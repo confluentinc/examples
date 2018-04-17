@@ -1,0 +1,16 @@
+1:{"uid":1,"name":"Cliff","locale":"en_US","address_city":"St Louis","elite":"P"}
+2:{"uid":2,"name":"Nick","locale":"en_US","address_city":"Palo Alto","elite":"G"}
+3:{"uid":3,"name":"Jeremy","locale":"en_US","address_city":"Austin","elite":"P"}
+4:{"uid":4,"name":"Michael","locale":"en_US","address_city":"Geneva","elite":"G"}
+5:{"uid":5,"name":"Neil","locale":"en_US","address_city":"London","elite":"G"}
+6:{"uid":6,"name":"Hojjat","locale":"en_US","address_city":"Palo Alto","elite":"S"}
+7:{"uid":7,"name":"Damian","locale":"en_US","address_city":"London","elite":"S"}
+8:{"uid":8,"name":"Apurva","locale":"en_US","address_city":"Palo Alto","elite":"S"}
+9:{"uid":9,"name":"Neha","locale":"en_US","address_city":"Palo Alto","elite":"P"}
+10:{"uid":10,"name":"Mattias","locale":"DE","address_city":"Palo Alto","elite":"S"}
+11:{"uid":11,"name":"Gwen","locale":"en_US","address_city":"Palo Alto","elite":"P"}
+12:{"uid":12,"name":"Guozhang","locale":"en_US","address_city":"Palo Alto","elite":"S"}
+13:{"uid":13,"name":"Lu","locale":"en_US","address_city":"Palo Alto","elite":"P"}
+14:{"uid":14,"name":"Robin","locale":"en_US","address_city":"Ilkley","elite":"G"}
+2:{"uid":2,"name":"Nick","locale":"en_US","address_city":"San Francisco","elite":"G"}
+2:{"uid":2,"name":"Nick","locale":"en_US","address_city":"Palo Alto","elite":"P"}

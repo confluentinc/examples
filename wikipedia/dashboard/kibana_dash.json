@@ -1,0 +1,168 @@
+{
+  "version": "5.5.2",
+  "objects": [
+    {
+      "id": "Edit-Rate",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Edit Rate",
+        "visState": "{\"type\":\"timelion\",\"title\":\"Edit Rate\",\"params\":{\"expression\":\".es(*)\",\"interval\":\"auto\"}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{}"
+        }
+      }
+    },
+    {
+      "id": "Top-Edited-Pages",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Top Edited Pages",
+        "visState": "{\"aggs\":[{\"enabled\":true,\"id\":\"1\",\"params\":{},\"schema\":\"metric\",\"type\":\"count\"},{\"enabled\":true,\"id\":\"2\",\"params\":{\"field\":\"WIKIPAGE\",\"order\":\"desc\",\"orderBy\":\"1\",\"size\":25},\"schema\":\"bucket\",\"type\":\"terms\"}],\"listeners\":{},\"params\":{\"perPage\":10,\"showMeticsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"totalFunc\":\"sum\"},\"title\":\"Top Edited Pages\",\"type\":\"table\"}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"wikipediabot\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "Top-Editors",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Top Editors",
+        "visState": "{\"title\":\"Top Editors\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showMeticsAtAllLevels\":false,\"showPartialRows\":false,\"showTotal\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"USERNAME\",\"size\":25,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"wikipediabot\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "Average-byte-change",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Average byte change",
+        "visState": "{\"type\":\"timelion\",\"title\":\"Average byte change\",\"params\":{\"expression\":\".es(metric='avg:BYTECHANGE').color(\\\"#c6c6c6\\\")\",\"interval\":\"auto\"}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{}"
+        }
+      }
+    },
+    {
+      "id": "Percentage-of-edits-that-are-bots",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Percentage of edits that are bots",
+        "visState": "{\"title\":\"Percentage of edits that are bots\",\"type\":\"timelion\",\"params\":{\"expression\":\".es('ISBOT:true').divide(.es()).multiply(100).yaxis(max=100)\",\"interval\":\"auto\"},\"aggs\":[],\"listeners\":{}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "Percentage-of-edits-that-are-minor",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Percentage of edits that are minor",
+        "visState": "{\"title\":\"Percentage of edits that are minor\",\"type\":\"timelion\",\"params\":{\"expression\":\".es('ISMINOR:true').divide(.es()).multiply(100).color(#ea7272).yaxis(max=100)\",\"interval\":\"auto\"},\"aggs\":[],\"listeners\":{}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "Percentage-of-edits-that-are-new",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Percentage of edits that are new",
+        "visState": "{\"title\":\"Percentage of edits that are new\",\"type\":\"timelion\",\"params\":{\"expression\":\".es('ISNEW:true').divide(.es()).multiply(100).color(#72d586).yaxis(max=100)\",\"interval\":\"auto\"},\"aggs\":[],\"listeners\":{}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "Percentage-of-edits-that-are-unpatrolled",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Percentage of edits that are unpatrolled",
+        "visState": "{\"title\":\"Percentage of edits that are unpatrolled\",\"type\":\"timelion\",\"params\":{\"expression\":\".es('ISUNPATROLLED:true').divide(.es()).multiply(100).color(#76cfd5).yaxis(max=100)\",\"interval\":\"auto\"},\"aggs\":[],\"listeners\":{}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "Wikipage-by-Average-Bytechange",
+      "type": "visualization",
+      "version": 1,
+      "attributes": {
+        "title": "Wikipage by Average Bytechange",
+        "visState": "{\"title\":\"Wikipage by Average Bytechange\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMeticsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"BYTECHANGE\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"WIKIPAGE\",\"size\":25,\"order\":\"desc\",\"orderBy\":\"1\"}}],\"listeners\":{}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"index\":\"wikipediabot\",\"query\":{\"query_string\":{\"query\":\"*\",\"analyze_wildcard\":true}},\"filter\":[]}"
+        }
+      }
+    },
+    {
+      "id": "wikipediabot",
+      "type": "index-pattern",
+      "version": 2,
+      "attributes": {
+        "title": "wikipediabot",
+        "notExpandable": true,
+        "fields": "[{\"name\":\"BYTECHANGE\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"COMMITMESSAGE\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"CREATEDAT\",\"type\":\"date\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"DIFFURL\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"ISBOT\",\"type\":\"boolean\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"ISMINOR\",\"type\":\"boolean\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"ISNEW\",\"type\":\"boolean\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"ISUNPATROLLED\",\"type\":\"boolean\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"USERNAME\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"WIKIPAGE\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"_id\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_index\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_source\",\"type\":\"_source\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_type\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}]"
+      }
+    },
+    {
+      "id": "Wikipedia",
+      "type": "dashboard",
+      "version": 1,
+      "attributes": {
+        "title": "Wikipedia",
+        "hits": 0,
+        "description": "",
+        "panelsJSON": "[{\"col\":1,\"id\":\"Edit-Rate\",\"panelIndex\":3,\"row\":1,\"size_x\":12,\"size_y\":2,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Top-Edited-Pages\",\"panelIndex\":1,\"row\":3,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":7,\"id\":\"Top-Editors\",\"panelIndex\":2,\"row\":3,\"size_x\":6,\"size_y\":5,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Average-byte-change\",\"panelIndex\":4,\"row\":8,\"size_x\":6,\"size_y\":4,\"type\":\"visualization\"},{\"col\":1,\"id\":\"Percentage-of-edits-that-are-bots\",\"panelIndex\":6,\"row\":12,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":4,\"id\":\"Percentage-of-edits-that-are-minor\",\"panelIndex\":7,\"row\":12,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":7,\"id\":\"Percentage-of-edits-that-are-new\",\"panelIndex\":8,\"row\":12,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"col\":10,\"id\":\"Percentage-of-edits-that-are-unpatrolled\",\"panelIndex\":9,\"row\":12,\"size_x\":3,\"size_y\":2,\"type\":\"visualization\"},{\"id\":\"Wikipage-by-Average-Bytechange\",\"type\":\"visualization\",\"panelIndex\":10,\"size_x\":6,\"size_y\":4,\"col\":7,\"row\":8}]",
+        "optionsJSON": "{\"darkTheme\":false}",
+        "uiStateJSON": "{\"P-1\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-2\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}},\"P-10\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[{\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"query\":\"*\"}}}]}"
+        }
+      }
+    }
+  ]
+}
