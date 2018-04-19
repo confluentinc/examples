@@ -24,3 +24,4 @@ do
   fi
 done
 
+#./ccloud-delete-all-topics.sh
