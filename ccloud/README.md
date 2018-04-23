@@ -6,7 +6,7 @@ This Confluent Cloud demo is the automated cloud version of the [Confluent Platf
 
 This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
 
-![image](images/ccloud-demo-diagram.jpg)
+![image](docs/images/ccloud-demo-diagram.jpg)
 
 # Prerequisites
 
