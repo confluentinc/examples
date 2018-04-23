@@ -319,11 +319,8 @@ a self-hosted cluster, and the destination cluster is Confluent Cloud.
    .. figure:: images/topic_info_ccloud_pageviews.png 
       :alt: image
 
-   .. figure:: images/topic_info_ccloud_users.png 
-      :alt: image
 
-4. You can manage Confluent Replicator in |c3| **Management –> Kafka Connect** page. The **Sources** tab shows the connector
-      ``replicator``. Click ``Edit`` to see the details of the connector configuration.
+4. You can manage Confluent Replicator in the **Management –> Kafka Connect** page. The **Sources** tab shows the connector ``replicator``. Click ``Edit`` to see the details of the connector configuration.
 
       .. figure:: images/connect_source_ccloud.png
          :alt: image
