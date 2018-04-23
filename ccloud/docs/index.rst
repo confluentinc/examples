@@ -14,9 +14,7 @@ This Confluent Cloud demo is the automated cloud version of the `Confluent Platf
 Overview
 ========
 
-This Confluent Cloud demo is the automated cloud version of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , whereby KSQL streaming runs on your Confluent Cloud cluster.
-
-You can monitor the KSQL stream in Confluent Control Center. Note that there will not be any details on the System Health pages about brokers or topics because Confluent Cloud does not provide the Confluent Metrics Reporter instrumentation outside of the Confluent Cloud.
+This Confluent Cloud demo is the automated cloud version of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , whereby KSQL streaming runs on your Confluent Cloud cluster.  You can monitor the KSQL stream in Confluent Control Center.
 
 This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
 
@@ -35,6 +33,8 @@ Run demo
 **Demo validated with:**
 
 -  Confluent Platform 4.1
+-  Confluent Cloud
+-  Confluent Cloud CLI
 -  Java version 1.8.0_162
 -  MacOS 10.12
 -  git
@@ -67,23 +67,276 @@ Run demo
 Playbook
 ========
 
+Confluent Cloud
+-------------------
+
+1. You must have access to an initialized, working Confluent Cloud cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your Confluent Cloud cluster:
+
+   .. sourcecode:: bash
+
+     $ cat ~/.ccloud/config
+
+2. You must have locally installed Confluent Cloud CLI. To install the CLI, follow `these steps <https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli>`__. Validate you can list topics in your cluster:
+
+   .. sourcecode:: bash
+
+     $ ccloud topic list
+
+3. Get familar with the Confluent Cloud CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
+
+   .. sourcecode:: bash
+
+     $ ccloud topic create test
+     Topic "test" created.
+     $ ccloud produce -t test  
+     a
+     b
+     c
+     ^C
+     $ ccloud consume -b -t test
+     a
+     b
+     c
+     ^CProcessed a total of 3 messages.
+
+
 |c3|
 --------------------------------
 
+1. **Monitoring –> Data Streams –> Message Delivery**: hover over
+   any chart to see number of messages and average latency within a
+   minute time interval.
+
+   .. figure:: images/message_delivery_ccloud.png
+      :alt: image
+
+
+2. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage `Kafka
+   connectors <https://docs.confluent.io/current/control-center/docs/connect.html>`__, and more
+   specifically for this demo, `Confluent Replicator <https://docs.confluent.io/current/multi-dc/index.html>`__.
+
+   -  Kafka Connect **Sources** tab shows the connector
+      ``replicator``. Click ``Edit`` to see the details of the connector configuration.
+
+      .. figure:: images/connect_source_ccloud.png
+         :alt: image
+
+3. **Management –> Topics –> Topic Information**: For a given topic,
+   click on the three dots ``...`` next to the topic name and click on
+   ``View details``. View which brokers are leaders for which partitions
+   and the number of consumer groups currently consuming from this
+   topic. Click on the boxed consumer group count to select a consumer
+   group for which to monitor its data streams and jump to it.
+
+   .. figure:: images/topic_info_ccloud.png
+      :alt: image
+  
+.. note:: There will not be any details on the |c3| System Health pages about brokers or topics because Confluent Cloud does not provide the Confluent Metrics Reporter instrumentation outside of the Confluent Cloud. Therefore, you should expect to see the following graphic on the System Health page.
+
+   .. figure:: images/rocketship.png
+      :alt: image
+
+  
 
 KSQL
 ----
 
+1. View the KSQL server configuration file
+
+   .. sourcecode:: bash
+
+        # Replicator's consumer points to the local cluster
+        $ cat `confluent current`/ksql-server/ksql-server-ccloud.properties
+
+2. The KSQL server that is connect to Confluent Cloud is listening on port 8089. You have two options for interfacing with KSQL:
+
+   (a) Run KSQL CLI to get to the KSQL CLI prompt.
+
+       .. sourcecode:: bash
+
+          $ ksql http://localhost:8089
+
+   (b) Run the preview KSQL web interface. Navigate your browser to ``http://localhost:8089/index.html``
+
+3. At the KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
+
+   .. sourcecode:: bash
+
+      ksql> SHOW PROPERTIES;
+
+4. View the existing KSQL streams and describe one of those streams called ``WIKIPEDIABOT``.
+
+   .. sourcecode:: bash
+
+      ksql> SHOW STREAMS;
+      
+       Stream Name              | Kafka Topic              | Format 
+      --------------------------------------------------------------
+       PAGEVIEWS_ORIGINAL       | pageviews.replica        | AVRO   
+       PAGEVIEWS_FEMALE         | PAGEVIEWS_FEMALE         | AVRO   
+       PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | AVRO   
+      --------------------------------------------------------------
+
+
+      ksql> DESCRIBE PAGEVIEWS_FEMALE_LIKE_89;
+      
+       Field    | Type                      
+      --------------------------------------
+       ROWTIME  | BIGINT           (system) 
+       ROWKEY   | VARCHAR(STRING)  (system) 
+       USERID   | VARCHAR(STRING)  (key)    
+       PAGEID   | VARCHAR(STRING)           
+       REGIONID | VARCHAR(STRING)           
+       GENDER   | VARCHAR(STRING)           
+      --------------------------------------
+      For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
+
+
+5. View the existing KSQL tables and describe one of those tables called ``EN_WIKIPEDIA_GT_1``.
+
+   .. sourcecode:: bash
+
+      ksql> SHOW TABLES;
+      
+       Table Name        | Kafka Topic       | Format | Windowed 
+      -----------------------------------------------------------
+       PAGEVIEWS_REGIONS | PAGEVIEWS_REGIONS | AVRO   | true     
+       USERS_ORIGINAL    | users.replica     | AVRO   | false    
+      -----------------------------------------------------------
+
+
+      ksql> DESCRIBE PAGEVIEWS_REGIONS;
+      
+       Field    | Type                      
+      --------------------------------------
+       ROWTIME  | BIGINT           (system) 
+       ROWKEY   | VARCHAR(STRING)  (system) 
+       GENDER   | VARCHAR(STRING)  (key)    
+       REGIONID | VARCHAR(STRING)  (key)    
+       NUMUSERS | BIGINT                    
+      --------------------------------------
+      For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
+
+
+6. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_WIKIPEDIABOT``.
+
+   .. sourcecode:: bash
+
+      ksql> SHOW QUERIES;
+
+       Query ID                      | Kafka Topic              | Query String
+      ----------------------------------------------------------------------------------------------------------
+       CTAS_PAGEVIEWS_REGIONS        | PAGEVIEWS_REGIONS        | CREATE TABLE pageviews_regions WITH (value_format='avro') AS SELECT gender, regionid , COUNT(*) AS numusers FROM pageviews_female WINDOW TUMBLING (size 30 second) GROUP BY gender, regionid HAVING COUNT(*) > 1;                 
+       CSAS_PAGEVIEWS_FEMALE         | PAGEVIEWS_FEMALE         | CREATE STREAM pageviews_female AS SELECT users_original.userid AS userid, pageid, regionid, gender FROM pageviews_original LEFT JOIN users_original ON pageviews_original.userid = users_original.userid WHERE gender = 'FEMALE'; 
+       CSAS_PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | CREATE STREAM pageviews_female_like_89 WITH (kafka_topic='pageviews_enriched_r8_r9', value_format='AVRO') AS SELECT * FROM pageviews_female WHERE regionid LIKE '%_8' OR regionid LIKE '%_9';                                     
+      ----------------------------------------------------------------------------------------------------------
+
+
+
+      ksql> EXPLAIN CSAS_PAGEVIEWS_FEMALE_LIKE_89;
+      
+      Type                 : QUERY
+      SQL                  : CREATE STREAM pageviews_female_like_89 WITH (kafka_topic='pageviews_enriched_r8_r9', value_format='AVRO') AS SELECT * FROM pageviews_female WHERE regionid LIKE '%_8' OR regionid LIKE '%_9';
+      
+      
+      Local runtime statistics
+      ------------------------
+      messages-per-sec:         0   total-messages:        43     last-message: 4/23/18 10:28:29 AM EDT
+       failed-messages:         0 failed-messages-per-sec:         0      last-failed:       n/a
+      (Statistics of the local KSQL server interaction with the Kafka topic pageviews_enriched_r8_r9)
+      
+
+7. At the KSQL prompt, view three messages from different KSQL streams and tables.
+
+   .. sourcecode:: bash
+
+      ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 LIMIT 3;
+      ksql> SELECT * FROM USERS_ORIGINAL LIMIT 3;
+
+8. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names above, and |c3| is showing the records that are incoming to each query.
+
+For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
+
+   .. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
+      :alt: image
+
+
 
 Replicator
 ------------
+
+Confluent Replicator copies data from a source Kafka cluster to a
+destination Kafka cluster. In this demo, the source cluster is a local install that represents
+a self-hosted cluster, and the destination cluster is Confluent Cloud.
+
+1. View the Confluent Replicator configuration files.  Note that Replicator is run as a standalone binary in this demo.
+
+   .. sourcecode:: bash
+
+        # Replicator's consumer points to the local cluster
+        $ cat `confluent current`/connect/replicator-to-ccloud-consumer.properties
+        bootstrap.servers=localhost:9092
+
+        # Replicator's producer points to the Confluent Cloud cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
+        $ cat `confluent current`/connect/replicator-to-ccloud-producer.properties
+        ssl.endpoint.identification.algorithm=https
+        confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
+        sasl.mechanism=PLAIN
+        confluent.monitoring.interceptor.sasl.mechanism=PLAIN
+        security.protocol=SASL_SSL
+        confluent.monitoring.interceptor.security.protocol=SASL_SSL
+        retry.backoff.ms=500
+        bootstrap.servers=SASL_SSL:<broker1>,SASL_SSL:<broker2>,SASL_SSL:<broker3>
+        confluent.monitoring.interceptor.bootstrap.servers=SASL_SSL:<broker1>,SASL_SSL:<broker2>,SASL_SSL:<broker3>
+        sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
+        confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
+
+        # General Replicator properties define the replication policy
+        $ cat `confluent current`/connect/replicator-to-ccloud.properties
+        topic.whitelist=pageviews,users
+        topic.rename.format=${topic}.replica
+        topic.config.sync=false
+
+2. View topics `pageviews` and `users` in the local cluster
+
+   .. sourcecode:: bash
+
+     $ kafka-topics --zookeeper localhost:2181  --describe --topic pageviews
+     Topic:pageviews	PartitionCount:1	ReplicationFactor:1	Configs:
+	   Topic: pageviews	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+
+     $ kafka-topics --zookeeper localhost:2181  --describe --topic users    
+     Topic:users	PartitionCount:1	ReplicationFactor:1	Configs:
+	   Topic: users	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+
+3. View topics `pageviews.replica` and `users.replica` in the Confluent Cloud cluster. In |c3|, for a given topic listed
+   in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
+   ``View details``. View which brokers are leaders for which partitions
+   and the number of consumer groups currently consuming from this
+   topic. Click on the boxed consumer group count to select a consumer
+   group for which to monitor its data streams and jump to it.
+
+   .. figure:: images/topic_info_ccloud_pageviews.png 
+      :alt: image
+
+   .. figure:: images/topic_info_ccloud_users.png 
+      :alt: image
+
+4. You can manage Confluent Replicator in |c3| **Management –> Kafka Connect** page. The **Sources** tab shows the connector
+      ``replicator``. Click ``Edit`` to see the details of the connector configuration.
+
+      .. figure:: images/connect_source_ccloud.png
+         :alt: image
+
 
 
 ========================
 Troubleshooting the demo
 ========================
 
-1. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current temp directory. Browse the current temp directory 
+1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working Confluent Cloud cluster and you have locally installed Confluent Cloud CLI.
+
+2. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current temp directory. Browse the current temp directory 
 
    .. sourcecode:: bash
 
@@ -98,23 +351,18 @@ Troubleshooting the demo
         zookeeper
 
 
-2. For example, to view the configuration and log file for Confluent Replicator:
+3. For example, to view the configuration and log file for KSQL:
 
    .. sourcecode:: bash
 
-        $ ls `confluent current`/connect/replicator*
-
-        replicator-to-ccloud-consumer.properties
-        replicator-to-ccloud-producer.properties
-        replicator-to-ccloud.properties
-        replicator-to-ccloud.stdout
+        $ ls `confluent current`/ksql-server
 
 
 ========
 Teardown
 ========
 
-1. Stop the demo, destroy all local components, delete topics backing KSQL queries.
+1. Stop the demo, destroy all local components created by `Confluent CLI`, delete topics backing KSQL queries.
 
    .. sourcecode:: bash
 
@@ -125,3 +373,4 @@ Teardown
    .. sourcecode:: bash
 
         $ ./ccloud-delete-all-topics.sh
+
