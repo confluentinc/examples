@@ -1,9 +1,9 @@
 .. _quickstart-demos-ccloud:
 
-Hybrid Kafka Clusters from Self-Host to Cloud
-==============================================
+Hybrid Kafka Clusters from Self-Host-ed to Confluent Cloud
+============================================================
 
-This Confluent Cloud demo is the automated cloud version of the `Confluent Platform 4.1 Quickstart <https://docs.confluent.io/current/quickstart/ce-quickstart.html>`__ , whereby KSQL streaming runs on your Confluent Cloud cluster.
+This Confluent Cloud demo is the automated cloud version of the :ref:`Confluent Platform 4.1 Quickstart <ce-quickstart>`, whereby KSQL stream processing runs on your Confluent Cloud cluster.
 
 .. contents:: Contents
     :local:
