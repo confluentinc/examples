@@ -2,9 +2,13 @@
 
 # Overview
 
-This Confluent Cloud demo is the automated cloud version of the [Confluent Platform 4.1 Quickstart](https://docs.confluent.io/current/quickstart.html), whereby KSQL streaming runs on your Confluent Cloud cluster. You can monitor the KSQL streams in Confluent Control Center. Note that there will not be any details on the System Health pages about brokers or topics because Confluent Cloud does not provide the Confluent Metrics Reporter instrumentation outside of the Confluent Cloud.
+This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This demo is the automated cloud version of the [Confluent Platform 4.1 Quickstart](https://docs.confluent.io/current/quickstart.html), but instead of KSQL stream processing running on your local install, it runs on your Confluent Cloud cluster.
 
-This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
+This demo showcases:
+* Confluent Cloud
+* KSQL
+* Confluent Replicator
+* |c3|
 
 ![image](docs/images/ccloud-demo-diagram.jpg)
 
@@ -17,14 +21,6 @@ This demo also showcases the Confluent Replicator executable for self-hosted Con
 
 NOTE: Do not run this demo against a production Confluent Cloud cluster. Run it only in a cluster used for development only.
 
-# What Should I see?
+# Documentation
 
-After you run `./start.sh`:
-
-* If you are running Confluent Enterprise, open your browser and navigate to the Control Center web interface:
-  *  Monitoring -> Data streams at http://localhost:9021/monitoring/streams to monitor throughput and latency performance of the KSQL queries
-  *  Management -> Kafka Connect at http://localhost:9021/management/connect to monitor Replicator
-* Run `ksql http://localhost:8089` to view and create queries, or open your browser and navigate to the KSQL UI at http://localhost:8089
-* Run `ccloud topic list` to view all the new Kafka topics created on Confluent Cloud
-
-In addition to running `./stop.sh` to stop the demo, you may also run `./ccloud-delete-all-topics.sh` to delete all topics used for Confluent Control Center, Kafka Connect, Confluent Schema Registry from your Confluent Cloud cluster.
+You can find the documentation for running this demo, and its accompanying playbook, at [https://docs.confluent.io/current/tutorials/quickstart-demos/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/quickstart-demos/ccloud/docs/index.html)

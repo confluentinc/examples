@@ -3,7 +3,7 @@
 Hybrid Kafka Clusters from Self-Host-ed to Confluent Cloud
 ============================================================
 
-This Confluent Cloud demo is the automated cloud version of the :ref:`Confluent Platform 4.1 Quickstart <ce-quickstart>`, whereby KSQL stream processing runs on your Confluent Cloud cluster.
+This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This demo is the automated cloud version of the :ref:`Confluent Platform 4.1 Quickstart <ce-quickstart>`, but instead of KSQL stream processing running on your local install, it runs on your Confluent Cloud cluster.
 
 .. contents:: Contents
     :local:
@@ -14,7 +14,7 @@ This Confluent Cloud demo is the automated cloud version of the :ref:`Confluent 
 Overview
 ========
 
-This Confluent Cloud demo is the automated cloud version of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , whereby KSQL streaming runs on your Confluent Cloud cluster.  You can monitor the KSQL stream in Confluent Control Center.
+This Confluent Cloud demo is the automated cloud version of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , whereby KSQL stream processing runs on your Confluent Cloud cluster.  You can monitor the KSQL stream in Confluent Control Center.
 
 This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
 
