@@ -3,7 +3,7 @@
 Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud
 ============================================================
 
-This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster. There are also additional |cp| components including |c3| and Confluent Replicator.
+This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__. Instead of KSQL stream processing running on your local machine, it runs on your |ccloud| cluster. There are also additional |cp| components including |c3| and Confluent Replicator.
 
 .. contents:: Contents
     :local:
@@ -14,15 +14,15 @@ This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Co
 Overview
 ========
 
-This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
+This |ccloud| demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
 
-You can monitor the KSQL streams in Confluent Control Center. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
+You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
 
 .. figure:: images/ccloud-demo-diagram.jpg
     :alt: image
 
 
-.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |CP| and |ccloud| with KSQL.
+.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
 
 ========
@@ -32,19 +32,19 @@ Run demo
 **Demo validated with:**
 
 -  Confluent Platform 4.1
--  Confluent Cloud
--  Confluent Cloud CLI
+-  |ccloud|
+-  |ccloud| CLI
 -  Java version 1.8.0_162
 -  MacOS 10.12
 
 
-1. Clone the `quickstart-demos GitHub repository <https://github.com/confluentinc/quickstart-demos>`__:
+1. Clone the `quickstart-demos GitHub repository <https://github.com/confluentinc/quickstart-demos>`__.
 
    .. sourcecode:: bash
 
      $ git clone https://github.com/confluentinc/quickstart-demos
 
-2. Change directory to the Confluent Cloud demo
+2. Change directory to the |ccloud| demo.
 
    .. sourcecode:: bash
 
@@ -56,7 +56,7 @@ Run demo
 
       $ ./start.sh
 
-4. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
+4. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
 
 
 
@@ -64,22 +64,22 @@ Run demo
 Playbook
 ========
 
-Confluent Cloud
+|ccloud|
 -------------------
 
-1. You must have access to an initialized, working Confluent Cloud cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your Confluent Cloud cluster:
+1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster.
 
    .. sourcecode:: bash
 
      $ cat ~/.ccloud/config
 
-2. You must have locally installed Confluent Cloud CLI. To install the CLI, follow `these steps <https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli>`__. Validate you can list topics in your cluster:
+2. You must have locally installed |ccloud| CLI. To install the CLI, follow `these steps <https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli>`__. Validate you can list topics in your cluster.
 
    .. sourcecode:: bash
 
      $ ccloud topic list
 
-3. Get familar with the Confluent Cloud CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
+3. Get familar with the |ccloud| CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
@@ -98,7 +98,7 @@ Confluent Cloud
 
 
 |c3|
---------------------------------
+----
 
 1. **Monitoring –> Data Streams –> Message Delivery**: hover over
    any chart to see number of messages and average latency within a
@@ -128,7 +128,7 @@ Confluent Cloud
    .. figure:: images/topic_info_ccloud.png
       :alt: image
   
-.. note:: There will not be any details on the |c3| System Health pages about brokers or topics because Confluent Cloud does not provide the Confluent Metrics Reporter instrumentation outside of the Confluent Cloud. Therefore, you should expect to see the following graphic on the System Health page.
+.. note:: There will not be any details on the |c3| System Health pages about brokers or topics because |ccloud| does not provide the Confluent Metrics Reporter instrumentation outside of the |ccloud|. Therefore, you should expect to see the following graphic on the System Health page.
 
    .. figure:: images/rocketship.png
       :alt: image
@@ -138,14 +138,14 @@ Confluent Cloud
 KSQL
 ----
 
-1. View the KSQL server configuration file
+1. View the KSQL server configuration file.
 
    .. sourcecode:: bash
 
         # KSQL bootstrap servers point to Confluent Cloud
         $ cat `confluent current`/ksql-server/ksql-server-ccloud.properties
 
-2. The KSQL server that is connected to Confluent Cloud is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL:
+2. The KSQL server that is connected to |ccloud| is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL.
 
    (a) Run KSQL CLI to get to the KSQL CLI prompt.
 
@@ -264,7 +264,7 @@ Replicator
 
 Confluent Replicator copies data from a source Kafka cluster to a
 destination Kafka cluster. In this demo, the source cluster is a local install that represents
-a self-hosted cluster, and the destination cluster is Confluent Cloud.
+a self-hosted cluster, and the destination cluster is |ccloud|.
 
 1. View the Confluent Replicator configuration files.  Note that in this demo, Replicator is run as a standalone binary.
 
@@ -274,7 +274,7 @@ a self-hosted cluster, and the destination cluster is Confluent Cloud.
         $ cat `confluent current`/connect/replicator-to-ccloud-consumer.properties
         bootstrap.servers=localhost:9092
 
-        # Replicator's producer points to the Confluent Cloud cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
+        # Replicator's producer points to the |ccloud| cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
         $ cat `confluent current`/connect/replicator-to-ccloud-producer.properties
         ssl.endpoint.identification.algorithm=https
         confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
@@ -306,7 +306,7 @@ a self-hosted cluster, and the destination cluster is Confluent Cloud.
      Topic:users	PartitionCount:1	ReplicationFactor:1	Configs:
 	   Topic: users	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
 
-3. View the replicated topics `pageviews.replica` and `users.replica` in the Confluent Cloud cluster. In |c3|, for a given topic listed
+3. View the replicated topics `pageviews.replica` and `users.replica` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
    ``View details``. View which brokers are leaders for which partitions
    and the number of consumer groups currently consuming from this
@@ -328,9 +328,9 @@ a self-hosted cluster, and the destination cluster is Confluent Cloud.
 Troubleshooting the demo
 ========================
 
-1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working Confluent Cloud cluster and you have locally installed Confluent Cloud CLI.
+1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working |ccloud| cluster and you have locally installed |ccloud| CLI.
 
-2. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current temp directory. Browse the current temp directory 
+2. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current temp directory. Browse the current temp directory.
 
    .. sourcecode:: bash
 
@@ -362,7 +362,7 @@ Teardown
 
         $ ./stop.sh
 
-2. Delete all topics in CCloud, including internal topics used for Confluent Control Center, Kafka Connect, KSQL, and Confluent Schema Registry.
+2. Delete all topics in CCloud, including internal topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry.
 
    .. sourcecode:: bash
 
