@@ -3,7 +3,7 @@
 Hybrid Kafka Clusters from Self-Host-ed to Confluent Cloud
 ============================================================
 
-This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This demo is the automated cloud version of the :ref:`Confluent Platform 4.1 Quickstart <ce-quickstart>`, but instead of KSQL stream processing running on your local install, it runs on your Confluent Cloud cluster.
+This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster. There are also additional |cp| components including |c3| and Confluent Replicator.
 
 .. contents:: Contents
     :local:
@@ -14,16 +14,15 @@ This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Co
 Overview
 ========
 
-This Confluent Cloud demo is the automated cloud version of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , whereby KSQL stream processing runs on your Confluent Cloud cluster.  You can monitor the KSQL stream in Confluent Control Center.
+This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud. This demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
 
-This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
-
+You can monitor the KSQL streams in Confluent Control Center. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to Confluent Cloud. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
 
 .. figure:: images/ccloud-demo-diagram.jpg
     :alt: image
 
 
-.. note:: This is a demo environment and has all services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |CP| and |cloud| with KSQL.
+.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |CP| and |ccloud| with KSQL.
 
 
 ========
@@ -37,8 +36,6 @@ Run demo
 -  Confluent Cloud CLI
 -  Java version 1.8.0_162
 -  MacOS 10.12
--  git
--  jq
 
 
 1. Clone the `quickstart-demos GitHub repository <https://github.com/confluentinc/quickstart-demos>`__:
@@ -53,7 +50,7 @@ Run demo
 
      $ cd quickstart-demos/ccloud
 
-3. Start the entire demo by running a single command that brings up the local "self-host" Confluent environment using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
+3. Start the entire demo by running a single command that brings up the local self-hosted Confluent Platform using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -145,10 +142,10 @@ KSQL
 
    .. sourcecode:: bash
 
-        # Replicator's consumer points to the local cluster
+        # KSQL bootstrap servers point to Confluent Cloud
         $ cat `confluent current`/ksql-server/ksql-server-ccloud.properties
 
-2. The KSQL server that is connect to Confluent Cloud is listening on port 8089. You have two options for interfacing with KSQL:
+2. The KSQL server that is connected to Confluent Cloud is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL:
 
    (a) Run KSQL CLI to get to the KSQL CLI prompt.
 
@@ -253,7 +250,7 @@ KSQL
       ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 LIMIT 3;
       ksql> SELECT * FROM USERS_ORIGINAL LIMIT 3;
 
-8. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names above, and |c3| is showing the records that are incoming to each query.
+8. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names shown above, and |c3| is showing the records that are incoming to each query.
 
 For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
 
@@ -269,7 +266,7 @@ Confluent Replicator copies data from a source Kafka cluster to a
 destination Kafka cluster. In this demo, the source cluster is a local install that represents
 a self-hosted cluster, and the destination cluster is Confluent Cloud.
 
-1. View the Confluent Replicator configuration files.  Note that Replicator is run as a standalone binary in this demo.
+1. View the Confluent Replicator configuration files.  Note that in this demo, Replicator is run as a standalone binary.
 
    .. sourcecode:: bash
 
@@ -309,7 +306,7 @@ a self-hosted cluster, and the destination cluster is Confluent Cloud.
      Topic:users	PartitionCount:1	ReplicationFactor:1	Configs:
 	   Topic: users	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
 
-3. View topics `pageviews.replica` and `users.replica` in the Confluent Cloud cluster. In |c3|, for a given topic listed
+3. View the replicated topics `pageviews.replica` and `users.replica` in the Confluent Cloud cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
    ``View details``. View which brokers are leaders for which partitions
    and the number of consumer groups currently consuming from this
