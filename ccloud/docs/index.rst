@@ -330,7 +330,7 @@ Troubleshooting the demo
 
 1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working |ccloud| cluster and you have locally installed |ccloud| CLI.
 
-2. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current temp directory. Browse the current temp directory.
+2. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current Confluent CLI temp directory. Browse the directory.
 
    .. sourcecode:: bash
 
@@ -345,7 +345,7 @@ Troubleshooting the demo
         zookeeper
 
 
-3. For example, to view the configuration and log file for KSQL:
+3. For example, to view the configuration and log files for KSQL server:
 
    .. sourcecode:: bash
 
@@ -362,7 +362,7 @@ Teardown
 
         $ ./stop.sh
 
-2. Delete all topics in CCloud, including internal topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry.
+2. Delete all |cp| internal topics in CCloud, including topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry.
 
    .. sourcecode:: bash
 
