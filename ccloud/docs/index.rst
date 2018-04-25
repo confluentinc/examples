@@ -283,8 +283,8 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
         security.protocol=SASL_SSL
         confluent.monitoring.interceptor.security.protocol=SASL_SSL
         retry.backoff.ms=500
-        bootstrap.servers=SASL_SSL:<broker1>,SASL_SSL:<broker2>,SASL_SSL:<broker3>
-        confluent.monitoring.interceptor.bootstrap.servers=SASL_SSL:<broker1>,SASL_SSL:<broker2>,SASL_SSL:<broker3>
+        bootstrap.servers=<broker1>,<broker2>,<broker3>
+        confluent.monitoring.interceptor.bootstrap.servers=<broker1>,<broker2>,<broker3>
         sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
         confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
 
