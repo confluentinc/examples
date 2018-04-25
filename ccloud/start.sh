@@ -45,6 +45,11 @@ sed -i '' 's/kafkastore.connection.url=localhost:2181/#kafkastore.connection.url
 while read -r line
 do
   if [[ ${line:0:1} != '#' ]]; then
+    if [[ ${line:0:9} == 'bootstrap' && ! "$line" =~ "SASL_SSL:" ]]; then
+      # Schema Registry requires security protocol, i.e. "SASL_SSL://", in kafkastore.bootstrap.servers
+      line=${line/=/=SASL_SSL:\/\/}
+      line=${line/,/,SASL_SSL:\/\/}
+    fi
     echo "kafkastore.$line" >> $SR_CONFIG
   fi
 done < "$CCLOUD_CONFIG"
