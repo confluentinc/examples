@@ -34,8 +34,8 @@ do
   fi
 done < "$CCLOUD_CONFIG"
 
-# Schema Registry instance for Confluent Cloud
-# Set this new Schema Registry listener to port $SR_LISTENER instead of default 8081 which is already in use
+# Confluent Schema Registry instance for Confluent Cloud
+# Set this new Schema Registry listener to port $SR_LISTENER instead of the default 8081 which is already in use
 SR_LISTENER=8085
 SR_CONFIG=$CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.properties
 cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $SR_CONFIG
@@ -47,6 +47,7 @@ do
   if [[ ${line:0:1} != '#' ]]; then
     if [[ ${line:0:9} == 'bootstrap' && ! "$line" =~ "SASL_SSL:" ]]; then
       # Schema Registry requires security protocol, i.e. "SASL_SSL://", in kafkastore.bootstrap.servers
+      # Workaround until this issue is resolved https://github.com/confluentinc/schema-registry/issues/790
       line=${line/=/=SASL_SSL:\/\/}
       line=${line/,/,SASL_SSL:\/\/}
     fi
@@ -56,21 +57,23 @@ done < "$CCLOUD_CONFIG"
 echo "Starting Confluent Schema Registry for Confluent Cloud and sleeping 40 seconds"
 schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
 sleep 40
-
 ccloud topic describe _schemas
 if [[ $? == 1 ]]; then
   echo "ERROR: Schema Registry could not create topic '_schemas' in Confluent Cloud. Please troubleshoot"
   exit
 fi
 
-# Produce pageviews data in local cluster
+# Produce to topic pageviews in local cluster
 kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
 ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
 sleep 5
 
-# Produce users data in CCloud cluster
+# Produce to topic users in CCloud cluster
 ccloud topic create users
-ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER propertiesFile=$CCLOUD_CONFIG &>/dev/null &
+KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
+cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_PROPERTIES
+echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_PROPERTIES
+ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://localhost:$SR_LISTENER propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
@@ -93,7 +96,7 @@ echo "Starting Confluent Replicator and sleeping 60 seconds"
 replicator --cluster.id replicator-to-ccloud --consumer.config $CONSUMER_PROPERTIES --producer.config $PRODUCER_PROPERTIES --replication.config $REPLICATOR_PROPERTIES > $CONFLUENT_CURRENT/connect/replicator-to-ccloud.stdout 2>&1 &
 sleep 60
 
-# Local KSQL Server connecting to Confluent Cloud
+# KSQL Server runs locally and connects to Confluent Cloud
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
 KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_SERVER_CONFIG
@@ -120,13 +123,12 @@ EOF
 echo "Starting KSQL Server for Confluent Cloud and sleeping 25 seconds"
 ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
 sleep 25
-
 ksql http://localhost:$KSQL_LISTENER <<EOF
 run script 'ksql.commands';
 exit ;
 EOF
 
-# Confluent Control Center to manage and monitor Confluent Cloud
+# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 if is_ce; then
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
   cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
