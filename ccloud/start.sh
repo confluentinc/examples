@@ -63,20 +63,21 @@ if [[ $? == 1 ]]; then
   exit
 fi
 
-# Produce data in local cluster
+# Produce pageviews data in local cluster
 kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
-kafka-topics --zookeeper localhost:2181 --create --topic users --partitions 12 --replication-factor 1
 ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
-ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
 sleep 5
+
+# Produce users data in CCloud cluster
+ccloud topic create users
+ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER propertiesFile=$CCLOUD_CONFIG &>/dev/null &
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 
-# Replicate local topics `pageviews` and `users` to Confluent Cloud topics `pageviews.replica` and `users.replica`
+# Replicate local topic `pageviews` to Confluent Cloud topics `pageviews.replica`
 ccloud topic create pageviews.replica
-ccloud topic create users.replica
 PRODUCER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-producer.properties
 cp $INTERCEPTORS_CCLOUD_CONFIG $PRODUCER_PROPERTIES
 if is_ce; then
@@ -85,7 +86,7 @@ fi
 CONSUMER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-consumer.properties
 echo "bootstrap.servers=localhost:9092" > $CONSUMER_PROPERTIES
 REPLICATOR_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud.properties
-echo "topic.whitelist=pageviews,users" > $REPLICATOR_PROPERTIES
+echo "topic.whitelist=pageviews" > $REPLICATOR_PROPERTIES
 echo "topic.rename.format=\${topic}.replica" >> $REPLICATOR_PROPERTIES
 echo "topic.config.sync=false" >> $REPLICATOR_PROPERTIES
 echo "Starting Confluent Replicator and sleeping 60 seconds"
