@@ -64,6 +64,8 @@ if [[ $? == 1 ]]; then
 fi
 
 # Produce data in local cluster
+kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
+kafka-topics --zookeeper localhost:2181 --create --topic users --partitions 12 --replication-factor 1
 ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
 ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
 sleep 5
