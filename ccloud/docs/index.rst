@@ -16,7 +16,7 @@ Overview
 
 This |ccloud| demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
 
-You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. This can be used for Disaster Recovery or other scenarios. In this case, Replicator is used to bootstrap the KSQL stream processing input Kafka topics `users` and `pageviews`.
+You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the Kafka topic `pageviews.replica` which is used for KSQL stream processing.
 
 .. figure:: images/ccloud-demo-diagram.jpg
     :alt: image
@@ -198,7 +198,7 @@ KSQL
        Table Name        | Kafka Topic       | Format | Windowed 
       -----------------------------------------------------------
        PAGEVIEWS_REGIONS | PAGEVIEWS_REGIONS | AVRO   | true     
-       USERS_ORIGINAL    | users.replica     | AVRO   | false    
+       USERS_ORIGINAL    | users             | AVRO   | false    
       -----------------------------------------------------------
 
 
@@ -290,23 +290,31 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
 
         # General Replicator properties define the replication policy
         $ cat `confluent current`/connect/replicator-to-ccloud.properties
-        topic.whitelist=pageviews,users
+        topic.whitelist=pageviews
         topic.rename.format=${topic}.replica
         topic.config.sync=false
 
-2. View topics `pageviews` and `users` in the local cluster
+2. View topics `pageviews` in the local cluster
 
    .. sourcecode:: bash
 
      $ kafka-topics --zookeeper localhost:2181  --describe --topic pageviews
-     Topic:pageviews	PartitionCount:1	ReplicationFactor:1	Configs:
-	   Topic: pageviews	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+     Topic:pageviews	PartitionCount:12	ReplicationFactor:1	Configs:
+	     Topic: pageviews	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 3	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 4	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 5	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 6	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 7	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 8	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 9	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 10	Leader: 0	Replicas: 0	Isr: 0
+	     Topic: pageviews	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
 
-     $ kafka-topics --zookeeper localhost:2181  --describe --topic users    
-     Topic:users	PartitionCount:1	ReplicationFactor:1	Configs:
-	   Topic: users	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
 
-3. View the replicated topics `pageviews.replica` and `users.replica` in the |ccloud| cluster. In |c3|, for a given topic listed
+3. View the replicated topics `pageviews.replica` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
    ``View details``. View which brokers are leaders for which partitions
    and the number of consumer groups currently consuming from this
