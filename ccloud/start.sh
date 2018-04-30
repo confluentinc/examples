@@ -91,7 +91,6 @@ echo "bootstrap.servers=localhost:9092" > $CONSUMER_PROPERTIES
 REPLICATOR_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud.properties
 echo "topic.whitelist=pageviews" > $REPLICATOR_PROPERTIES
 echo "topic.rename.format=\${topic}.replica" >> $REPLICATOR_PROPERTIES
-echo "topic.config.sync=false" >> $REPLICATOR_PROPERTIES
 echo "Starting Confluent Replicator and sleeping 60 seconds"
 replicator --cluster.id replicator-to-ccloud --consumer.config $CONSUMER_PROPERTIES --producer.config $PRODUCER_PROPERTIES --replication.config $REPLICATOR_PROPERTIES > $CONFLUENT_CURRENT/connect/replicator-to-ccloud.stdout 2>&1 &
 sleep 60
