@@ -18,21 +18,8 @@ get_ksql_ui
 confluent start
 CONFLUENT_CURRENT=`confluent current`
 
-# Confluent Cloud configuration
-CCLOUD_CONFIG=$HOME/.ccloud/config
-
-# Build configuration file with CCloud connection parameters and
-# Confluent Monitoring Interceptors for Streams Monitoring in Confluent Control Center
-INTERCEPTORS_CCLOUD_CONFIG=$CONFLUENT_CURRENT/control-center/interceptors-ccloud.config
-while read -r line
-do
-  echo $line >> $INTERCEPTORS_CCLOUD_CONFIG
-  if is_ce; then
-    if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' || ${line:0:9} == 'bootstrap' ]]; then
-      echo "confluent.monitoring.interceptor.$line" >> $INTERCEPTORS_CCLOUD_CONFIG
-    fi
-  fi
-done < "$CCLOUD_CONFIG"
+DELTA_CONFIGS_DIR="delta_configs"
+./ccloud-generate-cp-configs.sh $DELTA_CONFIGS_DIR
 
 # Confluent Schema Registry instance for Confluent Cloud
 # Set this new Schema Registry listener to port $SR_LISTENER instead of the default 8081 which is already in use
@@ -42,18 +29,7 @@ cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $SR_CONFIG
 sed -i '' "s/listeners=http:\/\/0.0.0.0:8081/listeners=http:\/\/0.0.0.0:$SR_LISTENER/g" $SR_CONFIG
 # Avoid clash between two local SR instances
 sed -i '' 's/kafkastore.connection.url=localhost:2181/#kafkastore.connection.url=localhost:2181/g' $SR_CONFIG
-while read -r line
-do
-  if [[ ${line:0:1} != '#' ]]; then
-    if [[ ${line:0:9} == 'bootstrap' && ! "$line" =~ "SASL_SSL:" ]]; then
-      # Schema Registry requires security protocol, i.e. "SASL_SSL://", in kafkastore.bootstrap.servers
-      # Workaround until this issue is resolved https://github.com/confluentinc/schema-registry/issues/790
-      line=${line/=/=SASL_SSL:\/\/}
-      line=${line/,/,SASL_SSL:\/\/}
-    fi
-    echo "kafkastore.$line" >> $SR_CONFIG
-  fi
-done < "$CCLOUD_CONFIG"
+cat $DELTA_CONFIGS_DIR/schema-registry-ccloud.delta >> $SR_CONFIG
 echo "Starting Confluent Schema Registry for Confluent Cloud and sleeping 40 seconds"
 schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
 sleep 40
@@ -71,8 +47,7 @@ sleep 5
 # Produce to topic users in CCloud cluster
 ccloud topic create users
 KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
-cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_PROPERTIES
-echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_PROPERTIES
+cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
 ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://localhost:$SR_LISTENER propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
@@ -82,10 +57,7 @@ jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 # Replicate local topic `pageviews` to Confluent Cloud topics `pageviews.replica`
 ccloud topic create pageviews.replica
 PRODUCER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-producer.properties
-cp $INTERCEPTORS_CCLOUD_CONFIG $PRODUCER_PROPERTIES
-if is_ce; then
-  echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $PRODUCER_PROPERTIES
-fi
+cp $DELTA_CONFIGS_DIR/replicator-to-ccloud-producer.delta $PRODUCER_PROPERTIES
 CONSUMER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-consumer.properties
 echo "bootstrap.servers=localhost:9092" > $CONSUMER_PROPERTIES
 REPLICATOR_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud.properties
@@ -98,13 +70,7 @@ sleep 60
 # KSQL Server runs locally and connects to Confluent Cloud
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
 KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
-cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_SERVER_CONFIG
-if is_ce; then
-  cat <<EOF >> $KSQL_SERVER_CONFIG
-producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
-consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
-EOF
-fi
+cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
 # Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
 KSQL_LISTENER=8089
 cat <<EOF >> $KSQL_SERVER_CONFIG
@@ -133,15 +99,7 @@ if is_ce; then
   cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
-  while read -r line
-    do
-    if [[ ${line:0:1} != '#' ]]; then
-      echo "$line" >> $C3_CONFIG
-      if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' || ${line:0:9} == 'bootstrap' ]]; then
-        echo "confluent.controlcenter.streams.$line" >> $C3_CONFIG
-      fi
-    fi
-  done < "$CCLOUD_CONFIG"
+  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
