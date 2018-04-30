@@ -1,5 +1,18 @@
 #!/bin/bash
 
+############################################
+# Process the Confluent Cloud configuration in $HOME/.ccloud/config
+# to create delta configuration files in the destination directory
+# with enabled interceptors for Streams Monitoring in Confluent Control Center
+# for the following components
+# - Confluent Schema Registry
+# - KSQL Data Generator
+# - KSQL server 
+# - Confluent Replicator (standalone binary)
+# - Confluent Control Center
+############################################
+
+
 # Confluent Cloud configuration
 CCLOUD_CONFIG=$HOME/.ccloud/config
 
