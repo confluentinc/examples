@@ -10,6 +10,9 @@
 # - KSQL server 
 # - Confluent Replicator (standalone binary)
 # - Confluent Control Center
+#
+# These are _delta_ configurations, not complete component configurations
+# Add them to the respective component's properties file
 ############################################
 
 
