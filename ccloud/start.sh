@@ -100,6 +100,7 @@ if is_ce; then
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.endpoint=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
 
