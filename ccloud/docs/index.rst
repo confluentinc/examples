@@ -292,7 +292,6 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current`/connect/replicator-to-ccloud.properties
         topic.whitelist=pageviews
         topic.rename.format=${topic}.replica
-        topic.config.sync=false
 
 2. View topics `pageviews` in the local cluster
 
