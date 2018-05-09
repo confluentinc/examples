@@ -358,6 +358,12 @@ Troubleshooting the demo
 
         $ ls `confluent current`/ksql-server
 
+4. To generate just the delta configuration parameters automatically derived from your Confluent Cloud cluster configuration, run:
+
+   .. sourcecode:: bash
+
+        $ ./ccloud-generate-cp-configs.sh
+
 
 ========
 Teardown
