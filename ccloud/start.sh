@@ -80,8 +80,6 @@ auto.offset.reset=earliest
 commit.interval.ms=0
 cache.max.bytes.buffering=0
 auto.offset.reset=earliest
-ksql.sink.replicas=3
-replication.factor=3
 ksql.schema.registry.url=http://localhost:$SR_LISTENER
 state.dir=$CONFLUENT_CURRENT/ksql-server/data-ccloud/kafka-streams
 EOF

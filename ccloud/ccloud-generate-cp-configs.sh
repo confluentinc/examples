@@ -81,6 +81,8 @@ echo "producer.retries=2147483647" >> $KSQL_SERVER_DELTA
 echo "producer.confluent.batch.expiry.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
 echo "producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
 echo "producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
+echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
+echo "replication.factor=3" >> $KSQL_SERVER_DELTA
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 C3_DELTA=$DEST/control-center-ccloud.delta
