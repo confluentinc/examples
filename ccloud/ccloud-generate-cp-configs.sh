@@ -77,12 +77,12 @@ KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_SERVER_DELTA
 echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_SERVER_DELTA
 echo "consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor" >> $KSQL_SERVER_DELTA
-echo "producer.retries=2147483647" >> $KSQL_SERVER_DELTA
-echo "producer.confluent.batch.expiry.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
-echo "producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
-echo "producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
+echo "ksql.streams.producer.retries=2147483647" >> $KSQL_SERVER_DELTA
+echo "ksql.streams.producer.confluent.batch.expiry.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
+echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
+echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
+echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
-echo "replication.factor=3" >> $KSQL_SERVER_DELTA
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 C3_DELTA=$DEST/control-center-ccloud.delta
