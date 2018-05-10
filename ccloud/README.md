@@ -10,7 +10,7 @@ This demo showcases:
 * Confluent Replicator
 * Confluent Control Center
 
-![image](docs/images/ccloud-demo-diagram.jpg)
+![image](docs/images/dwg_CCloud_DemoDiagram.jpg)
 
 # Prerequisites
 
