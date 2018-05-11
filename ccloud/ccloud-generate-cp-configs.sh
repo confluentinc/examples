@@ -89,8 +89,10 @@ C3_DELTA=$DEST/control-center-ccloud.delta
 while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
-    echo "$line" >> $C3_DELTA
-    if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' || ${line:0:9} == 'bootstrap' ]]; then
+    if [[ ${line:0:9} == 'bootstrap' ]]; then
+      echo "$line" >> $C3_DELTA
+    fi
+    if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
       echo "confluent.controlcenter.streams.$line" >> $C3_DELTA
     fi
   fi
