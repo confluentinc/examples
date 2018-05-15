@@ -100,6 +100,13 @@ Playbook
 |c3|
 ----
 
+1. View the Confluent Control Center configuration file.
+
+   .. sourcecode:: bash
+
+        # Control Center servers point to Confluent Cloud
+        $ cat `confluent current`/control-center/control-center-ccloud.properties
+
 1. **Monitoring –> Data Streams –> Message Delivery**: hover over
    any chart to see number of messages and average latency within a
    minute time interval.
@@ -330,6 +337,50 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
          :alt: image
 
 
+===============================
+Confluent Cloud Configurations
+===============================
+
+This demo uses Confluent CLI (for development and demos only!) and saves all modified configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory.
+
+1. View your Confluent Cloud configuration file
+
+   .. sourcecode:: bash
+
+        $ cat $HOME/.ccloud/config
+
+2. Generate the per-component delta configuration parameters, automatically derived from your Confluent Cloud cluster configuration:
+
+   .. sourcecode:: bash
+
+        $ ./ccloud-generate-cp-configs.sh
+
+3. View the full configuration file for the KSQL server that connects to your Confluent Cloud cluster (requires demo to be actively running):
+
+   .. sourcecode:: bash
+
+        $ cat `confluent current`/ksql-server/ksql-server-ccloud.properties
+
+4. View the full configuration file for Confluent Replicator that copies data from your local cluster to your Confluent Cloud cluster (requires demo to be actively running):
+
+   .. sourcecode:: bash
+
+        $ cat `confluent current`/connect/replicator-to-ccloud-consumer.properties
+        $ cat `confluent current`/connect/replicator-to-ccloud-producer.properties
+        $ cat `confluent current`/connect/replicator-to-ccloud.properties
+
+5. View the full configuration file for Confluent control Center that connects to your Confluent Cloud cluster (requires demo to be actively running):
+
+   .. sourcecode:: bash
+
+        $ cat `confluent current`/control-center/control-center-ccloud.properties
+
+6. View the full configuration file for Confluent Schema Registry that connects to your Confluent Cloud cluster (requires demo to be actively running):
+
+   .. sourcecode:: bash
+
+        $ cat `confluent current`/schema-registry/schema-registry-ccloud.properties
+
 
 ========================
 Troubleshooting the demo
@@ -337,32 +388,12 @@ Troubleshooting the demo
 
 1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working |ccloud| cluster and you have locally installed |ccloud| CLI.
 
-2. Because this demo uses Confluent CLI, all configuration files and log files are in the respective component subfolders in the current Confluent CLI temp directory. Browse the directory.
+
+2. To view log files, look in the current Confluent CLI temp director (requires demo to be actively running):
 
    .. sourcecode:: bash
 
         $ ls `confluent current`
-
-        connect
-        control-center
-        kafka
-        kafka-rest
-        ksql-server
-        schema-registry
-        zookeeper
-
-
-3. For example, to view the configuration and log files for KSQL server:
-
-   .. sourcecode:: bash
-
-        $ ls `confluent current`/ksql-server
-
-4. To generate just the delta configuration parameters automatically derived from your Confluent Cloud cluster configuration, run:
-
-   .. sourcecode:: bash
-
-        $ ./ccloud-generate-cp-configs.sh
 
 
 ========
