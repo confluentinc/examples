@@ -136,3 +136,30 @@ function check_mysql() {
 
   return 0
 }
+
+function prep_sqltable() {
+  TABLE="locations"
+  TABLE_LOCATIONS=/usr/local/lib/table.$TABLE
+  cp table.$TABLE $TABLE_LOCATIONS
+
+  # View contents of file
+  echo -e "\n======= Contents of $TABLE_LOCATIONS ======="
+  cat $TABLE_LOCATIONS
+
+  return 0
+}
+
+function show_topic() {
+  TOPIC=$1
+
+  # Run the Consumer to print the key as well as the value from the Topic
+  echo -e "\n======= Running kafka-console-consumer for topic $TOPIC ======="
+  kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true
+--max-messages 10
+
+  return 0
+}
