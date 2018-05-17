@@ -1,21 +1,32 @@
 ![image](../images/confluent-logo-300-2.png)
 
-- [Prerequisites](#prerequisites)
 - [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Description](#description)
 - [Quickstart](#quickstart)
 
+
+# Overview
+
+1. Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API `KStream`
+2. Show some basic usage of the stream processing API
 
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
 * [Confluent Platform 4.1](https://www.confluent.io/download/)
+* Maven command `mvn` to compile Java code
+* By default the `timeout` command is available on most Linux distributions but not Mac OS. This `timeout` command is used by the bash scripts to terminate consumer processes after a period of time. To install it on a Mac:
 
-# Overview
+```shell
+# Install coreutils
+brew install coreutils
 
-## Objectives
+# Add a "gnubin" directory to your PATH
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+```
 
-1. Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API `KStream`
-2. Show some basic usage of the stream processing API
+# Description
 
 ## Example 1: Kafka console producer -> Key:String and Value:String
 
@@ -63,32 +74,18 @@ All examples in this repo demonstrate the Kafka Streams API methods `count` and 
 
 # Quickstart
 
-## Prerequisites
-
-* [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
-* Maven command `mvn` to compile Java code
-* By default the `timeout` command is available on most Linux distributions but not Mac OS. This `timeout` command is used by the bash scripts to terminate consumer processes after a period of time. To install it on a Mac:
-
-```shell
-# Install coreutils
-brew install coreutils
-
-# Add a "gnubin" directory to your PATH
-PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-```
-
 # What Should I see?
 
 After you run `./start.sh`:
 
 * You should see each of the four examples run end-to-end
 * If you are running Confluent Enterprise, open your browser and navigate to the Control Center web interface Management -> Kafka Connect tab at http://localhost:9021/management/connect to see the two deployed connectors
+* Beyond that, the real value of this demo is to see the provided configurations and client code
 
 
 ## Original Dataset
 
-Dataset is `files/table.locations`
+[Dataset](../utils/table.locations)
 
 ```
 1|Raleigh|300
