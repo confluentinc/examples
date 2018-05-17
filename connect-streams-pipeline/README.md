@@ -44,7 +44,7 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 ### Notes
 
-This example uses a few SMTs including one to cast the key to an `int64`, along with a [custom LongConverter](src/main/java/io/confluent/examples/connectandstreams/utils/LongConverter.java).
+This example uses a few SMTs including one to cast the key to an `int64`. The key needs a `Long` Converter, and until [KAFKA-6913](https://issues.apache.org/jira/browse/KAFKA-6913) is resolved, it has a [custom Long Converter](src/main/java/io/confluent/examples/connectandstreams/utils/LongConverter.java).
 
 ## Example 3: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
