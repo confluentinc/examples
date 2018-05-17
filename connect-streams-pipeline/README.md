@@ -19,8 +19,8 @@
 
 ## Example 1: Kafka console producer -> Key:String and Value:String
 
-Uses command line `kafka-console-producer` to produce `String` keys and `String` values to a Kafka topic.
-Client application reads from the Kafka topic using `Serdes.String()` for both key and value.
+* Command line `kafka-console-producer` produces `String` keys and `String` values to a Kafka topic.
+* [Client application](src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for both key and value.
 
 ### Notes
 
@@ -28,8 +28,8 @@ Client application reads from the Kafka topic using `Serdes.String()` for both k
 
 ## Example 2: JDBC source connector with Single Message Transformations -> Key:String and Value:JSON
 
-Uses Kafka Connect JDBC source connector to produce JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
-Client application reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
+* Kafka Connect JDBC source connector produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
+* [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
 
 ### Notes
 
@@ -37,8 +37,8 @@ Client application reads from the Kafka topic using `Serdes.String()` for key an
 
 ## Example 3: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
-Uses Kafka Connect JDBC source connector to produce Avro values, and null `String` keys, to a Kafka topic.
-Client application reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
+* Kafka Connect JDBC source connector produces Avro values, and null `String` keys, to a Kafka topic.
+* [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java) reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
 ### Notes
 
@@ -46,8 +46,8 @@ This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a
 
 ## Example 4: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 
-Uses Java client to produce `Long` keys and `SpecificAvro` values to a Kafka topic.
-Client application reads from the Kafka topic using `Serdes.Long()` for key and `SpecificAvroSerde` for the value.
+* Java client produces `Long` keys and `SpecificAvro` values to a Kafka topic.
+* [Client application](src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.Long()` for key and `SpecificAvroSerde` for the value.
 
 ## Stream processing
 
