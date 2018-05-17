@@ -102,8 +102,10 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-console-consumer \
+kafka-avro-console-consumer \
 --bootstrap-server localhost:9092 \
+--property schema.registry=http://localhost:8081 \
+--key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
 --from-beginning \
 --topic $TOPIC \
 --property print.key=true \
