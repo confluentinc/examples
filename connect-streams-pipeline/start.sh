@@ -13,6 +13,7 @@ mvn -q compile
 (cd target/classes && jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar io/confluent/examples/connectandstreams/utils/LongConverter.class)
 
 get_ksql_ui
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
 
 # Create the SQL table
@@ -49,7 +50,7 @@ timeout 5s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstr
 
 PACKAGE="jdbcjson"
 TOPIC="$PACKAGE-locations"
-echo -e "\n========== $PACKAGE: Example 2: JDBC source connector with Single Message Transformations -> Key:String and Value:JSON"
+echo -e "\n========== $PACKAGE: Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON"
 sleep 2
 
 # Run source connector
@@ -62,6 +63,7 @@ kafka-console-consumer \
 --from-beginning \
 --topic $TOPIC \
 --property print.key=true \
+--key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
 --max-messages 10
 
 # Run the Java consumer application
@@ -115,3 +117,34 @@ kafka-avro-console-consumer \
 # Consumer
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest -Dexec.args="localhost:9092 http://localhost:8081"
 
+# --------------------------------------------------------------
+
+PACKAGE="jdbcavroksql"
+TOPIC="$PACKAGE-locations"
+echo -e "\n========== $PACKAGE: Example 5: JDBC source connector with Avro to KSQL -> Key:String(null) and Value:Avro"
+sleep 2
+
+# Run source connector
+confluent unload $PACKAGE &>/dev/null
+confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+
+# Run the Consumer to print the key as well as the value from the Topic
+kafka-avro-console-consumer \
+--property schema.registry=http://localhost:8081 \
+--bootstrap-server localhost:9092 \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true \
+--max-messages 10
+
+# Create KSQL queries
+ksql http://localhost:8088 <<EOF
+run script '$PACKAGE.commands';
+exit ;
+EOF
+
+# Read queries
+timeout 5s ksql http://localhost:8088 <<EOF
+SELECT * FROM JDBCAVROKSQLLOCATIONSWITHKEY LIMIT 10;
+exit ;
+EOF

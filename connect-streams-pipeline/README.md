@@ -60,6 +60,11 @@ This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a
 * [Java client](src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java) produces `Long` keys and `SpecificAvro` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.Long()` for key and `SpecificAvroSerde` for the value.
 
+## Example 5: JDBC source connector with Avro to KSQL -> Key:Long and Value:Avro
+
+* [Kafka Connect JDBC source connector](jdbcgenericavroksql-connector.properties) produces Avro values, and null keys, to a Kafka topic.
+* [KSQL](jdbcgenericavroksql.commands) reads from the Kafka topic and then uses `PARTITION BY` to create a new stream of messages with `BIGINT` keys.
+
 ## Stream processing
 
 All examples in this repo demonstrate the Kafka Streams API methods `count` and `reduce`.
