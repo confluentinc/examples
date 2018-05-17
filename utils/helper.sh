@@ -136,3 +136,33 @@ function check_mysql() {
 
   return 0
 }
+
+function prep_sqltable() {
+  TABLE="locations"
+  TABLE_LOCATIONS=/usr/local/lib/table.$TABLE
+  cp ../utils/table.$TABLE $TABLE_LOCATIONS
+
+  DB=/usr/local/lib/retail.db
+  echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
+  echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, name VARCHAR(255), sale INTEGER);" | sqlite3 $DB
+  echo ".import $TABLE_LOCATIONS $TABLE" | sqlite3 $DB
+  #echo "pragma table_info($TABLE);" | sqlite3 $DB
+  #echo "select * from $TABLE;" | sqlite3 $DB
+
+  # View contents of file
+  #echo -e "\n======= Contents of $TABLE_LOCATIONS ======="
+  #cat $TABLE_LOCATIONS
+
+  return 0
+}
+
+function print_topic() {
+  TOPIC=$1
+
+  kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true \
+--max-messages 10
+}

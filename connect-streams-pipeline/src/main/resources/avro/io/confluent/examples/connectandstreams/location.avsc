@@ -1,0 +1,9 @@
+{"namespace": "io.confluent.examples.connectandstreams.avro",
+ "type": "record",
+ "name": "Location",
+ "fields": [
+     {"name": "id", "type": "long", "doc" : "id"},
+     {"name": "name", "type": "string", "doc" : "name"},
+     {"name": "sale", "type": "long", "doc" : "sale"}
+ ]
+}
