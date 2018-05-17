@@ -155,14 +155,3 @@ function prep_sqltable() {
 
   return 0
 }
-
-function print_topic() {
-  TOPIC=$1
-
-  kafka-console-consumer \
---bootstrap-server localhost:9092 \
---from-beginning \
---topic $TOPIC \
---property print.key=true \
---max-messages 10
-}
