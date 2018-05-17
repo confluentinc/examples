@@ -28,7 +28,7 @@
 
 ## Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 
-* Kafka Connect JDBC source connector produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
+* [Kafka Connect JDBC source connector](jdbcjson-connector.properties) produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
 
 ### Notes
@@ -37,7 +37,7 @@ This example uses a few SMTs including one to cast the key to an `int64`, along 
 
 ## Example 3: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
-* Kafka Connect JDBC source connector produces Avro values, and null `String` keys, to a Kafka topic.
+* [Kafka Connect JDBC source connector](jdbcgenericavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java) reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
 ### Notes
@@ -46,7 +46,7 @@ This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a
 
 ## Example 4: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 
-* Java client produces `Long` keys and `SpecificAvro` values to a Kafka topic.
+* [Java client](src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java) produces `Long` keys and `SpecificAvro` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.Long()` for key and `SpecificAvroSerde` for the value.
 
 ## Stream processing

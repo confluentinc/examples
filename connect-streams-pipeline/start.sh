@@ -35,11 +35,16 @@ kafka-console-producer \
 --property parse.key=true \
 --property key.separator='|' &>/dev/null
 
+# Run the Consumer to print the key as well as the value from the Topic
+kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true \
+--max-messages 10
+
 # Run the Java consumer application
 timeout 5s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
-
-# Run the Consumer to print the key as well as the value from the Topic
-print_topic $TOPIC
 
 # --------------------------------------------------------------
 
@@ -52,11 +57,16 @@ sleep 2
 confluent unload $PACKAGE &>/dev/null
 confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
 
+# Run the Consumer to print the key as well as the value from the Topic
+kafka-console-consumer \
+--bootstrap-server localhost:9092 \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true \
+--max-messages 10
+
 # Run the Java consumer application
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
-
-# Run the Consumer to print the key as well as the value from the Topic
-print_topic $TOPIC
 
 # --------------------------------------------------------------
 
@@ -69,11 +79,17 @@ sleep 2
 confluent unload $PACKAGE &>/dev/null
 confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
 
+# Run the Consumer to print the key as well as the value from the Topic
+kafka-avro-console-consumer \
+--property schema.registry=http://localhost:8081 \
+--bootstrap-server localhost:9092 \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true \
+--max-messages 10
+
 # Run the Java consumer application
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
-
-# Run the Consumer to print the key as well as the value from the Topic
-print_topic $TOPIC
 
 # --------------------------------------------------------------
 
@@ -85,10 +101,18 @@ sleep 2
 # Producer
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.Driver -Dexec.args="localhost:9092 http://localhost:8081 /usr/local/lib/table.locations"
 
-# Consumer
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest -Dexec.args="localhost:9092 http://localhost:8081"
-
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
 # Run the Consumer to print the key as well as the value from the Topic
-print_topic $TOPIC
+kafka-avro-console-consumer \
+--bootstrap-server localhost:9092 \
+--property schema.registry=http://localhost:8081 \
+--key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
+--from-beginning \
+--topic $TOPIC \
+--property print.key=true \
+--max-messages 10
+
+# Consumer
+timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest -Dexec.args="localhost:9092 http://localhost:8081"
+
