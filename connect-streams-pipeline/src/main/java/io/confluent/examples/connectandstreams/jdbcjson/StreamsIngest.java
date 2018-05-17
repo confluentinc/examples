@@ -60,10 +60,10 @@ public class StreamsIngest {
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         final Serde<LocationJSON> locationSerde = Serdes.serdeFrom(new JsonSerializer<LocationJSON>(), new JsonDeserializer<LocationJSON>(LocationJSON.class));
-        final KStream<String, LocationJSON> locationsJSON = builder.stream(Serdes.String(), locationSerde, INPUT_TOPIC);
+        final KStream<Long, LocationJSON> locationsJSON = builder.stream(Serdes.Long(), locationSerde, INPUT_TOPIC);
         locationsJSON.print();
 
-        KStream<Long,Long> sales = locationsJSON.map((k, v) -> new KeyValue<Long, Long>(Long.parseLong(k), (Long)v.getSale()));
+        KStream<Long,Long> sales = locationsJSON.map((k, v) -> new KeyValue<Long, Long>(k, (Long)v.getSale()));
 
         // Count occurrences of each key
         KStream<Long, Long> countKeys = sales.groupByKey(Serdes.Long(), Serdes.Long())

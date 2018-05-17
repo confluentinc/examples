@@ -8,15 +8,17 @@ check_running_cp 4.1 || exit
 
 ./stop.sh
 
+# Compile java client code and copy custom LongConverter jar
+mvn -q compile
+(cd target/classes && jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar io/confluent/examples/connectandstreams/utils/LongConverter.class)
+jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar ./target/classes/io/confluent/examples/connectandstreams/utils/LongConverter.class 
+
 get_ksql_ui
 confluent start
 
 # Create the SQL table
 TABLE_LOCATIONS=/usr/local/lib/table.locations
 prep_sqltable
-
-# Compile java
-mvn -q compile
 
 # --------------------------------------------------------------
 
