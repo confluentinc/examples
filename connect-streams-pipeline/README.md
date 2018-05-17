@@ -26,14 +26,14 @@
 
 [KAFKA-2526](https://issues.apache.org/jira/browse/KAFKA-2526): one cannot use the `--key-serializer` argument in the `kafka-console-producer` to serialize the key as a `Long`. As a result, in this example the key is serialized as a `String`. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify `--line-reader` argument in the `kafka-console-producer`.
 
-## Example 2: JDBC source connector with Single Message Transformations -> Key:String and Value:JSON
+## Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 
 * Kafka Connect JDBC source connector produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
 
 ### Notes
 
-[KAFKA-4714](https://github.com/apache/kafka/pull/2458): with this enhancement, the simple message transform will be able to cast the type of the key as `Long`. Until this is implemented, in this example the key is written as a `String`.
+This example uses a few SMTs including one to cast the key to an `int64`, along with a [custom LongConverter](src/main/java/io/confluent/examples/connectandstreams/utils/LongConverter.java).
 
 ## Example 3: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
