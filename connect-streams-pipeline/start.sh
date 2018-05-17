@@ -11,7 +11,6 @@ check_running_cp 4.1 || exit
 # Compile java client code and copy custom LongConverter jar
 mvn -q compile
 (cd target/classes && jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar io/confluent/examples/connectandstreams/utils/LongConverter.class)
-jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar ./target/classes/io/confluent/examples/connectandstreams/utils/LongConverter.class 
 
 get_ksql_ui
 confluent start
