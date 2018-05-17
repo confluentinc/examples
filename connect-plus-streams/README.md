@@ -13,7 +13,8 @@
 # Overview
 
 ## Objectives
-1. Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded into the Kafka Streams API `KStream`
+
+1. Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API `KStream`
 2. Show some basic usage of the stream processing API
 
 ## Example 1: Kafka console producer -> Key:`String` and Value:`String`
@@ -64,13 +65,10 @@ All examples in this repo demonstrate the Kafka Streams API methods `count` and 
 
 ## Prerequisites
 
-1. Use the Confluent CLI to start a Kafka cluster on your localhost. It will spin up services including one Kafka broker, ZooKeeper, Kafka Connect, Confluent Schema Registry.
-
-```shell
-confluent start
-```
-
-2. By default the `timeout` command is available on most Linux distributions but not Mac OS. This `timeout` command is used by the bash scripts to terminate consumer processes after a period of time. To install it on a Mac:
+* [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
+* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* Maven command `mvn` to compile Java code
+* By default the `timeout` command is available on most Linux distributions but not Mac OS. This `timeout` command is used by the bash scripts to terminate consumer processes after a period of time. To install it on a Mac:
 
 ```shell
 # Install coreutils
@@ -80,50 +78,13 @@ brew install coreutils
 PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 ```
 
-3. **NOTE:** you may need to edit the file paths referenced in the bash scripts in the `scripts/` directory, particularly if you installed Confluent Platform via ZIP or TAR or are on Mac.
+# What Should I see?
 
-## Build the apps
+After you run `./start.sh`:
 
-Compile from the pom.xml file. This also generate sources to create the `avro.model.Location` Java code
+* You should see each of the four examples run end-to-end
+* If you are running Confluent Enterprise, open your browser and navigate to the Control Center web interface Management -> Kafka Connect tab at http://localhost:9021/management/connect to see the two deployed connectors
 
-```shell
-mvn clean package
-```
-
-## Run the Examples
-
-There are multiple examples of data flow as described above. Each example has a corresponding bash script in the `scripts/` directory, and the Java package name is built into the bash script name. The bash script does several things:
-1. Copies `files/table.locations` to `/usr/local/lib/table.locations`
-2. If the example uses the JDBC connector, creates a table called `locations` in a local sqlite database.
-3. If the example uses the JDBC connector, starts Kafka Connect in standalone mode on the local machine
-3. Produces data to a Kafka topic (method differs example to example)
-4. Runs `StreamsIngest` class unique to each example to read data from the Kafka topic and do some simple streams processing
-
-```shell
-# Example 1: Kafka console producer -> `String`
-./scripts/run-consoleproducer.sh
-
-# Example 2: JDBC source connector with Single Message Transformations -> JSON
-./scripts/run-jdbcjson.sh
-
-# Example 3: JDBC source connector with `GenericAvro` -> `GenericRecord`
-./scripts/run-jdbcgenericavro.sh
-
-# Example 4: Java client producer with `SpecificAvro` -> custom class
-./scripts/run-javaproducer.sh
-```
-
-## Overrides
-
-Assumptions:
-* Broker is `localhost:9092`
-* Confluent Schema Registry is `http://localhost:8081`
-* table.locations is copied to `/usr/local/lib/table.locations`
-* sqlite3 database is created at `/usr/local/lib/sqlite3`
-
-To override any of the above values, you will need to make appropriate changes in the following places:
-* `scripts/`: bash scripts (file path, sqlite3 database path, ZooKeeper address, Java arguments)
-* `files/`: properties files for Kafka Connect
 
 ## Original Dataset
 
