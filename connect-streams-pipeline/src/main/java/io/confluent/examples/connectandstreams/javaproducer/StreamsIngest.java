@@ -61,7 +61,7 @@ public class StreamsIngest {
         final KStreamBuilder builder = new KStreamBuilder();
 
         Properties streamsConfiguration = new Properties();
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "javaproducer-1");
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "javaproducer");
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");

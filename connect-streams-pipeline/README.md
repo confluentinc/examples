@@ -92,7 +92,7 @@ All examples in this repo demonstrate the Kafka Streams API methods `count` and 
 
 After you run `./start.sh`:
 
-* You should see each of the four examples run end-to-end
+* You should see each of the examples run end-to-end
 * If you are running Confluent Enterprise, open your browser and navigate to the Control Center web interface Management -> Kafka Connect tab at http://localhost:9021/management/connect to see the two deployed connectors
 * Beyond that, the real value of this demo is to see the provided configurations and client code
 
