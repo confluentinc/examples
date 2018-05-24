@@ -171,3 +171,13 @@ timeout 5s ksql http://localhost:8088 <<EOF
 SELECT * FROM JDBCAVROKSQLLOCATIONSWITHKEY LIMIT 10;
 exit ;
 EOF
+
+timeout 5s ksql http://localhost:8088 <<EOF
+SELECT * FROM COUNTLOCATIONS LIMIT 5;
+exit ;
+EOF
+
+timeout 5s ksql http://localhost:8088 <<EOF
+SELECT * FROM SUMLOCATIONS LIMIT 5;
+exit ;
+EOF
