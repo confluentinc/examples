@@ -113,3 +113,26 @@ After you run `./start.sh`:
 3|Moscow|200
 1|Raleigh|700
 ```
+
+## Expected Results
+
+### Count
+
+```
+1|Raleigh|3
+2|Dusseldorf|2
+3|Moscow|3
+4|Sydney|1
+5|Chennai|1
+```
+
+### Sum
+
+```
+1|Raleigh|1600
+2|Dusseldorf|500
+3|Moscow|1100
+4|Sydney|200
+5|Chennai|400
+```
+
