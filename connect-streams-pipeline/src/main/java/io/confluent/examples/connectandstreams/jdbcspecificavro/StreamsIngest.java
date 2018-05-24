@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.confluent.examples.connectandstreams.jdbcgenericavro;
+package io.confluent.examples.connectandstreams.jdbcspecificavro;
 
 import java.util.Properties;
 
@@ -28,18 +28,22 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.KeyValue;
 
-import org.apache.avro.generic.GenericRecord;
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
-import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
+import org.apache.kafka.common.serialization.Serde;
 import io.confluent.examples.connectandstreams.avro.Location;
+
+import java.util.Collections;
+
 
 public class StreamsIngest {
 
-    static final String INPUT_TOPIC = "jdbcgenericavro-locations";
+    static final String INPUT_TOPIC = "jdbcspecificavro-locations";
     static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
     static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
-    static final String KEYS_STORE = "jdbcgenericavro-count-keys";
-    static final String SALES_STORE = "jdbcgenericavro-aggregate-sales";
+    static final String KEYS_STORE = "jdbcspecificavro-count-keys";
+    static final String SALES_STORE = "jdbcspecificavro-aggregate-sales";
 
     public static void main(String[] args) throws Exception {
 
@@ -59,16 +63,20 @@ public class StreamsIngest {
         final KStreamBuilder builder = new KStreamBuilder();
 
         Properties streamsConfiguration = new Properties();
-        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "jdbcgenericavro");
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "jdbcspecificavro");
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        streamsConfiguration.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde.class);
-        streamsConfiguration.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL);
 
-        KStream<String, GenericRecord> locationsGeneric = builder.stream(INPUT_TOPIC);
-        locationsGeneric.print();
-        KStream<Long, Location> locations = locationsGeneric.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), new Location ((Long) v.get("id"), (String) v.get("name").toString(), (Long) v.get("sale")) ));
+        final Serde<Location> locationSerde = new SpecificAvroSerde<>();
+        final boolean isKeySerde = false;
+        locationSerde.configure(
+            Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL),
+            isKeySerde);
+
+        KStream<String, Location> locationsNoKey = builder.stream(Serdes.String(), locationSerde, INPUT_TOPIC);
+        locationsNoKey.print();
+        KStream<Long, Location> locations = locationsNoKey.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), v ));
         locations.print();
 
         KStream<Long,Long> sales = locations.map((k, v) -> new KeyValue<Long, Long>(k, v.getSale()));

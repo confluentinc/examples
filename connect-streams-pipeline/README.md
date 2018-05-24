@@ -46,14 +46,23 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 This example uses a few SMTs including one to cast the key to an `int64`. The key needs a `Long` Converter, and until [KAFKA-6913](https://issues.apache.org/jira/browse/KAFKA-6913) is resolved, it has a [custom Long Converter](src/main/java/io/confluent/examples/connectandstreams/utils/LongConverter.java).
 
-## Example 3: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
+## Example 3a: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
+
+* [Kafka Connect JDBC source connector](jdbcspecificavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
+* [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java) reads from the Kafka topic using `SpecificAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
+
+### Notes
+
+This example uses a simple message transformation `SetSchemaMetadata` with code that has a fix for [KAFKA-5164](https://issues.apache.org/jira/browse/KAFKA-5164), allowing the connector to set the namespace in the schema. If you do not have the fix for [KAFKA-5164](https://issues.apache.org/jira/browse/KAFKA-5164), see Example 3b that uses `GenericAvro` instead of `SpecificAvro`.
+
+## Example 3b: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
 * [Kafka Connect JDBC source connector](jdbcgenericavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java) reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
 ### Notes
 
-This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a specific reason. JDBC source connector currently doesn't set a namespace when it generates a schema name for the data it is producing to Kafka. For `SpecificAvroSerde`, the lack of namespace is a problem when trying to match reader and writer schema because Avro uses the writer schema name and namespace to create a classname and tries to load this class, but without a namespace, the class will not be found. A workaround will be available when [KAFKA-5164](https://issues.apache.org/jira/browse/KAFKA-5164) is fixed, using simple message transformation `SetSchemaMetadata` to add the namespace in the connector.
+This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a specific reason. JDBC source connector currently doesn't set a namespace when it generates a schema name for the data it is producing to Kafka. For `SpecificAvroSerde`, the lack of namespace is a problem when trying to match reader and writer schema because Avro uses the writer schema name and namespace to create a classname and tries to load this class, but without a namespace, the class will not be found.
 
 ## Example 4: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 
