@@ -70,7 +70,8 @@ echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.Monitoring
 REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
 cp $INTERCEPTORS_CCLOUD_CONFIG $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
-
+echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
+echo "retry.backoff.ms=500" >> $REPLICATOR_PRODUCER_DELTA
 
 # KSQL Server runs locally and connects to Confluent Cloud
 KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
