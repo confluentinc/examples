@@ -31,7 +31,7 @@ function check_ccloud() {
 function check_running_cp() {
   expected_version=$1
 
-  actual_version=$( confluent version | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
+  actual_version=$( confluent version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
   if [[ $expected_version != $actual_version ]]; then
     echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version. Please run the correct version of Confluent Platform to proceed.\n"
     exit 1
@@ -41,7 +41,7 @@ function check_running_cp() {
 }
 
 function is_ce() {
-  type=$( confluent version | awk -F: '{print $1;}' )
+  type=$( confluent version | tail -1 | awk -F: '{print $1;}' )
   if [[ "$type" == "Confluent Enterprise" ]]; then
     return 0
   elif [[ "$type" == "Confluent Open Source" ]]; then
