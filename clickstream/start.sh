@@ -10,7 +10,6 @@ check_running_grafana 5.0.3 || exit 1
 
 ./stop.sh
 
-get_ksql_ui
 cp -nR ksql/ksql-clickstream-demo/demo/connect-config/null-filter-4.0.0-SNAPSHOT.jar $CONFLUENT_HOME/share/java/kafka-connect-elasticsearch/.
 confluent start
 
