@@ -15,7 +15,7 @@ fi
 ./stop.sh
 
 confluent start
-CONFLUENT_CURRENT=`confluent current`
+CONFLUENT_CURRENT=`confluent current | tail -1`
 
 DELTA_CONFIGS_DIR="delta_configs"
 ./ccloud-generate-cp-configs.sh $DELTA_CONFIGS_DIR
