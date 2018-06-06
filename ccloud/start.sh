@@ -14,7 +14,6 @@ fi
 
 ./stop.sh
 
-get_ksql_ui
 confluent start
 CONFLUENT_CURRENT=`confluent current`
 

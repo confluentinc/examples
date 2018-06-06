@@ -11,7 +11,6 @@ check_running_kibana || exit 1
 
 ./stop.sh
 
-get_ksql_ui
 # Add Debezium connector
 mkdir -p $CONFLUENT_HOME/share/java/debezium-connector-mysql
 cp -nR ./debezium-connector-mysql/* $CONFLUENT_HOME/share/java/debezium-connector-mysql/.

@@ -8,7 +8,6 @@ check_running_cp 5.0 || exit
 
 ./stop.sh
 
-get_ksql_ui
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
 

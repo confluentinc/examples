@@ -52,12 +52,6 @@ function is_ce() {
   fi
 }
 
-function get_ksql_ui() {
-  [[ -d $CONFLUENT_HOME/ui ]] || mkdir -p "$CONFLUENT_HOME/ui"
-  [[ -f "$CONFLUENT_HOME/ui/ksql-experimental-ui-0.1.war" ]] || wget --directory-prefix="$CONFLUENT_HOME/ui" https://s3.amazonaws.com/ksql-experimental-ui/ksql-experimental-ui-0.1.war
-  return 0
-}
-
 function check_running_elasticsearch() {
   expected_version=$1
 

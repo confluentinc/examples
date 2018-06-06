@@ -8,7 +8,6 @@ check_running_cp 5.0 || exit
 
 ./stop.sh
 
-get_ksql_ui
 confluent start
 
 if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
