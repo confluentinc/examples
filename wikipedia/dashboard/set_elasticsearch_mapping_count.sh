@@ -31,5 +31,6 @@ DATA=$( cat << EOF
 
 EOF);
 
+curl -XDELETE http://localhost:9200/en_wikipedia_gt_1 &> /dev/null
 curl -XPUT -H "${HEADER}" --data "${DATA}" 'http://localhost:9200/en_wikipedia_gt_1?pretty'
 echo

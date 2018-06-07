@@ -46,5 +46,6 @@ DATA=$( cat << EOF
 
 EOF);
 
+curl -XDELETE http://localhost:9200/wikipediabot &> /dev/null
 curl -XPUT -H "${HEADER}" --data "${DATA}" 'http://localhost:9200/wikipediabot?pretty'
 echo

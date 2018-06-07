@@ -62,7 +62,7 @@ function check_running_elasticsearch() {
   expected_version=$1
 
   if [[ ! $(jps | grep Elasticsearch) ]]; then
-    echo -e "\nThis script requires Elasticsearch version $expected_version to be running. Please start Elasticsearch and run again, or comment out this check in the start script.\n"
+    echo -e "\nThis script requires Elasticsearch version $expected_version to be running. Please start Elasticsearch and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
     exit 1
   else
     curl --silent --output /dev/null 'http://localhost:9200/?pretty'
@@ -85,8 +85,8 @@ function check_running_elasticsearch() {
 function check_running_grafana() {
   expected_version=$1
 
-  if [[ $(ps -ef | grep grafana-server | grep -v grep ) =~ "not found" ]]; then
-    echo -e "\nThis script requires Grafana to be running. Please start Grafana and run again.\n"
+  if [[ $(ps -ef | grep grafana-server | grep -v grep ) == "" ]]; then
+    echo -e "\nThis script requires Grafana to be running. Please start Grafana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
     exit 1
   else
     curl --silent --output /dev/null 'http://localhost:3000/?pretty'
@@ -107,8 +107,8 @@ function check_running_grafana() {
 }
 
 function check_running_kibana() {
-  if [[ $(ps -ef | grep kibana | grep -v grep ) =~ "not found" ]]; then
-    echo -e "\nThis script requires Kibana to be running. Please start Kibana and run again, or comment out this check in the start script.\n"
+  if [[ $(ps -ef | grep kibana | grep -v grep ) == "" ]]; then
+    echo -e "\nThis script requires Kibana to be running. Please start Kibana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
     exit 1
   else
     curl --silent --output /dev/null 'http://localhost:5601/?pretty'
