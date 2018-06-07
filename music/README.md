@@ -17,4 +17,4 @@ use KSQL to inspect the data.
 
 After you run `./start.sh`:
 
-* Run `ksql http://localhost:8088` to view and create queries, or open your browser and navigate to the KSQL UI at http://localhost:8088
+* If you are running Confluent Enterprise, use Control Center to view and create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
