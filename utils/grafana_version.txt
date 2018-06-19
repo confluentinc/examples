@@ -1,0 +1,8 @@
+# Notes on how to brew install Grafana version 5.0.3 on macOS
+
+cd "$(brew --repo homebrew/core)"
+git log Formula/grafana.rb
+git checkout -b grafana-5.0.3 96a0f6c408c1e4e8e3feaaba956e033c8efb9d14
+brew unlink grafana
+HOMEBREW_NO_AUTO_UPDATE=1 brew install grafana
+grafana-server -v
