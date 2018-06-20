@@ -105,7 +105,7 @@ Playbook
    .. sourcecode:: bash
 
         # Control Center servers point to Confluent Cloud
-        $ cat `confluent current`/control-center/control-center-ccloud.properties
+        $ cat `confluent current | tail -1`/control-center/control-center-ccloud.properties
 
 1. **Monitoring –> Data Streams –> Message Delivery**: hover over
    any chart to see number of messages and average latency within a
@@ -150,7 +150,7 @@ KSQL
    .. sourcecode:: bash
 
         # KSQL bootstrap servers point to Confluent Cloud
-        $ cat `confluent current`/ksql-server/ksql-server-ccloud.properties
+        $ cat `confluent current | tail -1`/ksql-server/ksql-server-ccloud.properties
 
 2. The KSQL server that is connected to |ccloud| is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL.
 
@@ -278,11 +278,11 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
    .. sourcecode:: bash
 
         # Replicator's consumer points to the local cluster
-        $ cat `confluent current`/connect/replicator-to-ccloud-consumer.properties
+        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
         bootstrap.servers=localhost:9092
 
         # Replicator's producer points to the |ccloud| cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
-        $ cat `confluent current`/connect/replicator-to-ccloud-producer.properties
+        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
         ssl.endpoint.identification.algorithm=https
         confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
         sasl.mechanism=PLAIN
@@ -296,7 +296,7 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
         confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
 
         # General Replicator properties define the replication policy
-        $ cat `confluent current`/connect/replicator-to-ccloud.properties
+        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
         topic.whitelist=pageviews
         topic.rename.format=${topic}.replica
 
@@ -359,27 +359,27 @@ This demo uses Confluent CLI (for development and demos only!) and saves all mod
 
    .. sourcecode:: bash
 
-        $ cat `confluent current`/ksql-server/ksql-server-ccloud.properties
+        $ cat `confluent current | tail -1`/ksql-server/ksql-server-ccloud.properties
 
 4. View the full configuration file for Confluent Replicator that copies data from your local cluster to your Confluent Cloud cluster (requires demo to be actively running):
 
    .. sourcecode:: bash
 
-        $ cat `confluent current`/connect/replicator-to-ccloud-consumer.properties
-        $ cat `confluent current`/connect/replicator-to-ccloud-producer.properties
-        $ cat `confluent current`/connect/replicator-to-ccloud.properties
+        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
+        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
+        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
 
 5. View the full configuration file for Confluent control Center that connects to your Confluent Cloud cluster (requires demo to be actively running):
 
    .. sourcecode:: bash
 
-        $ cat `confluent current`/control-center/control-center-ccloud.properties
+        $ cat `confluent current | tail -1`/control-center/control-center-ccloud.properties
 
 6. View the full configuration file for Confluent Schema Registry that connects to your Confluent Cloud cluster (requires demo to be actively running):
 
    .. sourcecode:: bash
 
-        $ cat `confluent current`/schema-registry/schema-registry-ccloud.properties
+        $ cat `confluent current | tail -1`/schema-registry/schema-registry-ccloud.properties
 
 
 ========================
@@ -393,7 +393,7 @@ Troubleshooting the demo
 
    .. sourcecode:: bash
 
-        $ ls `confluent current`
+        $ ls `confluent current | tail -1`
 
 
 ========
