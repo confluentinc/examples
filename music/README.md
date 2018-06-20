@@ -10,7 +10,7 @@ use KSQL to inspect the data.
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 * Java 1.8 to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
 
 # What Should I see?

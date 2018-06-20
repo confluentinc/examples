@@ -7,7 +7,7 @@ The Clickstream demo is the automated version of the [KSQL Clickstream demo](htt
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 * Elasticsearch 5.6.5 to export data from Kafka
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
 * Grafana 5.0.3 to visualize data

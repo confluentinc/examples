@@ -10,7 +10,7 @@ The Ratings demo showcases Kafka stream processing using KSQL. Check out the [st
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 
 # What Should I see?
 

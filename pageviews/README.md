@@ -2,12 +2,12 @@
 
 # Overview
 
-The Pageviews demo is the automated version of the [Confluent Platform 4.1 Quickstart](https://docs.confluent.io/current/quickstart.html)
+The Pageviews demo is the automated version of the [Confluent Platform 5.0 Quickstart](https://docs.confluent.io/current/quickstart.html)
 
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 
 # What Should I see?
 

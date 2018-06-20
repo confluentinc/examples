@@ -22,7 +22,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 
 # Prerequisites
 
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 * Env var `CONFLUENT_HOME=/path/to/confluentplatform`
 * Env var `PATH` includes `$CONFLUENT_HOME/bin`
 * Internet connectivity to download the KSQL UI
