@@ -41,7 +41,7 @@ function check_running_cp() {
 }
 
 function is_ce() {
-  type=$( confluent version | tail -1 | grep Confluent | awk -F: '{print $1;}' )
+  type=$( confluent version | tail -1 | awk -F: '{print $1;}' )
   if [[ "$type" == "Confluent Enterprise" ]]; then
     return 0
   elif [[ "$type" == "Confluent Open Source" ]]; then
