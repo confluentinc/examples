@@ -5,7 +5,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.confluent</groupId>
   <artifactId>connect-streams-examples</artifactId>
-  <version>4.1.0</version>
+  <version>4.1.1</version>
   <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -15,7 +15,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </repositories>
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
-    <confluent.version>4.1.0</confluent.version>
+    <confluent.version>4.1.1</confluent.version>
     <kafka.version>1.1.0</kafka.version>
     <avro.version>1.8.2</avro.version>
     <!-- Maven properties for compilation -->
