@@ -13,6 +13,7 @@
 # - Confluent Control Center
 # - Java
 # - .NET
+# - Go
 #
 # These are _delta_ configurations, not complete component configurations
 # Add them to the respective component's properties file
@@ -170,6 +171,8 @@ cat <<EOF >> $DOTNET_CONFIG
 var producerConfig = new Dictionary<string, object>
 {
     { "bootstrap.servers", "$BOOTSTRAP_SERVERS" },
+    { "broker.version.fallback", "0.10.0.0" },
+    { "api.version.fallback.ms", 0 },
     { "sasl.mechanisms", "PLAIN" },
     { "security.protocol", "SASL_SSL" },
     { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
@@ -179,9 +182,12 @@ var producerConfig = new Dictionary<string, object>
     { “plugin.library.paths”, “monitoring-interceptor”},
     // .....
 };
+
 var consumerConfig = new Dictionary<string, object>
 {
     { "bootstrap.servers", "$BOOTSTRAP_SERVERS" },
+    { "broker.version.fallback", "0.10.0.0" },
+    { "api.version.fallback.ms", 0 },
     { "sasl.mechanisms", "PLAIN" },
     { "security.protocol", "SASL_SSL" },
     { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
@@ -191,4 +197,35 @@ var consumerConfig = new Dictionary<string, object>
     { “plugin.library.paths”, “monitoring-interceptor”},
     // .....
 };
+EOF
+
+# Go
+GO_CONFIG=$DEST/go.delta
+echo "$GO_CONFIG"
+
+cat <<EOF >> $GO_CONFIG
+producer, err := kafka.NewProducer(&kafka.ConfigMap{
+	         "bootstrap.servers": "$BOOTSTRAP_SERVERS",
+	         "broker.version.fallback": "0.10.0.0",
+	         "api.version.fallback.ms": 0,
+	         "sasl.mechanisms": "PLAIN",
+	         "security.protocol": "SASL_SSL",
+	         "sasl.username": "$CLOUD_KEY",
+	         "sasl.password": "$CLOUD_SECRET",
+                 "plugin.library.paths": "monitoring-interceptor",
+                 // ....
+                 })
+
+consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
+		 "bootstrap.servers": "$BOOTSTRAP_SERVERS",
+		 "broker.version.fallback": "0.10.0.0",
+		 "api.version.fallback.ms": 0,
+		 "sasl.mechanisms": "PLAIN",
+		 "security.protocol": "SASL_SSL",
+		 "sasl.username": "$CLOUD_KEY",
+		 "sasl.password": "$CLOUD_SECRET",
+		 "session.timeout.ms": 6000,
+                 "plugin.library.paths": "monitoring-interceptor",
+                 // ....
+                 })
 EOF
