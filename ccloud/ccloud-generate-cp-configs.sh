@@ -12,6 +12,7 @@
 # - Confluent Replicator (standalone binary)
 # - Confluent Control Center
 # - Java
+# - Python
 # - .NET
 # - Go
 #
@@ -162,12 +163,45 @@ props.put(StreamsConfig.CONSUMER_PREFIX + ConsumerConfig.INTERCEPTOR_CLASSES_CON
 // ....
 EOF
 
+# Python
+PYTHON_CONFIG=$DEST/python.delta
+echo "$PYTHON_CONFIG"
+
+cat <<EOF >> $PYTHON_CONFIG
+from confluent_kafka import Producer, Consumer, KafkaError
+
+producer = Producer({
+           'bootstrap.servers': '$BOOTSTRAP_SERVERS',
+           'broker.version.fallback': '0.10.0.0',
+           'api.version.fallback.ms': 0,
+           'sasl.mechanisms': 'PLAIN',
+           'security.protocol': 'SASL_SSL',
+           'sasl.username': '$CLOUD_KEY',
+           'sasl.password': '$CLOUD_SECRET',
+           'plugin.library.paths': 'monitoring-interceptor',
+           // ....
+})
+
+consumer = Consumer({
+           'bootstrap.servers': '$BOOTSTRAP_SERVERS',
+           'broker.version.fallback': '0.10.0.0',
+           'api.version.fallback.ms': 0,
+           'sasl.mechanisms': 'PLAIN',
+           'security.protocol': 'SASL_SSL',
+           'sasl.username': '$CLOUD_KEY',
+           'sasl.password': '$CLOUD_SECRET',
+           'plugin.library.paths': 'monitoring-interceptor',
+           // ....
+})
+EOF
 
 # .NET 
 DOTNET_CONFIG=$DEST/dotnet.delta
 echo "$DOTNET_CONFIG"
 
 cat <<EOF >> $DOTNET_CONFIG
+using Confluent.Kafka;
+
 var producerConfig = new Dictionary<string, object>
 {
     { "bootstrap.servers", "$BOOTSTRAP_SERVERS" },
@@ -204,6 +238,10 @@ GO_CONFIG=$DEST/go.delta
 echo "$GO_CONFIG"
 
 cat <<EOF >> $GO_CONFIG
+import (
+	"github.com/confluentinc/confluent-kafka-go/kafka"
+)
+
 producer, err := kafka.NewProducer(&kafka.ConfigMap{
 	         "bootstrap.servers": "$BOOTSTRAP_SERVERS",
 	         "broker.version.fallback": "0.10.0.0",
