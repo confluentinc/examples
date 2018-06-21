@@ -24,6 +24,7 @@ BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CCLOUD_CONFIG | awk -F'=' '{print
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CCLOUD_CONFIG | cut -d'=' -f2- )
 echo "bootstrap.servers: $BOOTSTRAP_SERVERS"
 echo "sasl.jaas.config: $SASL_JAAS_CONFIG"
+echo ""
 
 # Destination directory
 if [[ ! -z "$1" ]]; then
@@ -52,7 +53,7 @@ done < "$CCLOUD_CONFIG"
 
 # Confluent Schema Registry instance for Confluent Cloud
 SR_CONFIG_DELTA=$DEST/schema-registry-ccloud.delta
-echo -e "\nConfluent Schema Registry: $SR_CONFIG_DELTA"
+echo "Confluent Schema Registry: $SR_CONFIG_DELTA"
 while read -r line
 do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -67,15 +68,9 @@ do
 done < "$CCLOUD_CONFIG"
 
 
-# KSQL DataGen for Confluent Cloud
-KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
-echo -e "\nKSQL datagen: $KSQL_DATAGEN_DELTA"
-cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
-echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
-
 # Confluent Replicator for Confluent Cloud
 REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
-echo -e "\nConfluent Replicator binary (Producer): $REPLICATOR_PRODUCER_DELTA"
+echo "Confluent Replicator binary (Producer): $REPLICATOR_PRODUCER_DELTA"
 cp $INTERCEPTORS_CCLOUD_CONFIG $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
 echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
@@ -83,7 +78,7 @@ echo "retry.backoff.ms=500" >> $REPLICATOR_PRODUCER_DELTA
 
 # KSQL Server runs locally and connects to Confluent Cloud
 KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
-echo -e "\nKSQL server: $KSQL_SERVER_DELTA"
+echo "KSQL server: $KSQL_SERVER_DELTA"
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_SERVER_DELTA
 echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_SERVER_DELTA
 echo "consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor" >> $KSQL_SERVER_DELTA
@@ -94,9 +89,15 @@ echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DE
 echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
 
+# KSQL DataGen for Confluent Cloud
+KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
+echo "KSQL datagen: $KSQL_DATAGEN_DELTA"
+cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
+echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
+
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 C3_DELTA=$DEST/control-center-ccloud.delta
-echo -e "\nConfluent Control Center: $C3_DELTA"
+echo "Confluent Control Center: $C3_DELTA"
 while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -111,7 +112,7 @@ done < "$CCLOUD_CONFIG"
 
 # Java
 JAVA_CONFIG=$DEST/java.delta
-echo -e "\nJava: $JAVA_CONFIG"
+echo "Java: $JAVA_CONFIG"
 
 cat <<EOF >> $JAVA_CONFIG
 import java.util.Properties;
