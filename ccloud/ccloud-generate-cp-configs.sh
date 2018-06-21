@@ -4,20 +4,22 @@
 # Process the Confluent Cloud configuration in $HOME/.ccloud/config
 # to create delta configuration files in the destination directory
 # with enabled interceptors for Streams Monitoring in Confluent Control Center
-# for the following components
 #
+# These are _delta_ configurations, not complete component configurations
+# Add them to the respective component configuration or application code
+#
+# Confluent Platform Components: 
 # - Confluent Schema Registry
 # - KSQL Data Generator
 # - KSQL server 
 # - Confluent Replicator (standalone binary)
 # - Confluent Control Center
+#
+# Kafka Clients:
 # - Java
 # - Python
 # - .NET
 # - Go
-#
-# These are _delta_ configurations, not complete component configurations
-# Add them to the respective component's properties file
 ############################################
 
 
