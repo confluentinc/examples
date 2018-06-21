@@ -167,7 +167,7 @@ DOTNET_CONFIG=$DEST/dotnet.delta
 echo "$DOTNET_CONFIG"
 
 cat <<EOF >> $DOTNET_CONFIG
-var pConfig = new Dictionary<string, object>
+var producerConfig = new Dictionary<string, object>
 {
     { "bootstrap.servers", "$BOOTSTRAP_SERVERS" },
     { "sasl.mechanisms", "PLAIN" },
@@ -175,10 +175,11 @@ var pConfig = new Dictionary<string, object>
     { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
     // { "ssl.ca.location", "c:\\path\\to\\cacert.pem" },     // windows
     { "sasl.username", "$CLOUD_KEY" },
-    { "sasl.password", "$CLOUD_SECRET" }
+    { "sasl.password", "$CLOUD_SECRET" },
+    { “plugin.library.paths”, “monitoring-interceptor”},
     // .....
 };
-var cConfig = new Dictionary<string, object>
+var consumerConfig = new Dictionary<string, object>
 {
     { "bootstrap.servers", "<confluent cloud bootstrap servers>" },
     { "sasl.mechanisms", "PLAIN" },
@@ -186,7 +187,8 @@ var cConfig = new Dictionary<string, object>
     { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
     // { "ssl.ca.location", "c:\\path\\to\\cacert.pem" },     // windows
     { "sasl.username", "$CLOUD_KEY" },
-    { "sasl.password", "$CLOUD_SECRET" }
+    { "sasl.password", "$CLOUD_SECRET" },
+    { “plugin.library.paths”, “monitoring-interceptor”},
     // .....
 };
 EOF
