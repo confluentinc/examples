@@ -2,19 +2,20 @@
 
 ###############################################################################
 # Overview:
-# - reads the Confluent Cloud configuration in $HOME/.ccloud/config
-# - writes delta configuration files into ./delta_configs for
-#   Confluent Platform components and clients connecting to Confluent Cloud
+# This code reads the Confluent Cloud configuration in $HOME/.ccloud/config
+# and writes delta configuration files into ./delta_configs for
+# Confluent Platform components and clients connecting to Confluent Cloud.
 #
-# Note these are _delta_ configurations, not complete component configurations.
+# Add the delta configurations to the respective component configuration files
+# or application code. Reminder: these are _delta_ configurations, not complete
+# configurations. See https://docs.confluent.io/ for complete examples.
+#
 # Delta configurations include customized settings for:
-# - bootstrap servers
-# - key
-# - secret
+# - bootstrap servers -> Confluent Cloud brokers
+# - sasl.username -> key
+# - sasl.password -> secret
 # - interceptors for Streams Monitoring in Confluent Control Center
-# - settings for optimized performance to Confluent Cloud (varies)
-#
-# Add them to the respective component configuration or application code.
+# - optimized performance to Confluent Cloud (varies based on client defaults)
 #
 # Confluent Platform Components: 
 # - Confluent Schema Registry
