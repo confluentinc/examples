@@ -181,7 +181,7 @@ var producerConfig = new Dictionary<string, object>
 };
 var consumerConfig = new Dictionary<string, object>
 {
-    { "bootstrap.servers", "<confluent cloud bootstrap servers>" },
+    { "bootstrap.servers", "$BOOTSTRAP_SERVERS" },
     { "sasl.mechanisms", "PLAIN" },
     { "security.protocol", "SASL_SSL" },
     { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
