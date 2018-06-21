@@ -1,12 +1,20 @@
 #!/bin/bash
 
-############################################
-# Process the Confluent Cloud configuration in $HOME/.ccloud/config
-# to create delta configuration files in the destination directory
-# with enabled interceptors for Streams Monitoring in Confluent Control Center
+###############################################################################
+# Overview:
+# - reads the Confluent Cloud configuration in $HOME/.ccloud/config
+# - writes delta configuration files into ./delta_configs for
+#   Confluent Platform components and clients connecting to Confluent Cloud
 #
-# These are _delta_ configurations, not complete component configurations
-# Add them to the respective component configuration or application code
+# Note these are _delta_ configurations, not complete component configurations.
+# Delta configurations include customized settings for:
+# - bootstrap servers
+# - key
+# - secret
+# - interceptors for Streams Monitoring in Confluent Control Center
+# - settings for optimized performance to Confluent Cloud (varies)
+#
+# Add them to the respective component configuration or application code.
 #
 # Confluent Platform Components: 
 # - Confluent Schema Registry
@@ -20,7 +28,7 @@
 # - Python
 # - .NET
 # - Go
-############################################
+###############################################################################
 
 
 # Confluent Cloud configuration
