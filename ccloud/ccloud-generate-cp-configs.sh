@@ -25,7 +25,8 @@
 # - Confluent Control Center
 #
 # Kafka Clients:
-# - Java
+# - Java (Producer/Consumer)
+# - Java (Streams)
 # - Python
 # - .NET
 # - Go
@@ -135,11 +136,51 @@ done < "$CCLOUD_CONFIG"
 
 echo -e "\nKafka Clients:"
 
-# Java
-JAVA_CONFIG=$DEST/java.delta
-echo "$JAVA_CONFIG"
+# Java (Producer/Consumer)
+JAVA_PC_CONFIG=$DEST/java_producer_consumer.delta
+echo "$JAVA_PC_CONFIG"
 
-cat <<EOF >> $JAVA_CONFIG
+cat <<EOF >> $JAVA_PC_CONFIG
+import java.util.Properties;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+
+Properties props = new Properties();
+
+// Basic Confluent Cloud Connectivity
+props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "$BOOTSTRAP_SERVERS");
+props.put(ProducerConfig.REPLICATION_FACTOR_CONFIG, 3);
+props.put(ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
+props.put(SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
+
+// Optimize Performance for Confluent Cloud
+props.put(ProducerConfig.RETRIES_CONFIG, 2147483647);
+props.put("producer.confluent.batch.expiry.ms", 9223372036854775807);
+props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 300000);
+props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 9223372036854775807);
+
+// Required for Streams Monitoring in Confluent Control Center
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, confluent.monitoring.interceptor.bootstrap.servers, "$BOOTSTRAP_SERVERS");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_MECHANISM, "PLAIN");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, confluent.monitoring.interceptor.bootstrap.servers, "$BOOTSTRAP_SERVERS");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_MECHANISM, "PLAIN");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
+
+// .... additional configuration settings
+EOF
+
+# Java (Streams)
+JAVA_STREAMS_CONFIG=$DEST/java_streams.delta
+echo "$JAVA_STREAMS_CONFIG"
+
+cat <<EOF >> $JAVA_STREAMS_CONFIG
 import java.util.Properties;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ConsumerConfig;
