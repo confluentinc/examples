@@ -29,7 +29,8 @@
 # - Python
 # - .NET
 # - Go
-# - Node.js
+# - Node.js (https://github.com/Blizzard/node-rdkafka)
+# - C++
 ###############################################################################
 
 
@@ -172,7 +173,7 @@ props.put(StreamsConfig.CONSUMER_PREFIX + ConsumerConfig.INTERCEPTOR_CLASSES_CON
 props.put(StreamsConfig.CONSUMER_PREFIX + ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_MECHANISM, "PLAIN");
 props.put(StreamsConfig.CONSUMER_PREFIX + ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
 
-// ....
+// .... additional configuration settings
 EOF
 
 # Python
@@ -191,7 +192,7 @@ producer = Producer({
            'sasl.username': '$CLOUD_KEY',
            'sasl.password': '$CLOUD_SECRET',
            'plugin.library.paths': 'monitoring-interceptor',
-           // ....
+           // .... additional configuration settings
 })
 
 consumer = Consumer({
@@ -203,7 +204,7 @@ consumer = Consumer({
            'sasl.username': '$CLOUD_KEY',
            'sasl.password': '$CLOUD_SECRET',
            'plugin.library.paths': 'monitoring-interceptor',
-           // ....
+           // .... additional configuration settings
 })
 EOF
 
@@ -226,7 +227,7 @@ var producerConfig = new Dictionary<string, object>
     { "sasl.username", "$CLOUD_KEY" },
     { "sasl.password", "$CLOUD_SECRET" },
     { “plugin.library.paths”, “monitoring-interceptor”},
-    // .....
+    // .... additional configuration settings
 };
 
 var consumerConfig = new Dictionary<string, object>
@@ -241,7 +242,7 @@ var consumerConfig = new Dictionary<string, object>
     { "sasl.username", "$CLOUD_KEY" },
     { "sasl.password", "$CLOUD_SECRET" },
     { “plugin.library.paths”, “monitoring-interceptor”},
-    // .....
+    // .... additional configuration settings
 };
 EOF
 
@@ -263,7 +264,7 @@ producer, err := kafka.NewProducer(&kafka.ConfigMap{
 	         "sasl.username": "$CLOUD_KEY",
 	         "sasl.password": "$CLOUD_SECRET",
                  "plugin.library.paths": "monitoring-interceptor",
-                 // ....
+                 // .... additional configuration settings
                  })
 
 consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
@@ -276,7 +277,7 @@ consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		 "sasl.password": "$CLOUD_SECRET",
 		 "session.timeout.ms": 6000,
                  "plugin.library.paths": "monitoring-interceptor",
-                 // ....
+                 // .... additional configuration settings
                  })
 EOF
 
@@ -293,8 +294,8 @@ var producer = new Kafka.Producer({
     'security.protocol': 'SASL_SSL',
     'sasl.username': '$CLOUD_KEY',
     'sasl.password': '$CLOUD_SECRET',
-    'plugin.library.paths.: 'monitoring-interceptor',
-    // ....
+    'plugin.library.paths': 'monitoring-interceptor',
+    // .... additional configuration settings
   });
 
 var consumer = Kafka.KafkaConsumer.createReadStream({
@@ -303,8 +304,8 @@ var consumer = Kafka.KafkaConsumer.createReadStream({
     'security.protocol': 'SASL_SSL',
     'sasl.username': '$CLOUD_KEY',
     'sasl.password': '$CLOUD_SECRET',
-    'plugin.library.paths.: 'monitoring-interceptor',
-    // ....
+    'plugin.library.paths': 'monitoring-interceptor',
+    // .... additional configuration settings
   }, {}, {
     topics: '<topic name>',
     waitInterval: 0,
@@ -312,3 +313,38 @@ var consumer = Kafka.KafkaConsumer.createReadStream({
 });
 EOF
 
+# C++
+CPP_CONFIG=$DEST/cpp.delta
+echo "$CPP_CONFIG"
+
+cat <<EOF >> $CPP_CONFIG
+#include "cppkafka/producer.h"
+#include "cppkafka/consumer.h"
+#include "cppkafka/configuration.h"
+
+using cppkafka::Producer;
+using cppkafka::Consumer;
+using cppkafka::Configuration;
+
+Configuration producerConfig = {
+    { "metadata.broker.list", "$BOOTSTRAP_SERVERS" },
+    { "sasl.mechanisms": "PLAIN" },
+    { "security.protocol": "SASL_SSL" },
+    { "sasl.username": "$CLOUD_KEY" },
+    { "sasl.password": "$CLOUD_SECRET" },
+    { "plugin.library.paths": "monitoring-interceptor" },
+    // .... additional configuration settings
+};
+Producer producer(producerConfig);
+
+Configuration consumerConfig = {
+    { "metadata.broker.list", "$BOOTSTRAP_SERVERS" },
+    { "sasl.mechanisms": "PLAIN" },
+    { "security.protocol": "SASL_SSL" },
+    { "sasl.username": "$CLOUD_KEY" },
+    { "sasl.password": "$CLOUD_SECRET" },
+    { "plugin.library.paths": "monitoring-interceptor" },
+    // .... additional configuration settings
+};
+Consumer consumer(consumerConfig);
+EOF
