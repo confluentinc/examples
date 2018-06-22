@@ -1,0 +1,125 @@
+---
+version: '2'
+services:
+  zookeeper:
+    image: "confluentinc/cp-zookeeper:4.1.1"
+    hostname: zookeeper
+    ports:
+      - '2181:2181'
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  kafka:
+    image: "confluentinc/cp-enterprise-kafka:4.1.1"
+    hostname: kafka
+    ports:
+      - '9092:9092'
+      - '29092:29092'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  schema-registry:
+    image: "confluentinc/cp-schema-registry:4.1.1"
+    hostname: schema-registry
+    depends_on:
+      - zookeeper
+      - kafka
+    ports:
+      - '8081:8081'
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  # KSQL
+  ksql-server:
+    image: "confluentinc/ksql-cli:5.0.0-beta30"
+    hostname: ksql-server
+    ports:
+      - '8088:8088'
+    depends_on:
+      - kafka
+      - schema-registry
+    # Note: The container's `run` script will perform the same readiness checks
+    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
+    # The reason we check for readiness here is that we can insert a sleep time
+    # for topic creation before we start the application.
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b kafka:29092 1 300 && \
+                       echo Waiting for Confluent Schema Registry to be ready... && \
+                       cub sr-ready schema-registry 8081 300 && \
+                       echo Waiting a few seconds for topic creation to finish... && \
+                       sleep 60 && \
+                       echo Starting KSQL... && \
+                       /usr/bin/ksql-server-start /etc/ksql/ksql-server.properties'"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_OPTS: "-Dbootstrap.servers=kafka:29092 -Dksql.schema.registry.url=http://schema-registry:8081 -Dlisteners=http://0.0.0.0:8088 -Dksql.streams.producer.retries=2147483647"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+  ksql-cli:
+    image: "confluentinc/ksql-cli:5.0.0-beta30"
+    hostname: ksql-cli
+    depends_on:
+      - kafka
+      - schema-registry
+      - ksql-server
+    command: "sleep infinity"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
+      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
+      STREAMS_SCHEMA_REGISTRY_PORT: 8081
+    extra_hosts:
+      - "moby:127.0.0.1"
+
+
+  # Runs the Kafka KSQL data generator for ratings
+  datagen-ratings:
+    image: "confluentinc/ksql-examples:4.1.0"
+    hostname: datagen-ratings
+    depends_on:
+      - kafka
+      - schema-registry
+    # Note: The container's `run` script will perform the same readiness checks
+    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
+    # The reason we check for readiness here is that we can insert a sleep time
+    # for topic creation before we start the application.
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b kafka:29092 1 300 && \
+                       echo Waiting for Confluent Schema Registry to be ready... && \
+                       cub sr-ready schema-registry 8081 300 && \
+                       echo Waiting a few seconds for topic creation to finish... && \
+                       sleep 20 && \
+                       java -jar /usr/share/java/ksql-examples/ksql-examples-4.1.1-SNAPSHOT-standalone.jar quickstart=ratings format=avro topic=ratings maxInterval=500 bootstrap-server=kafka:29092 schemaRegistryUrl=http://schema-registry:8081'"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
+      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
+      STREAMS_SCHEMA_REGISTRY_PORT: 8081
+    extra_hosts:
+      - "moby:127.0.0.1"
