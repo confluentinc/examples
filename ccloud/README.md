@@ -13,19 +13,19 @@ This demo showcases:
 It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud, including the following:
 
 * Confluent Platform Components:
- * Confluent Schema Registry
- * KSQL Data Generator
- * KSQL server
- * Confluent Replicator (standalone binary)
- * Confluent Control Center
+  * Confluent Schema Registry
+  * KSQL Data Generator
+  * KSQL server
+  * Confluent Replicator (standalone binary)
+  * Confluent Control Center
 * Kafka Clients:
- * Java (Producer/Consumer)
- * Java (Streams)
- * Python
- * .NET
- * Go
- * Node.js (https://github.com/Blizzard/node-rdkafka)
- * C++
+  * Java (Producer/Consumer)
+  * Java (Streams)
+  * Python
+  * .NET
+  * Go
+  * Node.js (https://github.com/Blizzard/node-rdkafka)
+  * C++
 
 ![image](docs/images/dwg_CCloud_DemoDiagram.jpg)
 
