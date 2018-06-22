@@ -12,6 +12,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 * [connect-streams-pipeline](connect-streams-pipeline/README.md)
 * [mysql-debezium](mysql-debezium/README.md)
 * [ccloud](ccloud/README.md)
+* [KSQL workshop](ksql-workshop/ksql-workshop.adoc)
 
 # Running The Demos
 
