@@ -14,9 +14,9 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
 * [Confluent Platform 4.1](https://www.confluent.io/download/)
 * If you are running the [step-by-step guide](ksql-workshop.adoc)
-** Docker
-** Docker Compose
-** 8GB+ RAM
+  * Docker
+  * Docker Compose
+  * 8GB+ RAM
 
 # What Should I see?
 
