@@ -29,6 +29,7 @@
 # - Python
 # - .NET
 # - Go
+# - Node.js
 ###############################################################################
 
 
@@ -278,3 +279,36 @@ consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
                  // ....
                  })
 EOF
+
+# Node.js
+NODE_CONFIG=$DEST/node.delta
+echo "$NODE_CONFIG"
+
+cat <<EOF >> $NODE_CONFIG
+var Kafka = require('node-rdkafka');
+
+var producer = new Kafka.Producer({
+    'metadata.broker.list': '$BOOTSTRAP_SERVERS',
+    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': 'SASL_SSL',
+    'sasl.username': '$CLOUD_KEY',
+    'sasl.password': '$CLOUD_SECRET',
+    'plugin.library.paths.: 'monitoring-interceptor',
+    // ....
+  });
+
+var consumer = Kafka.KafkaConsumer.createReadStream({
+    'metadata.broker.list': '$BOOTSTRAP_SERVERS',
+    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': 'SASL_SSL',
+    'sasl.username': '$CLOUD_KEY',
+    'sasl.password': '$CLOUD_SECRET',
+    'plugin.library.paths.: 'monitoring-interceptor',
+    // ....
+  }, {}, {
+    topics: '<topic name>',
+    waitInterval: 0,
+    objectMode: false
+});
+EOF
+
