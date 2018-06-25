@@ -359,33 +359,33 @@ CPP_CONFIG=$DEST/cpp.delta
 echo "$CPP_CONFIG"
 
 cat <<EOF >> $CPP_CONFIG
-#include "cppkafka/producer.h"
-#include "cppkafka/consumer.h"
-#include "cppkafka/configuration.h"
+#include <librdkafka/rdkafkacpp.h>
 
-using cppkafka::Producer;
-using cppkafka::Consumer;
-using cppkafka::Configuration;
+RdKafka::Conf *producerConfig = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
+if (producerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("sasl.mechanisms", "PLAIN", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("security.protocol", "SASL_SSL", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("sasl.username", "$CLOUD_KEY", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("sasl.password", "$CLOUD_SECRET", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("plugin.library.paths", "monitoring-interceptor", errstr) != RdKafka::Conf::CONF_OK ||
+    /* .... additional configuration settings */
+   ) {
+        std::cerr << "Configuration failed: " << errstr << std::endl;
+        exit(1);
+}
+RdKafka::Producer *producer = RdKafka::Producer::create(producerConfig, errstr);
 
-Configuration producerConfig = {
-    { "metadata.broker.list", "$BOOTSTRAP_SERVERS" },
-    { "sasl.mechanisms": "PLAIN" },
-    { "security.protocol": "SASL_SSL" },
-    { "sasl.username": "$CLOUD_KEY" },
-    { "sasl.password": "$CLOUD_SECRET" },
-    { "plugin.library.paths": "monitoring-interceptor" },
-    // .... additional configuration settings
-};
-Producer producer(producerConfig);
-
-Configuration consumerConfig = {
-    { "metadata.broker.list", "$BOOTSTRAP_SERVERS" },
-    { "sasl.mechanisms": "PLAIN" },
-    { "security.protocol": "SASL_SSL" },
-    { "sasl.username": "$CLOUD_KEY" },
-    { "sasl.password": "$CLOUD_SECRET" },
-    { "plugin.library.paths": "monitoring-interceptor" },
-    // .... additional configuration settings
-};
-Consumer consumer(consumerConfig);
+RdKafka::Conf *consumerConfig = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
+if (consumerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("sasl.mechanisms", "PLAIN", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("security.protocol", "SASL_SSL", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("sasl.username", "$CLOUD_KEY", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("sasl.password", "$CLOUD_SECRET", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("plugin.library.paths", "monitoring-interceptor", errstr) != RdKafka::Conf::CONF_OK ||
+    /* .... additional configuration settings */
+   ) {
+        std::cerr << "Configuration failed: " << errstr << std::endl;
+        exit(1);
+}
+RdKafka::Consumer *consumer = RdKafka::Consumer::create(consumerConfig, errstr);
 EOF
