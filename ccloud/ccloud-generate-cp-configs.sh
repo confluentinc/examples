@@ -232,6 +232,7 @@ producer = Producer({
            'security.protocol': 'SASL_SSL',
            'sasl.username': '$CLOUD_KEY',
            'sasl.password': '$CLOUD_SECRET',
+           // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
            'plugin.library.paths': 'monitoring-interceptor',
            // .... additional configuration settings
 })
@@ -244,6 +245,7 @@ consumer = Consumer({
            'security.protocol': 'SASL_SSL',
            'sasl.username': '$CLOUD_KEY',
            'sasl.password': '$CLOUD_SECRET',
+           // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
            'plugin.library.paths': 'monitoring-interceptor',
            // .... additional configuration settings
 })
@@ -263,10 +265,9 @@ var producerConfig = new Dictionary<string, object>
     { "api.version.fallback.ms", 0 },
     { "sasl.mechanisms", "PLAIN" },
     { "security.protocol", "SASL_SSL" },
-    { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
-    // { "ssl.ca.location", "c:\\path\\to\\cacert.pem" },     // windows
     { "sasl.username", "$CLOUD_KEY" },
     { "sasl.password", "$CLOUD_SECRET" },
+    // { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // varies by distro
     { “plugin.library.paths”, “monitoring-interceptor”},
     // .... additional configuration settings
 };
@@ -278,10 +279,9 @@ var consumerConfig = new Dictionary<string, object>
     { "api.version.fallback.ms", 0 },
     { "sasl.mechanisms", "PLAIN" },
     { "security.protocol", "SASL_SSL" },
-    { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // linux, osx
-    // { "ssl.ca.location", "c:\\path\\to\\cacert.pem" },     // windows
     { "sasl.username", "$CLOUD_KEY" },
     { "sasl.password", "$CLOUD_SECRET" },
+    // { "ssl.ca.location", "/usr/local/etc/openssl/cert.pem" }, // varies by distro
     { “plugin.library.paths”, “monitoring-interceptor”},
     // .... additional configuration settings
 };
@@ -304,6 +304,7 @@ producer, err := kafka.NewProducer(&kafka.ConfigMap{
 	         "security.protocol": "SASL_SSL",
 	         "sasl.username": "$CLOUD_KEY",
 	         "sasl.password": "$CLOUD_SECRET",
+                 // "ssl.ca.location": "/usr/local/etc/openssl/cert.pem", // varies by distro
                  "plugin.library.paths": "monitoring-interceptor",
                  // .... additional configuration settings
                  })
@@ -316,6 +317,7 @@ consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		 "security.protocol": "SASL_SSL",
 		 "sasl.username": "$CLOUD_KEY",
 		 "sasl.password": "$CLOUD_SECRET",
+                 // "ssl.ca.location": "/usr/local/etc/openssl/cert.pem", // varies by distro
 		 "session.timeout.ms": 6000,
                  "plugin.library.paths": "monitoring-interceptor",
                  // .... additional configuration settings
@@ -335,6 +337,7 @@ var producer = new Kafka.Producer({
     'security.protocol': 'SASL_SSL',
     'sasl.username': '$CLOUD_KEY',
     'sasl.password': '$CLOUD_SECRET',
+     // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
     'plugin.library.paths': 'monitoring-interceptor',
     // .... additional configuration settings
   });
@@ -345,6 +348,7 @@ var consumer = Kafka.KafkaConsumer.createReadStream({
     'security.protocol': 'SASL_SSL',
     'sasl.username': '$CLOUD_KEY',
     'sasl.password': '$CLOUD_SECRET',
+     // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
     'plugin.library.paths': 'monitoring-interceptor',
     // .... additional configuration settings
   }, {}, {
@@ -367,8 +371,9 @@ if (producerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) !=
     producerConfig->set("security.protocol", "SASL_SSL", errstr) != RdKafka::Conf::CONF_OK ||
     producerConfig->set("sasl.username", "$CLOUD_KEY", errstr) != RdKafka::Conf::CONF_OK ||
     producerConfig->set("sasl.password", "$CLOUD_SECRET", errstr) != RdKafka::Conf::CONF_OK ||
+    // producerConfig->set("ssl.ca.location", "/usr/local/etc/openssl/cert.pem", errstr) != RdKafka::Conf::CONF_OK || // varies by distro
     producerConfig->set("plugin.library.paths", "monitoring-interceptor", errstr) != RdKafka::Conf::CONF_OK ||
-    /* .... additional configuration settings */
+    // .... additional configuration settings
    ) {
         std::cerr << "Configuration failed: " << errstr << std::endl;
         exit(1);
@@ -381,8 +386,9 @@ if (consumerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) !=
     consumerConfig->set("security.protocol", "SASL_SSL", errstr) != RdKafka::Conf::CONF_OK ||
     consumerConfig->set("sasl.username", "$CLOUD_KEY", errstr) != RdKafka::Conf::CONF_OK ||
     consumerConfig->set("sasl.password", "$CLOUD_SECRET", errstr) != RdKafka::Conf::CONF_OK ||
+    // consumerConfig->set("ssl.ca.location", "/usr/local/etc/openssl/cert.pem", errstr) != RdKafka::Conf::CONF_OK || // varies by distro
     consumerConfig->set("plugin.library.paths", "monitoring-interceptor", errstr) != RdKafka::Conf::CONF_OK ||
-    /* .... additional configuration settings */
+    // .... additional configuration settings
    ) {
         std::cerr << "Configuration failed: " << errstr << std::endl;
         exit(1);
