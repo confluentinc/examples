@@ -3,21 +3,14 @@ version: '2'
 services:
   zookeeper:
     image: "confluentinc/cp-zookeeper:4.1.1"
-    hostname: zookeeper
-    ports:
-      - '2181:2181'
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    extra_hosts:
-      - "moby:127.0.0.1"
 
   kafka:
     image: "confluentinc/cp-enterprise-kafka:4.1.1"
-    hostname: kafka
     ports:
       - '9092:9092'
-      - '29092:29092'
     depends_on:
       - zookeeper
     environment:
@@ -34,29 +27,19 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
-    extra_hosts:
-      - "moby:127.0.0.1"
 
   schema-registry:
     image: "confluentinc/cp-schema-registry:4.1.1"
-    hostname: schema-registry
     depends_on:
       - zookeeper
       - kafka
-    ports:
-      - '8081:8081'
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
-    extra_hosts:
-      - "moby:127.0.0.1"
 
   # KSQL
   ksql-server:
     image: "confluentinc/ksql-cli:5.0.0-beta30"
-    hostname: ksql-server
-    ports:
-      - '8088:8088'
     depends_on:
       - kafka
       - schema-registry
@@ -76,12 +59,9 @@ services:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_OPTS: "-Dbootstrap.servers=kafka:29092 -Dksql.schema.registry.url=http://schema-registry:8081 -Dlisteners=http://0.0.0.0:8088 -Dksql.streams.producer.retries=2147483647"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-    extra_hosts:
-      - "moby:127.0.0.1"
 
   ksql-cli:
     image: "confluentinc/ksql-cli:5.0.0-beta30"
-    hostname: ksql-cli
     depends_on:
       - kafka
       - schema-registry
@@ -93,14 +73,10 @@ services:
       STREAMS_BOOTSTRAP_SERVERS: kafka:29092
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
-    extra_hosts:
-      - "moby:127.0.0.1"
-
 
   # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
     image: "confluentinc/ksql-examples:4.1.0"
-    hostname: datagen-ratings
     depends_on:
       - kafka
       - schema-registry
@@ -121,5 +97,3 @@ services:
       STREAMS_BOOTSTRAP_SERVERS: kafka:29092
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
-    extra_hosts:
-      - "moby:127.0.0.1"
