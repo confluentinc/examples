@@ -43,7 +43,7 @@ IMPORTANT: *THIS MUST BE DONE _BEFORE_ THE WORKSHOP - The docker images are larg
 +
 [source,bash]
 ----
-git clone https://github.com/confluentinc/demo-scene.git
+git clone https://github.com/confluentinc/quickstart-demos.git
 ----
 
 0. Did you remember to increase the memory dedicated to Docker to at least 8GB?
@@ -53,7 +53,7 @@ git clone https://github.com/confluentinc/demo-scene.git
 +
 [source,bash]
 ----
-cd ksql-workshop
+cd quickstart-demos/ksql-workshop
 ----
 
 0. How much memory did you allocate to Docker? It needs to be >= 8 GB!
@@ -73,7 +73,6 @@ NOTE: In Docker’s advanced settings, increase the memory dedicated to Docker t
 
 [source,bash]
 ----
-cd ksql-workshop
 docker-compose up -d
 docker-compose logs -f kafka|grep "INFO Kafka version"
 ----
