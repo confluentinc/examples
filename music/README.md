@@ -10,11 +10,11 @@ use KSQL to inspect the data.
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 * Java 1.8 to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
 
 # What Should I see?
 
 After you run `./start.sh`:
 
-* Run `ksql http://localhost:8088` to view and create queries, or open your browser and navigate to the KSQL UI at http://localhost:8088
+* If you are running Confluent Enterprise, use Control Center to view and create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.

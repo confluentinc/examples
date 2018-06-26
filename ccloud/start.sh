@@ -4,7 +4,7 @@
 . ../utils/helper.sh
 
 check_env || exit 1
-check_running_cp 4.1 || exit 
+check_running_cp 5.0 || exit 
 check_ccloud || exit
 
 if ! is_ce ; then
@@ -14,7 +14,6 @@ fi
 
 ./stop.sh
 
-get_ksql_ui
 confluent start
 CONFLUENT_CURRENT=`confluent current | tail -1`
 
@@ -43,6 +42,9 @@ fi
 kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
 ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
 sleep 5
+
+# Register the same schema for the replicated topic pageviews.replica
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"ConnectDefault\",\"namespace\":\"io.confluent.connect.avro\",\"fields\":[{\"name\":\"viewtime\",\"type\":\"long\"},{\"name\":\"userid\",\"type\":\"string\"},{\"name\":\"pageid\",\"type\":\"string\"}]}"}' http://localhost:$SR_LISTENER/subjects/pageviews.replica-value/versions
 
 # Produce to topic users in CCloud cluster
 ccloud topic create users
@@ -100,6 +102,7 @@ if is_ce; then
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
 

@@ -12,7 +12,7 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/)
 * If you are running the [step-by-step guide](ksql-workshop.adoc)
   * Docker
   * Docker Compose

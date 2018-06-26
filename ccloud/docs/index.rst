@@ -31,7 +31,7 @@ Run demo
 
 **Demo validated with:**
 
--  Confluent Platform 4.1
+-  Confluent Platform 5.0
 -  |ccloud|
 -  |ccloud| CLI
 -  Java version 1.8.0_162

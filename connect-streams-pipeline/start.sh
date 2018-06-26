@@ -4,7 +4,7 @@
 . ../utils/helper.sh
 
 check_env || exit 1
-check_running_cp 4.1 || exit 
+check_running_cp 5.0 || exit 
 
 ./stop.sh
 
@@ -12,7 +12,6 @@ check_running_cp 4.1 || exit
 mvn -q compile
 (cd target/classes && jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar io/confluent/examples/connectandstreams/utils/LongConverter.class)
 
-get_ksql_ui
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
 

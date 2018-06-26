@@ -32,7 +32,7 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 4.1: Enterprise](https://www.confluent.io/download/)
+* [Confluent Platform 5.0: Enterprise](https://www.confluent.io/download/)
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 

@@ -41,7 +41,7 @@ function check_running_cp() {
 }
 
 function is_ce() {
-  type=$( confluent version | tail -1 | grep Confluent | awk -F: '{print $1;}' )
+  type=$( confluent version | tail -1 | awk -F: '{print $1;}' )
   if [[ "$type" == "Confluent Enterprise" ]]; then
     return 0
   elif [[ "$type" == "Confluent Open Source" ]]; then
@@ -50,12 +50,6 @@ function is_ce() {
     echo -e "\nCannot determine if Confluent Enterprise or Confluent Open Source from `confluent version`. Assuming Confluent Open Source\n"
     return 1
   fi
-}
-
-function get_ksql_ui() {
-  [[ -d $CONFLUENT_HOME/ui ]] || mkdir -p "$CONFLUENT_HOME/ui"
-  [[ -f "$CONFLUENT_HOME/ui/ksql-experimental-ui-0.1.war" ]] || wget --directory-prefix="$CONFLUENT_HOME/ui" https://s3.amazonaws.com/ksql-experimental-ui/ksql-experimental-ui-0.1.war
-  return 0
 }
 
 function check_running_elasticsearch() {
