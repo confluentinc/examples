@@ -11,10 +11,10 @@ check_running_cp 5.0 || exit
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
 
-cat mysql_users.txt | kafka-console-producer --broker-list localhost:9092 --topic mysql_users --property parse.key=true --property key.separator=:
+cat data/customers.json | kafka-console-producer --broker-list localhost:9092 --topic customers
 
 if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
-ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500 $PROPERTIES &>/dev/null &
+ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500 schemaRegistryUrl=http://localhost:8081 $PROPERTIES &>/dev/null &
 sleep 5
 
 ksql http://localhost:8088 <<EOF
