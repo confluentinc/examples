@@ -9,8 +9,6 @@ v0.10, 19 Jun 2018
 
 == Introduction
 
-This is a two-hour hands-on workshop.
-
 [quote]
 ____
 KSQL is the streaming SQL engine for Apache Kafka. Using just SQL it is possible for developers to build powerful stream processing applications. This talk will show practical examples of KSQL:
@@ -551,7 +549,9 @@ With the stream registered, we can now re-key the topic, using a KSQL `CSAS` and
 
 [source,sql]
 ----
-ksql> CREATE STREAM CUSTOMERS_SRC_REKEY WITH (PARTITIONS=1, VALUE_FORMAT='AVRO') AS SELECT * FROM CUSTOMERS_SRC PARTITION BY ID;
+ksql> CREATE STREAM CUSTOMERS_SRC_REKEY \
+        WITH (PARTITIONS=1, VALUE_FORMAT='AVRO') AS \
+        SELECT * FROM CUSTOMERS_SRC PARTITION BY ID;
 
  Message
 ----------------------------
@@ -584,7 +584,7 @@ In the re-keyed stream the `ROWKEY` and `ID` are equal:
 
 [source,sql]
 ----
-ksql> SELECT C.ROWKEY, C.ID FROM CUSTOMERS C LIMIT 3;
+ksql> SELECT C.ROWKEY, C.ID FROM CUSTOMERS_SRC_REKEY C LIMIT 3;
 1 | 1
 2 | 2
 3 | 3
@@ -608,6 +608,8 @@ ksql> CREATE TABLE CUSTOMERS WITH (KAFKA_TOPIC='CUSTOMERS_SRC_REKEY', VALUE_FORM
 ---------------
 ksql>
 ----
+
+_n.b. if you get the error `Unable to verify the AVRO schema is compatible with KSQL` then retry the command after a second or two (ref. https://github.com/confluentinc/ksql/issues/1394[#1394])._
 
 Query the table:
 
