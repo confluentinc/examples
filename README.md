@@ -8,7 +8,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 * [music](music/README.md)
 * [clickstream](clickstream/README.md)
 * [wikipedia](wikipedia/README.md)
-* [ratings](ratings/README.md)
+* [ksql-workshop](ksql-workshop/README.md)
 * [connect-streams-pipeline](connect-streams-pipeline/README.md)
 * [mysql-debezium](mysql-debezium/README.md)
 * [ccloud](ccloud/README.md)
