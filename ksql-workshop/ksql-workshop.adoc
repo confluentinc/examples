@@ -3,7 +3,7 @@
 :doctype: book
 :sectnums:
 Robin Moffatt <@rmoff>
-v0.10, 19 Jun 2018
+v0.11, 28 Jun 2018
 
 :toc:
 
@@ -23,18 +23,22 @@ image::images/ksql_workshop_01.png[Diagram of what's being built with the KSQL d
 
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
-——_Robin Moffatt https://twitter.com/rmoff/[@rmoff], 19 Jun 2018_
+——_Robin Moffatt https://twitter.com/rmoff/[@rmoff]_
 
 == Pre-requisites
 
 * Docker
 * Docker Compose
 * 8GB+ RAM
+* Clone github repository (see below)
+* Pull required docker images (see below)
 
 IMPORTANT: *THIS MUST BE DONE _BEFORE_ THE WORKSHOP - The docker images are large and will take time to download. Please don't wait until the workshop as the wi-fi will not cope!*
 
 [IMPORTANT]
 ====
+
+1. Install https://docs.docker.com/compose/install/[Docker Compose] on your system. There are Mac, Windows, and Linux options available at the link.
 
 0. In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
 ** Don't forget to do this
@@ -122,6 +126,8 @@ Note that the data is in Avro, so you will see lots of special characters in the
 
 Press Ctrl-C to cancel and return to the command prompt.
 
+NOTE: On Linux the name of the network is `ksqlworkshop_default` (no `-` between `ksql` and `workshop`).
+
 == Source Data : Customers
 
 To keep things simple, we're going to mock up the data that would be coming from our customers table on a database. In practice you would ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]
@@ -132,16 +138,18 @@ Run the following command to send the customer data to the `customers` topic:
 
 [source,bash]
 ----
-cat data/customers.json | \
 docker run --interactive \
            --network ksql-workshop_default \
-           confluentinc/cp-kafkacat \
+           --volume $PWD/data:/data confluentinc/cp-kafkacat \
            kafkacat -b kafka:29092 \
                     -t customers \
-                    -P
+                    -P -l /data/customers.json
 ----
 
 Note that there is no output from this command. We will verify its success in the next step.
+
+_On Windows you may find that the above doesn't work. If so, run just the second part of the command (starting `docker run…`) and manually paste the contents of `data/customers.json doesn't have cat (for loading customer data)
+
 
 === Inspect customer data
 
@@ -608,7 +616,44 @@ ksql> CREATE TABLE CUSTOMERS WITH (KAFKA_TOPIC='CUSTOMERS_SRC_REKEY', VALUE_FORM
 ksql>
 ----
 
-_n.b. if you get the error `Unable to verify the AVRO schema is compatible with KSQL` then retry the command after a second or two (ref. https://github.com/confluentinc/ksql/issues/1394[#1394])._
+[NOTE]
+====
+_n.b. if you get the error `Unable to verify the AVRO schema is compatible with KSQL` then_ :
+
+* Retry the command after a second or two (ref. https://github.com/confluentinc/ksql/issues/1394[#1394]).
+* Check that the topic's source stream is created:
++
+[source,sql]
+----
+ksql> SHOW STREAMS;
+ Stream Name         | Kafka Topic         | Format
+----------------------------------------------------
+ CUSTOMERS_SRC_REKEY | CUSTOMERS_SRC_REKEY | AVRO
+ [...]
+----
++
+* Verify that the source stream is processing messages by running `DESCRIBE EXTENDED CUSTOMERS_SRC_REKEY;`. Under the heading `Local runtime statistics` you should see:
++
+[source,sql]
+----
+Local runtime statistics
+------------------------
+messages-per-sec:      0.10   total-messages:        10     last-message: 6/28/18 6:23:54 PM UTC
+ failed-messages:         0 failed-messages-per-sec:         0      last-failed:       n/a
+----
++
+** If no 'messages-per-sec' is shown, the next step is to verify that you ran `SET 'auto.offset.reset' = 'earliest';` earlier. You can run it again to be certain. If it says `Successfully changed local property 'auto.offset.reset' from 'null' to 'earliest'` then the `null` shows that it wasn't previously set.
+** If this was the case, then you need to drop and recreate the stream in order to process the customer data:
++
+[source,sql]
+----
+TERMINATE QUERY CSAS_CUSTOMERS_SRC_REKEY_0;
+DROP STREAM CUSTOMERS_SRC_REKEY;
+----
++
+Then re-run the `CREATE STREAM CUSTOMERS_SRC_REKEY[…]` from above. Use `SHOW QUERIES;` to list the queries running if the name differs from that shown in the `TERMINATE` statement.
+====
+
 
 Query the table:
 
@@ -860,6 +905,62 @@ With the enriched and filtered data being populated into Kafka topics from KSQL 
 
 * Power event-drive applications. For example, notify the ops team if a VIP user leaves a poor review.
 * Stream to analytics platforms. For example, use Kafka Connect to stream the enriched data stream to Elasticsearch and visualise the real time with Kibana.
+
+== Optional: Stream data to Elasticsearch
+
+NOTE: This section assumes that you are familiar with the use of Kibana
+
+Using Kafka Connect you can stream data from a Kafka to one (or many) targets, including Elasticsearch, HDFS, S3, and so on.
+
+Here we'll see how to stream it to Elasticsearch for rapid visualisation and analysis.
+
+Make sure that Elasticsearch and Kibana are running:
+
+[source,bash]
+----
+docker-compose up -d elasticsearch
+----
+
+Create a dynamic mapping in Elasticsearch so that the timestamp of source data is correctly detected:
+
+[source,bash]
+----
+curl -XPUT "http://localhost:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d' { "index_patterns": "*", "settings": { "number_of_shards": 1, "number_of_replicas": 0 }, "mappings": { "_default_": { "dynamic_templates": [ { "dates": { "match": "EXTRACT_TS", "mapping": { "type": "date" } } }, { "non_analysed_string_template": { "match": "*", "match_mapping_type": "string", "mapping": { "type": "keyword" } } } ] } } }'
+----
+
+Create a connector to stream `RATINGS_WITH_CUSTOMER_DATA` to Elasticsearch:
+
+[source,bash]
+----
+curl -X "POST" "http://localhost:18083/connectors/" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "es_sink_unhappy_platinum_customers",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics": "RATINGS_WITH_CUSTOMER_DATA",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.ignore": "true",
+    "schema.ignore": "true",
+    "type.name": "type.name=kafkaconnect",
+    "topic.index.map": "RATINGS_WITH_CUSTOMER_DATA:ratings_with_customer_data",
+    "connection.url": "http://elasticsearch:9200",
+    "transforms": "ExtractTimestamp",
+    "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.ExtractTimestamp.timestamp.field" : "EXTRACT_TS"
+  }
+}'
+----
+
+Use the Kibana interface to check that docs are arriving in Elasticsearch:
+
+image::images/kibana_01.png[]
+
+Add the index pattern to Kibana, and then use the Discover and Visualise options to explore and create analyses on the data:
+
+image::images/kibana_02.png[]
+
+image::images/kibana_03.png[]
 
 == Shutting down the environment
 
