@@ -717,6 +717,8 @@ ON R.USER_ID = C.ID WHERE C.LAST_NAME IS NOT NULL;
 2018-06-20 13:03:51 | 6 | 2 | 6902 | web | Surprisingly good, maybe you are getting your mojo back at long last! | Gianina | Mixhel | gold
 ----
 
+NOTE: The timestamp of KSQL Table events should be _before_ the event to which they are being joined. Because of KStream processing semantics you may see null value results against some events produced prior to the table events.
+
 <<<
 === Populating a Kafka topic with the results of a Stream-Table join
 
