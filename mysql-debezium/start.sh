@@ -27,6 +27,7 @@ confluent config mysql-source-demo-customers-raw -d ./connector_debezium_custome
 sleep 10
 
 if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
+kafka-topics --zookeeper localhost:2181 --create --topic ratings --partitions 4 --replication-factor 1
 ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500 $PROPERTIES &>/dev/null &
 sleep 10
 
