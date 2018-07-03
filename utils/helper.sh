@@ -33,7 +33,7 @@ function check_running_cp() {
 
   actual_version=$( confluent version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
   if [[ $expected_version != $actual_version ]]; then
-    echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version. Please run the correct version of Confluent Platform to proceed.\n"
+    echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the quickstart-demos repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
   fi
 
