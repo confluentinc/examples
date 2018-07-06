@@ -23,14 +23,14 @@ CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME,
 --Track song play counts in 30 second intervals
 CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 second) GROUP BY ID, NAME, GENRE, KEYCOL;
 --Convert TABLE to STREAM
-CREATE STREAM ksql_songplaycounts30stream (ID BIGINT, NAME VARCHAR, GENRE VARCHAR, KEYCOL BIGINT, COUNT BIGINT) WITH (kafka_topic='KSQL_SONGPLAYCOUNTS30', value_format='AVRO');
+CREATE STREAM ksql_songplaycounts30stream (ID BIGINT, NAME VARCHAR, GENRE VARCHAR, KEYCOL INT, COUNT BIGINT) WITH (kafka_topic='KSQL_SONGPLAYCOUNTS30', value_format='AVRO');
 --Get all data into a STREAM with a single partition, using the `KEYCOL` field described earlier
 CREATE STREAM ksql_songplaycounts30streampart AS SELECT * FROM ksql_songplaycounts30stream WHERE ROWTIME is not null PARTITION BY KEYCOL;
 
 --Track song play counts for all time
 CREATE TABLE ksql_songplaycounts AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays GROUP BY ID, NAME, GENRE, KEYCOL;
 --Convert TABLE to STREAM
-CREATE STREAM ksql_songplaycountsstream (ID BIGINT, NAME VARCHAR, GENRE VARCHAR, KEYCOL BIGINT, COUNT BIGINT) WITH (kafka_topic='KSQL_SONGPLAYCOUNTS', value_format='AVRO');
+CREATE STREAM ksql_songplaycountsstream (ID BIGINT, NAME VARCHAR, GENRE VARCHAR, KEYCOL INT, COUNT BIGINT) WITH (kafka_topic='KSQL_SONGPLAYCOUNTS', value_format='AVRO');
 --Get all data into a STREAM with a single partition, using the `KEYCOL` field described earlier
 CREATE STREAM ksql_songplaycountsstreampart AS SELECT * FROM ksql_songplaycountsstream WHERE ROWTIME is not null PARTITION BY KEYCOL;
 
