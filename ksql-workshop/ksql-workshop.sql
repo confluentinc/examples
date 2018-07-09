@@ -1,3 +1,9 @@
+-- ###################################################
+-- These are the commands used during the workshop. 
+-- You can use this file to catch up to certain stages
+-- of the workshop if you want.
+-- ###################################################
+
 CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='customers', VALUE_FORMAT='JSON');
 
 CREATE STREAM CUSTOMERS_SRC_REKEY \
