@@ -21,6 +21,8 @@ ____
 
 image::images/ksql_workshop_01.png[Diagram of what's being built with the KSQL demo]
 
+You can find all of the KSQL commands used during this workshop in the `ksql-workshop.sql` file.
+
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
 ——_Robin Moffatt https://twitter.com/rmoff/[@rmoff]_
