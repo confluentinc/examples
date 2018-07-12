@@ -2,3 +2,5 @@
 ccloud/delta_configs/
 */target
 img_data
+python_notify/
+.Python
