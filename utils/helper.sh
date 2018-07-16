@@ -149,3 +149,15 @@ function prep_sqltable() {
 
   return 0
 }
+
+function error_not_compatible_confluent_cli() {
+  adoc_file=$1
+
+  echo "******"
+  echo "This demo is currently runnable only with Docker and not Confluent CLI."
+  echo "To run with Docker, follow step-by-step instructions in $adoc_file"
+  echo "To run with Confluent CLI on a local Confluent Platform install, this work is in progress and please check back soon!"
+  echo "******"
+
+  return 0
+}
