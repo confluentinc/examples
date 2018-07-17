@@ -1,3 +1,7 @@
+-- ###############################################
+-- This file is called automatically from start.sh
+-- ###############################################
+
 --We need to identify fields in schema, even with Avro, because this is a script (https://github.com/confluentinc/ksql/issues/1031)
 CREATE STREAM ratings (RATING_ID BIGINT, USER_ID INTEGER, STARS INTEGER, ROUTE_ID INTEGER, RATING_TIME BIGINT, CHANNEL VARCHAR, MESSAGE VARCHAR) WITH (KAFKA_TOPIC='ratings', VALUE_FORMAT='AVRO');
 
