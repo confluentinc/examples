@@ -17,7 +17,9 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 | [ksql-workshop](ksql-workshop/README.md)   | showcases Kafka stream processing using KSQL and can be run automated or self-guided as a KSQL workshop
 | [music](music/README.md)                   | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html)
 | [mysql-debezium](mysql-debezium/README.md) | end-to-end streaming ETL with KSQL for stream processing using the [Debezium Connector for MySQL](http://debezium.io/docs/connectors/mysql/)
+| [oracle-ksql-elasticsearch](oracle-ksql-elasticsearch/README.md) | Enrich event stream data from Oracle, enriching it with KSQL, and then stream into Elasticsearch
 | [pageviews](pageviews/README.md)           | automated version of the [Confluent Platform 5.0 Quickstart](https://docs.confluent.io/current/quickstart.html)
+| [postgres-debezium-ksql-elasticsearch](postgres-debezium-ksql-elasticsearch/README.md) | Enrich event stream data with CDC data from Postgres and then stream into Elasticsearch
 | [wikipedia](wikipedia/README.md)           | non-Docker version of the [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html)
 
 # Running The Demos
