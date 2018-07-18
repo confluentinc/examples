@@ -32,21 +32,20 @@ echo "Port tcp:$RESTPORT looks free"
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic orders
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic order-validations
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory
-kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
-kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
+#kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
+#kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
 
 # Dlog4j.configuration=src/main/resources/log4j.properties
 
 echo "Starting OrdersService"
 mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &
-
 sleep 10
 if [[ $(netstat -ant | grep $RESTPORT) == "" ]]; then
   echo "OrdersService not running on port $RESTPORT.  Please troubleshoot"
   exit 1
 fi
 
-for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
+for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService"; do
     echo "Starting $SERVICE"
     mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &
 done
@@ -56,15 +55,19 @@ sleep 10
 echo "Posting Order Requests"
 mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrderRequests -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
 
+sleep 10
+
 # Validate messages in topics
-echo "orders:"
+echo "-----orders-----"
 confluent consume orders --value-format avro --max-messages 5
-echo "order-validations:"
+echo "-----order-validations-----"
 confluent consume order-validations --value-format avro --max-messages 5
-echo "warehouse-inventory:"
-confluent consume warehouse-inventory --max-messages 5
-echo "payments:"
-confluent consume payments --value-format avro --max-messages 5
-echo "customers:"
-confluent consume customers --value-format avro --max-messages 5
+echo "-----warehouse-inventory-----"
+confluent consume warehouse-inventory --max-messages 2 --from-beginning --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
+
+# Requires EmailService to be populated with customer info
+#echo "-----payments-----"
+#confluent consume payments --value-format avro --max-messages 5
+#echo "-----customers-----"
+#confluent consume customers --value-format avro --max-messages 5
 
