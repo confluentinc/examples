@@ -13,9 +13,7 @@ confluent start schema-registry
 sleep 5
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-(cd kafka-streams-examples && git checkout DEVX-147)
-#[[ -d "kafka-streams-examples/target" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
-(cd kafka-streams-examples && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && git checkout DEVX-147 && mvn clean compile -DskipTests)
 
 RESTPORT=53231
 
@@ -39,9 +37,10 @@ mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.ex
 
 sleep 5
 
-echo "Starting PostOrderRequests"
+echo "Posting Order Requests"
 mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrderRequests -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
 
+# Validate messages in topics
 confluent consume orders --value-format avro --max-messages 5
 confluent consume warehouse-inventory --max-messages 5
 
