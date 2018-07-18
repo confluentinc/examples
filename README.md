@@ -15,6 +15,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 | [clickstream](clickstream/README.md)       | automated version of the [KSQL Clickstream demo](https://github.com/confluentinc/ksql/blob/master/ksql-clickstream-demo/non-docker-clickstream.md#clickstream-analysis)
 | [connect-streams-pipeline](connect-streams-pipeline/README.md) | demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API
 | [ksql-workshop](ksql-workshop/README.md)   | showcases Kafka stream processing using KSQL and can be run automated or self-guided as a KSQL workshop
+| [microservices-orders](microservices-orders/README.md) | integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) into Confluent Platform
 | [music](music/README.md)                   | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html)
 | [mysql-debezium](mysql-debezium/README.md) | end-to-end streaming ETL with KSQL for stream processing using the [Debezium Connector for MySQL](http://debezium.io/docs/connectors/mysql/)
 | [oracle-ksql-elasticsearch](oracle-ksql-elasticsearch/README.md) | Enrich event stream data from Oracle, enriching it with KSQL, and then stream into Elasticsearch
