@@ -4,6 +4,8 @@
 
 This demo integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) fully into the Confluent Platform and Confluent Cloud.
 
+![image](system-diag.png)
+
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
