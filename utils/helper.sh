@@ -116,6 +116,15 @@ function check_running_kibana() {
   return 0
 }
 
+function check_mvn() {
+  if [[ $(type mvn 2>&1) =~ "not found" ]]; then
+    echo "'mvn' is not found. Install Maven and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_mysql() {
   if [[ $(type mysql 2>&1) =~ "not found" ]]; then
     echo "'mysql' is not found. Install MySQL and try again"

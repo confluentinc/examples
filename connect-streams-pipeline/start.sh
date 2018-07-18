@@ -4,6 +4,7 @@
 . ../utils/helper.sh
 
 check_env || exit 1
+check_mvn || exit 1
 check_running_cp 5.0 || exit 
 
 ./stop.sh
