@@ -13,9 +13,13 @@ confluent start
 sleep 5
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-cp -n PostOrderRequests.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-cp -n AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+yes | cp -f PostOrderRequests.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+yes | cp -f AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
 (cd kafka-streams-examples && git checkout DEVX-147 && mvn clean compile -DskipTests)
+if [[ $? != 0 ]]; then
+  echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
+  exit 1
+fi
 
 # Get random port number
 RESTPORT=$(jot -r 1  10000 65000)
