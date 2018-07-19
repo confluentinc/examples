@@ -13,6 +13,7 @@ confluent start
 sleep 5
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
+cp -n PostOrderRequests.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
 cp -n AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
 (cd kafka-streams-examples && git checkout DEVX-147 && mvn clean compile -DskipTests)
 
@@ -47,7 +48,9 @@ if [[ $(netstat -ant | grep $RESTPORT) == "" ]]; then
 fi
 
 echo "Adding Inventory"
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="75 20" > /dev/null 2>&1 &
+COUNT_UNDERPANTS=75
+COUNT_JUMPERS=20
+mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &
 
 for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService"; do
     echo "Starting $SERVICE"
@@ -76,7 +79,7 @@ confluent consume warehouse-inventory --max-messages 2 --from-beginning --proper
 # Topic inventory-service-store-of-reserved-stock-changelog: table backing the reserved inventory
 # It maxes out when orders = initial inventory
 echo "-----inventory-service-store-of-reserved-stock-changelog-----"
-confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages 20
+confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
 
 # Requires EmailService to be populated with customer info
 #echo "-----payments-----"
