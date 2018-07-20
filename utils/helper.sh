@@ -164,7 +164,7 @@ function prep_sqltable_customers() {
   TABLE_PATH=/usr/local/lib/table.$TABLE
   cp ../utils/table.$TABLE $TABLE_PATH
 
-  DB=/usr/local/lib/customers.db
+  DB=/usr/local/lib/microservices.db
   echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
   echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255));" | sqlite3 $DB
   echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB

@@ -7,18 +7,9 @@ check_env || exit 1
 check_mvn || exit 1
 check_running_cp 5.0 || exit 1
 
-# Create the SQL table
-TABLE_CUSTOMERS=/usr/local/lib/table.customers
-prep_sqltable_customers
-
-exit
-
-
 ./stop.sh
 
-confluent start
-sleep 5
-
+# Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 yes | cp -f PostOrderRequests.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
 yes | cp -f AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
@@ -27,6 +18,9 @@ if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
 fi
+
+confluent start
+sleep 5
 
 # Get random port number
 RESTPORT=$(jot -r 1  10000 65000)
@@ -45,8 +39,8 @@ echo "Port tcp:$RESTPORT looks free"
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic orders
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic order-validations
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
 #kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
-#kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
 
 # Dlog4j.configuration=src/main/resources/log4j.properties
 
@@ -63,7 +57,12 @@ COUNT_UNDERPANTS=75
 COUNT_JUMPERS=20
 mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &
 
-for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService"; do
+# Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
+TABLE_CUSTOMERS=/usr/local/lib/table.customers
+prep_sqltable_customers
+if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
+
+for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "Email Service"; do
     echo "Starting $SERVICE"
     mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &
 done
@@ -74,6 +73,10 @@ echo "Posting Order Requests"
 mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrderRequests -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
 
 sleep 10
+
+# Topic customers: Connect reads customer data from a sqlite3 database
+echo "-----customers-----"
+confluent consume customers --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.LongDeserializer --from-beginning --max-messages 5
 
 # Topic orders: a unique order is requested 1 per second
 echo "-----orders-----"
