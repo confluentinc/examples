@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
+import java.lang.Math;
 
 import static io.confluent.examples.streams.avro.microservices.Product.JUMPERS;
 import static io.confluent.examples.streams.avro.microservices.Product.UNDERPANTS;
@@ -31,15 +32,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import javax.ws.rs.core.Response;
 
-
-/*
- * confluent start
- * mvn compile
- * mvn exec:java -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost 5432"
- * mvn exec:java -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrderRequests -Dexec.args="5432"
- * confluent consume orders --value-format avro
- */
-
 public class PostOrderRequests {
 
   private static GenericType<OrderBean> newBean() {
@@ -48,6 +40,8 @@ public class PostOrderRequests {
   }
 
   public static void main(String [] args) throws Exception {
+
+    final int NUM_CUSTOMERS = 6;
 
     final int restPort = args.length > 0 ? Integer.valueOf(args[0]) : 5432;
     System.out.printf("restPort: %d\n", restPort);
@@ -63,7 +57,9 @@ public class PostOrderRequests {
     // send 2000 orders, one every 1000 milliseconds
     for (int i = 0; i < 2000; i++) {
 
-      OrderBean inputOrder = new OrderBean(id(i), 2L, OrderState.CREATED, Product.JUMPERS, 1, 1d);
+      int randomCustomerId = (int)(Math.random() * NUM_CUSTOMERS + 1);
+
+      OrderBean inputOrder = new OrderBean(id(i), Long.valueOf(randomCustomerId), OrderState.CREATED, Product.JUMPERS, 1, 1d);
 
       // POST order to OrdersService
       System.out.printf("Posting order to: %s   .... ", path.urlPost());
