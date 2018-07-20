@@ -7,6 +7,13 @@ check_env || exit 1
 check_mvn || exit 1
 check_running_cp 5.0 || exit 1
 
+# Create the SQL table
+TABLE_CUSTOMERS=/usr/local/lib/table.customers
+prep_sqltable_customers
+
+exit
+
+
 ./stop.sh
 
 confluent start

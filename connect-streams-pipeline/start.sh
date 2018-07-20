@@ -18,7 +18,7 @@ confluent start
 
 # Create the SQL table
 TABLE_LOCATIONS=/usr/local/lib/table.locations
-prep_sqltable
+prep_sqltable_locations
 
 # --------------------------------------------------------------
 

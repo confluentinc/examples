@@ -140,21 +140,40 @@ function check_mysql() {
   return 0
 }
 
-function prep_sqltable() {
+function prep_sqltable_locations() {
   TABLE="locations"
-  TABLE_LOCATIONS=/usr/local/lib/table.$TABLE
-  cp ../utils/table.$TABLE $TABLE_LOCATIONS
+  TABLE_PATH=/usr/local/lib/table.$TABLE
+  cp ../utils/table.$TABLE $TABLE_PATH
 
   DB=/usr/local/lib/retail.db
   echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
   echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, name VARCHAR(255), sale INTEGER);" | sqlite3 $DB
-  echo ".import $TABLE_LOCATIONS $TABLE" | sqlite3 $DB
+  echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
   #echo "pragma table_info($TABLE);" | sqlite3 $DB
   #echo "select * from $TABLE;" | sqlite3 $DB
 
   # View contents of file
-  #echo -e "\n======= Contents of $TABLE_LOCATIONS ======="
-  #cat $TABLE_LOCATIONS
+  #echo -e "\n======= Contents of $TABLE_PATH ======="
+  #cat $TABLE_PATH
+
+  return 0
+}
+
+function prep_sqltable_customers() {
+  TABLE="customers"
+  TABLE_PATH=/usr/local/lib/table.$TABLE
+  cp ../utils/table.$TABLE $TABLE_PATH
+
+  DB=/usr/local/lib/customers.db
+  echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
+  echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255));" | sqlite3 $DB
+  echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
+  echo "pragma table_info($TABLE);" | sqlite3 $DB
+  echo "select * from $TABLE;" | sqlite3 $DB
+
+  # View contents of file
+  echo -e "\n======= Contents of $TABLE_PATH ======="
+  cat $TABLE_PATH
 
   return 0
 }
