@@ -69,32 +69,35 @@ done
 
 sleep 10
 
-echo "Posting Order Requests"
+echo -e "\nPosting Order Requests and Payments"
 mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
 
 sleep 10
 
-# Topic customers: Connect reads customer data from a sqlite3 database
-echo "\n-----customers-----"
+################################
+# View messages in topics
+
+# Topic customers: populated by Kafka Connect that uses the JDBC source connector to read customer data from a sqlite3 database
+echo -e "\n-----customers-----"
 confluent consume customers --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.LongDeserializer --from-beginning --max-messages 5
 
-# Topic orders: a unique order is requested 1 per second
-echo \n"-----orders-----"
+# Topic orders: populated by a POST to the OrdersService service. A unique order is requested 1 per second
+echo -e "\n-----orders-----"
 confluent consume orders --value-format avro --max-messages 5
 
-# Topic payments: one payment is made per order
-echo "\n-----payments-----"
+# Topic payments: populated by PostOrdersAndPayments writing to the topic after placing an order. One payment is made per order
+echo -e "\n-----payments-----"
 confluent consume payments --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 5
 
 # Topic order-validations: PASS/FAIL for each "checkType": ORDER_DETAILS_CHECK (OrderDetailsService), FRAUD_CHECK (FraudService), INVENTORY_CHECK (InventoryService)
-echo "\n-----order-validations-----"
+echo -e "\n-----order-validations-----"
 confluent consume order-validations --value-format avro --max-messages 10
 
 # Topic warehouse-inventory: initial inventory in stock
-echo "\n-----warehouse-inventory-----"
+echo -e "\n-----warehouse-inventory-----"
 confluent consume warehouse-inventory --max-messages 2 --from-beginning --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
 
 # Topic inventory-service-store-of-reserved-stock-changelog: table backing the reserved inventory
 # It maxes out when orders = initial inventory
-echo "\n-----inventory-service-store-of-reserved-stock-changelog-----"
+echo -e "\n-----inventory-service-store-of-reserved-stock-changelog-----"
 confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
