@@ -11,9 +11,9 @@ check_running_cp 5.0 || exit 1
 
 # Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-yes | cp -f PostOrderRequests.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+yes | cp -f PostOrdersAndPayments.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
 yes | cp -f AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-(cd kafka-streams-examples && git checkout DEVX-147 && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && git checkout 5.0.x && git fetch --prune ; git pull && mvn clean compile -DskipTests)
 if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
@@ -40,7 +40,7 @@ kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-fa
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic order-validations
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
-#kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
 
 # Dlog4j.configuration=src/main/resources/log4j.properties
 
@@ -70,34 +70,31 @@ done
 sleep 10
 
 echo "Posting Order Requests"
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrderRequests -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
+mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
 
 sleep 10
 
 # Topic customers: Connect reads customer data from a sqlite3 database
-echo "-----customers-----"
+echo "\n-----customers-----"
 confluent consume customers --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.LongDeserializer --from-beginning --max-messages 5
 
 # Topic orders: a unique order is requested 1 per second
-echo "-----orders-----"
+echo \n"-----orders-----"
 confluent consume orders --value-format avro --max-messages 5
 
+# Topic payments: one payment is made per order
+echo "\n-----payments-----"
+confluent consume payments --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 5
+
 # Topic order-validations: PASS/FAIL for each "checkType": ORDER_DETAILS_CHECK (OrderDetailsService), FRAUD_CHECK (FraudService), INVENTORY_CHECK (InventoryService)
-echo "-----order-validations-----"
-confluent consume order-validations --value-format avro --max-messages 5
+echo "\n-----order-validations-----"
+confluent consume order-validations --value-format avro --max-messages 10
 
 # Topic warehouse-inventory: initial inventory in stock
-echo "-----warehouse-inventory-----"
+echo "\n-----warehouse-inventory-----"
 confluent consume warehouse-inventory --max-messages 2 --from-beginning --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
 
 # Topic inventory-service-store-of-reserved-stock-changelog: table backing the reserved inventory
 # It maxes out when orders = initial inventory
-echo "-----inventory-service-store-of-reserved-stock-changelog-----"
+echo "\n-----inventory-service-store-of-reserved-stock-changelog-----"
 confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
-
-# Requires EmailService to be populated with customer info
-#echo "-----payments-----"
-#confluent consume payments --value-format avro --max-messages 5
-#echo "-----customers-----"
-#confluent consume customers --value-format avro --max-messages 5
-

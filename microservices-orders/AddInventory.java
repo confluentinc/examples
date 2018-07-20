@@ -38,15 +38,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import javax.ws.rs.core.Response;
 
-
-/*
- * confluent start
- * mvn compile
- * mvn exec:java -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost 5432"
- * mvn exec:java -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrderRequests -Dexec.args="5432"
- * confluent consume orders --value-format avro
- */
-
 public class AddInventory {
 
   private static void sendInventory(List<KeyValue<Product, Integer>> inventory,

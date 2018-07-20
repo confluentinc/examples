@@ -168,12 +168,12 @@ function prep_sqltable_customers() {
   echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
   echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255));" | sqlite3 $DB
   echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
-  echo "pragma table_info($TABLE);" | sqlite3 $DB
-  echo "select * from $TABLE;" | sqlite3 $DB
+  #echo "pragma table_info($TABLE);" | sqlite3 $DB
+  #echo "select * from $TABLE;" | sqlite3 $DB
 
   # View contents of file
-  echo -e "\n======= Contents of $TABLE_PATH ======="
-  cat $TABLE_PATH
+  #echo -e "\n======= Contents of $TABLE_PATH ======="
+  #cat $TABLE_PATH
 
   return 0
 }
