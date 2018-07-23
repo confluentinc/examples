@@ -13,7 +13,7 @@ check_running_cp 5.0 || exit 1
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 yes | cp -f PostOrdersAndPayments.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
 yes | cp -f AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-(cd kafka-streams-examples && git checkout 5.0.x && git fetch --prune ; git pull && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && git checkout DEVX-147-phase2 && git fetch --prune ; git pull && mvn clean compile -DskipTests)
 if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
