@@ -49,10 +49,7 @@ public class AddInventory {
     producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     producerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
     producerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
-    producerConfig.put(StreamsConfig.PRODUCER_PREFIX + ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
-        "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
-    producerConfig.put(StreamsConfig.CONSUMER_PREFIX + ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG,
-        "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
+    producerConfig.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
 
     ProductTypeSerde productSerde = new ProductTypeSerde();
 

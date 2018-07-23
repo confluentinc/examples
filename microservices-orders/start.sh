@@ -45,7 +45,7 @@ kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-fa
 # Dlog4j.configuration=src/main/resources/log4j.properties
 
 echo "Starting OrdersService"
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &)
 sleep 10
 if [[ $(netstat -ant | grep $RESTPORT) == "" ]]; then
   echo "OrdersService not running on port $RESTPORT.  Please troubleshoot"
@@ -55,22 +55,22 @@ fi
 echo "Adding Inventory"
 COUNT_UNDERPANTS=75
 COUNT_JUMPERS=20
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &)
 
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
 TABLE_CUSTOMERS=/usr/local/lib/table.customers
 prep_sqltable_customers
 if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
 
-for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "Email Service"; do
+for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
     echo "Starting $SERVICE"
-    mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &
+    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
 done
 
 sleep 10
 
 echo -e "\nPosting Order Requests and Payments"
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
 
 sleep 10
 
@@ -83,7 +83,7 @@ confluent consume customers --value-format avro --property print.key=true --prop
 
 # Topic orders: populated by a POST to the OrdersService service. A unique order is requested 1 per second
 echo -e "\n-----orders-----"
-confluent consume orders --value-format avro --max-messages 5
+confluent consume orders --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 5 
 
 # Topic payments: populated by PostOrdersAndPayments writing to the topic after placing an order. One payment is made per order
 echo -e "\n-----payments-----"
