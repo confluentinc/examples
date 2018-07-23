@@ -11,9 +11,9 @@ check_running_cp 5.0 || exit 1
 
 # Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-yes | cp -f PostOrdersAndPayments.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-yes | cp -f AddInventory.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-(cd kafka-streams-examples && git checkout DEVX-147-phase2 && git fetch --prune ; git pull && mvn clean compile -DskipTests)
+yes | cp -f *.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+#(cd kafka-streams-examples && git checkout DEVX-147-phase2 && git fetch --prune ; git pull && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && mvn clean compile -DskipTests)
 if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
@@ -62,10 +62,11 @@ TABLE_CUSTOMERS=/usr/local/lib/table.customers
 prep_sqltable_customers
 if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
 
-for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
-    echo "Starting $SERVICE"
-    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
-done
+# Cannot run EmailService without AvroSerialization error!
+#for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
+#    echo "Starting $SERVICE"
+#    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
+#done
 
 sleep 10
 
