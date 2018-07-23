@@ -15,8 +15,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </repositories>
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
-    <confluent.version>4.1.1</confluent.version>
-    <kafka.version>1.1.0</kafka.version>
+    <confluent.version>5.1.0-beta180723173636</confluent.version>
+    <kafka.version>2.1.0-beta180723173636</kafka.version>
     <avro.version>1.8.2</avro.version>
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
