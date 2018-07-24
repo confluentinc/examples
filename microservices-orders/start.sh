@@ -12,14 +12,14 @@ check_running_cp 5.0 || exit 1
 # Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 yes | cp -f *.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-#(cd kafka-streams-examples && git checkout DEVX-147-phase2 && git fetch --prune ; git pull && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && git checkout DEVX-147-phase2 && git fetch --prune ; git pull && mvn clean compile -DskipTests)
 (cd kafka-streams-examples && mvn clean compile -DskipTests)
 if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
 fi
 
-confluent start schema-registry
+confluent start
 sleep 5
 
 # Get random port number
@@ -42,8 +42,6 @@ kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-fa
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
 
-# Dlog4j.configuration=src/main/resources/log4j.properties
-
 echo "Starting OrdersService"
 (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &)
 sleep 10
@@ -60,22 +58,18 @@ COUNT_JUMPERS=20
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
 TABLE_CUSTOMERS=/usr/local/lib/table.customers
 prep_sqltable_customers
-#if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
+if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
 
 # Cannot run EmailService without AvroSerialization error!
-#for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
-#    echo "Starting $SERVICE"
-#    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
-#done
+for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
+    echo "Starting $SERVICE"
+    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
+done
 
 sleep 10
 
 echo -e "\nPosting Order Requests and Payments"
-#(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
-
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.ProduceOrders > /dev/null 2>&1 &
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.ProduceCustomers > /dev/null 2>&1 &
-mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.ProducePayments > /dev/null 2>&1 &
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
 
 sleep 10
 
