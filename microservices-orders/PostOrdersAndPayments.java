@@ -57,7 +57,7 @@ public class PostOrdersAndPayments {
   private static void sendPayment(String id, Payment payment,
       Schemas.Topic<String, Payment> topic) {
 
-    System.out.printf("-----> id: %s, payment: %s\n", id, payment);
+    //System.out.printf("-----> id: %s, payment: %s\n", id, payment);
 
     final SpecificAvroSerializer<Payment> paymentSerializer = new SpecificAvroSerializer<>();
     final boolean isKeySerde = false;

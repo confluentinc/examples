@@ -19,6 +19,7 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
 sleep 5
 
@@ -90,7 +91,7 @@ confluent consume payments --value-format avro --property print.key=true --prope
 
 # Topic order-validations: PASS/FAIL for each "checkType": ORDER_DETAILS_CHECK (OrderDetailsService), FRAUD_CHECK (FraudService), INVENTORY_CHECK (InventoryService)
 echo -e "\n-----order-validations-----"
-confluent consume order-validations --value-format avro --max-messages 10
+confluent consume order-validations --value-format avro --max-messages 15
 
 # Topic warehouse-inventory: initial inventory in stock
 echo -e "\n-----warehouse-inventory-----"
@@ -100,3 +101,17 @@ confluent consume warehouse-inventory --max-messages 2 --from-beginning --proper
 # It maxes out when orders = initial inventory
 echo -e "\n-----inventory-service-store-of-reserved-stock-changelog-----"
 confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
+
+
+# Create KSQL queries
+ksql http://localhost:8088 <<EOF
+run script 'ksql.commands';
+exit ;
+EOF
+
+# Read queries
+timeout 5s ksql http://localhost:8088 <<EOF
+SELECT * FROM ORDER_VALIDATIONS LIMIT 10;
+exit ;
+EOF
+

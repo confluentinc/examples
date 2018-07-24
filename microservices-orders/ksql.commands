@@ -1,0 +1,9 @@
+--We need to identify fields in schema, even with Avro, because this is a script (https://github.com/confluentinc/ksql/issues/1031)
+CREATE STREAM ORDER_VALIDATIONS (orderid varchar, checktype varchar, validationresult varchar) WITH (kafka_topic='order-validations', value_format='AVRO');
+CREATE STREAM ORDER_VALIDATIONS_FAILED WITH (kafka_topic='order-validations-failed', value_format='AVRO') AS SELECT * FROM order_validations WHERE validationresult = 'FAIL';
+
+--We need to identify fields in schema, even with Avro, because this is a script (https://github.com/confluentinc/ksql/issues/1031)
+CREATE TABLE customers (orderid bigint, firstname varchar, lastname varchar, email varchar, address varchar) WITH (kafka_topic='customers', value_format='AVRO', key='orderid');
+
+--Join
+CREATE STREAM failed_orders AS SELECT customers.orderid AS orderid FROM order_validations_failed LEFT JOIN customers ON order_validations_failed.orderid = customers.orderid;
