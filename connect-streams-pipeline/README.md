@@ -44,7 +44,7 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 ### Notes
 
-This example uses a few SMTs including one to cast the key to an `int64`. The key needs a `Long` Converter, and until [KAFKA-6913](https://issues.apache.org/jira/browse/KAFKA-6913) is resolved, it has a [custom Long Converter](src/main/java/io/confluent/examples/connectandstreams/utils/LongConverter.java).
+This example uses a few SMTs including one to cast the key to an `int64`. The key uses the `org.apache.kafka.connect.converters.LongConverter` provided by [KAFKA-6913](https://issues.apache.org/jira/browse/KAFKA-6913).
 
 ## Example 3a: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
 
