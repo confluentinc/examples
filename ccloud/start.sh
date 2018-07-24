@@ -43,8 +43,8 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://localhost:$SR_LISTENER &>/dev/null &
 sleep 5
 
-# Register the same schema for the replicated topic pageviews.replica
-curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"ConnectDefault\",\"namespace\":\"io.confluent.connect.avro\",\"fields\":[{\"name\":\"viewtime\",\"type\":\"long\"},{\"name\":\"userid\",\"type\":\"string\"},{\"name\":\"pageid\",\"type\":\"string\"}]}"}' http://localhost:$SR_LISTENER/subjects/pageviews.replica-value/versions
+# Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 # Produce to topic users in CCloud cluster
 ccloud topic create users
