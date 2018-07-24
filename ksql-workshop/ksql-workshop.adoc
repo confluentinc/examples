@@ -963,7 +963,7 @@ $ docker ps
 71c9a39c5150        docker.elastic.co/kibana/kibana:6.3.0                                                   "/usr/local/bin/ki..."   11 minutes ago      Up 11 minutes       0.0.0.0:5601->5601/tcp                           kibana
 ----
 
-Then, point your browser to that address (in this case, 0.0.0:5601)
+Then, point your browser to that address (in this case, 0.0.0.0:5601)
 
 Use the Kibana interface to check that docs are arriving in Elasticsearch:
 
