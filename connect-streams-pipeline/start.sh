@@ -8,9 +8,7 @@ check_running_cp 5.0 || exit
 
 ./stop.sh
 
-# Compile java client code and copy custom LongConverter jar
-mvn -q compile
-(cd target/classes && jar cvf $CONFLUENT_HOME/share/java/kafka-connect-jdbc/LongConverter.jar io/confluent/examples/connectandstreams/utils/LongConverter.class)
+mvn compile
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
