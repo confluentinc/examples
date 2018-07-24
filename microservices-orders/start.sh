@@ -102,6 +102,7 @@ confluent consume warehouse-inventory --max-messages 2 --from-beginning --proper
 echo -e "\n-----inventory-service-store-of-reserved-stock-changelog-----"
 confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
 
+exit
 
 # Create KSQL queries
 ksql http://localhost:8088 <<EOF
@@ -111,7 +112,7 @@ EOF
 
 # Read queries
 timeout 5s ksql http://localhost:8088 <<EOF
-SELECT * FROM ORDER_VALIDATIONS LIMIT 10;
+SELECT * FROM orders_cust1_joined LIMIT 5;
 exit ;
 EOF
 
