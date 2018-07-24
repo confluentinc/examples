@@ -19,7 +19,7 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-confluent start
+confluent start schema-registry
 sleep 5
 
 # Get random port number
@@ -60,7 +60,7 @@ COUNT_JUMPERS=20
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
 TABLE_CUSTOMERS=/usr/local/lib/table.customers
 prep_sqltable_customers
-if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
+#if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
 
 # Cannot run EmailService without AvroSerialization error!
 #for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
@@ -71,7 +71,11 @@ if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.con
 sleep 10
 
 echo -e "\nPosting Order Requests and Payments"
-(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
+#(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
+
+mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.ProduceOrders > /dev/null 2>&1 &
+mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.ProduceCustomers > /dev/null 2>&1 &
+mvn exec:java -f kafka-streams-examples/pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.ProducePayments > /dev/null 2>&1 &
 
 sleep 10
 
