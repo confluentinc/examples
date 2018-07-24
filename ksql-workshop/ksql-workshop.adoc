@@ -128,7 +128,7 @@ Note that the data is in Avro, so you will see lots of special characters in the
 
 Press Ctrl-C to cancel and return to the command prompt.
 
-NOTE: On Linux the name of the network is `ksqlworkshop_default` (no `-` between `ksql` and `workshop`).
+NOTE: On Linux and OSX the name of the network is `ksqlworkshop_default` (no `-` between `ksql` and `workshop`).
 
 == Source Data : Customers
 
@@ -955,6 +955,15 @@ curl -X "POST" "http://localhost:18083/connectors/" \
   }
 }'
 ----
+
+To access Kibana, first look up the address using docker ps:
+[source,bash]
+----
+$ docker ps
+71c9a39c5150        docker.elastic.co/kibana/kibana:6.3.0                                                   "/usr/local/bin/ki..."   11 minutes ago      Up 11 minutes       0.0.0.0:5601->5601/tcp                           kibana
+----
+
+Then, point your browser to that address (in this case, 0.0.0:5601)
 
 Use the Kibana interface to check that docs are arriving in Elasticsearch:
 
