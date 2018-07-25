@@ -5,6 +5,8 @@
 
 check_env || exit 1
 check_mvn || exit 1
+check_running_elasticsearch 5.6.5 || exit 1
+check_running_kibana || exit 1
 check_running_cp 5.0 || exit 1
 
 ./stop.sh
@@ -61,6 +63,11 @@ TABLE_CUSTOMERS=/usr/local/lib/table.customers
 prep_sqltable_customers
 if is_ce; then confluent config jdbc-customers -d ./connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connector_jdbc_customers_oss.config; fi
 
+# Sink Connector -> Elasticsearch -> Kibana
+if is_ce; then confluent config elasticsearch -d ./connector_elasticsearch.config; else confluent config elasticsearch -d ./connector_elasticsearch_oss.config; fi
+./dashboard/set_elasticsearch_mapping.sh
+./dashboard/configure_kibana_dashboard.sh
+
 # Cannot run EmailService without AvroSerialization error!
 for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
     echo "Starting $SERVICE"
@@ -115,4 +122,5 @@ timeout 5s ksql http://localhost:8088 <<EOF
 SELECT * FROM orders_cust1_joined LIMIT 5;
 exit ;
 EOF
+
 
