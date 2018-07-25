@@ -1,4 +1,4 @@
-set 'auto.offset.reset'='earliest';
+--set 'auto.offset.reset'='earliest';
 
 --We need to identify fields in schema, even with Avro, because this is a script (https://github.com/confluentinc/ksql/issues/1031)
 CREATE STREAM CUSTOMERS_SRC (id INTEGER, FIRST_NAME VARCHAR, LAST_NAME VARCHAR, EMAIL VARCHAR, GENDER VARCHAR, COMMENTS VARCHAR, MESSAGETOPIC VARCHAR, MESSAGESOURCE VARCHAR) WITH (KAFKA_TOPIC='asgard.demo.customers', VALUE_FORMAT='AVRO');
