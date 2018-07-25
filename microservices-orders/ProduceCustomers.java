@@ -35,15 +35,15 @@ public class ProduceCustomers {
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
         KafkaProducer<Long, Customer> producer = new KafkaProducer<Long, Customer>(props, new LongSerializer(), mySerializer);
 
-        for (int i = 1; i < 2001; i++) {
+        int i = 1;
+        while (true) {
            String orderId = id(0L);
            Customer customer = new Customer(15L, "Franz", "Kafka", "frans@thedarkside.net", "oppression street, prague, cze");
            ProducerRecord<Long, Customer> record = new ProducerRecord<Long, Customer>("customers", customer.getId(), customer);
            producer.send(record);
            Thread.sleep(1000L);
-        };
-
-        producer.close();
+           i++;
+        }
    }
 
 }

@@ -32,17 +32,17 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.GenericType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.lang.Math;
+import java.util.Random;
 
 import static io.confluent.examples.streams.avro.microservices.Product.JUMPERS;
 import static io.confluent.examples.streams.avro.microservices.Product.UNDERPANTS;
 import static io.confluent.examples.streams.microservices.domain.beans.OrderId.id;
 import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.MIN;
-import static java.util.Arrays.asList;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 
 import javax.ws.rs.core.Response;
@@ -81,6 +81,8 @@ public class PostOrdersAndPayments {
   public static void main(String [] args) throws Exception {
 
     final int NUM_CUSTOMERS = 6;
+    final List<Product> productTypeList = Arrays.asList(Product.JUMPERS, Product.UNDERPANTS, Product.STOCKINGS);
+    final Random randomGenerator = new Random();
 
     final int restPort = args.length > 0 ? Integer.valueOf(args[0]) : 5432;
     System.out.printf("restPort: %d\n", restPort);
@@ -93,12 +95,15 @@ public class PostOrdersAndPayments {
         .property(ClientProperties.READ_TIMEOUT, 60000);
     Client client = ClientBuilder.newClient(clientConfig);
 
-    // send 2000 orders, one every 1000 milliseconds
-    for (int i = 1; i < 2001; i++) {
+    // send one order every 1 second
+    int i = 1;
+    while (true) {
 
-      int randomCustomerId = (int)(Math.random() * NUM_CUSTOMERS + 1);
+      int randomCustomerId = randomGenerator.nextInt(NUM_CUSTOMERS);
+      Product randomProduct = productTypeList.get(randomGenerator.nextInt(productTypeList.size()));
 
-      OrderBean inputOrder = new OrderBean(id(i), Long.valueOf(randomCustomerId), OrderState.CREATED, Product.JUMPERS, 1, 1d);
+      //OrderBean inputOrder = new OrderBean(id(i), Long.valueOf(randomCustomerId), OrderState.CREATED, Product.JUMPERS, 1, 1d);
+      OrderBean inputOrder = new OrderBean(id(i), Long.valueOf(randomCustomerId), OrderState.CREATED, randomProduct, 1, 1d);
 
       // POST order to OrdersService
       System.out.printf("Posting order to: %s   .... ", path.urlPost());
@@ -137,6 +142,7 @@ public class PostOrdersAndPayments {
       //));
 
       Thread.sleep(1000L);
+      i++;
     }
   }
 

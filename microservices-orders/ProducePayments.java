@@ -35,16 +35,16 @@ public class ProducePayments {
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
         KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props, new StringSerializer(), mySerializer);
 
-        for (int i = 1; i < 2001; i++) {
+        int i = 1;
+        while (true) {
            String orderId = id(0L);
            Order order = new Order(orderId, 15L, CREATED, UNDERPANTS, 3, 5.00d);
            Payment payment = new Payment("Payment:1234", orderId, "CZK", 1000.00d);
            ProducerRecord<String, Payment> record = new ProducerRecord<String, Payment>("payments", payment.getId(), payment);
            producer.send(record);
            Thread.sleep(1000L);
-        };
-
-        producer.close();
+           i++;
+        }
    }
 
 }

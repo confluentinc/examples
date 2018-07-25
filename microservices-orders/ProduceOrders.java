@@ -34,15 +34,15 @@ public class ProduceOrders {
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
         KafkaProducer<String, Order> producer = new KafkaProducer<String, Order>(props, new StringSerializer(), mySerializer);
 
-        for (int i = 1; i < 2001; i++) {
+        int i = 1;
+        while (true) {
            String orderId = id(0L);
            Order order = new Order(orderId, 15L, CREATED, UNDERPANTS, 3, 5.00d);
            ProducerRecord<String, Order> record = new ProducerRecord<String, Order>("orders", order.getId(), order);
            producer.send(record);
            Thread.sleep(1000L);
-        };
-
-        producer.close();
+           i++;
+        }
    }
 
 }
