@@ -14,6 +14,7 @@ check_running_kibana || exit 1
 # Add Debezium connector
 mkdir -p $CONFLUENT_HOME/share/java/debezium-connector-mysql
 cp -nR ./debezium-connector-mysql/* $CONFLUENT_HOME/share/java/debezium-connector-mysql/.
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
 
 # MySQL: Drop & repopulate data
