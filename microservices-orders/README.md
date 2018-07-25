@@ -24,3 +24,4 @@ After you run `./start.sh`:
 * If you are running Confluent Enterprise, use Control Center to view and create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
 * Navigate to the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
+![image](images/kibana_microservices.png)
