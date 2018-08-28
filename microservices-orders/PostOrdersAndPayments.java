@@ -69,7 +69,6 @@ public class PostOrdersAndPayments {
     producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     producerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
     producerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
-    producerConfig.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
 
     KafkaProducer<String, Payment> paymentProducer = new KafkaProducer<String, Payment>(producerConfig, new StringSerializer(), paymentSerializer);
 
