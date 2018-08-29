@@ -4,8 +4,9 @@
 
 The music demo is the KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html).
 This isn't an exact replica of that demo because some features in Kafka Streams API are not available yet in KSQL (coming soon!).
-Some of these differences are noted in the [KSQL commands](ksql.commands). Instead of the music demos's REST endpoints,
-use KSQL to inspect the data.
+Some of these differences are noted in the [KSQL commands](ksql.commands).
+
+Follow along with the video [Demo: Build a Streaming Application with KSQL](https://www.youtube.com/watch?v=ExEWJVjj-RA).
 
 # Prerequisites
 
@@ -17,4 +18,6 @@ use KSQL to inspect the data.
 
 After you run `./start.sh`:
 
+* Instead of using the music demos's REST endpoints, use KSQL to inspect the data.
 * If you are running Confluent Enterprise, use Control Center to view and create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
+
