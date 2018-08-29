@@ -2,9 +2,17 @@
 
 # Overview
 
-This demo integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) fully into the Confluent Platform and Confluent Cloud.
+This demo is based on the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) 
 
-![image](system-diag.png)
+![image](docs/images/system-diag.png)
+
+This demo augments that Microservices Orders scenario by fully integrating it into streaming ETL built on Confluent Platform:
+
+* [JDBC source connector](connector_jdbc_customers.config): reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic called `customers`
+* [Elasticsearch sink connector](connector_elasticsearch.config): reads from a Kafka topic called `orders` and pushes to Elasticsearch
+* [KSQL](ksql.commands): creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
+
+![image](docs/images/microservices-demo.jpg)
 
 # Prerequisites
 
@@ -16,12 +24,38 @@ This demo integrates the [Microservices Orders Demo Application](https://github.
 * Kibana 5.5.2 to visualize data
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
+# Dataflow
+
+Here is a description of which microservices and clients are producing to and reading from which topics (excludes internal topics).
+
+## Microservices
+
+| Service                             | Consuming From                    | Producing To          |
+| ----------------------------------- | --------------------------------- | --------------------- |
+| InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
+| FraudService                        | `orders`                          | `order-validations`   |
+| OrderDetailsService                 | `orders`                          | `order-validations`   |
+| ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`              |
+| EmailService                        | `orders`, `payments`, `customers` | -                     |
+
+## Other clients
+
+| Other Clients                       | Consuming From        | Producing To            |
+| ----------------------------------- | --------------------- | ----------------------- |
+| OrdersService                       | -                     | `orders`                |
+| PostOrdersAndPayments               | -                     | `payments`              |
+| AddInventory                        | -                     | `warehouse-inventory`   |
+| KSQL                                | `orders`, `customers` | KSQL streams and tables |
+| JDBC source connector               | DB                    | `customers`             |
+| Elasticsearch sink connector        | `orders`              | ES                      |
+
+
 # What Should I see?
 
 After you run `./start.sh`:
 
-* If you are running Confluent Enterprise, open your browser and navigate to the Control Center web interface Monitoring -> Data streams tab at http://localhost:9021/monitoring/streams to see throughput and latency performance of the KSQL queries
+* If you are running Confluent Enterprise, open your browser and navigate to the Control Center web interface Monitoring -> Data streams [tab](http://localhost:9021/monitoring/streams) to see throughput and latency performance of the KSQL queries
 * If you are running Confluent Enterprise, use Control Center to view and create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
 * Navigate to the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
-![image](images/kibana_microservices.png)
+![image](docs/images/kibana_microservices.png)
