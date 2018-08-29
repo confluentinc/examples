@@ -8,8 +8,8 @@ This demo is based on the [Microservices Orders Demo Application](https://github
 
 This demo augments that Microservices Orders scenario by fully integrating it into streaming ETL built on Confluent Platform:
 
-* [JDBC source connector](connector_jdbc_customers.config): reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic called `customers`
-* [Elasticsearch sink connector](connector_elasticsearch.config): reads from a Kafka topic called `orders` and pushes to Elasticsearch
+* [JDBC source connector](connector_jdbc_customers.config): reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
+* [Elasticsearch sink connector](connector_elasticsearch.config): pushes data from a Kafka topic to Elasticsearch
 * [KSQL](ksql.commands): creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
 
 ![image](docs/images/microservices-demo.jpg)
