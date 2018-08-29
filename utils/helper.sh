@@ -125,6 +125,24 @@ function check_mvn() {
   return 0
 }
 
+function check_jot() {
+  if [[ $(type jot 2>&1) =~ "not found" ]]; then
+    echo "'jot' is not found. Install jot, for random number generation, and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_netstat() {
+  if [[ $(type netstat 2>&1) =~ "not found" ]]; then
+    echo "'netstat' is not found. Install netstat, typically provided by the net-tools package, and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_mysql() {
   if [[ $(type mysql 2>&1) =~ "not found" ]]; then
     echo "'mysql' is not found. Install MySQL and try again"
