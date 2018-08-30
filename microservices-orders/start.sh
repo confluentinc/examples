@@ -69,7 +69,7 @@ if is_ce; then confluent config elasticsearch -d ./connectors/connector_elastics
 ./dashboard/set_elasticsearch_mapping.sh
 ./dashboard/configure_kibana_dashboard.sh
 
-# Cannot run EmailService without AvroSerialization error!
+# Start microservices
 for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
     echo "Starting $SERVICE"
     (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
