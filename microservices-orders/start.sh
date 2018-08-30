@@ -16,7 +16,7 @@ check_running_cp 5.0 || exit 1
 # Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 yes | cp -f src/main/java/*.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-(cd kafka-streams-examples && git checkout 5.0.0-post && git fetch --prune ; git pull && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && git fetch && git checkout 5.0.0-post && git pull && mvn clean compile -DskipTests)
 if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
@@ -55,7 +55,7 @@ if [[ $(netstat -ant | grep $RESTPORT) == "" ]]; then
 fi
 
 echo "Adding Inventory"
-COUNT_UNDERPANTS=75
+COUNT_UNDERPANTS=25
 COUNT_JUMPERS=20
 (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &)
 
@@ -82,8 +82,16 @@ echo -e "\nPosting Order Requests and Payments"
 
 sleep 10
 
+# Create KSQL queries
+ksql http://localhost:8088 <<EOF
+run script 'ksql.commands';
+exit ;
+EOF
+
+
 ################################
-# View messages in topics
+
+echo -e "\n*** Sampling messages in Kafka topics and a KSQL stream***\n"
 
 # Topic customers: populated by Kafka Connect that uses the JDBC source connector to read customer data from a sqlite3 database
 echo -e "\n-----customers-----"
@@ -109,12 +117,6 @@ confluent consume warehouse-inventory --max-messages 2 --from-beginning --proper
 # It maxes out when orders = initial inventory
 echo -e "\n-----inventory-service-store-of-reserved-stock-changelog-----"
 confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
-
-# Create KSQL queries
-ksql http://localhost:8088 <<EOF
-run script 'ksql.commands';
-exit ;
-EOF
 
 # Read queries
 timeout 5s ksql http://localhost:8088 <<EOF

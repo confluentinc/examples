@@ -2,7 +2,7 @@
 
 # Overview
 
-This demo is based on the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) 
+This demo is based on the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices). Please familiarize yourself with that scenario so that you can better interpret the demo here.
 
 ![image](docs/images/system-diag.png)
 
@@ -54,8 +54,8 @@ Here is a description of which microservices and clients are producing to and re
 
 After you run `./start.sh`:
 
-* If you are running Confluent Enterprise, open your browser and navigate to the Control Center [Data streams tab](http://localhost:9021/monitoring/streams) to see throughput and latency performance of the KSQL queries
-* If you are running Confluent Enterprise, navigate to the Control Center [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
+* (Confluent Enterprise): navigate to the Control Center [Kafka Connect tab](http://localhost:9021/management/connect/) to view the JDCB source connector and Elasticsearch sink connector.
+* (Confluent Enterprise): navigate to the Control Center [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
 * Navigate to the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
 ![image](docs/images/kibana_microservices.png)
