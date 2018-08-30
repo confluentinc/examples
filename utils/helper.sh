@@ -56,18 +56,18 @@ function check_running_elasticsearch() {
   expected_version=$1
 
   if [[ ! $(jps | grep Elasticsearch) ]]; then
-    echo -e "\nThis script requires Elasticsearch version $expected_version to be running. Please start Elasticsearch and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
+    echo -e "\nTo showcase a sink connector, this script requires Elasticsearch version $expected_version to be running. Please start Elasticsearch and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
     exit 1
   else
     curl --silent --output /dev/null 'http://localhost:9200/?pretty'
     status=$?
     if [[ ${status} -ne 0 ]]; then
-      echo -e "\nThis script requires Elasticsearch to be listening on port 9200. Please reconfigure and restart Elasticsearch and run again.\n"
+      echo -e "\nTo showcase a sink connector, this script requires Elasticsearch to be listening on port 9200. Please reconfigure and restart Elasticsearch and run again.\n"
       exit 1
     else
       actual_version=$(curl --silent 'http://localhost:9200/?pretty' | jq .version.number -r)
       if [[ $expected_version != $actual_version ]]; then
-        echo -e "\nThis script requires Elasticsearch version $expected_version but the running version is $actual_version. Please run the correct version of Elasticsearch to proceed.\n"
+        echo -e "\nTo showcase a sink connector, this script requires Elasticsearch version $expected_version but the running version is $actual_version. Please run the correct version of Elasticsearch to proceed.\n"
         exit 1
       fi
     fi
@@ -80,18 +80,18 @@ function check_running_grafana() {
   expected_version=$1
 
   if [[ $(ps -ef | grep grafana-server | grep -v grep ) == "" ]]; then
-    echo -e "\nThis script requires Grafana to be running. Please start Grafana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
+    echo -e "\nTo showcase a sink connector, this script requires Grafana to be running. Please start Grafana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
     exit 1
   else
     curl --silent --output /dev/null 'http://localhost:3000/?pretty'
     status=$?
     if [[ ${status} -ne 0 ]]; then
-      echo -e "\nThis script requires Grafana to be listening on port 3000. Please reconfigure and restart Grafana and run again.\n"
+      echo -e "\nTo showcase a sink connector, this script requires Grafana to be listening on port 3000. Please reconfigure and restart Grafana and run again.\n"
       exit 1
     else
       actual_version=$(grafana-server -v | awk '{print $2;}')
       if [[ $expected_version != $actual_version ]]; then
-        echo -e "\nThis script requires Grafana version $expected_version but the running version is $actual_version. Please run the correct version of Grafana to proceed.\n"
+        echo -e "\nTo showcase a sink connector, this script requires Grafana version $expected_version but the running version is $actual_version. Please run the correct version of Grafana to proceed.\n"
       exit 1
       fi
     fi
@@ -102,15 +102,42 @@ function check_running_grafana() {
 
 function check_running_kibana() {
   if [[ $(ps -ef | grep kibana | grep -v grep ) == "" ]]; then
-    echo -e "\nThis script requires Kibana to be running. Please start Kibana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
+    echo -e "\nTo showcase a sink connector, this script requires Kibana to be running. Please start Kibana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
     exit 1
   else
     curl --silent --output /dev/null 'http://localhost:5601/?pretty'
     status=$?
     if [[ ${status} -ne 0 ]]; then
-      echo -e "\nThis script requires Kibana to be listening on port 5601. Please reconfigure and restart Kibana and run again.\n"
+      echo -e "\nTo showcase a sink connector, this script requires Kibana to be listening on port 5601. Please reconfigure and restart Kibana and run again.\n"
       exit 1
     fi
+  fi
+
+  return 0
+}
+
+function check_mvn() {
+  if [[ $(type mvn 2>&1) =~ "not found" ]]; then
+    echo "'mvn' is not found. Install Maven and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_jot() {
+  if [[ $(type jot 2>&1) =~ "not found" ]]; then
+    echo "'jot' is not found. Install jot, for random number generation, and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_netstat() {
+  if [[ $(type netstat 2>&1) =~ "not found" ]]; then
+    echo "'netstat' is not found. Install netstat, typically provided by the net-tools package, and try again"
+    exit 1
   fi
 
   return 0
@@ -131,21 +158,40 @@ function check_mysql() {
   return 0
 }
 
-function prep_sqltable() {
+function prep_sqltable_locations() {
   TABLE="locations"
-  TABLE_LOCATIONS=/usr/local/lib/table.$TABLE
-  cp ../utils/table.$TABLE $TABLE_LOCATIONS
+  TABLE_PATH=/usr/local/lib/table.$TABLE
+  cp ../utils/table.$TABLE $TABLE_PATH
 
   DB=/usr/local/lib/retail.db
   echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
   echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, name VARCHAR(255), sale INTEGER);" | sqlite3 $DB
-  echo ".import $TABLE_LOCATIONS $TABLE" | sqlite3 $DB
+  echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
   #echo "pragma table_info($TABLE);" | sqlite3 $DB
   #echo "select * from $TABLE;" | sqlite3 $DB
 
   # View contents of file
-  #echo -e "\n======= Contents of $TABLE_LOCATIONS ======="
-  #cat $TABLE_LOCATIONS
+  #echo -e "\n======= Contents of $TABLE_PATH ======="
+  #cat $TABLE_PATH
+
+  return 0
+}
+
+function prep_sqltable_customers() {
+  TABLE="customers"
+  TABLE_PATH=/usr/local/lib/table.$TABLE
+  cp ../utils/table.$TABLE $TABLE_PATH
+
+  DB=/usr/local/lib/microservices.db
+  echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
+  echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255));" | sqlite3 $DB
+  echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
+  #echo "pragma table_info($TABLE);" | sqlite3 $DB
+  #echo "select * from $TABLE;" | sqlite3 $DB
+
+  # View contents of file
+  #echo -e "\n======= Contents of $TABLE_PATH ======="
+  #cat $TABLE_PATH
 
   return 0
 }
