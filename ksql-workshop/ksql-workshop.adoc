@@ -228,9 +228,20 @@ Make sure that you get a successful start up screen:
 
 [source,bash]
 ----
-Copyright 2017 Confluent Inc.
+                  ===========================================
+                  =        _  __ _____  ____  _             =
+                  =       | |/ // ____|/ __ \| |            =
+                  =       | ' /| (___ | |  | | |            =
+                  =       |  <  \___ \| |  | | |            =
+                  =       | . \ ____) | |__| | |____        =
+                  =       |_|\_\_____/ \___\_\______|       =
+                  =                                         =
+                  =  Streaming SQL Engine for Apache Kafka® =
+                  ===========================================
 
-CLI v5.0.0-SNAPSHOT, Server v5.0.0-SNAPSHOT located at http://ksql-server:8088
+Copyright 2017-2018 Confluent Inc.
+
+CLI v5.0.0, Server v5.0.0 located at http://ksql-server:8088
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
 
@@ -586,6 +597,13 @@ ksql>
 
 With the stream registered, we can now re-key the topic, using a KSQL `CSAS` and the `PARTITION BY` clause. Note that we're taking the opportunity to re-serialise the data into Avro format. We're also changing the number of partitions from that of the source (4) to match that of the `ratings` topic (1):
 
+[IMPORTANT]
+====
+By changing the partition key, data may move between partitions, and thus its ordering change. Kafka's strict ordering guarantee only applies within a partition. 
+
+In our example this doesn't matter, but be aware of this if you rely on this re-keying technique in other KSQL queries.
+====
+
 [source,sql]
 ----
 ksql> CREATE STREAM CUSTOMERS_SRC_REKEY \
@@ -707,7 +725,7 @@ Run the following SQL:
 [source,sql]
 ----
 SELECT R.MESSAGE, C.FIRST_NAME, C.LAST_NAME \
-FROM RATINGS R LEFT JOIN CUSTOMERS C \
+FROM RATINGS R INNER JOIN CUSTOMERS C \
 ON R.USER_ID = C.ID \
 LIMIT 5;
 ----
@@ -731,14 +749,14 @@ Query terminated
 ksql>
 ----
 
-Now let's pull the full set of data, including a reformat of the timestamp into something human readable. Note the `IS NOT NULL` clause to filter out any ratings with no corresponding user data (i.e. making it in-effect an `INNER JOIN`):
+Now let's pull the full set of data, including a reformat of the timestamp into something human readable.
 
 [source,sql]
 ----
 SELECT TIMESTAMPTOSTRING(R.RATING_TIME, 'yyyy-MM-dd HH:mm:ss'), R.RATING_ID, R.STARS, R.ROUTE_ID,  R.CHANNEL, \
 R.MESSAGE, C.FIRST_NAME, C.LAST_NAME, C.CLUB_STATUS \
-FROM RATINGS R LEFT JOIN CUSTOMERS C \
-ON R.USER_ID = C.ID WHERE C.LAST_NAME IS NOT NULL;
+FROM RATINGS R INNER JOIN CUSTOMERS C \
+ON R.USER_ID = C.ID;
 ----
 
 [source,sql]
@@ -749,7 +767,7 @@ ON R.USER_ID = C.ID WHERE C.LAST_NAME IS NOT NULL;
 2018-06-20 13:03:51 | 6 | 2 | 6902 | web | Surprisingly good, maybe you are getting your mojo back at long last! | Gianina | Mixhel | gold
 ----
 
-NOTE: The timestamp of KSQL Table events should be _before_ the event to which they are being joined. Because of KStream processing semantics you may see null value results against some events produced prior to the table events.
+Press Ctrl-C to cancel the output. 
 
 <<<
 === Populating a Kafka topic with the results of a Stream-Table join
