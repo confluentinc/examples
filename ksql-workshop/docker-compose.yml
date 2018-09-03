@@ -2,13 +2,13 @@
 version: '2'
 services:
   zookeeper:
-    image: "confluentinc/cp-zookeeper:4.1.1"
+    image: "confluentinc/cp-zookeeper:5.0.0"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: "confluentinc/cp-enterprise-kafka:4.1.1"
+    image: "confluentinc/cp-enterprise-kafka:5.0.0"
     ports:
       - '9092:9092'
     depends_on:
@@ -30,7 +30,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: "confluentinc/cp-schema-registry:4.1.1"
+    image: "confluentinc/cp-schema-registry:5.0.0"
     depends_on:
       - zookeeper
       - kafka
@@ -67,70 +67,38 @@ services:
       - kafka
       - schema-registry
 
-  # KSQL
   ksql-server:
-    image: "confluentinc/ksql-cli:5.0.0-beta30"
+    image: confluentinc/cp-ksql-server:5.0.0
     depends_on:
       - kafka
       - schema-registry
-    # Note: The container's `run` script will perform the same readiness checks
-    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
-    # The reason we check for readiness here is that we can insert a sleep time
-    # for topic creation before we start the application.
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 300 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8081 300 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 60 && \
-                       echo Starting KSQL... && \
-                       /usr/bin/ksql-server-start /etc/ksql/ksql-server.properties'"
     environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_OPTS: "-Dbootstrap.servers=kafka:29092 -Dksql.schema.registry.url=http://schema-registry:8081 -Dlisteners=http://0.0.0.0:8088 -Dksql.streams.producer.retries=2147483647"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      KSQL_BOOTSTRAP_SERVERS: kafka:29092
+      KSQL_LISTENERS: http://0.0.0.0:8088
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KSQL_KSQL_SERVICE_ID: confluent_rmoff_01
 
-  ksql-cli:
-    image: "confluentinc/ksql-cli:5.0.0-beta30"
-    depends_on:
-      - kafka
-      - schema-registry
-      - ksql-server
-    command: "sleep infinity"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8081
-
-  # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
-    image: "confluentinc/ksql-examples:4.1.0"
+  # Runs the Kafka KSQL data generator for ratings
+    image: "confluentinc/ksql-examples:5.0.0"
     depends_on:
       - kafka
       - schema-registry
-    # Note: The container's `run` script will perform the same readiness checks
-    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
-    # The reason we check for readiness here is that we can insert a sleep time
-    # for topic creation before we start the application.
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b kafka:29092 1 300 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 300 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 20 && \
-                       java -jar /usr/share/java/ksql-examples/ksql-examples-4.1.1-SNAPSHOT-standalone.jar quickstart=ratings format=avro topic=ratings maxInterval=500 bootstrap-server=kafka:29092 schemaRegistryUrl=http://schema-registry:8081'"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8081
-
+                       ksql-datagen \
+                          quickstart=ratings \
+                          format=avro \
+                          topic=ratings \
+                          maxInterval=500 \
+                          bootstrap-server=kafka:29092 \
+                          schemaRegistryUrl=http://schema-registry:8081'"
 
 # External systems
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
     container_name: elasticsearch
