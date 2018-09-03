@@ -64,12 +64,12 @@ git clone https://github.com/confluentinc/quickstart-demos.git
 0. Did you check that Docker has at least 8GB of memory available?
 ** You really do need to do this
 
-2. Checkout the latest stable branch, and change the working directory
+2. Change the working directory and checkout the latest stable branch: 
 +
 [source,bash]
 ----
-git checkout 5.0.0-post
 cd quickstart-demos/ksql-workshop
+git checkout 5.0.0-post
 ----
 
 0. How much memory does Docker have? It needs to be >= 8 GB!
