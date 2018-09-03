@@ -79,9 +79,28 @@ git checkout 5.0.0-post
 +
 [source,bash]
 ----
-docker-compose pull
+docker pull confluentinc/cp-zookeeper:5.0.0
+docker pull confluentinc/cp-enterprise-kafka:5.0.0
+docker pull confluentinc/cp-schema-registry:5.0.0
+docker pull confluentinc/cp-kafka-connect:5.0.0
+docker pull confluentinc/cp-ksql-server:5.0.0
+docker pull confluentinc/ksql-examples:5.0.0
+docker pull confluentinc/cp-kafkacat
+docker pull confluentinc/cp-ksql-cli:5.0.0
+docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+docker pull docker.elastic.co/kibana/kibana:6.3.0
 ----
+
+4. If you want to use the Elasticsearch part of the workshop then make sure the virtual memory mmap count limit is set appropriately. 
++
+[source,bash]
+----
+sysctl -w vm.max_map_count=262144
+----
++
+See the https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html[Elasticsearch docs] for more info. 
 ====
+
 
 == Start Confluent Platform
 
@@ -98,7 +117,7 @@ Once you see output then it means Kafka is running and you can proceed
 [source,bash]
 ----
 $ docker-compose logs -f kafka|grep "INFO Kafka version"
-kafka_1                 | [2018-06-19 11:37:32,586] INFO Kafka version : 1.1.1-cp1 (org.apache.kafka.common.utils.AppInfoParser)
+kafka_1             | [2018-09-03 14:08:09,790] INFO Kafka version : 2.0.0-cp1 (org.apache.kafka.common.utils.AppInfoParser)
 ----
 
 Press Ctrl-C twice to exit the `docker-compose logs` command
@@ -124,6 +143,8 @@ The event stream driving this example is a simulated stream of events purporting
 
 === Inspect the ratings data
 
+Here we use https://github.com/edenhill/kafkacat/[`kafkacat` ] for showing the Kafka messages and detailed metadata. 
+
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
@@ -138,7 +159,7 @@ Note that the data is in Avro, so you will see lots of special characters in the
 
 Press Ctrl-C to cancel and return to the command prompt.
 
-NOTE: On Linux the name of the network is `ksqlworkshop_default` (no `-` between `ksql` and `workshop`).
+NOTE: On Linux the name of the network _may_ be `ksqlworkshop_default` (no `-` between `ksql` and `workshop`). Use `docker network ls` to check, and modify the `docker run` command above (and subsequently in this workshop) accordingly. 
 
 == Source Data : Customers
 
@@ -150,8 +171,8 @@ Run the following command to send the customer data to the `customers` topic:
 
 [source,bash]
 ----
-docker run --interactive \
-           --network ksql-workshop_default \
+docker run --network ksql-workshop_default \
+           --interactive \
            --volume $PWD/data:/data confluentinc/cp-kafkacat \
            kafkacat -b kafka:29092 \
                     -t customers \
@@ -160,12 +181,9 @@ docker run --interactive \
 
 Note that there is no output from this command. We will verify its success in the next step.
 
-_On Windows you may find that the above doesn't work. If so, run just the second part of the command (starting `docker run…`) and manually paste the contents of `data/customers.json doesn't have cat (for loading customer data)
-
-
 === Inspect customer data
 
-Run this command to inspect the content of the `customers` topic that we populated above. Note the use of https://github.com/edenhill/kafkacat/[`kafkacat` ] for showing the messages and detailed metadata.
+Run this command to inspect the content of the `customers` topic that we populated above. 
 
 [source,bash]
 ----
@@ -201,7 +219,9 @@ Launch the CLI:
 
 [source,bash]
 ----
-docker-compose exec ksql-cli ksql http://ksql-server:8088
+docker run --network ksql-workshop_default \
+           --tty --interactive \
+           confluentinc/cp-ksql-cli:5.0.0 http://ksql-server:8088
 ----
 
 Make sure that you get a successful start up screen:
