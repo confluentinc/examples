@@ -42,8 +42,17 @@ IMPORTANT: *THIS MUST BE DONE _BEFORE_ THE WORKSHOP - The docker images are larg
 
 1. Install https://docs.docker.com/compose/install/[Docker Compose] on your system. There are Mac, Windows, and Linux options available at the link.
 
-0. In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
+0. [Mac/Windows only] In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
 ** Don't forget to do this
+
+1. Confirm that Docker has at least 8GB of memory available to it: 
++
+[source,bash]
+----
+docker system info | grep Memory 
+----
++
+Should return a value greater than 8GB - if not, the Kafka stack will probably not work. 
 
 1. Clone the workshop repo to your local machine:
 +
@@ -52,7 +61,7 @@ IMPORTANT: *THIS MUST BE DONE _BEFORE_ THE WORKSHOP - The docker images are larg
 git clone https://github.com/confluentinc/quickstart-demos.git
 ----
 
-0. Did you remember to increase the memory dedicated to Docker to at least 8GB?
+0. Did you check that Docker has at least 8GB of memory available?
 ** You really do need to do this
 
 2. Checkout the latest stable branch, and change the working directory
@@ -63,7 +72,7 @@ git checkout 5.0.0-post
 cd quickstart-demos/ksql-workshop
 ----
 
-0. How much memory did you allocate to Docker? It needs to be >= 8 GB!
+0. How much memory does Docker have? It needs to be >= 8 GB!
 ** Nothing will work if you don't do this
 
 3. Pull all required docker images—this will take a while!
