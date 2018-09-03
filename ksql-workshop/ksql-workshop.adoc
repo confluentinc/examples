@@ -3,7 +3,7 @@
 :doctype: book
 :sectnums:
 Robin Moffatt <@rmoff>
-v0.11, 28 Jun 2018
+v1.20, September 3, 2018
 
 :toc:
 
@@ -55,10 +55,11 @@ git clone https://github.com/confluentinc/quickstart-demos.git
 0. Did you remember to increase the memory dedicated to Docker to at least 8GB?
 ** You really do need to do this
 
-2. Change working directory
+2. Checkout the latest stable branch, and change the working directory
 +
 [source,bash]
 ----
+git checkout 5.0.0-post
 cd quickstart-demos/ksql-workshop
 ----
 
