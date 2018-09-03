@@ -85,7 +85,7 @@ docker-compose pull
 
 == Start Confluent Platform
 
-NOTE: In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
+_NOTE: Make sure that Docker has at least 8GB of memory available (check with `docker system info | grep Memory`)_
 
 [source,bash]
 ----
