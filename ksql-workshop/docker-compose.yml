@@ -52,10 +52,10 @@ services:
     environment:
       CONNECT_BOOTSTRAP_SERVERS: "kafka:29092"
       CONNECT_REST_PORT: 18083
-      CONNECT_GROUP_ID: compose-connect-group
-      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_GROUP_ID: kafka-connect-cp
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-kafka-connect-cp-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-kafka-connect-cp-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: docker-kafka-connect-cp-status
       CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
@@ -121,15 +121,17 @@ services:
     ports:
      - 8083:8083
     environment:
-     - BOOTSTRAP_SERVERS=kafka:29092
-     - GROUP_ID=1
-     - CONFIG_STORAGE_TOPIC=my_connect_configs
-     - OFFSET_STORAGE_TOPIC=my_connect_offsets
-     - STATUS_STORAGE_TOPIC=my_connect_status
-     - KEY_CONVERTER=io.confluent.connect.avro.AvroConverter
-     - VALUE_CONVERTER=io.confluent.connect.avro.AvroConverter
-     - CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
-     - CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: connect-debezium
+      CONFIG_STORAGE_TOPIC: docker-connect-debezium-configs
+      OFFSET_STORAGE_TOPIC: docker-connect-debezium-offsets
+      STATUS_STORAGE_TOPIC: docker-connect-debezium-status
+      KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+    volumes:
+     - $PWD/scripts:/scripts
      
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0

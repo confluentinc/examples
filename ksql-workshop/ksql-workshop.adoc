@@ -87,6 +87,8 @@ docker pull confluentinc/cp-ksql-server:5.0.0
 docker pull confluentinc/ksql-examples:5.0.0
 docker pull confluentinc/cp-kafkacat
 docker pull confluentinc/cp-ksql-cli:5.0.0
+docker pull debezium/connect:0.8
+docker pull debezium/example-mysql:0.8
 docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.0
 docker pull docker.elastic.co/kibana/kibana:6.3.0
 ----
@@ -127,14 +129,18 @@ Run `docker-compose ps` to confirm that all components are running:
 [source,bash]
 ----
 $ docker-compose ps
-Name                            Command               State                        Ports
----------------------------------------------------------------------------------------------------------------------------
-ksql-workshop_datagen-ratings_1   bash -c echo Waiting for K ...   Up
-ksql-workshop_kafka_1             /etc/confluent/docker/run        Up      0.0.0.0:29092->29092/tcp, 0.0.0.0:9092->9092/tcp
-ksql-workshop_ksql-cli_1          perl -e while(1){ sleep 99 ...   Up
-ksql-workshop_ksql-server_1       bash -c echo Waiting for K ...   Up      0.0.0.0:8088->8088/tcp
-ksql-workshop_schema-registry_1   /etc/confluent/docker/run        Up      0.0.0.0:8081->8081/tcp
-ksql-workshop_zookeeper_1         /etc/confluent/docker/run        Up      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
+              Name                            Command               State                          Ports
+--------------------------------------------------------------------------------------------------------------------------------
+ksql-workshop_connect-debezium_1   /docker-entrypoint.sh start      Up      0.0.0.0:8083->8083/tcp, 8778/tcp, 9092/tcp, 9779/tcp
+ksql-workshop_datagen-ratings_1    bash -c echo Waiting for K ...   Up
+ksql-workshop_elasticsearch_1      /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 9300/tcp
+ksql-workshop_kafka-connect-cp_1   /etc/confluent/docker/run        Up      0.0.0.0:18083->18083/tcp, 8083/tcp, 9092/tcp
+ksql-workshop_kafka_1              /etc/confluent/docker/run        Up      0.0.0.0:9092->9092/tcp
+ksql-workshop_kibana_1             /usr/local/bin/kibana-docker     Up      0.0.0.0:5601->5601/tcp
+ksql-workshop_ksql-server_1        /etc/confluent/docker/run        Up      8088/tcp
+ksql-workshop_mysql_1              docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
+ksql-workshop_schema-registry_1    /etc/confluent/docker/run        Up      8081/tcp
+ksql-workshop_zookeeper_1          /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp
 ----
 
 == Source Data : Rating events
@@ -148,7 +154,7 @@ Here we use https://github.com/edenhill/kafkacat/[`kafkacat` ] for showing the K
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
-          --tty --interactive \
+          --tty --interactive --rm \
           confluentinc/cp-kafkacat \
           kafkacat -b kafka:29092 -C -K: \
           -f '\nKey (%K bytes): %k\t\nValue (%S bytes): %s\n\Partition: %p\tOffset: %o\n--\n' \
@@ -163,19 +169,96 @@ NOTE: On Linux the name of the network _may_ be `ksqlworkshop_default` (no `-` b
 
 == Source Data : Customers
 
-To keep things simple, we're going to mock up the data that would be coming from our customers table on a database. In practice you would ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]
-
 === Populate customer data
+
+Depending on time available, and your interest in exploring database integration with Kafka, you may opt for one of the two methods below for getting customer data into Kafka. 
+
+==== Option A: RDBMS
+
+**This shows how to ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]. If you want, you can replace this step with the following one ("Populate customer data [manually]").**
+
+Check that Kafka Connect with Debezium's connector has started: 
+
+[source,bash]
+----
+docker-compose logs -f connect-debezium|grep "Kafka Connect started"
+----
+
+Wait for the output: 
+
+[source,bash]
+----
+connect-debezium_1  | 2018-09-04 11:33:04,639 INFO   ||  Kafka Connect started   [org.apache.kafka.connect.runtime.Connect]
+----
+
+Press Ctrl-C to return to the command prompt. 
+
+We'll now create _two_ Kafka Connect connectors. Both stream events from MySQL into Kafka using Debezium, but differ in how they handle the message structure. 
+
+[source,bash]
+----
+docker-compose exec connect-debezium bash -c '/scripts/create-mysql-source.sh'
+----
+
+You should see `HTTP/1.1 201 Created`, twice. 
+
+If you are interested you can inspect the script file (`scripts/create-mysql-source.sh` in the workshop folder) that includes the configuration payload in JSON. 
+
+1. The connector called `mysql-source-demo-customers` flattens the before/after record state data, along with the nested metadata, into a single flat structure. This is what we use during the rest of the workshop. 
++ 
+The flattening is done using a *Single Message Transform* from Debezium, called `io.debezium.transforms.UnwrapFromEnvelope`. 
++ The connector also uses two Single Message Transforms to illustrate how metadata can be added to ingested data. The `InsertField` transformation adds the topic name into a field called `messagetopic`, and some fixed text into the `messagesource` field. 
+
+2. The connector `mysql-source-demo-customers-raw` retains the nested structure of the before/after record data.
++
+A Single Message Transform is used to route the messages to a different topic. By default Debezium will use the format `server.schema.table` when streaming a table's data to a Kafka topic. We use the `RegexRouter` to redirect the messages to a topic with a `-raw` suffix. 
+
+===== Exploring CDC change records
+
+Start a MySQL command prompt: 
+
+[source,bash]
+----
+docker-compose exec mysql bash -c 'mysql -u $MYSQL_USER -p$MYSQL_PASSWORD demo'
+----
+
+Now in a separate terminal window run the following, to stream the contents of the customers topic and any changes to stdout: 
+
+[source,bash]
+----
+docker-compose exec -T kafka \
+      kafka-console-consumer \
+      --bootstrap-server kafka:29092 \
+      --topic asgard.demo.CUSTOMERS-raw --from-beginning|jq '.'
+----
+
+(_https://stedolan.github.io/jq/[jq] is useful here—if you don't have it installed, remove `|jq '.'` from the above command)._
+
+Note the customer data shown, and the structure of it, with `before`, `after`, and `source` data.
+
+From the MySQL command prompt, make some changes to the data: 
+
+[source,sql]
+----
+INSERT INTO CUSTOMERS (ID,FIRST_NAME,LAST_NAME) VALUES (42,'Rick','Astley');
+UPDATE CUSTOMERS SET FIRST_NAME = 'Thomas', LAST_NAME ='Smith' WHERE ID=2;
+----
+
+For each change, inspect the output of the Kafka topic. Observe the difference between an `INSERT` and `UPDATE`. 
+
+==== Option B: Manually
+
+If you want to follow the simpler path for this workshop, you can just mock up the data that would be coming from our customers table on a database. In practice you would ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]
 
 Run the following command to send the customer data to the `customers` topic:
 
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
-           --interactive \
+           --interactive --rm \
            --volume $PWD/data:/data confluentinc/cp-kafkacat \
            kafkacat -b kafka:29092 \
-                    -t customers \
+                    -t asgard.demo.CUSTOMERS \
                     -P -l /data/customers.json
 ----
 
@@ -188,11 +271,11 @@ Run this command to inspect the content of the `customers` topic that we populat
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
-          --tty --interactive \
+          --tty --interactive --rm \
           confluentinc/cp-kafkacat \
           kafkacat -b kafka:29092 -C -K: \
           -f '\nKey (%K bytes): %k\t\nValue (%S bytes): %s\n\Partition: %p\tOffset: %o\n--\n' \
-          -t customers
+          -t asgard.demo.CUSTOMERS
 ----
 
 You should see ten messages, similar to this:
@@ -220,7 +303,7 @@ Launch the CLI:
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
-           --tty --interactive \
+           --tty --interactive --rm \
            confluentinc/cp-ksql-cli:5.0.0 http://ksql-server:8088
 ----
 
@@ -255,13 +338,19 @@ KSQL can be used to view the topic metadata on a Kafka cluster (`SHOW TOPICS;`),
 [source,sql]
 ----
 ksql> SHOW TOPICS;
- Kafka Topic        | Registered | Partitions | Partition Replicas | Consumers | ConsumerGroups
-------------------------------------------------------------------------------------------------
- _confluent-metrics | false      | 12         | 1                  | 0         | 0
- _schemas           | false      | 1          | 1                  | 0         | 0
- customers          | false      | 1          | 1                  | 0         | 0
- ratings            | false      | 1          | 1                  | 0         | 0
-------------------------------------------------------------------------------------------------
+
+ Kafka Topic                     | Registered | Partitions | Partition Replicas | Consumers | ConsumerGroups
+-------------------------------------------------------------------------------------------------------------
+ _confluent-metrics              | false      | 12         | 1                  | 0         | 0
+ _schemas                        | false      | 1          | 1                  | 0         | 0
+ asgard.demo.CUSTOMERS           | false      | 1          | 1                  | 1         | 1
+ asgard.demo.CUSTOMERS-raw       | false      | 1          | 1                  | 2         | 2
+ docker-connect-debezium-configs | false      | 1          | 1                  | 0         | 0
+ docker-connect-debezium-offsets | false      | 25         | 1                  | 0         | 0
+ ratings                         | false      | 1          | 1                  | 0         | 0
+[...]
+-------------------------------------------------------------------------------------------------------------
+ksql>
 ----
 
 === Inspect a topic contents - Ratings
@@ -290,7 +379,7 @@ Here we use the `FROM BEGINNING` argument, which tells KSQL to go back to the _b
 
 [source,sql]
 ----
-ksql> PRINT 'customers' FROM BEGINNING;
+ksql> PRINT 'asgard.demo.CUSTOMERS' FROM BEGINNING;
 Format:JSON
 {"ROWTIME":1529499994472,"ROWKEY":"null","id":1,"first_name":"Annemarie","last_name":"Arent","email":"aarent0@cpanel.net","gender":"Female","club_status":"platinum","comments":"Organized web-enabled ability"}
 {"ROWTIME":1529499994472,"ROWKEY":"null","id":2,"first_name":"Merilyn","last_name":"Doughartie","email":"mdoughartie1@dedecms.com","gender":"Female","club_status":"platinum","comments":"Optimized local definition"}
@@ -567,11 +656,11 @@ Remember our Customer data? Let's bring that into play, and use it to enrich the
 
 Let's check the data first, using the very handy `PRINT` command:
 
-`PRINT 'customers' FROM BEGINNING;`
+`PRINT 'asgard.demo.CUSTOMERS' FROM BEGINNING;`
 
 [source,sql]
 ----
-ksql> PRINT 'customers' FROM BEGINNING;
+ksql> PRINT 'asgard.demo.CUSTOMERS' FROM BEGINNING;
 Format:JSON
 {"ROWTIME":1529492614185,"ROWKEY":"null","id":1,"first_name":"Annemarie","last_name":"Arent","email":"aarent0@cpanel.net","gender":"Female","club_status":"platinum","comments":"Organized web-enabled ability"}
 ----
@@ -586,7 +675,7 @@ First we will register the customer topic. Note that because it is in JSON forma
 
 [source,sql]
 ----
-ksql> CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='customers', VALUE_FORMAT='JSON');
+ksql> CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='asgard.demo.CUSTOMERS', VALUE_FORMAT='JSON');
 
  Message
 ----------------
