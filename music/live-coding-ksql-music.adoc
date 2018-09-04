@@ -7,15 +7,14 @@ v1.00, 4 Sept 2018
 
 == Introduction
 
-In this tutorial we will run Confluent’s Kafka Music demo application using KSQL. The Kafka Music application demonstrates how to build a simple music charts application that continuously computes, in real-time, the latest music charts. The application’s input data is two topics in Avro format.
+In this tutorial we will run Confluent’s Kafka Music demo application using KSQL. The Kafka Music application demonstrates how to build a simple music charts application that continuously computes, in real-time, the latest music charts.
 
-You may separately compare this KSQL demo to the Kafka Streams API version of the demo if you want to see the differences: https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html
-
+You may separately compare this KSQL demo to the https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html[Kafka Streams API version of the demo] if you want to see the differences.
 
 This code file accompanies:
 
-- video screencast : https://www.youtube.com/watch?v=ExEWJVjj-RA 
-- automated demo : https://github.com/confluentinc/quickstart-demos/tree/5.0.0-post/music
+- https://www.youtube.com/watch?v=ExEWJVjj-RA[video screencast]
+- https://github.com/confluentinc/quickstart-demos/tree/5.0.0-post/music[automated demo]
 
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
@@ -23,7 +22,7 @@ Don't forget to check out the #ksql channel on our https://slackpass.io/confluen
 
 === Start Confluent platform
 
-First we need a Kafka cluster, a KSQL server, and Confluent Schema Registry. Hats off to Confluent CLI for making this super easy to bring up all the services on one local host for development and testing purposes.
+First we need a Kafka cluster, a KSQL server, and Confluent Schema Registry. Confluent CLI makes it super easy to bring up all the services on one local host for development and testing purposes.
 
 [source,bash]
 ----
@@ -33,16 +32,16 @@ confluent start
 
 === Generate Source Data
 
-Clone the `kafka-streams-examples` repo and compile the java code.  This requires Java 1.8 and Maven installed locally.
+Clone the https://github.com/confluentinc/kafka-streams-examples[kafka-streams-examples] repo and compile the java code.  This requires Java 1.8 and Maven installed locally.
 
 [source,bash]
 ----
 git clone https://github.com/confluentinc/kafka-streams-examples.git
 cd kafka-streams-examples
 mvn clean package -DskipTests
----
+----
 
-Generate the source data in Avro format:
+Generate the data to two topics, in Avro format:
 
 * `play-events` : stream of play events (“song X was played”)
 * `song-feed` : stream of song metadata (“song X was written by artist Y”)
