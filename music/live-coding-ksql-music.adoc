@@ -181,4 +181,30 @@ ksql> CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY
 ksql> CREATE TABLE ksql_songtable WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='Avro', KEY='ID');
 ----
 
+=== JOIN play events with the database of songs
+
+We can do a STREAM-TABLE join to bring together the stream of play events with the song table. This will result in a new stream of data that shows not only when a particular song is played, but also descriptive song information like song title along with each play event.
+
+[source,sql]
+----
+CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION, 1 AS KEYCOL FROM ksql_playevents_min_duration plays LEFT JOIN ksql_songtable songtable ON plays.SONG_ID = songtable.ID;
+----
+
+Notice the addition of a clause `1 AS KEYCOL.` This creates a new field `KEYCOL` where every row gets a value of 1. `KEYCOL` can be later used in other derived streams and tables to do aggregations on a global basis, not on a per-partition basis. 
+
+=== Create Top Music Charts
+
+You can create a top music chart for all time to see which songs get the most play. We can use the `COUNT` function on the stream `ksql_songplays` that we created above.
+
+[source,sql]
+----
+CREATE TABLE ksql_songplaycounts AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays GROUP BY ID, NAME, GENRE, KEYCOL;
+----
+
+While the all-time greatest hits are cool, we also might not mind knowing the stats just in the last 30 seconds. Create another query, adding in a `WINDOW` clause, which gives counts of play events for all songs, in 30-second intervals.
+
+[source,sql]
+----
+CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
+----
 
