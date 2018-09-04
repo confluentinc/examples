@@ -1,4 +1,6 @@
-== Pre-requisites
+= Pre-requisites for KSQL Workshop
+Robin Moffatt <robin@confluent.io>
+v1.00, September 4, 2018
 
 * Docker
 * Docker Compose
@@ -64,11 +66,13 @@ docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.0
 docker pull docker.elastic.co/kibana/kibana:6.3.0
 ----
 
-4. If you want to use the Elasticsearch part of the workshop then make sure the virtual memory mmap count limit is set appropriately. 
+4. Linux only:
++ 
+If you want to use the Elasticsearch part of the workshop then make sure the virtual memory mmap count limit is set appropriately. 
 +
 [source,bash]
 ----
-sysctl -w vm.max_map_count=262144
+sudo sysctl -w vm.max_map_count=262144
 ----
 +
 See the https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html[Elasticsearch docs] for more info. 
