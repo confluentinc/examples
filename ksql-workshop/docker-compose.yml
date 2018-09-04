@@ -103,6 +103,34 @@ services:
                           schemaRegistryUrl=http://schema-registry:8081'"
 
 # Other systems
+  mysql:
+    image: debezium/example-mysql:0.8
+    environment:
+     - MYSQL_ROOT_PASSWORD=debezium
+     - MYSQL_USER=mysqluser
+     - MYSQL_PASSWORD=mysqlpw
+    volumes:
+     - ./customers.sql:/docker-entrypoint-initdb.d/z99_dump.sql
+
+  connect-debezium:
+    image: debezium/connect:0.8
+    depends_on:
+     - kafka
+     - mysql
+     - schema-registry
+    ports:
+     - 8083:8083
+    environment:
+     - BOOTSTRAP_SERVERS=kafka:29092
+     - GROUP_ID=1
+     - CONFIG_STORAGE_TOPIC=my_connect_configs
+     - OFFSET_STORAGE_TOPIC=my_connect_offsets
+     - STATUS_STORAGE_TOPIC=my_connect_status
+     - KEY_CONVERTER=io.confluent.connect.avro.AvroConverter
+     - VALUE_CONVERTER=io.confluent.connect.avro.AvroConverter
+     - CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+     - CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL=http://schema-registry:8081
+     
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
     ports:
