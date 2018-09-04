@@ -7,6 +7,7 @@ import io.confluent.examples.streams.microservices.domain.Schemas;
 import io.confluent.examples.streams.microservices.domain.Schemas.Topics;
 import io.confluent.examples.streams.microservices.domain.beans.OrderBean;
 import io.confluent.examples.streams.microservices.util.Paths;
+import io.confluent.examples.streams.utils.MonitoringInterceptorUtils;
 
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -69,6 +70,7 @@ public class PostOrdersAndPayments {
     producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     producerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
     producerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
+    MonitoringInterceptorUtils.maybeConfigureInterceptorsProducer(producerConfig);
 
     KafkaProducer<String, Payment> paymentProducer = new KafkaProducer<String, Payment>(producerConfig, new StringSerializer(), paymentSerializer);
 
