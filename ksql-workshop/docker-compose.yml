@@ -110,7 +110,7 @@ services:
      - MYSQL_USER=mysqluser
      - MYSQL_PASSWORD=mysqlpw
     volumes:
-     - ./customers.sql:/docker-entrypoint-initdb.d/z99_dump.sql
+     - ./data/customers.sql:/docker-entrypoint-initdb.d/z99_dump.sql
 
   connect-debezium:
     image: debezium/connect:0.8
