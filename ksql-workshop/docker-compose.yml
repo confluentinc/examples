@@ -9,10 +9,13 @@ services:
 
   kafka:
     image: confluentinc/cp-enterprise-kafka:5.0.0
-    ports:
-      - '9092:9092'
     depends_on:
       - zookeeper
+    ports:
+    # Exposes 9092 for external connections to the broker
+    # Use kafka:29092 for connections internal on the docker network
+    # See https://rmoff.net/2018/08/02/kafka-listeners-explained/ for details
+      - 9092:9092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -40,8 +43,12 @@ services:
 
   kafka-connect-cp:
     image: confluentinc/cp-kafka-connect:5.0.0
+    depends_on:
+      - zookeeper
+      - kafka
+      - schema-registry
     ports:
-      - "18083:18083"
+      - 18083:18083
     environment:
       CONNECT_BOOTSTRAP_SERVERS: "kafka:29092"
       CONNECT_REST_PORT: 18083
@@ -62,10 +69,6 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: '/usr/share/java'
-    depends_on:
-      - zookeeper
-      - kafka
-      - schema-registry
 
   ksql-server:
     image: confluentinc/cp-ksql-server:5.0.0
@@ -79,8 +82,8 @@ services:
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       KSQL_KSQL_SERVICE_ID: confluent_rmoff_01
 
-  datagen-ratings:
   # Runs the Kafka KSQL data generator for ratings
+  datagen-ratings:
     image: confluentinc/ksql-examples:5.0.0
     depends_on:
       - kafka
@@ -99,13 +102,11 @@ services:
                           bootstrap-server=kafka:29092 \
                           schemaRegistryUrl=http://schema-registry:8081'"
 
-# External systems
+# Other systems
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
-    container_name: elasticsearch
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - 9200:9200
     environment:
       xpack.security.enabled: "false"
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
@@ -114,11 +115,10 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:6.3.0
-    container_name: kibana
     depends_on:
       - elasticsearch
     ports:
-      - "5601:5601"
+      - 5601:5601
     environment:
       xpack.security.enabled: "false"
       discovery.type: "single-node"
