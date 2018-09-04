@@ -3,6 +3,9 @@
 # Overview
 
 The music demo is the KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html).
+
+![image](images/ksql-music-demo-overview.jpg)
+
 This isn't an exact replica of that demo because some features in Kafka Streams API are not available yet in KSQL (coming soon!).
 Some of these differences are noted in the [KSQL commands](ksql.commands).
 

@@ -9,6 +9,8 @@ v1.00, 4 Sept 2018
 
 In this tutorial we will run Confluent’s Kafka Music demo application using KSQL. The Kafka Music application demonstrates how to build a simple music charts application that continuously computes, in real-time, the latest music charts.
 
+image::images/ksql-music-demo-overview.jpg[Diagram]
+
 You may separately compare this KSQL demo to the https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html[Kafka Streams API version of the demo] if you want to see the differences.
 
 This code file accompanies:
