@@ -26,8 +26,8 @@ First we need a Kafka cluster, a KSQL server, and Confluent Schema Registry. Con
 
 [source,bash]
 ----
-confluent destroy
-confluent start
+$ confluent destroy
+$ confluent start
 ----
 
 === Generate Source Data
@@ -36,9 +36,9 @@ Clone the https://github.com/confluentinc/kafka-streams-examples[kafka-streams-e
 
 [source,bash]
 ----
-git clone https://github.com/confluentinc/kafka-streams-examples.git
-cd kafka-streams-examples
-mvn clean package -DskipTests
+$ git clone https://github.com/confluentinc/kafka-streams-examples.git
+$ cd kafka-streams-examples
+$ mvn clean package -DskipTests
 ----
 
 Generate the data to two topics, in Avro format:
@@ -48,7 +48,7 @@ Generate the data to two topics, in Avro format:
 
 [source,bash]
 ----
-java -cp target/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver
+$ java -cp target/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver
 ----
 
 == Demo
@@ -57,7 +57,7 @@ java -cp target/kafka-streams-examples-5.0.0-standalone.jar io.confluent.example
 
 If you are running Confluent Enterprise 5.0 or later, use Control Center's capabilities to inspect the Kafka topics with the source data `play-events` and `song-feed`.
 
-* `play-events` : 
+* Exploring the topic `play-events` : 
 
 image:images/topic_inspect_play_events.png[play-events]
 
@@ -80,9 +80,9 @@ Or use the Confluent CLI to read the topic data directly:
 $ confluent consume play-events --value-format avro
 ----
 
-* `song-feed` :
+* Exploring the topic `song-feed` : 
 
-Not viewable at this time in the topic inspection of Confluent Control Center because topic inspection only works on new data, not old data already produced to the topic.  Instead, use KSQL to view the `song-feed` topic:
+At this time, you cannot view data in this topic using the topic inspection capability of Confluent Control Center because topic inspection only works on new data, not old data already produced to the topic.  Instead, use KSQL to view the `song-feed` topic:
 
 [source,sql]
 ----
@@ -103,19 +103,21 @@ $ confluent consume song-feed --value-format avro --from-beginning
 
 === Create a Stream from the `play-events` topic
 
-To work with the generated Kafka data, beginning with `play-events` topic because it’s pretty straightforward.
+To process the data in Kafka, let's begin with the `play-events` topic because it’s more straightforward.
 
-We need to register the topic `play-events` as a KSQL stream, and specify that it’s Avro data. It results in a KSQL stream called `ksql_playevents` that is an unbounded sequence of events. (Note: these query names are preceded with `ksql_` but that is not required. We are doing it so that you can run these KSQL queries alongside the Kafka Streams API version of this music demo and not run into any naming conflicts)
+We need to register the topic `play-events` as a KSQL stream, and specify that it’s Avro data. The following statement results a KSQL stream called `ksql_playevents` that is an unbounded sequence of events.
+
+NOTE: we prefix these query names with `ksql_` but that is not required. We are doing it so that you can run these KSQL queries alongside the Kafka Streams API version of this music demo and not run into naming conflicts.
 
 If you are running Confluent Enterprise 5.0 or later, use Control Center's capabilities to create a new KSQL stream from an existing Kafka topic:
 
-* Configure the name as `ksql_playevents`
+* Configure the stream name as `ksql_playevents`
 * Change the message value encoding to `AVRO` (default: `JSON`)
-* Notice that because of Control Center integration with Schema Registry, it automatically gleans the fields `song_id` and `duration` in the payload
+* Notice that because of Control Center integration with Schema Registry, it automatically gleans the fields and types for `song_id` and `duration` in the payload
 
 image:images/ksql_playevents.png[play-events]
 
-Alternative, define the stream as follows:
+If you are not running Confluent Enterprise, define the KSQL stream as follows from the KSQL CLI:
 
 [source,sql]
 ----
@@ -134,13 +136,15 @@ The above query is not persistent -- it will stop if this screen is closed. To m
 
 image:images/ksql_playevents_min_30_persistent.png[play-events]
 
-This persistent query will now show up under the `PERSISTENT QUERIES` tab (or `show queries;` in the KSQL CLI).  
+This persistent query will now show in the `PERSISTENT QUERIES` tab (or in KSQL CLI, it will show in the output of `show queries;`).
 
 === Create a Table from the `song-feed` topic
 
-Next let's work with the generated Kafka data for the `song-feed` topic, which represents a database of songs. We want to view this data as a TABLE key’d on song id. However, the original Kafka topic has no key, i.e., the key of each Kafka message is `null`. To make a KSQL TABLE, we need the topic to have a non-null key for JOINs and aggregations to work.  We can address this in a few simple steps:
+Next let's work with the generated Kafka data for the `song-feed` topic, which represents a database of songs. The goal is to view this data as a TABLE key’d on song id.
 
-1. Create a `STREAM` from the original Kafka topic `song-feed`:
+However, the original Kafka topic has no key, i.e., the key of each Kafka message is `null`. To make a KSQL TABLE, we need the topic to have a non-null key for JOINs and aggregations to work.  We can address this in a few simple steps:
+
+* Create a `STREAM` from the original Kafka topic `song-feed`:
 
 [source,sql]
 ----
@@ -161,7 +165,7 @@ ksql> SELECT * FROM ksql_songfeed limit 5;
 ksql> DESCRIBE ksql_songfeed;
 ----
  
-2. So far we have created a stream but there are two observations:
+* Observe the following in the newly created stream:
 
 (a) the stream has no key
 (b) the ID field that we would want to be the key `ID` is of type `BIGINT`
@@ -173,7 +177,7 @@ We need to resolve these two issues because in the current KSQL release, a TABLE
 ksql> CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='AVRO') AS SELECT CAST(ID AS STRING) as ID, ALBUM, ARTIST, NAME, GENRE FROM ksql_songfeed PARTITION BY ID;
 ----
  
-3. Convert the above stream into a table with the `ID` field as its key (which is now of type `String`). This TABLE is a materialized view of events with only the latest value for each key, which represents an up-to-date database of songs.
+* Convert the above stream into a table with the `ID` field as its key (which is now of type `String`). This TABLE is a materialized view of events with only the latest value for each key, which represents an up-to-date database of songs.
  
 [source,sql]
 ----
