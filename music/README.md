@@ -6,6 +6,10 @@ The music demo is the KSQL version of the [Kafka Streams Demo Application](https
 This isn't an exact replica of that demo because some features in Kafka Streams API are not available yet in KSQL (coming soon!).
 Some of these differences are noted in the [KSQL commands](ksql.commands).
 
+![image](images/ksql-music-demo-overview.jpg)
+
+As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install. Alternatively, you may follow the [step-by-step guide](live-coding-ksql-music.adoc).
+
 Follow along with the video [Demo: Build a Streaming Application with KSQL](https://www.youtube.com/watch?v=ExEWJVjj-RA).
 
 # Prerequisites
