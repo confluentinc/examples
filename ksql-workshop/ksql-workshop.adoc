@@ -781,9 +781,8 @@ SELECT R.RATING_ID, R.CHANNEL, R.STARS, R.MESSAGE, \
        C.ID, C.CLUB_STATUS, C.EMAIL, \
        C.FIRST_NAME, C.LAST_NAME \
 FROM RATINGS R \
-     LEFT JOIN CUSTOMERS C \
-       ON R.USER_ID = C.ID \
-WHERE C.FIRST_NAME IS NOT NULL ;
+     INNER JOIN CUSTOMERS C \
+       ON R.USER_ID = C.ID ;
 ----
 
 [source,sql]
@@ -904,14 +903,14 @@ ksql>
 
 In the resulting `TABLE` there are some characteristics to note:
 
-* The `ROWTIME` is the _start_ of the timestamp window. This is always a multiple offset from the epoch, regardless of when the first event arrived in the system.
-* The `ROWKEY` is a composite key of the timestamp window start plus the column(s) defined in the `GROUP BY`
+* The `ROWTIME` is the timestamp of the most recent message to arrive in that aggregate.
+* The `ROWKEY` is a composite key of the window start timestamp as an epoch, plus the column(s) defined in the `GROUP BY`. It's not currently possible to access the window start/end time programatically from KSQL, but https://github.com/confluentinc/ksql/issues/1674[this is planned].
 
-Using the `ROWKEY` column it's possible to examine the aggregate values and associated window:
+Using the `ROWKEY` column it's possible to examine the aggregate values:
 
 [source,sql]
 ----
-SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS WINDOW_START_TS, \
+SELECT ROWKEY, \
         CLUB_STATUS, RATING_COUNT \
 FROM RATINGS_BY_CLUB_STATUS \
 LIMIT 5;
@@ -919,11 +918,11 @@ LIMIT 5;
 
 [source,sql]
 ----
-2018-06-20 13:03:00 | platinum | 3
-2018-06-20 13:04:00 | platinum | 26
-2018-06-20 13:05:00 | platinum | 26
-2018-06-20 13:06:00 | platinum | 20
-2018-06-20 13:07:00 | platinum | 23
+platinum : Window{start=1535986500000 end=-} | platinum | 23
+silver : Window{start=1535983740000 end=-} | silver | 9
+gold : Window{start=1535983740000 end=-} | gold | 39
+gold : Window{start=1535983800000 end=-} | gold | 46
+platinum : Window{start=1535983980000 end=-} | platinum | 18
 Limit Reached
 Query terminated
 ksql>
@@ -934,7 +933,7 @@ This table that we've created is just a first class object in KSQL, updated in r
 
 [source,sql]
 ----
-SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS WINDOW_START_TS, \
+SELECT ROWKEY, \
         CLUB_STATUS, RATING_COUNT \
 FROM RATINGS_BY_CLUB_STATUS \
 WHERE CLUB_STATUS='bronze';
@@ -942,11 +941,11 @@ WHERE CLUB_STATUS='bronze';
 
 [source,sql]
 ----
-2018-06-20 15:19:00 | bronze | 27
-2018-06-20 15:20:00 | bronze | 22
-2018-06-20 15:21:00 | bronze | 23
-2018-06-20 15:22:00 | bronze | 22
-2018-06-20 15:23:00 | bronze | 28
+bronze : Window{start=1535986740000 end=-} | bronze | 23
+bronze : Window{start=1535986800000 end=-} | bronze | 22
+bronze : Window{start=1535986860000 end=-} | bronze | 35
+bronze : Window{start=1535986920000 end=-} | bronze | 25
+bronze : Window{start=1535986980000 end=-} | bronze | 30
 ----
 
 If you let the `SELECT` output continue to run, you'll see all of the past time window aggregate values—but also the current one. Note that the _current_ time window's aggregate value will continue to update, because new events are being continually processed and reflected in the value. If you were to send an event to the source `ratings` topic with a timestamp in the past, the corresponding time window's aggregate would be re-emitted.
@@ -970,14 +969,16 @@ Make sure that Elasticsearch and Kibana are running:
 
 [source,bash]
 ----
-docker-compose up -d elasticsearch
+$ docker-compose ps|egrep "elasticsearch|kibana"
+elasticsearch                      /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
+kibana                             /usr/local/bin/kibana-docker     Up      0.0.0.0:5601->5601/tcp
 ----
 
 Create a dynamic mapping in Elasticsearch so that the timestamp of source data is correctly detected:
 
 [source,bash]
 ----
-curl -XPUT "http://localhost:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d' { "index_patterns": "*", "settings": { "number_of_shards": 1, "number_of_replicas": 0 }, "mappings": { "_default_": { "dynamic_templates": [ { "dates": { "match": "EXTRACT_TS", "mapping": { "type": "date" } } }, { "non_analysed_string_template": { "match": "*", "match_mapping_type": "string", "mapping": { "type": "keyword" } } } ] } } }'
+curl -XPUT "http://localhost:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d' { "index_patterns": "*", "settings": { "number_of_shards": 1, "number_of_replicas": 0 }, "mappings": { "_default_": { "dynamic_templates": [ { "dates": { "match": "TS", "mapping": { "type": "date" } } }, { "non_analysed_string_template": { "match": "*", "match_mapping_type": "string", "mapping": { "type": "keyword" } } } ] } } }'
 ----
 
 Create a connector to stream `RATINGS_WITH_CUSTOMER_DATA` to Elasticsearch:
@@ -999,12 +1000,46 @@ curl -X "POST" "http://localhost:18083/connectors/" \
     "connection.url": "http://elasticsearch:9200",
     "transforms": "ExtractTimestamp",
     "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
-    "transforms.ExtractTimestamp.timestamp.field" : "EXTRACT_TS"
+    "transforms.ExtractTimestamp.timestamp.field" : "TS"
   }
 }'
 ----
 
-Use the Kibana interface to check that docs are arriving in Elasticsearch:
+Create a connector to stream `RATINGS_BY_CLUB_STATUS` to Elasticsearch:
+
+[source,bash]
+----
+curl -X "POST" "http://localhost:18083/connectors/" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "es_sink_ratings_agg_by_status_1min",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics": "RATINGS_BY_CLUB_STATUS",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.ignore": "false",
+    "schema.ignore": "true",
+    "type.name": "type.name=kafkaconnect",
+    "topic.index.map": "RATINGS_BY_CLUB_STATUS:ratings_agg_by_status_1min",
+    "connection.url": "http://elasticsearch:9200",
+    "transforms": "ExtractTimestamp",
+    "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.ExtractTimestamp.timestamp.field" : "TS"
+  }
+}'
+----
+
+_Note that the above sets `"key.ignore": "false"` , and thus aggregates will be updated in-place._
+
+If you have `jq` on your machine you can run this to check that the connector is `RUNNING`: 
+
+[source,bash]
+----
+$ curl -s "http://localhost:18083/connectors"| jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:18083/connectors/"{connector_name}"/status"| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+es_sink_unhappy_platinum_customers  |  RUNNING  |  RUNNING
+----
+
+Use the Kibana interface (http://localhost:5601) to check that docs are arriving in Elasticsearch:
 
 image::images/kibana_01.png[]
 
@@ -1021,13 +1056,11 @@ To terminate the workshop environment, run `docker-compose down`:
 [source,bash]
 ----
 $ docker-compose down
-Stopping ksql-workshop_ksql-cli_1        ... done
 Stopping ksql-workshop_ksql-server_1     ... done
 Stopping ksql-workshop_datagen-ratings_1 ... done
 Stopping ksql-workshop_schema-registry_1 ... done
 Stopping ksql-workshop_kafka_1           ... done
 Stopping ksql-workshop_zookeeper_1       ... done
-Removing ksql-workshop_ksql-cli_1        ... done
 Removing ksql-workshop_ksql-server_1     ... done
 Removing ksql-workshop_datagen-ratings_1 ... done
 Removing ksql-workshop_schema-registry_1 ... done
