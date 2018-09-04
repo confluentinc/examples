@@ -81,6 +81,8 @@ ksql-workshop_schema-registry_1    /etc/confluent/docker/run        Up      8081
 ksql-workshop_zookeeper_1          /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp
 ----
 
+IMPORTANT: If any components do not show "Up" under the `State` column (e.g. they say "Exit") then you must rectify this before continuing. As a first solution, try re-issuing the `docker-compose up -d command`.
+
 == Source Data : Rating events
 
 The event stream driving this example is a simulated stream of events purporting to show the ratings left by users on a website, with data elements including the device type that they used, the star rating, and a message associated with the rating.
@@ -113,7 +115,7 @@ Depending on time available, and your interest in exploring database integration
 
 ==== Option A: RDBMS
 
-**This shows how to ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]. If you want, you can replace this step with the following one ("Populate customer data [manually]").**
+**This shows how to ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]. If you want, you can replace this step with the following one ("Option B").**
 
 Check that Kafka Connect with Debezium's connector has started: 
 
@@ -164,6 +166,7 @@ Now in a separate terminal window run the following, to stream the contents of t
 
 [source,bash]
 ----
+# Make sure you run this from the `quickstart-demos/ksql-workshop` folder
 docker-compose exec -T kafka \
       kafka-console-consumer \
       --bootstrap-server kafka:29092 \
@@ -182,7 +185,7 @@ INSERT INTO CUSTOMERS (ID,FIRST_NAME,LAST_NAME) VALUES (42,'Rick','Astley');
 UPDATE CUSTOMERS SET FIRST_NAME = 'Thomas', LAST_NAME ='Smith' WHERE ID=2;
 ----
 
-For each change, inspect the output of the Kafka topic. Observe the difference between an `INSERT` and `UPDATE`. 
+You should see each DML cause an almost-instantaneous update on the Kafka topic. For each change, inspect the output of the Kafka topic. Observe the difference between an `INSERT` and `UPDATE`. 
 
 ==== Option B: Manually
 
@@ -204,7 +207,7 @@ Note that there is no output from this command. We will verify its success in th
 
 === Inspect customer data
 
-Run this command to inspect the content of the `customers` topic that we populated above. 
+Run this command to inspect the content of the main `asgard.demo.CUSTOMERS` topic that we populated. 
 
 [source,bash]
 ----
@@ -216,7 +219,7 @@ docker run --network ksql-workshop_default \
           -t asgard.demo.CUSTOMERS
 ----
 
-You should see ten messages, similar to this:
+You should see messages, similar to this:
 
 ----
 Key (-1 bytes):
@@ -308,7 +311,7 @@ Format:AVRO
 22/02/18 12:55:05 GMT, 5313, {"rating_id": 5313, "user_id": 3, "stars": 4, "route_id": 6975, "rating_time": 1519304105213, "channel": "web", "message": "why is it so difficult to keep the bathrooms clean ?"}
 ----
 
-Press Ctrl-C to cancel and return to the KSQL prompt.
+Press Ctrl-C to cancel and return to the KSQL prompt. 
 
 <<<
 === Inspect a topic contents - Customers
@@ -323,16 +326,14 @@ Format:JSON
 {"ROWTIME":1529499994472,"ROWKEY":"null","id":2,"first_name":"Merilyn","last_name":"Doughartie","email":"mdoughartie1@dedecms.com","gender":"Female","club_status":"platinum","comments":"Optimized local definition"}
 ----
 
-Press Ctrl-C to cancel and return to the KSQL prompt.
+Press Ctrl-C to cancel and return to the KSQL prompt. This may take up to a minute to cancel (https://github.com/confluentinc/ksql/issues/1759[#1759]). If it still does not cancel then just start a new KSQL CLI using the `docker run` command from above and proceed to the next step. 
 
 <<<
 == KSQL offsets
 
 Since Apache Kafka persists data, it is possible to use KSQL to query and process data from the past, as well as new events that arrive on the topic.
 
-To tell KSQL to process from beginning of topic run:
-
-`SET 'auto.offset.reset' = 'earliest';`
+To tell KSQL to process from beginning of topic run `SET 'auto.offset.reset' = 'earliest';`
 
 Run this now, so that future processing includes all existing data—this is important for the Customer data, since no new messages are arriving on this topic and thus we need to make sure we work with the messages already present.
 
@@ -603,11 +604,18 @@ Format:JSON
 {"ROWTIME":1529492614185,"ROWKEY":"null","id":1,"first_name":"Annemarie","last_name":"Arent","email":"aarent0@cpanel.net","gender":"Female","club_status":"platinum","comments":"Organized web-enabled ability"}
 ----
 
+Press Ctrl-C to cancel and return to the KSQL prompt. This may take up to a minute to cancel (https://github.com/confluentinc/ksql/issues/1759[#1759]). 
+
 === Re-Key Customers Topic
 
 When we join the customer data to the ratings, the customer Kafka messages _must be keyed on the field on which we are performing the join_. If this is not the case the join will fail and we'll get `NULL` values in the result.
 
-Our source customer messages are not currently keyed—observe the `"ROWKEY":"null"` in the `PRINT` output above (and in the `kafkacat` output earlier on too). To re-key a topic in Kafka we can use KSQL!
+Our source customer messages are not currently keyed correctly. Depending on how you chose to populate the Customer topic earlier: 
+
+* From Debezium, the messages are actually keyed using the Primary Key of the source table, but using a key serialisation that KSQL does not support - and thus in effect is not useful as a key in KSQL at all
+* From a manual input of JSON messages, the key is null (observe the `"ROWKEY":"null"` in the `PRINT` output above)
+
+To re-key a topic in Kafka we can use KSQL!
 
 First we will register the customer topic. Note that because it is in JSON format we need to declare all of the columns and their datatypes:
 
@@ -652,7 +660,7 @@ To inspect the key for a given stream/table, use the `ROWKEY` system column.
 
 Here we compare it to the join column (`ID`); for the join to succeed they must be equal.
 
-In the source stream, the `ROWKEY` is null because the key of the underlying Kafka messages is null:
+In the source stream, the `ROWKEY` is null (or `Struct{id=x}` if streamed from Debezium) because the key of the underlying Kafka messages is null:
 
 [source,sql]
 ----
@@ -664,7 +672,7 @@ Limit Reached
 Query terminated
 ----
 
-In the re-keyed stream the `ROWKEY` and `ID` are equal:
+In the re-keyed stream the `ROWKEY` and `ID` are equal, which is essential for a successful JOIN operation in KSQL.
 
 [source,sql]
 ----
@@ -981,7 +989,7 @@ If you let the `SELECT` output continue to run, you'll see all of the past time 
 
 With the enriched and filtered data being populated into Kafka topics from KSQL you can use it to :
 
-* Power event-drive applications. For example, notify the ops team if a VIP user leaves a poor review.
+* Feed event-driven applications. For example, notify the ops team if a VIP user leaves a poor review.
 * Stream to analytics platforms. For example, use Kafka Connect to stream the enriched data stream to Elasticsearch and visualise the real time with Kibana.
 
 == Optional: Stream data to Elasticsearch
@@ -992,7 +1000,7 @@ Using Kafka Connect you can stream data from a Kafka to one (or many) targets, i
 
 Here we'll see how to stream it to Elasticsearch for rapid visualisation and analysis.
 
-Make sure that Elasticsearch and Kibana are running:
+From a bash prompt, make sure that Elasticsearch and Kibana are running:
 
 [source,bash]
 ----
@@ -1063,6 +1071,8 @@ If you have `jq` on your machine you can run this to check that the connector is
 [source,bash]
 ----
 $ curl -s "http://localhost:18083/connectors"| jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:18083/connectors/"{connector_name}"/status"| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+
+es_sink_ratings_agg_by_status_1min  |  RUNNING  |  RUNNING
 es_sink_unhappy_platinum_customers  |  RUNNING  |  RUNNING
 ----
 
