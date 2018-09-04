@@ -1,4 +1,6 @@
-== Pre-requisites
+= Pre-requisites for KSQL Workshop
+Robin Moffatt <robin@confluent.io>
+v1.00, September 4, 2018
 
 * Docker
 * Docker Compose
@@ -35,17 +37,6 @@ git clone https://github.com/confluentinc/quickstart-demos.git
 0. Did you check that Docker has at least 8GB of memory available?
 ** You really do need to do this
 
-2. Change the working directory and checkout the latest stable branch: 
-+
-[source,bash]
-----
-cd quickstart-demos/ksql-workshop
-git checkout 5.0.0-post
-----
-
-0. How much memory does Docker have? It needs to be >= 8 GB!
-** Nothing will work if you don't do this
-
 3. Pull all required docker images—this will take a while!
 +
 [source,bash]
@@ -64,11 +55,13 @@ docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.0
 docker pull docker.elastic.co/kibana/kibana:6.3.0
 ----
 
-4. If you want to use the Elasticsearch part of the workshop then make sure the virtual memory mmap count limit is set appropriately. 
+4. Linux only:
++ 
+If you want to use the Elasticsearch part of the workshop then make sure the virtual memory mmap count limit is set appropriately. 
 +
 [source,bash]
 ----
-sysctl -w vm.max_map_count=262144
+sudo sysctl -w vm.max_map_count=262144
 ----
 +
 See the https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html[Elasticsearch docs] for more info. 

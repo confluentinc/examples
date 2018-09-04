@@ -37,6 +37,15 @@ Please see link:pre-requisites.adoc[]
 
 _NOTE: Make sure that Docker has at least 8GB of memory available (check with `docker system info | grep Memory`)_
 
+Change the working directory:
+
+[source,bash]
+----
+cd quickstart-demos/ksql-workshop
+----
+
+Start Confluent Platform: 
+
 [source,bash]
 ----
 docker-compose up -d
