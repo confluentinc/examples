@@ -1,0 +1,76 @@
+== Pre-requisites
+
+* Docker
+* Docker Compose
+* 8GB+ RAM
+* Clone github repository (see below)
+* Pull required docker images (see below)
+
+IMPORTANT: *THIS MUST BE DONE _BEFORE_ THE WORKSHOP - The docker images are large and will take time to download. Please don't wait until the workshop as the wi-fi will not cope!*
+
+[IMPORTANT]
+====
+
+1. Install https://docs.docker.com/compose/install/[Docker Compose] on your system. There are Mac, Windows, and Linux options available at the link.
+
+0. [Mac/Windows only] In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
+** Don't forget to do this
+
+1. Confirm that Docker has at least 8GB of memory available to it: 
++
+[source,bash]
+----
+docker system info | grep Memory 
+----
++
+Should return a value greater than 8GB - if not, the Kafka stack will probably not work. 
+
+1. Clone the workshop repo to your local machine:
++
+[source,bash]
+----
+git clone https://github.com/confluentinc/quickstart-demos.git
+----
+
+0. Did you check that Docker has at least 8GB of memory available?
+** You really do need to do this
+
+2. Change the working directory and checkout the latest stable branch: 
++
+[source,bash]
+----
+cd quickstart-demos/ksql-workshop
+git checkout 5.0.0-post
+----
+
+0. How much memory does Docker have? It needs to be >= 8 GB!
+** Nothing will work if you don't do this
+
+3. Pull all required docker images—this will take a while!
++
+[source,bash]
+----
+docker pull confluentinc/cp-zookeeper:5.0.0
+docker pull confluentinc/cp-enterprise-kafka:5.0.0
+docker pull confluentinc/cp-schema-registry:5.0.0
+docker pull confluentinc/cp-kafka-connect:5.0.0
+docker pull confluentinc/cp-ksql-server:5.0.0
+docker pull confluentinc/ksql-examples:5.0.0
+docker pull confluentinc/cp-kafkacat
+docker pull confluentinc/cp-ksql-cli:5.0.0
+docker pull debezium/connect:0.8
+docker pull debezium/example-mysql:0.8
+docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+docker pull docker.elastic.co/kibana/kibana:6.3.0
+----
+
+4. If you want to use the Elasticsearch part of the workshop then make sure the virtual memory mmap count limit is set appropriately. 
++
+[source,bash]
+----
+sysctl -w vm.max_map_count=262144
+----
++
+See the https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html[Elasticsearch docs] for more info. 
+====
+

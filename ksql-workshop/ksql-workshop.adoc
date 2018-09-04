@@ -3,7 +3,7 @@
 :doctype: book
 :sectnums:
 Robin Moffatt <@rmoff>
-v0.11, 28 Jun 2018
+v1.20, September 3, 2018
 
 :toc:
 
@@ -27,55 +27,15 @@ Don't forget to check out the #ksql channel on our https://slackpass.io/confluen
 
 ——_Robin Moffatt https://twitter.com/rmoff/[@rmoff]_
 
-== Pre-requisites
+== Prerequisites
 
-* Docker
-* Docker Compose
-* 8GB+ RAM
-* Clone github repository (see below)
-* Pull required docker images (see below)
+IMPORTANT: These **MUST** be completed before the workshop!
 
-IMPORTANT: *THIS MUST BE DONE _BEFORE_ THE WORKSHOP - The docker images are large and will take time to download. Please don't wait until the workshop as the wi-fi will not cope!*
-
-[IMPORTANT]
-====
-
-1. Install https://docs.docker.com/compose/install/[Docker Compose] on your system. There are Mac, Windows, and Linux options available at the link.
-
-0. In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
-** Don't forget to do this
-
-1. Clone the workshop repo to your local machine:
-+
-[source,bash]
-----
-git clone https://github.com/confluentinc/quickstart-demos.git
-----
-
-0. Did you remember to increase the memory dedicated to Docker to at least 8GB?
-** You really do need to do this
-
-2. Change working directory
-+
-[source,bash]
-----
-cd quickstart-demos/ksql-workshop
-----
-
-0. How much memory did you allocate to Docker? It needs to be >= 8 GB!
-** Nothing will work if you don't do this
-
-3. Pull all required docker images—this will take a while!
-+
-[source,bash]
-----
-docker-compose pull
-----
-====
+Please see link:pre-requisites.adoc[]
 
 == Start Confluent Platform
 
-NOTE: In Docker’s advanced settings, increase the memory dedicated to Docker to at least 8GB.
+_NOTE: Make sure that Docker has at least 8GB of memory available (check with `docker system info | grep Memory`)_
 
 [source,bash]
 ----
@@ -88,7 +48,7 @@ Once you see output then it means Kafka is running and you can proceed
 [source,bash]
 ----
 $ docker-compose logs -f kafka|grep "INFO Kafka version"
-kafka_1                 | [2018-06-19 11:37:32,586] INFO Kafka version : 1.1.1-cp1 (org.apache.kafka.common.utils.AppInfoParser)
+kafka_1             | [2018-09-03 14:08:09,790] INFO Kafka version : 2.0.0-cp1 (org.apache.kafka.common.utils.AppInfoParser)
 ----
 
 Press Ctrl-C twice to exit the `docker-compose logs` command
@@ -98,14 +58,18 @@ Run `docker-compose ps` to confirm that all components are running:
 [source,bash]
 ----
 $ docker-compose ps
-Name                            Command               State                        Ports
----------------------------------------------------------------------------------------------------------------------------
-ksql-workshop_datagen-ratings_1   bash -c echo Waiting for K ...   Up
-ksql-workshop_kafka_1             /etc/confluent/docker/run        Up      0.0.0.0:29092->29092/tcp, 0.0.0.0:9092->9092/tcp
-ksql-workshop_ksql-cli_1          perl -e while(1){ sleep 99 ...   Up
-ksql-workshop_ksql-server_1       bash -c echo Waiting for K ...   Up      0.0.0.0:8088->8088/tcp
-ksql-workshop_schema-registry_1   /etc/confluent/docker/run        Up      0.0.0.0:8081->8081/tcp
-ksql-workshop_zookeeper_1         /etc/confluent/docker/run        Up      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
+              Name                            Command               State                          Ports
+--------------------------------------------------------------------------------------------------------------------------------
+ksql-workshop_connect-debezium_1   /docker-entrypoint.sh start      Up      0.0.0.0:8083->8083/tcp, 8778/tcp, 9092/tcp, 9779/tcp
+ksql-workshop_datagen-ratings_1    bash -c echo Waiting for K ...   Up
+ksql-workshop_elasticsearch_1      /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 9300/tcp
+ksql-workshop_kafka-connect-cp_1   /etc/confluent/docker/run        Up      0.0.0.0:18083->18083/tcp, 8083/tcp, 9092/tcp
+ksql-workshop_kafka_1              /etc/confluent/docker/run        Up      0.0.0.0:9092->9092/tcp
+ksql-workshop_kibana_1             /usr/local/bin/kibana-docker     Up      0.0.0.0:5601->5601/tcp
+ksql-workshop_ksql-server_1        /etc/confluent/docker/run        Up      8088/tcp
+ksql-workshop_mysql_1              docker-entrypoint.sh mysqld      Up      3306/tcp, 33060/tcp
+ksql-workshop_schema-registry_1    /etc/confluent/docker/run        Up      8081/tcp
+ksql-workshop_zookeeper_1          /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp
 ----
 
 == Source Data : Rating events
@@ -114,10 +78,12 @@ The event stream driving this example is a simulated stream of events purporting
 
 === Inspect the ratings data
 
+Here we use https://github.com/edenhill/kafkacat/[`kafkacat` ] for showing the Kafka messages and detailed metadata. 
+
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
-          --tty --interactive \
+          --tty --interactive --rm \
           confluentinc/cp-kafkacat \
           kafkacat -b kafka:29092 -C -K: \
           -f '\nKey (%K bytes): %k\t\nValue (%S bytes): %s\n\Partition: %p\tOffset: %o\n--\n' \
@@ -128,43 +94,117 @@ Note that the data is in Avro, so you will see lots of special characters in the
 
 Press Ctrl-C to cancel and return to the command prompt.
 
-NOTE: On Linux the name of the network is `ksqlworkshop_default` (no `-` between `ksql` and `workshop`).
+NOTE: On Linux the name of the network _may_ be `ksqlworkshop_default` (no `-` between `ksql` and `workshop`). Use `docker network ls` to check, and modify the `docker run` command above (and subsequently in this workshop) accordingly. 
 
 == Source Data : Customers
 
-To keep things simple, we're going to mock up the data that would be coming from our customers table on a database. In practice you would ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]
-
 === Populate customer data
+
+Depending on time available, and your interest in exploring database integration with Kafka, you may opt for one of the two methods below for getting customer data into Kafka. 
+
+==== Option A: RDBMS
+
+**This shows how to ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]. If you want, you can replace this step with the following one ("Populate customer data [manually]").**
+
+Check that Kafka Connect with Debezium's connector has started: 
+
+[source,bash]
+----
+docker-compose logs -f connect-debezium|grep "Kafka Connect started"
+----
+
+Wait for the output: 
+
+[source,bash]
+----
+connect-debezium_1  | 2018-09-04 11:33:04,639 INFO   ||  Kafka Connect started   [org.apache.kafka.connect.runtime.Connect]
+----
+
+Press Ctrl-C to return to the command prompt. 
+
+We'll now create _two_ Kafka Connect connectors. Both stream events from MySQL into Kafka using Debezium, but differ in how they handle the message structure. 
+
+[source,bash]
+----
+docker-compose exec connect-debezium bash -c '/scripts/create-mysql-source.sh'
+----
+
+You should see `HTTP/1.1 201 Created`, twice. 
+
+If you are interested you can inspect the script file (`scripts/create-mysql-source.sh` in the workshop folder) that includes the configuration payload in JSON. 
+
+1. The connector called `mysql-source-demo-customers` flattens the before/after record state data, along with the nested metadata, into a single flat structure. This is what we use during the rest of the workshop. 
++ 
+The flattening is done using a *Single Message Transform* from Debezium, called `io.debezium.transforms.UnwrapFromEnvelope`. 
++ The connector also uses two Single Message Transforms to illustrate how metadata can be added to ingested data. The `InsertField` transformation adds the topic name into a field called `messagetopic`, and some fixed text into the `messagesource` field. 
+
+2. The connector `mysql-source-demo-customers-raw` retains the nested structure of the before/after record data.
++
+A Single Message Transform is used to route the messages to a different topic. By default Debezium will use the format `server.schema.table` when streaming a table's data to a Kafka topic. We use the `RegexRouter` to redirect the messages to a topic with a `-raw` suffix. 
+
+===== Exploring CDC change records
+
+Start a MySQL command prompt: 
+
+[source,bash]
+----
+docker-compose exec mysql bash -c 'mysql -u $MYSQL_USER -p$MYSQL_PASSWORD demo'
+----
+
+Now in a separate terminal window run the following, to stream the contents of the customers topic and any changes to stdout: 
+
+[source,bash]
+----
+docker-compose exec -T kafka \
+      kafka-console-consumer \
+      --bootstrap-server kafka:29092 \
+      --topic asgard.demo.CUSTOMERS-raw --from-beginning|jq '.'
+----
+
+(_https://stedolan.github.io/jq/[jq] is useful here—if you don't have it installed, remove `|jq '.'` from the above command)._
+
+Note the customer data shown, and the structure of it, with `before`, `after`, and `source` data.
+
+From the MySQL command prompt, make some changes to the data: 
+
+[source,sql]
+----
+INSERT INTO CUSTOMERS (ID,FIRST_NAME,LAST_NAME) VALUES (42,'Rick','Astley');
+UPDATE CUSTOMERS SET FIRST_NAME = 'Thomas', LAST_NAME ='Smith' WHERE ID=2;
+----
+
+For each change, inspect the output of the Kafka topic. Observe the difference between an `INSERT` and `UPDATE`. 
+
+==== Option B: Manually
+
+If you want to follow the simpler path for this workshop, you can just mock up the data that would be coming from our customers table on a database. In practice you would ingest the data using https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc[Kafka Connect and CDC]
 
 Run the following command to send the customer data to the `customers` topic:
 
 [source,bash]
 ----
-docker run --interactive \
-           --network ksql-workshop_default \
+docker run --network ksql-workshop_default \
+           --interactive --rm \
            --volume $PWD/data:/data confluentinc/cp-kafkacat \
            kafkacat -b kafka:29092 \
-                    -t customers \
+                    -t asgard.demo.CUSTOMERS \
                     -P -l /data/customers.json
 ----
 
 Note that there is no output from this command. We will verify its success in the next step.
 
-_On Windows you may find that the above doesn't work. If so, run just the second part of the command (starting `docker run…`) and manually paste the contents of `data/customers.json doesn't have cat (for loading customer data)
-
-
 === Inspect customer data
 
-Run this command to inspect the content of the `customers` topic that we populated above. Note the use of https://github.com/edenhill/kafkacat/[`kafkacat` ] for showing the messages and detailed metadata.
+Run this command to inspect the content of the `customers` topic that we populated above. 
 
 [source,bash]
 ----
 docker run --network ksql-workshop_default \
-          --tty --interactive \
+          --tty --interactive --rm \
           confluentinc/cp-kafkacat \
           kafkacat -b kafka:29092 -C -K: \
           -f '\nKey (%K bytes): %k\t\nValue (%S bytes): %s\n\Partition: %p\tOffset: %o\n--\n' \
-          -t customers
+          -t asgard.demo.CUSTOMERS
 ----
 
 You should see ten messages, similar to this:
@@ -191,16 +231,29 @@ Launch the CLI:
 
 [source,bash]
 ----
-docker-compose exec ksql-cli ksql http://ksql-server:8088
+docker run --network ksql-workshop_default \
+           --tty --interactive --rm \
+           confluentinc/cp-ksql-cli:5.0.0 http://ksql-server:8088
 ----
 
 Make sure that you get a successful start up screen:
 
 [source,bash]
 ----
-Copyright 2017 Confluent Inc.
+                  ===========================================
+                  =        _  __ _____  ____  _             =
+                  =       | |/ // ____|/ __ \| |            =
+                  =       | ' /| (___ | |  | | |            =
+                  =       |  <  \___ \| |  | | |            =
+                  =       | . \ ____) | |__| | |____        =
+                  =       |_|\_\_____/ \___\_\______|       =
+                  =                                         =
+                  =  Streaming SQL Engine for Apache Kafka® =
+                  ===========================================
 
-CLI v5.0.0-SNAPSHOT, Server v5.0.0-SNAPSHOT located at http://ksql-server:8088
+Copyright 2017-2018 Confluent Inc.
+
+CLI v5.0.0, Server v5.0.0 located at http://ksql-server:8088
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
 
@@ -214,13 +267,19 @@ KSQL can be used to view the topic metadata on a Kafka cluster (`SHOW TOPICS;`),
 [source,sql]
 ----
 ksql> SHOW TOPICS;
- Kafka Topic        | Registered | Partitions | Partition Replicas | Consumers | ConsumerGroups
-------------------------------------------------------------------------------------------------
- _confluent-metrics | false      | 12         | 1                  | 0         | 0
- _schemas           | false      | 1          | 1                  | 0         | 0
- customers          | false      | 1          | 1                  | 0         | 0
- ratings            | false      | 1          | 1                  | 0         | 0
-------------------------------------------------------------------------------------------------
+
+ Kafka Topic                     | Registered | Partitions | Partition Replicas | Consumers | ConsumerGroups
+-------------------------------------------------------------------------------------------------------------
+ _confluent-metrics              | false      | 12         | 1                  | 0         | 0
+ _schemas                        | false      | 1          | 1                  | 0         | 0
+ asgard.demo.CUSTOMERS           | false      | 1          | 1                  | 1         | 1
+ asgard.demo.CUSTOMERS-raw       | false      | 1          | 1                  | 2         | 2
+ docker-connect-debezium-configs | false      | 1          | 1                  | 0         | 0
+ docker-connect-debezium-offsets | false      | 25         | 1                  | 0         | 0
+ ratings                         | false      | 1          | 1                  | 0         | 0
+[...]
+-------------------------------------------------------------------------------------------------------------
+ksql>
 ----
 
 === Inspect a topic contents - Ratings
@@ -249,7 +308,7 @@ Here we use the `FROM BEGINNING` argument, which tells KSQL to go back to the _b
 
 [source,sql]
 ----
-ksql> PRINT 'customers' FROM BEGINNING;
+ksql> PRINT 'asgard.demo.CUSTOMERS' FROM BEGINNING;
 Format:JSON
 {"ROWTIME":1529499994472,"ROWKEY":"null","id":1,"first_name":"Annemarie","last_name":"Arent","email":"aarent0@cpanel.net","gender":"Female","club_status":"platinum","comments":"Organized web-enabled ability"}
 {"ROWTIME":1529499994472,"ROWKEY":"null","id":2,"first_name":"Merilyn","last_name":"Doughartie","email":"mdoughartie1@dedecms.com","gender":"Female","club_status":"platinum","comments":"Optimized local definition"}
@@ -526,11 +585,11 @@ Remember our Customer data? Let's bring that into play, and use it to enrich the
 
 Let's check the data first, using the very handy `PRINT` command:
 
-`PRINT 'customers' FROM BEGINNING;`
+`PRINT 'asgard.demo.CUSTOMERS' FROM BEGINNING;`
 
 [source,sql]
 ----
-ksql> PRINT 'customers' FROM BEGINNING;
+ksql> PRINT 'asgard.demo.CUSTOMERS' FROM BEGINNING;
 Format:JSON
 {"ROWTIME":1529492614185,"ROWKEY":"null","id":1,"first_name":"Annemarie","last_name":"Arent","email":"aarent0@cpanel.net","gender":"Female","club_status":"platinum","comments":"Organized web-enabled ability"}
 ----
@@ -545,7 +604,7 @@ First we will register the customer topic. Note that because it is in JSON forma
 
 [source,sql]
 ----
-ksql> CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='customers', VALUE_FORMAT='JSON');
+ksql> CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='asgard.demo.CUSTOMERS', VALUE_FORMAT='JSON');
 
  Message
 ----------------
@@ -555,6 +614,13 @@ ksql>
 ----
 
 With the stream registered, we can now re-key the topic, using a KSQL `CSAS` and the `PARTITION BY` clause. Note that we're taking the opportunity to re-serialise the data into Avro format. We're also changing the number of partitions from that of the source (4) to match that of the `ratings` topic (1):
+
+[IMPORTANT]
+====
+By changing the partition key, data may move between partitions, and thus its ordering change. Kafka's strict ordering guarantee only applies within a partition. 
+
+In our example this doesn't matter, but be aware of this if you rely on this re-keying technique in other KSQL queries.
+====
 
 [source,sql]
 ----
@@ -677,7 +743,7 @@ Run the following SQL:
 [source,sql]
 ----
 SELECT R.MESSAGE, C.FIRST_NAME, C.LAST_NAME \
-FROM RATINGS R LEFT JOIN CUSTOMERS C \
+FROM RATINGS R INNER JOIN CUSTOMERS C \
 ON R.USER_ID = C.ID \
 LIMIT 5;
 ----
@@ -701,14 +767,14 @@ Query terminated
 ksql>
 ----
 
-Now let's pull the full set of data, including a reformat of the timestamp into something human readable. Note the `IS NOT NULL` clause to filter out any ratings with no corresponding user data (i.e. making it in-effect an `INNER JOIN`):
+Now let's pull the full set of data, including a reformat of the timestamp into something human readable.
 
 [source,sql]
 ----
 SELECT TIMESTAMPTOSTRING(R.RATING_TIME, 'yyyy-MM-dd HH:mm:ss'), R.RATING_ID, R.STARS, R.ROUTE_ID,  R.CHANNEL, \
 R.MESSAGE, C.FIRST_NAME, C.LAST_NAME, C.CLUB_STATUS \
-FROM RATINGS R LEFT JOIN CUSTOMERS C \
-ON R.USER_ID = C.ID WHERE C.LAST_NAME IS NOT NULL;
+FROM RATINGS R INNER JOIN CUSTOMERS C \
+ON R.USER_ID = C.ID;
 ----
 
 [source,sql]
@@ -719,7 +785,7 @@ ON R.USER_ID = C.ID WHERE C.LAST_NAME IS NOT NULL;
 2018-06-20 13:03:51 | 6 | 2 | 6902 | web | Surprisingly good, maybe you are getting your mojo back at long last! | Gianina | Mixhel | gold
 ----
 
-NOTE: The timestamp of KSQL Table events should be _before_ the event to which they are being joined. Because of KStream processing semantics you may see null value results against some events produced prior to the table events.
+Press Ctrl-C to cancel the output. 
 
 <<<
 === Populating a Kafka topic with the results of a Stream-Table join
@@ -733,9 +799,8 @@ SELECT R.RATING_ID, R.CHANNEL, R.STARS, R.MESSAGE, \
        C.ID, C.CLUB_STATUS, C.EMAIL, \
        C.FIRST_NAME, C.LAST_NAME \
 FROM RATINGS R \
-     LEFT JOIN CUSTOMERS C \
-       ON R.USER_ID = C.ID \
-WHERE C.FIRST_NAME IS NOT NULL ;
+     INNER JOIN CUSTOMERS C \
+       ON R.USER_ID = C.ID ;
 ----
 
 [source,sql]
@@ -856,14 +921,14 @@ ksql>
 
 In the resulting `TABLE` there are some characteristics to note:
 
-* The `ROWTIME` is the _start_ of the timestamp window. This is always a multiple offset from the epoch, regardless of when the first event arrived in the system.
-* The `ROWKEY` is a composite key of the timestamp window start plus the column(s) defined in the `GROUP BY`
+* The `ROWTIME` is the timestamp of the most recent message to arrive in that aggregate.
+* The `ROWKEY` is a composite key of the window start timestamp as an epoch, plus the column(s) defined in the `GROUP BY`. It's not currently possible to access the window start/end time programatically from KSQL, but https://github.com/confluentinc/ksql/issues/1674[this is planned].
 
-Using the `ROWKEY` column it's possible to examine the aggregate values and associated window:
+Using the `ROWKEY` column it's possible to examine the aggregate values:
 
 [source,sql]
 ----
-SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS WINDOW_START_TS, \
+SELECT ROWKEY, \
         CLUB_STATUS, RATING_COUNT \
 FROM RATINGS_BY_CLUB_STATUS \
 LIMIT 5;
@@ -871,11 +936,11 @@ LIMIT 5;
 
 [source,sql]
 ----
-2018-06-20 13:03:00 | platinum | 3
-2018-06-20 13:04:00 | platinum | 26
-2018-06-20 13:05:00 | platinum | 26
-2018-06-20 13:06:00 | platinum | 20
-2018-06-20 13:07:00 | platinum | 23
+platinum : Window{start=1535986500000 end=-} | platinum | 23
+silver : Window{start=1535983740000 end=-} | silver | 9
+gold : Window{start=1535983740000 end=-} | gold | 39
+gold : Window{start=1535983800000 end=-} | gold | 46
+platinum : Window{start=1535983980000 end=-} | platinum | 18
 Limit Reached
 Query terminated
 ksql>
@@ -886,7 +951,7 @@ This table that we've created is just a first class object in KSQL, updated in r
 
 [source,sql]
 ----
-SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') AS WINDOW_START_TS, \
+SELECT ROWKEY, \
         CLUB_STATUS, RATING_COUNT \
 FROM RATINGS_BY_CLUB_STATUS \
 WHERE CLUB_STATUS='bronze';
@@ -894,11 +959,11 @@ WHERE CLUB_STATUS='bronze';
 
 [source,sql]
 ----
-2018-06-20 15:19:00 | bronze | 27
-2018-06-20 15:20:00 | bronze | 22
-2018-06-20 15:21:00 | bronze | 23
-2018-06-20 15:22:00 | bronze | 22
-2018-06-20 15:23:00 | bronze | 28
+bronze : Window{start=1535986740000 end=-} | bronze | 23
+bronze : Window{start=1535986800000 end=-} | bronze | 22
+bronze : Window{start=1535986860000 end=-} | bronze | 35
+bronze : Window{start=1535986920000 end=-} | bronze | 25
+bronze : Window{start=1535986980000 end=-} | bronze | 30
 ----
 
 If you let the `SELECT` output continue to run, you'll see all of the past time window aggregate values—but also the current one. Note that the _current_ time window's aggregate value will continue to update, because new events are being continually processed and reflected in the value. If you were to send an event to the source `ratings` topic with a timestamp in the past, the corresponding time window's aggregate would be re-emitted.
@@ -922,14 +987,16 @@ Make sure that Elasticsearch and Kibana are running:
 
 [source,bash]
 ----
-docker-compose up -d elasticsearch
+$ docker-compose ps|egrep "elasticsearch|kibana"
+elasticsearch                      /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 0.0.0.0:9300->9300/tcp
+kibana                             /usr/local/bin/kibana-docker     Up      0.0.0.0:5601->5601/tcp
 ----
 
 Create a dynamic mapping in Elasticsearch so that the timestamp of source data is correctly detected:
 
 [source,bash]
 ----
-curl -XPUT "http://localhost:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d' { "index_patterns": "*", "settings": { "number_of_shards": 1, "number_of_replicas": 0 }, "mappings": { "_default_": { "dynamic_templates": [ { "dates": { "match": "EXTRACT_TS", "mapping": { "type": "date" } } }, { "non_analysed_string_template": { "match": "*", "match_mapping_type": "string", "mapping": { "type": "keyword" } } } ] } } }'
+curl -XPUT "http://localhost:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d' { "index_patterns": "*", "settings": { "number_of_shards": 1, "number_of_replicas": 0 }, "mappings": { "_default_": { "dynamic_templates": [ { "dates": { "match": "TS", "mapping": { "type": "date" } } }, { "non_analysed_string_template": { "match": "*", "match_mapping_type": "string", "mapping": { "type": "keyword" } } } ] } } }'
 ----
 
 Create a connector to stream `RATINGS_WITH_CUSTOMER_DATA` to Elasticsearch:
@@ -951,12 +1018,46 @@ curl -X "POST" "http://localhost:18083/connectors/" \
     "connection.url": "http://elasticsearch:9200",
     "transforms": "ExtractTimestamp",
     "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
-    "transforms.ExtractTimestamp.timestamp.field" : "EXTRACT_TS"
+    "transforms.ExtractTimestamp.timestamp.field" : "TS"
   }
 }'
 ----
 
-Use the Kibana interface to check that docs are arriving in Elasticsearch:
+Create a connector to stream `RATINGS_BY_CLUB_STATUS` to Elasticsearch:
+
+[source,bash]
+----
+curl -X "POST" "http://localhost:18083/connectors/" \
+-H "Content-Type: application/json" \
+-d '{
+  "name": "es_sink_ratings_agg_by_status_1min",
+  "config": {
+    "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
+    "topics": "RATINGS_BY_CLUB_STATUS",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.ignore": "false",
+    "schema.ignore": "true",
+    "type.name": "type.name=kafkaconnect",
+    "topic.index.map": "RATINGS_BY_CLUB_STATUS:ratings_agg_by_status_1min",
+    "connection.url": "http://elasticsearch:9200",
+    "transforms": "ExtractTimestamp",
+    "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.ExtractTimestamp.timestamp.field" : "TS"
+  }
+}'
+----
+
+_Note that the above sets `"key.ignore": "false"` , and thus aggregates will be updated in-place._
+
+If you have `jq` on your machine you can run this to check that the connector is `RUNNING`: 
+
+[source,bash]
+----
+$ curl -s "http://localhost:18083/connectors"| jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:18083/connectors/"{connector_name}"/status"| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+es_sink_unhappy_platinum_customers  |  RUNNING  |  RUNNING
+----
+
+Use the Kibana interface (http://localhost:5601) to check that docs are arriving in Elasticsearch:
 
 image::images/kibana_01.png[]
 
@@ -973,13 +1074,11 @@ To terminate the workshop environment, run `docker-compose down`:
 [source,bash]
 ----
 $ docker-compose down
-Stopping ksql-workshop_ksql-cli_1        ... done
 Stopping ksql-workshop_ksql-server_1     ... done
 Stopping ksql-workshop_datagen-ratings_1 ... done
 Stopping ksql-workshop_schema-registry_1 ... done
 Stopping ksql-workshop_kafka_1           ... done
 Stopping ksql-workshop_zookeeper_1       ... done
-Removing ksql-workshop_ksql-cli_1        ... done
 Removing ksql-workshop_ksql-server_1     ... done
 Removing ksql-workshop_datagen-ratings_1 ... done
 Removing ksql-workshop_schema-registry_1 ... done
