@@ -50,6 +50,7 @@ public class AddInventory {
     producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
     producerConfig.put(ProducerConfig.ACKS_CONFIG, "all");
     producerConfig.put(ProducerConfig.RETRIES_CONFIG, 0);
+    producerConfig.put(ProducerConfig.CLIENT_ID_CONFIG, "inventory-generator");
     MonitoringInterceptorUtils.maybeConfigureInterceptorsProducer(producerConfig);
     ProductTypeSerde productSerde = new ProductTypeSerde();
 
