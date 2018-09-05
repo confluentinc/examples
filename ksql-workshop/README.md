@@ -4,7 +4,13 @@
 
 This KSQL ratings demo showcases Kafka stream processing using KSQL. This demo was initially created for a KSQL workshop.
 
-As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install instead of Docker. Alternatively, you may follow the [step-by-step guide](ksql-workshop.adoc), and that instruction is based on Docker instead of your local Confluent Platform install.
+----
+
+**You can follow the [step-by-step guide](ksql-workshop.adoc) workshop instructions here. These instructions are based on Docker instead of your local Confluent Platform install.**
+
+----
+
+As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install instead of Docker.
 
 ![image](images/ksql_workshop_01.png)
 
