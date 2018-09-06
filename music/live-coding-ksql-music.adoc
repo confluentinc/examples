@@ -62,6 +62,8 @@ The Docker compose file includes a container that auto-generates source data to 
 * `play-events` : stream of play events (“song X was played”)
 * `song-feed` : stream of song metadata (“song X was written by artist Y”)
 
+image:images/ksql-music-demo-source-data.jpg[source-data]
+
 Use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Under `MANAGEMENT` select `Topics`, then scroll down and click on the topic and select `Inspect`.
 
 image:images/inspect_topic.png[inspect-topic]
@@ -89,6 +91,10 @@ PRINT "song-feed" FROM BEGINNING;
 ----
 
 image:images/topic_ksql_song_feed.png[song-feed-ksql]
+
+So the source data looks as follows
+
+image:images/ksql-music-demo-source-data-explore.jpg[source-data-explore]
 
 === Create a new stream
 
