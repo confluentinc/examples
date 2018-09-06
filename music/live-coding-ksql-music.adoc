@@ -70,7 +70,12 @@ image:images/inspect_topic.png[inspect-topic]
 
 image:images/topic_inspect_play_events.png[play-events]
 
-From the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center:
+Or use the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center to inspect the topic:
+
+[source,sql]
+----
+PRINT "play-events";
+----
 
 image:images/topic_ksql_play_events.png[play-events-ksql]
 
@@ -96,7 +101,7 @@ Register the topic `play-events` as a KSQL stream and specify that it is Avro fo
 * Configure the new stream name as `ksql_playevents`
 * Change the message value encoding to `AVRO` (default: `JSON`)
 
-From the KSQL query editor:
+Or from the KSQL query editor:
 
 [source,sql]
 ----
@@ -134,7 +139,7 @@ Now this persistent query will show in the queries list.
 
 Next let's work with the `song-feed` topic, which effectively represents a table of songs. To create a KSQL `TABLE`, it is required to have a non-null key and the key is required to be of type `String`. We want it to be keyed on the song's ID, for JOINS and aggregations to work on that table.
 
-However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`, so we need to address this before creating the table. Until this is improved in a https://github.com/confluentinc/ksql/issues/804[future KSQL release], we can create a `TABLE` from the `song-feed` topic in a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
+However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`.  We can create a `TABLE` from the `song-feed` topic in a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
  
 * Create a `STREAM` from the original Kafka topic `song-feed`:
 
@@ -159,7 +164,7 @@ DESCRIBE ksql_songfeed;
 
 image:images/describe_songfeed.png[describe-song-feed]
  
-* Use the `PARTITION BY` clause to add a key and the `CAST` function to change the type to `String`.
+* Use the `PARTITION BY` clause to assign a key and use the `CAST` function to change the field type to `String`.
  
 [source,sql]
 ----
@@ -234,9 +239,10 @@ However, if you choose to jump ahead to the end state, run the KSQL command file
 
 [source,bash]
 ----
-$ docker-compose exec ksql-cli  bash -c "ksql http://ksql-server:8088 <<EOF
-run script '/tmp/ksql.commands';
-exit ;
-EOF
+$ docker-compose exec ksql-cli ksql http://ksql-server:8088
+....
+ksql> run script '/tmp/ksql.commands';
+ksql> exit;
+$
 "
 ----
