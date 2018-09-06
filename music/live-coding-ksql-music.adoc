@@ -20,50 +20,61 @@ This code file accompanies:
 
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
-== Prep
+== Setup
 
-=== Start Confluent platform
+=== Docker
 
-First we need a Kafka cluster, a KSQL server, and Confluent Schema Registry. Confluent CLI makes it super easy to bring up all the services on one local host for development and testing purposes.
+This tutorial assumes you are running the KSQL music demo application in Docker. 
 
-[source,bash]
-----
-$ confluent destroy
-$ confluent start
-----
+NOTE: You may alternatively run this demo on a Confluent Platform local install, just by running the https://github.com/confluentinc/quickstart-demos/blob/5.0.0-post/music/start.sh[start script].
 
-=== Generate Source Data
-
-Clone the https://github.com/confluentinc/kafka-streams-examples[kafka-streams-examples] repo and compile the java code.  This requires Java 1.8 and Maven installed locally.
+To get this demo running in Docker, clone the https://github.com/confluentinc/quickstart-demos[repo] with the KSQL music demo.
 
 [source,bash]
 ----
-$ git clone https://github.com/confluentinc/kafka-streams-examples.git
-$ cd kafka-streams-examples
-$ mvn clean package -DskipTests
+$ git clone https://github.com/confluentinc/quickstart-demos
 ----
 
-Generate the data to two topics, in Avro format:
+In Docker's advanced https://docs.docker.com/docker-for-mac/#advanced[settings], increase the memory dedicated to Docker to at least 8GB (default is 2GB).
 
-* `play-events` : stream of play events (“song X was played”)
-* `song-feed` : stream of song metadata (“song X was written by artist Y”)
+From the `quickstart-demos/music` directory, start the demo by running a single command that brings up the Docker containers.  This will take less than 2 minutes to complete.
 
 [source,bash]
 ----
-$ java -cp target/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver
+$ docker-compose up -d
+----
+
+Do not proceed until you see the output in the logs below.
+
+[source,bash]
+----
+$ docker-compose logs -f control-center | grep -i "Started NetworkTrafficServerConnector"
+control-center                | [2018-09-06 15:03:22,518] INFO Started NetworkTrafficServerConnector@4d48bd85{HTTP/1.1,[http/1.1]}{0.0.0.0:9021} (org.eclipse.jetty.server.AbstractConnector)
 ----
 
 == Demo
 
 === Explore the source data
 
-If you are running Confluent Enterprise 5.0 or later, use Control Center's capabilities to inspect the Kafka topics with the source data `play-events` and `song-feed`.
+The demo auto-generates source data to two topics, in Avro format:
+
+* `play-events` : stream of play events (“song X was played”)
+* `song-feed` : stream of song metadata (“song X was written by artist Y”)
+
+Use Google Chrome to navigate to Confluent Control Center and inspect the Kafka topics: http://localhost:9021/development/ksql/.
+
+If you don't want to use the KSQL UI in Control Center, use the KSQL CLI:
+
+[source,bash]
+----
+$ docker-compose exec ksql-cli ksql http://ksql-server:8088
+----
 
 * Exploring the topic `play-events` : 
 
 image:images/topic_inspect_play_events.png[play-events]
 
-Alternatively, you may use the KSQL CLI `ksql http://localhost:8088` to inspect the topics and run KSQL queries. For example, the KSQL equivalent to above is:
+From KSQL CLI:
 
 [source,sql]
 ----
@@ -75,16 +86,11 @@ ksql> print "play-events";
 ....
 ----
 
-Or use the Confluent CLI to read the topic data directly:
-
-[source,bash]
-----
-$ confluent consume play-events --value-format avro
-----
-
 * Exploring the topic `song-feed` : 
 
-At this time, you cannot view data in this topic using the topic inspection capability of Confluent Control Center because topic inspection only works on new data, not old data already produced to the topic.  Instead, use KSQL to view the `song-feed` topic:
+At this time, you cannot view data in this topic using the topic inspection capability of Confluent Control Center because topic inspection only works on new data, not old data already produced to the topic.  Instead, use KSQL CLI to view the `song-feed` topic:
+
+From KSQL CLI:
 
 [source,sql]
 ----
@@ -96,22 +102,13 @@ ksql> print "song-feed" from beginning;
 ....
 ----
 
-Or use the Confluent CLI to read the topic data directly:
-
-[source,bash]
-----
-$ confluent consume song-feed --value-format avro --from-beginning
-----
-
 === Create a Stream from the `play-events` topic
 
 To process the data in Kafka, let's begin with the `play-events` topic because it’s more straightforward.
 
-We need to register the topic `play-events` as a KSQL stream, and specify that it’s Avro data. The following statement results a KSQL stream called `ksql_playevents` that is an unbounded sequence of events.
+NOTE: we prefix the KSQL stream, table,a nd query names with `ksql_` but that is not required. We are doing it so that you can run these KSQL queries alongside the Kafka Streams API version of this music demo and not run into naming conflicts.
 
-NOTE: we prefix these query names with `ksql_` but that is not required. We are doing it so that you can run these KSQL queries alongside the Kafka Streams API version of this music demo and not run into naming conflicts.
-
-If you are running Confluent Enterprise 5.0 or later, use Control Center's capabilities to create a new KSQL stream from an existing Kafka topic:
+We need to register the topic `play-events` as a KSQL stream, and specify that it’s Avro data.
 
 * Configure the stream name as `ksql_playevents`
 * Change the message value encoding to `AVRO` (default: `JSON`)
@@ -119,7 +116,7 @@ If you are running Confluent Enterprise 5.0 or later, use Control Center's capab
 
 image:images/ksql_playevents.png[play-events]
 
-If you are not running Confluent Enterprise, define the KSQL stream as follows from the KSQL CLI:
+From KSQL CLI:
 
 [source,sql]
 ----
@@ -213,3 +210,19 @@ While the all-time greatest hits are cool, we also might not mind knowing the st
 CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
 
+== Jumping Ahead
+
+=== KSQL Command File
+
+For learning purposes, we suggest you walk through this tutorial step-by-step.
+
+However, if you choose to jump ahead to the end state, run the KSQL command file that automatically configures the KSQL queries.
+
+[source,bash]
+----
+$ docker-compose exec ksql-cli  bash -c "ksql http://ksql-server:8088 <<EOF
+run script '/tmp/ksql.commands';
+exit ;
+EOF
+"
+----
