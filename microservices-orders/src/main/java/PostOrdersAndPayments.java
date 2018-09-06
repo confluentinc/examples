@@ -143,7 +143,7 @@ public class PostOrdersAndPayments {
       //    inputOrder.getPrice()
       //));
 
-      Thread.sleep(1000L);
+      Thread.sleep(5000L);
       i++;
     }
   }
