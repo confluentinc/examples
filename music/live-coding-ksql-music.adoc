@@ -218,11 +218,18 @@ While the all-time greatest hits are cool, it would also be good to see stats fo
 CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
 
-Any downstream application can consume this data for further processing.
-
 == Here is what you built
 
-Congratulations, you built a streaming application that processes data in real-time!  If you are familiar with SQL semantics, hopefully that shouldn’t have been too hard.  The application enriched a stream of play events with song metadata and generated top counts.  Below is a summary of the underlying Kafka topics and KSQL streams.
+Congratulations, you built a streaming application that processes data in real-time!  The application enriched a stream of play events with song metadata and generated top counts. Any downstream systems can consume results from your KSQL queries for further processing.
+
+[source,bash]
+----
+SELECT * FROM ksql_songplaycounts30 LIMIT 5;
+----
+
+image::images/counts-results.png[results]
+
+If you were already familiar with SQL semantics, hopefully this tutorial wasn't too hard to follow. Below is a summary of the underlying Kafka topics and KSQL streams.
 
 image::images/ksql-music-demo-overview.jpg[Diagram]
 
