@@ -134,7 +134,7 @@ Now this persistent query will show in the queries list.
 
 Next let's work with the `song-feed` topic, which effectively represents a table of songs. To create a KSQL `TABLE`, it is required to have a non-null key and the key is required to be of type `String`. We want it to be keyed on the song's ID, for JOINS and aggregations to work on that table.
 
-However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`, so we need to address this before creating the table. Until this is improved in a https://github.com/confluentinc/ksql/issues/804[future KSQL release], we can create a `TABLE` from the `song-feed` topic in a few simple steps:
+However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`, so we need to address this before creating the table. Until this is improved in a https://github.com/confluentinc/ksql/issues/804[future KSQL release], we can create a `TABLE` from the `song-feed` topic in a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
  
 * Create a `STREAM` from the original Kafka topic `song-feed`:
 
@@ -173,32 +173,47 @@ CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VAL
 CREATE TABLE ksql_songtable WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='Avro', KEY='ID');
 ----
 
-=== JOIN play events with the database of songs
+Confirm that the entires in this table have a non-null `ROWKEY`.
 
-We can do a STREAM-TABLE join to bring together the stream of play events with the song table. This will result in a new stream of data that shows not only when a particular song is played, but also descriptive song information like song title along with each play event.
+[source,sql]
+----
+SELECT * FROM ksql_songtable limit 5;
+----
+
+=== Join play events with the database of songs
+
+At this point we have created a stream of filtered play events called `ksql_playevents_min_duration` and a table of song metadata called `ksql_songtable`.
+
+We can enrich the stream of play events with song metadata, with a STREAM-TABLE join. This will result in a new stream of play events enriched with descriptive song information like song title along with each play event.
 
 [source,sql]
 ----
 CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION, 1 AS KEYCOL FROM ksql_playevents_min_duration plays LEFT JOIN ksql_songtable songtable ON plays.SONG_ID = songtable.ID;
 ----
 
-Notice the addition of a clause `1 AS KEYCOL.` This creates a new field `KEYCOL` where every row gets a value of 1. `KEYCOL` can be later used in other derived streams and tables to do aggregations on a global basis, not on a per-partition basis. 
+Notice the addition of a clause `1 AS KEYCOL.` For every row, this creates a new field `KEYCOL` that has a value of 1. `KEYCOL` can be later used in other derived streams and tables to do aggregations on a global basis.
 
 === Create Top Music Charts
 
-You can create a top music chart for all time to see which songs get the most play. We can use the `COUNT` function on the stream `ksql_songplays` that we created above.
+You can create a top music chart for all time to see which songs get played the most. We can use the `COUNT` function on the stream `ksql_songplays` that we created above.
 
 [source,sql]
 ----
 CREATE TABLE ksql_songplaycounts AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
 
-While the all-time greatest hits are cool, we also might not mind knowing the stats just in the last 30 seconds. Create another query, adding in a `WINDOW` clause, which gives counts of play events for all songs, in 30-second intervals.
+While the all-time greatest hits are cool, it would also be good to see stats for just the last 30 seconds. Create another query, adding in a `WINDOW` clause, which gives counts of play events for all songs, in 30-second intervals.
 
 [source,sql]
 ----
 CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
+
+== Here is what you built
+
+Congratulations, you built a streaming application that processes data in real-time!  If you are familiar with SQL semantics, hopefully that shouldn’t have been too hard.  The application enriched a stream of play events with song metadata and generated top counts.  Below is a summary of the underlying Kafka topics and KSQL streams.
+
+image::images/ksql-music-demo-overview.jpg[Diagram]
 
 == Jumping Ahead
 
