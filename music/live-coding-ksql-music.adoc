@@ -243,5 +243,4 @@ $ docker-compose exec ksql-cli ksql http://ksql-server:8088
 ....
 ksql> run script '/tmp/ksql.commands';
 ksql> exit
-"
 ----
