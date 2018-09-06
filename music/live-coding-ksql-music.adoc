@@ -227,7 +227,7 @@ Congratulations, you built a streaming application that processes data in real-t
 SELECT * FROM ksql_songplaycounts30 LIMIT 5;
 ----
 
-image::images/counts-results.png[results]
+image::images/counts_results.png[results]
 
 If you were already familiar with SQL semantics, hopefully this tutorial wasn't too hard to follow. Below is a summary of the underlying Kafka topics and KSQL streams.
 
