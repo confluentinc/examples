@@ -28,7 +28,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -55,32 +55,6 @@ services:
     extra_hosts:
       - "moby:127.0.0.1"
 
-  # This "container" is a workaround to pre-create topics for the Kafka Music application
-  # until we have a more elegant way to do that.
-  kafka-create-topics:
-    image: confluentinc/cp-kafka:5.0.0
-    depends_on:
-      - kafka
-    hostname: kafka-create-topics
-    container_name: kafka-create-topics
-    # We defined a dependency on "kafka", but `depends_on` will NOT wait for the
-    # dependencies to be "ready" before starting the "kafka-create-topics"
-    # container;  it waits only until the dependencies have started.  Hence we
-    # must control startup order more explicitly.
-    # See https://docs.docker.com/compose/startup-order/
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 20 && \
-                       kafka-topics --create --topic play-events --if-not-exists --zookeeper zookeeper:32181 --partitions 4 --replication-factor 1 && \
-                       kafka-topics --create --topic song-feed --if-not-exists --zookeeper zookeeper:32181 --partitions 4 --replication-factor 1 && \
-                       sleep infinity'"
-    environment:
-      # The following settings are listed here only to satisfy the image's requirements.
-      # We override the image's `command` anyways, hence this container will not start a broker.
-      KAFKA_BROKER_ID: ignored
-      KAFKA_ZOOKEEPER_CONNECT: ignored
-    extra_hosts:
-      - "moby:127.0.0.1"
-
   # Continuously generates input data for the Kafka Music application.
   kafka-music-data-generator:
     image: confluentinc/kafka-streams-examples:5.0.0
@@ -89,8 +63,7 @@ services:
     depends_on:
       - kafka
       - schema-registry
-      - kafka-create-topics
-    # Control startup order similarly to the "kafka-create-topics" container above.
+    # Control startup order
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
@@ -115,8 +88,7 @@ services:
     depends_on:
       - kafka
       - schema-registry
-      - kafka-create-topics
-    # Control startup order similarly to the "kafka-create-topics" container above.
+    # Control startup order
     # Note: The container's `run` script will perform the same readiness checks
     # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
     # The reason we check for readiness here is that we can insert a sleep time
