@@ -62,17 +62,17 @@ The demo auto-generates source data to two topics, in Avro format:
 * `play-events` : stream of play events (“song X was played”)
 * `song-feed` : stream of song metadata (“song X was written by artist Y”)
 
-Use Google Chrome to navigate to http://localhost:9021[Confluent Control Center] and inspect the Kafka topics:
+Use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Under `MANAGEMENT` select `Topics`, then scroll down and click on the topic and select `Inspect`.
 
 image:images/inspect_topic.png[inspect-topic]
 
-* Inspect the topic `play-events` : 
+* Inspect the topic `play-events` :
 
 image:images/topic_inspect_play_events.png[play-events]
 
 Or use the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center to inspect the topic:
 
-[source,sql]
+[source,bash]
 ----
 PRINT "play-events";
 ----
@@ -81,9 +81,9 @@ image:images/topic_ksql_play_events.png[play-events-ksql]
 
 * Inspect the topic `song-feed` : 
 
-At this time, you cannot inspect data in this topic using the topic inspection capability in Confluent Control Center because topic inspection only works on new data, not old data already produced to the topic.  Instead, from the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center, print the topic with the `from beginning` clause:
+At this time, you cannot inspect data in the topic `song-feed` using the topic inspection capability in Confluent Control Center because topic inspection only works on new data, not previous data already produced to the topic, as is the case here.  Instead, from the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center, print the topic with the `FROM BEGINNING` clause:
 
-[source,sql]
+[source,bash]
 ----
 PRINT "song-feed" FROM BEGINNING;
 ----
@@ -92,23 +92,21 @@ image:images/topic_ksql_song_feed.png[song-feed-ksql]
 
 === Create a new stream
 
-To process the data in Kafka, let's begin with the `play-events` topic.
-
-NOTE: prefix the names of the KSQL streams and tables with `ksql_`.  This is not required but do it so that you can run these KSQL queries alongside the Kafka Streams API version of this music demo and avoid naming conflicts.
-
-Register the topic `play-events` as a KSQL stream and specify that it is Avro format.
+Let's create a new stream from the Kafka topic, beginning with the `play-events` topic. Register the topic `play-events` as a KSQL stream and specify that it is Avro format.
 
 * Configure the new stream name as `ksql_playevents`
 * Change the message value encoding to `AVRO` (default: `JSON`)
 
-Or from the KSQL query editor:
+NOTE: Prefix the names of the KSQL streams and tables with `ksql_`.  This is not required but do it so that you can run these KSQL queries alongside the Kafka Streams API version of this music demo and avoid naming conflicts.
 
-[source,sql]
+To register the topic `play-events`, from the KSQL query editor:
+
+[source,bash]
 ----
 CREATE STREAM ksql_playevents WITH (KAFKA_TOPIC='play-events', VALUE_FORMAT='AVRO');
 ----
 
-Or from the KSQL Streams view, select "Create Stream", and fill out the fields as shown below.  Notice that because of Control Center integration with Confluent Schema Registry, it automatically determines the fields `song_id` and `duration` in the payload, and their respective data types.
+Or from Control Center in the KSQL Streams view, select "Create Stream" and fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, it automatically detects the fields `song_id` and `duration` and their respective data types.
 
 image:images/ksql_playevents.png[play-events]
 
@@ -117,7 +115,7 @@ image:images/ksql_playevents.png[play-events]
 
 Do some basic filtering on the newly created stream `ksql_playevents`, e.g. to qualify songs that were played for at least 30 seconds.  From the KSQL query editor:
 
-[source,sql]
+[source,bash]
 ----
 SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 ----
@@ -126,7 +124,7 @@ image:images/ksql_playevents_min_30_non_persistent.png[play-events]
 
 The above query is not persistent -- it will stop if this screen is closed. To make the query persistent and stay running until explicitly terminated, prefix the previous query with `CREATE STREAM <new stream name> AS`.  From the KSQL query editor:
 
-[source,sql]
+[source,bash]
 ----
 CREATE STREAM ksql_playevents_min_duration AS SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 ----
@@ -143,21 +141,21 @@ However the original Kafka topic has a `null` key and the ID field is of type `B
  
 * Create a `STREAM` from the original Kafka topic `song-feed`:
 
-[source,sql]
+[source,bash]
 ----
 CREATE STREAM ksql_songfeed WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO');
 ----
  
 As mentioned earlier, if you explore the data in this stream, you see that `ROWKEY` is blank, which means the stream has no key.
  
-[source,sql]
+[source,bash]
 ----
 SELECT * FROM ksql_songfeed limit 5;
 ----
  
 Then `DESCRIBE` the stream to see the fields associated with this topic and notice that the field `ID` is of type `BIGINT`.
  
-[source,sql]
+[source,bash]
 ----
 DESCRIBE ksql_songfeed;
 ----
@@ -166,21 +164,21 @@ image:images/describe_songfeed.png[describe-song-feed]
  
 * Use the `PARTITION BY` clause to assign a key and use the `CAST` function to change the field type to `String`.
  
-[source,sql]
+[source,bash]
 ----
 CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='AVRO') AS SELECT CAST(ID AS STRING) AS ID, ALBUM, ARTIST, NAME, GENRE FROM ksql_songfeed PARTITION BY ID;
 ----
  
 * Convert the above stream into a TABLE with the `ID` field as its key, which is now of type `String`. This TABLE is a materialized view of events with only the latest value for each key, which represents an up-to-date database of songs.
  
-[source,sql]
+[source,bash]
 ----
 CREATE TABLE ksql_songtable WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='Avro', KEY='ID');
 ----
 
 Confirm that the entires in this table have a non-null `ROWKEY`.
 
-[source,sql]
+[source,bash]
 ----
 SELECT * FROM ksql_songtable limit 5;
 ----
@@ -191,7 +189,7 @@ At this point we have created a stream of filtered play events called `ksql_play
 
 We can enrich the stream of play events with song metadata, with a STREAM-TABLE join. This will result in a new stream of play events enriched with descriptive song information like song title along with each play event.
 
-[source,sql]
+[source,bash]
 ----
 CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION, 1 AS KEYCOL FROM ksql_playevents_min_duration plays LEFT JOIN ksql_songtable songtable ON plays.SONG_ID = songtable.ID;
 ----
@@ -202,14 +200,14 @@ Notice the addition of a clause `1 AS KEYCOL.` For every row, this creates a new
 
 You can create a top music chart for all time to see which songs get played the most. We can use the `COUNT` function on the stream `ksql_songplays` that we created above.
 
-[source,sql]
+[source,bash]
 ----
 CREATE TABLE ksql_songplaycounts AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
 
 While the all-time greatest hits are cool, it would also be good to see stats for just the last 30 seconds. Create another query, adding in a `WINDOW` clause, which gives counts of play events for all songs, in 30-second intervals.
 
-[source,sql]
+[source,bash]
 ----
 CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
