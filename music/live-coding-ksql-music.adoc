@@ -220,7 +220,7 @@ CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) A
 
 == Here is what you built
 
-Congratulations, you built a streaming application that processes data in real-time!  The application enriched a stream of play events with song metadata and generated top counts. Any downstream systems can consume results from your KSQL queries for further processing.
+Congratulations, you built a streaming application that processes data in real-time!  The application enriched a stream of play events with song metadata and generated top counts. Any downstream systems can consume results from your KSQL queries for further processing.  If you were already familiar with SQL semantics, hopefully this tutorial wasn't too hard to follow.
 
 [source,bash]
 ----
@@ -228,10 +228,6 @@ SELECT * FROM ksql_songplaycounts30 LIMIT 5;
 ----
 
 image::images/counts_results.png[results]
-
-If you were already familiar with SQL semantics, hopefully this tutorial wasn't too hard to follow. Below is a summary of the underlying Kafka topics and KSQL streams.
-
-image::images/ksql-music-demo-overview.jpg[Diagram]
 
 == Jumping Ahead
 
