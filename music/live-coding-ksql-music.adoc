@@ -135,9 +135,9 @@ Now this persistent query will show in the queries list.
 
 === Create a new table
 
-Next let's work with the `song-feed` topic, which effectively represents a table of songs. To create a KSQL `TABLE`, it is required to have a non-null key and the key is required to be of type `String`. We want it to be keyed on the song's ID, for JOINS and aggregations to work on that table.
+Next let's work with the `song-feed` topic, which effectively represents a table of songs. To create a KSQL `TABLE`, it is required to have a non-null key and the key is required to be of type `String`. It can be keyed on the song's ID for joins and aggregations to work on that table.
 
-However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`.  We can create a `TABLE` from the `song-feed` topic in a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
+However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`. You can still create a `TABLE` in a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
  
 * Create a `STREAM` from the original Kafka topic `song-feed`:
 
@@ -169,7 +169,7 @@ image:images/describe_songfeed.png[describe-song-feed]
 CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='AVRO') AS SELECT CAST(ID AS STRING) AS ID, ALBUM, ARTIST, NAME, GENRE FROM ksql_songfeed PARTITION BY ID;
 ----
  
-* Convert the above stream into a TABLE with the `ID` field as its key, which is now of type `String`. This TABLE is a materialized view of events with only the latest value for each key, which represents an up-to-date database of songs.
+* Convert the above stream into a TABLE with the `ID` field as its key, which is now of type `String`. This TABLE is a materialized view of events with only the latest value for each key, which represents an up-to-date table of songs.
  
 [source,bash]
 ----
@@ -183,11 +183,11 @@ Confirm that the entires in this table have a non-null `ROWKEY`.
 SELECT * FROM ksql_songtable limit 5;
 ----
 
-=== Join play events with the database of songs
+=== Join play events with the table of songs
 
 At this point we have created a stream of filtered play events called `ksql_playevents_min_duration` and a table of song metadata called `ksql_songtable`.
 
-We can enrich the stream of play events with song metadata, with a STREAM-TABLE join. This will result in a new stream of play events enriched with descriptive song information like song title along with each play event.
+Enrich the stream of play events with song metadata using a Stream-Table `JOIN`. This will result in a new stream of play events enriched with descriptive song information like song title along with each play event.
 
 [source,bash]
 ----
@@ -198,7 +198,7 @@ Notice the addition of a clause `1 AS KEYCOL.` For every row, this creates a new
 
 === Create Top Music Charts
 
-You can create a top music chart for all time to see which songs get played the most. We can use the `COUNT` function on the stream `ksql_songplays` that we created above.
+You can create a top music chart for all time to see which songs get played the most. Use the `COUNT` function on the stream `ksql_songplays` that we created above.
 
 [source,bash]
 ----
@@ -211,6 +211,8 @@ While the all-time greatest hits are cool, it would also be good to see stats fo
 ----
 CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
 ----
+
+Any downstream application can consume this data for further processing.
 
 == Here is what you built
 
