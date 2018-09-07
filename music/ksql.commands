@@ -40,8 +40,3 @@ CREATE STREAM ksql_songplaycountsstreampart AS SELECT * FROM ksql_songplaycounts
 CREATE TABLE ksql_top5 AS SELECT KEYCOL, TOPK(COUNT,5) FROM ksql_songplaycountsstreampart GROUP BY KEYCOL;
 --Top Five songs for each genre based on each WINDOW of ksql_songplaycounts
 CREATE TABLE ksql_top5bygenre AS SELECT GENRE, TOPK(COUNT,5) FROM ksql_songplaycountsstreampart GROUP BY GENRE;
-
---There is no automatic way to micro-batch to get one "final" count per window (https://github.com/confluentinc/ksql/issues/1030)
---However, for windows that have closed, assuming no late-arriving data, the results will be final
---e.g. if you know that window time 1521807660000 has closed, you can get the final counts
---SELECT * FROM KSQL_SONGPLAYCOUNTS30 WHERE ROWTIME = 1521807660000;
