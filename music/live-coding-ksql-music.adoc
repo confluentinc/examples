@@ -139,9 +139,9 @@ Now this persistent query will show in the queries list.
 
 === Create a new table
 
-Next let's work with the `song-feed` topic, which effectively represents a table of songs. To create a KSQL `TABLE`, it is required to have a non-null key and the key is required to be of type `String`. It can be keyed on the song's ID for joins and aggregations to work on that table.
+Next let's work on the `song-feed` topic, which effectively represents a table of songs. Data in a KSQL `TABLE` are required to have key of type `String`. In this demo, the table can be keyed on the song's ID for joins and aggregations to work on that table.
 
-However the original Kafka topic has a `null` key and the ID field is of type `BIGINT`. You can still create a `TABLE` in a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
+However the original Kafka topic has a key of type `Long` and the ID field is of type `BIGINT`. You can still create a `TABLE` with a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
  
 * Create a `STREAM` from the original Kafka topic `song-feed`:
 
@@ -149,8 +149,6 @@ However the original Kafka topic has a `null` key and the ID field is of type `B
 ----
 CREATE STREAM ksql_songfeed WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO');
 ----
- 
-As mentioned earlier, if you explore the data in this stream, you see that `ROWKEY` is blank, which means the stream has no key.
  
 [source,bash]
 ----
@@ -180,7 +178,7 @@ CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VAL
 CREATE TABLE ksql_songtable WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='Avro', KEY='ID');
 ----
 
-Confirm that the entires in this table have a non-null `ROWKEY`.
+Confirm that the entires in this KSQL table have a `ROWKEY` that matches the String ID of the song.
 
 [source,bash]
 ----
