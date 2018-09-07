@@ -229,7 +229,11 @@ SELECT * FROM ksql_songplaycounts30 LIMIT 5;
 
 image::images/counts_results.png[results]
 
-== Jumping Ahead
+== Appendix
+
+=== Compare KSQL Queries and Kafka Streams Java
+
+Compare the music applications written with ksql.commands[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.0.x/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
 
 === KSQL CLI
 
