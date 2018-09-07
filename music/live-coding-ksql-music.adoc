@@ -9,7 +9,7 @@ v1.00, 4 Sept 2018
 
 In this tutorial, we show you how to build a demo streaming application with KSQL.  This application continuously computes, in real-time, top music charts based on a stream of song play events.
 
-Does this demo sound familiar?  It should.  Last year Confluent produced the same demo application written using the https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html[Kafka Streams API].  Since last year, Confluent has released production-ready https://www.confluent.io/product/ksql/[KSQL], the streaming SQL engine for Apache Kafka.  Users can choose between Kafka Streams or KSQL depending on the use case.  Both enable developers to build real-time, elastic scalable, fault-tolerant applications with exactly once capabilities, and totally compatible with on-premises deployments and Confluent Cloud. In this tutorial we take the same music application concept and rewrite it using KSQL, so that you can compare and contrast the experience.
+Does this demo sound familiar?  It should.  Last year Confluent produced a https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html[similar demo application] using the Kafka Streams API.  Since then, Confluent has released production-ready https://www.confluent.io/product/ksql/[KSQL], the streaming SQL engine for Apache Kafka.  Users can choose between Kafka Streams or KSQL depending on the use case.  Both enable developers to build real-time, scalable, fault-tolerant applications with exactly once capabilities, for Confluent Cloud and on-premises Kafka deployments. Here we take the same music application concept and rewrite it using KSQL so you can compare and contrast the experience.
 
 image::images/ksql-music-demo-overview.jpg[Diagram]
 
@@ -24,11 +24,9 @@ Don't forget to check out the #ksql channel on our https://slackpass.io/confluen
 
 === Docker
 
-This tutorial assumes you are running the KSQL music demo application in Docker. 
+NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/quickstart-demos/blob/5.0.0-post/music/start.sh[start script].
 
-NOTE: You may alternatively run this demo on a Confluent Platform local install, just by running the https://github.com/confluentinc/quickstart-demos/blob/5.0.0-post/music/start.sh[start script].
-
-To get this demo running in Docker, clone this https://github.com/confluentinc/quickstart-demos[repo].
+Clone this https://github.com/confluentinc/quickstart-demos[quickstart-demos repo].
 
 [source,bash]
 ----
@@ -41,7 +39,7 @@ From the `quickstart-demos/music` directory, start the demo by running a single 
 
 [source,bash]
 ----
-$ cd quickstart-demos/music/
+$ cd quickstart-demos/music
 $ docker-compose up -d
 ----
 
