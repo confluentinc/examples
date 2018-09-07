@@ -233,7 +233,7 @@ image::images/counts_results.png[results]
 
 === Compare KSQL Queries and Kafka Streams Java
 
-Compare the music applications written with ksql.commands[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.0.x/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
+Compare the music applications written with link:ksql.commands[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.0.x/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
 
 === KSQL CLI
 
