@@ -1,9 +1,8 @@
 = Workshop: Real-time SQL Stream Processing at Scale with Apache Kafka and KSQL
-:source-highlighter: pygments
 :doctype: book
 :sectnums:
 Robin Moffatt <@rmoff>
-v1.20, September 3, 2018
+v1.30, September 10, 2018
 
 :toc:
 
@@ -272,7 +271,7 @@ Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
 ksql>
 ----
 
-== See available Kafka topics
+=== See available Kafka topics
 
 KSQL can be used to view the topic metadata on a Kafka cluster (`SHOW TOPICS;`), as well as inspect the messages in a topic (`PRINT <topic>;`).
 
@@ -329,7 +328,7 @@ Format:JSON
 Press Ctrl-C to cancel and return to the KSQL prompt. This may take up to a minute to cancel (https://github.com/confluentinc/ksql/issues/1759[#1759]). If it still does not cancel then just start a new KSQL CLI using the `docker run` command from above and proceed to the next step. 
 
 <<<
-== KSQL offsets
+=== KSQL offsets
 
 Since Apache Kafka persists data, it is possible to use KSQL to query and process data from the past, as well as new events that arrive on the topic.
 
@@ -435,7 +434,7 @@ Query terminated
 ksql>
 ----
 
-=== Creating a Kafka topic populated by a filtered stream
+== Creating a Kafka topic populated by a filtered stream
 
 image::images/ksql_workshop_02.png[Filtering data with KSQL]
 
@@ -461,7 +460,7 @@ Each processed message is written to a new Kafka topic. Remember, this is a _con
 
 _This method of creating derived topics is frequently referred to by the acronym of the statement—`CSAS` (-> `CREATE STREAM … AS SELECT`)._
 
-==== Inspect the derived stream
+=== Inspect the derived stream
 
 Using `DESCRIBE` we can see that the new stream has the same columns as the source one.
 
@@ -538,7 +537,7 @@ messages-per-sec:      0.33   total-messages:      1857     last-message: 6/20/1
 
 _N.B. you can use the up arrow on your keyboard to cycle through KSQL command history for easy access and replay of previous commands. Ctrl-R also works for searching command history._
 
-==== Query the stream
+=== Query the stream
 
 The derived stream that we've created is just another stream that we can interact with in KSQL as any other. If you run a `SELECT` against the stream you'll see new messages arriving based on those coming from the source `ratings` topic:
 
@@ -552,7 +551,7 @@ ksql> SELECT STARS, CHANNEL, MESSAGE FROM POOR_RATINGS;
 
 Press Ctrl-C to cancel and return to the KSQL prompt.
 
-==== It's just a Kafka topic…
+=== It's just a Kafka topic…
 
 The query that we created above (`CREATE STREAM POOR_RATINGS AS…`) populates a Kafka topic, which we can also access as a KSQL stream (as in the previous step). Let's inspect this topic now, using KSQL.
 
@@ -589,9 +588,13 @@ Format:AVRO
 
 image::images/ksql_workshop_03.png[Joining data with KSQL]
 
-Remember our Customer data? Let's bring that into play, and use it to enrich the inbound stream of ratings data to show against each rating who the customer is, and their club status ('platinum','gold', etc).
+Remember our Customer data? Let's bring that into play, and use it to enrich the inbound stream of ratings data to show against each rating who the customer is, and their club status ('platinum','gold', etc). 
 
-=== Inspect Customers Data
+=== Prepare the Customer data 
+
+We're going to model the Customers topic as a **KSQL Table**. This is a semantic construct that enables us to work with the data in the topic as key/value pairs, with a single value for each key. You can read more about https://docs.confluent.io/current/streams/concepts.html#duality-of-streams-and-tables[this here].
+
+==== Inspect Customers Data
 
 Let's check the data first, using the very handy `PRINT` command:
 
@@ -606,7 +609,7 @@ Format:JSON
 
 Press Ctrl-C to cancel and return to the KSQL prompt. This may take up to a minute to cancel (https://github.com/confluentinc/ksql/issues/1759[#1759]). 
 
-=== Re-Key Customers Topic
+==== Re-Key Customers Topic
 
 When we join the customer data to the ratings, the customer Kafka messages _must be keyed on the field on which we are performing the join_. If this is not the case the join will fail and we'll get `NULL` values in the result.
 
@@ -686,7 +689,7 @@ ksql>
 ----
 ====
 
-=== Create Customers Table
+==== Create Customers Table
 
 Now, create a `TABLE` over the new re-keyed Kafka topic. Why's it a table? Because *for each key* (user id), we want to know *its current value* (name, status, etc)
 
@@ -805,7 +808,7 @@ ON R.USER_ID = C.ID;
 Press Ctrl-C to cancel the output. 
 
 <<<
-=== Populating a Kafka topic with the results of a Stream-Table join
+==== Populating a Kafka topic with the results of a Stream-Table join
 
 Let's persist this as an enriched stream, by simply prefixing the query with `CREATE STREAM … AS`:
 
@@ -847,7 +850,7 @@ mdoughartie1@dedecms.com | 1 | worst. flight. ever. #neveragain
 ----
 
 <<<
-=== Daisy-chaining derived streams
+== Daisy-chaining derived streams
 
 image::images/ksql_workshop_04.png[Filtering enriched data with KSQL]
 
@@ -985,13 +988,6 @@ bronze : Window{start=1535986980000 end=-} | bronze | 30
 
 If you let the `SELECT` output continue to run, you'll see all of the past time window aggregate values—but also the current one. Note that the _current_ time window's aggregate value will continue to update, because new events are being continually processed and reflected in the value. If you were to send an event to the source `ratings` topic with a timestamp in the past, the corresponding time window's aggregate would be re-emitted.
 
-== Next steps
-
-With the enriched and filtered data being populated into Kafka topics from KSQL you can use it to :
-
-* Feed event-driven applications. For example, notify the ops team if a VIP user leaves a poor review.
-* Stream to analytics platforms. For example, use Kafka Connect to stream the enriched data stream to Elasticsearch and visualise the real time with Kibana.
-
 == Optional: Stream data to Elasticsearch
 
 NOTE: This section assumes that you are familiar with the use of Kibana
@@ -1107,3 +1103,11 @@ Removing network ksql-workshop_default
 ----
 
 _If you want to preserve the state of all containers, run `docker-compose stop` instead._
+
+== Next steps
+
+With the enriched and filtered data being populated into Kafka topics from KSQL you can use it to :
+
+* Feed event-driven applications. For example, notify the ops team if a VIP user leaves a poor review.
+* Stream to analytics platforms. For example, use Kafka Connect to stream the enriched data stream to Elasticsearch and visualise the real time with Kibana.
+
