@@ -988,13 +988,6 @@ bronze : Window{start=1535986980000 end=-} | bronze | 30
 
 If you let the `SELECT` output continue to run, you'll see all of the past time window aggregate values—but also the current one. Note that the _current_ time window's aggregate value will continue to update, because new events are being continually processed and reflected in the value. If you were to send an event to the source `ratings` topic with a timestamp in the past, the corresponding time window's aggregate would be re-emitted.
 
-== Next steps
-
-With the enriched and filtered data being populated into Kafka topics from KSQL you can use it to :
-
-* Feed event-driven applications. For example, notify the ops team if a VIP user leaves a poor review.
-* Stream to analytics platforms. For example, use Kafka Connect to stream the enriched data stream to Elasticsearch and visualise the real time with Kibana.
-
 == Optional: Stream data to Elasticsearch
 
 NOTE: This section assumes that you are familiar with the use of Kibana
@@ -1110,3 +1103,11 @@ Removing network ksql-workshop_default
 ----
 
 _If you want to preserve the state of all containers, run `docker-compose stop` instead._
+
+== Next steps
+
+With the enriched and filtered data being populated into Kafka topics from KSQL you can use it to :
+
+* Feed event-driven applications. For example, notify the ops team if a VIP user leaves a poor review.
+* Stream to analytics platforms. For example, use Kafka Connect to stream the enriched data stream to Elasticsearch and visualise the real time with Kibana.
+
