@@ -178,7 +178,7 @@ CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VAL
 CREATE TABLE ksql_songtable WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='Avro', KEY='ID');
 ----
 
-Confirm that the entires in this KSQL table have a `ROWKEY` that matches the String ID of the song.
+Confirm that the entries in this KSQL table have a `ROWKEY` that matches the String ID of the song.
 
 [source,bash]
 ----
