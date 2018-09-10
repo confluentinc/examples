@@ -25,6 +25,10 @@ DATA=$( cat << EOF
     "dest.kafka.replication.factor": 3,
     "src.kafka.bootstrap.servers": "kafka:29092",
     "src.consumer.group.id": "connect-replicator",
+    "src.consumer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor",
+    "src.consumer.confluent.monitoring.interceptor.bootstrap.servers": "kafka:29092",
+    "src.kafka.timestamps.producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor",
+    "src.kafka.timestamps.producer.confluent.monitoring.interceptor.bootstrap.servers": "kafka:29092",
     "tasks.max": "1"
   }
 }

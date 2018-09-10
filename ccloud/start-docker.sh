@@ -1,7 +1,17 @@
+#!/bin/bash
+
+# Source library
+. ../utils/helper.sh
+
+check_ccloud || exit
+
 ./ccloud-generate-cp-configs.sh
+
 source delta_configs/env.delta
+
 ccloud topic create users
 ccloud topic create pageviews.replica
+
 docker-compose up -d
 
 echo "Sleeping 60 seconds to wait for all services to come up"
