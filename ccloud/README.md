@@ -51,7 +51,7 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 To run the Docker setup:
 
 ```bash
-$ start-ccloud.sh
+$ start-docker.sh
 ```
 
 NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.

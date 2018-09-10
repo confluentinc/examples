@@ -1,0 +1,18 @@
+./ccloud-generate-cp-configs.sh
+source delta_configs/env.delta
+ccloud topic create users
+ccloud topic create pageviews.replica
+docker-compose up -d
+
+echo "Sleeping 60 seconds to wait for all services to come up"
+sleep 60
+
+./submit_replicator_config.sh
+
+sleep 10
+
+docker-compose exec ksql-cli  bash -c "ksql http://ksql-server:8089 <<EOF
+run script '/tmp/ksql.commands';
+exit ;
+EOF
+"
