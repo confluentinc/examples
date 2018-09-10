@@ -65,6 +65,7 @@ services:
     ports:
       - "8089:8089"
     environment:
+      KSQL_HOST_NAME: ksql-server
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
       KSQL_LISTENERS: "http://0.0.0.0:8089"
@@ -77,7 +78,6 @@ services:
       KSQL_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       KSQL_SASL_MECHANISM: "PLAIN"
       KSQL_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
-      KSQL_HOST_NAME: ksql-server
       KSQL_KSQL_STREAMS_PRODUCER_RETRIES: 2147483647
       KSQL_KSQL_STREAMS_PRODUCER_CONFLUENT_BATCH_EXPIRE_MS: 9223372036854775807
       KSQL_KSQL_STREAMS_PRODUCER_REQUEST_TIMEOUT_MS: 300000
@@ -185,7 +185,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8085 20 && \
+                       cub sr-ready schema-registry 8085 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 2 && \
                        cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.0.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.0.0.jar && \

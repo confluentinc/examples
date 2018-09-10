@@ -15,7 +15,9 @@ ccloud topic create pageviews.replica
 docker-compose up -d
 
 echo "Sleeping 60 seconds to wait for all services to come up"
-sleep 60
+sleep 50
+
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 ./submit_replicator_config.sh
 
