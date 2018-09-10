@@ -110,7 +110,7 @@ To register the topic `play-events`, from the KSQL query editor:
 CREATE STREAM ksql_playevents WITH (KAFKA_TOPIC='play-events', VALUE_FORMAT='AVRO');
 ----
 
-Or from Control Center in the KSQL Streams view, select "Create Stream" and fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, it automatically detects the fields `song_id` and `duration` and their respective data types.
+Or from the KSQL Streams view, select "Create Stream" and fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, it automatically detects the fields `song_id` and `duration` and their respective data types.
 
 image:images/ksql_playevents.png[play-events]
 
@@ -233,7 +233,7 @@ Compare the music applications written with link:ksql.commands[KSQL queries] and
 
 === KSQL CLI
 
-We recommend using Confluent Control Center to manage your Kafka cluster, inspect your topics, and use the built-in KSQL functionality with Schema Registry integration. Alternatively, you can use the KSQL CLI Docker container. Run the following from the command line:
+We recommend using the built-in KSQL functionality in Confluent Control Center because it's where you can also manage your Kafka cluster, it has Schema Registry integration, you can inspect your topics, manage connectors to connect to other data systems, monitor performance, etc. Alternatively, you can use the KSQL CLI from the provided Docker container: 
 
 [source,bash]
 ----
