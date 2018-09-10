@@ -32,6 +32,9 @@
 # - Go
 # - Node.js (https://github.com/Blizzard/node-rdkafka)
 # - C++
+#
+# OS:
+# - ENV file
 ###############################################################################
 
 
@@ -86,6 +89,7 @@ do
       # Workaround until this issue is resolved https://github.com/confluentinc/schema-registry/issues/790
       line=${line/=/=SASL_SSL:\/\/}
       line=${line/,/,SASL_SSL:\/\/}
+      SR_BOOTSTRAP_SERVERS=$line
     fi
     echo "kafkastore.$line" >> $SR_CONFIG_DELTA
   fi
@@ -394,4 +398,14 @@ if (consumerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) !=
         exit(1);
 }
 RdKafka::Consumer *consumer = RdKafka::Consumer::create(consumerConfig, errstr);
+EOF
+
+# ENV
+ENV_CONFIG=$DEST/env.delta
+echo "$ENV_CONFIG"
+
+cat <<EOF >> $ENV_CONFIG
+export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
+export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
+export SR_BOOTSTRAP_SERVERS='$SR_BOOTSTRAP_SERVERS'
 EOF
