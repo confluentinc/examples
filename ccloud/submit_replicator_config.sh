@@ -11,7 +11,7 @@ fi
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
-  "name": "replicate-topic",
+  "name": "replicator",
   "config": {
     "connector.class": "io.confluent.connect.replicator.ReplicatorSourceConnector",
     "topic.whitelist": "pageviews",
