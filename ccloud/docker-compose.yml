@@ -231,7 +231,7 @@ services:
       - mi2:/usr/share/java/monitoring-interceptors/
       - mi3:/usr/share/java/kafka-connect-replicator/
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: "kafka1:9091,kafka2:9092"
+      CONNECT_BOOTSTRAP_SERVERS: "kafka:9092"
       CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: "connect"
       CONNECT_CONFIG_STORAGE_TOPIC: connect-config
