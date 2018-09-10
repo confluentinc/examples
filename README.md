@@ -11,7 +11,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 
 | Demo                                       | Description 
 | ------------------------------------------ | -------------------------------------------------------------------------------- 
-| [ccloud](ccloud/README.md)                 | hybrid Kafka Clusters from Self-Hosted to Confluent Cloud, runs on your local install and Confluent Cloud cluster
+| [ccloud](ccloud/README.md)                 | hybrid Kafka Clusters from Self-Hosted to Confluent Cloud
 | [clickstream](clickstream/README.md)       | automated version of the [KSQL Clickstream demo](https://github.com/confluentinc/ksql/blob/master/ksql-clickstream-demo/non-docker-clickstream.md#clickstream-analysis)
 | [connect-streams-pipeline](connect-streams-pipeline/README.md) | demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API
 | [ksql-workshop](ksql-workshop/README.md)   | showcases Kafka stream processing using KSQL and can be run automated or self-guided as a KSQL workshop
