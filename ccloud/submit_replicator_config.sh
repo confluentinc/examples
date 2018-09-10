@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 CONNECT_HOST=localhost
 
 if [[ $1 ]];then
@@ -16,9 +17,8 @@ DATA=$( cat << EOF
     "topic.rename.format": "\${topic}.replica",
     "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
-    "dest.kafka.bootstrap.servers": $BOOTSTRAP_SERVERS,
+    "dest.kafka.bootstrap.servers": "$BOOTSTRAP_SERVERS",
     "dest.kafka.security.protocol": "SASL_SSL",
-    "dest.kafka.sasl.jaas.config": $SASL_JAAS_CONFIG
     "dest.kafka.sasl.mechanism": "PLAIN",
     "dest.kafka.replication.factor": 3,
     "src.kafka.bootstrap.servers": "kafka:9092",
