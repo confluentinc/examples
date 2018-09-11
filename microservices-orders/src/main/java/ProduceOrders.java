@@ -11,6 +11,7 @@ import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
 import java.util.Collections;
 
+import io.confluent.examples.streams.utils.MonitoringInterceptorUtils;
 import io.confluent.examples.streams.microservices.domain.Schemas.Topics;
 import static io.confluent.examples.streams.microservices.domain.beans.OrderId.id;
 import static io.confluent.examples.streams.avro.microservices.OrderState.CREATED;
@@ -32,6 +33,7 @@ public class ProduceOrders {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
+        MonitoringInterceptorUtils.maybeConfigureInterceptorsProducer(props);
         KafkaProducer<String, Order> producer = new KafkaProducer<String, Order>(props, new StringSerializer(), mySerializer);
 
         int i = 1;

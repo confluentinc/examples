@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.examples.streams.utils.MonitoringInterceptorUtils;
 
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.CUSTOMERS;
 import io.confluent.examples.streams.microservices.domain.Schemas.Topics;
@@ -25,6 +26,7 @@ public class ConsumeCustomers {
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, Topics.CUSTOMERS.keySerde().deserializer().getClass());
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, Topics.CUSTOMERS.valueSerde().deserializer().getClass());
+        MonitoringInterceptorUtils.maybeConfigureInterceptorsConsumer(props);
 
         try (KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props)) {
             consumer.subscribe(Arrays.asList("customers"));

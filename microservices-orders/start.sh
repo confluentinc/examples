@@ -99,27 +99,27 @@ confluent consume customers --value-format avro --property print.key=true --prop
 
 # Topic orders: populated by a POST to the OrdersService service. A unique order is requested 1 per second
 echo -e "\n-----orders-----"
-confluent consume orders --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 5 
+confluent consume orders --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 5 
 
 # Topic payments: populated by PostOrdersAndPayments writing to the topic after placing an order. One payment is made per order
 echo -e "\n-----payments-----"
-confluent consume payments --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 5
+confluent consume payments --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 5
 
 # Topic order-validations: PASS/FAIL for each "checkType": ORDER_DETAILS_CHECK (OrderDetailsService), FRAUD_CHECK (FraudService), INVENTORY_CHECK (InventoryService)
 echo -e "\n-----order-validations-----"
-confluent consume order-validations --value-format avro --max-messages 15
+confluent consume order-validations --value-format avro --from-beginning --max-messages 15
 
 # Topic warehouse-inventory: initial inventory in stock
 echo -e "\n-----warehouse-inventory-----"
-confluent consume warehouse-inventory --max-messages 2 --from-beginning --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
+confluent consume warehouse-inventory --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --from-beginning --max-messages 2
 
-# Topic inventory-service-store-of-reserved-stock-changelog: table backing the reserved inventory
+# Topic InventoryService-store-of-reserved-stock-changelog: table backing the reserved inventory
 # It maxes out when orders = initial inventory
-echo -e "\n-----inventory-service-store-of-reserved-stock-changelog-----"
-confluent consume inventory-service-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --max-messages $COUNT_JUMPERS
+echo -e "\n-----InventoryService-store-of-reserved-stock-changelog-----"
+confluent consume InventoryService-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --from-beginning --max-messages 5
 
 # Read queries
-timeout 5s ksql http://localhost:8088 <<EOF
-SELECT * FROM orders_cust1_joined LIMIT 5;
+ksql http://localhost:8088 <<EOF
+SELECT * FROM orders_cust1_joined LIMIT 3;
 exit ;
 EOF
