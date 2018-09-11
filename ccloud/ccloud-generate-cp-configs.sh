@@ -32,6 +32,9 @@
 # - Go
 # - Node.js (https://github.com/Blizzard/node-rdkafka)
 # - C++
+#
+# OS:
+# - ENV file
 ###############################################################################
 
 
@@ -43,10 +46,10 @@ BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CCLOUD_CONFIG | awk -F'=' '{print
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CCLOUD_CONFIG | cut -d'=' -f2- )
 CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
 CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
-echo "bootstrap.servers: $BOOTSTRAP_SERVERS"
-echo "sasl.jaas.config: $SASL_JAAS_CONFIG"
-echo "key: $CLOUD_KEY"
-echo "secret: $CLOUD_SECRET"
+#echo "bootstrap.servers: $BOOTSTRAP_SERVERS"
+#echo "sasl.jaas.config: $SASL_JAAS_CONFIG"
+#echo "key: $CLOUD_KEY"
+#echo "secret: $CLOUD_SECRET"
 
 # Destination directory
 if [[ ! -z "$1" ]]; then
@@ -85,7 +88,8 @@ do
       # Schema Registry requires security protocol, i.e. "SASL_SSL://", in kafkastore.bootstrap.servers
       # Workaround until this issue is resolved https://github.com/confluentinc/schema-registry/issues/790
       line=${line/=/=SASL_SSL:\/\/}
-      line=${line/,/,SASL_SSL:\/\/}
+      line=${line//,/,SASL_SSL:\/\/}
+      SR_BOOTSTRAP_SERVERS=$line
     fi
     echo "kafkastore.$line" >> $SR_CONFIG_DELTA
   fi
@@ -99,6 +103,10 @@ cp $INTERCEPTORS_CCLOUD_CONFIG $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
 echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
 echo "retry.backoff.ms=500" >> $REPLICATOR_PRODUCER_DELTA
+REPLICATOR_SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG
+REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\\=/=}
+REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\"/\\\"}
+
 
 # KSQL Server runs locally and connects to Confluent Cloud
 KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
@@ -394,4 +402,15 @@ if (consumerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) !=
         exit(1);
 }
 RdKafka::Consumer *consumer = RdKafka::Consumer::create(consumerConfig, errstr);
+EOF
+
+# ENV
+ENV_CONFIG=$DEST/env.delta
+echo "$ENV_CONFIG"
+
+cat <<EOF >> $ENV_CONFIG
+export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
+export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
+export SR_BOOTSTRAP_SERVERS='$SR_BOOTSTRAP_SERVERS'
+export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
 EOF

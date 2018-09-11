@@ -4,6 +4,7 @@
 . ../utils/helper.sh
 
 check_env || exit 1
+check_mvn || exit 1
 check_running_cp 5.0 || exit 
 
 ./stop.sh
@@ -15,7 +16,7 @@ confluent start
 
 # Create the SQL table
 TABLE_LOCATIONS=/usr/local/lib/table.locations
-prep_sqltable
+prep_sqltable_locations
 
 # --------------------------------------------------------------
 

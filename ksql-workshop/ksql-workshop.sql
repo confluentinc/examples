@@ -4,7 +4,9 @@
 -- of the workshop if you want.
 -- ###################################################
 
-CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='customers', VALUE_FORMAT='JSON');
+SET 'auto.offset.reset' = 'earliest';
+
+CREATE STREAM CUSTOMERS_SRC (id BIGINT, first_name VARCHAR, last_name VARCHAR, email VARCHAR, gender VARCHAR, club_status VARCHAR, comments VARCHAR) WITH (KAFKA_TOPIC='asgard.demo.CUSTOMERS', VALUE_FORMAT='JSON');
 
 CREATE STREAM CUSTOMERS_SRC_REKEY \
         WITH (PARTITIONS=1, VALUE_FORMAT='AVRO') AS \
@@ -21,9 +23,8 @@ SELECT R.RATING_ID, R.CHANNEL, R.STARS, R.MESSAGE, \
        C.ID, C.CLUB_STATUS, C.EMAIL, \
        C.FIRST_NAME, C.LAST_NAME \
 FROM RATINGS R \
-     LEFT JOIN CUSTOMERS C \
-       ON R.USER_ID = C.ID \
-WHERE C.FIRST_NAME IS NOT NULL ;
+     INNER JOIN CUSTOMERS C \
+       ON R.USER_ID = C.ID;
 
 CREATE STREAM UNHAPPY_PLATINUM_CUSTOMERS AS \
 SELECT CLUB_STATUS, EMAIL, STARS, MESSAGE \
