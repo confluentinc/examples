@@ -16,8 +16,7 @@ check_running_cp 5.0 || exit 1
 # Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 yes | cp -f src/main/java/*.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-#(cd kafka-streams-examples && git fetch && git checkout 5.0.0-post && git pull && mvn clean compile -DskipTests)
-(cd kafka-streams-examples && mvn clean compile -DskipTests)
+(cd kafka-streams-examples && git fetch && git checkout 5.0.0-post && git pull && mvn clean compile -DskipTests)
 if [[ $? != 0 ]]; then
   echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
@@ -117,10 +116,10 @@ confluent consume warehouse-inventory --property print.key=true --property value
 # Topic InventoryService-store-of-reserved-stock-changelog: table backing the reserved inventory
 # It maxes out when orders = initial inventory
 echo -e "\n-----InventoryService-store-of-reserved-stock-changelog-----"
-confluent consume InventoryService-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --from-beginning --max-messages $COUNT_JUMPERS
+confluent consume InventoryService-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --from-beginning --max-messages 5
 
 # Read queries
-timeout 5s ksql http://localhost:8088 <<EOF
-SELECT * FROM orders_cust1_joined LIMIT 5;
+ksql http://localhost:8088 <<EOF
+SELECT * FROM orders_cust1_joined LIMIT 3;
 exit ;
 EOF
