@@ -54,8 +54,13 @@ Here is a description of which microservices and clients are producing to and re
 
 After you run `./start.sh`:
 
-* (Confluent Enterprise): navigate to the Control Center [Kafka Connect tab](http://localhost:9021/management/connect/) to view the JDCB source connector and Elasticsearch sink connector.
-* (Confluent Enterprise): navigate to the Control Center [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
-* Navigate to the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
+* Confluent Enterprise: use Confluent Control Center to navigate to the:
+** [Streams monitoring tab](http://localhost:9021/monitoring/streams) to view the throughput and latency performance of the microservices
+
+![image](docs/images/streams-monitoring.png)
+
+** [Kafka Connect tab](http://localhost:9021/management/connect/) to view the JDCB source connector and Elasticsearch sink connector.
+** [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
+* View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
 ![image](docs/images/kibana_microservices.png)
