@@ -1,0 +1,125 @@
+#!/bin/bash
+
+# Source library
+. ../utils/helper.sh
+
+check_env || exit 1
+check_mvn || exit 1
+check_jot || exit 1
+check_netstat || exit 1
+check_running_elasticsearch 5.6.5 || exit 1
+check_running_kibana || exit 1
+check_running_cp 5.0 || exit 1
+
+./stop.sh
+
+# Compile java client code
+[[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
+yes | cp -f src/main/java/*.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+(cd kafka-streams-examples && git fetch && git checkout 5.0.0-post && git pull && mvn clean compile -DskipTests)
+if [[ $? != 0 ]]; then
+  echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
+  exit 1
+fi
+
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+confluent start
+sleep 5
+
+# Get random port number
+RESTPORT=$(jot -r 1  10000 65000)
+COUNT=0
+while [[ $(netstat -ant | grep $RESTPORT) != "" ]]; do
+  RESTPORT=$(jot -r 1  10000 65000)
+  COUNT=$((COUNT+1))
+  if [[ $COUNT > 5 ]]; then
+    echo "Could not allocate a free rest port. Please troubleshoot"
+    exit 1
+  fi
+done
+echo "Port tcp:$RESTPORT looks free"
+
+# Create topics
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic orders
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic order-validations
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
+
+echo "Starting OrdersService"
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &)
+sleep 10
+if [[ $(netstat -ant | grep $RESTPORT) == "" ]]; then
+  echo "OrdersService not running on port $RESTPORT.  Please troubleshoot"
+  exit 1
+fi
+
+echo "Adding Inventory"
+COUNT_UNDERPANTS=25
+COUNT_JUMPERS=20
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &)
+
+# Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
+TABLE_CUSTOMERS=/usr/local/lib/table.customers
+prep_sqltable_customers
+if is_ce; then confluent config jdbc-customers -d ./connectors/connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connectors/connector_jdbc_customers_oss.config; fi
+
+# Sink Connector -> Elasticsearch -> Kibana
+if is_ce; then confluent config elasticsearch -d ./connectors/connector_elasticsearch.config; else confluent config elasticsearch -d ./connectors/connector_elasticsearch_oss.config; fi
+./dashboard/set_elasticsearch_mapping.sh
+./dashboard/configure_kibana_dashboard.sh
+
+# Start microservices
+for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
+    echo "Starting $SERVICE"
+    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
+done
+
+sleep 10
+
+echo -e "\nPosting Order Requests and Payments"
+(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
+
+sleep 10
+
+# Create KSQL queries
+ksql http://localhost:8088 <<EOF
+run script 'ksql.commands';
+exit ;
+EOF
+
+
+################################
+
+echo -e "\n*** Sampling messages in Kafka topics and a KSQL stream***\n"
+
+# Topic customers: populated by Kafka Connect that uses the JDBC source connector to read customer data from a sqlite3 database
+echo -e "\n-----customers-----"
+confluent consume customers --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.LongDeserializer --from-beginning --max-messages 5
+
+# Topic orders: populated by a POST to the OrdersService service. A unique order is requested 1 per second
+echo -e "\n-----orders-----"
+confluent consume orders --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 5 
+
+# Topic payments: populated by PostOrdersAndPayments writing to the topic after placing an order. One payment is made per order
+echo -e "\n-----payments-----"
+confluent consume payments --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 5
+
+# Topic order-validations: PASS/FAIL for each "checkType": ORDER_DETAILS_CHECK (OrderDetailsService), FRAUD_CHECK (FraudService), INVENTORY_CHECK (InventoryService)
+echo -e "\n-----order-validations-----"
+confluent consume order-validations --value-format avro --from-beginning --max-messages 15
+
+# Topic warehouse-inventory: initial inventory in stock
+echo -e "\n-----warehouse-inventory-----"
+confluent consume warehouse-inventory --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --from-beginning --max-messages 2
+
+# Topic InventoryService-store-of-reserved-stock-changelog: table backing the reserved inventory
+# It maxes out when orders = initial inventory
+echo -e "\n-----InventoryService-store-of-reserved-stock-changelog-----"
+confluent consume InventoryService-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --from-beginning --max-messages 5
+
+# Read queries
+ksql http://localhost:8088 <<EOF
+SELECT * FROM orders_cust1_joined LIMIT 3;
+exit ;
+EOF
