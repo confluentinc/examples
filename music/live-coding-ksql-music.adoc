@@ -15,8 +15,8 @@ image::images/ksql-music-demo-overview.jpg[Diagram]
 
 This tutorial accompanies:
 
-- https://www.youtube.com/watch?v=ExEWJVjj-RA[video screencast]
-- https://github.com/confluentinc/quickstart-demos/tree/5.0.0-post/music[automated demo]
+- https://www.youtube.com/watch?v=ExEWJVjj-RA[KSQL Streaming Application for Music Charts screencast]
+- https://github.com/confluentinc/quickstart-demos/tree/5.0.0-post/music[automated KSQL demo]
 
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
@@ -62,7 +62,7 @@ The Docker compose file includes a container that auto-generates source data to 
 
 image:images/ksql-music-demo-source-data.jpg[source-data]
 
-Use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Under `MANAGEMENT` select `Topics`, then scroll down and click on the topic and select `Inspect`.
+After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Under `MANAGEMENT` select `Topics`, then scroll down and click on the topic and select `Inspect`.
 
 image:images/inspect_topic.png[inspect-topic]
 
@@ -126,7 +126,7 @@ SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 
 image:images/ksql_playevents_min_30_non_persistent.png[play-events]
 
-The above query is not persistent -- it will stop if this screen is closed. To make the query persistent and stay running until explicitly terminated, prefix the previous query with `CREATE STREAM <new stream name> AS`.  From the KSQL query editor:
+The above query is not persistent -- it will stop if this screen is closed. To make the query persistent and stay running until explicitly terminated, prepend the previous query with `CREATE STREAM <new stream name> AS`.  From the KSQL query editor:
 
 [source,bash]
 ----
@@ -200,7 +200,7 @@ Notice the addition of a clause `1 AS KEYCOL.` For every row, this creates a new
 
 === Create Top Music Charts
 
-You can create a top music chart for all time to see which songs get played the most. Use the `COUNT` function on the stream `ksql_songplays` that we created above.
+Now you can create a top music chart for all time to see which songs get played the most. Use the `COUNT` function on the stream `ksql_songplays` that we created above.
 
 [source,bash]
 ----
