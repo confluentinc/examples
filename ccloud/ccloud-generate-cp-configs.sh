@@ -40,9 +40,14 @@
 
 # Confluent Cloud configuration
 CCLOUD_CONFIG=$HOME/.ccloud/config
+PERM=$(stat -c "%a" $HOME/.ccloud/config)
 
 ### Glean BOOTSTRAP_SERVERS and SASL_JAAS_CONFIG (key and password) from the Confluent Cloud configuration file
 BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
+BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS/\\/}
+SR_BOOTSTRAP_SERVERS="SASL_SSL://${BOOTSTRAP_SERVERS}"
+SR_BOOTSTRAP_SERVERS=${SR_BOOTSTRAP_SERVERS//,/,SASL_SSL:\/\/}
+SR_BOOTSTRAP_SERVERS=${SR_BOOTSTRAP_SERVERS/\\/}
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CCLOUD_CONFIG | cut -d'=' -f2- )
 CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
 CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
@@ -70,11 +75,15 @@ fi
 INTERCEPTORS_CCLOUD_CONFIG=$DEST/interceptors-ccloud.config
 while read -r line
 do
+  if [[ ${line:0:9} == 'bootstrap' ]]; then
+    line=${line/\\/}
+  fi
   echo $line >> $INTERCEPTORS_CCLOUD_CONFIG
   if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' || ${line:0:9} == 'bootstrap' ]]; then
     echo "confluent.monitoring.interceptor.$line" >> $INTERCEPTORS_CCLOUD_CONFIG
   fi
 done < "$CCLOUD_CONFIG"
+chmod $PERM $INTERCEPTORS_CCLOUD_CONFIG
 
 echo -e "\nConfluent Platform Components:"
 
@@ -89,12 +98,12 @@ do
       # Workaround until this issue is resolved https://github.com/confluentinc/schema-registry/issues/790
       line=${line/=/=SASL_SSL:\/\/}
       line=${line//,/,SASL_SSL:\/\/}
-      SR_BOOTSTRAP_SERVERS=$line
+      line=${line/\\/}
     fi
     echo "kafkastore.$line" >> $SR_CONFIG_DELTA
   fi
 done < "$CCLOUD_CONFIG"
-
+chmod $PERM $SR_CONFIG_DELTA
 
 # Confluent Replicator for Confluent Cloud
 REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
@@ -106,7 +115,7 @@ echo "retry.backoff.ms=500" >> $REPLICATOR_PRODUCER_DELTA
 REPLICATOR_SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG
 REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\\=/=}
 REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\"/\\\"}
-
+chmod $PERM $REPLICATOR_PRODUCER_DELTA
 
 # KSQL Server runs locally and connects to Confluent Cloud
 KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
@@ -120,12 +129,14 @@ echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
+chmod $PERM $KSQL_SERVER_DELTA
 
 # KSQL DataGen for Confluent Cloud
 KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
 echo "$KSQL_DATAGEN_DELTA"
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
+chmod $PERM $KSQL_DATAGEN_DELTA
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 C3_DELTA=$DEST/control-center-ccloud.delta
@@ -134,6 +145,7 @@ while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
     if [[ ${line:0:9} == 'bootstrap' ]]; then
+      line=${line/\\/}
       echo "$line" >> $C3_DELTA
     fi
     if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
@@ -141,6 +153,7 @@ while read -r line
     fi
   fi
 done < "$CCLOUD_CONFIG"
+chmod $PERM $C3_DELTA
 
 echo -e "\nKafka Clients:"
 
@@ -183,6 +196,7 @@ props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_JAAS_CONF
 
 // .... additional configuration settings
 EOF
+chmod $PERM $JAVA_PC_CONFIG
 
 # Java (Streams)
 JAVA_STREAMS_CONFIG=$DEST/java_streams.delta
@@ -224,6 +238,7 @@ props.put(StreamsConfig.CONSUMER_PREFIX + ConsumerConfig.INTERCEPTOR_CLASSES_CON
 
 // .... additional configuration settings
 EOF
+chmod $PERM $JAVA_STREAMS_CONFIG
 
 # Python
 PYTHON_CONFIG=$DEST/python.delta
@@ -258,6 +273,7 @@ consumer = Consumer({
            // .... additional configuration settings
 })
 EOF
+chmod $PERM $PYTHON_CONFIG
 
 # .NET 
 DOTNET_CONFIG=$DEST/dotnet.delta
@@ -294,6 +310,7 @@ var consumerConfig = new Dictionary<string, object>
     // .... additional configuration settings
 };
 EOF
+chmod $PERM $DOTNET_CONFIG
 
 # Go
 GO_CONFIG=$DEST/go.delta
@@ -331,6 +348,7 @@ consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
                  // .... additional configuration settings
                  })
 EOF
+chmod $PERM $GO_CONFIG
 
 # Node.js
 NODE_CONFIG=$DEST/node.delta
@@ -365,6 +383,7 @@ var consumer = Kafka.KafkaConsumer.createReadStream({
     objectMode: false
 });
 EOF
+chmod $PERM $NODE_CONFIG
 
 # C++
 CPP_CONFIG=$DEST/cpp.delta
@@ -403,6 +422,7 @@ if (consumerConfig->set("metadata.broker.list", "$BOOTSTRAP_SERVERS", errstr) !=
 }
 RdKafka::Consumer *consumer = RdKafka::Consumer::create(consumerConfig, errstr);
 EOF
+chmod $PERM $CPP_CONFIG
 
 # ENV
 ENV_CONFIG=$DEST/env.delta
@@ -414,3 +434,4 @@ export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
 export SR_BOOTSTRAP_SERVERS='$SR_BOOTSTRAP_SERVERS'
 export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
 EOF
+chmod $PERM $ENV_CONFIG
