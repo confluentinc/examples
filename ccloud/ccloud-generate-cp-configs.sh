@@ -1,4 +1,19 @@
 #!/bin/bash
+#
+# Copyright 2016 Confluent Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 
 ###############################################################################
 # Overview:
@@ -37,9 +52,14 @@
 # - ENV file
 ###############################################################################
 
+set -eu
 
 # Confluent Cloud configuration
 CCLOUD_CONFIG=$HOME/.ccloud/config
+if [[ ! -f $CCLOUD_CONFIG ]]; then
+  echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
+  exit 1
+fi
 PERM=$(stat -c "%a" $HOME/.ccloud/config)
 
 ### Glean BOOTSTRAP_SERVERS and SASL_JAAS_CONFIG (key and password) from the Confluent Cloud configuration file
@@ -57,22 +77,17 @@ CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
 #echo "secret: $CLOUD_SECRET"
 
 # Destination directory
-if [[ ! -z "$1" ]]; then
+if [[ $# -ne 0 ]] && [[ ! -z "$1" ]]; then
   DEST=$1
 else
   DEST="delta_configs"
 fi
-rm -fr $DEST
 mkdir -p $DEST
-
-if [[ ! -e $CCLOUD_CONFIG ]]; then
-  echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
-  exit 1
-fi
 
 # Build configuration file with CCloud connection parameters and
 # Confluent Monitoring Interceptors for Streams Monitoring in Confluent Control Center
 INTERCEPTORS_CCLOUD_CONFIG=$DEST/interceptors-ccloud.config
+rm -f $INTERCEPTORS_CCLOUD_CONFIG
 while read -r line
 do
   if [[ ${line:0:9} == 'bootstrap' ]]; then
@@ -90,6 +105,7 @@ echo -e "\nConfluent Platform Components:"
 # Confluent Schema Registry instance for Confluent Cloud
 SR_CONFIG_DELTA=$DEST/schema-registry-ccloud.delta
 echo "$SR_CONFIG_DELTA"
+rm -f $SR_CONFIG_DELTA
 while read -r line
 do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -108,6 +124,7 @@ chmod $PERM $SR_CONFIG_DELTA
 # Confluent Replicator for Confluent Cloud
 REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
 echo "$REPLICATOR_PRODUCER_DELTA"
+rm -f $REPLICATOR_PRODUCER_DELTA
 cp $INTERCEPTORS_CCLOUD_CONFIG $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
 echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
@@ -134,6 +151,7 @@ chmod $PERM $KSQL_SERVER_DELTA
 # KSQL DataGen for Confluent Cloud
 KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
 echo "$KSQL_DATAGEN_DELTA"
+rm -f $KSQL_DATAGEN_DELTA
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
 chmod $PERM $KSQL_DATAGEN_DELTA
@@ -141,6 +159,7 @@ chmod $PERM $KSQL_DATAGEN_DELTA
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 C3_DELTA=$DEST/control-center-ccloud.delta
 echo "$C3_DELTA"
+rm -f $C3_DELTA
 while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -160,6 +179,7 @@ echo -e "\nKafka Clients:"
 # Java (Producer/Consumer)
 JAVA_PC_CONFIG=$DEST/java_producer_consumer.delta
 echo "$JAVA_PC_CONFIG"
+rm -f $JAVA_PC_CONFIG
 
 cat <<EOF >> $JAVA_PC_CONFIG
 import java.util.Properties;
@@ -201,6 +221,7 @@ chmod $PERM $JAVA_PC_CONFIG
 # Java (Streams)
 JAVA_STREAMS_CONFIG=$DEST/java_streams.delta
 echo "$JAVA_STREAMS_CONFIG"
+rm -f $JAVA_STREAMS_CONFIG
 
 cat <<EOF >> $JAVA_STREAMS_CONFIG
 import java.util.Properties;
@@ -243,6 +264,7 @@ chmod $PERM $JAVA_STREAMS_CONFIG
 # Python
 PYTHON_CONFIG=$DEST/python.delta
 echo "$PYTHON_CONFIG"
+rm -f $PYTHON_CONFIG
 
 cat <<EOF >> $PYTHON_CONFIG
 from confluent_kafka import Producer, Consumer, KafkaError
@@ -278,6 +300,7 @@ chmod $PERM $PYTHON_CONFIG
 # .NET 
 DOTNET_CONFIG=$DEST/dotnet.delta
 echo "$DOTNET_CONFIG"
+rm -f $PYTHON_CONFIG
 
 cat <<EOF >> $DOTNET_CONFIG
 using Confluent.Kafka;
@@ -315,6 +338,7 @@ chmod $PERM $DOTNET_CONFIG
 # Go
 GO_CONFIG=$DEST/go.delta
 echo "$GO_CONFIG"
+rm -f $GO_CONFIG
 
 cat <<EOF >> $GO_CONFIG
 import (
@@ -353,6 +377,7 @@ chmod $PERM $GO_CONFIG
 # Node.js
 NODE_CONFIG=$DEST/node.delta
 echo "$NODE_CONFIG"
+rm -f $NODE_CONFIG
 
 cat <<EOF >> $NODE_CONFIG
 var Kafka = require('node-rdkafka');
@@ -388,6 +413,7 @@ chmod $PERM $NODE_CONFIG
 # C++
 CPP_CONFIG=$DEST/cpp.delta
 echo "$CPP_CONFIG"
+rm -f $CPP_CONFIG
 
 cat <<EOF >> $CPP_CONFIG
 #include <librdkafka/rdkafkacpp.h>
@@ -427,6 +453,7 @@ chmod $PERM $CPP_CONFIG
 # ENV
 ENV_CONFIG=$DEST/env.delta
 echo "$ENV_CONFIG"
+rm -f $ENV_CONFIG
 
 cat <<EOF >> $ENV_CONFIG
 export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
