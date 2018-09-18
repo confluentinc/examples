@@ -2,9 +2,8 @@
 
 # Overview
 
-This demo is based on the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices). Please familiarize yourself with that scenario so that you can better interpret the demo here.
-
-![image](docs/images/system-diag.png)
+This demo is based on the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices).
+Please familiarize yourself with that scenario so that you can better interpret the demo here.  
 
 This demo augments that Microservices Orders scenario by fully integrating it into streaming ETL built on Confluent Platform:
 
@@ -17,11 +16,11 @@ This demo augments that Microservices Orders scenario by fully integrating it in
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
-* [Confluent Platform 5.0](https://www.confluent.io/download/)
+* [Confluent Platform 5.0](https://www.confluent.io/download/): download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
 * Java 1.8 to compile the demo application
-* Elasticsearch 5.6.5 to export data from Kafka
+* [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
-* Kibana 5.5.2 to visualize data
+* [Kibana 5.5.2](https://www.elastic.co/downloads/past-releases/kibana-5-5-2) to visualize data
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
 # Dataflow
@@ -54,12 +53,12 @@ Here is a description of which microservices and clients are producing to and re
 
 After you run `./start.sh`:
 
+* (Confluent Enterprise) Use Confluent Control Center to navigate to the [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
 * (Confluent Enterprise) Use Confluent Control Center to navigate to the [Streams monitoring tab](http://localhost:9021/monitoring/streams) to view the throughput and latency performance of the microservices
 
 ![image](docs/images/streams-monitoring.png)
 
 * (Confluent Enterprise) Use Confluent Control Center to navigate to the [Kafka Connect tab](http://localhost:9021/management/connect/) to view the JDCB source connector and Elasticsearch sink connector.
-* (Confluent Enterprise) Use Confluent Control Center to navigate to the [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
 * View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
 ![image](docs/images/kibana_microservices.png)
