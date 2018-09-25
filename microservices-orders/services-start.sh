@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sleep 5
+RESTPORT=18894
 
-java -cp /usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.microservices.OrdersService broker:9092 http://schema-registry:8081 localhost 18894 > /dev/null 2>&1 &
+java -cp /usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.microservices.OrdersService broker:9092 http://schema-registry:8081 localhost $RESTPORT > /dev/null 2>&1 &
 
 sleep 10
 
@@ -15,6 +15,4 @@ done
 
 sleep 10
 
-java -cp /usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.microservices.PostOrdersAndPayments 18894 > /dev/null 2>&1 &
-
-echo "Finished starting microservices"
+java -cp /usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.microservices.PostOrdersAndPayments $RESTPORT > /dev/null 2>&1 &
