@@ -124,6 +124,7 @@ services:
       KSQL_HOST_NAME: ksql-server
       KSQL_APPLICATION_ID: "cp-all-in-one"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
+      KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
       KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       KSQL_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
