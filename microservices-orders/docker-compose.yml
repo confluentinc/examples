@@ -146,6 +146,8 @@ services:
     depends_on:
       - broker
       - schema-registry
+    ports:
+      - "18894:18894"
     volumes:
       - $PWD/kafka-streams-examples/target/kafka-streams-examples-5.0.0-standalone.jar:/usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar
       - $PWD/services-start.sh:/tmp/services-start.sh

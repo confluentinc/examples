@@ -15,4 +15,4 @@ done
 
 sleep 10
 
-java -cp /usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.microservices.PostOrdersAndPayments $RESTPORT > /dev/null 2>&1 &
+java -cp /usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar io.confluent.examples.streams.microservices.PostOrdersAndPayments $RESTPORT broker:9092 http://schema-registry:8081 > /dev/null 2>&1 &
