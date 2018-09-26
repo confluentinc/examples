@@ -137,6 +137,16 @@ services:
       - broker
       - connect
       - ksql-server
+    entrypoint: /bin/sh
+    tty: true
+
+  ksql-query-setup:
+    image: confluentinc/cp-ksql-cli:5.0.0
+    container_name: ksql-query-setup
+    depends_on:
+      - broker
+      - connect
+      - ksql-server
     volumes:
       - $PWD/run-ksql.sh:/tmp/run-ksql.sh
       - $PWD/ksql.commands:/tmp/ksql.commands
@@ -224,9 +234,6 @@ services:
       xpack.security.enabled: "false"
       XPACK_SECURITY_ENABLED: "false"
       xpack.monitoring.enabled: "false"
-      #network.host: "0.0.0.0"
-      #http.host: "0.0.0.0"
-      #http.port: "9200"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.2
