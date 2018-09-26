@@ -191,6 +191,7 @@ services:
                        sleep 60 && \
                        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
                        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config && \
+                       echo Waiting 90 seconds for Elasticsearch and Kibana to be ready... && \
                        sleep 90 && \
                        /tmp/dashboard/docker-combined.sh'"
     environment:
