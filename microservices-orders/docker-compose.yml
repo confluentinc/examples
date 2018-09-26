@@ -216,16 +216,22 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+    network_mode: bridge
     environment:
       xpack.security.enabled: "false"
       xpack.monitoring.enabled: "false"
-      http.host=0.0.0.0
-      XPACK_MONITORING_ENABLED: "false"
-      DISCOVERY_TYPE: "single-node"
-      ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      http.host: "elasticsearch"
+      http.port: "9200"
+      network.host: "elasticsearch"
+      #XPACK_MONITORING_ENABLED: "false"
+      #DISCOVERY_TYPE: "single-node"
+      #ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      #HTTP_HOST: "elasticsearch"
+      #HTTP_PORT: "9200"
+      #NETWORK_HOST: "elasticsearch"
     volumes:
       - $PWD/dashboard:/tmp/dashboard
-    command: "bash -c 'sleep 60 && \
+    command: "bash -c 'sleep 20 && \
                        /tmp/dashboard/set_elasticsearch_mapping_docker.sh && \
                        sleep 2 &&
                        /tmp/dashboard/configure_kibana_dashboard_docker.sh'"
@@ -238,12 +244,14 @@ services:
       - elasticsearch
     ports:
       - "5601:5601"
+    network_mode: bridge
     environment:
       xpack.security.enabled: "false"
       xpack.monitoring.enabled: "false"
       discovery.type: "single-node"
       server.name: "kibana"
-      http.host=0.0.0.0
+      server.port: "kibana:5601"
+      elasticsearch.url: "http://elasticsearch:9200"
 
 volumes:
     mi2: {}
