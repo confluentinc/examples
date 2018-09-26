@@ -141,6 +141,7 @@ services:
       - $PWD/ksql.commands:/tmp/ksql.commands
     entrypoint: /bin/sh
     tty: true
+    command: "/tmp/run-ksql.sh"
 
   microservices-app:
     image: confluentinc/kafka-streams-examples:5.0.0
