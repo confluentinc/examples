@@ -188,6 +188,7 @@ services:
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic payments && \
                        echo Waiting 60 seconds for Connect to be ready... && \
                        sleep 60 && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
                        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config'"
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
@@ -208,6 +209,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.5
+    hostname: elasticsearch
     container_name: elasticsearch
     depends_on:
       - connect
@@ -216,10 +218,21 @@ services:
       - "9300:9300"
     environment:
       xpack.security.enabled: "false"
+      xpack.monitoring.enabled: "false"
+      http.host=0.0.0.0
+      XPACK_MONITORING_ENABLED: "false"
+      DISCOVERY_TYPE: "single-node"
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+    volumes:
+      - $PWD/dashboard:/tmp/dashboard
+    command: "bash -c 'sleep 60 && \
+                       /tmp/dashboard/set_elasticsearch_mapping_docker.sh && \
+                       sleep 2 &&
+                       /tmp/dashboard/configure_kibana_dashboard_docker.sh'"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.2
+    hostname: kibana
     container_name: kibana
     depends_on:
       - elasticsearch
@@ -227,7 +240,10 @@ services:
       - "5601:5601"
     environment:
       xpack.security.enabled: "false"
+      xpack.monitoring.enabled: "false"
       discovery.type: "single-node"
+      server.name: "kibana"
+      http.host=0.0.0.0
 
 volumes:
     mi2: {}
