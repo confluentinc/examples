@@ -179,6 +179,7 @@ services:
       - schema-registry
     volumes:
       - $PWD/connectors:/tmp/connectors
+      - $PWD/dashboard:/tmp/dashboard
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker:9092 1 20 && \
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic orders && \
@@ -189,7 +190,9 @@ services:
                        echo Waiting 60 seconds for Connect to be ready... && \
                        sleep 60 && \
                        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
-                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config'"
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config && \
+                       sleep 90 && \
+                       /tmp/dashboard/docker-combined.sh'"
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
       # We override the image's `command` anyways, hence this container will not start a broker.
@@ -216,42 +219,39 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
-    network_mode: bridge
     environment:
       xpack.security.enabled: "false"
+      XPACK_SECURITY_ENABLED: "false"
       xpack.monitoring.enabled: "false"
-      http.host: "elasticsearch"
-      http.port: "9200"
-      network.host: "elasticsearch"
-      #XPACK_MONITORING_ENABLED: "false"
-      #DISCOVERY_TYPE: "single-node"
-      #ES_JAVA_OPTS: "-Xms1g -Xmx1g"
-      #HTTP_HOST: "elasticsearch"
-      #HTTP_PORT: "9200"
-      #NETWORK_HOST: "elasticsearch"
-    volumes:
-      - $PWD/dashboard:/tmp/dashboard
-    command: "bash -c 'sleep 20 && \
-                       /tmp/dashboard/set_elasticsearch_mapping_docker.sh && \
-                       sleep 2 &&
-                       /tmp/dashboard/configure_kibana_dashboard_docker.sh'"
+      #network.host: "0.0.0.0"
+      #http.host: "0.0.0.0"
+      #http.port: "9200"
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.2
+    #image: kibana:5.5.2
     hostname: kibana
     container_name: kibana
     depends_on:
       - elasticsearch
     ports:
       - "5601:5601"
-    network_mode: bridge
     environment:
       xpack.security.enabled: "false"
+      XPACK_SECURITY_ENABLED: "false"
       xpack.monitoring.enabled: "false"
       discovery.type: "single-node"
+      elasticsearch.url: http://elasticsearch:9200
+      server.host: "0.0.0.0"
+      SERVER_HOST: "0.0.0.0"
       server.name: "kibana"
-      server.port: "kibana:5601"
-      elasticsearch.url: "http://elasticsearch:9200"
+      SERVER_NAME: "kibana"
+      XPACK_GRAPH_ENABLED: "false"
+      XPACK_MONITORING_ENABLED: "false"
+      XPACK_REPORTING_ENABLED: "false"
+      XPACK_SECURITY_ENABLED: "false"
+    command: [ "/bin/bash", "-c", "/usr/share/kibana/bin/kibana-plugin remove x-pack; /usr/local/bin/kibana-docker" ]
+
 
 volumes:
     mi2: {}
