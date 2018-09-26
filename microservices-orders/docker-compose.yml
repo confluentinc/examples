@@ -136,6 +136,9 @@ services:
       - broker
       - connect
       - ksql-server
+    volumes:
+      - $PWD/run-ksql.sh:/tmp/run-ksql.sh
+      - $PWD/ksql.commands:/tmp/ksql.commands
     entrypoint: /bin/sh
     tty: true
 
