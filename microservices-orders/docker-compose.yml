@@ -59,7 +59,6 @@ services:
       - "8083:8083"
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
-      - $PWD/connectors:/tmp/connectors
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
@@ -84,10 +83,6 @@ services:
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_PLUGIN_PATH: /usr/share/java
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:9092 1 20 && \
-                       sleep 30 && \
-                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers.config'"
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:5.0.0
@@ -168,25 +163,25 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   # This "container" is a workaround to pre-create topics
-  kafka-create-topics:
+  kafka-setup:
     image: confluentinc/cp-kafka:5.0.0
-    hostname: kafka-create-topics
-    container_name: kafka-create-topics
+    hostname: kafka-setup
+    container_name: kafka-setup
     depends_on:
       - broker
       - schema-registry
-    # We defined a dependency on "kafka", but `depends_on` will NOT wait for the
-    # dependencies to be "ready" before starting the "kafka-create-topics"
-    # container;  it waits only until the dependencies have started.  Hence we
-    # must control startup order more explicitly.
-    # See https://docs.docker.com/compose/startup-order/
+    volumes:
+      - $PWD/connectors:/tmp/connectors
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker:9092 1 20 && \
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic orders && \
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic order-validations && \
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory && \
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic customers && \
-                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic payments'"
+                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic payments && \
+                       echo Waiting 60 seconds for Connect to be ready... && \
+                       sleep 60 && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers.config'"
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
       # We override the image's `command` anyways, hence this container will not start a broker.
