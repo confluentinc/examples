@@ -183,7 +183,7 @@ services:
                        kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic payments && \
                        echo Waiting 60 seconds for Connect to be ready... && \
                        sleep 60 && \
-                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers.config'"
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config'"
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
       # We override the image's `command` anyways, hence this container will not start a broker.
