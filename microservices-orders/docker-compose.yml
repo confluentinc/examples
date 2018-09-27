@@ -1,0 +1,265 @@
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.0.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: confluentinc/cp-enterprise-kafka:5.0.0
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:9092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:5.0.0
+    hostname: schema-registry
+    container_name: schema-registry
+    depends_on:
+      - zookeeper
+      - broker
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+
+  connect:
+    image: confluentinc/cp-kafka-connect:5.0.0
+    hostname: connect
+    container_name: connect
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+    ports:
+      - "8083:8083"
+    volumes:
+      - mi2:/usr/share/java/monitoring-interceptors/
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: compose-connect-group
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
+      CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.0.jar
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_PLUGIN_PATH: /usr/share/java
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.0.0
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - zookeeper
+      - broker
+      - schema-registry
+      - connect
+      - ksql-server
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:9092'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONTROL_CENTER_CONNECT_CLUSTER: 'connect:8083'
+      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
+
+  ksql-server:
+    image: confluentinc/cp-ksql-server:5.0.0
+    hostname: ksql-server
+    container_name: ksql-server
+    depends_on:
+      - broker
+      - connect
+    ports:
+      - "8088:8088"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      KSQL_BOOTSTRAP_SERVERS: "broker:9092"
+      KSQL_HOST_NAME: ksql-server
+      KSQL_APPLICATION_ID: "cp-all-in-one"
+      KSQL_LISTENERS: "http://0.0.0.0:8088"
+      KSQL_AUTO_OFFSET_RESET: "earliest"
+      KSQL_CACHE_MAX_BYTES_BUFFERING: 0
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      KSQL_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+
+  ksql-cli:
+    image: confluentinc/cp-ksql-cli:5.0.0
+    container_name: ksql-cli
+    depends_on:
+      - broker
+      - connect
+      - ksql-server
+    entrypoint: /bin/sh
+    tty: true
+
+  ksql-query-setup:
+    image: confluentinc/cp-ksql-cli:5.0.0
+    container_name: ksql-query-setup
+    depends_on:
+      - broker
+      - connect
+      - ksql-server
+    volumes:
+      - $PWD/run-ksql.sh:/tmp/run-ksql.sh
+      - $PWD/ksql.commands:/tmp/ksql.commands
+    entrypoint: /bin/sh
+    tty: true
+    command: "/tmp/run-ksql.sh"
+
+  microservices-app:
+    image: confluentinc/kafka-streams-examples:5.0.0
+    hostname: microservices-app
+    container_name: microservices-app
+    depends_on:
+      - broker
+      - schema-registry
+    ports:
+      - "18894:18894"
+    volumes:
+      - $PWD/kafka-streams-examples/target/kafka-streams-examples-5.0.0-standalone.jar:/usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar
+      - $PWD/services-start.sh:/tmp/services-start.sh
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b broker:9092 1 20 && \
+                       echo Waiting for Confluent Schema Registry to be ready... && \
+                       cub sr-ready schema-registry 8081 20 && \
+                       echo Waiting a few seconds for topic creation to finish... && \
+                       sleep 5 && \
+                       /tmp/services-start.sh && \
+                       tail -f /dev/null'"
+    environment:
+      STREAMS_BOOTSTRAP_SERVERS: broker:9092
+      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
+      STREAMS_SCHEMA_REGISTRY_PORT: 8081
+
+  # This "container" is a workaround to pre-create topics
+  kafka-setup:
+    image: confluentinc/cp-kafka:5.0.0
+    hostname: kafka-setup
+    container_name: kafka-setup
+    depends_on:
+      - broker
+      - schema-registry
+    volumes:
+      - $PWD/connectors:/tmp/connectors
+      - $PWD/dashboard:/tmp/dashboard
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b broker:9092 1 20 && \
+                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic orders && \
+                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic order-validations && \
+                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory && \
+                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic customers && \
+                       kafka-topics --create --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic payments && \
+                       echo Waiting 60 seconds for Connect to be ready... && \
+                       sleep 60 && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config && \
+                       echo Waiting 90 seconds for Elasticsearch and Kibana to be ready... && \
+                       sleep 90 && \
+                       /tmp/dashboard/docker-combined.sh'"
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+
+  postgres:
+    image: debezium/postgres:10.0
+    hostname: postgres
+    container_name: postgres
+    environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres
+    volumes:
+     - $PWD/../utils/customers.sql:/docker-entrypoint-initdb.d/z98_customers.sql
+     - $PWD/../utils/table.customers:/tmp/table.customers
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.5
+    hostname: elasticsearch
+    container_name: elasticsearch
+    depends_on:
+      - connect
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      xpack.security.enabled: "false"
+      XPACK_SECURITY_ENABLED: "false"
+      xpack.monitoring.enabled: "false"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:5.5.2
+    #image: kibana:5.5.2
+    hostname: kibana
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+    environment:
+      xpack.security.enabled: "false"
+      XPACK_SECURITY_ENABLED: "false"
+      xpack.monitoring.enabled: "false"
+      discovery.type: "single-node"
+      elasticsearch.url: http://elasticsearch:9200
+      server.host: "0.0.0.0"
+      SERVER_HOST: "0.0.0.0"
+      server.name: "kibana"
+      SERVER_NAME: "kibana"
+      XPACK_GRAPH_ENABLED: "false"
+      XPACK_MONITORING_ENABLED: "false"
+      XPACK_REPORTING_ENABLED: "false"
+      XPACK_SECURITY_ENABLED: "false"
+    command: [ "/bin/bash", "-c", "/usr/share/kibana/bin/kibana-plugin remove x-pack; /usr/local/bin/kibana-docker" ]
+
+
+volumes:
+    mi2: {}
