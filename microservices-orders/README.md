@@ -15,25 +15,13 @@ This demo augments that Microservices Orders scenario by fully integrating it in
 
 # Prerequisites
 
-## Local
-
-As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
-
-* [Confluent Platform 5.0](https://www.confluent.io/download/)
+* [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
 * [Confluent Platform 5.0](https://www.confluent.io/download/): download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
-* Java 1.8 to run the demo application
-* Maven to compile the demo application
+* Java 1.8 to compile the demo application
 * [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
 * [Kibana 5.5.2](https://www.elastic.co/downloads/past-releases/kibana-5-5-2) to visualize data
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
-
-## Docker
-
-This requires the following:
-
-* Docker version 17.06.1-ce
-* Docker Compose version 1.14.0 with Docker Compose file format 2.1
 
 # Dataflow
 
