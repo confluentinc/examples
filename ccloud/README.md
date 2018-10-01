@@ -27,7 +27,7 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
   * Node.js (https://github.com/Blizzard/node-rdkafka)
   * C++
 
-![image](docs/images/dwg_CCloud_DemoDiagram.jpg)
+![image](docs/images/confluent-cloud-demo-diagram.png)
 
 # Prerequisites
 

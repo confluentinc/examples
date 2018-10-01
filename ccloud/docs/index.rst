@@ -18,7 +18,7 @@ This |ccloud| demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|.
 
 You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
 
-.. figure:: images/dwg_CCloud_DemoDiagram.jpg
+.. figure:: images/confluent-cloud-demo-diagram.png
     :alt: image
 
 
