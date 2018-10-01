@@ -16,7 +16,7 @@ Overview
 
 This |ccloud| demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
 
-You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the Kafka topic `pageviews.replica` which is used for KSQL stream processing.
+You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
 
 .. figure:: images/dwg_CCloud_DemoDiagram.jpg
     :alt: image
@@ -176,7 +176,7 @@ KSQL
       
        Stream Name              | Kafka Topic              | Format 
       --------------------------------------------------------------
-       PAGEVIEWS_ORIGINAL       | pageviews.replica        | AVRO   
+       PAGEVIEWS_ORIGINAL       | pageviews                | AVRO   
        PAGEVIEWS_FEMALE         | PAGEVIEWS_FEMALE         | AVRO   
        PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | AVRO   
       --------------------------------------------------------------
@@ -298,7 +298,6 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
         # General Replicator properties define the replication policy
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
         topic.whitelist=pageviews
-        topic.rename.format=${topic}.replica
 
 2. View topics `pageviews` in the local cluster
 
@@ -320,7 +319,7 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
 	     Topic: pageviews	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
 
 
-3. View the replicated topics `pageviews.replica` in the |ccloud| cluster. In |c3|, for a given topic listed
+3. View the replicated topics `pageviews` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
    ``View details``. View which brokers are leaders for which partitions
    and the number of consumer groups currently consuming from this
