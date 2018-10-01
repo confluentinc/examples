@@ -102,6 +102,7 @@ services:
       CONTROL_CENTER_CONNECT_CLUSTER: 'connect:8083'
       CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
       CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
@@ -155,7 +156,8 @@ services:
     command: "/tmp/run-ksql.sh"
 
   microservices-app:
-    image: confluentinc/kafka-streams-examples:5.0.0
+    #image: confluentinc/kafka-streams-examples:5.0.0
+    image: 368821881613.dkr.ecr.us-west-2.amazonaws.com/confluentinc/kafka-streams-examples:5.0.x-161
     hostname: microservices-app
     container_name: microservices-app
     depends_on:
@@ -164,7 +166,6 @@ services:
     ports:
       - "18894:18894"
     volumes:
-      - $PWD/kafka-streams-examples/target/kafka-streams-examples-5.0.0-standalone.jar:/usr/share/java/kafka-streams-examples2/kafka-streams-examples-5.0.0-standalone.jar
       - $PWD/services-start.sh:/tmp/services-start.sh
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker:9092 1 20 && \
