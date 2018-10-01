@@ -41,6 +41,12 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
 
+To run the local setup:
+
+```bash
+$ start.sh
+```
+
 ## Docker
 
 * Docker version 17.06.1-ce
