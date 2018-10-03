@@ -44,7 +44,7 @@ ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 sc
 sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
-curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
+#curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 # Produce to topic users in CCloud cluster
 ccloud topic create users
@@ -56,18 +56,32 @@ ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaReg
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 
-# Replicate local topic `pageviews` to Confluent Cloud topics `pageviews.replica`
-ccloud topic create pageviews.replica
+# Replicate local topic `pageviews` to Confluent Cloud topic `pageviews`
+ccloud topic create pageviews
 PRODUCER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-producer.properties
 cp $DELTA_CONFIGS_DIR/replicator-to-ccloud-producer.delta $PRODUCER_PROPERTIES
 CONSUMER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-consumer.properties
 echo "bootstrap.servers=localhost:9092" > $CONSUMER_PROPERTIES
 REPLICATOR_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud.properties
 echo "topic.whitelist=pageviews" > $REPLICATOR_PROPERTIES
-echo "topic.rename.format=\${topic}.replica" >> $REPLICATOR_PROPERTIES
+#echo "topic.rename.format=\${topic}.replica" >> $REPLICATOR_PROPERTIES
 echo "Starting Confluent Replicator and sleeping 60 seconds"
 replicator --cluster.id replicator-to-ccloud --consumer.config $CONSUMER_PROPERTIES --producer.config $PRODUCER_PROPERTIES --replication.config $REPLICATOR_PROPERTIES > $CONFLUENT_CURRENT/connect/replicator-to-ccloud.stdout 2>&1 &
 sleep 60
+
+# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
+if is_ce; then
+  C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
+  cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
+  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
+  jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
+  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
+  echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
+  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
+  echo "confluent.controlcenter.schema.registry.url=http://localhost:$SR_LISTENER" >> $C3_CONFIG
+  control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
+fi
 
 # KSQL Server runs locally and connects to Confluent Cloud
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
@@ -92,19 +106,5 @@ ksql http://localhost:$KSQL_LISTENER <<EOF
 run script 'ksql.commands';
 exit ;
 EOF
-
-# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
-if is_ce; then
-  C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
-  cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
-  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
-  jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
-  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
-  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
-  echo "confluent.controlcenter.schema.registry.url=http://localhost:$SR_LISTENER" >> $C3_CONFIG
-  control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
-fi
 
 sleep 10
