@@ -126,11 +126,9 @@ Playbook
          :alt: image
 
 3. **Management –> Topics –> Topic Information**: For a given topic,
-   click on the three dots ``...`` next to the topic name and click on
-   ``View details``. View which brokers are leaders for which partitions
-   and the number of consumer groups currently consuming from this
-   topic. Click on the boxed consumer group count to select a consumer
-   group for which to monitor its data streams and jump to it.
+   click on the three dots ``...`` next to the topic name to see more
+   options per topic including in sync replicas, schema, topic
+   messages, and configuration settings. Shown below is replica info.
 
    .. figure:: images/topic_info_ccloud.png
       :alt: image
@@ -321,10 +319,7 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
 
 3. View the replicated topics `pageviews` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
-   ``View details``. View which brokers are leaders for which partitions
-   and the number of consumer groups currently consuming from this
-   topic. Click on the boxed consumer group count to select a consumer
-   group for which to monitor its data streams and jump to it.
+   ``Status`` to see brokers are leaders for which partitions.
 
    .. figure:: images/topic_info_ccloud_pageviews.png 
       :alt: image

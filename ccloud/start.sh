@@ -69,6 +69,20 @@ echo "Starting Confluent Replicator and sleeping 60 seconds"
 replicator --cluster.id replicator-to-ccloud --consumer.config $CONSUMER_PROPERTIES --producer.config $PRODUCER_PROPERTIES --replication.config $REPLICATOR_PROPERTIES > $CONFLUENT_CURRENT/connect/replicator-to-ccloud.stdout 2>&1 &
 sleep 60
 
+# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
+if is_ce; then
+  C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
+  cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
+  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
+  jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
+  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
+  echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
+  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
+  echo "confluent.controlcenter.schema.registry.url=http://localhost:$SR_LISTENER" >> $C3_CONFIG
+  control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
+fi
+
 # KSQL Server runs locally and connects to Confluent Cloud
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
 KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
@@ -92,19 +106,5 @@ ksql http://localhost:$KSQL_LISTENER <<EOF
 run script 'ksql.commands';
 exit ;
 EOF
-
-# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
-if is_ce; then
-  C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
-  cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
-  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
-  jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
-  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
-  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
-  echo "confluent.controlcenter.schema.registry.url=http://localhost:$SR_LISTENER" >> $C3_CONFIG
-  control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
-fi
 
 sleep 10
