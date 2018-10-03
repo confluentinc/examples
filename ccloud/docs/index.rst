@@ -126,11 +126,9 @@ Playbook
          :alt: image
 
 3. **Management –> Topics –> Topic Information**: For a given topic,
-   click on the three dots ``...`` next to the topic name and click on
-   ``View details``. View which brokers are leaders for which partitions
-   and the number of consumer groups currently consuming from this
-   topic. Click on the boxed consumer group count to select a consumer
-   group for which to monitor its data streams and jump to it.
+   click on the three dots ``...`` next to the topic name to see more
+   options per topic including in sync replicas, schema, topic
+   messages, and configuration settings. Shown below is replica info.
 
    .. figure:: images/topic_info_ccloud.png
       :alt: image
@@ -168,7 +166,7 @@ KSQL
 
       ksql> SHOW PROPERTIES;
 
-4. View the existing KSQL streams and describe one of those streams called ``WIKIPEDIABOT``.
+4. View the existing KSQL streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -196,7 +194,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-5. View the existing KSQL tables and describe one of those tables called ``EN_WIKIPEDIA_GT_1``.
+5. View the existing KSQL tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
 
    .. sourcecode:: bash
 
@@ -222,7 +220,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-6. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_WIKIPEDIABOT``.
+6. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -320,11 +318,9 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
 
 
 3. View the replicated topics `pageviews` in the |ccloud| cluster. In |c3|, for a given topic listed
-   in **Management –> Topics**, click on the three dots ``...`` next to the topic name and click on
-   ``View details``. View which brokers are leaders for which partitions
-   and the number of consumer groups currently consuming from this
-   topic. Click on the boxed consumer group count to select a consumer
-   group for which to monitor its data streams and jump to it.
+   in **Management –> Topics**, click on the three dots ``...`` next to the topic name to see more
+   options per topic including in sync replicas, schema, topic
+   messages, and configuration settings. Shown below is replica info.
 
    .. figure:: images/topic_info_ccloud_pageviews.png 
       :alt: image
