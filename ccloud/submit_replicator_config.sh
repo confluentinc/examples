@@ -15,7 +15,6 @@ DATA=$( cat << EOF
   "config": {
     "connector.class": "io.confluent.connect.replicator.ReplicatorSourceConnector",
     "topic.whitelist": "pageviews",
-    "topic.rename.format": "\${topic}.replica",
     "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "dest.kafka.bootstrap.servers": "$BOOTSTRAP_SERVERS",

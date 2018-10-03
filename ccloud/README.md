@@ -27,7 +27,7 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
   * Node.js (https://github.com/Blizzard/node-rdkafka)
   * C++
 
-![image](docs/images/dwg_CCloud_DemoDiagram.jpg)
+![image](docs/images/confluent-cloud-demo-diagram.png)
 
 # Prerequisites
 
@@ -40,6 +40,12 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
+
+To run the local setup:
+
+```bash
+$ start.sh
+```
 
 ## Docker
 
