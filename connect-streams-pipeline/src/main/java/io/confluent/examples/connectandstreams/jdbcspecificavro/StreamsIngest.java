@@ -25,8 +25,14 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KStreamBuilder;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.kstream.Printed;
+import org.apache.kafka.streams.kstream.Serialized;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.common.utils.Bytes;
+import org.apache.kafka.streams.state.KeyValueStore;
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
@@ -35,7 +41,6 @@ import org.apache.kafka.common.serialization.Serde;
 import io.confluent.examples.connectandstreams.avro.Location;
 
 import java.util.Collections;
-
 
 public class StreamsIngest {
 
@@ -60,7 +65,7 @@ public class StreamsIngest {
         System.out.println("Connecting to Confluent schema registry at " + SCHEMA_REGISTRY_URL);
 
 
-        final KStreamBuilder builder = new KStreamBuilder();
+        final StreamsBuilder builder = new StreamsBuilder();
 
         Properties streamsConfiguration = new Properties();
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "jdbcspecificavro");
@@ -74,27 +79,27 @@ public class StreamsIngest {
             Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL),
             isKeySerde);
 
-        KStream<String, Location> locationsNoKey = builder.stream(Serdes.String(), locationSerde, INPUT_TOPIC);
-        locationsNoKey.print();
+        KStream<String, Location> locationsNoKey = builder.stream(INPUT_TOPIC, Consumed.with(Serdes.String(), locationSerde));
+        locationsNoKey.print(Printed.toSysOut());
         KStream<Long, Location> locations = locationsNoKey.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), v ));
-        locations.print();
+        locations.print(Printed.toSysOut());
 
         KStream<Long,Long> sales = locations.map((k, v) -> new KeyValue<Long, Long>(k, v.getSale()));
 
         // Count occurrences of each key
-        KStream<Long, Long> countKeys = sales.groupByKey(Serdes.Long(), Serdes.Long())
-            .count(KEYS_STORE)
+        KStream<Long, Long> countKeys = sales.groupByKey(Serialized.with(Serdes.Long(), Serdes.Long()))
+            .count(Materialized.<Long, Long, KeyValueStore<Bytes, byte[]>>as(KEYS_STORE).withValueSerde(Serdes.Long()))
             .toStream();
-        countKeys.print();
+        countKeys.print(Printed.toSysOut());
 
         // Aggregate values by key
-        KStream<Long,Long> salesAgg = sales.groupByKey(Serdes.Long(), Serdes.Long())
+        KStream<Long,Long> salesAgg = sales.groupByKey(Serialized.with(Serdes.Long(), Serdes.Long()))
             .reduce(
-                (aggValue, newValue) -> aggValue + newValue, SALES_STORE)
+                (aggValue, newValue) -> aggValue + newValue)
             .toStream();
-        salesAgg.print();
+        salesAgg.print(Printed.toSysOut());
 
-        KafkaStreams streams = new KafkaStreams(builder, streamsConfiguration);
+        KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
         streams.start();
 
         // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
