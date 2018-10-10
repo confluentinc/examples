@@ -80,7 +80,7 @@ All examples in this repo demonstrate the Kafka Streams API methods `count` and 
 
 ### Notes
 
-[KAFKA-5245](https://issues.apache.org/jira/browse/KAFKA-5245): one needs to provide the Serdes twice, (1) when calling `KStreamBuilder#stream()` and (2) when calling `KStream#groupByKey()`
+[KAFKA-5245](https://issues.apache.org/jira/browse/KAFKA-5245): one needs to provide the Serdes twice, (1) when calling `StreamsBuilder#stream()` and (2) when calling `KStream#groupByKey()`
 
 [PR-531](https://github.com/confluentinc/schema-registry/pull/531): Confluent distribution provides packages for `GenericAvroSerde` and `SpecificAvroSerde`
 
