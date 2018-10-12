@@ -44,7 +44,7 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 To run the local setup:
 
 ```bash
-$ start.sh
+$ ./start.sh
 ```
 
 ## Docker
@@ -57,7 +57,7 @@ $ start.sh
 To run the Docker setup:
 
 ```bash
-$ start-docker.sh
+$ ./start-docker.sh
 ```
 
 NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.
