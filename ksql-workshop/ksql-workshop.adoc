@@ -42,7 +42,7 @@ Change the working directory:
 
 [source,bash]
 ----
-cd quickstart-demos/ksql-workshop
+cd examples/ksql-workshop
 ----
 
 Start Confluent Platform: 
@@ -167,7 +167,7 @@ Now in a separate terminal window run the following, to stream the contents of t
 
 [source,bash]
 ----
-# Make sure you run this from the `quickstart-demos/ksql-workshop` folder
+# Make sure you run this from the `examples/ksql-workshop` folder
 docker-compose exec -T kafka \
       kafka-console-consumer \
       --bootstrap-server kafka:29092 \
