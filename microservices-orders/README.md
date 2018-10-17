@@ -15,7 +15,7 @@ This demo augments that Microservices Orders scenario by fully integrating it in
 
 # Prerequisites
 
-* [Common demo prerequisites](https://github.com/confluentinc/quickstart-demos#prerequisites)
+* [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [Confluent Platform 5.0](https://www.confluent.io/download/): download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
 * Java 1.8 to compile the demo application
 * [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka

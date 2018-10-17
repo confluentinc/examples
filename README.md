@@ -26,7 +26,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 
 # Running The Demos
 
-1. Clone the repo: `git clone https://github.com/confluentinc/quickstart-demos`
+1. Clone the repo: `git clone https://github.com/confluentinc/examples`
 2. Change directory to one of the demo subfolders
 3. Start a demo with `./start.sh`
 4. Stop a demo with `./stop.sh`
