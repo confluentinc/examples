@@ -4,18 +4,22 @@
 
 This library has examples for developers who want to write client applications that produce messages to or consume messages from Kafka.
 
-## Java Producers and Consumers
+## Producers and Consumers in Java
 
 * [Non-Avro messages to and from Confluent Cloud](cloud/README.md)
 * [Avro messages to and from a local cluster](avro/README.md)
 
-## librdkafka
+## Producers and Consumers in programming languages derived from librdkafka
 
 Library of librdkafka examples available at https://github.com/edenhill/librdkafka/tree/master/examples
 
 ## Kafka Streams
 
 Library of streams examples available at https://github.com/confluentinc/kafka-streams-examples
+
+## KSQL
+
+* [Various end-to-end examples](https://github.com/confluentinc/quickstart-demos)
 
 # Prerequisites
 
