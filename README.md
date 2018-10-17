@@ -14,6 +14,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 | [ccloud](ccloud/README.md)                 |   Y   |   Y    | hybrid Kafka Clusters from Self-Hosted to Confluent Cloud
 | [clickstream](clickstream/README.md)       |   Y   |   N    | automated version of the [KSQL Clickstream demo](https://github.com/confluentinc/ksql/blob/master/ksql-clickstream-demo/non-docker-clickstream.md#clickstream-analysis)
 | [connect-streams-pipeline](connect-streams-pipeline/README.md) |   Y   |   N    | demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API
+| [clients](clients/README.md)               |   Y   |   N    | Producers and consumers; non-Avro to Confluent Cloud or Avro to local install
 | [ksql-workshop](ksql-workshop/README.md)   |   Y   |   Y    | showcases Kafka stream processing using KSQL and can be run automated or self-guided as a KSQL workshop
 | [microservices-orders](microservices-orders/README.md) |   Y   |   N    | integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) into Confluent Platform
 | [music](music/README.md)                   |   Y   |   Y    | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html)
