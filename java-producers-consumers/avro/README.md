@@ -9,21 +9,22 @@ For more information, please see the [application development documentation](htt
 
 1. Before you start, you must start a local Kafka cluster with Confluent CLI.
 
-```shell
-confluent start
+```
+$ confluent start
 ```
 
 Then you may proceed:
 
-	1. First run the example producer to publish 10 data records with Avro and Confluent Schema Registry
+2. Run the example producer to publish 10 data records with Avro and Confluent Schema Registry
 
-		```shell
+		```
 		# Build the client examples
 		$ mvn clean package
 		
 		# Run the producer
                 $ mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.clients.basicavro.ProducerExample
 		```
+
 		You should see
 		
 		```
@@ -33,9 +34,9 @@ Then you may proceed:
 		```
 		
 
-	2. Then, run the example consumer to read the records we just published to the Kafka cluster, and to display the records in the console.
+3. Run the example consumer to read the records we just published to the Kafka cluster, and to display the records in the console.
 
-		```shell
+		```
 		# Build the client examples
 		$ mvn clean package
 		
@@ -59,12 +60,13 @@ Then you may proceed:
                 offset = 9, key = id9, value = {"id": "id9", "amount": 1000.0}
 		....
 		```
+
 		Hit Ctrl+C to stop.
 
 
         3. Use the command line to view the same messages in the topic `payments`
 
-		```shell
+		```
                 $ confluent consume payments --from-beginning --value-format avro --from-beginning
                 This CLI is intended for development only, not for production
                 https://docs.confluent.io/current/cli/index.html
@@ -83,7 +85,7 @@ Then you may proceed:
 
          4. View the schema associated to the topic `payments` value.
 
-                ```shell
+                ```
                 $ curl -X GET http://localhost:8081/subjects/payments-value/versions/latest | jq .
                 {
                   "subject": "payments-value",
