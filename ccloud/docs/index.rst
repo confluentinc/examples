@@ -38,17 +38,17 @@ Run demo
 -  MacOS 10.12
 
 
-1. Clone the `quickstart-demos GitHub repository <https://github.com/confluentinc/quickstart-demos>`__.
+1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
 
    .. sourcecode:: bash
 
-     $ git clone https://github.com/confluentinc/quickstart-demos
+     $ git clone https://github.com/confluentinc/examples
 
 2. Change directory to the |ccloud| demo.
 
    .. sourcecode:: bash
 
-     $ cd quickstart-demos/ccloud
+     $ cd examples/ccloud
 
 3. Start the entire demo by running a single command that brings up the local self-hosted Confluent Platform using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
 
