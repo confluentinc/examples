@@ -1,0 +1,40 @@
+Licensed under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License. You may obtain a copy of the License at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on
+an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied. See the License for the
+specific language governing permissions and limitations
+under the License.
+
+This project includes:
+  Apache Avro under The Apache Software License, Version 2.0
+  Apache Kafka under The Apache Software License, Version 2.0
+  Apache Log4j under The Apache Software License, Version 2.0
+  Commons Compress under The Apache Software License, Version 2.0
+  config under Apache License 2.0
+  Data Mapper for Jackson under The Apache Software License, Version 2.0
+  Jackson under The Apache Software License, Version 2.0
+  Jackson-annotations under The Apache Software License, Version 2.0
+  Jackson-core under The Apache Software License, Version 2.0
+  jackson-databind under The Apache Software License, Version 2.0
+  JLine under BSD
+  JUnit under Common Public License Version 1.0
+  kafka-avro-serializer under Apache License 2.0
+  kafka-schema-registry-client under Apache License 2.0
+  LZ4 and xxHash under The Apache Software License, Version 2.0
+  ParaNamer Core under BSD
+  producer-example under Apache License 2.0
+  SLF4J API Module under MIT License
+  SLF4J LOG4J-12 Binding under MIT License
+  snappy-java under The Apache Software License, Version 2.0
+  The Netty Project under Apache License, Version 2.0
+  utils under Apache License 2.0
+  XZ for Java under Public Domain
+  ZkClient under The Apache Software License, Version 2.0
+  zookeeper under Apache License, Version 2.0
+

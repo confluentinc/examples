@@ -19,7 +19,7 @@ This demo augments that Microservices Orders scenario by fully integrating it in
 
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
-* [Confluent Platform 5.0](https://www.confluent.io/download/)
+* [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [Confluent Platform 5.0](https://www.confluent.io/download/): download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
