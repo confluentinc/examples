@@ -81,6 +81,22 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <downloadJavadocs>true</downloadJavadocs>
         </configuration>
       </plugin>
+      <plugin>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+          <version>5.0.0</version>
+          <configuration>
+              <schemaRegistryUrls>
+                  <param>http://localhost:8081</param>
+              </schemaRegistryUrls>
+              <subjects>
+                  <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2a.avsc</transactions-value>
+              </subjects>
+          </configuration>
+          <goals>
+              <goal>test-compatibility</goal>
+          </goals>
+      </plugin>
     </plugins>
   </build>
 </project>
