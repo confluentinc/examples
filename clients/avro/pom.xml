@@ -23,6 +23,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <url>https://packages.confluent.io/maven/</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <dependencies>  
     <!-- Add the Kafka dependencies -->
     <dependency>
