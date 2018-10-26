@@ -12,6 +12,8 @@ import java.util.Properties;
 
 public class ProducerExample {
 
+    private static final String TOPIC = "transactions";
+
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) {
 
@@ -28,7 +30,7 @@ public class ProducerExample {
             for (long i = 0; i < 10; i++) {
                 final String orderId = "id" + Long.toString(i);
                 final Payment payment = new Payment(orderId, 1000.00d);
-                final ProducerRecord<String, Payment> record = new ProducerRecord<String, Payment>("payments", payment.getId().toString(), payment);
+                final ProducerRecord<String, Payment> record = new ProducerRecord<String, Payment>(TOPIC, payment.getId().toString(), payment);
                 producer.send(record);
                 Thread.sleep(1000L);
             }
@@ -37,7 +39,7 @@ public class ProducerExample {
             e.printStackTrace();
         }
 
-        System.out.printf("Successfully produced 10 messages to a topic called payments\n");
+        System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
 
 
     }

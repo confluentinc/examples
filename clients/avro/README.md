@@ -29,7 +29,7 @@ You should see
 		
 ```shell
 ....
-Successfully produced 10 messages to a topic called payments
+Successfully produced 10 messages to a topic called transactions
 ....
 ```
 		
@@ -64,10 +64,10 @@ offset = 9, key = id9, value = {"id": "id9", "amount": 1000.0}
 Hit Ctrl+C to stop.
 
 
-3. Use the command line to view the same messages in the topic `payments`
+3. Use the command line to view the same messages in the topic `transactions`
 
 ```shell
-$ confluent consume payments --from-beginning --value-format avro --from-beginning
+$ confluent consume transactions --from-beginning --value-format avro --from-beginning
 This CLI is intended for development only, not for production
 https://docs.confluent.io/current/cli/index.html
 
@@ -83,12 +83,12 @@ https://docs.confluent.io/current/cli/index.html
 {"id":"id9","amount":1000.0}
 ```
 
-4. View the schema associated to the topic `payments` value.
+4. View the schema associated to the topic `transactions` value.
 
 ```shell
-$ curl -X GET http://localhost:8081/subjects/payments-value/versions/latest | jq .
+$ curl -X GET http://localhost:8081/subjects/transactions-value/versions/latest | jq .
 {
-  "subject": "payments-value",
+  "subject": "transactions-value",
   "version": 1,
   "id": 1,
   "schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"}]}"
