@@ -16,6 +16,8 @@ import java.util.Properties;
 
 public class ConsumerExample {
 
+    private static final String TOPIC = "transactions";
+
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) {
         final Properties props = new Properties();
@@ -30,7 +32,7 @@ public class ConsumerExample {
         props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true); 
 
         try (final KafkaConsumer<String, Payment> consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Collections.singletonList("payments"));
+            consumer.subscribe(Collections.singletonList(TOPIC));
 
             while (true) {
                 ConsumerRecords<String, Payment> records = consumer.poll(100);
