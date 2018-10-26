@@ -7,12 +7,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>java-client-avro-examples</artifactId>
   <version>5.0.0</version>
   <packaging>jar</packaging>
-    <repositories>
-        <repository>
-            <id>confluent</id>
-            <url>http://packages.confluent.io/maven/</url>
-        </repository>
-    </repositories>
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
     <confluent.version>5.0.0</confluent.version>
@@ -22,6 +16,19 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <name>Confluent</name>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
   <dependencies>  
     <!-- Add the Kafka dependencies -->
     <dependency>
@@ -68,6 +75,9 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
           </goals>
           <configuration>
             <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
+            <includes>
+              <include>Payment.avsc</include>
+            </includes>
             <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
           </configuration>
         </execution>
@@ -80,6 +90,22 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <configuration>
             <downloadJavadocs>true</downloadJavadocs>
         </configuration>
+      </plugin>
+      <plugin>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+          <version>5.0.0</version>
+          <configuration>
+              <schemaRegistryUrls>
+                  <param>http://localhost:8081</param>
+              </schemaRegistryUrls>
+              <subjects>
+                  <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2a.avsc</transactions-value>
+              </subjects>
+          </configuration>
+          <goals>
+              <goal>test-compatibility</goal>
+          </goals>
       </plugin>
     </plugins>
   </build>
