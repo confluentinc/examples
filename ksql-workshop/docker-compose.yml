@@ -102,6 +102,31 @@ services:
                           bootstrap-server=kafka:29092 \
                           schemaRegistryUrl=http://schema-registry:8081'"
 
+# Confluent Control Center with Kafka connect for Debezium source but not ES sink
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.0.0
+    container_name: control-center
+    restart: always
+    depends_on:
+      - zookeeper
+      - kafka
+      - kafka-connect-cp
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: "kafka:29092"
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_REPLICATION: 1
+      CONTROL_CENTER_COMMAND_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_METRICS_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS: 1
+      CONTROL_CENTER_CONNECT_CLUSTER: "http://connect-debezium:8083"
+      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+
 # Other systems
   mysql:
     image: debezium/example-mysql:0.8
