@@ -5,11 +5,6 @@ Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud
 
 This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__. Instead of the Kafka cluster backing the KSQL stream processing running on your local machine, it runs on your |ccloud| cluster. There are also additional |cp| components including |c3| and Confluent Replicator.
 
-.. contents:: Contents
-    :local:
-    :depth: 2
-
-
 ========
 Overview
 ========
