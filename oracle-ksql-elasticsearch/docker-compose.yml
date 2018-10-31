@@ -52,7 +52,7 @@ services:
       - "moby:127.0.0.1"
 
   kafka-connect-cp:
-    image: confluentinc/cp-kafka-connect:4.1.1
+    image: confluentinc/cp-kafka-connect:5.1.0
     hostname: kafka-connect-cp
     ports:
       - "18083:18083"
