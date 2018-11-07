@@ -89,7 +89,7 @@ services:
 
   # KSQL
   ksql-server:
-    image: "confluentinc/ksql-cli:5.0.0-beta30"
+    image: confluentinc/ksql-cli:5.0.1
     hostname: ksql-server
     ports:
       - '8088:8088'
@@ -117,7 +117,7 @@ services:
       - "moby:127.0.0.1"
 
   ksql-cli:
-    image: "confluentinc/ksql-cli:5.0.0-beta30"
+    image: confluentinc/ksql-cli:5.0.1
     hostname: ksql-cli
     depends_on:
       - kafka
