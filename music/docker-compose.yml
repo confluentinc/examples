@@ -57,7 +57,7 @@ services:
 
   # Continuously generates input data for the Kafka Music application.
   kafka-music-data-generator:
-    image: confluentinc/kafka-streams-examples:5.0.0
+    image: confluentinc/kafka-streams-examples:5.0.1
     hostname: kafka-music-data-generator
     container_name: kafka-music-data-generator
     depends_on:
@@ -68,7 +68,7 @@ services:
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 20 && \
-                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-5.0.0-standalone.jar \
+                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-5.0.1-standalone.jar \
                        io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver \
                        kafka:29092 http://schema-registry:8081'"
     environment:
@@ -82,7 +82,7 @@ services:
 
   # Runs the Kafka Music application.
   kafka-music-application:
-    image: confluentinc/kafka-streams-examples:5.0.0
+    image: confluentinc/kafka-streams-examples:5.0.1
     hostname: kafka-music-application
     container_name: kafka-music-applications-streams
     depends_on:

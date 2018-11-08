@@ -84,7 +84,7 @@ services:
 
   # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
-    image: confluentinc/ksql-examples:5.0.0
+    image: confluentinc/ksql-examples:5.0.1
     depends_on:
       - kafka
       - schema-registry
