@@ -22,7 +22,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 | [oracle-ksql-elasticsearch](oracle-ksql-elasticsearch/README.md) |   N   |   [Y](oracle-ksql-elasticsearch/README.md)    | enrich event stream data from Oracle, enriching it with KSQL, and then stream into Elasticsearch
 | [pageviews](pageviews/README.md)           |   [Y](pageviews/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html)
 | [postgres-debezium-ksql-elasticsearch](postgres-debezium-ksql-elasticsearch/README.md) |   N   |   [Y](postgres-debezium-ksql-elasticsearch/README.md)    | enrich event stream data with CDC data from Postgres and then stream into Elasticsearch
-| [wikipedia](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html)
+| [wikipedia](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments
 
 # Running The Demos
 
