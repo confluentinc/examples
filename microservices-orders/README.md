@@ -61,9 +61,21 @@ Here is a description of which microservices and clients are producing to and re
 | Elasticsearch sink connector        | `orders`              | ES                      |
 
 
-# What Should I see?
+# Running the Demo
 
-After you run `./start.sh`:
+Local install:
+
+```bash
+./start.sh
+```
+
+Docker:
+
+```bash
+docker-compose up -d
+```
+
+After starting the demo:
 
 * (Confluent Enterprise) Use Confluent Control Center to navigate to the [KSQL tab](http://localhost:9021/development/ksql/localhost%3A8088/streams) to view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
 * (Confluent Enterprise) Use Confluent Control Center to navigate to the [Streams monitoring tab](http://localhost:9021/monitoring/streams) to view the throughput and latency performance of the microservices
