@@ -78,7 +78,7 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.0.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.1.jar
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_PLUGIN_PATH: /usr/share/java
@@ -156,8 +156,7 @@ services:
     command: "/tmp/run-ksql.sh"
 
   microservices-app:
-    #image: confluentinc/kafka-streams-examples:5.0.0
-    image: 368821881613.dkr.ecr.us-west-2.amazonaws.com/confluentinc/kafka-streams-examples:5.0.x-161
+    image: confluentinc/kafka-streams-examples:5.0.1
     hostname: microservices-app
     container_name: microservices-app
     depends_on:
@@ -170,7 +169,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker:9092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8081 20 && \
+                       cub sr-ready schema-registry 8081 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 5 && \
                        /tmp/services-start.sh && \
