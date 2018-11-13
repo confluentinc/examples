@@ -69,7 +69,10 @@ public class OrderDetailsService implements Service {
 
     try {
       Map<TopicPartition, OffsetAndMetadata> consumedOffsets = new HashMap<>();
-      consumer.subscribe(singletonList(Topics.ORDERS.name()));
+
+      // TODO 1.1: subscribe the local `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
+      // ...
+
       if (eosEnabled) {
         producer.initTransactions();
       }
@@ -86,13 +89,13 @@ public class OrderDetailsService implements Service {
               //Validate the order then send the result (but note we are in a transaction so
               //nothing will be "seen" downstream until we commit the transaction below)
 
-              // TODO 1.1: validate the order using `OrderDetailsService#isValid`
+              // TODO 1.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
               // ...
 
-              // TODO 1.2: create a new record using `OrderDetailsService#result()`
+              // TODO 1.3: create a new record using `OrderDetailsService#result()` that takes the order and validation result
               // ...
 
-              // TODO 1.3: produce the new record using the existing producer
+              // TODO 1.4: produce the newly created record using the existing producer
               // ...
 
               if (eosEnabled) {
