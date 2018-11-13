@@ -74,7 +74,9 @@ public class EmailService implements Service {
         JoinWindows.of(MIN), serdes)
         //Next join to the GKTable of Customers
         .join(customers,
-            (key1, tuple) -> tuple.order.getCustomerId(),
+            // TODO 3.2: get the customer Id, specified by `order.getCustomerId()`, from the tuple in the record's value
+            // ...
+
             // note how, because we use a GKtable, we can join on any attribute of the Customer.
             EmailTuple::setCustomer)
         //Now for each tuple send an email.

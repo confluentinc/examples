@@ -228,6 +228,7 @@ Exercise
 Instructions: implement the `TODO` lines of the file `labs/EmailService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/EmailService.java>`
 
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
+#. TODO 3.2: get the customer Id, specified by `order.getCustomerId()`, from the tuple in the record's value
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/EmailService.java>`__.
 
