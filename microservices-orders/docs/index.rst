@@ -154,16 +154,16 @@ In contrast, in an event-driven design, there an event stream is the inter-servi
 Exercise
 ~~~~~~~~
 
-File: `labs/lab1/OrderDetailsService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/lab1/OrderDetailsService.java>`
-
 Write a service that validates customer orders.
 Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
+File to edit: `labs/lab1/OrderDetailsService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/lab1/OrderDetailsService.java>`
+
 #. TODO 1.1: subscribe the existing `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
 #. TODO 1.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
 #. TODO 1.3: create a new record using `OrderDetailsService#result()` that takes the order and validation result
-#. TODO 1.4: produce the newly created record using the existing producer
+#. TODO 1.4: produce the newly created record using the existing `producer`
 
 If you get stuck, here is the `solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java>`__.
 

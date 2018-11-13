@@ -95,7 +95,7 @@ public class OrderDetailsService implements Service {
               // TODO 1.3: create a new record using `OrderDetailsService#result()` that takes the order and validation result
               // ...
 
-              // TODO 1.4: produce the newly created record using the existing producer
+              // TODO 1.4: produce the newly created record using the existing `producer`
               // ...
 
               if (eosEnabled) {
