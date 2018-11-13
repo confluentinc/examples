@@ -142,13 +142,39 @@ How to use the playbook
 #. Run the unit test for the code
 
 
-Request-driven vs Event-driven
-------------------------------
+Lab 1: Request-driven vs Event-driven
+-------------------------------------
 
-Legacy designs are request-driven.
-This means that the code logic sends commands to other services to tell them what to do, and then sends queries to get the resulting state
+Concept
+~~~~~~~
 
-Service-based architectures, like microservices or SOA, are commonly built with
-synchronous request-response protocols. This approach is very natural. It is,
-after all, the way we write programs: we make calls to other code modules, await
-a response, and continue.
+Service-based architectures are often designed to be request-driven, which sends commands to other services to tell them what to do, awaits a response, or sends queries to get the resulting state.
+In contrast, in an event-driven design, there an event stream is the inter-service communication which leads to less coupling and queries, enables services to cross deployment boundaries, and avoids synchronous execution.
+
+Exercise
+~~~~~~~~
+
+File: `labs/lab1/OrderDetailsService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/lab1/OrderDetailsService.java>`
+
+Write a service that validates customer orders.
+Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
+When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
+Your assignment is:
+
+#. TODO 1.1: validate the order using `OrderDetailsService#isValid`
+#. TODO 1.2: create a new record using `OrderDetailsService#result()`
+#. TODO 1.3: produce the new record using the existing producer
+
+If you get stuck, here is the `solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java#L88>`__.
+
+Test your code
+~~~~~~~~~~~~~~
+
+File: `labs/lab1/OrderDetailsService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/lab1/OrderDetailsService.java>`
+
+   .. sourcecode:: bash
+
+      cp labs/lab1/OrderDetailsService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java
+      mvn clean compile -DskipTests package
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsServiceTest test
+
