@@ -72,13 +72,13 @@ public class EmailService implements Service {
     orders.join(payments, EmailTuple::new,
         //Join Orders and Payments streams
         JoinWindows.of(MIN), serdes)
-        //Next join to the GKTable of Customers
-        .join(customers,
-            // TODO 3.2: get the customer Id, specified by `order.getCustomerId()`, from the tuple in the record's value
+
+            // TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
+            // 1) the GlobalKTable for the stream-table join
+            // 2) customer Id, specified by `order.getCustomerId()`, using a KeyValueMapper that gets the customer id from the tuple in the record's value
+            // 3) method that computes a value for the result record, in this case `EmailTuple::setCustomer`
             // ...
 
-            // note how, because we use a GKtable, we can join on any attribute of the Customer.
-            EmailTuple::setCustomer)
         //Now for each tuple send an email.
         .peek((key, emailTuple)
             -> emailer.sendEmail(emailTuple)
