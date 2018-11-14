@@ -13,13 +13,7 @@ check_running_cp 5.0 || exit 1
 
 ./stop.sh
 
-# Compile java client code
-[[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-(cd kafka-streams-examples && git fetch && git checkout 5.0.1-post && git pull && mvn clean compile -DskipTests package)
-if [[ $? != 0 ]]; then
-  echo "There seems to be a BUILD FAILURE error? Please troubleshoot"
-  exit 1
-fi
+./get-kafka-streams-examples.sh
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start

@@ -190,6 +190,20 @@ If you are running Confluent Enterprise (local or Docker) you can see a lot more
 
 * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
 
+Make sure to stop the demo before proceeding to the exercises.
+
+If you are running |cp| locally:
+
+.. sourcecode:: bash
+
+      ./stop.sh
+
+If you are running Docker:
+
+.. sourcecode:: bash
+
+      docker-compose down
+
 
 Exercise 1: Persist Events 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -216,10 +230,20 @@ To test your code, save off the project's working solution, copy your version of
 
 .. sourcecode:: bash
 
+      # Clone and compile kafka-streams-examples
+      ./get-kafka-streams-examples.sh
+
+      # Save off the working microservices client application to /tmp/
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/OrdersService.java /tmp/.
+
+      # Copy your exercise client application to the project
       cp exercises/OrdersService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-      mvn clean compile -DskipTests
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrdersServiceTest test
+
+      # Compile the project and resolve any compilation errors
+      mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
+
+      # Run the test
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrdersServiceTest test -f kafka-streams-examples/pom.xml
 
 
 Exercise 2: Request-driven vs Event-driven
@@ -248,10 +272,20 @@ To test your code, save off the project's working solution, copy your version of
 
 .. sourcecode:: bash
 
+      # Clone and compile kafka-streams-examples
+      ./get-kafka-streams-examples.sh
+
+      # Save off the working microservices client application to /tmp/
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java /tmp/.
+
+      # Copy your exercise client application to the project
       cp exercises/OrderDetailsService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-      mvn clean compile -DskipTests
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsServiceTest test
+
+      # Compile the project and resolve any compilation errors
+      mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
+
+      # Run the test
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsService test -f kafka-streams-examples/pom.xml
 
 
 Exercise 3: Enriching Streams with Joins
@@ -286,10 +320,20 @@ To test your code, save off the project's working solution, copy your version of
 
 .. sourcecode:: bash
 
+      # Clone and compile kafka-streams-examples
+      ./get-kafka-streams-examples.sh
+
+      # Save off the working microservices client application to /tmp/
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/EmailService.java /tmp/.
+
+      # Copy your exercise client application to the project
       cp exercises/EmailService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-      mvn clean compile -DskipTests
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailServiceTest test
+
+      # Compile the project and resolve any compilation errors
+      mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
+
+      # Run the test
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailService test -f kafka-streams-examples/pom.xml
 
 
 Exercise 4: Filtering and Branching
@@ -318,10 +362,20 @@ To test your code, save off the project's working solution, copy your version of
 
 .. sourcecode:: bash
 
+      # Clone and compile kafka-streams-examples
+      ./get-kafka-streams-examples.sh
+
+      # Save off the working microservices client application to /tmp/
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/FraudService.java /tmp/.
+
+      # Copy your exercise client application to the project
       cp exercises/FraudService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-      mvn clean compile -DskipTests
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudService test
+
+      # Compile the project and resolve any compilation errors
+      mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
+
+      # Run the test
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudService test -f kafka-streams-examples/pom.xml
 
 
 Exercise 5: Stateful Operations
@@ -350,10 +404,20 @@ To test your code, save off the project's working solution, copy your version of
 
 .. sourcecode:: bash
 
+      # Clone and compile kafka-streams-examples
+      ./get-kafka-streams-examples.sh
+
+      # Save off the working microservices client application to /tmp/
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java /tmp/.
+
+      # Copy your exercise client application to the project
       cp exercises/ValidationsAggregatorService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-      mvn clean compile -DskipTests
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorServiceTest test
+
+      # Compile the project and resolve any compilation errors
+      mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
+
+      # Run the test
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorService test -f kafka-streams-examples/pom.xml
 
 
 Exercise 6: State Stores
@@ -386,10 +450,20 @@ To test your code, save off the project's working solution, copy your version of
 
 .. sourcecode:: bash
 
+      # Clone and compile kafka-streams-examples
+      ./get-kafka-streams-examples.sh
+
+      # Save off the working microservices client application to /tmp/
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java /tmp/.
+
+      # Copy your exercise client application to the project
       cp exercises/InventoryService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
-      mvn clean compile -DskipTests
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryServiceTest test
+
+      # Compile the project and resolve any compilation errors
+      mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
+
+      # Run the test
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
 
 
 ====================
