@@ -9,6 +9,9 @@ This self-paced tutorial teaches developers basic principles of streaming applic
 Overview
 ========
 
+Scope
+-----
+
 This demo is based on the `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__, and augments it by fully integrating it into streaming ETL built on Confluent Platform.
 
 This demo adds:
@@ -19,6 +22,38 @@ This demo adds:
 
 .. figure:: images/microservices-demo.jpg
     :alt: image
+
+Dataflow
+--------
+
+Here is a description of which microservices and clients are producing to and reading from which topics (excludes internal topics).
+
+Microservices
+~~~~~~~~~~~~~
+
++-------------------------------------+-----------------------------------+-----------------------|
+| Service                             | Consuming From                    | Producing To          |
++=====================================+===================================+=======================+
+| InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
+| FraudService                        | `orders`                          | `order-validations`   |
+| OrderDetailsService                 | `orders`                          | `order-validations`   |
+| ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`              |
+| EmailService                        | `orders`, `payments`, `customers` | -                     |
++-------------------------------------+-----------------------------------+-----------------------|
+
+Other clients
+~~~~~~~~~~~~~
+
++-------------------------------------+-----------------------+-------------------------|
+| Other Clients                       | Consuming From        | Producing To            |
++=====================================+=======================+=========================+
+| OrdersService                       | -                     | `orders`                |
+| PostOrdersAndPayments               | -                     | `payments`              |
+| AddInventory                        | -                     | `warehouse-inventory`   |
+| KSQL                                | `orders`, `customers` | KSQL streams and tables |
+| JDBC source connector               | DB                    | `customers`             |
+| Elasticsearch sink connector        | `orders`              | ES                      |
++-------------------------------------+-----------------------+-------------------------|
 
 
 ==============
@@ -72,39 +107,6 @@ If you are running Docker, then run the full solution:
    .. sourcecode:: bash
 
       docker-compose up -d
-
-
-Dataflow
---------
-
-Here is a description of which microservices and clients are producing to and reading from which topics (excludes internal topics).
-
-Microservices
-~~~~~~~~~~~~~
-
-+-------------------------------------+-----------------------------------+-----------------------|
-| Service                             | Consuming From                    | Producing To          |
-+=====================================+===================================+=======================+
-| InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
-| FraudService                        | `orders`                          | `order-validations`   |
-| OrderDetailsService                 | `orders`                          | `order-validations`   |
-| ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`              |
-| EmailService                        | `orders`, `payments`, `customers` | -                     |
-+-------------------------------------+-----------------------------------+-----------------------|
-
-Other clients
-~~~~~~~~~~~~~
-
-+-------------------------------------+-----------------------+-------------------------|
-| Other Clients                       | Consuming From        | Producing To            |
-+=====================================+=======================+=========================+
-| OrdersService                       | -                     | `orders`                |
-| PostOrdersAndPayments               | -                     | `payments`              |
-| AddInventory                        | -                     | `warehouse-inventory`   |
-| KSQL                                | `orders`, `customers` | KSQL streams and tables |
-| JDBC source connector               | DB                    | `customers`             |
-| Elasticsearch sink connector        | `orders`              | ES                      |
-+-------------------------------------+-----------------------+-------------------------|
 
 
 What You Should See
@@ -301,11 +303,8 @@ Lab 5: State Stores
 Concept
 ~~~~~~~
 
-// YEVA: paraphrase, because right now this is a straight quote from Ben
-
-Kafka can be used to store data in the log, with the most common means being a state store (a disk-resident hash table, held inside the API, and backed by a Kafka topic) in Kafka Streams.
-As a state store gets its durability from a Kafka topic, we can use transactions to tie writes to the state store and writes to other output topics together.
-This turns out to be an extremely powerful pattern because it mimics the tying of messaging and databases together atomically.
+Kafka Streams provides so-called state stores, a disk-resident hash table, held inside the API, and backed by a Kafka topic.
+It can be used by stream processing applications to store and query data, which is an important capability when implementing stateful operations.
 
 Exercise
 ~~~~~~~~
