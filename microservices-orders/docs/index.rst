@@ -37,12 +37,19 @@ The java source code for these microservices are in the `kafka-streams-examples 
 | Service                             | Consuming From                    | Producing To          |
 +=====================================+===================================+=======================+
 | InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
++-------------------------------------+-----------------------------------+-----------------------+
 | FraudService                        | `orders`                          | `order-validations`   |
++-------------------------------------+-----------------------------------+-----------------------+
 | OrderDetailsService                 | `orders`                          | `order-validations`   |
++-------------------------------------+-----------------------------------+-----------------------+
 | ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`              |
++-------------------------------------+-----------------------------------+-----------------------+
 | EmailService                        | `orders`, `payments`, `customers` | -                     |
++-------------------------------------+-----------------------------------+-----------------------+
 | OrdersService                       | -                                 | `orders`              |
++-------------------------------------+-----------------------------------+-----------------------+
 | PostOrdersAndPayments               | -                                 | `payments`            |
++-------------------------------------+-----------------------------------+-----------------------+
 | AddInventory                        | -                                 | `warehouse-inventory` |
 +-------------------------------------+-----------------------------------+-----------------------+
 
@@ -61,9 +68,11 @@ It is build on the Confluent Platform, including:
 +-------------------------------------+-----------------------+-------------------------+
 | Other Clients                       | Consuming From        | Producing To            |
 +=====================================+=======================+=========================+
-| KSQL                                | `orders`, `customers` | KSQL streams and tables |
 | JDBC source connector               | DB                    | `customers`             |
++-------------------------------------+-----------------------+-------------------------+
 | Elasticsearch sink connector        | `orders`              | ES                      |
++-------------------------------------+-----------------------+-------------------------+
+| KSQL                                | `orders`, `customers` | KSQL streams and tables |
 +-------------------------------------+-----------------------+-------------------------+
 
 
@@ -73,9 +82,7 @@ Pre-requisites
 
 You will get a lot more out of this tutorial if you have first read the following:
 
-#. Read Ben Stopford's book `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__.
-It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.
-The concepts discussed in that book are the foundation for this playbook.
+#. Read Ben Stopford's book `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__.  It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.  The concepts discussed in that book are the foundation for this playbook.
 
 #. Familiarize yourself with the scenario in the `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
 
@@ -83,7 +90,7 @@ Next step is to setup your environment, depending on whether you are running |cp
 
 
 Local
------
+~~~~~
 
 * `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
@@ -94,7 +101,7 @@ Local
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
 Docker
-------
+~~~~~~
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
@@ -108,7 +115,7 @@ We recommend that you first run the full solution to understand what a successfu
 Without writing any code, you can run the end-to-end demo to showcase a customer-representative deployment of a streaming application.
 
 Start the demo
---------------
+~~~~~~~~~~~~~~
 
 If you are running |cp| locally, then run the full solution:
 
@@ -124,7 +131,7 @@ If you are running Docker, then run the full solution:
 
 
 What You Should See
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 After running the end-to-end demo:
 
@@ -146,9 +153,8 @@ Playbook
 ========
 
 
-
 How to use the playbook
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
 
 First run the full end-to-end working solution.
 Starting at the high-level provides context for the services.
@@ -163,15 +169,15 @@ For each lab:
 
 
 Lab 1: Capture event
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Description
-~~~~~~~~~~~
+-----------
 
 // YEVA: concepts
 
 Exercise
-~~~~~~~~
+--------
 
 // YEVA: description
 
@@ -183,7 +189,7 @@ Instructions: implement the `TODO` lines of the file `labs/OrdersService.java <h
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrdersService.java>`__.
 
 Test your code
-~~~~~~~~~~~~~~
+--------------
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -196,10 +202,10 @@ Save off the project's working solution, copy your version of the file to the ma
 
 
 Lab 2: Request-driven vs Event-driven
--------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
-~~~~~~~~~~~
+-----------
 
 Service-based architectures are often designed to be request-driven, which sends commands to other services to tell them what to do, awaits a response, or sends queries to get the resulting state.
 In contrast, in an event-driven design, there an event stream is the inter-service communication which leads to less coupling and queries, enables services to cross deployment boundaries, and avoids synchronous execution.
@@ -207,7 +213,7 @@ In contrast, in an event-driven design, there an event stream is the inter-servi
 // YEVA: add more around this
 
 Exercise
-~~~~~~~~
+--------
 
 Write a service that validates customer orders.
 Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
@@ -223,7 +229,7 @@ Instructions: implement the `TODO` lines of the file `labs/OrderDetailsService.j
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java>`__.
 
 Test your code
-~~~~~~~~~~~~~~
+--------------
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -236,10 +242,10 @@ Save off the project's working solution, copy your version of the file to the ma
 
 
 Lab 3: Enriching Streams with Joins
---------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
-~~~~~~~~~~~
+-----------
 
 Streams can be enriched with data from other streams or tables, through joins.
 Many stream processing applications in practice are coded as streaming joins.
@@ -249,7 +255,7 @@ Here, a popular pattern is to make the information in the databases available in
 Then the application using the Kafka Streams API performs very fast and efficient local joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
 
 Exercise
-~~~~~~~~
+--------
 
 Write a service that joins streaming order information with streaming payment information and with data from a customer database.
 First the payment stream needs to be rekeyed to match the same key info as the order stream, then joined together.
@@ -267,7 +273,7 @@ If you get stuck, here is the `complete solution <https://github.com/confluentin
 
 
 Test your code
-~~~~~~~~~~~~~~
+--------------
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -280,15 +286,15 @@ Save off the project's working solution, copy your version of the file to the ma
 
 
 Lab 4: Filtering and Aggregating
---------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Description
-~~~~~~~~~~~
+-----------
 
 // YEVA: 
 
 Exercise
-~~~~~~~~
+--------
 
 // YEVA: description
 
@@ -302,7 +308,7 @@ If you get stuck, here is the `complete solution <https://github.com/confluentin
 
 
 Test your code
-~~~~~~~~~~~~~~
+--------------
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -316,16 +322,17 @@ Save off the project's working solution, copy your version of the file to the ma
 
 
 Lab 5: State Stores
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 Description
-~~~~~~~~~~~
+-----------
 
-Kafka Streams provides so-called state stores, a disk-resident hash table, held inside the API, and backed by a Kafka topic.
+Kafka Streams provides so-called state stores, a disk-resident hash table, held inside the API for the client application.
 It can be used by stream processing applications to store and query data, which is an important capability when implementing stateful operations.
+The state store is backed by a Kafka topic and comes with all the Kafka guarantees.
 
 Exercise
-~~~~~~~~
+--------
 
 // YEVA: description
 
@@ -342,7 +349,7 @@ If you get stuck, here is the `complete solution <https://github.com/confluentin
 
 
 Test your code
-~~~~~~~~~~~~~~
+--------------
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
