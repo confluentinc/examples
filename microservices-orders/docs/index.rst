@@ -6,7 +6,7 @@
 Developing Streaming Applications
 =================================
 
-This self-paced tutorial teaches developers basic principles of streaming applications.
+This self-paced tutorial provides exercises for developers to apply the basic principles of streaming applications.
 
 ========
 Overview
@@ -86,9 +86,9 @@ Reading
 
 You will get a lot more out of this tutorial if you have first read the following:
 
-#. `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__: book by Ben Stopford.  It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.  The concepts discussed in that book are the foundation for this playbook.
+#. `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__: book by Ben Stopford.  It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.  The concepts discussed in that book are the foundation for this tutorial.
 
-#. `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__: familiarize yourself with the scenario used in this playbook.
+#. `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__: familiarize yourself with the scenario used in this tutorial.
 
 
 Environment Setup
@@ -117,17 +117,17 @@ Docker:
 
 
 ========
-Playbook
+Tutorial
 ========
 
-How to use the playbook
+How to use the tutorial:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 First run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
 This provides context for each of the exercises in which you will develop pieces of the microservices.
 
-After you have successfully run the full solution, run through the playbook to learn the basic principles of streaming applications.
-There are multiple exercises in the playbook, and for each exercise:
+After you have successfully run the full solution, run through the tutorial to learn the basic principles of streaming applications.
+There are multiple exercises in the tutorial, and for each exercise:
 
 #. Read the description to understand the focus area for the exercise
 #. Open the file specified in each exercise and fill in the missing code, identified by `TODO`
@@ -143,13 +143,13 @@ First, clone the `examples GitHub repository <https://github.com/confluentinc/ex
 
        git clone https://github.com/confluentinc/examples
 
-If you are running |cp| locally, then run the full solution:
+If you are running |cp| locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
 .. sourcecode:: bash
 
       ./start.sh
 
-If you are running Docker, then run the full solution:
+If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers):
 
 .. sourcecode:: bash
 
