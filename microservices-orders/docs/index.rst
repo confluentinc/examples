@@ -390,3 +390,13 @@ To test your code, save off the project's working solution, copy your version of
       cp exercises/InventoryService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
       mvn clean compile -DskipTests
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryServiceTest test
+
+
+====================
+Additional Resources
+====================
+
+* `Kafka Streams videos <https://www.youtube.com/watch?v=Z3JKCLG3VP4&list=PLa7VYi0yPIH1vDclVOB49xUruBAWkOCZD>`__
+* `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__
+* `Confluent documentation <https://docs.confluent.io/current/streams/concepts.html>`__
+
