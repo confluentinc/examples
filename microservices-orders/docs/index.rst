@@ -214,16 +214,26 @@ Save off the project's working solution, copy your version of the file to the ma
       mvn clean compile -DskipTests
       mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsServiceTest test
 
-Lab 3: YEVA:
--------------------------------------
+
+Lab 3: Enriching Streams with Joins
+--------------------------------------
 
 Concept
 ~~~~~~~
 
+Streams can be enriched with data from other streams or tables, through joins.
+Many stream processing applications in practice are coded as streaming joins.
+For example, applications backing an online shop might need to access multiple, updating database tables (e.g. sales prices, inventory, customer information) in order to enrich a new data record (e.g. customer transaction) with context information.
+That is, scenarios where you need to perform table lookups at very large scale and with a low processing latency.
+Here, a popular pattern is to make the information in the databases available in Kafka through so-called change data capture in combination with Kafka’s Connect API to pull in the data from the database.
+Then the application using the Kafka Streams API performs very fast and efficient local joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
+
 Exercise
 ~~~~~~~~
 
-// YEVA
+Write a service that joins streaming order information with streaming payment information and with data from a customer database.
+First the payment stream needs to be rekeyed to match the same key info as the order stream, then joined together.
+Then the resulting stream is joined with the customer information that was read into Kafka by a JDBC source from a customer database.
 
 Instructions: implement the `TODO` lines of the file `labs/EmailService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/EmailService.java>`
 
@@ -238,4 +248,91 @@ If you get stuck, here is the `complete solution <https://github.com/confluentin
 
 Test your code
 ~~~~~~~~~~~~~~
+
+Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+
+   .. sourcecode:: bash
+
+      cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/EmailService.java /tmp/.
+      cp labs/EmailService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+      mvn clean compile -DskipTests
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailServiceTest test
+
+
+Lab 4: Filtering and Aggregating
+--------------------------------
+
+Concept
+~~~~~~~
+
+// YEVA: 
+
+Exercise
+~~~~~~~~
+
+// YEVA: description
+
+Instructions: implement the `TODO` lines of the file `labs/ValidationsAggregatorService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/ValidationsAggregatorService.java>`
+
+#. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
+#. TODO 4.2: group the records by key using `KStream#groupByKey` (required before using an aggregation operator), providing the existing Serialized instance for ORDERS
+#. TODO 4.3: use an aggregation operator `KTable#reduce` to collapse the records in this stream to a single order for a given key
+
+If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java>`__.
+
+
+Test your code
+~~~~~~~~~~~~~~
+
+Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+
+   .. sourcecode:: bash
+
+      cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java /tmp/.
+      cp labs/ValidationsAggregatorService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+      mvn clean compile -DskipTests
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorServiceTest test
+
+
+
+Lab 5: State Stores
+-------------------
+
+Concept
+~~~~~~~
+
+// YEVA: paraphrase, because right now this is a straight quote from Ben
+
+Kafka can be used to store data in the log, with the most common means being a state store (a disk-resident hash table, held inside the API, and backed by a Kafka topic) in Kafka Streams.
+As a state store gets its durability from a Kafka topic, we can use transactions to tie writes to the state store and writes to other output topics together.
+This turns out to be an extremely powerful pattern because it mimics the tying of messaging and databases together atomically.
+
+Exercise
+~~~~~~~~
+
+// YEVA: description
+
+Instructions: implement the `TODO` lines of the file `labs/InventoryService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/InventoryService.java>`
+
+#. TODO 5.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
+   #. the key Serde is derived from the topic specified by `WAREHOUSE_INVENTORY`
+   #. the value Serde is derived from `Serdes.Long()` because it represents a count
+#. TODO 5.2: update the reserved stock in the KeyValueStore called `reservedStocksStore`
+   #. the key is the product in the order, using `OrderBean#getProduct`
+   #. the value is the sum of the current reserved stock and the quantity in the order, using `OrderBean#getQuantity`
+
+If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java>`__.
+
+
+Test your code
+~~~~~~~~~~~~~~
+
+Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+
+   .. sourcecode:: bash
+
+      cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java /tmp/.
+      cp labs/InventoryService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+      mvn clean compile -DskipTests
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryServiceTest test
 
