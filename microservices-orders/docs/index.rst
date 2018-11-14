@@ -75,6 +75,9 @@ It is build on the Confluent Platform, including:
 | KSQL                                | `orders`, `customers` | KSQL streams and tables |
 +-------------------------------------+-----------------------+-------------------------+
 
+.. figure:: images/microservices-exercises-combined.jpg
+    :alt: image
+
 
 ==============
 Pre-requisites
