@@ -34,7 +34,7 @@ All the services are client applications written in Java, and they use the Kafka
 The java source code for these microservices are in the `kafka-streams-examples repo <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
 
 +-------------------------------------+-----------------------------------+-----------------------+
-| Service                             | Consuming From                    | Producing To          |
+| Service                             | Consumes From                     | Produces To           |
 +=====================================+===================================+=======================+
 | InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
 +-------------------------------------+-----------------------------------+-----------------------+
@@ -66,7 +66,7 @@ It is build on the Confluent Platform, including:
 
 
 +-------------------------------------+-----------------------+-------------------------+
-| Other Clients                       | Consuming From        | Producing To            |
+| Other Clients                       | Consumes From         | Produces To             |
 +=====================================+=======================+=========================+
 | JDBC source connector               | DB                    | `customers`             |
 +-------------------------------------+-----------------------+-------------------------+
@@ -80,17 +80,23 @@ It is build on the Confluent Platform, including:
 Pre-requisites
 ==============
 
+
+Reading
+~~~~~~~
+
 You will get a lot more out of this tutorial if you have first read the following:
 
 #. `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__: book by Ben Stopford.  It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.  The concepts discussed in that book are the foundation for this playbook.
 
 #. `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__: familiarize yourself with the scenario used in this playbook.
 
-Next step is to setup your environment, depending on whether you are running |cp| locally or in Docker:
 
+Environment Setup
+~~~~~~~~~~~~~~~~~
 
-Local
-~~~~~
+To setup your environment, make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
+
+Local:
 
 * `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
@@ -103,22 +109,39 @@ Local
 
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
-Docker
-~~~~~~
+Docker:
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
 
 
-=====================
-Run the Full Solution
-=====================
 
-We recommend that you first run the full solution to understand what a successful run looks like.
-Without writing any code, you can run the end-to-end demo to showcase a customer-representative deployment of a streaming application.
+========
+Playbook
+========
 
-Start the demo
-~~~~~~~~~~~~~~
+How to use the playbook
+~~~~~~~~~~~~~~~~~~~~~~~
+
+First run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
+This provides context for each of the exercises in which you will develop pieces of the microservices.
+
+After you have successfully run the full solution, run through the playbook to learn the basic principles of streaming applications.
+There are multiple exercises in the playbook, and for each exercise:
+
+#. Read the description to understand the focus area for the exercise
+#. Open the file specified in each exercise and fill in the missing code, identified by `TODO`
+#. Compile the project and run the unit test for the code to ensure it works
+
+
+Exercise 0: Run End-to-End Demo
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First, clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
+
+   .. sourcecode:: bash
+
+       git clone https://github.com/confluentinc/examples
 
 If you are running |cp| locally, then run the full solution:
 
@@ -132,12 +155,7 @@ If you are running Docker, then run the full solution:
 
       docker-compose up -d
 
-
-What You Should See
-~~~~~~~~~~~~~~~~~~~
-
-After running the end-to-end demo, the microservices applications will be running and Kafka topics will have data in them.
-
+After running one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 If you are running locally, you can sample the topic data by running:
 
 .. sourcecode:: bash
@@ -160,27 +178,8 @@ If you are running Confluent Enterprise (local or Docker) you can see a lot more
 * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
 
 
-========
-Playbook
-========
-
-
-How to use the playbook
-~~~~~~~~~~~~~~~~~~~~~~~
-
-First run the full end-to-end working solution.
-Starting at the high-level provides context for the services.
-
-After you have run the full solution successfully, run through the playbook to learn the basic principles of streaming applications.
-There are multiple exercises in the playbook, and for each exercise:
-
-#. Read the description to understand the focus area for the exercise
-#. Open the file specified in each exercise and fill in the missing code, identified by `TODO`
-#. Compile the project and run the unit test for the code to ensure it works
-
-
 Exercise 1: Persist Events 
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Events are sources of truth, or "facts", that represent things that happen.
 In a streaming architecture, events are first class citizens and constantly push data into our applications.
