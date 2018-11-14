@@ -1,5 +1,8 @@
 .. _microservices-orders:
 
+.. toctree:: 
+    :maxdepth: 2
+
 Developing Streaming Applications
 =================================
 
