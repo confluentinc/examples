@@ -111,7 +111,7 @@ public class ValidationsAggregatorService implements Service {
 
         //there could be multiple failed rules for each order so collapse to a single order
 
-        // TODO 5.2: group the records by key using `KStream#groupByKey` (required before using an aggregation operator), providing the existing Serialized instance for ORDERS
+        // TODO 5.2: group the records by key using `KStream#groupByKey`, providing the existing Serialized instance for ORDERS
         // ...
 
         // TODO 5.3: use an aggregation operator `KTable#reduce` to collapse the records in this stream to a single order for a given key
