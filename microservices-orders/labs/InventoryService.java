@@ -79,7 +79,7 @@ public class InventoryService implements Service {
     //This will be prepopulated from Kafka before the service starts processing
     StoreBuilder reservedStock = Stores
 
-      // TODO 5.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
+      // TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
       // 1. the key Serde is derived from the topic specified by `WAREHOUSE_INVENTORY`
       // 2. the value Serde is derived from `Serdes.Long()` because it represents a count
       // ...
@@ -134,7 +134,7 @@ public class InventoryService implements Service {
       if (warehouseStockCount - reserved - order.getQuantity() >= 0) {
         //reserve the stock by adding it to the 'reserved' store
 
-        // TODO 5.2: update the reserved stock in the KeyValueStore called `reservedStocksStore`
+        // TODO 6.2: update the reserved stock in the KeyValueStore called `reservedStocksStore`
         // 1. the key is the product in the order, using `OrderBean#getProduct`
         // 2. the value is the sum of the current reserved stock and the quantity in the order, using `OrderBean#getQuantity`
 

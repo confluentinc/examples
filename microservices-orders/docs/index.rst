@@ -82,9 +82,9 @@ Pre-requisites
 
 You will get a lot more out of this tutorial if you have first read the following:
 
-#. Read Ben Stopford's book `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__.  It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.  The concepts discussed in that book are the foundation for this playbook.
+#. `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__: book by Ben Stopford.  It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.  The concepts discussed in that book are the foundation for this playbook.
 
-#. Familiarize yourself with the scenario in the `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
+#. `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__: familiarize yourself with the scenario used in this playbook.
 
 Next step is to setup your environment, depending on whether you are running |cp| locally or in Docker:
 
@@ -160,15 +160,14 @@ First run the full end-to-end working solution.
 Starting at the high-level provides context for the services.
 
 After you have run the full solution successfully, run through the playbook to learn the basic principles of streaming applications.
-There are five labs in the playbook.
-For each lab:
+There are multiple labs in the playbook, and for each lab:
 
 #. Read the description to understand the focus area for the lab
 #. Open the file specified in each lab and fill in the missing code, identified by `TODO`
 #. Compile the project and run the unit test for the code to ensure it works
 
 
-Lab 1: Capture event
+Lab 1: Event Capture
 ~~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -265,6 +264,7 @@ Instructions: implement the `TODO` lines of the file `labs/EmailService.java <ht
 
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
 #. TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
+
    #. the GlobalKTable for the stream-table join
    #. customer Id, specified by `order.getCustomerId()`, using a KeyValueMapper that gets the customer id from the tuple in the record's value
    #. method that computes a value for the result record, in this case `EmailTuple::setCustomer`
@@ -285,8 +285,8 @@ Save off the project's working solution, copy your version of the file to the ma
       mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailServiceTest test
 
 
-Lab 4: Filtering and Aggregating
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Lab 4: Filtering
+~~~~~~~~~~~~~~~~
 
 Description
 -----------
@@ -298,11 +298,48 @@ Exercise
 
 // YEVA: description
 
-Instructions: implement the `TODO` lines of the file `labs/ValidationsAggregatorService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/ValidationsAggregatorService.java>`
+Instructions: implement the `TODO` lines of the file `labs/FraudService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/FraudService.java>`
 
 #. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
-#. TODO 4.2: group the records by key using `KStream#groupByKey` (required before using an aggregation operator), providing the existing Serialized instance for ORDERS
-#. TODO 4.3: use an aggregation operator `KTable#reduce` to collapse the records in this stream to a single order for a given key
+#. TODO 4.2: create a `KStream<String, OrderValue>` array from the `ordersWithTotals` stream by branching the records based on `OrderValue#getValue`
+
+   #. First branched stream: FRAUD_CHECK will fail for predicate where order value >= FRAUD_LIMIT
+   #. Second branched stream: FRAUD_CHECK will pass for predicate where order value < FRAUD_LIMIT
+
+If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/FraudService.java>`__.
+
+
+Test your code
+--------------
+
+Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+
+.. sourcecode:: bash
+
+      cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/FraudService.java /tmp/.
+      cp labs/FraudService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
+      mvn clean compile -DskipTests
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudService test
+
+
+Lab 5: Aggregations
+~~~~~~~~~~~~~~~~~~~
+
+Description
+-----------
+
+// YEVA:
+
+Exercise
+--------
+
+// YEVA: description
+
+Instructions: implement the `TODO` lines of the file `labs/ValidationsAggregatorService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/ValidationsAggregatorService.java>`
+
+#. TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
+#. TODO 5.2: group the records by key using `KStream#groupByKey` (required before using an aggregation operator), providing the existing Serialized instance for ORDERS
+#. TODO 5.3: use an aggregation operator `KTable#reduce` to collapse the records in this stream to a single order for a given key
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java>`__.
 
@@ -320,8 +357,7 @@ Save off the project's working solution, copy your version of the file to the ma
       mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorServiceTest test
 
 
-
-Lab 5: State Stores
+Lab 6: State Stores
 ~~~~~~~~~~~~~~~~~~~
 
 Description
@@ -338,10 +374,13 @@ Exercise
 
 Instructions: implement the `TODO` lines of the file `labs/InventoryService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/labs/InventoryService.java>`
 
-#. TODO 5.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
+#. TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
+
    #. the key Serde is derived from the topic specified by `WAREHOUSE_INVENTORY`
    #. the value Serde is derived from `Serdes.Long()` because it represents a count
-#. TODO 5.2: update the reserved stock in the KeyValueStore called `reservedStocksStore`
+
+#. TODO 6.2: update the reserved stock in the KeyValueStore called `reservedStocksStore`
+
    #. the key is the product in the order, using `OrderBean#getProduct`
    #. the value is the sum of the current reserved stock and the quantity in the order, using `OrderBean#getQuantity`
 

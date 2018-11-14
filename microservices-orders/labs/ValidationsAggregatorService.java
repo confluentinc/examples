@@ -73,14 +73,15 @@ public class ValidationsAggregatorService implements Service {
         .stream(ORDER_VALIDATIONS.name(), serdes1);
     KStream<String, Order> orders = builder
         .stream(ORDERS.name(), serdes2)
-
-        // TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
-        // ...
+        .filter((id, order) -> OrderState.CREATED.equals(order.getState()));
 
     //If all rules pass then validate the order
     validations
         .groupByKey(serdes3)
-        .windowedBy(SessionWindows.with(5 * MIN))
+
+        // TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
+        // ...
+
         .aggregate(
             () -> 0L,
             (id, result, total) -> PASS.equals(result.getValidationResult()) ? total + 1 : total,
@@ -110,10 +111,10 @@ public class ValidationsAggregatorService implements Service {
 
         //there could be multiple failed rules for each order so collapse to a single order
 
-        // TODO 4.2: group the records by key using `KStream#groupByKey` (required before using an aggregation operator), providing the existing Serialized instance for ORDERS
+        // TODO 5.2: group the records by key using `KStream#groupByKey` (required before using an aggregation operator), providing the existing Serialized instance for ORDERS
         // ...
 
-        // TODO 4.3: use an aggregation operator `KTable#reduce` to collapse the records in this stream to a single order for a given key
+        // TODO 5.3: use an aggregation operator `KTable#reduce` to collapse the records in this stream to a single order for a given key
         // ...
 
         //Push the validated order into the orders topic
