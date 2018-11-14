@@ -9,29 +9,28 @@ This self-paced tutorial teaches developers basic principles of streaming applic
 Overview
 ========
 
-Scope
------
+This is a small microservice ecosystem built with Kafka Streams. There is a related `blog post <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__  that outlines the approach used.
 
-This demo is based on the `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__, and augments it by fully integrating it into streaming ETL built on Confluent Platform.
-
-This demo adds:
-
-* JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
-* Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
-* KSQL: creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
+Note: this is demo code, not a production system and certain elements are left for further work.
 
 .. figure:: images/microservices-demo.jpg
     :alt: image
 
-Dataflow
---------
-
-Here is a description of which microservices and clients are producing to and reading from which topics (excludes internal topics).
-
 Microservices
 ~~~~~~~~~~~~~
 
-+-------------------------------------+-----------------------------------+-----------------------|
+The example centers around an Orders Service which provides a REST interface to POST and GET Orders. Posting an Order creates an event in Kafka. This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds. The result of each validation is pushed through a separate topic, Order Validations, so that we retain the ‘single writer’ status of the Orders Service —> Orders Topic. The results of the various validation checks are aggregated back in the Order Service (Validation Aggregator) which then moves the order to a Validated or Failed state, based on the combined result.
+
+To allow users to GET any order, the Orders Service creates a queryable materialized view (embedded inside the Orders Service), using a state store in each instance of the service, so any Order can be requested historically. Note also that the Orders Service can be scaled out over a number of nodes, so GET requests must be routed to the correct node to get a certain key. This is handled automatically using the Interactive Queries functionality in Kafka Streams.
+
+The Orders Service also includes a blocking HTTP GET so that clients can read their own writes. In this way we bridge the synchronous, blocking paradigm of a Restful interface with the asynchronous, non-blocking processing performed server-side.
+
+Finally there is a very simple email service.
+
+All the services are client applications written in Java, and they use the Kafka Streams API.
+The java source code for these microservices are in the `kafka-streams-examples repo <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
+
++-------------------------------------+-----------------------------------+-----------------------+
 | Service                             | Consuming From                    | Producing To          |
 +=====================================+===================================+=======================+
 | InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
@@ -39,26 +38,37 @@ Microservices
 | OrderDetailsService                 | `orders`                          | `order-validations`   |
 | ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`              |
 | EmailService                        | `orders`, `payments`, `customers` | -                     |
-+-------------------------------------+-----------------------------------+-----------------------|
+| OrdersService                       | -                                 | `orders`              |
+| PostOrdersAndPayments               | -                                 | `payments`            |
+| AddInventory                        | -                                 | `warehouse-inventory` |
++-------------------------------------+-----------------------------------+-----------------------+
 
-Other clients
-~~~~~~~~~~~~~
 
-+-------------------------------------+-----------------------+-------------------------|
+End-to-end Streaming ETL
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+This demo showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
+It is build on the Confluent Platform, including:
+
+* JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
+* Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
+* KSQL: creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
+
+
++-------------------------------------+-----------------------+-------------------------+
 | Other Clients                       | Consuming From        | Producing To            |
 +=====================================+=======================+=========================+
-| OrdersService                       | -                     | `orders`                |
-| PostOrdersAndPayments               | -                     | `payments`              |
-| AddInventory                        | -                     | `warehouse-inventory`   |
 | KSQL                                | `orders`, `customers` | KSQL streams and tables |
 | JDBC source connector               | DB                    | `customers`             |
 | Elasticsearch sink connector        | `orders`              | ES                      |
-+-------------------------------------+-----------------------+-------------------------|
++-------------------------------------+-----------------------+-------------------------+
 
 
 ==============
 Pre-requisites
 ==============
+
+You will get a lot more out of this tutorial if you have first read the following:
 
 #. Read Ben Stopford's book `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__.
 It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.
@@ -66,10 +76,11 @@ The concepts discussed in that book are the foundation for this playbook.
 
 #. Familiarize yourself with the scenario in the `Microservices Orders Demo Application <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
 
-#. Setup your environment, depending on whether you are running |cp| locally or in Docker:
+Next step is to setup your environment, depending on whether you are running |cp| locally or in Docker:
+
 
 Local
-~~~~~
+-----
 
 * `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
@@ -80,7 +91,7 @@ Local
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
 Docker
-~~~~~~
+------
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
@@ -98,13 +109,13 @@ Start the demo
 
 If you are running |cp| locally, then run the full solution:
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       ./start.sh
 
 If you are running Docker, then run the full solution:
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       docker-compose up -d
 
@@ -131,24 +142,28 @@ After running the end-to-end demo:
 Playbook
 ========
 
-After you have run the full solution successfully, we recommend that you run through the playbook to learn the basic principles of streaming applications.
 
 
 How to use the playbook
 -----------------------
 
-#. Go to the appropriate section of each playbook
-#. Find the relevant files
-#. Fill in the missing code
-#. Compile the code
-#. Run the unit test for the code
+First run the full end-to-end working solution.
+Starting at the high-level provides context for the services.
+
+After you have run the full solution successfully, run through the playbook to learn the basic principles of streaming applications.
+There are five labs in the playbook.
+For each lab:
+
+#. Read the description to understand the focus area for the lab
+#. Open the file specified in each lab and fill in the missing code, identified by `TODO`
+#. Compile the project and run the unit test for the code to ensure it works
 
 
 Lab 1: Capture event
 --------------------
 
-Concept
-~~~~~~~
+Description
+~~~~~~~~~~~
 
 // YEVA: concepts
 
@@ -169,7 +184,7 @@ Test your code
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/OrdersService.java /tmp/.
       cp labs/OrdersService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
@@ -180,8 +195,8 @@ Save off the project's working solution, copy your version of the file to the ma
 Lab 2: Request-driven vs Event-driven
 -------------------------------------
 
-Concept
-~~~~~~~
+Description
+~~~~~~~~~~~
 
 Service-based architectures are often designed to be request-driven, which sends commands to other services to tell them what to do, awaits a response, or sends queries to get the resulting state.
 In contrast, in an event-driven design, there an event stream is the inter-service communication which leads to less coupling and queries, enables services to cross deployment boundaries, and avoids synchronous execution.
@@ -209,7 +224,7 @@ Test your code
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java /tmp/.
       cp labs/OrderDetailsService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
@@ -220,8 +235,8 @@ Save off the project's working solution, copy your version of the file to the ma
 Lab 3: Enriching Streams with Joins
 --------------------------------------
 
-Concept
-~~~~~~~
+Description
+~~~~~~~~~~~
 
 Streams can be enriched with data from other streams or tables, through joins.
 Many stream processing applications in practice are coded as streaming joins.
@@ -253,7 +268,7 @@ Test your code
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/EmailService.java /tmp/.
       cp labs/EmailService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
@@ -264,8 +279,8 @@ Save off the project's working solution, copy your version of the file to the ma
 Lab 4: Filtering and Aggregating
 --------------------------------
 
-Concept
-~~~~~~~
+Description
+~~~~~~~~~~~
 
 // YEVA: 
 
@@ -288,7 +303,7 @@ Test your code
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java /tmp/.
       cp labs/ValidationsAggregatorService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
@@ -300,8 +315,8 @@ Save off the project's working solution, copy your version of the file to the ma
 Lab 5: State Stores
 -------------------
 
-Concept
-~~~~~~~
+Description
+~~~~~~~~~~~
 
 Kafka Streams provides so-called state stores, a disk-resident hash table, held inside the API, and backed by a Kafka topic.
 It can be used by stream processing applications to store and query data, which is an important capability when implementing stateful operations.
@@ -328,7 +343,7 @@ Test your code
 
 Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
       cp kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java /tmp/.
       cp labs/InventoryService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
