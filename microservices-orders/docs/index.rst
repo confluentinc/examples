@@ -120,14 +120,23 @@ Docker:
 Tutorial
 ========
 
-How to use the tutorial:
+How to use the tutorial
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 First run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
 This provides context for each of the exercises in which you will develop pieces of the microservices.
 
 After you have successfully run the full solution, run through the tutorial to learn the basic principles of streaming applications.
-There are multiple exercises in the tutorial, and for each exercise:
+There are multiple exercises in the tutorial:
+
+* Exercise 1: Persist Events 
+* Exercise 2: Request-driven vs Event-driven
+* Exercise 3: Enriching Streams with Joins
+* Exercise 4: Filtering and Branching
+* Exercise 5: Stateful Operations
+* Exercise 6: State Stores
+
+For each exercise:
 
 #. Read the description to understand the focus area for the exercise
 #. Open the file specified in each exercise and fill in the missing code, identified by `TODO`
@@ -139,9 +148,9 @@ Exercise 0: Run End-to-End Demo
 
 First, clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
-       git clone https://github.com/confluentinc/examples
+   git clone https://github.com/confluentinc/examples
 
 If you are running |cp| locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
@@ -156,6 +165,10 @@ If you are running Docker, then run the full solution (this also starts a local 
       docker-compose up -d
 
 After running one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
+
+.. figure:: images/microservices-demo.jpg
+    :alt: image
+
 If you are running locally, you can sample the topic data by running:
 
 .. sourcecode:: bash
@@ -182,8 +195,11 @@ Exercise 1: Persist Events
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Events are sources of truth, or "facts", that represent things that happen.
-In a streaming architecture, events are first class citizens and constantly push data into our applications.
-The client applications can then react to these streams of events in real-time.
+In a streaming architecture, events are first class citizens and constantly push data into applications.
+The client applications can then react to these streams of events in real-time, and decide what to do next.
+
+.. figure:: images/microservices-exercise-1.jpg
+    :alt: image
 
 In this exercise, you will persist an event into Kafka by producing a record that represents a customer order.
 It happens in the Orders Service which provides a REST interface to POST and GET Orders.
@@ -196,7 +212,7 @@ Implement the `TODO` lines of the file `exercises/OrdersService.java <https://gi
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrdersService.java>`__.
 
-Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -212,6 +228,9 @@ Exercise 2: Request-driven vs Event-driven
 Service-based architectures are often designed to be request-driven, which sends commands to other services to tell them what to do, awaits a response, or sends queries to get the resulting state.
 In contrast, in an event-driven design, there an event stream is the inter-service communication which leads to less coupling and queries, enables services to cross deployment boundaries, and avoids synchronous execution.
 
+.. figure:: images/microservices-exercise-2.jpg
+    :alt: image
+
 In this exercise, you will Write a service that validates customer orders.
 Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
@@ -225,7 +244,7 @@ Implement the `TODO` lines of the file `exercises/OrderDetailsService.java <http
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java>`__.
 
-Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -236,7 +255,7 @@ Save off the project's working solution, copy your version of the file to the ma
 
 
 Exercise 3: Enriching Streams with Joins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Streams can be enriched with data from other streams or tables, through joins.
 Many stream processing applications in practice are coded as streaming joins.
@@ -244,6 +263,9 @@ For example, applications backing an online shop might need to access multiple, 
 That is, scenarios where you need to perform table lookups at very large scale and with a low processing latency.
 Here, a popular pattern is to make the information in the databases available in Kafka through so-called change data capture in combination with Kafka’s Connect API to pull in the data from the database.
 Then the application using the Kafka Streams API performs very fast and efficient local joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
+
+.. figure:: images/microservices-exercise-3.jpg
+    :alt: image
 
 In this exercise, you will write a service that joins streaming order information with streaming payment information and with data from a customer database.
 First the payment stream needs to be rekeyed to match the same key info as the order stream, then joined together.
@@ -260,7 +282,7 @@ Implement the `TODO` lines of the file `exercises/EmailService.java <https://git
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/EmailService.java>`__.
 
-Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -271,11 +293,14 @@ Save off the project's working solution, copy your version of the file to the ma
 
 
 Exercise 4: Filtering and Branching
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kafka can capture a lot of information related to an event.
 This information can be captured in a single Kafka topic.
 Client applications can then manipulate that data, based on some user-defined criteria, to create new streams of data that they can act on.
+
+.. figure:: images/microservices-exercise-4.jpg
+    :alt: image
 
 In this exercise, you will define one set of criteria to filter records in a stream, and then define another set of criteria to branch records into two different streams.
 
@@ -289,7 +314,7 @@ Implement the `TODO` lines of the file `exercises/FraudService.java <https://git
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/FraudService.java>`__.
 
-Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -306,6 +331,9 @@ You can combine current record values with previous record values using aggregat
 They are stateful operations because they maintain data during processing.
 Often these are combined with windowing capabilities in order to run computations in real-time over a window of time.
 
+.. figure:: images/microservices-exercise-5.jpg
+    :alt: image
+
 In this exercise, you will create a session window to define 5-minute windows for processing.
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
 Before running `reduce`, you will group the records by key, which is required before using an aggregation operator to repartition the data.
@@ -318,7 +346,7 @@ Implement the `TODO` lines of the file `exercises/ValidationsAggregatorService.j
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java>`__.
 
-Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -334,6 +362,9 @@ Exercise 6: State Stores
 Kafka Streams provides so-called state stores, a disk-resident hash table, held inside the API for the client application.
 It can be used by stream processing applications to store and query data, which is an important capability when implementing stateful operations.
 The state store is backed by a Kafka topic and comes with all the Kafka guarantees.
+
+.. figure:: images/microservices-exercise-6.jpg
+    :alt: image
 
 In this exercise, you will create a state store for the Inventory Service, and update it as new orders come in.
 
@@ -351,7 +382,7 @@ Implement the `TODO` lines of the file `exercises/InventoryService.java <https:/
 
 If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java>`__.
 
-Save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -359,4 +390,3 @@ Save off the project's working solution, copy your version of the file to the ma
       cp exercises/InventoryService.java kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/.
       mvn clean compile -DskipTests
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryServiceTest test
-
