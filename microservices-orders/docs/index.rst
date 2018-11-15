@@ -179,11 +179,17 @@ After running one of the above two commands, the microservices applications will
 .. figure:: images/microservices-demo.jpg
     :alt: image
 
-If you are running locally, you can sample the topic data by running:
+If you are running locally, you can sample topic data by running:
 
 .. sourcecode:: bash
 
       ./read-topics.sh
+
+If you are running Docker, you can sample topic data by running:
+
+.. sourcecode:: bash
+
+      ./read-topics-docker.sh
 
 View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
