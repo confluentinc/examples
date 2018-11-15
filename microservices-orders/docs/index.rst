@@ -14,10 +14,10 @@ Overview
 
 This is a small microservice ecosystem built with Kafka Streams. There is a related `blog post <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__  that outlines the approach used.
 
-Note: this is demo code, not a production system and certain elements are left for further work.
-
 .. figure:: images/microservices-demo.jpg
     :alt: image
+
+Note: this is demo code, not a production system and certain elements are left for further work.
 
 Microservices
 ~~~~~~~~~~~~~
@@ -30,8 +30,13 @@ The Orders Service also includes a blocking HTTP GET so that clients can read th
 
 Finally there is a very simple email service.
 
+.. figure:: images/microservices-exercises-combined.jpg
+    :alt: image
+
 All the services are client applications written in Java, and they use the Kafka Streams API.
 The java source code for these microservices are in the `kafka-streams-examples repo <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
+
+Summary of services and the topics they consume from and produce to:
 
 +-------------------------------------+-----------------------------------+-----------------------+
 | Service                             | Consumes From                     | Produces To           |
@@ -58,12 +63,11 @@ End-to-end Streaming ETL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 This demo showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
-It is build on the Confluent Platform, including:
+It is build on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
 * KSQL: creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
-
 
 +-------------------------------------+-----------------------+-------------------------+
 | Other Clients                       | Consumes From         | Produces To             |
@@ -75,9 +79,6 @@ It is build on the Confluent Platform, including:
 | KSQL                                | `orders`, `customers` | KSQL streams and tables |
 +-------------------------------------+-----------------------+-------------------------+
 
-.. figure:: images/microservices-exercises-combined.jpg
-    :alt: image
-
 
 ==============
 Pre-requisites
@@ -88,11 +89,10 @@ Reading
 ~~~~~~~
 
 You will get a lot more out of this tutorial if you have first learned the concepts which are foundational for this tutorial.
+To learn how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems, we recommend:
 
-If you have lots of time: `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__, a book by Ben Stopford.
-It explains how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems.
-
-If you do not have lots of time: `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ or `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__.
+* If you have lots of time: `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__, a book by Ben Stopford.
+* If you do not have lots of time: `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ or `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__.
 
 
 Environment Setup
@@ -102,7 +102,7 @@ To setup your environment, make sure you have the following pre-requisites, depe
 
 Local:
 
-* `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically Confluent Enterprise to use topic management, KSQL and Confluent Schema Registry integration, and streams monitoring capabilities
+* `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically |cpe| to use topic management, KSQL and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
@@ -117,6 +117,7 @@ Docker:
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
+* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 
 
 
@@ -130,8 +131,7 @@ How to use the tutorial
 First run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
 This provides context for each of the exercises in which you will develop pieces of the microservices.
 
-After you have successfully run the full solution, run through the tutorial to learn the basic principles of streaming applications.
-There are multiple exercises in the tutorial:
+After you have successfully run the full solution, then go through the execises in the tutorial to gain a better understanding of the basic principles of streaming applications:
 
 * Exercise 1: Persist Events 
 * Exercise 2: Request-driven vs Event-driven
@@ -143,12 +143,14 @@ There are multiple exercises in the tutorial:
 For each exercise:
 
 #. Read the description to understand the focus area for the exercise
-#. Open the file specified in each exercise and fill in the missing code, identified by `TODO`
-#. Compile the project and run the unit test for the code to ensure it works
+#. Edit the file specified in each exercise and fill in the missing code
+#. Copy the file to the project, then compile the project and run the test for the service to ensure it works
 
 
 Exercise 0: Run End-to-End Demo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Running the fully working demo end-to-end provides context for each of the later exercises.
 
 Start
 -----
@@ -166,7 +168,6 @@ If you are running |cp| locally, then run the full solution (this also starts a 
       ./start.sh
 
 If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
-Because so many services are running on the host machine, in Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB).
 
 .. sourcecode:: bash
 
@@ -177,7 +178,7 @@ Explore
 
 After running one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
-.. figure:: images/microservices-demo.jpg
+.. figure:: images/microservices-exercises-combined.jpg
     :alt: image
 
 If you are running locally, you can sample topic data by running:
@@ -197,7 +198,7 @@ View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microse
 .. figure:: images/kibana_microservices.png
     :alt: image
 
-If you are running Confluent Enterprise (local or Docker) you can see a lot more information in Confluent Control Center:
+If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
 * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
 * `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
