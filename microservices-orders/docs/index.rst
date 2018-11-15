@@ -165,7 +165,8 @@ If you are running |cp| locally, then run the full solution (this also starts a 
 
       ./start.sh
 
-If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers):
+If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
+Because so many services are running on the host machine, in Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB).
 
 .. sourcecode:: bash
 
