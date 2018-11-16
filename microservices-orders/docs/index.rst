@@ -201,7 +201,7 @@ View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microse
 
 .. figure:: images/kibana_microservices.png
     :alt: image
-    :width: 400px
+    :width: 600px
 
 If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
@@ -210,6 +210,7 @@ If you are running |cpe| (local or Docker) you can see a lot more information in
 
 .. figure:: images/streams-monitoring.png
     :alt: image
+    :width: 600px
 
 * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
 
