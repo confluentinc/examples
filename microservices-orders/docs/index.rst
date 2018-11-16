@@ -83,11 +83,6 @@ It is build on the |cp|, including:
 | KSQL                                | `orders`, `customers` | KSQL streams and tables |
 +-------------------------------------+-----------------------+-------------------------+
 
-.. figure:: images/elastic-search-kafka.png
-    :alt: image
-
-    Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__)
-
 
 ==============
 Pre-requisites
@@ -198,23 +193,28 @@ Running the fully working demo end-to-end provides context for each of the later
 
       ./read-topics-docker.sh
 
-4. View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
+4. The Kibana dashboard is populated by Elasticsearch.
 
-.. figure:: images/kibana_microservices.png
+.. figure:: images/elastic-search-kafka.png
     :alt: image
-    :width: 600px
+
+   Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+
+    View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
+
+    .. figure:: images/kibana_microservices.png
+        :alt: image
+        :width: 600px
 
 5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
    * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
+   * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
    * `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
 
    .. figure:: images/streams-monitoring.png
        :alt: image
        :width: 600px
-
-   * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
-
 
 6. When you are done, make sure to stop the demo before proceeding to the exercises.
 
