@@ -25,7 +25,7 @@ Microservices
 The example centers around an Orders Service which provides a REST interface to POST and GET Orders.
 Posting an Order creates an event in Kafka.
 This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
-The result of each validation is pushed through a separate topic, Order Validations, so that we retain the `single writer’ status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in `the book <https://www.confluent.io/designing-event-driven-systems>`__).
+The result of each validation is pushed through a separate topic, Order Validations, so that we retain the `single writer’ status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__).
 The results of the various validation checks are aggregated back in the Order Service (Validation Aggregator) which then moves the order to a Validated or Failed state, based on the combined result.
 
 To allow users to GET any order, the Orders Service creates a queryable materialized view (embedded inside the Orders Service), using a state store in each instance of the service, so any Order can be requested historically. Note also that the Orders Service can be scaled out over a number of nodes, so GET requests must be routed to the correct node to get a certain key. This is handled automatically using the Interactive Queries functionality in Kafka Streams.
@@ -82,6 +82,11 @@ It is build on the |cp|, including:
 +-------------------------------------+-----------------------+-------------------------+
 | KSQL                                | `orders`, `customers` | KSQL streams and tables |
 +-------------------------------------+-----------------------+-------------------------+
+
+.. figure:: images/elastic-search-kafka.png
+    :alt: image
+
+    Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
 
 ==============
@@ -214,6 +219,7 @@ If you are running |cpe| (local or Docker) you can see a lot more information in
 
 * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
 
+
 Stop
 ----
 
@@ -287,6 +293,12 @@ Exercise 2: Event-driven App
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Service-based architectures are often designed to be request-driven, which sends commands to other services to tell them what to do, awaits a response, or sends queries to get the resulting state.
+
+.. figure:: images/event-driven.png
+    :alt: image
+
+    A visual summary of commands, events, and queries (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+
 In contrast, in an event-driven design, there an event stream is the inter-service communication which leads to less coupling and queries, enables services to cross deployment boundaries, and avoids synchronous execution.
 
 .. figure:: images/microservices-exercise-2.jpg
@@ -341,6 +353,12 @@ Streams can be enriched with data from other streams or tables, through joins.
 Many stream processing applications in practice are coded as streaming joins.
 For example, applications backing an online shop might need to access multiple, updating database tables (e.g. sales prices, inventory, customer information) in order to enrich a new data record (e.g. customer transaction) with context information.
 That is, scenarios where you need to perform table lookups at very large scale and with a low processing latency.
+
+.. figure:: images/state-stores-kafka-streams.png
+    :alt: image
+
+    A stateless streaming service that joins two streams at runtime (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+
 Here, a popular pattern is to make the information in the databases available in Kafka through so-called change data capture in combination with Kafka’s Connect API to pull in the data from the database.
 Then the application using the Kafka Streams API performs very fast and efficient local joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
 
@@ -498,6 +516,12 @@ Exercise 6: State Stores
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kafka Streams provides so-called state stores, a disk-resident hash table, held inside the API for the client application.
+
+.. figure:: images/state-stores-kafka-streams.png
+    :alt: image
+
+    State stores in Kafka Streams can be used to create use-case-specific views right inside the service (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+
 It can be used by stream processing applications to store and query data, which is an important capability when implementing stateful operations.
 The state store is backed by a Kafka topic and comes with all the Kafka guarantees.
 
