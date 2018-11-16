@@ -161,79 +161,72 @@ Exercise 0: Run End-to-End Demo
 
 Running the fully working demo end-to-end provides context for each of the later exercises.
 
-Start
------
-
-First, clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
+1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
 .. sourcecode:: bash
 
    git clone https://github.com/confluentinc/examples
 
-If you are running |cp| locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
+2. Start the demo
 
-.. sourcecode:: bash
+   * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
+
+   .. sourcecode:: bash
 
       ./start.sh
 
-If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
+   * If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
 
-.. sourcecode:: bash
+   .. sourcecode:: bash
 
       docker-compose up -d
 
-Explore
--------
+3. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
-After running one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
+   .. figure:: images/microservices-exercises-combined.jpg
+       :alt: image
 
-.. figure:: images/microservices-exercises-combined.jpg
-    :alt: image
+   * If you are running locally, you can sample topic data by running:
 
-If you are running locally, you can sample topic data by running:
-
-.. sourcecode:: bash
+   .. sourcecode:: bash
 
       ./read-topics.sh
 
-If you are running Docker, you can sample topic data by running:
+   * If you are running Docker, you can sample topic data by running:
 
-.. sourcecode:: bash
+   .. sourcecode:: bash
 
       ./read-topics-docker.sh
 
-View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
+4. View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
 .. figure:: images/kibana_microservices.png
     :alt: image
     :width: 600px
 
-If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
+5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
-* `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
-* `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
+   * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
+   * `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
 
-.. figure:: images/streams-monitoring.png
-    :alt: image
-    :width: 600px
+   .. figure:: images/streams-monitoring.png
+       :alt: image
+       :width: 600px
 
-* `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
+   * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
 
 
-Stop
-----
+6. When you are done, make sure to stop the demo before proceeding to the exercises.
 
-Make sure to stop the demo before proceeding to the exercises.
+   * If you are running |cp| locally:
 
-If you are running |cp| locally:
-
-.. sourcecode:: bash
+   .. sourcecode:: bash
 
       ./stop.sh
 
-If you are running Docker:
+   * If you are running Docker:
 
-.. sourcecode:: bash
+   .. sourcecode:: bash
 
       docker-compose down
 
