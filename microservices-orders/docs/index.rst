@@ -197,6 +197,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
 .. figure:: images/elastic-search-kafka.png
     :alt: image
+    :width: 600px
 
    Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
