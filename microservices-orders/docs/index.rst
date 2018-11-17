@@ -106,7 +106,7 @@ To learn how service-based architectures and stream processing tools such as Apa
 
 For more learning on Kafka Streams API that you can use as a reference while working through this tutorial, we recommend:
 
-* `Kafka Streams API documentation <https://docs.confluent.io/current/streams/index.html>`__
+* `Kafka Streams documentation <https://docs.confluent.io/current/streams/index.html>`__
 
 
 Environment Setup
@@ -582,7 +582,7 @@ Additional Resources
 ====================
 
 * `Kafka Streams videos <https://www.youtube.com/watch?v=Z3JKCLG3VP4&list=PLa7VYi0yPIH1vDclVOB49xUruBAWkOCZD>`__
-* `Confluent documentation <https://docs.confluent.io/current/streams/concepts.html>`__
+* `Kafka Streams documentation <https://docs.confluent.io/current/streams/index.html>`__
 * `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__
 * `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__
 * `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__
