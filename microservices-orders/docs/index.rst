@@ -268,8 +268,8 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord-java.lang.String-K-V-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-org.apache.kafka.clients.producer.Callback-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
-   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java
+   * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
+   * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java|src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/OrdersService.java`.
 
@@ -325,8 +325,8 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe-java.util.Collection-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
    * https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#singletonList-T-
+   * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java`.
 
@@ -386,11 +386,11 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
 
-   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/Consumed.html#with-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/StreamsBuilder.html#stream-java.lang.String-org.apache.kafka.streams.kstream.Consumed-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#selectKey-org.apache.kafka.streams.kstream.KeyValueMapper-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#join-org.apache.kafka.streams.kstream.KTable-org.apache.kafka.streams.kstream.ValueJoiner-org.apache.kafka.streams.kstream.Joined-
+   * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/EmailService.java`.
 
@@ -441,7 +441,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#filter-org.apache.kafka.streams.kstream.Predicate-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#branch-org.apache.kafka.streams.kstream.Predicate...-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java
+   * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java|src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/FraudService.java`.
 
@@ -553,7 +553,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/Stores.html#persistentKeyValueStore-java.lang.String-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/Stores.html#keyValueStoreBuilder-org.apache.kafka.streams.state.KeyValueBytesStoreSupplier-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/KeyValueStore.html#put-K-V-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
+   * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/InventoryService.java`.
 
