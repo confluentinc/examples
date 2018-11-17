@@ -23,7 +23,7 @@ Microservices
 ~~~~~~~~~~~~~
 
 The example centers around an Orders Service which provides a REST interface to POST and GET Orders.
-Posting an Order creates an event in Kafka.
+Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
 This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 The result of each validation is pushed through a separate topic, Order Validations, so that we retain the `single writer’ status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__).
 The results of the various validation checks are aggregated back in the Order Service (Validation Aggregator) which then moves the order to a Validated or Failed state, based on the combined result.
@@ -38,7 +38,7 @@ Finally there is a very simple email service.
     :alt: image
 
 All the services are client applications written in Java, and they use the Kafka Streams API.
-The java source code for these microservices are in the `kafka-streams-examples repo <https://github.com/confluentinc/kafka-streams-examples/tree/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices>`__.
+The java source code for these microservices are in the :cp-examples:`kafka-streams-examples repo|src/main/java/io/confluent/examples/streams/microservices`.
 
 Summary of services and the topics they consume from and produce to:
 
@@ -247,7 +247,7 @@ In this exercise, you will persist events into Kafka by producing records that r
 This event happens in the Orders Service which provides a REST interface to POST and GET Orders.
 Posting an Order is essentially a REST call, and it creates the event in Kafka. 
 
-Implement the `TODO` lines of the file `exercises/OrdersService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/exercises/OrdersService.java>`__
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrdersService.java`
 
 #. TODO 1.1: create a new `ProducerRecord` with a key specified by `bean.getId()` and value of the bean, to the orders topic whose name is specified by `ORDERS.name()`
 #. TODO 1.2: produce the newly created record using the existing `producer` and pass use the `OrdersService#callback` function to send the `response` and the record key
@@ -258,10 +258,10 @@ Implement the `TODO` lines of the file `exercises/OrdersService.java <https://gi
 
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord-java.lang.String-K-V-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-org.apache.kafka.clients.producer.Callback-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
-   * https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java
+   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
+   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java
    
-   If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrdersService.java>`__.
+   If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/OrdersService.java`.
 
 To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -302,7 +302,7 @@ In this exercise, you will write a service that validates customer orders.
 Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
-Implement the `TODO` lines of the file `exercises/OrderDetailsService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/exercises/OrderDetailsService.java>`__
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrderDetailsService.java`
 
 #. TODO 2.1: subscribe the existing `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
 #. TODO 2.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
@@ -315,10 +315,10 @@ Implement the `TODO` lines of the file `exercises/OrderDetailsService.java <http
 
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe-java.util.Collection-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
+   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
    * https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#singletonList-T-
    
-   If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java>`__.
+   If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java`.
 
 To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -363,7 +363,7 @@ In this exercise, you will write a service that joins streaming order informatio
 First the payment stream needs to be rekeyed to match the same key info as the order stream, then joined together.
 Then the resulting stream is joined with the customer information that was read into Kafka by a JDBC source from a customer database.
 
-Implement the `TODO` lines of the file `exercises/EmailService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/exercises/EmailService.java>`__
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/EmailService.java`
 
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
 #. TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
@@ -376,13 +376,13 @@ Implement the `TODO` lines of the file `exercises/EmailService.java <https://git
 
    The following APIs will be helpful:
 
-   * https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
+   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/Consumed.html#with-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/StreamsBuilder.html#stream-java.lang.String-org.apache.kafka.streams.kstream.Consumed-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#selectKey-org.apache.kafka.streams.kstream.KeyValueMapper-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#join-org.apache.kafka.streams.kstream.KTable-org.apache.kafka.streams.kstream.ValueJoiner-org.apache.kafka.streams.kstream.Joined-
    
-   If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/EmailService.java>`__.
+   If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/EmailService.java`.
 
 To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -417,7 +417,7 @@ Client applications can then manipulate that data, based on some user-defined cr
 In this exercise, you will define one set of criteria to filter records in a stream based on some criteria.
 Then you will define define another set of criteria to branch records into two different streams.
 
-Implement the `TODO` lines of the file `exercises/FraudService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/exercises/FraudService.java>`__
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/FraudService.java`
 
 #. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
 #. TODO 4.2: create a `KStream<String, OrderValue>` array from the `ordersWithTotals` stream by branching the records based on `OrderValue#getValue`
@@ -431,9 +431,9 @@ Implement the `TODO` lines of the file `exercises/FraudService.java <https://git
 
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#filter-org.apache.kafka.streams.kstream.Predicate-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#branch-org.apache.kafka.streams.kstream.Predicate...-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java
+   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java
    
-   If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/FraudService.java>`__.
+   If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/FraudService.java`.
 
 To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -469,7 +469,7 @@ In this exercise, you will create a session window to define 5-minute windows fo
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
 Before running `reduce`, you will group the records by key, which is required before using an aggregation operator to repartition the data.
 
-Implement the `TODO` lines of the file `exercises/ValidationsAggregatorService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/exercises/ValidationsAggregatorService.java>`__
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
 
 #. TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
 #. TODO 5.2: group the records by key using `KStream#groupByKey`, providing the existing Serialized instance for ORDERS
@@ -484,7 +484,7 @@ Implement the `TODO` lines of the file `exercises/ValidationsAggregatorService.j
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#groupByKey-org.apache.kafka.streams.kstream.Serialized-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/SessionWindowedKStream.html#reduce-org.apache.kafka.streams.kstream.Reducer-
    
-   If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java>`__.
+   If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java`.
 
 To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
@@ -524,7 +524,7 @@ The state store is backed by a Kafka topic and comes with all the Kafka guarante
 
 In this exercise, you will create a state store for the Inventory Service, and update it as new orders come in.
 
-Implement the `TODO` lines of the file `exercises/InventoryService.java <https://github.com/confluentinc/examples/tree/5.0.1-post/microservices-orders/exercises/InventoryService.java>`__
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/InventoryService.java`
 
 #. TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
 
@@ -543,9 +543,9 @@ Implement the `TODO` lines of the file `exercises/InventoryService.java <https:/
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/Stores.html#persistentKeyValueStore-java.lang.String-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/Stores.html#keyValueStoreBuilder-org.apache.kafka.streams.state.KeyValueBytesStoreSupplier-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
    * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/KeyValueStore.html#put-K-V-
-   * https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
+   * https://github.com/confluentinc/kafka-streams-examples/blob/|release|/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java
    
-   If you get stuck, here is the `complete solution <https://github.com/confluentinc/kafka-streams-examples/blob/5.0.1-post/src/main/java/io/confluent/examples/streams/microservices/InventoryService.java>`__.
+   If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/InventoryService.java`.
 
 To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
 
