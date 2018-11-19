@@ -1,10 +1,10 @@
-.. _microservices-orders:
+.. _tutorial-microservices-orders:
 
 .. toctree:: 
     :maxdepth: 2
 
-Developing Streaming Applications
-=================================
+Tutorial: Introduction to Streaming Application Development
+===========================================================
 
 This self-paced tutorial provides exercises for developers to apply the basic principles of streaming applications.
 
