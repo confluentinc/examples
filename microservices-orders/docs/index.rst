@@ -22,7 +22,7 @@ Note: this is demo code, not a production system and certain elements are left f
 Microservices
 ~~~~~~~~~~~~~
 
-The example centers around an Orders Service which provides a REST interface to POST and GET Orders.
+The systems center on an Orders Service which exposes a REST interface to POST and GET Orders.
 Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
 This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 The result of each validation is pushed through a separate topic, Order Validations, so that we retain the "single writer" status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__).
@@ -32,7 +32,7 @@ To allow users to GET any order, the Orders Service creates a queryable material
 
 The Orders Service also includes a blocking HTTP GET so that clients can read their own writes. In this way we bridge the synchronous, blocking paradigm of a Restful interface with the asynchronous, non-blocking processing performed server-side.
 
-Finally there is a very simple email service.
+Finally there is a simple service that sends emails and another that collates orders and makes them available in a search index using Elasticsearch. 
 
 .. figure:: images/microservices-exercises-combined.jpg
     :alt: image
@@ -532,7 +532,8 @@ The state store is backed by a Kafka topic and comes with all the Kafka guarante
 .. figure:: images/microservices-exercise-6.jpg
     :alt: image
 
-In this exercise, you will create a state store for the Inventory Service, and update it as new orders come in.
+In this exercise, you will create a state store for the Inventory Service.
+This state store is initialized with data from a Kafka topic before the service starts processing, and then it is updated as new orders are created.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/InventoryService.java`
 
