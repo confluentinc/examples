@@ -178,15 +178,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
    * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      ./start.sh
+        ./start.sh
 
    * If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      docker-compose up -d
+        docker-compose up -d
 
 3. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
@@ -207,17 +207,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
 4. The Kibana dashboard is populated by Elasticsearch.
 
-.. figure:: images/elastic-search-kafka.png
-    :alt: image
-    :width: 600px
+   .. figure:: images/elastic-search-kafka.png
+       :alt: image
+       :width: 600px
 
-   Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+   Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__). View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
-    View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
-
-    .. figure:: images/kibana_microservices.png
-        :alt: image
-        :width: 600px
+   .. figure:: images/kibana_microservices.png
+       :alt: image
+       :width: 600px
 
 5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
@@ -233,15 +231,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
    * If you are running |cp| locally:
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      ./stop.sh
+        ./stop.sh
 
    * If you are running Docker:
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      docker-compose down
+        docker-compose down
 
 
 Exercise 1: Persist Events 
