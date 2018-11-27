@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.0.2-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.0.2-beta181127181705
     hostname: zookeeper
     ports:
       - '2181:2181'
@@ -13,7 +13,7 @@ services:
       - "moby:127.0.0.1"
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.0.2-SNAPSHOT
+    image: confluentinc/cp-enterprise-kafka:5.0.2-beta181127181705
     hostname: kafka
     ports:
       - '9092:9092'
@@ -38,7 +38,7 @@ services:
       - "moby:127.0.0.1"
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.0.2-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.0.2-beta181127181705
     hostname: schema-registry
     depends_on:
       - zookeeper
@@ -52,7 +52,7 @@ services:
       - "moby:127.0.0.1"
 
   kafka-connect-cp:
-    image: confluentinc/cp-kafka-connect:5.0.2-SNAPSHOT
+    image: confluentinc/cp-kafka-connect:5.0.2-beta181127181705
     hostname: kafka-connect-cp
     ports:
       - "18083:18083"
