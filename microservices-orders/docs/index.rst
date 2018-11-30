@@ -289,7 +289,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.OrdersServiceTest test -f kafka-streams-examples/pom.xml
 
 
@@ -346,7 +346,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsService test -f kafka-streams-examples/pom.xml
 
 
@@ -410,7 +410,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailService test -f kafka-streams-examples/pom.xml
 
 
@@ -461,7 +461,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudService test -f kafka-streams-examples/pom.xml
 
 
@@ -512,7 +512,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorService test -f kafka-streams-examples/pom.xml
 
 
@@ -574,7 +574,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
 
 
