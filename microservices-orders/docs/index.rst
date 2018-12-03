@@ -477,7 +477,7 @@ Often these are combined with windowing capabilities in order to run computation
 
 In this exercise, you will create a session window to define 5-minute windows for processing.
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
-Before running `reduce`, you will group the records by key to repartition the data, which is generally required before using an aggregation operator.
+Before running `reduce`, you will group the records to repartition the data, which is generally required before using an aggregation operator.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
 
