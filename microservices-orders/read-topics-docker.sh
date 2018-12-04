@@ -32,5 +32,6 @@ docker-compose exec connect kafka-console-consumer --bootstrap-server broker:909
 # Read queries
 docker-compose exec ksql-cli bash -c "ksql http://ksql-server:8088 <<EOF
 SELECT * FROM orders_cust1_joined LIMIT 3;
+SELECT * FROM FRAUD_ORDER LIMIT 2;
 exit ;
 EOF"
