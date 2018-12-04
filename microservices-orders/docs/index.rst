@@ -222,7 +222,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
 5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
-   * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
+   * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS;``
    * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
    * `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
 
@@ -610,7 +610,7 @@ From the KSQL CLI prompt, create the following:
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/ksql.commands`.
 
 The CLI parser will give immediate feedback whether your KSQL queries worked or not.
-Use `SELECT * FROM <stream or table name>;` to see the rows in each query.
+Use ``SELECT * FROM <stream or table name>;`` to see the rows in each query.
 
 
 
