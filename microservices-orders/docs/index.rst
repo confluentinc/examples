@@ -12,19 +12,20 @@ This self-paced tutorial provides exercises for developers to apply the basic pr
 Overview
 ========
 
-This is a small microservice ecosystem built with Kafka Streams. There is a related `blog post <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__  that outlines the approach used.
+This is a small microservice ecosystem built with Kafka Streams and KSQL. There is a related `blog post <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__  that outlines the approach used.
 
 .. figure:: images/microservices-demo.jpg
     :alt: image
 
 Note: this is demo code, not a production system and certain elements are left for further work.
 
+
 Microservices
 ~~~~~~~~~~~~~
 
 The example centers around an Orders Service which provides a REST interface to POST and GET Orders.
 Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
-This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
+This is picked up by different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 The result of each validation is pushed through a separate topic, Order Validations, so that we retain the "single writer" status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__).
 The results of the various validation checks are aggregated in the Validation Aggregator Service, which then moves the order to a Validated or Failed state, based on the combined result.
 
@@ -32,7 +33,9 @@ To allow users to GET any order, the Orders Service creates a queryable material
 
 The Orders Service also includes a blocking HTTP GET so that clients can read their own writes. In this way we bridge the synchronous, blocking paradigm of a Restful interface with the asynchronous, non-blocking processing performed server-side.
 
-Finally there is a very simple email service.
+There is a simple email service that shows how to enrich streams by joining them with other data sources.
+
+Finally, KSQL is running with persistent queries to enrich streams and to also check for fraudulent behavior.
 
 Here is a diagram of the microservices and the related Kafka topics.
 
