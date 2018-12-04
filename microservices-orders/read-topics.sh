@@ -31,6 +31,7 @@ confluent consume InventoryService-store-of-reserved-stock-changelog --property 
 
 # Read queries
 ksql http://localhost:8088 <<EOF
-SELECT * FROM orders_cust1_joined LIMIT 3;
+SELECT * FROM orders_cust1_joined LIMIT 2;
+select * FROM FRAUD_ORDER_LIMIT LIMIT 2;
 exit ;
 EOF

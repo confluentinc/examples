@@ -53,7 +53,6 @@ COUNT_JUMPERS=20
 (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &)
 
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
-TABLE_CUSTOMERS=/usr/local/lib/table.customers
 prep_sqltable_customers
 if is_ce; then confluent config jdbc-customers -d ./connectors/connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connectors/connector_jdbc_customers_oss.config; fi
 

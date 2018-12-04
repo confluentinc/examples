@@ -34,6 +34,8 @@ The Orders Service also includes a blocking HTTP GET so that clients can read th
 
 Finally there is a very simple email service.
 
+Here is a diagram of the microservices and the related Kafka topics.
+
 .. figure:: images/microservices-exercises-combined.jpg
     :alt: image
 
@@ -67,7 +69,7 @@ It is build on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
-* KSQL: creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
+* KSQL: another variant of a fraud detection microservice
 
 +-------------------------------------+-----------------------+-------------------------+
 | Other Clients                       | Consumes From         | Produces To             |
@@ -82,7 +84,7 @@ It is build on the |cp|, including:
 For the end-to-end demo, the code that creates the order events via REST calls to the Orders Service and generates the initial inventory is provided by the following applications:
 
 +-------------------------------------+-----------------------------------+-----------------------+
-| Application                         | Consumes From                     | Produces To           |
+| Application (Datagen)               | Consumes From                     | Produces To           |
 +=====================================+===================================+=======================+
 | PostOrdersAndPayments               | -                                 | `payments`            |
 +-------------------------------------+-----------------------------------+-----------------------+
@@ -153,6 +155,7 @@ After you have successfully run the full solution, then go through the execises 
 * Exercise 4: Filtering and Branching
 * Exercise 5: Stateful Operations
 * Exercise 6: State Stores
+* Exercise 7: KSQL
 
 For each exercise:
 
@@ -575,6 +578,40 @@ To test your code, save off the project's working solution, copy your version of
 
       # Run the test
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
+
+
+Exercise 7: KSQL
+~~~~~~~~~~~~~~~~
+
+Confluent KSQL is the open source, streaming SQL engine that enables real-time data processing against Apache Kafka.
+It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without the need to write code in a programming language such as Java or Python.
+KSQL is scalable, elastic, fault-tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
+
+.. figure:: images/microservices-exercise-7.jpg
+    :alt: image
+
+In this exercise, assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
+If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksql-cli ksql` to get to the KSQL CLI prompt.
+
+From the KSQL CLI prompt, create the following:
+
+#. TODO 7.1: create a persistent query with a KSQL stream that does a stream-table join based on customer id.
+#. TODO 7.2: create a persistent query with a KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
+
+.. tip::
+
+   The following APIs will be helpful:
+
+   * https://docs.confluent.io/current/ksql/docs/developer-guide/create-a-stream.html#create-a-persistent-streaming-query-from-a-stream
+   * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#joining
+   * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#aggregating-windowing-and-sessionization
+
+   If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/ksql.commands`.
+
+The CLI parser will give immediate feedback whether your KSQL queries worked or not.
+Use `SELECT * FROM <stream or table name>;` to see the rows in each query.
+
 
 
 ====================
