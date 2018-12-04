@@ -594,7 +594,7 @@ KSQL is scalable, elastic, fault-tolerant, and it supports a wide range of strea
     :alt: image
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information.
-You will create another persistent query that performs detects fraudulent behavior by counting the number of orders in a given window.
+You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
 Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
 If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
