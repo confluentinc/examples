@@ -595,7 +595,7 @@ You will create another persistent query that performs detects fraudulent behavi
 
 Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
 If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
-If you are running on Docker, then type `docker-compose exec ksql-cli ksql` to get to the KSQL CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksql-server:8088` to get to the KSQL CLI prompt.
 From the KSQL CLI prompt, create the following persistent queries:
 
 #. TODO 7.1: KSQL stream that does a stream-table join based on customer id.
