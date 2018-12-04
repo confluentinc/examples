@@ -155,7 +155,7 @@ After you have successfully run the full solution, then go through the execises 
 * Exercise 4: Filtering and Branching
 * Exercise 5: Stateful Operations
 * Exercise 6: State Stores
-* Exercise 7: KSQL
+* Exercise 7: Enrichment with KSQL
 
 For each exercise:
 
@@ -580,8 +580,8 @@ To test your code, save off the project's working solution, copy your version of
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
 
 
-Exercise 7: KSQL
-~~~~~~~~~~~~~~~~
+Exercise 7: Enrichment with KSQL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Confluent KSQL is the open source, streaming SQL engine that enables real-time data processing against Apache Kafka.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without the need to write code in a programming language such as Java or Python.
@@ -590,14 +590,16 @@ KSQL is scalable, elastic, fault-tolerant, and it supports a wide range of strea
 .. figure:: images/microservices-exercise-7.jpg
     :alt: image
 
-In this exercise, assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
+In this exercise, you will create one persistent query that enriches the `orders` stream with customer information.
+You will create another persistent query that performs detects fraudulent behavior by counting the number of orders in a given window.
+
+Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
 If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
 If you are running on Docker, then type `docker-compose exec ksql-cli ksql` to get to the KSQL CLI prompt.
+From the KSQL CLI prompt, create the following persistent queries:
 
-From the KSQL CLI prompt, create the following:
-
-#. TODO 7.1: create a persistent query with a KSQL stream that does a stream-table join based on customer id.
-#. TODO 7.2: create a persistent query with a KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
+#. TODO 7.1: KSQL stream that does a stream-table join based on customer id.
+#. TODO 7.2: KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
 
 .. tip::
 
