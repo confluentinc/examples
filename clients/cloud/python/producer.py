@@ -68,11 +68,6 @@ if __name__ == '__main__':
            'sasl.password': conf['sasl.password']
     })
     fs = a.create_topics([NewTopic(topic, num_partitions=1, replication_factor=3)])
-
-    # Wait for operation to finish.
-    # Timeouts are preferably controlled by passing request_timeout=15.0
-    # to the create_topics() call.
-    # All futures will finish at the same time.
     for topic, f in fs.items():
         try:
             f.result()  # The result itself is None

@@ -1,6 +1,12 @@
+# Overview
+
+Produce messages to and consume messages from Confluent Cloud using Confluent Python Client for Apache Kafka
+
+
 # Prerequisites
 
-Confluent's Python Client for Apache Kafka: https://github.com/confluentinc/confluent-kafka-python
+* Install Confluent's Python Client for Apache Kafka: https://github.com/confluentinc/confluent-kafka-python
+* File with client configuration parameters to connect to your Confluent Cloud instance
 
 
 # Usage
@@ -45,16 +51,5 @@ alice 	 {"count": 8}
 Updated total count to 36
 alice 	 {"count": 9}
 Updated total count to 45
-end of partition: test1 [4] @ 1
-end of partition: test1 [6] @ 1
-end of partition: test1 [0] @ 1
-end of partition: test1 [3] @ 0
-end of partition: test1 [5] @ 2
-end of partition: test1 [8] @ 1
-end of partition: test1 [2] @ 2
-end of partition: test1 [9] @ 0
-end of partition: test1 [1] @ 0
-end of partition: test1 [7] @ 1
-end of partition: test1 [10] @ 0
-end of partition: test1 [11] @ 12
+end of partition: test1 [0] @ 10
 
