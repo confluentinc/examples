@@ -59,6 +59,7 @@ if __name__ == '__main__':
     })
 
     # Create topic if needed
+    # Examples of additional admin API functionality: https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
     topic = sys.argv[2]
     a = AdminClient({
            'bootstrap.servers': conf['bootstrap.servers'],
