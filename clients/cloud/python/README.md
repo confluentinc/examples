@@ -1,3 +1,10 @@
+# Prerequisites
+
+Confluent's Python Client for Apache Kafka: https://github.com/confluentinc/confluent-kafka-python
+
+
+# Usage
+
 $ cat ~/.ccloud/librdkafka.config
 bootstrap.servers=<>
 sasl.username=<>
