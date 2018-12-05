@@ -35,9 +35,9 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <kafka.version>2.0.2-SNAPSHOT</kafka.version>
+        <kafka.version>2.0.2-beta181205211305</kafka.version>
         <kafka.scala.version>2.11</kafka.scala.version>
-        <confluent.version>5.0.2-SNAPSHOT</confluent.version>
+        <confluent.version>5.0.2-beta181205211305</confluent.version>
         <slf4j-api.version>1.7.6</slf4j-api.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
