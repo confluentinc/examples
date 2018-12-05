@@ -22,10 +22,9 @@
 #
 # =============================================================================
 
-from confluent_kafka import Producer
+from confluent_kafka import Producer, KafkaError
 from confluent_kafka.admin import AdminClient, NewTopic
 import sys
-import pprint
 
 
 if __name__ == '__main__':
@@ -43,7 +42,6 @@ if __name__ == '__main__':
           parameter, value = line.strip().split('=', 1)
           conf[parameter] = value.strip()
     fh.close
-    #pprint.pprint(conf)
     #print conf['bootstrap.servers']
     #print conf['sasl.username']
     #print conf['sasl.password']
@@ -59,7 +57,7 @@ if __name__ == '__main__':
            'sasl.password': conf['sasl.password']
     })
 
-    # Topic creation
+    # Create topic if needed
     topic = sys.argv[2]
     a = AdminClient({
            'bootstrap.servers': conf['bootstrap.servers'],
@@ -79,8 +77,8 @@ if __name__ == '__main__':
             f.result()  # The result itself is None
             print("Topic {} created".format(topic))
         except Exception as e:
-            print("Failed to create topic {}: {}".format(topic, e))
-
+            if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
+              print("Failed to create topic {}: {}".format(topic, e))
 
     # Optional per-message delivery callback (triggered by poll() or flush())
     # when a message has been successfully delivered or permanently
@@ -92,7 +90,7 @@ if __name__ == '__main__':
         else:
             print("produced to: {0} [{1}] @ {2}".format(msg.topic(), msg.partition(), msg.offset()))
 
-    for n in range(100):
+    for n in range(10):
       p.produce(topic, "m" + `n`, callback=acked)
       p.poll(0)
 
