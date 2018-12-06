@@ -38,14 +38,10 @@ if __name__ == '__main__':
     conf = {}
     with open(config_file) as fh:
       for line in fh:
-        if line[0] != "#" and line.strip():
-          #print line
+        line = line.strip()
+        if line[0] != "#" and len(line) != 0:
           parameter, value = line.strip().split('=', 1)
           conf[parameter] = value.strip()
-    fh.close
-    #print conf['bootstrap.servers']
-    #print conf['sasl.username']
-    #print conf['sasl.password']
 
     # Create Producer instance
     p = Producer({
@@ -74,6 +70,7 @@ if __name__ == '__main__':
             f.result()  # The result itself is None
             print("Topic {} created".format(topic))
         except Exception as e:
+            # Continue if error code TOPIC_ALREADY_EXISTS, which may be valid if topic exists
             if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
               print("Failed to create topic {}: {}".format(topic, e))
 
@@ -89,11 +86,10 @@ if __name__ == '__main__':
 
     for n in range(10):
       record_key = "alice"
-      data = {}
-      data['count'] = n
-      record_value = json.dumps(data)
+      record_value = json.dumps({'count': n})
       print ("{0} \t {1}".format(record_key, record_value))
       p.produce(topic,key=record_key,value=record_value,callback=acked)
+      # p.poll(0) services callbacks from previous produce() calls
       p.poll(0)
 
     p.flush(10)

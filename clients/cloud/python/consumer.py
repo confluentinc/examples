@@ -38,14 +38,10 @@ if __name__ == '__main__':
     conf = {}
     with open(config_file) as fh:
       for line in fh:
-        if line[0] != "#" and line.strip():
-          #print line
+        line = line.strip()
+        if line[0] != "#" and len(line) != 0:
           parameter, value = line.strip().split('=', 1)
           conf[parameter] = value.strip()
-    fh.close
-    #print conf['bootstrap.servers']
-    #print conf['sasl.username']
-    #print conf['sasl.password']
 
     # Create Consumer instance
     c = Consumer({
@@ -67,25 +63,26 @@ if __name__ == '__main__':
     total_count=0
     try:
         while True:
-            msg = c.poll(0.1)  # Wait for message or event/error
+            msg = c.poll(1.0)  # Wait for message or event/error
             if msg is None:
                 # No message available within timeout.
                 # Initial message consumption may take up to `session.timeout.ms` for
                 #   the group to rebalance and start consuming
                 continue
             elif not msg.error():
+                # Check for Kafka message
                 record_key = msg.key()
                 record_value = msg.value()
-                print ("{0} \t {1}".format(record_key, record_value))
+                print ("{} \t {}".format(record_key, record_value))
                 data = json.loads(record_value)
                 count = data['count']
                 total_count += count
-                print ("Updated total count to {0}".format(total_count))
+                print ("Updated total count to {}".format(total_count))
 
             elif msg.error().code() == KafkaError._PARTITION_EOF:
                 print('end of partition: {0} [{1}] @ {2}'.format(msg.topic(), msg.partition(), msg.offset()))
             else:
-                print('error: {0}'.format(msg.error().str()))
+                print('error: {}'.format(msg.error()))
     except KeyboardInterrupt:
         pass
     finally:
