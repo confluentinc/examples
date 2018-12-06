@@ -62,7 +62,8 @@ if __name__ == '__main__':
     total_count=0
     try:
         while True:
-            msg = c.poll(1.0)  # Wait for message or event/error
+            print "Waiting for message or event/error in poll()"
+            msg = c.poll(1.0)
             if msg is None:
                 # No message available within timeout.
                 # Initial message consumption may take up to `session.timeout.ms` for
