@@ -74,23 +74,24 @@ if __name__ == '__main__':
             if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
               print("Failed to create topic {}: {}".format(topic, e))
 
-    # Optional per-message delivery callback (triggered by poll() or flush())
-    # when a message has been successfully delivered or permanently
-    # failed delivery (after retries).
+    # Optional per-message on_delivery handler (triggered by poll() or flush())
+    # when a message has been successfully delivered or
+    # permanently failed delivery (after retries).
     def acked(err, msg):
-        """Delivery report callback called (from flush()) on successful or failed delivery of the message."""
+        """Delivery report handler called on successful or failed delivery of the message."""
         if err is not None:
             print("failed to deliver message: {0}".format(err.str()))
-        #else:
-        #    print("produced to: {0} [{1}] @ {2}".format(msg.topic(), msg.partition(), msg.offset()))
+        else:
+            print("Successfully produced record to topic {} partition [{}] @ offset {}".format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
       record_key = "alice"
       record_value = json.dumps({'count': n})
-      print ("{0} \t {1}".format(record_key, record_value))
-      p.produce(topic,key=record_key,value=record_value,callback=acked)
-      # p.poll(0) services callbacks from previous produce() calls
+      print ("Preparing to produce record: {} \t {}".format(record_key, record_value))
+      p.produce(topic,key=record_key,value=record_value,on_delivery=acked)
+      # p.poll(0) serves delivery reports from previous produce() calls to the on_delivery handler
       p.poll(0)
 
     p.flush(10)
 
+    print ("10 messages were successfully produced to topic {}!".format(topic))

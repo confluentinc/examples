@@ -73,16 +73,13 @@ if __name__ == '__main__':
                 # Check for Kafka message
                 record_key = msg.key()
                 record_value = msg.value()
-                print ("{} \t {}".format(record_key, record_value))
                 data = json.loads(record_value)
                 count = data['count']
                 total_count += count
-                print ("Updated total count to {}".format(total_count))
-
-            elif msg.error().code() == KafkaError._PARTITION_EOF:
-                print('end of partition: {0} [{1}] @ {2}'.format(msg.topic(), msg.partition(), msg.offset()))
+                print ("Consumed record with key {} and value {}, and updated total count to {}".format(record_key,record_value,total_count))
             else:
-                print('error: {}'.format(msg.error()))
+                if msg.error().code() != KafkaError._PARTITION_EOF:
+                  print('error: {}'.format(msg.error()))
     except KeyboardInterrupt:
         pass
     finally:

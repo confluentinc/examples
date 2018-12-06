@@ -1,55 +1,67 @@
 # Overview
 
-Produce messages to and consume messages from Confluent Cloud using Confluent Python Client for Apache Kafka
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using [Confluent Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python).
 
 
 # Prerequisites
 
-* Install Confluent's Python Client for Apache Kafka: https://github.com/confluentinc/confluent-kafka-python
-* File with client configuration parameters to connect to your Confluent Cloud instance
+* [Confluent's Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed on your machine
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
+* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
 
 
-# Usage
-
+```bash
 $ cat ~/.ccloud/librdkafka.config
-bootstrap.servers=<>
-sasl.username=<>
-sasl.password=<>
+bootstrap.servers=<broker-1,broker-2,broker-3>
+sasl.username=<api-key-id>
+sasl.password=<secret-access-key>
+```
 
+# Example 1: Hello World!
 
+In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
+Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
+The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
+
+1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+
+```bash
 $ ./producer.py ~/.ccloud/librdkafka.config test1                      
-alice 	 {"count": 0}
-alice 	 {"count": 1}
-alice 	 {"count": 2}
-alice 	 {"count": 3}
-alice 	 {"count": 4}
-alice 	 {"count": 5}
-alice 	 {"count": 6}
-alice 	 {"count": 7}
-alice 	 {"count": 8}
-alice 	 {"count": 9}
+Preparing to produce record: alice 	 {"count": 0}
+Preparing to produce record: alice 	 {"count": 1}
+Preparing to produce record: alice 	 {"count": 2}
+Preparing to produce record: alice 	 {"count": 3}
+Preparing to produce record: alice 	 {"count": 4}
+Preparing to produce record: alice 	 {"count": 5}
+Preparing to produce record: alice 	 {"count": 6}
+Preparing to produce record: alice 	 {"count": 7}
+Preparing to produce record: alice 	 {"count": 8}
+Preparing to produce record: alice 	 {"count": 9}
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset 9
+10 messages were successfully produced to topic test1!
+```
 
+1. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
-$ ./consumer.py ~/.ccloud/librdkafka.config test1                       
-alice 	 {"count": 0}
-Updated total count to 0
-alice 	 {"count": 1}
-Updated total count to 1
-alice 	 {"count": 2}
-Updated total count to 3
-alice 	 {"count": 3}
-Updated total count to 6
-alice 	 {"count": 4}
-Updated total count to 10
-alice 	 {"count": 5}
-Updated total count to 15
-alice 	 {"count": 6}
-Updated total count to 21
-alice 	 {"count": 7}
-Updated total count to 28
-alice 	 {"count": 8}
-Updated total count to 36
-alice 	 {"count": 9}
-Updated total count to 45
-end of partition: test1 [0] @ 10
-
+```bash
+$ ./consumer.py ~/.ccloud/librdkafka.config test1
+Consumed record with key alice and value {"count": 0}, and updated total count to 0
+Consumed record with key alice and value {"count": 1}, and updated total count to 1
+Consumed record with key alice and value {"count": 2}, and updated total count to 3
+Consumed record with key alice and value {"count": 3}, and updated total count to 6
+Consumed record with key alice and value {"count": 4}, and updated total count to 10
+Consumed record with key alice and value {"count": 5}, and updated total count to 15
+Consumed record with key alice and value {"count": 6}, and updated total count to 21
+Consumed record with key alice and value {"count": 7}, and updated total count to 28
+Consumed record with key alice and value {"count": 8}, and updated total count to 36
+Consumed record with key alice and value {"count": 9}, and updated total count to 45
+```
