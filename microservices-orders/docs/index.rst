@@ -12,7 +12,9 @@ This self-paced tutorial provides exercises for developers to apply the basic pr
 Overview
 ========
 
-This is a small microservice ecosystem built with Kafka Streams. There is a related `blog post <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__  that outlines the approach used.
+The tutorial is based on a small microservice ecosystem, showcasing an order management workflow such as you might find in retail and online shopping.
+It is built using Kafka Streams, whereby  business events that describe the order management workflow propagate through this ecosystem.  
+There is a related `blog post <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__  that outlines the approach used.
 
 .. figure:: images/microservices-demo.jpg
     :alt: image
@@ -22,7 +24,7 @@ Note: this is demo code, not a production system and certain elements are left f
 Microservices
 ~~~~~~~~~~~~~
 
-The example centers around an Orders Service which provides a REST interface to POST and GET Orders.
+In this example, the system centers on an Orders Service which exposes a REST interface to POST and GET Orders.
 Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
 This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 The result of each validation is pushed through a separate topic, Order Validations, so that we retain the "single writer" status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__).
@@ -32,7 +34,7 @@ To allow users to GET any order, the Orders Service creates a queryable material
 
 The Orders Service also includes a blocking HTTP GET so that clients can read their own writes. In this way we bridge the synchronous, blocking paradigm of a Restful interface with the asynchronous, non-blocking processing performed server-side.
 
-Finally there is a very simple email service.
+Finally there is a simple service that sends emails and another that collates orders and makes them available in a search index using Elasticsearch. 
 
 .. figure:: images/microservices-exercises-combined.jpg
     :alt: image
@@ -148,7 +150,7 @@ This provides context for each of the exercises in which you will develop pieces
 After you have successfully run the full solution, then go through the execises in the tutorial to gain a better understanding of the basic principles of streaming applications:
 
 * Exercise 1: Persist Events 
-* Exercise 2: Event-driven App
+* Exercise 2: Event-driven Applications
 * Exercise 3: Enriching Streams with Joins
 * Exercise 4: Filtering and Branching
 * Exercise 5: Stateful Operations
@@ -176,15 +178,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
    * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      ./start.sh
+        ./start.sh
 
    * If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      docker-compose up -d
+        docker-compose up -d
 
 3. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
@@ -205,17 +207,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
 4. The Kibana dashboard is populated by Elasticsearch.
 
-.. figure:: images/elastic-search-kafka.png
-    :alt: image
-    :width: 600px
+   .. figure:: images/elastic-search-kafka.png
+       :alt: image
+       :width: 600px
 
-   Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+   Full-text search is added via an Elasticsearch database connected through Kafka’s Connect API (`source <https://www.confluent.io/designing-event-driven-systems>`__). View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
 
-    View the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Microservices
-
-    .. figure:: images/kibana_microservices.png
-        :alt: image
-        :width: 600px
+   .. figure:: images/kibana_microservices.png
+       :alt: image
+       :width: 600px
 
 5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
@@ -231,15 +231,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
    * If you are running |cp| locally:
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      ./stop.sh
+        ./stop.sh
 
    * If you are running Docker:
 
-   .. sourcecode:: bash
+     .. sourcecode:: bash
 
-      docker-compose down
+        docker-compose down
 
 
 Exercise 1: Persist Events 
@@ -253,7 +253,7 @@ Client applications can then react to these streams of events in real-time, and 
 .. figure:: images/microservices-exercise-1.jpg
     :alt: image
 
-In this exercise, you will persist events into Kafka by producing records that represents customer orders.
+In this exercise, you will persist events into Kafka by producing records that represent customer orders.
 This event happens in the Orders Service which provides a REST interface to POST and GET Orders.
 Posting an Order is essentially a REST call, and it creates the event in Kafka. 
 
@@ -289,12 +289,12 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.OrdersServiceTest test -f kafka-streams-examples/pom.xml
 
 
-Exercise 2: Event-driven App
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exercise 2: Event-driven Applications
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Service-based architectures are often designed to be request-driven, which sends commands to other services to tell them what to do, awaits a response, or sends queries to get the resulting state.
 
@@ -346,7 +346,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsService test -f kafka-streams-examples/pom.xml
 
 
@@ -361,10 +361,10 @@ That is, scenarios where you need to perform table lookups at very large scale a
 .. figure:: images/state-stores-kafka-streams.png
     :alt: image
 
-    A stateless streaming service that joins two streams at runtime (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+    A stateful streaming service that joins two streams at runtime (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-Here, a popular pattern is to make the information in the databases available in Kafka through so-called change data capture in combination with Kafka’s Connect API to pull in the data from the database.
-Then the application using the Kafka Streams API performs very fast and efficient local joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
+A popular pattern is to make the information in the databases available in Kafka through so-called change data capture in combination with Kafka’s Connect API to pull in the data from the database.
+Once the data is in Kafka, client applications can perform very fast and efficient joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
 
 .. figure:: images/microservices-exercise-3.jpg
     :alt: image
@@ -410,7 +410,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailService test -f kafka-streams-examples/pom.xml
 
 
@@ -461,7 +461,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudService test -f kafka-streams-examples/pom.xml
 
 
@@ -477,7 +477,7 @@ Often these are combined with windowing capabilities in order to run computation
 
 In this exercise, you will create a session window to define 5-minute windows for processing.
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
-Before running `reduce`, you will group the records by key, which is required before using an aggregation operator to repartition the data.
+Before running `reduce`, you will group the records to repartition the data, which is generally required before using an aggregation operator.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
 
@@ -512,7 +512,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorService test -f kafka-streams-examples/pom.xml
 
 
@@ -532,7 +532,8 @@ The state store is backed by a Kafka topic and comes with all the Kafka guarante
 .. figure:: images/microservices-exercise-6.jpg
     :alt: image
 
-In this exercise, you will create a state store for the Inventory Service, and update it as new orders come in.
+In this exercise, you will create a state store for the Inventory Service.
+This state store is initialized with data from a Kafka topic before the service starts processing, and then it is updated as new orders are created.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/InventoryService.java`
 
@@ -573,7 +574,7 @@ To test your code, save off the project's working solution, copy your version of
       # Compile the project and resolve any compilation errors
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
-      # Run the test
+      # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
 
 
@@ -586,3 +587,4 @@ Additional Resources
 * `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__
 * `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__
 * `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__
+* `No More Silos: How to Integrate your Databases with Apache Kafka and CDC <https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc>`__
