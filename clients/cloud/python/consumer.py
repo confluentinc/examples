@@ -24,7 +24,6 @@
 
 from confluent_kafka import Consumer, KafkaError
 import sys
-import uuid
 import json
 
 
@@ -52,7 +51,7 @@ if __name__ == '__main__':
         'security.protocol': 'SASL_SSL',
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
-        'group.id': str(uuid.uuid1()),  # this will create a new consumer group on each invocation.
+        'group.id': 'group1',
         'auto.offset.reset': 'earliest'
     })
 
