@@ -35,6 +35,8 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 * Command line `kafka-console-producer` produces `String` keys and `String` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for both key and value.
 
+![image](images/example_1.jpg)
+
 ### Notes
 
 [KAFKA-2526](https://issues.apache.org/jira/browse/KAFKA-2526): one cannot use the `--key-serializer` argument in the `kafka-console-producer` to serialize the key as a `Long`. As a result, in this example the key is serialized as a `String`. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify `--line-reader` argument in the `kafka-console-producer`.
@@ -44,7 +46,7 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 * [Kafka Connect JDBC source connector](jdbcjson-connector.properties) produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
 
-![image](blog_connect_streams_diag.jpg)
+![image](images/blog_connect_streams_diag.jpg)
 
 ### Notes
 
@@ -55,7 +57,7 @@ This example uses a few SMTs including one to cast the key to an `int64`. The ke
 * [Kafka Connect JDBC source connector](jdbcspecificavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java) reads from the Kafka topic using `SpecificAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
-![image](blog_connect_streams_diag.jpg)
+![image](images/blog_connect_streams_diag.jpg)
 
 ### Notes
 
@@ -66,7 +68,7 @@ This example uses a simple message transformation `SetSchemaMetadata` with code 
 * [Kafka Connect JDBC source connector](jdbcgenericavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java) reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
-![image](blog_connect_streams_diag.jpg)
+![image](images/blog_connect_streams_diag.jpg)
 
 ### Notes
 
@@ -122,7 +124,7 @@ After you run `./start.sh`:
 1|Raleigh|700
 ```
 
-![image](blog_stream.jpg)
+![image](images/blog_stream.jpg)
 
 ## Expected Results
 
@@ -136,7 +138,7 @@ After you run `./start.sh`:
 5|Chennai|1
 ```
 
-![image](blog_count.jpg)
+![image](images/blog_count.jpg)
 
 ### Sum
 
@@ -148,4 +150,4 @@ After you run `./start.sh`:
 5|Chennai|400
 ```
 
-![image](blog_sum.jpg)
+![image](images/blog_sum.jpg)
