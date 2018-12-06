@@ -26,15 +26,23 @@ from confluent_kafka import Producer, KafkaError
 from confluent_kafka.admin import AdminClient, NewTopic
 import sys
 import json
+import argparse
+
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        sys.stderr.write('Usage: %s <path to Confluent Cloud configuration file> <topic name>\n' % sys.argv[0])
-        sys.exit(1)
+
+    # Parse arguments
+    parser = argparse.ArgumentParser(description="Confluent Python Client example to produce messages to Confluent Cloud")
+    parser._action_groups.pop()
+    required = parser.add_argument_group('required arguments')
+    required.add_argument('-f', dest="config_file", help="path to Confluent Cloud configuration file", required=True)
+    required.add_argument('-t', dest="topic", help="topic name", required=True)
+    args = parser.parse_args()
+    config_file = args.config_file
+    topic = args.topic
 
     # Read Confluent Cloud configuration for librdkafka clients
-    config_file = sys.argv[1]
     conf = {}
     with open(config_file) as fh:
       for line in fh:
@@ -56,7 +64,6 @@ if __name__ == '__main__':
 
     # Create topic if needed
     # Examples of additional admin API functionality: https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
-    topic = sys.argv[2]
     a = AdminClient({
            'bootstrap.servers': conf['bootstrap.servers'],
            'sasl.mechanisms': 'PLAIN',
