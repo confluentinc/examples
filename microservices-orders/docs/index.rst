@@ -21,12 +21,13 @@ There is a related `blog post <https://www.confluent.io/blog/building-a-microser
 
 Note: this is demo code, not a production system and certain elements are left for further work.
 
+
 Microservices
 ~~~~~~~~~~~~~
 
 In this example, the system centers on an Orders Service which exposes a REST interface to POST and GET Orders.
 Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
-This is picked up by three different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
+This is picked up by different validation engines (Fraud Service, Inventory Service, Order Details Service) which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 The result of each validation is pushed through a separate topic, Order Validations, so that we retain the "single writer" status of the Orders Service —> Orders Topic (there are several options for managing consistency in event collaboration, discussed in Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__).
 The results of the various validation checks are aggregated in the Validation Aggregator Service, which then moves the order to a Validated or Failed state, based on the combined result.
 
@@ -34,7 +35,11 @@ To allow users to GET any order, the Orders Service creates a queryable material
 
 The Orders Service also includes a blocking HTTP GET so that clients can read their own writes. In this way we bridge the synchronous, blocking paradigm of a Restful interface with the asynchronous, non-blocking processing performed server-side.
 
-Finally there is a simple service that sends emails and another that collates orders and makes them available in a search index using Elasticsearch. 
+There is a simple service that sends emails and another that collates orders and makes them available in a search index using Elasticsearch. 
+
+Finally, KSQL is running with persistent queries to enrich streams and to also check for fraudulent behavior.
+
+Here is a diagram of the microservices and the related Kafka topics.
 
 .. figure:: images/microservices-exercises-combined.jpg
     :alt: image
@@ -69,7 +74,7 @@ It is build on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
-* KSQL: creates streams and tables and joins data from a STREAM of orders with a TABLE of customer data
+* KSQL: another variant of a fraud detection microservice
 
 +-------------------------------------+-----------------------+-------------------------+
 | Other Clients                       | Consumes From         | Produces To             |
@@ -84,7 +89,7 @@ It is build on the |cp|, including:
 For the end-to-end demo, the code that creates the order events via REST calls to the Orders Service and generates the initial inventory is provided by the following applications:
 
 +-------------------------------------+-----------------------------------+-----------------------+
-| Application                         | Consumes From                     | Produces To           |
+| Application (Datagen)               | Consumes From                     | Produces To           |
 +=====================================+===================================+=======================+
 | PostOrdersAndPayments               | -                                 | `payments`            |
 +-------------------------------------+-----------------------------------+-----------------------+
@@ -155,6 +160,7 @@ After you have successfully run the full solution, then go through the execises 
 * Exercise 4: Filtering and Branching
 * Exercise 5: Stateful Operations
 * Exercise 6: State Stores
+* Exercise 7: Enrichment with KSQL
 
 For each exercise:
 
@@ -219,7 +225,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
 5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
 
-   * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query `SELECT * FROM ORDERS;`
+   * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS;``
    * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
    * `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
 
@@ -576,6 +582,42 @@ To test your code, save off the project's working solution, copy your version of
 
       # Run the test and validate that it passes
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
+
+
+Exercise 7: Enrichment with KSQL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Confluent KSQL is the open source, streaming SQL engine that enables real-time data processing against Apache Kafka.
+It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without the need to write code in a programming language such as Java or Python.
+KSQL is scalable, elastic, fault-tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
+
+.. figure:: images/microservices-exercise-7.jpg
+    :alt: image
+
+In this exercise, you will create one persistent query that enriches the `orders` stream with customer information.
+You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
+
+Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
+If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksql-server:8088` to get to the KSQL CLI prompt.
+From the KSQL CLI prompt, create the following persistent queries:
+
+#. TODO 7.1: KSQL stream that does a stream-table join based on customer id.
+#. TODO 7.2: KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
+
+.. tip::
+
+   The following APIs will be helpful:
+
+   * https://docs.confluent.io/current/ksql/docs/developer-guide/create-a-stream.html#create-a-persistent-streaming-query-from-a-stream
+   * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#joining
+   * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#aggregating-windowing-and-sessionization
+
+   If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/ksql.commands`.
+
+The CLI parser will give immediate feedback whether your KSQL queries worked or not.
+Use ``SELECT * FROM <stream or table name>;`` to see the rows in each query.
+
 
 
 ====================
