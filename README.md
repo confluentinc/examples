@@ -11,9 +11,9 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 
 | Demo                                       | Local | Docker | Description 
 | ------------------------------------------ | ----- | ------ | -------------------------------------------------------------------------------- 
-| [ccloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | hybrid Kafka Clusters from Self-Hosted to Confluent Cloud
+| [ccloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | end-to-end demo of a hybrid Kafka Cluster between Confluent Cloud and on-prem
 | [clickstream](clickstream/README.md)       |   [Y](clickstream/README.md)   |   [Y](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker)    | automated version of the [KSQL Clickstream demo](https://github.com/confluentinc/ksql/blob/master/ksql-clickstream-demo/non-docker-clickstream.md#clickstream-analysis)
-| [clients](clients/README.md)               |   [Y](clients/README.md)   |   N    | Producers and consumers; non-Avro to Confluent Cloud or Avro to local install
+| [clients](clients/README.md)               |   [Y](clients/README.md)   |   N    | Examples of client applications in different programming languages: producers/consumers to Confluent Cloud, Avro/SR to local install
 | [connect-streams-pipeline](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API
 | [ksql-workshop](ksql-workshop/README.md)   |   [Y](ksql-workshop/README.md)   |   [Y](ksql-workshop/README.md)    | showcases Kafka stream processing using KSQL and can be run automated or self-guided as a KSQL workshop
 | [microservices-orders](microservices-orders/README.md) |   [Y](microservices-orders/README.md)   |   N    | integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) into Confluent Platform
