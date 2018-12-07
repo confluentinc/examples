@@ -28,7 +28,6 @@ import json
 import ccloud_lib
 
 
-
 if __name__ == '__main__':
 
     # Initialization
@@ -47,7 +46,8 @@ if __name__ == '__main__':
     })
 
     # Create topic if needed
-    # Examples of additional admin API functionality: https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
+    # Examples of additional admin API functionality:
+    # https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
     a = AdminClient({
            'bootstrap.servers': conf['bootstrap.servers'],
            'sasl.mechanisms': 'PLAIN',
@@ -63,7 +63,7 @@ if __name__ == '__main__':
         except Exception as e:
             # Continue if error code TOPIC_ALREADY_EXISTS, which may be valid if topic exists
             if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
-              print("Failed to create topic {}: {}".format(topic, e))
+                print("Failed to create topic {}: {}".format(topic, e))
 
     # Optional per-message on_delivery handler (triggered by poll() or flush())
     # when a message has been successfully delivered or
@@ -76,13 +76,13 @@ if __name__ == '__main__':
             print("Successfully produced record to topic {} partition [{}] @ offset {}".format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
-      record_key = "alice"
-      record_value = json.dumps({'count': n})
-      print ("Producing record: {}\t{}".format(record_key, record_value))
-      p.produce(topic,key=record_key,value=record_value,on_delivery=acked)
-      # p.poll() serves delivery reports (on_delivery) from previous produce() calls.
-      p.poll(0)
+        record_key = "alice"
+        record_value = json.dumps({'count': n})
+        print("Producing record: {}\t{}".format(record_key, record_value))
+        p.produce(topic, key=record_key, value=record_value, on_delivery=acked)
+        # p.poll() serves delivery reports (on_delivery) from previous produce() calls.
+        p.poll(0)
 
     p.flush(10)
 
-    print ("10 messages were successfully produced to topic {}!".format(topic))
+    print("10 messages were successfully produced to topic {}!".format(topic))

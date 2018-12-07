@@ -22,11 +22,9 @@
 #
 # =============================================================================
 
-from confluent_kafka import Consumer, KafkaError
+from confluent_kafka import Consumer
 import json
-import argparse
 import ccloud_lib
-
 
 
 if __name__ == '__main__':
@@ -52,10 +50,10 @@ if __name__ == '__main__':
     c.subscribe([topic])
 
     # Process messages
-    total_count=0
+    total_count = 0
     try:
         while True:
-            print ("Waiting for message or event/error in poll()")
+            print("Waiting for message or event/error in poll()")
             msg = c.poll(1.0)
             if msg is None:
                 # No message available within timeout.
@@ -69,7 +67,7 @@ if __name__ == '__main__':
                 data = json.loads(record_value)
                 count = data['count']
                 total_count += count
-                print ("Consumed record with key {} and value {}, and updated total count to {}".format(record_key,record_value,total_count))
+                print("Consumed record with key {} and value {}, and updated total count to {}".format(record_key, record_value, total_count))
             else:
                 print('error: {}'.format(msg.error()))
     except KeyboardInterrupt:
@@ -77,4 +75,3 @@ if __name__ == '__main__':
     finally:
         # Leave group and commit final offsets
         c.close()
-

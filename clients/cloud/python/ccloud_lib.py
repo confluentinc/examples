@@ -23,8 +23,9 @@
 
 import argparse
 
+
 def parse_args():
-    """ Parse command line arguments """
+    """Parse command line arguments"""
 
     parser = argparse.ArgumentParser(description="Confluent Python Client example to produce messages to Confluent Cloud")
     parser._action_groups.pop()
@@ -32,19 +33,19 @@ def parse_args():
     required.add_argument('-f', dest="config_file", help="path to Confluent Cloud configuration file", required=True)
     required.add_argument('-t', dest="topic", help="topic name", required=True)
     args = parser.parse_args()
- 
+
     return args
 
 
 def read_ccloud_config(config_file):
-    """ Read Confluent Cloud configuration for librdkafka clients """
+    """Read Confluent Cloud configuration for librdkafka clients"""
 
     conf = {}
     with open(config_file) as fh:
-      for line in fh:
-        line = line.strip()
-        if line[0] != "#" and len(line) != 0:
-          parameter, value = line.strip().split('=', 1)
-          conf[parameter] = value.strip()
+        for line in fh:
+            line = line.strip()
+            if line[0] != "#" and len(line) != 0:
+                parameter, value = line.strip().split('=', 1)
+                conf[parameter] = value.strip()
 
     return conf
