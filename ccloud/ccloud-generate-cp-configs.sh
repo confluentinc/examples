@@ -60,12 +60,14 @@ if [[ ! -f $CCLOUD_CONFIG ]]; then
   echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
   exit 1
 fi
+
 PERM=600
-PERM=$(stat -c "%a" $HOME/.ccloud/config)
-status=$?
-if [[ $status != 0 ]]; then
-  # Try BSD options instead of GNU binutils options for `stat`
-  PERM=$(stat -f “%OLp” $HOME/.ccloud/config)
+if ls --version 2>/dev/null | grep -q 'coreutils' ; then
+  # GNU binutils
+  PERM=$(stat -c "%a" $HOME/.ccloud/config)
+else
+  # BSD
+  PERM=$(stat -f "%OLp" $HOME/.ccloud/config)
 fi
 echo "INFO: setting file permission to $PERM"
 
