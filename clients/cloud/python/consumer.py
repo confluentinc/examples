@@ -36,6 +36,8 @@ if __name__ == '__main__':
     conf = ccloud_lib.read_ccloud_config(config_file)
 
     # Create Consumer instance
+    # 'auto.offset.reset=earliest' to start reading from the beginning of the
+    #   topic if no committed offsets exist
     c = Consumer({
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': 'PLAIN',
@@ -43,7 +45,7 @@ if __name__ == '__main__':
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
         'group.id': 'python_example_group_1',
-        'auto.offset.reset': 'earliest'      # Start reading from the beginning of the topic if no committed offsets exist
+        'auto.offset.reset': 'earliest'
     })
 
     # Subscribe to topic
@@ -57,8 +59,9 @@ if __name__ == '__main__':
             msg = c.poll(1.0)
             if msg is None:
                 # No message available within timeout.
-                # Initial message consumption may take up to `session.timeout.ms` for
-                #   the group to rebalance and start consuming
+                # Initial message consumption may take up to
+                # `session.timeout.ms` for the consumer group to
+                # rebalance and start consuming
                 continue
             elif not msg.error():
                 # Check for Kafka message
@@ -67,7 +70,9 @@ if __name__ == '__main__':
                 data = json.loads(record_value)
                 count = data['count']
                 total_count += count
-                print("Consumed record with key {} and value {}, and updated total count to {}".format(record_key, record_value, total_count))
+                print("Consumed record with key {} and value {}, \
+                      and updated total count to {}"
+                      .format(record_key, record_value, total_count))
             else:
                 print('error: {}'.format(msg.error()))
     except KeyboardInterrupt:

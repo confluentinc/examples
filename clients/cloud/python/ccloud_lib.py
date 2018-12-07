@@ -27,11 +27,19 @@ import argparse
 def parse_args():
     """Parse command line arguments"""
 
-    parser = argparse.ArgumentParser(description="Confluent Python Client example to produce messages to Confluent Cloud")
+    parser = argparse.ArgumentParser(
+             description="Confluent Python Client example to produce messages \
+                  to Confluent Cloud")
     parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
-    required.add_argument('-f', dest="config_file", help="path to Confluent Cloud configuration file", required=True)
-    required.add_argument('-t', dest="topic", help="topic name", required=True)
+    required.add_argument('-f',
+                          dest="config_file",
+                          help="path to Confluent Cloud configuration file",
+                          required=True)
+    required.add_argument('-t',
+                          dest="topic",
+                          help="topic name",
+                          required=True)
     args = parser.parse_args()
 
     return args
