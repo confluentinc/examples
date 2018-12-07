@@ -5,7 +5,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* [Confluent's Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed on your machine
+* [Confluent's Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed on your machine. Check that you are using version 1.0 or higher (e.g., `pip show confluent-kafka`).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
 
@@ -37,15 +37,15 @@ Preparing to produce record: alice 	 {"count": 6}
 Preparing to produce record: alice 	 {"count": 7}
 Preparing to produce record: alice 	 {"count": 8}
 Preparing to produce record: alice 	 {"count": 9}
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
-Successfully produced record to topic test1 partition [0] @ offset None
+Successfully produced record to topic test1 partition [0] @ offset 0
+Successfully produced record to topic test1 partition [0] @ offset 1
+Successfully produced record to topic test1 partition [0] @ offset 2
+Successfully produced record to topic test1 partition [0] @ offset 3
+Successfully produced record to topic test1 partition [0] @ offset 4
+Successfully produced record to topic test1 partition [0] @ offset 5
+Successfully produced record to topic test1 partition [0] @ offset 6
+Successfully produced record to topic test1 partition [0] @ offset 7
+Successfully produced record to topic test1 partition [0] @ offset 8
 Successfully produced record to topic test1 partition [0] @ offset 9
 10 messages were successfully produced to topic test1!
 ```
@@ -54,6 +54,8 @@ Successfully produced record to topic test1 partition [0] @ offset 9
 
 ```bash
 $ ./consumer.py -f ~/.ccloud/librdkafka.config -t test1
+...
+Waiting for message or event/error in poll()
 Consumed record with key alice and value {"count": 0}, and updated total count to 0
 Consumed record with key alice and value {"count": 1}, and updated total count to 1
 Consumed record with key alice and value {"count": 2}, and updated total count to 3
@@ -64,4 +66,6 @@ Consumed record with key alice and value {"count": 6}, and updated total count t
 Consumed record with key alice and value {"count": 7}, and updated total count to 28
 Consumed record with key alice and value {"count": 8}, and updated total count to 36
 Consumed record with key alice and value {"count": 9}, and updated total count to 45
+Waiting for message or event/error in poll()
+...
 ```

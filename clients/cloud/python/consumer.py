@@ -23,37 +23,23 @@
 # =============================================================================
 
 from confluent_kafka import Consumer, KafkaError
-import sys
 import json
 import argparse
+import ccloud_lib
+
 
 
 if __name__ == '__main__':
 
-    # Parse arguments
-    parser = argparse.ArgumentParser(description="Confluent Python Client example to consume messages from Confluent Cloud")
-    parser._action_groups.pop()
-    required = parser.add_argument_group('required arguments')
-    required.add_argument('-f', dest="config_file", help="path to Confluent Cloud configuration file", required=True)
-    required.add_argument('-t', dest="topic", help="topic name", required=True)
-    args = parser.parse_args()
+    # Initialization
+    args = ccloud_lib.parse_args()
     config_file = args.config_file
     topic = args.topic
-
-    # Read Confluent Cloud configuration for librdkafka clients
-    conf = {}
-    with open(config_file) as fh:
-      for line in fh:
-        line = line.strip()
-        if line[0] != "#" and len(line) != 0:
-          parameter, value = line.strip().split('=', 1)
-          conf[parameter] = value.strip()
+    conf = ccloud_lib.read_ccloud_config(config_file)
 
     # Create Consumer instance
     c = Consumer({
         'bootstrap.servers': conf['bootstrap.servers'],
-        'broker.version.fallback': '0.10.0.0',
-        'api.version.fallback.ms': 0,
         'sasl.mechanisms': 'PLAIN',
         'security.protocol': 'SASL_SSL',
         'sasl.username': conf['sasl.username'],
@@ -85,8 +71,7 @@ if __name__ == '__main__':
                 total_count += count
                 print ("Consumed record with key {} and value {}, and updated total count to {}".format(record_key,record_value,total_count))
             else:
-                if msg.error().code() != KafkaError._PARTITION_EOF:
-                  print('error: {}'.format(msg.error()))
+                print('error: {}'.format(msg.error()))
     except KeyboardInterrupt:
         pass
     finally:

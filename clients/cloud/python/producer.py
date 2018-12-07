@@ -24,38 +24,22 @@
 
 from confluent_kafka import Producer, KafkaError
 from confluent_kafka.admin import AdminClient, NewTopic
-import sys
 import json
-import argparse
+import ccloud_lib
 
 
 
 if __name__ == '__main__':
 
-    # Parse arguments
-    parser = argparse.ArgumentParser(description="Confluent Python Client example to produce messages to Confluent Cloud")
-    parser._action_groups.pop()
-    required = parser.add_argument_group('required arguments')
-    required.add_argument('-f', dest="config_file", help="path to Confluent Cloud configuration file", required=True)
-    required.add_argument('-t', dest="topic", help="topic name", required=True)
-    args = parser.parse_args()
+    # Initialization
+    args = ccloud_lib.parse_args()
     config_file = args.config_file
     topic = args.topic
-
-    # Read Confluent Cloud configuration for librdkafka clients
-    conf = {}
-    with open(config_file) as fh:
-      for line in fh:
-        line = line.strip()
-        if line[0] != "#" and len(line) != 0:
-          parameter, value = line.strip().split('=', 1)
-          conf[parameter] = value.strip()
+    conf = ccloud_lib.read_ccloud_config(config_file)
 
     # Create Producer instance
     p = Producer({
            'bootstrap.servers': conf['bootstrap.servers'],
-           'broker.version.fallback': '0.10.0.0',
-           'api.version.fallback.ms': 0,
            'sasl.mechanisms': 'PLAIN',
            'security.protocol': 'SASL_SSL',
            'sasl.username': conf['sasl.username'],
@@ -96,7 +80,7 @@ if __name__ == '__main__':
       record_value = json.dumps({'count': n})
       print ("Preparing to produce record: {} \t {}".format(record_key, record_value))
       p.produce(topic,key=record_key,value=record_value,on_delivery=acked)
-      # p.poll(0) serves delivery reports from previous produce() calls to the on_delivery handler
+      # p.poll(0) serves delivery reports (on_delivery) from previous produce() calls.
       p.poll(0)
 
     p.flush(10)
