@@ -309,7 +309,7 @@ chmod $PERM $PYTHON_CONFIG
 # .NET 
 DOTNET_CONFIG=$DEST/dotnet.delta
 echo "$DOTNET_CONFIG"
-rm -f $PYTHON_CONFIG
+rm -f $DOTNET_CONFIG
 
 cat <<EOF >> $DOTNET_CONFIG
 using Confluent.Kafka;

@@ -11,7 +11,8 @@ This library has examples for developers who want to write client applications t
 
 ## Producers and Consumers in programming languages derived from librdkafka
 
-Library of librdkafka examples available at https://github.com/edenhill/librdkafka/tree/master/examples
+* [Python producer/consumer with Confluent Cloud](cloud/python/)
+* [Other languages with librdkafka examples](https://github.com/edenhill/librdkafka/tree/master/examples)
 
 ## Kafka Streams
 
