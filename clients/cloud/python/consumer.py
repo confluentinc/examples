@@ -44,8 +44,8 @@ if __name__ == '__main__':
         'security.protocol': 'SASL_SSL',
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
-        'group.id': 'group1',
-        'auto.offset.reset': 'earliest'
+        'group.id': 'python_example_group_1',
+        'auto.offset.reset': 'earliest'      # Start reading from the beginning of the topic if no committed offsets exist
     })
 
     # Subscribe to topic
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     total_count=0
     try:
         while True:
-            print "Waiting for message or event/error in poll()"
+            print ("Waiting for message or event/error in poll()")
             msg = c.poll(1.0)
             if msg is None:
                 # No message available within timeout.

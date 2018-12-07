@@ -71,16 +71,16 @@ if __name__ == '__main__':
     def acked(err, msg):
         """Delivery report handler called on successful or failed delivery of the message."""
         if err is not None:
-            print("failed to deliver message: {0}".format(err.str()))
+            print("Failed to deliver message: {}".format(err))
         else:
             print("Successfully produced record to topic {} partition [{}] @ offset {}".format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
       record_key = "alice"
       record_value = json.dumps({'count': n})
-      print ("Preparing to produce record: {} \t {}".format(record_key, record_value))
+      print ("Producing record: {}\t{}".format(record_key, record_value))
       p.produce(topic,key=record_key,value=record_value,on_delivery=acked)
-      # p.poll(0) serves delivery reports (on_delivery) from previous produce() calls.
+      # p.poll() serves delivery reports (on_delivery) from previous produce() calls.
       p.poll(0)
 
     p.flush(10)
