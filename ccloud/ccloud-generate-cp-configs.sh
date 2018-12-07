@@ -60,7 +60,16 @@ if [[ ! -f $CCLOUD_CONFIG ]]; then
   echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
   exit 1
 fi
-PERM=$(stat -c "%a" $HOME/.ccloud/config)
+
+PERM=600
+if ls --version 2>/dev/null | grep -q 'coreutils' ; then
+  # GNU binutils
+  PERM=$(stat -c "%a" $HOME/.ccloud/config)
+else
+  # BSD
+  PERM=$(stat -f "%OLp" $HOME/.ccloud/config)
+fi
+echo "INFO: setting file permission to $PERM"
 
 ### Glean BOOTSTRAP_SERVERS and SASL_JAAS_CONFIG (key and password) from the Confluent Cloud configuration file
 BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
