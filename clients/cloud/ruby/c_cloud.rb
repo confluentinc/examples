@@ -46,13 +46,25 @@ class CCloud
     @args[:topic]
   end
 
+  #
+  # An asynchronous producer tweaked for the low-throughput needs of this example
+  #
+  def producer
+    @producer ||= @kafka.async_producer(
+      # Trigger a delivery once 5 messages have been buffered.
+      delivery_threshold: 5,
+
+      # Trigger a delivery every 1 second.
+      delivery_interval: 1,
+    )
+  end
+
   def consumer
     return @consumer unless @consumer.nil?
 
     # Consumers with the same group id will form a Consumer Group together.
     @consumer = @kafka.consumer(group_id: 'ruby_example_group_1')
 
-    # Stop the consumer when the SIGTERM signal is sent to the process.
     # It's better to shut down gracefully than to kill the process.
     at_exit do
       @consumer.stop # Leave group and commit final offsets
@@ -66,7 +78,7 @@ class CCloud
     options = {}
 
     OptionParser.new do |opts|
-      opts.banner = 'Confluent Python Client example to produce messages to Confluent Cloud'
+      opts.banner = 'Ruby client example to produce and consume messages from Confluent Cloud'
 
       opts.on('-f', '--config CONFIG', 'path to Confluent Cloud configuration file') do |v|
         options[:config] = v

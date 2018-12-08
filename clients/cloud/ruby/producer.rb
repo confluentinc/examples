@@ -30,21 +30,31 @@ topic = ccloud.topic
 begin
   ccloud.kafka.create_topic(topic, num_partitions: 1, replication_factor: 3)
   puts "Created topic #{topic}"
-rescue Kafka::Error => e
-  puts "Failed to create topic: #{e.message}"
+rescue Kafka::TopicAlreadyExists => e
+  puts "Did not create topic #{topic} because it already exists."
 end
 
-0.upto(9).each do |n|
-  record_key = 'alice'
-  record_value = JSON.dump(count: n)
-  record = "#{record_key}\t#{record_value}"
-  puts "Producing record: #{record}"
+produced_messages = 0
+begin
+  0.upto(9).each do |n|
+    record_key = 'alice'
+    record_value = JSON.dump(count: n)
+    record = "#{record_key}\t#{record_value}"
+    puts "Producing record: #{record}"
 
-  begin
-    ccloud.kafka.deliver_message(record_value, key: record_key, topic: topic)
-  rescue Kafka::Error => e
-    puts "Failed to produce record #{record}: #{e.message}"
+    begin
+      ccloud.producer.produce(record_value, key: record_key, topic: topic)
+      produced_messages += 1
+    rescue Kafka::Error => e
+      puts "Failed to produce record #{record}: #{e.message}"
+    end
   end
+ensure
+  # deliver all the buffered messages
+  ccloud.producer.deliver_messages
+  # Make sure to call `#shutdown` on the producer in order to avoid leaking
+  # resources. `#shutdown` will wait for any pending messages to be delivered
+  # before returning.
+  ccloud.producer.shutdown
 end
-
-puts "10 messages were successfully produced to topic #{topic}!"
+puts "#{produced_messages} messages were successfully produced to topic #{topic}!"
