@@ -1,0 +1,14 @@
+GEM
+  specs:
+    digest-crc (0.4.1)
+    ruby-kafka (0.7.4)
+      digest-crc
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ruby-kafka
+
+BUNDLED WITH
+   1.17.1
