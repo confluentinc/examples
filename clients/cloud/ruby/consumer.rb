@@ -36,17 +36,19 @@ ccloud.consumer.subscribe(topic, default_offset: :earliest)
 total_count = 0
 puts "Consuming messages from #{topic}"
 # Process messages
-begin
-  ccloud.consumer.each_message do |message|
-    record_key = message.key
-    record_value = message.value
-    data = JSON.parse(record_value)
-    count = data['count']
-    total_count += count
+while true
+  begin
+    ccloud.consumer.each_message do |message|
+      record_key = message.key
+      record_value = message.value
+      data = JSON.parse(record_value)
+      count = data['count']
+      total_count += count
 
-    puts "Consumed record with key #{record_key} and value #{record_value}, " \
+      puts "Consumed record with key #{record_key} and value #{record_value}, " \
          "and updated total count #{total_count}"
+    end
+  rescue Kafka::Error => e
+    puts "Consuming messages from #{topic} failed: #{e.message}"
   end
-rescue Kafka::Error => e
-  puts "Consuming messages from #{topic} failed: #{e.message}"
 end
