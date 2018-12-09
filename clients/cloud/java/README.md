@@ -59,25 +59,25 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 	$ mvn clean package
 	
 	# Run the producer
-	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.Producer" \
+	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.ProducerExample" \
 	  -Dexec.args="$HOME/.ccloud/config test1"
 	```
 
 	You should see:
 	
-	```
-        ...
-        Produced record: alice	{"count":0}
-        Produced record: alice	{"count":1}
-        Produced record: alice	{"count":2}
-        Produced record: alice	{"count":3}
-        Produced record: alice	{"count":4}
-        Produced record: alice	{"count":5}
-        Produced record: alice	{"count":6}
-        Produced record: alice	{"count":7}
-        Produced record: alice	{"count":8}
-        Produced record: alice	{"count":9}
-        10 messages were successfully produced to topic test1
+	```shell
+	...
+	Produced record: alice	{"count":0}
+	Produced record: alice	{"count":1}
+	Produced record: alice	{"count":2}
+	Produced record: alice	{"count":3}
+	Produced record: alice	{"count":4}
+	Produced record: alice	{"count":5}
+	Produced record: alice	{"count":6}
+	Produced record: alice	{"count":7}
+	Produced record: alice	{"count":8}
+	Produced record: alice	{"count":9}
+	10 messages were successfully produced to topic test1
 	...
 	```
 
@@ -88,24 +88,25 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 	$ mvn clean package
 	
 	# Run the consumer
-	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.Consumer" \
+	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.ConsumerExample" \
 	  -Dexec.args="$HOME/.ccloud/config test1"
 	```
 
 	You should see:
 
-        ```
-        Consumed record with key alice and value {"count":0}, and updated total count to 0
-        Consumed record with key alice and value {"count":1}, and updated total count to 1
-        Consumed record with key alice and value {"count":2}, and updated total count to 3
-        Consumed record with key alice and value {"count":3}, and updated total count to 6
-        Consumed record with key alice and value {"count":4}, and updated total count to 10
-        Consumed record with key alice and value {"count":5}, and updated total count to 15
-        Consumed record with key alice and value {"count":6}, and updated total count to 21
-        Consumed record with key alice and value {"count":7}, and updated total count to 28
-        Consumed record with key alice and value {"count":8}, and updated total count to 36
-        Consumed record with key alice and value {"count":9}, and updated total count to 45
-        ```
+        ```shell
+	...
+	Consumed record with key alice and value {"count":0}, and updated total count to 0
+	Consumed record with key alice and value {"count":1}, and updated total count to 1
+	Consumed record with key alice and value {"count":2}, and updated total count to 3
+	Consumed record with key alice and value {"count":3}, and updated total count to 6
+	Consumed record with key alice and value {"count":4}, and updated total count to 10
+	Consumed record with key alice and value {"count":5}, and updated total count to 15
+	Consumed record with key alice and value {"count":6}, and updated total count to 21
+	Consumed record with key alice and value {"count":7}, and updated total count to 28
+	Consumed record with key alice and value {"count":8}, and updated total count to 36
+	Consumed record with key alice and value {"count":9}, and updated total count to 45
+	```
 
         When you are done, press `<ctrl>-c`.
 
