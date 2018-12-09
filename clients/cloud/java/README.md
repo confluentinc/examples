@@ -94,7 +94,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 
 	You should see:
 
-        ```shell
+	```
 	...
 	Consumed record with key alice and value {"count":0}, and updated total count to 0
 	Consumed record with key alice and value {"count":1}, and updated total count to 1
