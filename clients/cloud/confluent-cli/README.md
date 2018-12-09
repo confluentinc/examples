@@ -57,4 +57,4 @@ alice	{"count":2}
 
 When you are done, press `<ctrl>-c`.
 
-3. You may also run the provided script [confluent-cli-example.sh](confluent-cli-example.sh).
+3. To demo the above commands, you may also run the provided script [confluent-cli-example.sh](confluent-cli-example.sh).
