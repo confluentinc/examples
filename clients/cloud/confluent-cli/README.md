@@ -7,7 +7,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine. It is provided as part of the [Confluent Platform download](https://www.confluent.io/download/).
+* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version 5.1.0 or higher. It is provided as part of the [Confluent Platform](https://www.confluent.io/download/).
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
@@ -25,7 +25,7 @@ The consumer reads the same topic from Confluent Cloud.
 $ ccloud topic create test1
 ```
 
-2. Run the Confluent CLI producer, writing messages to topic `test1`, passing in additional arguments:
+2. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test1`, passing in additional arguments:
 
 * `--cloud`: write messages to the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
 * `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
@@ -44,7 +44,7 @@ alice,{"count":2}
 
 When you are done, press `<ctrl>-d`.
 
-2. Run the consumer, reading messages from topic `test`, passing in additional arguments:
+2. Run the [Confluent CLI consumer](https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume), reading messages from topic `test`, passing in additional arguments:
 
 * `--cloud`: read messages from the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
 * `--property print.key=true`: print key and value (by default, it only prints value)
