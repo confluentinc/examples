@@ -14,4 +14,6 @@ num_messages=10
                                  --property key.separator=,
 
 # Consume messages
-confluent consume $topic_name --cloud --property print.key=true --from-beginning
+confluent consume $topic_name --cloud \
+                              --property print.key=true \
+                              --from-beginning
