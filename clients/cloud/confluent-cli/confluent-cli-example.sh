@@ -1,10 +1,12 @@
 #!/bin/bash
 
+set -eu
+
 # Set topic name
 topic_name=test1
 
 # Create topic in Confluent Cloud
-ccloud topic create $topic_name
+ccloud topic create $topic_name || true
 
 # Produce messages
 num_messages=10
