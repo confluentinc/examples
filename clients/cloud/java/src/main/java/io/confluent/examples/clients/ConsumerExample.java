@@ -15,10 +15,15 @@
  */
 package io.confluent.examples.clients;
 
-import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.connect.json.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import io.confluent.examples.clients.model.RecordJSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,9 +32,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.Random;
 
 public class ConsumerExample {
+
+  private static final ObjectMapper MAPPER = new ObjectMapper();
+
   public static void main(String[] args) throws Exception {
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
@@ -42,23 +49,30 @@ public class ConsumerExample {
     Properties props = loadConfig(args[0]);
 
     // Add additional properties.
-    props.put("enable.auto.commit", "true");
-    props.put("auto.commit.interval.ms", "1000");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
+    props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonDeserializer");
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, "java_example_group_1");
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    // WARNING: These settings are for CLI tools / examples. Don't use in production unless you want to reset the consumer app every reboot.
-    props.put("group.id", "example" + new Random().nextInt());
-    props.put("auto.offset.reset", "earliest");
-
-    final Consumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+    final Consumer<String, JsonNode> consumer = new KafkaConsumer<String, JsonNode>(props);
     consumer.subscribe(Arrays.asList(topic));
+
+    Long total_count = 0L;
+    String key;
+    JsonNode value;
+    RecordJSON countRecord;
 
     try {
       while (true) {
-        ConsumerRecords<String, String> records = consumer.poll(100);
-        for (ConsumerRecord<String, String> record : records) {
-          System.out.printf("offset = %d, key = %s, value = %s \n", record.offset(), record.key(), record.value());
+        ConsumerRecords<String, JsonNode> records = consumer.poll(100);
+        for (ConsumerRecord<String, JsonNode> record : records) {
+          key = record.key();
+          value = record.value();
+          countRecord = MAPPER.treeToValue(value,RecordJSON.class);
+          total_count += countRecord.getCount();
+          System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }
       }
     } finally {
