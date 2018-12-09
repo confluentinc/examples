@@ -25,7 +25,10 @@ The consumer reads the same topic from Confluent Cloud.
 $ ccloud topic create test1
 ```
 
-2. Run the Confluent CLI producer, passing in additional arguments to parse the message key.
+2. Run the Confluent CLI producer, writing messages to topic `test1`, passing in additional arguments:
+
+* `--cloud`: write messages to the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
+* `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
 
 ```bash
 $ confluent produce test1 --cloud --property parse.key=true --property key.separator=,
@@ -41,7 +44,11 @@ alice,{"count":2}
 
 When you are done, press `<ctrl>-d`.
 
-2. Run the consumer, passing in additional arguments to print the message key.
+2. Run the consumer, reading messages from topic `test`, passing in additional arguments:
+
+* `--cloud`: read messages from the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
+* `--property print.key=true`: print key and value (by default, it only prints value)
+* `--from-beginning`: print all messages from the beginning of the topic
 
 ```bash
 $ confluent consume test1 --cloud --property print.key=true --from-beginning     
