@@ -64,20 +64,16 @@ public class StreamsExample {
     
         // Load properties from disk.
         Properties props = loadConfig(args[0]);
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "java_streams_example_group_2");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "java_streams_example_group_1");
         props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-
-        // JSON serde
-        //final Serializer<JsonNode> jsonSerializer = new JsonSerializer();
-        //final Deserializer<JsonNode> jsonDeserializer = new JsonDeserializer();
-        //final Serde<JsonNode> jsonSerde = Serdes.serdeFrom(jsonSerializer, jsonDeserializer);
 
         final StreamsBuilder builder = new StreamsBuilder();
         final KStream<String, RecordJSON> records = builder.stream(topic, Consumed.with(Serdes.String(), new JsonPOJOSerde<>(RecordJSON.class)));
 
         KStream<String,Long> counts = records.map((k, v) -> new KeyValue<String, Long>(k, v.getCount()));
+        counts.print(Printed.toSysOut());
 
         // Aggregate values by key
         KStream<String,Long> countAgg = counts.groupByKey(Serialized.with(Serdes.String(), Serdes.Long()))
