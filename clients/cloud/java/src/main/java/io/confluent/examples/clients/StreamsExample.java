@@ -71,14 +71,14 @@ public class StreamsExample {
         final KStream<String, RecordJSON> records = builder.stream(topic, Consumed.with(Serdes.String(), new JsonPOJOSerde<>(RecordJSON.class)));
 
         KStream<String,Long> counts = records.map((k, v) -> new KeyValue<String, Long>(k, v.getCount()));
-        counts.print(Printed.toSysOut());
+        counts.print(Printed.<String,Long>toSysOut().withLabel("Consumed record"));
 
         // Aggregate values by key
         KStream<String,Long> countAgg = counts.groupByKey(Serialized.with(Serdes.String(), Serdes.Long()))
             .reduce(
                 (aggValue, newValue) -> aggValue + newValue)
             .toStream();
-        countAgg.print(Printed.toSysOut());
+        countAgg.print(Printed.<String,Long>toSysOut().withLabel("Running count"));
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
         streams.start();

@@ -91,27 +91,27 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 
 	```
 	...
-	[KSTREAM-MAP-0000000001]: alice, 0
-	[KSTREAM-MAP-0000000001]: alice, 1
-	[KSTREAM-MAP-0000000001]: alice, 2
-	[KSTREAM-MAP-0000000001]: alice, 3
-	[KSTREAM-MAP-0000000001]: alice, 4
-	[KSTREAM-MAP-0000000001]: alice, 5
-	[KSTREAM-MAP-0000000001]: alice, 6
-	[KSTREAM-MAP-0000000001]: alice, 7
-	[KSTREAM-MAP-0000000001]: alice, 8
-	[KSTREAM-MAP-0000000001]: alice, 9
+	[Consumed record]: alice, 0
+	[Consumed record]: alice, 1
+	[Consumed record]: alice, 2
+	[Consumed record]: alice, 3
+	[Consumed record]: alice, 4
+	[Consumed record]: alice, 5
+	[Consumed record]: alice, 6
+	[Consumed record]: alice, 7
+	[Consumed record]: alice, 8
+	[Consumed record]: alice, 9
 	...
-	[KTABLE-TOSTREAM-0000000008]: alice, 0
-	[KTABLE-TOSTREAM-0000000008]: alice, 1
-	[KTABLE-TOSTREAM-0000000008]: alice, 3
-	[KTABLE-TOSTREAM-0000000008]: alice, 6
-	[KTABLE-TOSTREAM-0000000008]: alice, 10
-	[KTABLE-TOSTREAM-0000000008]: alice, 15
-	[KTABLE-TOSTREAM-0000000008]: alice, 21
-	[KTABLE-TOSTREAM-0000000008]: alice, 28
-	[KTABLE-TOSTREAM-0000000008]: alice, 36
-	[KTABLE-TOSTREAM-0000000008]: alice, 45
+	[Running count]: alice, 0
+	[Running count]: alice, 1
+	[Running count]: alice, 3
+	[Running count]: alice, 6
+	[Running count]: alice, 10
+	[Running count]: alice, 15
+	[Running count]: alice, 21
+	[Running count]: alice, 28
+	[Running count]: alice, 36
+	[Running count]: alice, 45
 	...
 	```
 
