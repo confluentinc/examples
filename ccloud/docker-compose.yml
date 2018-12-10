@@ -188,7 +188,7 @@ services:
                        cub sr-ready schema-registry 8085 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 2 && \
-                       cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.1.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.0.1.jar && \
+                       cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.0.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.0.1.jar && \
                        /usr/bin/ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://schema-registry:8085 propertiesFile=/tmp/ksql-datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
