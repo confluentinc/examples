@@ -66,6 +66,7 @@ public class StreamsExample {
         Properties props = loadConfig(args[0]);
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "java_streams_example_group_1");
         props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
+        props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
