@@ -25,7 +25,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	$ mvn clean package
 	
 	# Run the producer
-	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.ProducerExample" \
+	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
 	  -Dexec.args="$HOME/.ccloud/config test1"
 	```
 
@@ -54,7 +54,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	$ mvn clean package
 	
 	# Run the consumer
-	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.ConsumerExample" \
+	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" \
 	  -Dexec.args="$HOME/.ccloud/config test1"
 	```
 
@@ -83,7 +83,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
         $ mvn clean package
 
         # Run the consumer
-        $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.StreamsExample" \
+        $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
           -Dexec.args="$HOME/.ccloud/config test1"
         ```
 
