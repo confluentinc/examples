@@ -87,8 +87,6 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
           -Dexec.args="$HOME/.ccloud/config test1"
         ```
 
-        Press `<ctrl>-c` to terminate the application.
-
 	You should see:
 
 	```
@@ -103,6 +101,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	[KSTREAM-MAP-0000000001]: alice, 7
 	[KSTREAM-MAP-0000000001]: alice, 8
 	[KSTREAM-MAP-0000000001]: alice, 9
+	...
 	[KTABLE-TOSTREAM-0000000008]: alice, 0
 	[KTABLE-TOSTREAM-0000000008]: alice, 1
 	[KTABLE-TOSTREAM-0000000008]: alice, 3
@@ -115,3 +114,5 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	[KTABLE-TOSTREAM-0000000008]: alice, 45
 	...
 	```
+
+        When you are done, press `<ctrl>-c`.
