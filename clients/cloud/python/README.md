@@ -11,7 +11,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 
 ```bash
-$ cat ~/.ccloud/librdkafka.config
+$ cat ~/.ccloud/example.config
 bootstrap.servers=<broker-1,broker-2,broker-3>
 sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
@@ -26,7 +26,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```bash
-$ ./producer.py -f ~/.ccloud/librdkafka.config -t test1
+$ ./producer.py -f ~/.ccloud/example.config -t test1
 Preparing to produce record: alice 	 {"count": 0}
 Preparing to produce record: alice 	 {"count": 1}
 Preparing to produce record: alice 	 {"count": 2}
@@ -53,7 +53,7 @@ Successfully produced record to topic test1 partition [0] @ offset 9
 1. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
-$ ./consumer.py -f ~/.ccloud/librdkafka.config -t test1
+$ ./consumer.py -f ~/.ccloud/example.config -t test1
 ...
 Waiting for message or event/error in poll()
 Consumed record with key alice and value {"count": 0}, and updated total count to 0
