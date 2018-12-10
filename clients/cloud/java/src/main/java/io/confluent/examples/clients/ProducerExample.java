@@ -44,6 +44,7 @@ public class ProducerExample {
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
+  // Create topic in Confluent Cloud
   public static void createTopic(final String topic,
                           final int partitions,
                           final int replication,
@@ -52,6 +53,7 @@ public class ProducerExample {
       try (final AdminClient adminClient = AdminClient.create(cloudConfig)) {
           adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
       } catch (final InterruptedException | ExecutionException e) {
+          // Ignore if TopicExistsException, which may be valid if topic exists
           if (!(e.getCause() instanceof TopicExistsException)) {
               throw new RuntimeException(e);
           }
@@ -64,12 +66,12 @@ public class ProducerExample {
       System.exit(-1);
     }
 
-    // Load properties from disk.
+    // Load properties from file
     Properties props = loadConfig(args[0]);
 
     // Create topic if needed
     String topic = args[1];
-    createTopic(topic, 12, 3, loadConfig(args[0]));
+    createTopic(topic, 12, 3, props);
 
     // Add additional properties.
     props.put(ProducerConfig.ACKS_CONFIG, "all");
