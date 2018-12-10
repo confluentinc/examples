@@ -17,42 +17,7 @@ In this example, the producer writes Kafka data to a topic in Confluent Cloud.
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
 The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
 
-1. Create a topic called `test1`:
-
-	```shell
-	# Create test1 topic
-	$ ccloud topic create test1
-	```
-	You should see
-	
-	```
-	Topic "test1" created.
-	```
-	Make sure the topic is created successfully.
-	
-	```shell
-	$ ccloud topic describe test1
-	```
-	
-	You should see
-
-	```
-	Topic:test1	PartitionCount:1	ReplicationFactor:3	Configs:min.insync.replicas=2
-	Topic: test1	Partition: 0		Leader: 0	Replicas: 0,1,2	Isr: 0,1,2
-	Topic: test1	Partition: 1		Leader: 1	Replicas: 1,2,0	Isr: 1,2,0
-	Topic: test1	Partition: 2		Leader: 2	Replicas: 2,0,1	Isr: 2,0,1
-	Topic: test1	Partition: 3		Leader: 0	Replicas: 0,2,1	Isr: 0,2,1
-	Topic: test1	Partition: 4		Leader: 1	Replicas: 1,0,2	Isr: 1,0,2
-	Topic: test1	Partition: 5		Leader: 2	Replicas: 2,1,0	Isr: 2,1,0
-	Topic: test1	Partition: 6		Leader: 0	Replicas: 0,1,2	Isr: 0,1,2
-	Topic: test1	Partition: 7		Leader: 1	Replicas: 1,2,0	Isr: 1,2,0
-	Topic: test1	Partition: 8		Leader: 2	Replicas: 2,0,1	Isr: 2,0,1
-	Topic: test1	Partition: 9		Leader: 0	Replicas: 0,2,1	Isr: 0,2,1
-	Topic: test1	Partition: 10		Leader: 1	Replicas: 1,0,2	Isr: 1,0,2
-	Topic: test1	Partition: 11		Leader: 2	Replicas: 2,1,0	Isr: 2,1,0
-	```
-
-2. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 	```shell
 	# Build the client examples
@@ -81,7 +46,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 	...
 	```
 
-3. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 	```shell
 	# Build the client examples

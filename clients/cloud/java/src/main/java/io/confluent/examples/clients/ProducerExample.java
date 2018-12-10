@@ -21,20 +21,42 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.connect.json.JsonSerializer;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.NewTopic;
+
 import io.confluent.examples.clients.model.RecordJSON;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+import org.apache.kafka.common.errors.TopicExistsException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.Collections;
+import java.util.Map;
 
 public class ProducerExample {
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
+
+  public static void createTopic(final String topic,
+                          final int partitions,
+                          final int replication,
+                          final Properties cloudConfig) {
+      final NewTopic newTopic = new NewTopic(topic, partitions, (short) replication);
+      try (final AdminClient adminClient = AdminClient.create(cloudConfig)) {
+          adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
+      } catch (final InterruptedException | ExecutionException e) {
+          if (!(e.getCause() instanceof TopicExistsException)) {
+              throw new RuntimeException(e);
+          }
+      }
+  }
 
   public static void main(String[] args) throws IOException {
     if (args.length != 2) {
@@ -45,8 +67,9 @@ public class ProducerExample {
     // Load properties from disk.
     Properties props = loadConfig(args[0]);
 
-    // Set topic
+    // Create topic if needed
     String topic = args[1];
+    createTopic(topic, 12, 3, loadConfig(args[0]));
 
     // Add additional properties.
     props.put(ProducerConfig.ACKS_CONFIG, "all");
