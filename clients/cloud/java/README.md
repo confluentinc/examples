@@ -1,6 +1,6 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the Java Producer and Consumer.
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the Java Producer and Consumer, and Kafka Streams API.
 
 
 # Prerequisites
@@ -16,6 +16,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
 The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
+The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
 
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
@@ -72,6 +73,19 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 	Consumed record with key alice and value {"count":8}, and updated total count to 36
 	Consumed record with key alice and value {"count":9}, and updated total count to 45
 	```
+
+        When you are done, press `<ctrl>-c`.
+
+3. Run the Kafka Streams application, , passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+
+        ```shell
+        # Build the client examples
+        $ mvn clean package
+
+        # Run the consumer
+        $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.StreamsExample" \
+          -Dexec.args="$HOME/.ccloud/config test1"
+        ```
 
         When you are done, press `<ctrl>-c`.
 
