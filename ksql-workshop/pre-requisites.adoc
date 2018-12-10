@@ -56,14 +56,14 @@ git clone https://github.com/confluentinc/examples.git
 +
 [source,bash]
 ----
-docker pull confluentinc/cp-zookeeper:5.0.1
-docker pull confluentinc/cp-enterprise-kafka:5.0.1
-docker pull confluentinc/cp-schema-registry:5.0.1
-docker pull confluentinc/cp-kafka-connect:5.0.1
-docker pull confluentinc/cp-ksql-server:5.0.1
-docker pull confluentinc/ksql-examples:5.0.1
+docker pull confluentinc/cp-zookeeper:5.1.0
+docker pull confluentinc/cp-enterprise-kafka:5.1.0
+docker pull confluentinc/cp-schema-registry:5.1.0
+docker pull confluentinc/cp-kafka-connect:5.1.0
+docker pull confluentinc/cp-ksql-server:5.1.0
+docker pull confluentinc/ksql-examples:5.1.0
 docker pull confluentinc/cp-kafkacat
-docker pull confluentinc/cp-ksql-cli:5.0.1
+docker pull confluentinc/cp-ksql-cli:5.1.0
 docker pull debezium/connect:0.8
 docker pull debezium/example-mysql:0.8
 docker pull docker.elastic.co/elasticsearch/elasticsearch:6.3.0
