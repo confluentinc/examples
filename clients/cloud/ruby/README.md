@@ -9,7 +9,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
     ```bash
-    $ cat ~/.ccloud/librdkafka.config
+    $ cat ~/.ccloud/example.config
     bootstrap.servers=<broker-1,broker-2,broker-3>
     sasl.username=<api-key-id>
     sasl.password=<secret-access-key>
@@ -28,7 +28,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
     ```bash
-    $ ruby producer.rb -f ~/.ccloud/librdkafka.config --topic test1
+    $ ruby producer.rb -f ~/.ccloud/example.config --topic test1
     Created topic test1
     Producing record: alice	{"count":0}
     Producing record: alice	{"count":1}
@@ -45,7 +45,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
     ```bash
-    $ ruby consumer.rb -f ~/.ccloud/librdkafka.config --topic test1
+    $ ruby consumer.rb -f ~/.ccloud/example.config --topic test1
     Consuming messages from test1
     Consumed record with key alice and value {"count":0}, and updated total count 0
     Consumed record with key alice and value {"count":1}, and updated total count 1
