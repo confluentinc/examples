@@ -75,10 +75,6 @@ public class ProducerExample {
 
     // Add additional properties.
     props.put(ProducerConfig.ACKS_CONFIG, "all");
-    props.put(ProducerConfig.RETRIES_CONFIG, 200);
-    props.put(ProducerConfig.BATCH_SIZE_CONFIG, 16384);
-    props.put(ProducerConfig.LINGER_MS_CONFIG, 100);
-    props.put(ProducerConfig.BUFFER_MEMORY_CONFIG, 33554432);
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonSerializer");
 

@@ -49,7 +49,6 @@ public class ConsumerExample {
     Properties props = loadConfig(args[0]);
 
     // Add additional properties.
-    props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
     props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonDeserializer");
@@ -60,17 +59,14 @@ public class ConsumerExample {
     consumer.subscribe(Arrays.asList(topic));
 
     Long total_count = 0L;
-    String key;
-    JsonNode value;
-    RecordJSON countRecord;
 
     try {
       while (true) {
         ConsumerRecords<String, JsonNode> records = consumer.poll(100);
         for (ConsumerRecord<String, JsonNode> record : records) {
-          key = record.key();
-          value = record.value();
-          countRecord = MAPPER.treeToValue(value,RecordJSON.class);
+          String key = record.key();
+          JsonNode value = record.value();
+          RecordJSON countRecord = MAPPER.treeToValue(value, RecordJSON.class);
           total_count += countRecord.getCount();
           System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }
