@@ -54,8 +54,8 @@ class CCloud
       # Trigger a delivery once 5 messages have been buffered.
       delivery_threshold: 5,
 
-      # Trigger a delivery every 1 second.
-      delivery_interval: 1,
+      # Trigger a delivery every 5 milliseconds.
+      delivery_interval: 0.005,
     )
   end
 
