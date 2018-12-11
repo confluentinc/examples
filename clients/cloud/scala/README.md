@@ -21,7 +21,7 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		$ sbt clean compile
 		
 		# Run the consumer
-		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer /Users/danhanley/.ccloud/config testtopic'
+		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer /path/to/.ccloud/config testtopic'
 		```
 		You should see
 		
