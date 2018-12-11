@@ -21,7 +21,6 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.connect.json.JsonSerializer;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -78,18 +77,18 @@ public class ProducerExample {
     // Add additional properties.
     props.put(ProducerConfig.ACKS_CONFIG, "all");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonSerializer");
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
-    Producer<String, JsonNode> producer = new KafkaProducer<String, JsonNode>(props);
+    Producer<String, String> producer = new KafkaProducer<String, String>(props);
 
     // Produce sample data
     final Long numMessages = 10L;
     for (Long i = 0L; i < numMessages; i++) {
       String key = "alice";
       RecordJSON countRecord = new RecordJSON(i);
-      JsonNode value = MAPPER.valueToTree(countRecord);
+      String value = MAPPER.valueToTree(countRecord).toString();
 
-      producer.send(new ProducerRecord<String, JsonNode>(topic, key, value), new Callback() {
+      producer.send(new ProducerRecord<String, String>(topic, key, value), new Callback() {
           @Override
           public void onCompletion(RecordMetadata m, Exception e) {
             if (e != null) {

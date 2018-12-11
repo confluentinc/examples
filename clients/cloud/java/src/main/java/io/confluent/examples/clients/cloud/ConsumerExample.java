@@ -50,22 +50,22 @@ public class ConsumerExample {
 
     // Add additional properties.
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonDeserializer");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "java_example_group_1");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    final Consumer<String, JsonNode> consumer = new KafkaConsumer<String, JsonNode>(props);
+    final Consumer<String, String> consumer = new KafkaConsumer<String, String>(props);
     consumer.subscribe(Arrays.asList(topic));
 
     Long total_count = 0L;
 
     try {
       while (true) {
-        ConsumerRecords<String, JsonNode> records = consumer.poll(100);
-        for (ConsumerRecord<String, JsonNode> record : records) {
+        ConsumerRecords<String, String> records = consumer.poll(100);
+        for (ConsumerRecord<String, String> record : records) {
           String key = record.key();
-          JsonNode value = record.value();
-          RecordJSON countRecord = MAPPER.treeToValue(value, RecordJSON.class);
+          String value = record.value();
+          RecordJSON countRecord = MAPPER.readValue(value, RecordJSON.class);
           total_count += countRecord.getCount();
           System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }
