@@ -33,7 +33,7 @@ import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.state.KeyValueStore;
 
-import io.confluent.examples.clients.cloud.model.RecordJSON;
+import io.confluent.examples.clients.cloud.model.DataRecord;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
@@ -69,10 +69,10 @@ public class StreamsExample {
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        final Serde<RecordJSON> RecordJSONSerde = getJsonSerde();
+        final Serde<DataRecord> DataRecord = getJsonSerde();
 
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, RecordJSON> records = builder.stream(topic, Consumed.with(Serdes.String(), RecordJSONSerde));
+        final KStream<String, DataRecord> records = builder.stream(topic, Consumed.with(Serdes.String(), DataRecord));
 
         KStream<String,Long> counts = records.map((k, v) -> new KeyValue<String, Long>(k, v.getCount()));
         counts.print(Printed.<String,Long>toSysOut().withLabel("Consumed record"));
@@ -92,15 +92,15 @@ public class StreamsExample {
 
     }
 
-    private static Serde<RecordJSON> getJsonSerde(){
+    private static Serde<DataRecord> getJsonSerde(){
 
         Map<String, Object> serdeProps = new HashMap<>();
-        serdeProps.put("json.value.type", RecordJSON.class);
+        serdeProps.put("json.value.type", DataRecord.class);
 
-        final Serializer<RecordJSON> mySerializer = new KafkaJsonSerializer<>();
+        final Serializer<DataRecord> mySerializer = new KafkaJsonSerializer<>();
         mySerializer.configure(serdeProps, false);
 
-        final Deserializer<RecordJSON> myDeserializer = new KafkaJsonDeserializer<>();
+        final Deserializer<DataRecord> myDeserializer = new KafkaJsonDeserializer<>();
         myDeserializer.configure(serdeProps, false);
 
         return Serdes.serdeFrom(mySerializer, myDeserializer);

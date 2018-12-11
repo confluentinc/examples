@@ -20,8 +20,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import io.confluent.examples.clients.cloud.model.RecordJSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.confluent.examples.clients.cloud.model.DataRecord;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,8 +31,6 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public class ConsumerExample {
-
-  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   public static void main(String[] args) throws Exception {
     if (args.length != 2) {
@@ -48,23 +45,22 @@ public class ConsumerExample {
 
     // Add additional properties.
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaJsonDeserializer");
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "java_example_group_1");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    final Consumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+    final Consumer<String, DataRecord> consumer = new KafkaConsumer<String, DataRecord>(props);
     consumer.subscribe(Arrays.asList(topic));
 
     Long total_count = 0L;
 
     try {
       while (true) {
-        ConsumerRecords<String, String> records = consumer.poll(100);
-        for (ConsumerRecord<String, String> record : records) {
+        ConsumerRecords<String, DataRecord> records = consumer.poll(100);
+        for (ConsumerRecord<String, DataRecord> record : records) {
           String key = record.key();
-          String value = record.value();
-          RecordJSON countRecord = MAPPER.readValue(value, RecordJSON.class);
-          total_count += countRecord.getCount();
+          DataRecord value = record.value();
+          total_count += value.getCount();
           System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }
       }

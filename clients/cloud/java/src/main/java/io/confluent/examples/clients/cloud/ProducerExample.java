@@ -26,8 +26,7 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
 
-import io.confluent.examples.clients.cloud.model.RecordJSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.confluent.examples.clients.cloud.model.DataRecord;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -41,8 +40,6 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ProducerExample {
-
-  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   // Create topic in Confluent Cloud
   public static void createTopic(final String topic,
@@ -76,18 +73,18 @@ public class ProducerExample {
     // Add additional properties.
     props.put(ProducerConfig.ACKS_CONFIG, "all");
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
-    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaJsonSerializer");
 
-    Producer<String, String> producer = new KafkaProducer<String, String>(props);
+    Producer<String, DataRecord> producer = new KafkaProducer<String, DataRecord>(props);
 
     // Produce sample data
     final Long numMessages = 10L;
     for (Long i = 0L; i < numMessages; i++) {
       String key = "alice";
-      RecordJSON countRecord = new RecordJSON(i);
-      String value = MAPPER.valueToTree(countRecord).toString();
+      DataRecord record = new DataRecord(i);
 
-      producer.send(new ProducerRecord<String, String>(topic, key, value), new Callback() {
+      System.out.printf("Producing record: %s\t%s%n", key, record);
+      producer.send(new ProducerRecord<String, DataRecord>(topic, key, record), new Callback() {
           @Override
           public void onCompletion(RecordMetadata m, Exception e) {
             if (e != null) {
