@@ -38,6 +38,8 @@ import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.Serializer;
+import io.confluent.kafka.serializers.KafkaJsonSerializer;
+import io.confluent.kafka.serializers.KafkaJsonDeserializer;
 
 import java.util.Collections;
 import java.io.IOException;
@@ -67,8 +69,10 @@ public class StreamsExample {
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
+        final Serde<RecordJSON> RecordJSONSerde = getJsonSerde();
+
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, RecordJSON> records = builder.stream(topic, Consumed.with(Serdes.String(), new JsonPOJOSerde<>(RecordJSON.class)));
+        final KStream<String, RecordJSON> records = builder.stream(topic, Consumed.with(Serdes.String(), RecordJSONSerde));
 
         KStream<String,Long> counts = records.map((k, v) -> new KeyValue<String, Long>(k, v.getCount()));
         counts.print(Printed.<String,Long>toSysOut().withLabel("Consumed record"));
@@ -86,6 +90,20 @@ public class StreamsExample {
         // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
+    }
+
+    private static Serde<RecordJSON> getJsonSerde(){
+
+        Map<String, Object> serdeProps = new HashMap<>();
+        serdeProps.put("json.value.type", RecordJSON.class);
+
+        final Serializer<RecordJSON> mySerializer = new KafkaJsonSerializer<>();
+        mySerializer.configure(serdeProps, false);
+
+        final Deserializer<RecordJSON> myDeserializer = new KafkaJsonDeserializer<>();
+        myDeserializer.configure(serdeProps, false);
+
+        return Serdes.serdeFrom(mySerializer, myDeserializer);
     }
 
     public static Properties loadConfig(String configFile) throws IOException {
