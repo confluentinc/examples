@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Confluent Inc.
+ * Copyright 2018 Confluent Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,7 +65,7 @@ public class ProducerExample {
   public static void main(String[] args) throws IOException {
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
-      System.exit(-1);
+      System.exit(1);
     }
 
     // Load properties from file

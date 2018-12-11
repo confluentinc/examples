@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Confluent Inc.
+ * Copyright 2018 Confluent Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ public class StreamsExample {
 
         if (args.length != 2) {
           System.out.println("Please provide command line arguments: configPath topic");
-          System.exit(-1);
+          System.exit(1);
         }
     
         String topic = args[1];
@@ -62,7 +62,7 @@ public class StreamsExample {
         // Load properties from disk.
         Properties props = loadConfig(args[0]);
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "java_streams_example_group_1");
-        props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
+        // Disable caching to print the aggregation value after each record
         props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
