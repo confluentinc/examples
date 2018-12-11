@@ -103,7 +103,7 @@ public class ProducerExample {
 
     producer.flush();
 
-    System.out.printf("10 messages were successfully produced to topic %s%n", topic);
+    System.out.printf("10 messages were produced to topic %s%n", topic);
 
     producer.close();
   }

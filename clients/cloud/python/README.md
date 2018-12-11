@@ -47,7 +47,7 @@ Successfully produced record to topic test1 partition [0] @ offset 6
 Successfully produced record to topic test1 partition [0] @ offset 7
 Successfully produced record to topic test1 partition [0] @ offset 8
 Successfully produced record to topic test1 partition [0] @ offset 9
-10 messages were successfully produced to topic test1!
+10 messages were produced to topic test1!
 ```
 
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:

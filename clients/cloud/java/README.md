@@ -43,7 +43,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	Produced record: alice	{"count":7}
 	Produced record: alice	{"count":8}
 	Produced record: alice	{"count":9}
-	10 messages were successfully produced to topic test1
+	10 messages were produced to topic test1
 	...
 	```
 
