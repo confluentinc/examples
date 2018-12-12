@@ -33,16 +33,26 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	
 	```shell
 	...
-	Produced record: alice	{"count":0}
-	Produced record: alice	{"count":1}
-	Produced record: alice	{"count":2}
-	Produced record: alice	{"count":3}
-	Produced record: alice	{"count":4}
-	Produced record: alice	{"count":5}
-	Produced record: alice	{"count":6}
-	Produced record: alice	{"count":7}
-	Produced record: alice	{"count":8}
-	Produced record: alice	{"count":9}
+	Producing record: alice	{"count":0}
+	Producing record: alice	{"count":1}
+	Producing record: alice	{"count":2}
+	Producing record: alice	{"count":3}
+	Producing record: alice	{"count":4}
+	Producing record: alice	{"count":5}
+	Producing record: alice	{"count":6}
+	Producing record: alice	{"count":7}
+	Producing record: alice	{"count":8}
+	Producing record: alice	{"count":9}
+	Produced record to topic test1 partition [0] @ offset 0
+	Produced record to topic test1 partition [0] @ offset 1
+	Produced record to topic test1 partition [0] @ offset 2
+	Produced record to topic test1 partition [0] @ offset 3
+	Produced record to topic test1 partition [0] @ offset 4
+	Produced record to topic test1 partition [0] @ offset 5
+	Produced record to topic test1 partition [0] @ offset 6
+	Produced record to topic test1 partition [0] @ offset 7
+	Produced record to topic test1 partition [0] @ offset 8
+	Produced record to topic test1 partition [0] @ offset 9
 	10 messages were produced to topic test1
 	...
 	```
