@@ -16,7 +16,6 @@ public class DataRecord {
     }
 
     public String toString() {
-        //return new StringBuilder().append("count:"+this.count).toString();
         return new com.google.gson.Gson().toJson(this);
     }
 
