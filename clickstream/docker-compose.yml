@@ -87,6 +87,23 @@ services:
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
       KSQL_KSQL_SERVICE_ID: confluent_rmoff_01
 
+  ksql-cli:
+    image: confluentinc/cp-ksql-cli:5.0.1
+    depends_on:
+      - ksql-server
+    entrypoint: /bin/sh
+    tty: true
+    volumes:
+      - $PWD/ksql/ksql-clickstream-demo/demo:/usr/share/doc/clickstream
+
+  kafkacat:
+    image: confluentinc/cp-kafkacat:latest
+    depends_on:
+      - kafka
+    entrypoint: /bin/sh
+    tty: true
+
+    
 # Not used in current demo
   # control-center:
   #   image: confluentinc/cp-enterprise-control-center:5.0.0
@@ -111,7 +128,7 @@ services:
   #     PORT: 9021
 
   # Runs the Kafka KSQL data generator for ratings
-  datagen-ratings:
+  datagen:
     image: confluentinc/ksql-examples:5.0.1
     depends_on:
       - kafka

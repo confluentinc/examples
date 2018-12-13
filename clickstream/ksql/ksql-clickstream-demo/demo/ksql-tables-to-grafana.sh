@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+cd $(dirname "$0")
 echo "Loading Clickstream-Demo TABLES to Confluent-Connect => Elastic => Grafana datasource"
 
 declare -a tables=('click_user_sessions' 'user_ip_activity' 'enriched_error_codes_count' 'errors_per_min_alert' 'errors_per_min' 'events_per_min' 'pages_per_min');
@@ -27,7 +27,7 @@ do
 
     # Wire in the new connection path
     echo -e "\t-> Connecting KSQL->Elastic->Grafana " "$table_name"  2>&1
-    /scripts/ksql-connect-es-grafana.sh "$table_name"  2>&1
+    ./ksql-connect-es-grafana.sh "$table_name"  2>&1
 done
 
 echo -e "\n\nDone!"

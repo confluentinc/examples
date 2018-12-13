@@ -25,4 +25,5 @@ exit ;
 EOF
 
 (cd ksql/ksql-clickstream-demo/demo/ && ./ksql-tables-to-grafana.sh &>/dev/null)
+(cd ksql/ksql-clickstream-demo/demo/ && ./elastic-dynamic-template.sh &>/dev/null)
 (cd ksql/ksql-clickstream-demo/demo/ && ./clickstream-analysis-dashboard.sh &>/dev/null)
