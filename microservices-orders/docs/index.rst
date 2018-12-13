@@ -312,7 +312,7 @@ Service-based architectures are often designed to be request-driven, in which se
 
     A visual summary of commands, events and queries (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-In contrast, in an event-driven design, there an event stream is the inter-service communication that leads to less coupling and queries, enables services to cross deployment boundaries and avoids synchronous execution.
+In contrast, in an event-driven design, an event stream is the inter-service communication that leads to less coupling and queries, enables services to cross deployment boundaries and avoids synchronous execution.
 
 .. figure:: images/microservices-exercise-2.jpg
     :alt: image
