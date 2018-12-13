@@ -42,7 +42,7 @@ kafka-console-consumer \
 --max-messages 10
 
 # Run the Java consumer application
-timeout 5s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
+timeout 15s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
 
 # --------------------------------------------------------------
 
@@ -65,7 +65,7 @@ kafka-console-consumer \
 --max-messages 10
 
 # Run the Java consumer application
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
+timeout 15s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
 
 # --------------------------------------------------------------
 
@@ -88,7 +88,7 @@ kafka-avro-console-consumer \
 --max-messages 10
 
 # Run the Java consumer application
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
+timeout 15s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
 
 # --------------------------------------------------------------
 
@@ -111,7 +111,7 @@ kafka-avro-console-consumer \
 --max-messages 10
 
 # Run the Java consumer application
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
+timeout 15s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
 
 # --------------------------------------------------------------
 
@@ -121,7 +121,7 @@ echo -e "\n========== $PACKAGE: Example 4: Java client producer with SpecificAvr
 sleep 2
 
 # Producer
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.Driver -Dexec.args="localhost:9092 http://localhost:8081 /usr/local/lib/table.locations"
+timeout 15s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.Driver -Dexec.args="localhost:9092 http://localhost:8081 /usr/local/lib/table.locations"
 
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
@@ -136,7 +136,7 @@ kafka-avro-console-consumer \
 --max-messages 10
 
 # Consumer
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest -Dexec.args="localhost:9092 http://localhost:8081"
+timeout 15s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest -Dexec.args="localhost:9092 http://localhost:8081"
 
 # --------------------------------------------------------------
 
