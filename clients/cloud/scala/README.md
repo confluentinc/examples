@@ -109,4 +109,4 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
         [Running count]: alice, 55
         ```
         
-Hit Ctrl+C in both windows to stop the Cosumer and Streams
+Hit Ctrl+C in both windows to stop the Consumer and Streams
