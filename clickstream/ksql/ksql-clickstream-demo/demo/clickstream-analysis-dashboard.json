@@ -35,14 +35,6 @@
         "pluginName": "Elasticsearch"
       },
       {
-        "name": "events_per_min_max_avg",
-        "label": "events_per_min_max_avg",
-        "description": "",
-        "type": "datasource",
-        "pluginId": "elasticsearch",
-        "pluginName": "Elasticsearch"
-      },
-      {
         "name": "enriched_error_codes_count",
         "label": "enriched_error_codes_count",
         "description": "",
@@ -578,118 +570,6 @@
             "timeFrom": null,
             "timeShift": null,
             "title": "Page Views using LIKE filtering",
-            "tooltip": {
-              "shared": true,
-              "sort": 0,
-              "value_type": "individual"
-            },
-            "type": "graph",
-            "xaxis": {
-              "buckets": null,
-              "mode": "time",
-              "name": null,
-              "show": true,
-              "values": []
-            },
-            "yaxes": [
-              {
-                "format": "short",
-                "label": null,
-                "logBase": 1,
-                "max": null,
-                "min": null,
-                "show": true
-              },
-              {
-                "format": "short",
-                "label": null,
-                "logBase": 1,
-                "max": null,
-                "min": null,
-                "show": true
-              }
-            ]
-          },
-          {
-            "aliasColors": {},
-            "bars": false,
-            "dashLength": 10,
-            "dashes": false,
-            "datasource": "events_per_min_max_avg",
-            "fill": 1,
-            "id": 1,
-            "legend": {
-              "alignAsTable": true,
-              "avg": true,
-              "current": false,
-              "hideEmpty": false,
-              "hideZero": false,
-              "max": false,
-              "min": false,
-              "rightSide": false,
-              "show": true,
-              "total": true,
-              "values": true
-            },
-            "lines": true,
-            "linewidth": 1,
-            "links": [],
-            "nullPointMode": "null",
-            "percentage": false,
-            "pointradius": 3,
-            "points": false,
-            "renderer": "flot",
-            "seriesOverrides": [],
-            "spaceLength": 10,
-            "span": 6,
-            "stack": false,
-            "steppedLine": false,
-            "targets": [
-              {
-                "bucketAggs": [
-                  {
-                    "field": "EVENT_TS",
-                    "id": "2",
-                    "settings": {
-                      "interval": "10s",
-                      "min_doc_count": 0,
-                      "trimEdges": 0
-                    },
-                    "type": "date_histogram"
-                  }
-                ],
-                "dsType": "elasticsearch",
-                "metrics": [
-                  {
-                    "field": "MAX",
-                    "id": "1",
-                    "meta": {},
-                    "settings": {},
-                    "type": "avg"
-                  },
-                  {
-                    "field": "AVG",
-                    "id": "3",
-                    "meta": {},
-                    "settings": {},
-                    "type": "avg"
-                  },
-                  {
-                    "field": "MIN",
-                    "id": "4",
-                    "meta": {},
-                    "settings": {},
-                    "type": "avg"
-                  }
-                ],
-                "refId": "A",
-                "timeField": "EVENT_TS"
-              }
-            ],
-            "thresholds": [],
-            "timeFrom": null,
-            "timeShift": null,
-            "title": "Min Max  Avg events using UDFs",
             "tooltip": {
               "shared": true,
               "sort": 0,
