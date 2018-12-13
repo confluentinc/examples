@@ -16,17 +16,16 @@
 package io.confluent.examples.clients.scala
 
 import java.io.FileReader
+import java.util
 import java.util.{Collections, Properties}
 
 import io.confluent.examples.clients.scala.model.RecordJSON
-import org.apache.kafka.common.serialization.{Deserializer, Serde}
-import org.apache.kafka.common.serialization.Serde
-import org.apache.kafka.common.serialization.Serdes
-import org.apache.kafka.common.serialization.Serializer
-import io.confluent.kafka.serializers.KafkaJsonDeserializer
-import io.confluent.kafka.serializers.KafkaJsonSerializer
+import org.apache.kafka.common.serialization.{Deserializer, Serde, Serdes, Serializer}
+import io.confluent.kafka.serializers.{KafkaJsonDeserializer, KafkaJsonSerializer}
 import org.apache.kafka.streams.{KafkaStreams, KeyValue, StreamsBuilder}
-import org.apache.kafka.streams.kstream.{Consumed, KStream, Printed, Serialized}
+import org.apache.kafka.streams.kstream._
+
+import scala.util.Random
 
 object Streams extends App {
   val configFileName = args(0)
@@ -60,7 +59,7 @@ object Streams extends App {
     import org.apache.kafka.clients.consumer.ConsumerConfig
     import org.apache.kafka.streams.StreamsConfig
     val properties = new Properties()
-    properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "java_streams_example_group")
+    properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "java_streams_example_group" + Random.nextInt)
     // Disable caching to print the aggregation value after each record
     properties.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0")
     properties.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, "3")

@@ -21,7 +21,7 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		$ sbt clean compile
 		
 		# Run the consumer
-		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer /Users/danhanley/.ccloud/config testtopic'
+		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer /path/to/.ccloud/config testtopic'
 		```
 		You should see
 		
@@ -32,9 +32,18 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		....
 		<snipped>
 		```
-		Enter 1 to start the consumer
+	2. Next, in a new window, run the Streams app:
+	```shell
+    		$ cd examples/clients/cloud/scala
+    		# Build the client examples
+    		$ sbt clean compile
+    		
+    		# Run the consumer
+    		$ sbt 'runMain io.confluent.examples.clients.scala.Streams /path/to/.ccloud/config testtopic'
+    		```
+	
 
-	1. Then, in a new window run the Kafka producer application to write records to the Kafka cluster, you should see these appear in the consumer window.
+	3. Then, in a new window run the Kafka producer application to write records to the Kafka cluster, you should see these appear in the consumer window.
 
 		```shell
 		$ sbt 'runMain io.confluent.examples.clients.scala.Producer /path/to/.ccloud/config testtopic' 
@@ -76,4 +85,28 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
         Polling
 
 ```
-		Hit Ctrl+C to stop.
+        In the Streams window you should see:
+        ```
+        [Consumed record]: alice, 1
+        [Consumed record]: alice, 2
+        [Consumed record]: alice, 3
+        [Consumed record]: alice, 4
+        [Consumed record]: alice, 5
+        [Consumed record]: alice, 6
+        [Consumed record]: alice, 7
+        [Consumed record]: alice, 8
+        [Consumed record]: alice, 9
+        [Consumed record]: alice, 10
+        [Running count]: alice, 1
+        [Running count]: alice, 3
+        [Running count]: alice, 6
+        [Running count]: alice, 10
+        [Running count]: alice, 15
+        [Running count]: alice, 21
+        [Running count]: alice, 28
+        [Running count]: alice, 36
+        [Running count]: alice, 45
+        [Running count]: alice, 55
+        ```
+        
+Hit Ctrl+C in both windows to stop the Cosumer and Streams
