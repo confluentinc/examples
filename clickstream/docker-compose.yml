@@ -69,6 +69,9 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
       CONNECT_PLUGIN_PATH: '/usr/share/java'
+      ELASTIC_HOST: elasticsearch
+      CONNECT_HOST: kafka-connect
+      GRAFANA_HOST: grafana
     volumes:
      - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
      - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
@@ -153,6 +156,7 @@ services:
     environment:
       xpack.security.enabled: "false"
       ES_JAVA_OPTS: "-Xms1g -Xmx1g"
+      ELASTIC_HOST: elasticsearch
     volumes:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 
@@ -160,6 +164,8 @@ services:
     image: grafana/grafana:5.2.4
     ports:
       - 3000:3000
+    environment:
+      GRAFANA_HOST: grafana
     volumes:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 

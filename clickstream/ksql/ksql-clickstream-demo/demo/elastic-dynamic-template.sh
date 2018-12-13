@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
+if [[ -z "${ELASTIC_HOST}" ]]; then
+  echo -e "ELASTIC_HOST not set, defaulting to localhost"
+  ELASTIC_HOST="localhost"
+fi
+
+
 echo -e "\n-> Removing kafkaconnect template if it exists already."
 
-curl -XDELETE "http://localhost:9200/_template/kafkaconnect/" > /tmp/log.txt 2>&1
+curl -s -XDELETE "http://$ELASTIC_HOST:9200/_template/kafkaconnect/" > /tmp/log.txt
 
 echo -e "\n\n-> Loading Elastic Dynamic Template to ensure _TS fields are used for TimeStamp\n\n"
 
-curl -XPUT "http://localhost:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d'
+curl -XPUT "http://$ELASTIC_HOST:9200/_template/kafkaconnect/" -H 'Content-Type: application/json' -d'
 {
   "template": "*",
   "settings": {

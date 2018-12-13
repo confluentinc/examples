@@ -3,15 +3,19 @@
 #        -H "Content-Type: application/json" \
 #	     --user admin:admin
 
+if [[ -z "${GRAFANA_HOST}" ]]; then
+  echo -e "GRAFANA_HOST not set, defaulting to localhost"
+  GRAFANA_HOST="localhost"
+fi
 
 echo "Loading Grafana ClickStream Dashboard"
 
-RESP="$(curl -s -X "POST" "http://localhost:3000/api/dashboards/db" \
+RESP="$(curl -s -X "POST" "http://$GRAFANA_HOST:3000/api/dashboards/db" \
 	    -H "Content-Type: application/json" \
 	     --user admin:admin \
 	     --data-binary @/scripts/clickstream-analysis-dashboard.json)"
 
-echo $RESP
+#echo $RESP
 echo ""
 echo ""
 
