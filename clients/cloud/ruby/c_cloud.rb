@@ -47,7 +47,7 @@ class CCloud
   end
 
   #
-  # An asynchronous producer tweaked for the low-throughput needs of this example
+  # An asynchronous producer configured for the low-throughput needs of this example
   #
   def producer
     @producer ||= @kafka.async_producer(
