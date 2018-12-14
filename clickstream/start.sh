@@ -5,8 +5,8 @@
 
 check_env || exit 1
 check_running_cp 5.0.1 || exit 
-#check_running_elasticsearch 5.6.5 || exit 1
-#check_running_grafana 5.0.3 || exit 1
+check_running_elasticsearch 5.6.5 || exit 1
+check_running_grafana 5.0.3 || exit 1
 
 ./stop.sh
 
