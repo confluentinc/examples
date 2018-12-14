@@ -13,11 +13,7 @@ check_running_grafana 5.0.3 || exit 1
 cp -nR ksql/ksql-clickstream-demo/demo/connect-config/null-filter-4.0.0-SNAPSHOT.jar $CONFLUENT_HOME/share/java/kafka-connect-elasticsearch/.
 confluent start
 
-if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
-ksql-datagen -daemon quickstart=clickstream format=json topic=clickstream maxInterval=100 iterations=500000 $PROPERTIES &>/dev/null &
-ksql-datagen quickstart=clickstream_codes format=json topic=clickstream_codes maxInterval=20 iterations=100 $PROPERTIES &>/dev/null &
-ksql-datagen quickstart=clickstream_users format=json topic=clickstream_users maxInterval=10 iterations=1000 $PROPERTIES &>/dev/null &
-sleep 5
+./start_datagen.sh
 
 ksql http://localhost:8088 <<EOF
 run script './ksql/ksql-clickstream-demo/demo/clickstream-schema.sql';
