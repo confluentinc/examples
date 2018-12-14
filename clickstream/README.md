@@ -1,10 +1,12 @@
 ![image](../images/confluent-logo-300-2.png)
 
-# Overview
+## Overview
 
-The Clickstream demo is the automated version of the [KSQL Clickstream demo](https://github.com/confluentinc/ksql/blob/master/ksql-clickstream-demo/non-docker-clickstream.md#clickstream-analysis)
+This demo shows how KSQL can be used to process a stream of click data, aggregate and filter it, and join to information about the users. Visualisation of the results is provided by Grafana, on top of data streamed to Elasticsearch. 
 
-# Prerequisites
+You can [run it using Docker](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html), or with a local install of Confluent Platform and following the instructions below. 
+
+## Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [Confluent Platform 5.0](https://www.confluent.io/download/)
@@ -13,7 +15,7 @@ The Clickstream demo is the automated version of the [KSQL Clickstream demo](htt
 * Grafana 5.0.3 to visualize data
   * If you do not want to use Grafana, comment out ``check_running_grafana`` in the ``start.sh`` script
 
-# What Should I see?
+## What Should I see?
 
 After you run `./start.sh`:
 
