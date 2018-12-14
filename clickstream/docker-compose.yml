@@ -151,6 +151,20 @@ services:
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 20 && \
                        ksql-datagen \
+                          bootstrap-server=kafka:29092 \
+                          quickstart=clickstream_codes \
+                          format=json \
+                          topic=clickstream_codes \
+                          maxInterval=20 \
+                          iterations=100 && \
+                       ksql-datagen \
+                          bootstrap-server=kafka:29092 \
+                          quickstart=clickstream_users \
+                          format=json \
+                          topic=clickstream_users \
+                          maxInterval=10 \
+                          iterations=1000 && \
+                       ksql-datagen \
                           quickstart=clickstream \
                           format=json \
                           topic=clickstream \
