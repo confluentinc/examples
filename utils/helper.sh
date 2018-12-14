@@ -31,7 +31,8 @@ function check_ccloud() {
 function check_running_cp() {
   expected_version=$1
 
-  actual_version=$( confluent version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
+  # This returns the actual version running trimmed to the same accuracy as the supplied expected_version
+  actual_version=$( confluent version | tail -1 | awk -F': ' -v exp_ver=$expected_version '{print substr($2,1,length(exp_ver))}')
   if [[ $expected_version != $actual_version ]]; then
     echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
