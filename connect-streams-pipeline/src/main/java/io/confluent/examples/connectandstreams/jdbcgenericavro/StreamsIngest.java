@@ -75,7 +75,8 @@ public class StreamsIngest {
         KStream<String, GenericRecord> locationsGeneric = builder.stream(INPUT_TOPIC);
         locationsGeneric.print(Printed.toSysOut());
 
-        KStream<Long, Location> locations = locationsGeneric.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), new Location ((Long) v.get("id"), (String) v.get("name").toString(), (Long) v.get("sale")) ));
+        KStream<Long, Location> locations = locationsGeneric.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), new Location ((Long) v.get("id"), (String) v.get("name").toString(), Long.valueOf((Integer)v.get("sale")))));
+        //KStream<Long, Location> locations = locationsGeneric.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), new Location ((Long) v.get("id"), (String) v.get("name").toString(), (Long) v.get("sale")) ));
         locations.print(Printed.toSysOut());
 
         KStream<Long,Long> sales = locations.map((k, v) -> new KeyValue<Long, Long>(k, v.getSale()));
