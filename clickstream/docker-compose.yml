@@ -2,12 +2,14 @@
 version: '2'
 services:
   zookeeper:
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:5.0.1
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
+    container_name: kafka
     image: confluentinc/cp-enterprise-kafka:5.0.1
     depends_on:
       - zookeeper
@@ -33,6 +35,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
+    container_name: schema-registry
     image: confluentinc/cp-schema-registry:5.0.1
     depends_on:
       - zookeeper
@@ -42,6 +45,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
 
   kafka-connect:
+    container_name: kafka-connect
     image: confluentinc/cp-kafka-connect:5.0.1
     ports:
       - 8083:8083
@@ -77,6 +81,7 @@ services:
      - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
 
   ksql-server:
+    container_name: ksql-server
     image: confluentinc/cp-ksql-server:5.0.1
     ports: 
       - 8088:8088
@@ -91,6 +96,7 @@ services:
       KSQL_KSQL_SERVICE_ID: confluent_rmoff_01
 
   ksql-cli:
+    container_name: ksql-cli
     image: confluentinc/cp-ksql-cli:5.0.1
     depends_on:
       - ksql-server
@@ -100,6 +106,7 @@ services:
       - $PWD/ksql/ksql-clickstream-demo/demo:/usr/share/doc/clickstream
 
   kafkacat:
+    container_name: kafkacat
     image: confluentinc/cp-kafkacat:latest
     depends_on:
       - kafka
@@ -130,8 +137,9 @@ services:
   #     CONTROL_CENTER_CUB_KAFKA_TIMEOUT: 300
   #     PORT: 9021
 
-  # Runs the Kafka KSQL data generator for ratings
+  # Runs the Kafka KSQL data generator
   datagen:
+    container_name: datagen
     image: confluentinc/ksql-examples:5.0.1
     depends_on:
       - kafka
@@ -150,6 +158,7 @@ services:
                           bootstrap-server=kafka:29092'"
 
   elasticsearch:
+    container_name: elasticsearch
     image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
     ports:
       - 9200:9200
@@ -161,6 +170,7 @@ services:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 
   grafana:
+    container_name: grafana
     image: grafana/grafana:5.2.4
     ports:
       - 3000:3000
