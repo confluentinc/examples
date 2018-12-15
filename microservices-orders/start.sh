@@ -14,6 +14,9 @@ check_running_cp 5.1 || exit 1
 ./stop.sh
 
 ./get-kafka-streams-examples.sh
+if [[ $? != 0 ]]; then
+  exit 1
+fi
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
