@@ -26,7 +26,7 @@ Run demo
 
 **Demo validated with:**
 
--  Confluent Platform 5.0
+-  Confluent Platform 5.1
 -  |ccloud|
 -  |ccloud| CLI
 -  Java version 1.8.0_162
