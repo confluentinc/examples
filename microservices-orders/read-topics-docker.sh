@@ -2,7 +2,7 @@
 
 ################################
 
-echo -e "\n*** Sampling messages in Kafka topics and a KSQL stream***\n"
+echo -e "\n*** Sampling messages in Kafka topics and a KSQL stream ***\n"
 
 # Topic customers: populated by Kafka Connect that uses the JDBC source connector to read customer data from a sqlite3 database
 echo -e "\n-----customers-----"
