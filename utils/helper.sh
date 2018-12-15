@@ -42,12 +42,12 @@ function check_running_cp() {
 
 function is_ce() {
   type=$( confluent version | tail -1 | awk -F: '{print $1;}' )
-  if [[ "$type" == "Confluent Enterprise" ]]; then
+  if [[ "$type" == "Confluent Platform" ]]; then
     return 0
-  elif [[ "$type" == "Confluent Open Source" ]]; then
+  elif [[ "$type" == "Confluent Community software" ]]; then
     return 1
   else
-    echo -e "\nCannot determine if Confluent Enterprise or Confluent Open Source from `confluent version`. Assuming Confluent Open Source\n"
+    echo -e "\nCannot determine if Confluent Platform or Confluent Community software from `confluent version`. Assuming Confluent Community\n"
     return 1
   fi
 }
