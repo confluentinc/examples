@@ -9,7 +9,7 @@ check_running_cp 5.1 || exit
 
 ./stop.sh
 
-mvn compile
+mvn clean compile
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 confluent start
@@ -42,7 +42,7 @@ kafka-console-consumer \
 --max-messages 10
 
 # Run the Java consumer application
-timeout 5s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
+timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
 
 # --------------------------------------------------------------
 
