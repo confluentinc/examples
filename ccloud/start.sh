@@ -8,7 +8,7 @@ check_running_cp 5.1 || exit
 check_ccloud || exit
 
 if ! is_ce ; then
-  echo "This demo uses Confluent Replicator which requires Confluent Enterprise, however this host is running Confluent Open Source. Exiting"
+  echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community software. Exiting"
   exit 1
 fi
 

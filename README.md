@@ -16,7 +16,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 | [clients](clients/README.md)               |   [Y](clients/README.md)   |   N    | Examples of client applications in different programming languages: producers/consumers to Confluent Cloud, Avro/SR to local install
 | [connect-streams-pipeline](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API
 | [ksql-workshop](ksql-workshop/README.md)   |   [Y](ksql-workshop/README.md)   |   [Y](ksql-workshop/README.md)    | showcases Kafka stream processing using KSQL and can be run automated or self-guided as a KSQL workshop
-| [microservices-orders](microservices-orders/README.md) |   [Y](microservices-orders/README.md)   |   N    | integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.0.x/src/main/java/io/confluent/examples/streams/microservices) into Confluent Platform
+| [microservices-orders](microservices-orders/README.md) |   [Y](microservices-orders/README.md)   |   N    | integrates the [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.1.0-post/src/main/java/io/confluent/examples/streams/microservices) into Confluent Platform
 | [music](music/README.md)                   |   [Y](music/README.md)   |   [Y](music/README.md)    | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html)
 | [mysql-debezium](mysql-debezium/README.md) |   [Y](mysql-debezium/README.md)   |   N    | end-to-end streaming ETL with KSQL for stream processing using the [Debezium Connector for MySQL](http://debezium.io/docs/connectors/mysql/)
 | oracle-ksql-elasticsearch |   N   |   Y    | Stream data from Oracle, enrich and filter with KSQL, and then stream into Elasticsearch. This is available on the [`demo-scene` repo here](https://github.com/confluentinc/demo-scene/blob/master/oracle-ksql-elasticsearch/oracle-ksql-elasticsearch-docker.adoc).
@@ -34,7 +34,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 
 For local installs:
 
-* [Confluent Platform 5.0](https://www.confluent.io/download/)
+* [Confluent Platform 5.1](https://www.confluent.io/download/)
 * Env var `CONFLUENT_HOME=/path/to/confluentplatform`
 * Env var `PATH` includes `$CONFLUENT_HOME/bin`
 * Each demo has its own set of prerequisites as well, documented in each demo's README
