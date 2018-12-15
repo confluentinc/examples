@@ -24,18 +24,10 @@ import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.LongSerializer;
-
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.KeyValue;
 
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import io.confluent.examples.connectandstreams.avro.Location;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
@@ -46,55 +38,60 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 
 public class Driver {
 
-    static final String INPUT_TOPIC = "javaproducer-locations";
-    static final String DEFAULT_TABLE_LOCATIONS = "/usr/local/lib/table.locations";
-    static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
-    static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
+  static final String INPUT_TOPIC = "javaproducer-locations";
+  static final String DEFAULT_TABLE_LOCATIONS = "/usr/local/lib/table.locations";
+  static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
+  static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
 
-    public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
 
-        if (args.length > 3) {
-            throw new IllegalArgumentException("usage: ... " +
-                "[<bootstrap.servers> (optional, default: " + DEFAULT_BOOTSTRAP_SERVERS + ")] " +
-                "[<schema.registry.url> (optional, default: " + DEFAULT_SCHEMA_REGISTRY_URL + ")] " +
-                "[<table.locations> (optional, default: " + DEFAULT_TABLE_LOCATIONS + ")] ");
-            }
+    if (args.length > 3) {
+      throw new IllegalArgumentException("usage: ... "
+          + "[<bootstrap.servers> (optional, default: " + DEFAULT_BOOTSTRAP_SERVERS + ")] "
+          + "[<schema.registry.url> (optional, default: " + DEFAULT_SCHEMA_REGISTRY_URL + ")] "
+          + "[<table.locations> (optional, default: " + DEFAULT_TABLE_LOCATIONS + ")] ");
+    }
 
-        final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
-        final String SCHEMA_REGISTRY_URL = args.length > 1 ? args[1] : DEFAULT_SCHEMA_REGISTRY_URL;
-        final String TABLE_LOCATIONS = args.length > 2 ? args[2] : DEFAULT_TABLE_LOCATIONS;
+    final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
+    final String schemaRegistryUrl = args.length > 1 ? args[1] : DEFAULT_SCHEMA_REGISTRY_URL;
+    final String tableLocations = args.length > 2 ? args[2] : DEFAULT_TABLE_LOCATIONS;
 
-        System.out.println("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
-        System.out.println("Connecting to Confluent schema registry at " + SCHEMA_REGISTRY_URL);
-        System.out.println("Reading locations table from file " + TABLE_LOCATIONS);
+    System.out.println("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
+    System.out.println("Connecting to Confluent schema registry at " + schemaRegistryUrl);
+    System.out.println("Reading locations table from file " + tableLocations);
 
-        final List<Location> locationsList = new ArrayList<Location>();
-        try (BufferedReader br = new BufferedReader(new FileReader(TABLE_LOCATIONS))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split("\\|");
-                locationsList.add(new Location(Long.parseLong(parts[0]), parts[1], Long.parseLong(parts[2])) );
-            }
-        }
+    final List<Location> locationsList = new ArrayList<Location>();
+    try (BufferedReader br = new BufferedReader(new FileReader(tableLocations))) {
+      String line;
+      while ((line = br.readLine()) != null) {
+        String[] parts = line.split("\\|");
+        locationsList.add(new Location(Long.parseLong(parts[0]), parts[1],
+            Long.parseLong(parts[2])));
+      }
+    }
 
-        final SpecificAvroSerializer<Location> locationSerializer = new SpecificAvroSerializer<>();
-        final boolean isKeySerde = false;
-        locationSerializer.configure(
-            Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL),
-            isKeySerde);
+    final SpecificAvroSerializer<Location> locationSerializer = new SpecificAvroSerializer<>();
+    final boolean isKeySerde = false;
+    locationSerializer.configure(
+        Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
+           schemaRegistryUrl),isKeySerde);
 
-        final Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        KafkaProducer<Long, Location> locationProducer = new KafkaProducer<Long, Location>(props, new LongSerializer(), locationSerializer);
+    final Properties props = new Properties();
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    KafkaProducer<Long, Location> locationProducer = new KafkaProducer<Long, Location>(props,
+        new LongSerializer(), locationSerializer);
 
-        locationsList.forEach(t -> {
-           System.out.println("Writing location information for '" + t.getId() + "' to input topic " + INPUT_TOPIC);
-           ProducerRecord<Long, Location> record = new ProducerRecord<Long, Location>(INPUT_TOPIC, t.getId(), t);
-           locationProducer.send(record);
-        });
+    locationsList.forEach(t -> {
+      System.out.println("Writing location information for '" + t.getId() 
+          + "' to input topic " + INPUT_TOPIC);
+      ProducerRecord<Long, Location> record = new ProducerRecord<Long, Location>(INPUT_TOPIC,
+          t.getId(), t);
+      locationProducer.send(record);
+    });
 
-        locationProducer.close();
-   }
+    locationProducer.close();
+
+  }
 
 }
 

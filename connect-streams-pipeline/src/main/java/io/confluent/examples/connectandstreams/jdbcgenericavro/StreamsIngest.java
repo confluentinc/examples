@@ -67,6 +67,7 @@ public class StreamsIngest {
         streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, "jdbcgenericavro");
         streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         streamsConfiguration.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
+        streamsConfiguration.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
         streamsConfiguration.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, GenericAvroSerde.class);
         streamsConfiguration.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL);
@@ -74,7 +75,7 @@ public class StreamsIngest {
         KStream<String, GenericRecord> locationsGeneric = builder.stream(INPUT_TOPIC);
         locationsGeneric.print(Printed.toSysOut());
 
-        KStream<Long, Location> locations = locationsGeneric.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), new Location ((Long) v.get("id"), (String) v.get("name").toString(), (Long) v.get("sale")) ));
+        KStream<Long, Location> locations = locationsGeneric.map((k, v) -> new KeyValue<Long, Location>((Long) v.get("id"), new Location ((Long) v.get("id"), (String) v.get("name").toString(), Long.valueOf((Integer)v.get("sale")))));
         locations.print(Printed.toSysOut());
 
         KStream<Long,Long> sales = locations.map((k, v) -> new KeyValue<Long, Long>(k, v.getSale()));
