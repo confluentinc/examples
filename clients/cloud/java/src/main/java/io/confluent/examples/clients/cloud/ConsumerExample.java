@@ -1,5 +1,5 @@
 /**
- * Copyright 2015 Confluent Inc.
+ * Copyright 2018 Confluent Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.confluent.examples.clients;
+package io.confluent.examples.clients.cloud;
 
-import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import io.confluent.examples.clients.cloud.model.DataRecord;
+import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -27,13 +30,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
-import java.util.Random;
 
 public class ConsumerExample {
+
   public static void main(String[] args) throws Exception {
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
-      System.exit(-1);
+      System.exit(1);
     }
 
     String topic = args[1];
@@ -42,23 +45,25 @@ public class ConsumerExample {
     Properties props = loadConfig(args[0]);
 
     // Add additional properties.
-    props.put("enable.auto.commit", "true");
-    props.put("auto.commit.interval.ms", "1000");
-    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaJsonDeserializer");
+    props.put(KafkaJsonDeserializerConfig.JSON_VALUE_TYPE, DataRecord.class);
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, "java_example_group_1");
+    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    // WARNING: These settings are for CLI tools / examples. Don't use in production unless you want to reset the consumer app every reboot.
-    props.put("group.id", "example" + new Random().nextInt());
-    props.put("auto.offset.reset", "earliest");
-
-    final Consumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+    final Consumer<String, DataRecord> consumer = new KafkaConsumer<String, DataRecord>(props);
     consumer.subscribe(Arrays.asList(topic));
+
+    Long total_count = 0L;
 
     try {
       while (true) {
-        ConsumerRecords<String, String> records = consumer.poll(100);
-        for (ConsumerRecord<String, String> record : records) {
-          System.out.printf("offset = %d, key = %s, value = %s \n", record.offset(), record.key(), record.value());
+        ConsumerRecords<String, DataRecord> records = consumer.poll(100);
+        for (ConsumerRecord<String, DataRecord> record : records) {
+          String key = record.key();
+          DataRecord value = record.value();
+          total_count += value.getCount();
+          System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }
       }
     } finally {
