@@ -93,4 +93,4 @@ if __name__ == '__main__':
 
     p.flush(10)
 
-    print("10 messages were successfully produced to topic {}!".format(topic))
+    print("10 messages were produced to topic {}!".format(topic))
