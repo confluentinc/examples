@@ -35,10 +35,10 @@ public class ConsumerExample {
             consumer.subscribe(Collections.singletonList(TOPIC));
 
             while (true) {
-                ConsumerRecords<String, Payment> records = consumer.poll(100);
-                for (ConsumerRecord<String, Payment> record : records) {
-                    String key = record.key();
-                    Payment value = record.value();
+                final ConsumerRecords<String, Payment> records = consumer.poll(100);
+                for (final ConsumerRecord<String, Payment> record : records) {
+                    final String key = record.key();
+                    final Payment value = record.value();
                     System.out.printf("key = %s, value = %s%n", key, value);
                 }
             }

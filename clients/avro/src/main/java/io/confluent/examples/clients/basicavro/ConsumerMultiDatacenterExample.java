@@ -36,10 +36,10 @@ public class ConsumerMultiDatacenterExample {
             consumer.subscribe(Collections.singletonList(TOPIC));
 
             while (true) {
-                ConsumerRecords<String, GenericRecord> records = consumer.poll(100);
-                for (ConsumerRecord<String, GenericRecord> record : records) {
-                    String key = record.key();
-                    GenericRecord value = record.value();
+                final ConsumerRecords<String, GenericRecord> records = consumer.poll(100);
+                for (final ConsumerRecord<String, GenericRecord> record : records) {
+                    final String key = record.key();
+                    final GenericRecord value = record.value();
                     System.out.printf("key = %s, value = %s%n", key, value);
                 }
             }
