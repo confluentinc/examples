@@ -306,19 +306,22 @@ Exercise 2: Event-driven applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Service-based architectures are often designed to be request-driven, in which services send commands to other services to tell them what to do, await a response, or send queries to get the resulting state.
+Building services on a protocol of requests and responses forces a complicated web of synchronous dependencies that bound services together.
 
 .. figure:: images/event-driven.png
     :alt: image
 
     A visual summary of commands, events and queries (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-In contrast, in an event-driven design, an event stream is the inter-service communication that leads to less coupling and queries, enables services to cross deployment boundaries and avoids synchronous execution.
+In contrast, in an event-driven design, the event stream is the inter-service communication that enables services to cross deployment boundaries and avoids synchronous execution.
+When and how downstream services respond to those events is within their control, which reduces the coupling between services and enables an architecture with more pluggability.
+Read more on `Build Services on a Backbone of Events <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
 .. figure:: images/microservices-exercise-2.jpg
     :alt: image
 
 In this exercise, you will write a service that validates customer orders.
-Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
+Instead of using a series of synchronous calls to submit and validate orders, the order event itself triggers the `OrderDetailsService`.
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrderDetailsService.java`
@@ -374,6 +377,7 @@ In these scenarios, you may need to perform table lookups at very large scale an
 
 A popular pattern is to make the information in the databases available in Kafka through so-called change data capture (CDC), together with Kafka’s Connect API to pull in the data from the database.
 Once the data is in Kafka, client applications can perform very fast and efficient joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
+Read more on `joins in Kafka Streams <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
 .. figure:: images/microservices-exercise-3.jpg
     :alt: image
@@ -427,8 +431,9 @@ Exercise 4: Filtering and branching
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Kafka can capture a lot of information related to an event.
-This information can be captured in a single Kafka topic.
-Client applications can then manipulate that data based on some user-defined criteria to create new streams of data that they can act on.
+This stream of events can be captured in a single Kafka topic.
+Client applications can then manipulate that stream based on some user-defined criteria, even creating new streams of data that they can act on or downstream services can act on.
+In some cases, the application may need to filter events from an input stream that match certain critera; in other cases, the application may need to branch, whereby each event is tested against a predicate and then routed to a stream that matches.
 
 .. figure:: images/microservices-exercise-4.jpg
     :alt: image
