@@ -104,7 +104,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <plugin>
           <groupId>io.confluent</groupId>
           <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-          <version>5.0.1</version>
+          <version>5.1.0</version>
           <configuration>
               <schemaRegistryUrls>
                   <param>http://localhost:8081</param>

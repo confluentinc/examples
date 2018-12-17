@@ -590,7 +590,7 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 7: Enrichment with KSQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Confluent KSQL <https://www.confluent.io/product/ksql/>`__ is the open source, streaming SQL engine that enables real-time data processing against Apache Kafka.
+`Confluent KSQL <https://www.confluent.io/product/ksql/>`__ is a streaming SQL engine that enables real-time data processing against Apache Kafka.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
 KSQL is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
