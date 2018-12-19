@@ -124,7 +124,7 @@ To setup your environment, make sure you have the following pre-requisites, depe
 
 Local:
 
-* `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically |cpe| to use topic management, KSQL and |sr-long| integration, and streams monitoring capabilities
+* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, KSQL and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
@@ -226,7 +226,7 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-5. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
+5. You can see a lot more information in Confluent Control Center:
 
    * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS;``
    * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
