@@ -70,7 +70,6 @@ object Streams extends App {
   }
 
   private def getJsonSerde(): Serde[RecordJSON] = {
-    import org.apache.kafka.common.serialization.Serdes
     import io.confluent.kafka.serializers.{KafkaJsonDeserializer, KafkaJsonSerializer}
     import org.apache.kafka.common.serialization.{Serializer,Deserializer}
     val serdeProps: java.util.Map[String, Object] = Collections.singletonMap("json.value.type", classOf[RecordJSON])
@@ -78,8 +77,10 @@ object Streams extends App {
     mySerializer.configure(serdeProps, false)
     val myDeserializer: Deserializer[RecordJSON] = new KafkaJsonDeserializer[RecordJSON]()
     myDeserializer.configure(serdeProps, false)
-    Serdes.serdeFrom(mySerializer, myDeserializer)
+    Serdes.fromFn(
+      (topic, data) => mySerializer.serialize(topic, data),
+      (topic, bytes) => Option(myDeserializer.deserialize(topic, bytes))
+    )
   }
-
 
 }
