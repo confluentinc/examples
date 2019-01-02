@@ -616,6 +616,12 @@ KSQL is scalable, elastic, fault tolerant, and it supports a wide range of strea
 .. figure:: images/microservices-exercise-7.jpg
     :alt: image
 
+You can use KSQL to merge streams of data in real time by using a SQL-like `join` syntax.
+A `KSQL join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
+The result of a KSQL join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
+KSQL also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
+You can use these to build stateful aggregates on streaming data. 
+
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
