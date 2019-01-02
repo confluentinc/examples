@@ -331,7 +331,7 @@ In this exercise, you will write a service that validates customer orders.
 Instead of using a series of synchronous calls to submit and validate orders, the order event itself triggers the `OrderDetailsService`.
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrderDetailsService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrderDetailsService.java|microservices-orders/exercises/OrderDetailsService.java`
 
 #. TODO 2.1: subscribe the existing `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
 #. TODO 2.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
@@ -394,7 +394,7 @@ In this exercise, you will write a service that joins streaming order informatio
 First, the payment stream needs to be rekeyed to match the same key info as the order stream before joined together.
 The resulting stream is then joined with the customer information that was read into Kafka by a JDBC source from a customer database.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/EmailService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.java|microservices-orders/exercises/EmailService.java`
 
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
 #. TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
@@ -450,7 +450,7 @@ In other cases, the application may need to branch events, whereby each event is
 In this exercise, you will define one set of criteria to filter records in a stream based on some criteria.
 Then you will define define another set of criteria to branch records into two different streams.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/FraudService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/FraudService.java|microservices-orders/exercises/FraudService.java`
 
 #. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
 #. TODO 4.2: create a `KStream<String, OrderValue>` array from the `ordersWithTotals` stream by branching the records based on `OrderValue#getValue`
@@ -504,7 +504,7 @@ In this exercise, you will create a session window to define five-minute windows
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
 Before running `reduce`, you will group the records to repartition the data, which is generally required before using an aggregation operator.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/ValidationsAggregatorService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
 
 #. TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
 #. TODO 5.2: group the records by key using `KStream#groupByKey`, providing the existing Serialized instance for ORDERS
@@ -563,7 +563,7 @@ Querying state stores is always read-only to guarantee that the underlying state
 In this exercise, you will create a state store for the Inventory Service.
 This state store is initialized with data from a Kafka topic before the service starts processing, and then it is updated as new orders are created.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/InventoryService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/InventoryService.java|microservices-orders/exercises/InventoryService.java`
 
 #. TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
 
