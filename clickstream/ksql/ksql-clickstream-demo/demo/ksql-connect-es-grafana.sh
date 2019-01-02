@@ -30,7 +30,6 @@ echo -e "\t-> Connecting:" $table_name
 
 # Tell Kafka to send this Table-Topic to Elastic
 # Note the addition of the FilterNulls transform, which converts null values to null records, which Connect ignores.
-# Note the addition of the ExtractTimestamp transform, which exposes the Kafka record's timestamp to Elastic in a field called EVENT_TS.
 echo -e "\t\t-> Adding Kafka Connect Elastic Source es_sink_$TABLE_NAME"
 
 curl -s -X "POST" "http://$CONNECT_HOST:8083/connectors/" \
@@ -48,10 +47,8 @@ curl -s -X "POST" "http://$CONNECT_HOST:8083/connectors/" \
     "type.name": "type.name=kafkaconnect",
     "topic.index.map": "'$TABLE_NAME':'$table_name'",
     "connection.url": "http://'$ELASTIC_HOST':9200",
-    "transforms": "FilterNulls,ExtractTimestamp",
-    "transforms.FilterNulls.type": "io.confluent.transforms.NullFilter",
-    "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
-    "transforms.ExtractTimestamp.timestamp.field" : "EVENT_TS"
+    "transforms": "FilterNulls",
+    "transforms.FilterNulls.type": "io.confluent.transforms.NullFilter"
   }
 }' >>/tmp/log.txt 2>&1
 
@@ -64,4 +61,3 @@ curl -s -X "POST" "http://$GRAFANA_HOST:3000/api/datasources" \
 	     --user admin:admin \
 	     -d $'{"id":1,"orgId":1,"name":"'$table_name'","type":"elasticsearch","typeLogoUrl":"public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg","access":"proxy","url":"http://'$ELASTIC_HOST':9200","password":"","user":"","database":"'$table_name'","basicAuth":false,"isDefault":false,"jsonData":{"timeField":"EVENT_TS"}}' \
        >>/tmp/log.txt 2>&1
-

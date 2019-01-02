@@ -124,7 +124,7 @@ Environment Setup
 
 Local:
 
-* `Confluent Platform 5.0 <https://www.confluent.io/download/>`__: download specifically |cpe| to use topic management, KSQL and |sr-long| integration, and streams monitoring capabilities
+* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, KSQL and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
@@ -233,7 +233,7 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-4. If you are running |cpe| (local or Docker) you can see a lot more information in Confluent Control Center:
+4. You can see a lot more information in Confluent Control Center:
 
    * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS;``
    * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
@@ -609,7 +609,7 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 7: Enrichment with KSQL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Confluent KSQL <https://www.confluent.io/product/ksql/>`__ is a streaming SQL engine that enables real-time data processing against Apache Kafka.
+`Confluent KSQL <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against Apache Kafka.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
 KSQL is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
