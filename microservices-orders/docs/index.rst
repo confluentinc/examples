@@ -555,7 +555,7 @@ It can be used to remember recently received input records, to track rolling agg
 
 It is also backed by a Kafka topic and comes with all the Kafka guarantees.
 Consequently, other applications can also `interactively query <https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html>`__ another application's state store.
-Querying state stores is always read-only to guarantee that the underlying state stores will never be mutated out-of-band (e.g., you cannot add new entries).
+Querying state stores is always read-only to guarantee that the underlying state stores will never be mutated out-of-band (i.e., you cannot add new entries).
 
 .. figure:: images/microservices-exercise-6.jpg
     :alt: image
