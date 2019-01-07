@@ -20,7 +20,7 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		# Build the client examples
 		$ sbt clean compile
 		
-		# Run the consumer
+		# Run the consumer - the config file is at ~/.ccloud/config by default, but sbt does not manage the tilde gracefully so you'll need to expand to the absolute path
 		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer /path/to/.ccloud/config testtopic'
 		```
 		You should see
