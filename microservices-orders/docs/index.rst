@@ -375,7 +375,7 @@ Exercise 3: Enriching streams with joins
 Streams can be enriched with data from other streams or tables through joins.
 A join enriches data by performing lookups in a streaming context where data is updated continuously and concurrently.
 For example, applications backing an online retail store might enrich new data records with information from multiple databases.
-In that scenario, it may be that a stream of customer transactions is enriched with sales price, inventory, customer information, etc.
+In this scenario, it may be that a stream of customer transactions is enriched with sales price, inventory, customer information, etc.
 These lookups can be performed at very large scale and with a low processing latency.
 
 .. figure:: images/state-stores-kafka-streams.png
