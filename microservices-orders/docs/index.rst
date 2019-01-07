@@ -120,7 +120,7 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
+#. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
 
 Local:
 
@@ -141,13 +141,13 @@ Docker:
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 
-2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
+#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
 .. sourcecode:: bash
 
    git clone https://github.com/confluentinc/examples
 
-3. Change directory to this project.
+#. Change directory to this project.
 
 .. sourcecode:: bash
 
@@ -190,7 +190,7 @@ Exercise 0: Run end-to-end demo
 
 Running the fully working demo end-to-end provides context for each of the later exercises.
 
-1. Start the demo
+#. Start the demo
 
    * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
@@ -204,7 +204,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
         docker-compose up -d
 
-2. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
+#. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.jpg
        :alt: image
@@ -221,7 +221,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
       ./read-topics-docker.sh
 
-3. The Kibana dashboard is populated by Elasticsearch.
+#. The Kibana dashboard is populated by Elasticsearch.
 
    .. figure:: images/elastic-search-kafka.png
        :alt: image
@@ -233,7 +233,7 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-4. Use |c3| to view Kafka data, write KSQL queries, manage Kafka connectors, and monitoring your applications:
+#. Use |c3| to view Kafka data, write KSQL queries, manage Kafka connectors, and monitoring your applications:
 
    * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS;``
    * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
@@ -243,7 +243,7 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-5. When you are done, make sure to stop the demo before proceeding to the exercises.
+#. When you are done, make sure to stop the demo before proceeding to the exercises.
 
    * If you are running |cp| locally:
 
