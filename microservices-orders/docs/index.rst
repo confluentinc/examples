@@ -492,7 +492,7 @@ Exercise 5: Stateful operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 An aggregation operation takes one input stream or table, and yields a new table by combining multiple input records into a single output record.
-Examples of aggregations are computing `count` or `sum`, because they combine current record values with previous record values.
+Examples of aggregations are computing ``count`` or ``sum``, because they combine current record values with previous record values.
 These are stateful operations because they maintain data during processing.
 Aggregations are always key-based operations, and Kafka’s Streams API ensures that records for the same key are always routed to the same stream processing task.
 Oftentimes, these are combined with windowing capabilities in order to run computations in real time over a window of time.
