@@ -439,7 +439,7 @@ Exercise 4: Filtering and branching
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 A stream of events can be captured in a Kafka topic.
-Client applications can then manipulate that stream based on some user-defined criteria, even creating new streams of data that they can act on or downstream services can act on.
+Client applications can then manipulate this stream based on some user-defined criteria, even creating new streams of data that they can act on or downstream services can act on.
 These help create new streams with more logically consistent data.
 In some cases, the application may need to filter events from an input stream that match certain critera, which results in a new stream with just a subset of records from the original stream.
 In other cases, the application may need to branch events, whereby each event is tested against a predicate and then routed to a stream that matches, which results in multiple new streams split from the original stream.
