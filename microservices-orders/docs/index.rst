@@ -16,7 +16,7 @@ The tutorial is based on a small microservices ecosystem, showcasing an order ma
 It is built using Kafka Streams, whereby  business events that describe the order management workflow propagate through this ecosystem.  
 The blog post `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ outlines the approach used.
 
-.. figure:: images/microservices-demo.jpg
+.. figure:: images/microservices-demo.png
     :alt: image
 
 Note: this is demo code, not a production system and certain elements are left for further work.
@@ -42,7 +42,7 @@ Finally, KSQL is running with persistent queries to enrich streams and to also c
 
 Here is a diagram of the microservices and the related Kafka topics.
 
-.. figure:: images/microservices-exercises-combined.jpg
+.. figure:: images/microservices-exercises-combined.png
     :alt: image
 
 All the services are client applications written in Java, and they use the Kafka Streams API.
@@ -206,7 +206,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
 #. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
-   .. figure:: images/microservices-exercises-combined.jpg
+   .. figure:: images/microservices-exercises-combined.png
        :alt: image
 
    * If you are running locally, you can sample topic data by running:
@@ -266,7 +266,7 @@ An event in a business is some fact that occurred, such as a sale, an invoice, a
 In event-oriented architectures, events are first-class citizens that constantly push data into applications.
 Client applications can then react to these streams of events in real time and decide what to do next.
 
-.. figure:: images/microservices-exercise-1.jpg
+.. figure:: images/microservices-exercise-1.png
     :alt: image
 
 In this exercise, you will persist events into Kafka by producing records that represent customer orders.
@@ -387,7 +387,7 @@ A popular pattern is to make the information in the databases available in Kafka
 Once the data is in Kafka, client applications can perform very fast and efficient joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
 Read more on `an overview of distributed, real-time joins <https://www.confluent.io/blog/distributed-real-time-joins-and-aggregations-on-user-activity-events-using-kafka-streams/>`__ and `implementing joins in Kafka Streams <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
-.. figure:: images/microservices-exercise-3.jpg
+.. figure:: images/microservices-exercise-3.png
     :alt: image
 
 In this exercise, you will write a service that joins streaming order information with streaming payment information and data from a customer database.
@@ -444,7 +444,7 @@ These help create new streams with more logically consistent data.
 In some cases, the application may need to filter events from an input stream that match certain critera, which results in a new stream with just a subset of records from the original stream.
 In other cases, the application may need to branch events, whereby each event is tested against a predicate and then routed to a stream that matches, which results in multiple new streams split from the original stream.
 
-.. figure:: images/microservices-exercise-4.jpg
+.. figure:: images/microservices-exercise-4.png
     :alt: image
 
 In this exercise, you will define one set of criteria to filter records in a stream based on some criteria.
@@ -497,7 +497,7 @@ These are stateful operations because they maintain data during processing.
 Aggregations are always key-based operations, and Kafka’s Streams API ensures that records for the same key are always routed to the same stream processing task.
 Oftentimes, these are combined with windowing capabilities in order to run computations in real time over a window of time.
 
-.. figure:: images/microservices-exercise-5.jpg
+.. figure:: images/microservices-exercise-5.png
     :alt: image
 
 In this exercise, you will create a session window to define five-minute windows for processing.
@@ -557,7 +557,7 @@ It is also backed by a Kafka topic and comes with all the Kafka guarantees.
 Consequently, other applications can also `interactively query <https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html>`__ another application's state store.
 Querying state stores is always read-only to guarantee that the underlying state stores will never be mutated out-of-band (i.e., you cannot add new entries).
 
-.. figure:: images/microservices-exercise-6.jpg
+.. figure:: images/microservices-exercise-6.png
     :alt: image
 
 In this exercise, you will create a state store for the Inventory Service.
@@ -613,7 +613,7 @@ Exercise 7: Enrichment with KSQL
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
 KSQL is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
-.. figure:: images/microservices-exercise-7.jpg
+.. figure:: images/microservices-exercise-7.png
     :alt: image
 
 You can use KSQL to merge streams of data in real time by using a SQL-like `join` syntax.
