@@ -6,6 +6,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import io.confluent.kafka.schemaregistry.client.rest.exceptions.RestClientException;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -24,7 +25,7 @@ public class ProducerExample {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
-        //props.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, false);
+        props.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, false);
 
         try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
 
@@ -38,6 +39,10 @@ public class ProducerExample {
 
             System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
 
+        } catch (final RestClientException e) {
+            e.printStackTrace();
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
         } catch (final Exception e) {
             e.printStackTrace();
         }
