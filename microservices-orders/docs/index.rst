@@ -325,7 +325,7 @@ In contrast, in an event-driven design, the event stream is the inter-service co
 When and how downstream services respond to those events is within their control, which reduces the coupling between services and enables an architecture with more pluggability.
 Read more on `Build Services on a Backbone of Events <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
-.. figure:: images/microservices-exercise-2.jpg
+.. figure:: images/microservices-exercise-2.png
     :alt: image
     :width: 600px
 
