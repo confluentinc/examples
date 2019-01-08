@@ -268,6 +268,7 @@ Client applications can then react to these streams of events in real time and d
 
 .. figure:: images/microservices-exercise-1.png
     :alt: image
+    :width: 600px
 
 In this exercise, you will persist events into Kafka by producing records that represent customer orders.
 This event happens in the Orders Service, which provides a REST interface to POST and GET Orders.
@@ -326,6 +327,7 @@ Read more on `Build Services on a Backbone of Events <https://docs.confluent.io/
 
 .. figure:: images/microservices-exercise-2.jpg
     :alt: image
+    :width: 600px
 
 In this exercise, you will write a service that validates customer orders.
 Instead of using a series of synchronous calls to submit and validate orders, the order event itself triggers the `OrderDetailsService`.
@@ -389,6 +391,7 @@ Read more on `an overview of distributed, real-time joins <https://www.confluent
 
 .. figure:: images/microservices-exercise-3.png
     :alt: image
+    :width: 600px
 
 In this exercise, you will write a service that joins streaming order information with streaming payment information and data from a customer database.
 First, the payment stream needs to be rekeyed to match the same key info as the order stream before joined together.
@@ -446,6 +449,7 @@ In other cases, the application may need to branch events, whereby each event is
 
 .. figure:: images/microservices-exercise-4.png
     :alt: image
+    :width: 600px
 
 In this exercise, you will define one set of criteria to filter records in a stream based on some criteria.
 Then you will define define another set of criteria to branch records into two different streams.
@@ -499,6 +503,7 @@ Oftentimes, these are combined with windowing capabilities in order to run compu
 
 .. figure:: images/microservices-exercise-5.png
     :alt: image
+    :width: 600px
 
 In this exercise, you will create a session window to define five-minute windows for processing.
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
@@ -559,6 +564,7 @@ Querying state stores is always read-only to guarantee that the underlying state
 
 .. figure:: images/microservices-exercise-6.png
     :alt: image
+    :width: 600px
 
 In this exercise, you will create a state store for the Inventory Service.
 This state store is initialized with data from a Kafka topic before the service starts processing, and then it is updated as new orders are created.
@@ -615,6 +621,7 @@ KSQL is scalable, elastic, fault tolerant, and it supports a wide range of strea
 
 .. figure:: images/microservices-exercise-7.png
     :alt: image
+    :width: 600px
 
 You can use KSQL to merge streams of data in real time by using a SQL-like `join` syntax.
 A `KSQL join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
