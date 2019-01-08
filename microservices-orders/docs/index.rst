@@ -120,7 +120,7 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-To setup your environment, make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
+1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
 
 Local:
 
@@ -141,6 +141,17 @@ Docker:
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 
+2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
+
+.. sourcecode:: bash
+
+   git clone https://github.com/confluentinc/examples
+
+3. Change directory to this project.
+
+.. sourcecode:: bash
+
+   cd examples/microservices-orders
 
 
 ========
@@ -150,7 +161,9 @@ Tutorial
 How to use the tutorial
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-First run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
+As a pre-requisite, follow the "Environment Setup" instructions.
+
+Then run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
 This provides context for each of the exercises in which you will develop pieces of the microservices.
 
 * Exercise 0: Run end-to-end demo
@@ -177,13 +190,7 @@ Exercise 0: Run end-to-end demo
 
 Running the fully working demo end-to-end provides context for each of the later exercises.
 
-1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
-
-.. sourcecode:: bash
-
-   git clone https://github.com/confluentinc/examples
-
-2. Start the demo
+#. Start the demo
 
    * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
@@ -197,7 +204,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
         docker-compose up -d
 
-3. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
+#. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.jpg
        :alt: image
@@ -214,7 +221,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
       ./read-topics-docker.sh
 
-4. The Kibana dashboard is populated by Elasticsearch.
+#. The Kibana dashboard is populated by Elasticsearch.
 
    .. figure:: images/elastic-search-kafka.png
        :alt: image
@@ -226,7 +233,7 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-5. You can see a lot more information in Confluent Control Center:
+#. Use |c3| to view Kafka data, write KSQL queries, manage Kafka connectors, and monitoring your applications:
 
    * `KSQL tab <http://localhost:9021/development/ksql/localhost%3A8088/streams>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS;``
    * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
@@ -236,7 +243,7 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-6. When you are done, make sure to stop the demo before proceeding to the exercises.
+#. When you are done, make sure to stop the demo before proceeding to the exercises.
 
    * If you are running |cp| locally:
 
@@ -275,8 +282,8 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
 
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord-java.lang.String-K-V-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-org.apache.kafka.clients.producer.Callback-
+   * https://docs.confluent.io/current/clients/javadocs/org/apache/kafka/clients/producer/ProducerRecord.html#ProducerRecord-java.lang.String-K-V-
+   * https://docs.confluent.io/current/clients/javadocs/org/apache/kafka/clients/producer/Callback.html
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java|src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java`
    
@@ -306,22 +313,25 @@ Exercise 2: Event-driven applications
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Service-based architectures are often designed to be request-driven, in which services send commands to other services to tell them what to do, await a response, or send queries to get the resulting state.
+Building services on a protocol of requests and responses forces a complicated web of synchronous dependencies that bound services together.
 
 .. figure:: images/event-driven.png
     :alt: image
 
     A visual summary of commands, events and queries (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-In contrast, in an event-driven design, an event stream is the inter-service communication that leads to less coupling and queries, enables services to cross deployment boundaries and avoids synchronous execution.
+In contrast, in an event-driven design, the event stream is the inter-service communication that enables services to cross deployment boundaries and avoids synchronous execution.
+When and how downstream services respond to those events is within their control, which reduces the coupling between services and enables an architecture with more pluggability.
+Read more on `Build Services on a Backbone of Events <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
 .. figure:: images/microservices-exercise-2.jpg
     :alt: image
 
 In this exercise, you will write a service that validates customer orders.
-Instead of using a series of synchronous calls to submit and validate orders, let the order event itself trigger the `OrderDetailsService`.
+Instead of using a series of synchronous calls to submit and validate orders, the order event itself triggers the `OrderDetailsService`.
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrderDetailsService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/OrderDetailsService.java|microservices-orders/exercises/OrderDetailsService.java`
 
 #. TODO 2.1: subscribe the existing `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
 #. TODO 2.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
@@ -332,8 +342,8 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
 
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe-java.util.Collection-
+   * https://docs.confluent.io/current/clients/javadocs/org/apache/kafka/clients/consumer/KafkaConsumer.html#subscribe-java.util.Collection-
+   * https://docs.confluent.io/current/clients/javadocs/org/apache/kafka/clients/producer/KafkaProducer.html#send-org.apache.kafka.clients.producer.ProducerRecord-
    * https://docs.oracle.com/javase/8/docs/api/java/util/Collections.html#singletonList-T-
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    
@@ -363,9 +373,10 @@ Exercise 3: Enriching streams with joins
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Streams can be enriched with data from other streams or tables through joins.
-Many stream processing applications in practice are coded as streaming joins.
-For example, applications backing an online shop might need to access multiple updating database tables (e.g., sales prices, inventory, customer information) in order to enrich a new data record (e.g., customer transaction) with context information.
-In these scenarios, you may need to perform table lookups at very large scale and with a low processing latency.
+A join enriches data by performing lookups in a streaming context where data is updated continuously and concurrently.
+For example, applications backing an online retail store might enrich new data records with information from multiple databases.
+In this scenario, it may be that a stream of customer transactions is enriched with sales price, inventory, customer information, etc.
+These lookups can be performed at very large scale and with a low processing latency.
 
 .. figure:: images/state-stores-kafka-streams.png
     :alt: image
@@ -374,6 +385,7 @@ In these scenarios, you may need to perform table lookups at very large scale an
 
 A popular pattern is to make the information in the databases available in Kafka through so-called change data capture (CDC), together with Kafka’s Connect API to pull in the data from the database.
 Once the data is in Kafka, client applications can perform very fast and efficient joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
+Read more on `an overview of distributed, real-time joins <https://www.confluent.io/blog/distributed-real-time-joins-and-aggregations-on-user-activity-events-using-kafka-streams/>`__ and `implementing joins in Kafka Streams <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
 .. figure:: images/microservices-exercise-3.jpg
     :alt: image
@@ -382,7 +394,7 @@ In this exercise, you will write a service that joins streaming order informatio
 First, the payment stream needs to be rekeyed to match the same key info as the order stream before joined together.
 The resulting stream is then joined with the customer information that was read into Kafka by a JDBC source from a customer database.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/EmailService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.java|microservices-orders/exercises/EmailService.java`
 
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
 #. TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
@@ -395,10 +407,10 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
 
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/Consumed.html#with-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/StreamsBuilder.html#stream-java.lang.String-org.apache.kafka.streams.kstream.Consumed-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#selectKey-org.apache.kafka.streams.kstream.KeyValueMapper-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#join-org.apache.kafka.streams.kstream.KTable-org.apache.kafka.streams.kstream.ValueJoiner-org.apache.kafka.streams.kstream.Joined-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/Consumed.html#with-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/StreamsBuilder.html#stream-java.lang.String-org.apache.kafka.streams.kstream.Consumed-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#selectKey-org.apache.kafka.streams.kstream.KeyValueMapper-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#join-org.apache.kafka.streams.kstream.KTable-org.apache.kafka.streams.kstream.ValueJoiner-org.apache.kafka.streams.kstream.Joined-
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/EmailService.java`.
@@ -426,9 +438,11 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 4: Filtering and branching
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Kafka can capture a lot of information related to an event.
-This information can be captured in a single Kafka topic.
-Client applications can then manipulate that data based on some user-defined criteria to create new streams of data that they can act on.
+A stream of events can be captured in a Kafka topic.
+Client applications can then manipulate this stream based on some user-defined criteria, even creating new streams of data that they can act on or downstream services can act on.
+These help create new streams with more logically consistent data.
+In some cases, the application may need to filter events from an input stream that match certain critera, which results in a new stream with just a subset of records from the original stream.
+In other cases, the application may need to branch events, whereby each event is tested against a predicate and then routed to a stream that matches, which results in multiple new streams split from the original stream.
 
 .. figure:: images/microservices-exercise-4.jpg
     :alt: image
@@ -436,7 +450,7 @@ Client applications can then manipulate that data based on some user-defined cri
 In this exercise, you will define one set of criteria to filter records in a stream based on some criteria.
 Then you will define define another set of criteria to branch records into two different streams.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/FraudService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/FraudService.java|microservices-orders/exercises/FraudService.java`
 
 #. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
 #. TODO 4.2: create a `KStream<String, OrderValue>` array from the `ordersWithTotals` stream by branching the records based on `OrderValue#getValue`
@@ -448,8 +462,8 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
 
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#filter-org.apache.kafka.streams.kstream.Predicate-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#branch-org.apache.kafka.streams.kstream.Predicate...-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#filter-org.apache.kafka.streams.kstream.Predicate-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#branch-org.apache.kafka.streams.kstream.Predicate...-
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java|src/main/java/io/confluent/examples/streams/microservices/domain/beans/OrderBean.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/FraudService.java`.
@@ -477,8 +491,10 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 5: Stateful operations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can combine current record values with previous record values using aggregations.
-They are stateful operations because they maintain data during processing.
+An aggregation operation takes one input stream or table, and yields a new table by combining multiple input records into a single output record.
+Examples of aggregations are computing ``count`` or ``sum``, because they combine current record values with previous record values.
+These are stateful operations because they maintain data during processing.
+Aggregations are always key-based operations, and Kafka’s Streams API ensures that records for the same key are always routed to the same stream processing task.
 Oftentimes, these are combined with windowing capabilities in order to run computations in real time over a window of time.
 
 .. figure:: images/microservices-exercise-5.jpg
@@ -488,7 +504,7 @@ In this exercise, you will create a session window to define five-minute windows
 Additionally, you will use a stateful operation `reduce` to collapse duplicate records in a stream.
 Before running `reduce`, you will group the records to repartition the data, which is generally required before using an aggregation operator.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/ValidationsAggregatorService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
 
 #. TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
 #. TODO 5.2: group the records by key using `KStream#groupByKey`, providing the existing Serialized instance for ORDERS
@@ -498,10 +514,10 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
 
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/SessionWindows.html#with-long-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KGroupedStream.html#windowedBy-org.apache.kafka.streams.kstream.SessionWindows-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/KStream.html#groupByKey-org.apache.kafka.streams.kstream.Serialized-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/kstream/SessionWindowedKStream.html#reduce-org.apache.kafka.streams.kstream.Reducer-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/SessionWindows.html#with-java.time.Duration-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KGroupedStream.html#windowedBy-org.apache.kafka.streams.kstream.SessionWindows-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#groupByKey-org.apache.kafka.streams.kstream.Serialized-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/SessionWindowedKStream.html#reduce-org.apache.kafka.streams.kstream.Reducer-
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java`.
 
@@ -528,15 +544,18 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 6: State stores
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Kafka Streams provides so-called state stores, which are disk-resident hash tables, held inside the API for the client application.
+Kafka Streams provides so-called `state stores <https://docs.confluent.io/current/streams/developer-guide/processor-api.html#implementing-custom-state-stores>`__, which are disk-resident hash tables, held inside the API for the client application.
+The state store can be used within stream processing applications to store and query data, an important capability when implementing stateful operations.
+It can be used to remember recently received input records, to track rolling aggregates, to de-duplicate input records, etc.
 
 .. figure:: images/state-stores-kafka-streams.png
     :alt: image
 
     State stores in Kafka Streams can be used to create use-case-specific views right inside the service (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-The state store can be used within stream processing applications to store and query data, an important capability when implementing stateful operations.
 It is also backed by a Kafka topic and comes with all the Kafka guarantees.
+Consequently, other applications can also `interactively query <https://docs.confluent.io/current/streams/developer-guide/interactive-queries.html>`__ another application's state store.
+Querying state stores is always read-only to guarantee that the underlying state stores will never be mutated out-of-band (i.e., you cannot add new entries).
 
 .. figure:: images/microservices-exercise-6.jpg
     :alt: image
@@ -544,7 +563,7 @@ It is also backed by a Kafka topic and comes with all the Kafka guarantees.
 In this exercise, you will create a state store for the Inventory Service.
 This state store is initialized with data from a Kafka topic before the service starts processing, and then it is updated as new orders are created.
 
-Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/InventoryService.java`
+Implement the `TODO` lines of the file :devx-examples:`exercises/InventoryService.java|microservices-orders/exercises/InventoryService.java`
 
 #. TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
 
@@ -560,9 +579,9 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
 
    The following APIs will be helpful:
    
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/Stores.html#persistentKeyValueStore-java.lang.String-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/Stores.html#keyValueStoreBuilder-org.apache.kafka.streams.state.KeyValueBytesStoreSupplier-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
-   * https://kafka.apache.org/20/javadoc/org/apache/kafka/streams/state/KeyValueStore.html#put-K-V-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/state/Stores.html#persistentKeyValueStore-java.lang.String-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/state/Stores.html#keyValueStoreBuilder-org.apache.kafka.streams.state.KeyValueBytesStoreSupplier-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/state/KeyValueStore.html#put-K-V-
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/InventoryService.java`.
@@ -597,16 +616,24 @@ KSQL is scalable, elastic, fault tolerant, and it supports a wide range of strea
 .. figure:: images/microservices-exercise-7.jpg
     :alt: image
 
-In this exercise, you will create one persistent query that enriches the `orders` stream with customer information.
+You can use KSQL to merge streams of data in real time by using a SQL-like `join` syntax.
+A `KSQL join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
+The result of a KSQL join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
+KSQL also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
+You can use these to build stateful aggregates on streaming data. 
+
+In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
-Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`. 
 If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
 If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksql-server:8088` to get to the KSQL CLI prompt.
-From the KSQL CLI prompt, create the following persistent queries:
 
-#. TODO 7.1: KSQL stream that does a stream-table join based on customer id.
-#. TODO 7.2: KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
+Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`.
+From the KSQL CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
+Then create the following persistent queries:
+
+#. TODO 7.1: create a new KSQL stream that does a stream-table join between `orders` and `customers_table` based on customer id.
+#. TODO 7.2: create a new KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
 
 .. tip::
 
