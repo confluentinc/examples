@@ -120,7 +120,7 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-#. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
+1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
 
 Local:
 
@@ -141,13 +141,13 @@ Docker:
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 
-#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
+2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
 .. sourcecode:: bash
 
    git clone https://github.com/confluentinc/examples
 
-#. Change directory to this project.
+3. Change directory to this project.
 
 .. sourcecode:: bash
 
