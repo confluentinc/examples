@@ -24,6 +24,7 @@ public class ProducerExample {
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
+        //props.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, false);
 
         try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
 
@@ -35,12 +36,11 @@ public class ProducerExample {
                 Thread.sleep(1000L);
             }
 
-        } catch (final InterruptedException e) {
+            System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
+
+        } catch (final Exception e) {
             e.printStackTrace();
         }
-
-        System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
-
 
     }
 
