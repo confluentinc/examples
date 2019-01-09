@@ -6,6 +6,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import org.apache.kafka.common.errors.SerializationException;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -35,12 +36,14 @@ public class ProducerExample {
                 Thread.sleep(1000L);
             }
 
+            producer.flush();
+            System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
+
+        } catch (final SerializationException e) {
+            e.printStackTrace();
         } catch (final InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
-
 
     }
 
