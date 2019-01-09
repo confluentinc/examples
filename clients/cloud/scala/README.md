@@ -20,8 +20,8 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		# Build the client examples
 		$ sbt clean compile
 		
-		# Run the consumer - the config file is at ~/.ccloud/config by default, but sbt does not manage the tilde gracefully so you'll need to expand to the absolute path
-		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer /path/to/.ccloud/config testtopic'
+		# Run the consumer 
+		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer $HOME/.ccloud/config testtopic'
 		```
 		You should see
 		
@@ -33,20 +33,19 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		<snipped>
 		```
 	2. Next, in a new window, run the Streams app:
-	```shell
+	    ```shell
     		$ cd examples/clients/cloud/scala
     		# Build the client examples
     		$ sbt clean compile
     		
     		# Run the consumer
-    		$ sbt 'runMain io.confluent.examples.clients.scala.Streams /path/to/.ccloud/config testtopic'
-    		```
-	
+    		$ sbt 'runMain io.confluent.examples.clients.scala.Streams $HOME/.ccloud/config testtopic'
+        ```
 
 	3. Then, in a new window run the Kafka producer application to write records to the Kafka cluster, you should see these appear in the consumer window.
 
 		```shell
-		$ sbt 'runMain io.confluent.examples.clients.scala.Producer /path/to/.ccloud/config testtopic' 
+		$ sbt 'runMain io.confluent.examples.clients.scala.Producer $HOME/.ccloud/config testtopic' 
 		```
         		
         You should see
@@ -107,6 +106,5 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
         [Running count]: alice, 36
         [Running count]: alice, 45
         [Running count]: alice, 55
-        ```
-        
+   ```
 Hit Ctrl+C in both windows to stop the Consumer and Streams
