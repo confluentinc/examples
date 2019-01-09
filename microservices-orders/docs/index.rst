@@ -380,7 +380,7 @@ For example, applications backing an online retail store might enrich new data r
 In this scenario, it may be that a stream of customer transactions is enriched with sales price, inventory, customer information, etc.
 These lookups can be performed at very large scale and with a low processing latency.
 
-.. figure:: images/state-stores-kafka-streams.png
+.. figure:: images/email-service-join.png
     :alt: image
 
     A stateful streaming service that joins two streams at runtime (`source <https://www.confluent.io/designing-event-driven-systems>`__)
