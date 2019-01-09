@@ -45,7 +45,8 @@ func ReadCCloudConfig(config_file string) (map[string]string) {
 
     file, err := os.Open(config_file)
     if err != nil {
-        panic(fmt.Sprintf("%s", err))
+        fmt.Printf("Failed to open file: %s", err)
+        os.Exit(1)
     }
     defer file.Close()
 
@@ -61,7 +62,8 @@ func ReadCCloudConfig(config_file string) (map[string]string) {
     }
 
     if err := scanner.Err(); err != nil {
-        panic(fmt.Sprintf("%s", err))
+        fmt.Printf("Failed to read file: %s", err)
+        os.Exit(1)
     }
 
     return m
