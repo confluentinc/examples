@@ -57,15 +57,17 @@ Successfully produced record to topic test1 partition [0] @ offset 9
 $ go build consumer.go
 $ ./consumer -f ~/.ccloud/example.config -t test1
 ...
-Consumed record with key alice and value {"Count": 0}, and updated total count to 0
-Consumed record with key alice and value {"Count": 1}, and updated total count to 1
-Consumed record with key alice and value {"Count": 2}, and updated total count to 3
-Consumed record with key alice and value {"Count": 3}, and updated total count to 6
-Consumed record with key alice and value {"Count": 4}, and updated total count to 10
-Consumed record with key alice and value {"Count": 5}, and updated total count to 15
-Consumed record with key alice and value {"Count": 6}, and updated total count to 21
-Consumed record with key alice and value {"Count": 7}, and updated total count to 28
-Consumed record with key alice and value {"Count": 8}, and updated total count to 36
-Consumed record with key alice and value {"Count": 9}, and updated total count to 45
+Consumed record with key alice and value {"Count":0}, and updated total count to 0
+Consumed record with key alice and value {"Count":1}, and updated total count to 1
+Consumed record with key alice and value {"Count":2}, and updated total count to 3
+Consumed record with key alice and value {"Count":3}, and updated total count to 6
+Consumed record with key alice and value {"Count":4}, and updated total count to 10
+Consumed record with key alice and value {"Count":5}, and updated total count to 15
+Consumed record with key alice and value {"Count":6}, and updated total count to 21
+Consumed record with key alice and value {"Count":7}, and updated total count to 28
+Consumed record with key alice and value {"Count":8}, and updated total count to 36
+Consumed record with key alice and value {"Count":9}, and updated total count to 45
+Ignored EOF at b1[0]@10(Broker: No more messages)
+Ignored OffsetsCommitted (<nil>, [b1[0]@10])
 ...
 ```
