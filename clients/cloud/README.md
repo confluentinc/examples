@@ -7,6 +7,7 @@ This directory includes examples of Kafka client streaming applications connecti
 [![](images/ruby.png)](ruby/)
 [![](images/confluent-cli.png)](confluent-cli/)
 [![](images/scala.png)](scala/)
+[![](images/go.png)](go/)
 
 # Other Confluent Cloud Demos
 
