@@ -34,6 +34,8 @@ import (
     "encoding/json"
 )
 
+type RecordValue ccloud_lib.RecordValue
+
 func main() {
 
     // Initialization
@@ -105,7 +107,9 @@ func main() {
 
     for n := 0; n < 10; n++ {
         record_key := "alice"
-        record_value, _ := json.Marshal(map[string]int{"count": n})
+        data := &RecordValue{
+            Count: n}
+        record_value, _ := json.Marshal(&data)
         fmt.Printf("Preparing to produce record: %s\t%s\n", record_key, record_value)
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: topic, Partition: kafka.PartitionAny},

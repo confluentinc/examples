@@ -24,6 +24,10 @@ import (
     "fmt"
 )
 
+type RecordValue struct {
+    Count   int
+}
+
 func ParseArgs() (*string, *string) {
 
     config_file := flag.String("f", "", "path to Confluent Cloud configuration file")

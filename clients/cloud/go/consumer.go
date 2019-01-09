@@ -30,9 +30,11 @@ import (
     "os"
     "os/signal"
     "fmt"
-    //"encoding/json"
+    "encoding/json"
     "syscall"
 )
+
+type RecordValue ccloud_lib.RecordValue
 
 func main() {
 
@@ -75,14 +77,15 @@ func main() {
 		switch e := ev.(type) {
 		case *kafka.Message:
                     record_key := string(e.Key)
-                    record_value := string(e.Value)
-		    fmt.Printf("key %s, value %s, count %d", record_key, record_value, total_count)
-                    //data = json.loads(record_value)
-                    //count = data['count']
-                    //total_count += count
-                    //print("Consumed record with key {} and value {}, \
-                          //and updated total count to {}"
-                          //.format(record_key, record_value, total_count))
+                    record_value := e.Value
+                    data := RecordValue{}
+                    err := json.Unmarshal(record_value, &data)
+	            if err != nil {
+		        fmt.Println("error:", err)
+	            }
+                    count := data.Count
+                    total_count += count
+                    fmt.Printf("Consumed record with key %s and value %s, and updated total count to %d\n", record_key, record_value, total_count)
 		case kafka.Error:
 			// Errors should generally be considered as informational, the client will try to automatically recover
 			fmt.Fprintf(os.Stderr, "%% Error: %v\n", e)

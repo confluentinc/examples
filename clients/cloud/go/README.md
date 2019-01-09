@@ -20,24 +20,24 @@ sasl.password=<secret-access-key>
 # Example 1: Hello World!
 
 In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
-Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
+Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"Count": 0}`).
 The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
 
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```bash
-$ go build
+$ go build producer.go
 $ ./producer -f ~/.ccloud/example.config -t test1
-Preparing to produce record: alice 	 {"count": 0}
-Preparing to produce record: alice 	 {"count": 1}
-Preparing to produce record: alice 	 {"count": 2}
-Preparing to produce record: alice 	 {"count": 3}
-Preparing to produce record: alice 	 {"count": 4}
-Preparing to produce record: alice 	 {"count": 5}
-Preparing to produce record: alice 	 {"count": 6}
-Preparing to produce record: alice 	 {"count": 7}
-Preparing to produce record: alice 	 {"count": 8}
-Preparing to produce record: alice 	 {"count": 9}
+Preparing to produce record: alice 	 {"Count": 0}
+Preparing to produce record: alice 	 {"Count": 1}
+Preparing to produce record: alice 	 {"Count": 2}
+Preparing to produce record: alice 	 {"Count": 3}
+Preparing to produce record: alice 	 {"Count": 4}
+Preparing to produce record: alice 	 {"Count": 5}
+Preparing to produce record: alice 	 {"Count": 6}
+Preparing to produce record: alice 	 {"Count": 7}
+Preparing to produce record: alice 	 {"Count": 8}
+Preparing to produce record: alice 	 {"Count": 9}
 Successfully produced record to topic test1 partition [0] @ offset 0
 Successfully produced record to topic test1 partition [0] @ offset 1
 Successfully produced record to topic test1 partition [0] @ offset 2
@@ -54,20 +54,18 @@ Successfully produced record to topic test1 partition [0] @ offset 9
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
-$ go build
+$ go build consumer.go
 $ ./consumer -f ~/.ccloud/example.config -t test1
 ...
-Waiting for message or event/error in poll()
-Consumed record with key alice and value {"count": 0}, and updated total count to 0
-Consumed record with key alice and value {"count": 1}, and updated total count to 1
-Consumed record with key alice and value {"count": 2}, and updated total count to 3
-Consumed record with key alice and value {"count": 3}, and updated total count to 6
-Consumed record with key alice and value {"count": 4}, and updated total count to 10
-Consumed record with key alice and value {"count": 5}, and updated total count to 15
-Consumed record with key alice and value {"count": 6}, and updated total count to 21
-Consumed record with key alice and value {"count": 7}, and updated total count to 28
-Consumed record with key alice and value {"count": 8}, and updated total count to 36
-Consumed record with key alice and value {"count": 9}, and updated total count to 45
-Waiting for message or event/error in poll()
+Consumed record with key alice and value {"Count": 0}, and updated total count to 0
+Consumed record with key alice and value {"Count": 1}, and updated total count to 1
+Consumed record with key alice and value {"Count": 2}, and updated total count to 3
+Consumed record with key alice and value {"Count": 3}, and updated total count to 6
+Consumed record with key alice and value {"Count": 4}, and updated total count to 10
+Consumed record with key alice and value {"Count": 5}, and updated total count to 15
+Consumed record with key alice and value {"Count": 6}, and updated total count to 21
+Consumed record with key alice and value {"Count": 7}, and updated total count to 28
+Consumed record with key alice and value {"Count": 8}, and updated total count to 36
+Consumed record with key alice and value {"Count": 9}, and updated total count to 45
 ...
 ```
