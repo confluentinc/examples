@@ -36,6 +36,7 @@ public class ProducerExample {
                 Thread.sleep(1000L);
             }
 
+            producer.flush();
             System.out.printf("Successfully produced 10 messages to a topic called %s%n", TOPIC);
 
         } catch (final SerializationException e) {
