@@ -21,7 +21,7 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
 		$ sbt clean compile
 		
 		# Run the consumer 
-		$ sbt 'runMain io.confluent.examples.clients.scala.Consumer $HOME/.ccloud/config testtopic'
+		$ sbt "runMain io.confluent.examples.clients.scala.Consumer $HOME/.ccloud/config testtopic"
 		```
 		You should see
 		
@@ -39,13 +39,13 @@ Before running the examples, **you should setup the Confluent Cloud CLI** by run
     		$ sbt clean compile
     		
     		# Run the consumer
-    		$ sbt 'runMain io.confluent.examples.clients.scala.Streams $HOME/.ccloud/config testtopic'
+    		$ sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.ccloud/config testtopic"
         ```
 
 	3. Then, in a new window run the Kafka producer application to write records to the Kafka cluster, you should see these appear in the consumer window.
 
 		```shell
-		$ sbt 'runMain io.confluent.examples.clients.scala.Producer $HOME/.ccloud/config testtopic' 
+		$ sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.ccloud/config testtopic"
 		```
         		
         You should see
