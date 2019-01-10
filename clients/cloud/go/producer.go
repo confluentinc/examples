@@ -25,7 +25,7 @@ package main
  */
 
 import (
-    "./ccloud_lib"
+    "./ccloud"
     "github.com/confluentinc/confluent-kafka-go/kafka"
     "os"
     "fmt"
@@ -34,13 +34,14 @@ import (
     "encoding/json"
 )
 
-type RecordValue ccloud_lib.RecordValue
+// RecordValue represents the struct of the value in a Kafka message
+type RecordValue ccloud.RecordValue
 
 func main() {
 
     // Initialization
-    config_file, topic := ccloud_lib.ParseArgs()
-    conf := ccloud_lib.ReadCCloudConfig(*config_file)
+    configFile, topic := ccloud.ParseArgs()
+    conf := ccloud.ReadCCloudConfig(*configFile)
 
     // Create Producer instance
     p, err := kafka.NewProducer(&kafka.ConfigMap{
@@ -90,7 +91,8 @@ func main() {
     }
     a.Close()
 
-    // Optional per-message on_delivery handler (triggered by Poll() or Flush())
+    // Go-routine to handle message delivery reports and
+    // possibly other event types (errors, stats, etc)
     go func() {
         for e := range p.Events() {
 	    switch ev := e.(type) {
@@ -106,21 +108,24 @@ func main() {
     }()
 
     for n := 0; n < 10; n++ {
-        record_key := "alice"
+        recordKey := "alice"
         data := &RecordValue{
             Count: n}
-        record_value, _ := json.Marshal(&data)
-        fmt.Printf("Preparing to produce record: %s\t%s\n", record_key, record_value)
+        recordValue, _ := json.Marshal(&data)
+        fmt.Printf("Preparing to produce record: %s\t%s\n", recordKey, recordValue)
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: topic, Partition: kafka.PartitionAny},
-                Key:            []byte(record_key),
-		Value:          []byte(record_value),
+                Key:            []byte(recordKey),
+		Value:          []byte(recordValue),
 	}, nil)
     }
 
+    // Wait for all messages to be delivered
     p.Flush(15 * 1000)
 
     fmt.Printf("10 messages were produced to topic %s!", *topic)
+
+    p.Close()
 
 }
 

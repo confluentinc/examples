@@ -25,7 +25,7 @@ package main
  */
 
 import (
-    "./ccloud_lib"
+    "./ccloud"
     "github.com/confluentinc/confluent-kafka-go/kafka"
     "os"
     "os/signal"
@@ -34,13 +34,14 @@ import (
     "syscall"
 )
 
-type RecordValue ccloud_lib.RecordValue
+// RecordValue represents the struct of the value in a Kafka message
+type RecordValue ccloud.RecordValue
 
 func main() {
 
     // Initialization
-    config_file, topic := ccloud_lib.ParseArgs()
-    conf := ccloud_lib.ReadCCloudConfig(*config_file)
+    configFile, topic := ccloud.ParseArgs()
+    conf := ccloud.ReadCCloudConfig(*configFile)
 
     // Create Consumer instance
     c, err := kafka.NewConsumer(&kafka.ConfigMap{
@@ -58,11 +59,12 @@ func main() {
 
     // Subscribe to topic
     err = c.SubscribeTopics([]string{*topic}, nil)
+    // Set up a channel for handling Ctrl-C, etc
     sigchan := make(chan os.Signal, 1)
     signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
 
     // Process messages
-    total_count := 0
+    totalCount := 0
     run := true
     for run == true {
         select {
@@ -76,16 +78,16 @@ func main() {
 		}
 		switch e := ev.(type) {
 		case *kafka.Message:
-                    record_key := string(e.Key)
-                    record_value := e.Value
+                    recordKey := string(e.Key)
+                    recordValue := e.Value
                     data := RecordValue{}
-                    err := json.Unmarshal(record_value, &data)
+                    err := json.Unmarshal(recordValue, &data)
 	            if err != nil {
-		        fmt.Println("error:", err)
+                        fmt.Printf("Failed to decode JSON at offset %d: %v", e.TopicPartition.Offset, err)
 	            }
                     count := data.Count
-                    total_count += count
-                    fmt.Printf("Consumed record with key %s and value %s, and updated total count to %d\n", record_key, record_value, total_count)
+                    totalCount += count
+                    fmt.Printf("Consumed record with key %s and value %s, and updated total count to %d\n", recordKey, recordValue, totalCount)
 		case kafka.Error:
 			// Errors should generally be considered as informational, the client will try to automatically recover
 			fmt.Fprintf(os.Stderr, "%% Error: %v\n", e)
