@@ -66,7 +66,7 @@ func main() {
     ctx, cancel := context.WithCancel(context.Background())
     defer cancel()
     // Create topics on cluster.
-    // Set Admin options to wait up to 60s for the operation to finish
+    // Set Admin options to wait up to 60s for the operation to finish on the remote cluster
     maxDur, err := time.ParseDuration("60s")
     if err != nil {
         fmt.Printf("ParseDuration(60s): %s", err)

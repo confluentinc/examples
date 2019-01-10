@@ -32,6 +32,7 @@ import (
     "fmt"
     "encoding/json"
     "syscall"
+    "time"
 )
 
 // RecordValue represents the struct of the value in a Kafka message
@@ -72,28 +73,22 @@ func main() {
                 fmt.Printf("Caught signal %v: terminating\n", sig)
                 run = false
             default:
-		ev := c.Poll(100)
-		if ev == nil {
-			continue
-		}
-		switch e := ev.(type) {
-		case *kafka.Message:
-                    recordKey := string(e.Key)
-                    recordValue := e.Value
+                msg, err := c.ReadMessage(100 * time.Millisecond)
+		if err == nil {
+                    recordKey := string(msg.Key)
+                    recordValue := msg.Value
                     data := RecordValue{}
                     err := json.Unmarshal(recordValue, &data)
 	            if err != nil {
-                        fmt.Printf("Failed to decode JSON at offset %d: %v", e.TopicPartition.Offset, err)
+                        fmt.Printf("Failed to decode JSON at offset %d: %v", msg.TopicPartition.Offset, err)
+                        continue
 	            }
                     count := data.Count
                     totalCount += count
                     fmt.Printf("Consumed record with key %s and value %s, and updated total count to %d\n", recordKey, recordValue, totalCount)
-		case kafka.Error:
-			// Errors should generally be considered as informational, the client will try to automatically recover
-			fmt.Fprintf(os.Stderr, "%% Error: %v\n", e)
-		default:
-			fmt.Printf("Ignored %v\n", e)
-		}
+		} else {
+                    continue
+                }
         }
     }
 
@@ -101,5 +96,3 @@ func main() {
     c.Close()
 
 }
-
-
