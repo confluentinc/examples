@@ -41,6 +41,10 @@ kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-fa
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic customers
 kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic payments
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic platinum
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic gold
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic silver
+kafka-topics --create --zookeeper localhost:2181 --partitions 1 --replication-factor 1 --topic bronze
 
 echo "Starting OrdersService"
 (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="localhost:9092 http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &)
@@ -65,10 +69,10 @@ if is_ce; then confluent config elasticsearch -d ./connectors/connector_elastics
 ./dashboard/configure_kibana_dashboard.sh
 
 # Start microservices
-for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
-    echo "Starting $SERVICE"
-    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
-done
+#for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
+#    echo "Starting $SERVICE"
+#    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
+#done
 
 sleep 10
 
@@ -84,5 +88,6 @@ exit ;
 EOF
 
 
+exit
 ./read-topics.sh
 
