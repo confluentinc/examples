@@ -69,10 +69,10 @@ if is_ce; then confluent config elasticsearch -d ./connectors/connector_elastics
 ./dashboard/configure_kibana_dashboard.sh
 
 # Start microservices
-#for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
-#    echo "Starting $SERVICE"
-#    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
-#done
+for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
+    echo "Starting $SERVICE"
+    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
+done
 
 sleep 10
 
@@ -87,7 +87,5 @@ run script 'ksql.commands';
 exit ;
 EOF
 
-
-exit
 ./read-topics.sh
 
