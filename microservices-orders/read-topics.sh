@@ -31,7 +31,7 @@ confluent consume InventoryService-store-of-reserved-stock-changelog --property 
 
 # Topic platinum: dynamic routing
 echo -e "\n-----platinum-----"
-confluent consume platinum --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 3
+confluent consume platinum --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 3 --timeout-ms 10000
 
 # Read queries
 ksql http://localhost:8088 <<EOF
