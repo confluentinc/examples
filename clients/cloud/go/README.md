@@ -5,7 +5,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* [Confluent's Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go) installed on your machine
+* [Confluent's Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go#getting-started) installed on your machine
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
 
@@ -67,7 +67,5 @@ Consumed record with key alice and value {"Count":6}, and updated total count to
 Consumed record with key alice and value {"Count":7}, and updated total count to 28
 Consumed record with key alice and value {"Count":8}, and updated total count to 36
 Consumed record with key alice and value {"Count":9}, and updated total count to 45
-Ignored EOF at b1[0]@10(Broker: No more messages)
-Ignored OffsetsCommitted (<nil>, [b1[0]@10])
 ...
 ```
