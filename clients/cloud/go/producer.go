@@ -37,7 +37,7 @@ import (
 type RecordValue ccloud.RecordValue
 
 // CreateTopic creates a topic using the Admin Client API
-func CreateTopic (p *kafka.Producer, topic *string) {
+func CreateTopic(p *kafka.Producer, topic string) {
 
 	a, err := kafka.NewAdminClientFromProducer(p)
 	if err != nil {
@@ -60,7 +60,7 @@ func CreateTopic (p *kafka.Producer, topic *string) {
 		// Multiple topics can be created simultaneously
 		// by providing more TopicSpecification structs here.
 		[]kafka.TopicSpecification{{
-			Topic:             *topic,
+			Topic:             topic,
 			NumPartitions:     1,
 			ReplicationFactor: 3}},
 		// Admin options
@@ -71,15 +71,14 @@ func CreateTopic (p *kafka.Producer, topic *string) {
 	}
 	for _, result := range results {
 		if result.Error.Code() != kafka.ErrNoError && result.Error.Code() != kafka.ErrTopicAlreadyExists {
-			fmt.Printf("Failed to create topic %s: %s", topic, result.Error)
+			fmt.Printf("Failed to create topic: %v\n", result.Error)
 			os.Exit(1)
 		}
-		fmt.Printf("%s\n", result)
+		fmt.Printf("%v\n", result)
 	}
 	a.Close()
 
 }
-
 
 func main() {
 
@@ -100,7 +99,7 @@ func main() {
 	}
 
 	// Create topic if needed
-	CreateTopic (p, topic)
+	CreateTopic(p, *topic)
 
 	// Go-routine to handle message delivery reports and
 	// possibly other event types (errors, stats, etc)
