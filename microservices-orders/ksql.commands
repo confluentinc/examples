@@ -4,15 +4,15 @@ CREATE STREAM orders (id varchar, customerid bigint, state varchar, product varc
 --Next 3 steps are required to create a TABLE with keys of String type
 
 --1. Identify fields in schema, even with Avro, because this is a script (https://github.com/confluentinc/ksql/issues/1031)
-CREATE STREAM customers_with_wrong_format_key (id bigint, firstname varchar, lastname varchar, email varchar, address varchar) WITH (kafka_topic='customers', value_format='AVRO');
+CREATE STREAM customers_with_wrong_format_key (id bigint, firstname varchar, lastname varchar, email varchar, address varchar, level varchar) WITH (kafka_topic='customers', value_format='AVRO');
 
 --2. Derive a new stream with the required key changes.
 --The CAST statement converts the key to the required format.
 --The PARTITION BY clause re-partitions the stream based on the new, converted key.
-CREATE STREAM customers_with_proper_key WITH (KAFKA_TOPIC='customers-with-proper-key', PARTITIONS=1) AS SELECT CAST(id as VARCHAR) as customerid, firstname, lastname, email, address FROM customers_with_wrong_format_key PARTITION BY customerid;
+CREATE STREAM customers_with_proper_key WITH (KAFKA_TOPIC='customers-with-proper-key', PARTITIONS=1) AS SELECT CAST(id as VARCHAR) as customerid, firstname, lastname, email, address, level FROM customers_with_wrong_format_key PARTITION BY customerid;
 
 --3. Create the table on the properly keyed stream
-CREATE TABLE customers_table (customerid varchar, firstname varchar, lastname varchar, email varchar, address varchar) WITH (KAFKA_TOPIC='customers-with-proper-key', VALUE_FORMAT='AVRO', KEY='customerid');
+CREATE TABLE customers_table (customerid varchar, firstname varchar, lastname varchar, email varchar, address varchar, level varchar) WITH (KAFKA_TOPIC='customers-with-proper-key', VALUE_FORMAT='AVRO', KEY='customerid');
 
 --Join customer information based on customer id
 CREATE STREAM orders_cust1_joined AS SELECT customers_table.customerid AS customerid, firstname, lastname, state, product, quantity, price FROM orders LEFT JOIN customers_table ON orders.customerid = customers_table.customerid;

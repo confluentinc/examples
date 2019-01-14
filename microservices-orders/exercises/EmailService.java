@@ -2,6 +2,7 @@ package io.confluent.examples.streams.microservices;
 
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.CUSTOMERS;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS;
+import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS_ENRICHED;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.PAYMENTS;
 import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.MIN;
 import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.addShutdownHookAndBlock;
@@ -10,6 +11,7 @@ import static io.confluent.examples.streams.microservices.util.MicroserviceUtils
 
 import io.confluent.examples.streams.avro.microservices.Customer;
 import io.confluent.examples.streams.avro.microservices.Order;
+import io.confluent.examples.streams.avro.microservices.OrderEnriched;
 import io.confluent.examples.streams.avro.microservices.Payment;
 
 import org.apache.kafka.streams.KafkaStreams;
@@ -19,6 +21,7 @@ import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.JoinWindows;
 import org.apache.kafka.streams.kstream.Joined;
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Produced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +37,9 @@ public class EmailService implements Service {
   private final String SERVICE_APP_ID = getClass().getSimpleName();
 
   private KafkaStreams streams;
-  private Emailer emailer;
+  private final Emailer emailer;
 
-  public EmailService(Emailer emailer) {
+  public EmailService(final Emailer emailer) {
     this.emailer = emailer;
   }
 
@@ -84,11 +87,17 @@ public class EmailService implements Service {
             -> emailer.sendEmail(emailTuple)
         );
 
+    //Send the order to a topic whose name is the value of customer level
+    orders.join(customers, (orderId, order) -> order.getCustomerId(), (order, customer) -> new OrderEnriched (order.getId(), order.getCustomerId(), customer.getLevel()))
+
+        // TODO 3.3: route an enriched order record to a topic that is dynamically determined from the value of the customerLevel field of the corresponding customer
+        // ...
+
     return new KafkaStreams(builder.build(), baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID));
   }
 
-  public static void main(String[] args) throws Exception {
-    EmailService service = new EmailService(new LoggingEmailer());
+  public static void main(final String[] args) throws Exception {
+    final EmailService service = new EmailService(new LoggingEmailer());
     service.start(parseArgsAndConfigure(args), "/tmp/kafka-streams");
     addShutdownHookAndBlock(service);
   }
@@ -96,10 +105,9 @@ public class EmailService implements Service {
   private static class LoggingEmailer implements Emailer {
 
     @Override
-    public void sendEmail(EmailTuple details) {
+    public void sendEmail(final EmailTuple details) {
       //In a real implementation we would do something a little more useful
-      log.warn("Sending an email to: \nCustomer:%s\nOrder:%s\nPayment%s", details.customer,
-          details.order, details.payment);
+      log.warn("Sending email: \nCustomer:{}\nOrder:{}\nPayment{}", details.customer, details.order, details.payment);
     }
   }
 
@@ -120,12 +128,12 @@ public class EmailService implements Service {
     public Payment payment;
     public Customer customer;
 
-    public EmailTuple(Order order, Payment payment) {
+    public EmailTuple(final Order order, final Payment payment) {
       this.order = order;
       this.payment = payment;
     }
 
-    EmailTuple setCustomer(Customer customer) {
+    EmailTuple setCustomer(final Customer customer) {
       this.customer = customer;
       return this;
     }

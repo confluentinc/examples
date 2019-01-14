@@ -50,21 +50,21 @@ The java source code for these microservices are in the :cp-examples:`kafka-stre
 
 Summary of services and the topics they consume from and produce to:
 
-+-------------------------------------+-----------------------------------+-----------------------+
-| Service                             | Consumes From                     | Produces To           |
-+=====================================+===================================+=======================+
-| InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`   |
-+-------------------------------------+-----------------------------------+-----------------------+
-| FraudService                        | `orders`                          | `order-validations`   |
-+-------------------------------------+-----------------------------------+-----------------------+
-| OrderDetailsService                 | `orders`                          | `order-validations`   |
-+-------------------------------------+-----------------------------------+-----------------------+
-| ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`              |
-+-------------------------------------+-----------------------------------+-----------------------+
-| EmailService                        | `orders`, `payments`, `customers` | -                     |
-+-------------------------------------+-----------------------------------+-----------------------+
-| OrdersService                       | -                                 | `orders`              |
-+-------------------------------------+-----------------------------------+-----------------------+
++-------------------------------------+-----------------------------------+----------------------------------------+
+| Service                             | Consumes From                     | Produces To                            |
++=====================================+===================================+========================================+
+| InventoryService                    | `orders`, `warehouse-inventory`   | `order-validations`                    |
++-------------------------------------+-----------------------------------+----------------------------------------+
+| FraudService                        | `orders`                          | `order-validations`                    |
++-------------------------------------+-----------------------------------+----------------------------------------+
+| OrderDetailsService                 | `orders`                          | `order-validations`                    |
++-------------------------------------+-----------------------------------+----------------------------------------+
+| ValidationsAggregatorService        | `order-validations`, `orders`     | `orders`                               |
++-------------------------------------+-----------------------------------+----------------------------------------+
+| EmailService                        | `orders`, `payments`, `customers` | `platinum`, `gold`, `silver`, `bronze` |
++-------------------------------------+-----------------------------------+----------------------------------------+
+| OrdersService                       | -                                 | `orders`                               |
++-------------------------------------+-----------------------------------+----------------------------------------+
 
 
 End-to-end Streaming ETL
@@ -396,6 +396,7 @@ Read more on `an overview of distributed, real-time joins <https://www.confluent
 In this exercise, you will write a service that joins streaming order information with streaming payment information and data from a customer database.
 First, the payment stream needs to be rekeyed to match the same key info as the order stream before joined together.
 The resulting stream is then joined with the customer information that was read into Kafka by a JDBC source from a customer database.
+Additionally, this service performs dynamic routing: an enriched order record is written to a topic that is determined from the value of level field of the corresponding customer.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.java|microservices-orders/exercises/EmailService.java`
 
@@ -406,6 +407,8 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.ja
    #. customer Id, specified by `order.getCustomerId()`, using a KeyValueMapper that gets the customer id from the tuple in the record's value
    #. method that computes a value for the result record, in this case `EmailTuple::setCustomer`
 
+#. TODO 3.3: route an enriched order record to a topic that is dynamically determined from the value of the customerLevel field of the corresponding customer
+
 .. tip::
 
    The following APIs will be helpful:
@@ -415,6 +418,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.ja
    * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#selectKey-org.apache.kafka.streams.kstream.KeyValueMapper-
    * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#join-org.apache.kafka.streams.kstream.KTable-org.apache.kafka.streams.kstream.ValueJoiner-org.apache.kafka.streams.kstream.Joined-
    * :cp-examples:`kafka-streams-examples/src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java|src/main/java/io/confluent/examples/streams/microservices/domain/Schemas.java`
+   * https://docs.confluent.io/current/streams/javadocs/org/apache/kafka/streams/kstream/KStream.html#to-org.apache.kafka.streams.processor.TopicNameExtractor-org.apache.kafka.streams.kstream.Produced-
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/EmailService.java`.
 

@@ -29,6 +29,10 @@ confluent consume warehouse-inventory --property print.key=true --property value
 echo -e "\n-----InventoryService-store-of-reserved-stock-changelog-----"
 confluent consume InventoryService-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --from-beginning --max-messages 5
 
+# Topic platinum: dynamic routing
+echo -e "\n-----platinum-----"
+confluent consume platinum --value-format avro --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --from-beginning --max-messages 3 --timeout-ms 10000
+
 # Read queries
 ksql http://localhost:8088 <<EOF
 SELECT * FROM orders_cust1_joined LIMIT 2;
