@@ -29,6 +29,10 @@ docker-compose exec connect kafka-console-consumer --bootstrap-server broker:909
 echo -e "\n-----InventoryService-store-of-reserved-stock-changelog-----"
 docker-compose exec connect kafka-console-consumer --bootstrap-server broker:9092 --topic InventoryService-store-of-reserved-stock-changelog --property print.key=true --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer -from-beginning --from-beginning --max-messages 5
 
+# Topic platinum: dynamic routing
+echo -e "\n-----platinum-----"
+docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:9092 --topic platinum --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property schema.registry.url=http://schema-registry:8081 --from-beginning --max-messages 3 --timeout-ms 10000
+
 # Read queries
 docker-compose exec ksql-cli bash -c "ksql http://ksql-server:8088 <<EOF
 SELECT * FROM orders_cust1_joined LIMIT 3;
