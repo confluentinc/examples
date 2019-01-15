@@ -23,10 +23,6 @@ async function createProducer(config) {
   });
 }
 
-function range(length) {
-  return Array.from(Array(length).keys());
-}
-
 async function produceExample() {
   const config = await configFromCli();
 
@@ -36,14 +32,16 @@ async function produceExample() {
 
   const producer = await createProducer(config);
 
-  range(10).forEach((count) => {
+  const range = Array(10).keys();
+
+  for (const count of range) {
     const key = 'alice';
     const value = Buffer.from(JSON.stringify({ count }));
     
     console.log(`Producing record ${key}\t${value}`);
 
     producer.produce(config.topic, -1, value, key);
-  });
+  }
 
   producer.flush(500, () => {
     producer.disconnect();
