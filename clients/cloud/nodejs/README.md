@@ -19,7 +19,7 @@ sasl.password=<secret-access-key>
 $ cd clients/nodejs
 $ npm install
 ```
-_Users of macOS 10.13 (High Sierra) and above should heed [additional configuration instructions](https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave) before running `npm install`._
+_Note: Users of macOS 10.13 (High Sierra) and above should heed [node-rdkafka's additional configuration instructions related to OpenSSL](https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave) before running `npm install`._
 
 
 # Example 1: Hello World!
