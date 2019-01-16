@@ -14,16 +14,13 @@ bootstrap.servers=<broker-1,broker-2,broker-3>
 sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
 ```
-* Users of macOS 10.13 (High Sierra) and above may need to specify OpenSSL paths so that the client's [librdkafka](https://github.com/edenhill/librdkafka) bindings can be built correctly:
-```bash
-export CPPFLAGS=-I/usr/local/opt/openssl/include
-export LDFLAGS=-L/usr/local/opt/openssl/lib
-```
-* Install npm dependencies:
+* Install npm dependencies.
 ```bash
 $ cd clients/nodejs
 $ npm install
 ```
+_Users of macOS 10.13 (High Sierra) and above should heed [additional configuration instructions](https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave) before running `npm install`._
+
 
 # Example 1: Hello World!
 
