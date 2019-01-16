@@ -49,6 +49,7 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
+* `jq` installed on your machine
 
 To run the local setup:
 
@@ -62,6 +63,7 @@ $ ./start.sh
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
+* `jq` installed on your machine
 
 To run the Docker setup:
 
