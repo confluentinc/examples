@@ -9,11 +9,14 @@ You can [run it using Docker](https://docs.confluent.io/current/ksql/docs/tutori
 ## Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.0](https://www.confluent.io/download/)
+* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* `jq` installed on your machine
 * [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
 * Grafana 5.0.3 to visualize data
   * If you do not want to use Grafana, comment out ``check_running_grafana`` in the ``start.sh`` script
+
+Note: this demo has been validated only on macOS.
 
 ## What Should I see?
 
