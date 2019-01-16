@@ -1,3 +1,19 @@
+/* Copyright 2019 Confluent Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 const minimist = require('minimist');
 const fs = require('fs');
 const readline = require('readline');
@@ -19,7 +35,7 @@ const requiredConfig = [
 
 const alias = {
   t: 'topic',
-  c: 'config'
+  f: 'config'
 };
 
 exports.configFromCli = async function(args = process.argv.slice(2)) {
@@ -60,31 +76,30 @@ ${hints.join('\n\n')}
 
 // config file access and parsing
 
-function assertRead(path) {
-  return new Promise((resolve, reject) =>
-    fs.access(path, fs.constants.R_OK, (err) => err 
-      ? reject(err) 
-      : resolve()));
-}
-
 function readAllLines(path) {    
-  return new Promise((resolve, _) => {
+  return new Promise((resolve, reject) => {
+    // Test file access directly, so that we can fail fast.
+    // Otherwise, an ENOENT is thrown in the global scope by the readline internals.
+    try {
+      fs.accessSync(path, fs.constants.R_OK);
+    } catch (err) {
+      reject(err);
+    }
+    
     let lines = [];
-
+    
     const reader = readline.createInterface({
       input: fs.createReadStream(path),
       crlfDelay: Infinity
     });
-
+    
     reader
       .on('line', (line) => lines.push(line))
-      .on('close', () => resolve(lines));    
+      .on('close', () => resolve(lines));
   });
 }
 
 async function configFromPath(path) {
-  await assertRead(path);
-  
   const lines = await readAllLines(path);
 
   return lines

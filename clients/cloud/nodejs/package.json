@@ -2,6 +2,9 @@
   "name": "confluent-examples-nodejs",
   "private": true,
   "version": "0.0.1",
+  "engines": {
+    "node": ">=8.6"
+  },
   "dependencies": {
     "minimist": "^1.2.0",
     "node-rdkafka": "^2.5.1"
