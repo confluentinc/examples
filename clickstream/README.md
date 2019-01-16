@@ -16,6 +16,8 @@ You can [run it using Docker](https://docs.confluent.io/current/ksql/docs/tutori
 * Grafana 5.0.3 to visualize data
   * If you do not want to use Grafana, comment out ``check_running_grafana`` in the ``start.sh`` script
 
+Note: this demo has been validated only on macOS.
+
 ## What Should I see?
 
 After you run `./start.sh`:
