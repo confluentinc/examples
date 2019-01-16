@@ -4,6 +4,7 @@
 . ../utils/helper.sh
 
 check_ccloud || exit
+check_jq || exit
 
 ./ccloud-generate-cp-configs.sh
 
