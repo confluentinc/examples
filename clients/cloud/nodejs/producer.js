@@ -61,7 +61,6 @@ function createProducer(config, onDeliveryReport) {
     'sasl.password': config['sasl.password'],
     'security.protocol': 'SASL_SSL',
     'sasl.mechanisms': 'PLAIN',
-    'dr_cb': true,
     'dr_msg_cb': true
   });
 
