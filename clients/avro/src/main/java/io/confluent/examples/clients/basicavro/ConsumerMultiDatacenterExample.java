@@ -17,8 +17,7 @@ import java.util.Properties;
 
 public class ConsumerMultiDatacenterExample {
 
-    private static final String TOPIC = "topic1";
-
+    private static final String DEFAULT_TOPIC = "topic1";
     private static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
     private static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
     private static final String DEFAULT_MONITORING_INTERCEPTORS_BOOTSTRAP_SERVERS = DEFAULT_BOOTSTRAP_SERVERS;
@@ -26,13 +25,14 @@ public class ConsumerMultiDatacenterExample {
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) {
 
-        final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
-        final String schemaRegistryUrl = args.length > 1 ? args[1] : DEFAULT_SCHEMA_REGISTRY_URL;
-        final String monitoringInterceptorBootstrapServers = args.length > 2 ? args[2] : DEFAULT_MONITORING_INTERCEPTORS_BOOTSTRAP_SERVERS;
+        final String topic = args.length > 0 ? args[0] : DEFAULT_TOPIC;
+        final String bootstrapServers = args.length > 1 ? args[1] : DEFAULT_BOOTSTRAP_SERVERS;
+        final String schemaRegistryUrl = args.length > 2 ? args[2] : DEFAULT_SCHEMA_REGISTRY_URL;
+        final String monitoringInterceptorBootstrapServers = args.length > 3 ? args[3] : DEFAULT_MONITORING_INTERCEPTORS_BOOTSTRAP_SERVERS;
 
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, "java-consumer-app");
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, "java-consumer-" + topic);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
@@ -42,7 +42,7 @@ public class ConsumerMultiDatacenterExample {
         props.put("confluent.monitoring.interceptor.bootstrap.servers", monitoringInterceptorBootstrapServers);
 
         try (final KafkaConsumer<String, GenericRecord> consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Collections.singletonList(TOPIC));
+            consumer.subscribe(Collections.singletonList(DEFAULT_TOPIC));
 
             while (true) {
                 final ConsumerRecords<String, GenericRecord> records = consumer.poll(100);
