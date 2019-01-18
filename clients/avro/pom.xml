@@ -61,6 +61,17 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
        <artifactId>kafka-connect-replicator</artifactId>
        <version>${confluent.version}</version>
     </dependency>
+    <!--
+        This dependency is included to demonstrate the use of
+        Confluent Monitoring Interceptors in conjunction with
+        Kafka Streams but isn't a required
+        dependency for running Kafka Streams.
+    -->
+    <dependency>
+        <groupId>io.confluent</groupId>
+        <artifactId>monitoring-interceptors</artifactId>
+        <version>${confluent.version}</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

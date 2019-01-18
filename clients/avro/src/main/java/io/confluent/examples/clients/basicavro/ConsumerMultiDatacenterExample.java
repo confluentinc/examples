@@ -21,12 +21,14 @@ public class ConsumerMultiDatacenterExample {
 
     private static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
     private static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
+    private static final String DEFAULT_MONITORING_INTERCEPTORS_BOOTSTRAP_SERVERS = DEFAULT_BOOTSTRAP_SERVERS;
 
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) {
 
         final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
         final String schemaRegistryUrl = args.length > 1 ? args[1] : DEFAULT_SCHEMA_REGISTRY_URL;
+        final String monitoringInterceptorBootstrapServers = args.length > 2 ? args[2] : DEFAULT_MONITORING_INTERCEPTORS_BOOTSTRAP_SERVERS;
 
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -36,7 +38,8 @@ public class ConsumerMultiDatacenterExample {
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
-        props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.connect.replicator.offsets.ConsumerTimestampsInterceptor");
+        props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.connect.replicator.offsets.ConsumerTimestampsInterceptor,io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
+        props.put("confluent.monitoring.interceptor.bootstrap.servers", monitoringInterceptorBootstrapServers);
 
         try (final KafkaConsumer<String, GenericRecord> consumer = new KafkaConsumer<>(props)) {
             consumer.subscribe(Collections.singletonList(TOPIC));
