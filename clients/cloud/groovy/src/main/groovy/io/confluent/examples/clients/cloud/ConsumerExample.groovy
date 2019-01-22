@@ -1,19 +1,27 @@
 /*
-  Copyright 2019 Confluent Inc.
- 
-  Licensed under the Apache License, Version 2.0 (the "License");
-  you may not use this file except in compliance with the License.
-  You may obtain a copy of the License at
- 
-  http://www.apache.org/licenses/LICENSE-2.0
- 
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS,
-  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  See the License for the specific language governing permissions and
-  limitations under the License.
+ * Copyright 2019 Confluent Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package io.confluent.examples.clients.cloud
+
+import static io.confluent.examples.clients.cloud.util.PropertiesLoader.loadConfig
+import static io.confluent.kafka.serializers.KafkaJsonDeserializerConfig.JSON_VALUE_TYPE
+import static java.lang.System.exit
+import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG
+import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG
+import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG
+import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
 
 import groovy.transform.CompileStatic
 import io.confluent.examples.clients.cloud.model.DataRecord
@@ -22,11 +30,6 @@ import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 
 import java.time.Duration
-
-import static io.confluent.examples.clients.cloud.util.PropertiesLoader.loadConfig
-import static io.confluent.kafka.serializers.KafkaJsonDeserializerConfig.JSON_VALUE_TYPE
-import static java.lang.System.exit
-import static org.apache.kafka.clients.consumer.ConsumerConfig.*
 
 @CompileStatic
 class ConsumerExample {
@@ -40,16 +43,16 @@ class ConsumerExample {
     def topic = args[1]
 
     // Load properties from disk.
-    def p = loadConfig(args[0])
+    def config = loadConfig(args[0])
 
     // Add additional properties.
-    p[KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer.name
-    p[VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaJsonDeserializer.name
-    p[JSON_VALUE_TYPE] = DataRecord.class
-    p[GROUP_ID_CONFIG] = 'groovy_example_group_1'
-    p[AUTO_OFFSET_RESET_CONFIG] = 'earliest'
+    config[KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer.name
+    config[VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaJsonDeserializer.name
+    config[JSON_VALUE_TYPE] = DataRecord
+    config[GROUP_ID_CONFIG] = 'groovy_example_group_1'
+    config[AUTO_OFFSET_RESET_CONFIG] = 'earliest'
 
-    def consumer = new KafkaConsumer<String, DataRecord>(p)
+    def consumer = new KafkaConsumer<String, DataRecord>(config)
     consumer.subscribe([topic] as List<String>)
 
     def totalCount = 0L

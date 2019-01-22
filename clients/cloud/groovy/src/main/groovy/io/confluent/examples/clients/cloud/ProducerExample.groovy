@@ -15,6 +15,12 @@
  */
 package io.confluent.examples.clients.cloud
 
+import static io.confluent.examples.clients.cloud.util.PropertiesLoader.loadConfig
+import static java.lang.System.exit
+import static org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG
+import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG
+import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
+
 import groovy.transform.CompileStatic
 import io.confluent.examples.clients.cloud.model.DataRecord
 import io.confluent.kafka.serializers.KafkaJsonSerializer
@@ -28,73 +34,68 @@ import org.apache.kafka.common.serialization.StringSerializer
 
 import java.util.concurrent.ExecutionException
 
-import static io.confluent.examples.clients.cloud.util.PropertiesLoader.loadConfig
-import static java.lang.System.exit
-import static org.apache.kafka.clients.admin.AdminClient.*
-import static org.apache.kafka.clients.producer.ProducerConfig.*
-
 @CompileStatic
 class ProducerExample {
 
   // Create topic in Confluent Cloud
-  static void createTopic(String topic,
-                          int partitions,
-                          int replication,
-                          Properties cloudConfig) {
+  static void newTopic(String topic,
+                       int partitions,
+                       int replication,
+                       Properties cloudConfig) {
 
     def newTopic = new NewTopic(topic, partitions, (short) replication)
 
-    def adminClient = create cloudConfig
+    def adminClient = AdminClient.create cloudConfig
 
-    adminClient.withCloseable {
-      it.createTopics([newTopic]).all().get()
+    adminClient.withCloseable { client ->
+      client.createTopics([newTopic]).all().get()
     }
   }
 
   static void main(String[] args) {
     if (args.length != 2) {
-      println "Please provide command line arguments: <configPath> <topic>"
+      println 'Please provide command line arguments: <configPath> <topic>'
       exit 1
     }
 
     // Load properties from file
-    def props = loadConfig(args[0])
+    def config = loadConfig args[0]
 
     // Create topic if needed
     def topic = args[1]
     try {
-      createTopic topic, 1, 3, props
+      newTopic topic, 1, 3, config
     } catch (ExecutionException e) {
-      if (!(e.cause instanceof TopicExistsException)) {
-        throw new RuntimeException(e)
+      if (!(e.cause.class == TopicExistsException)) {
+        throw e
       }
     }
 
     // Add additional properties.
-    props[ACKS_CONFIG] = "all"
-    props[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer.name
-    props[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaJsonSerializer.name
+    config[ACKS_CONFIG] = 'all'
+    config[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer.name
+    config[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaJsonSerializer.name
 
-    def producer = new KafkaProducer<String, DataRecord>(props)
+    def producer = new KafkaProducer<String, DataRecord>(config)
 
     // Produce sample data
-    final Long numMessages = 10L
+    final numMessages = 10L
 
     producer.withCloseable {
-      for (Long i = 0L; i < numMessages; i++) {
+      for (def i = 0L; i < numMessages; i++) {
 
         def key = 'alice'
         def record = new DataRecord(i)
 
         println "Producing record: $key\t$record\n"
         def record1 = new ProducerRecord<String, DataRecord>(topic, key, record)
-        producer.send(record1, { RecordMetadata m, Exception e ->
-          if (!e) {
-            println "Produced record to topic ${m.topic()} partition [${m.partition()}] @ offset ${m.offset()}\n"
-          } else {
+        producer.send record1, { RecordMetadata metadata, Exception e ->
+          if (e) {
             e.printStackTrace()
+          } else {
+            println "Produced record to topic ${metadata.topic()} partition [${metadata.partition()}] @ offset ${metadata.offset()}\n"
           }
-        })
+        }
       }
 
       producer.flush()

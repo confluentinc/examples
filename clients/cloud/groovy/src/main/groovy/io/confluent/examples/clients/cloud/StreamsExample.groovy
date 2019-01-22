@@ -13,11 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.confluent.examples.clients.cloud
 
+import static io.confluent.examples.clients.cloud.util.PropertiesLoader.loadConfig
+import static java.lang.System.exit
+import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
+import static org.apache.kafka.streams.StreamsConfig.APPLICATION_ID_CONFIG
+import static org.apache.kafka.streams.StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG
+import static org.apache.kafka.streams.StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG
+import static org.apache.kafka.streams.StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG
+import static org.apache.kafka.streams.StreamsConfig.REPLICATION_FACTOR_CONFIG
+
 import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
 import io.confluent.examples.clients.cloud.model.DataRecord
 import io.confluent.kafka.serializers.KafkaJsonDeserializer
 import io.confluent.kafka.serializers.KafkaJsonSerializer
@@ -27,14 +34,10 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.KeyValue
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.kstream.Consumed
+import org.apache.kafka.streams.kstream.KStream
 import org.apache.kafka.streams.kstream.KeyValueMapper
 import org.apache.kafka.streams.kstream.Printed
 import org.apache.kafka.streams.kstream.Reducer
-
-import static io.confluent.examples.clients.cloud.util.PropertiesLoader.loadConfig
-import static java.lang.System.exit
-import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
-import static org.apache.kafka.streams.StreamsConfig.*
 
 @CompileStatic
 class StreamsExample {
@@ -42,41 +45,39 @@ class StreamsExample {
   static void main(String[] args) throws Exception {
 
     if (args.length != 2) {
-      println "Please provide command line arguments: configPath topic"
+      println 'Please provide command line arguments: configPath topic'
       exit 1
     }
 
-    def topic = args[1]
+    String topic = args[1]
 
     // Load properties from disk.
-    def p = loadConfig args[0]
+    Properties config = loadConfig args[0]
 
-    p[APPLICATION_ID_CONFIG] = "groovy_streams_example_group_1"
-    p[DEFAULT_KEY_SERDE_CLASS_CONFIG] = Serdes.String().class.name
-    p[DEFAULT_VALUE_SERDE_CLASS_CONFIG] = Serdes.Long().class.name
+    config[APPLICATION_ID_CONFIG] = 'groovy_streams_example_group_1'
+    config[DEFAULT_KEY_SERDE_CLASS_CONFIG] = Serdes.String().class.name
+    config[DEFAULT_VALUE_SERDE_CLASS_CONFIG] = Serdes.Long().class.name
 
     // Disable caching to print the aggregation value after each record
-    p[CACHE_MAX_BYTES_BUFFERING_CONFIG] = 0
-    p[REPLICATION_FACTOR_CONFIG] = 3
-    p[AUTO_OFFSET_RESET_CONFIG] = "earliest"
-
-    def dataRecordSerde = getJsonSerde()
+    config[CACHE_MAX_BYTES_BUFFERING_CONFIG] = 0
+    config[REPLICATION_FACTOR_CONFIG] = 3
+    config[AUTO_OFFSET_RESET_CONFIG] = 'earliest'
 
     def builder = new StreamsBuilder()
-    def records = builder.stream topic, Consumed.with(Serdes.String(), dataRecordSerde)
+    def records = builder.stream topic, Consumed.with(Serdes.String(), jsonSerde())
 
     def counts = records.map new KeyValueMapper<String, DataRecord, KeyValue<String, Long>>() {
 
       @Override
       KeyValue<String, Long> apply(String key, DataRecord value) {
-        return new KeyValue<String, Long>(key, value.count)
+        new KeyValue<String, Long>(key, value.count)
       }
     }
 
-    counts.print(Printed.<String, Long> toSysOut().withLabel("Consumed record"));
+    counts.print(Printed.<String, Long> toSysOut().withLabel('Consumed record'))
 
     // Aggregate values by key
-    def countAgg = counts
+    KStream<String, Long> countAgg = counts
         .groupByKey()
         .reduce(new Reducer<Long>() {
 
@@ -85,14 +86,14 @@ class StreamsExample {
         aggValue + newValue
       }
     }).toStream()
-    
-    countAgg.print(Printed.<String, Long> toSysOut().withLabel("Running count"));
 
-    def streams = new KafkaStreams(builder.build(), p)
+    countAgg.print(Printed.<String, Long> toSysOut().withLabel('Running count'))
+
+    def streams = new KafkaStreams(builder.build(), config)
     streams.start()
 
     // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
-    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+    Runtime.runtime.addShutdownHook(new Thread(new Runnable() {
 
       @Override
       void run() {
@@ -102,10 +103,10 @@ class StreamsExample {
 
   }
 
-  private static Serde<DataRecord> getJsonSerde() {
+  private static Serde<DataRecord> jsonSerde() {
 
     def serdeProps = [:]
-    serdeProps["json.value.type"] = DataRecord.class
+    serdeProps['json.value.type'] = DataRecord
 
     def mySerializer = new KafkaJsonSerializer<>()
     mySerializer.configure serdeProps, false

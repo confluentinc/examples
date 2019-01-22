@@ -35,9 +35,9 @@ tasks.withType(JavaCompile) {
 
 task runApp(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
-  main = project.hasProperty("mainClass") ? project.getProperty("mainClass") : "package.MyDefaultMain"
-  def configPath = project.hasProperty("configPath") ? project.getProperty("configPath") :
-               "${System.getProperty("user.home")}/.ccloud/config"
-  def topic = project.hasProperty("topic") ? project.getProperty("topic") : "topic1"
+  main = project.hasProperty('mainClass') ? project.getProperty('mainClass') : 'package.MyDefaultMain'
+  def configPath = project.hasProperty('configPath') ? project.getProperty('configPath') :
+               "${System.getProperty('user.home')}/.ccloud/config"
+  def topic = project.hasProperty('topic') ? project.getProperty('topic') : 'topic1'
   args = [configPath, topic]
 }
