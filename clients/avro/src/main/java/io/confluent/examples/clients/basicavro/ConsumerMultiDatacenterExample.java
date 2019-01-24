@@ -9,6 +9,7 @@ import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.avro.generic.GenericRecord;
+import io.confluent.monitoring.clients.interceptor.MonitoringInterceptorConfig;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -30,6 +31,8 @@ public class ConsumerMultiDatacenterExample {
         final String schemaRegistryUrl = args.length > 2 ? args[2] : DEFAULT_SCHEMA_REGISTRY_URL;
         final String monitoringInterceptorBootstrapServers = args.length > 3 ? args[3] : DEFAULT_MONITORING_INTERCEPTORS_BOOTSTRAP_SERVERS;
 
+        System.out.printf("%nConsumer reading topic %s from bootstrap servers %s, with Confluent Schema Registry at %s, producing Confluent Monitoring Interceptors to %s%n%n", topic, bootstrapServers, schemaRegistryUrl, monitoringInterceptorBootstrapServers);
+
         final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "java-consumer-" + topic);
@@ -39,7 +42,7 @@ public class ConsumerMultiDatacenterExample {
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
         props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.connect.replicator.offsets.ConsumerTimestampsInterceptor,io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
-        props.put("confluent.monitoring.interceptor.bootstrap.servers", monitoringInterceptorBootstrapServers);
+        props.put(MonitoringInterceptorConfig.MONITORING_INTERCEPTOR_PREFIX + ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, monitoringInterceptorBootstrapServers);
 
         try (final KafkaConsumer<String, GenericRecord> consumer = new KafkaConsumer<>(props)) {
             consumer.subscribe(Collections.singletonList(DEFAULT_TOPIC));
