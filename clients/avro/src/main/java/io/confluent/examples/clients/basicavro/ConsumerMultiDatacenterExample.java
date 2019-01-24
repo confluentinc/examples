@@ -45,7 +45,7 @@ public class ConsumerMultiDatacenterExample {
         props.put(MonitoringInterceptorConfig.MONITORING_INTERCEPTOR_PREFIX + ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, monitoringInterceptorBootstrapServers);
 
         try (final KafkaConsumer<String, GenericRecord> consumer = new KafkaConsumer<>(props)) {
-            consumer.subscribe(Collections.singletonList(DEFAULT_TOPIC));
+            consumer.subscribe(Collections.singletonList(topic));
 
             while (true) {
                 final ConsumerRecords<String, GenericRecord> records = consumer.poll(100);
