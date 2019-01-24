@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 @file:JvmName("ProducerExample")
+
 package io.confluent.examples.clients.cloud
 
 import io.confluent.examples.clients.cloud.model.DataRecord
 import io.confluent.examples.clients.cloud.util.loadConfig
+import io.confluent.kafka.serializers.KafkaJsonSerializer
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.errors.TopicExistsException
@@ -38,23 +41,13 @@ fun createTopic(topic: String,
 
 
   try {
-    val adminClient = AdminClient.create(cloudConfig)
-
-    adminClient.createTopics(listOf(newTopic)).all().get()
-
-  } catch (e: InterruptedException) {
-    // Ignore if TopicExistsException, which may be valid if topic exists
-    if (e.cause !is TopicExistsException) {
-      throw RuntimeException(e)
+    with(AdminClient.create(cloudConfig)) {
+      createTopics(listOf(newTopic)).all().get()
     }
-  } catch (e: ExecutionException) {
-    if (e.cause !is TopicExistsException) {
-      throw RuntimeException(e)
-    }
+  } catch (e: Exception) {
+    if (e.cause !is TopicExistsException) throw e
   }
-
 }
-
 
 fun main(args: Array<String>) {
   if (args.size != 2) {
@@ -70,19 +63,19 @@ fun main(args: Array<String>) {
   createTopic(topic, 1, 3, props)
 
   // Add additional properties.
-  props[ProducerConfig.ACKS_CONFIG] = "all"
-  props[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
-  props[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = "io.confluent.kafka.serializers.KafkaJsonSerializer"
+  props[ACKS_CONFIG] = "all"
+  props[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
+  props[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaJsonSerializer::class.qualifiedName
 
   val producer = KafkaProducer<String, DataRecord>(props)
 
   // Produce sample data
-  val numMessages = 10L
+  val numMessages = 10
   producer.use {
-    for (i in 0L until numMessages) {
+    repeat(numMessages) { i ->
       val key = "alice"
-      val record = DataRecord(i)
-      System.out.printf("Producing record: %s\t%s%n", key, record)
+      val record = DataRecord(i.toLong())
+      println("Producing record: $key\t$record")
 
       producer.send(ProducerRecord(topic, key, record)) { m: RecordMetadata,
                                                           _: Exception? ->

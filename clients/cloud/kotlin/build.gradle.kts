@@ -1,5 +1,4 @@
 group = "io.confluent.ccloud"
-version = "5.0.1"
 
 plugins {
   java
