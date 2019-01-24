@@ -35,9 +35,9 @@ import java.util.concurrent.ExecutionException
 // Create topic in Confluent Cloud
 fun createTopic(topic: String,
                 partitions: Int,
-                replication: Int,
+                replication: Short,
                 cloudConfig: Properties) {
-  val newTopic = NewTopic(topic, partitions, replication.toShort())
+  val newTopic = NewTopic(topic, partitions, replication)
 
 
   try {
@@ -67,11 +67,9 @@ fun main(args: Array<String>) {
   props[KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.qualifiedName
   props[VALUE_SERIALIZER_CLASS_CONFIG] = KafkaJsonSerializer::class.qualifiedName
 
-  val producer = KafkaProducer<String, DataRecord>(props)
-
   // Produce sample data
   val numMessages = 10
-  producer.use {
+  KafkaProducer<String, DataRecord>(props).use { producer ->
     repeat(numMessages) { i ->
       val key = "alice"
       val record = DataRecord(i.toLong())

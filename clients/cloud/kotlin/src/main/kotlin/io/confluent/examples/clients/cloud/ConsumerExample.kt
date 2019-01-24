@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 @file:JvmName("ConsumerExample")
+
 package io.confluent.examples.clients.cloud
 
 import io.confluent.examples.clients.cloud.model.DataRecord
@@ -24,7 +25,6 @@ import org.apache.kafka.clients.consumer.ConsumerConfig.*
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.time.Duration.ofMillis
-import java.util.*
 
 fun main(args: Array<String>) {
 
@@ -45,8 +45,9 @@ fun main(args: Array<String>) {
   props[GROUP_ID_CONFIG] = "kotlin_example_group_1"
   props[AUTO_OFFSET_RESET_CONFIG] = "earliest"
 
-  val consumer = KafkaConsumer<String, DataRecord>(props)
-  consumer.subscribe(Arrays.asList(topic))
+  val consumer = KafkaConsumer<String, DataRecord>(props).apply {
+    subscribe(listOf(topic))
+  }
 
   var totalCount = 0L
 

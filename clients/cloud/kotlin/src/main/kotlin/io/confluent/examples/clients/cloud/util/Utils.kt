@@ -6,11 +6,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 
-fun loadConfig(configFile: String): Properties {
-  if (!Files.exists(Paths.get(configFile))) {
-    throw IOException("$configFile not found.")
+fun loadConfig(configFile: String) = FileInputStream(configFile).use {
+  Properties().apply {
+    load(it)
   }
-  val cfg = Properties()
-  FileInputStream(configFile).use { cfg.load(it) }
-  return cfg
 }
