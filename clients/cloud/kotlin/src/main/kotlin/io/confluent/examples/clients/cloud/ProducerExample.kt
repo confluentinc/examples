@@ -44,7 +44,7 @@ fun createTopic(topic: String,
     with(AdminClient.create(cloudConfig)) {
       createTopics(listOf(newTopic)).all().get()
     }
-  } catch (e: Exception) {
+  } catch (e: ExecutionException) {
     if (e.cause !is TopicExistsException) throw e
   }
 }
@@ -69,16 +69,20 @@ fun main(args: Array<String>) {
 
   // Produce sample data
   val numMessages = 10
+  // `use` will execute block and close producer automatically  
   KafkaProducer<String, DataRecord>(props).use { producer ->
     repeat(numMessages) { i ->
       val key = "alice"
       val record = DataRecord(i.toLong())
       println("Producing record: $key\t$record")
 
-      producer.send(ProducerRecord(topic, key, record)) { m: RecordMetadata,
-                                                          _: Exception? ->
-        println("Produced record to topic ${m.topic()} partition [${m.partition()}] @ offset ${m.offset()}")
-
+      producer.send(ProducerRecord(topic, key, record)) { m: RecordMetadata, e: Exception? ->
+        when (e) {
+          // no exception, good to go!
+          null -> println("Produced record to topic ${m.topic()} partition [${m.partition()}] @ offset ${m.offset()}")
+          // print stacktrace in case of exception
+          else -> e.printStackTrace()
+        }
       }
     }
 
