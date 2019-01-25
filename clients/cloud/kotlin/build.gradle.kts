@@ -1,8 +1,9 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 group = "io.confluent.ccloud"
 
 plugins {
   java
-  maven
   kotlin("jvm") version "1.3.11"
 }
 
@@ -12,8 +13,8 @@ java {
 }
 
 dependencies {
-  compile("org.jetbrains.kotlin:kotlin-stdlib")
-  compile("org.jetbrains.kotlin:kotlin-reflect")
+  compile(kotlin("stdlib"))
+  compile(kotlin("reflect"))
 
   compile("org.apache.kafka:kafka-clients:2.1.0")
   compile("org.apache.kafka:kafka-streams:2.1.0")
@@ -28,15 +29,16 @@ dependencies {
 
 repositories {
   jcenter()
-
   maven(url = "http://packages.confluent.io/maven/")
-  maven(url = "http://repo.maven.apache.org/maven2")
 }
 
 val configPath: String by project
 val topic: String by project
 val mainClass: String by project
 
+tasks.withType<KotlinCompile> {
+  kotlinOptions.jvmTarget = "1.8"
+}
 
 task("runApp", JavaExec::class) {
   classpath = sourceSets["main"].runtimeClasspath
