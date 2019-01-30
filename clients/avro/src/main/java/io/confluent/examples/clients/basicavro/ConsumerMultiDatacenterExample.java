@@ -41,8 +41,17 @@ public class ConsumerMultiDatacenterExample {
         props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
+
+        // ConsumerTimestampsInterceptor: enables consumer applications to resume where they left off after a datacenter failover when using Confluent Replicator
+        // MonitoringConsumerInterceptor: enables streams monitoring in Confluent Control Center
         props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.connect.replicator.offsets.ConsumerTimestampsInterceptor,io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
         props.put(MonitoringInterceptorConfig.MONITORING_INTERCEPTOR_PREFIX + ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, monitoringInterceptorBootstrapServers);
+
+        // Enable the embedded producer in the Consumer Timestamps Interceptor,
+        // which writes to the `__consumer_timestamps` topic in the origin cluster,
+        // to send Monitoring Producer Interceptors monitoring data
+        props.put("timestamps.producer." + ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
+        props.put("timestamps.producer." + MonitoringInterceptorConfig.MONITORING_INTERCEPTOR_PREFIX + ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, monitoringInterceptorBootstrapServers);
 
         try (final KafkaConsumer<String, GenericRecord> consumer = new KafkaConsumer<>(props)) {
             consumer.subscribe(Collections.singletonList(topic));
