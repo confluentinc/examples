@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.1.1-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.1.1
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.1.1-SNAPSHOT
+    image: confluentinc/cp-enterprise-kafka:5.1.1
     hostname: kafka
     container_name: kafka
     ports:
@@ -37,7 +37,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.1.1-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.1.1
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -57,7 +57,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.1.1-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.1.1
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -105,7 +105,7 @@ services:
       #KSQL_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.1.1-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.1.1
     container_name: ksql-cli
     volumes:
       - $PWD/ksql.commands:/tmp/ksql.commands
@@ -116,7 +116,7 @@ services:
     tty: true
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.1.1-SNAPSHOT
+    image: confluentinc/cp-enterprise-control-center:5.1.1
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -205,7 +205,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
-    image: confluentinc/cp-kafka:5.1.1-SNAPSHOT
+    image: confluentinc/cp-kafka:5.1.1
     hostname: kafka-create-topics
     container_name: kafka-create-topics
     depends_on:
@@ -227,7 +227,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.1.1-SNAPSHOT
+    image: confluentinc/cp-kafka-connect:5.1.1
     hostname: connect
     container_name: connect
     depends_on:
@@ -284,7 +284,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
   replicator:
-    image: confluentinc/cp-enterprise-replicator:5.1.1-SNAPSHOT
+    image: confluentinc/cp-enterprise-replicator:5.1.1
     hostname: replicator
     container_name: replicator
     volumes:
