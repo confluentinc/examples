@@ -8,7 +8,7 @@
 # Demo list
 
 There are multiple demos in this repo that showcase Kafka stream processing on the Confluent Platform.
-Some demos run on local installs ([download Confluent Platform](https://www.confluent.io/download/)) and others run on Docker.
+Some demos run on local installs (download [Confluent Platform](https://www.confluent.io/download/)) and others run on Docker (install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)).
 
 ## Where to start
 
