@@ -1,13 +1,22 @@
 ![image](images/confluent-logo-300-2.png)
 
-* [Overview](#overview)
-* [Running The Demos](#running-the-demos)
+* [Demo list](#demo-list)
+* [Running demos](#running-demos)
 * [Prerequisities](#prerequisites)
 
 
-# Overview
+# Demo list
 
 There are multiple demos in this repo that showcase Kafka stream processing on the Confluent Platform.  Each demo resides in its own subfolder.
+
+## Where to start
+
+The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo) because it comes with the most extensive documentation and playbook that spins up a Kafka streaming ETL using KSQL for stream processing.
+It is also a great configuration reference for Confluent Platform.
+
+
+## Full list
+
 
 | Demo                                       | Local | Docker | Description 
 | ------------------------------------------ | ----- | ------ | -------------------------------------------------------------------------------- 
@@ -24,7 +33,7 @@ There are multiple demos in this repo that showcase Kafka stream processing on t
 | [postgres-debezium-ksql-elasticsearch](postgres-debezium-ksql-elasticsearch/README.md) |   N   |   [Y](postgres-debezium-ksql-elasticsearch/README.md)    | enrich event stream data with CDC data from Postgres and then stream into Elasticsearch
 | [wikipedia](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments
 
-# Running The Demos
+# Running Demos
 
 1. Clone the repo: `git clone https://github.com/confluentinc/examples`
 2. Change directory to one of the demo subfolders
