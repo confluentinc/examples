@@ -1,19 +1,18 @@
 ![image](../images/confluent-logo-300-2.png)
 
-# Overview
+# Avro
 
-This library has examples for developers who want to write client applications that produce messages to or consume messages from Kafka.
-
-## Basic Producers and Consumers in various programming languages
-
-* [Non-Avro messages to and from Confluent Cloud](cloud/README.md)
 * [Avro messages to and from a local cluster](avro/README.md)
 
-## Kafka Streams
+# Basic Producers and Consumers with Confluent Cloud
 
-Library of streams examples available at https://github.com/confluentinc/kafka-streams-examples
+* [Various programming languages to and from Confluent Cloud](cloud/README.md)
 
-## KSQL
+# Kafka Streams
+
+* [Library of streams examples](https://github.com/confluentinc/kafka-streams-examples)
+
+# KSQL
 
 * [Various end-to-end examples](https://github.com/confluentinc/examples)
 
