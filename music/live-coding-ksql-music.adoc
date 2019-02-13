@@ -16,7 +16,7 @@ image::images/ksql-music-demo-overview.jpg[Diagram]
 This tutorial accompanies:
 
 - https://www.youtube.com/watch?v=ExEWJVjj-RA[KSQL Streaming Application for Music Charts screencast]
-- https://github.com/confluentinc/examples/tree/5.1.0-post/music[automated KSQL demo]
+- https://github.com/confluentinc/examples/tree/5.1.1-post/music[automated KSQL demo]
 
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
@@ -24,7 +24,7 @@ Don't forget to check out the #ksql channel on our https://slackpass.io/confluen
 
 === Docker
 
-NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/examples/blob/5.1.0-post/music/start.sh[start script].
+NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/examples/blob/5.1.1-post/music/start.sh[start script].
 
 Clone this https://github.com/confluentinc/examples[examples repo].
 
