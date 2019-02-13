@@ -359,7 +359,7 @@ ksql> CREATE STREAM ratings WITH (KAFKA_TOPIC='ratings', VALUE_FORMAT='AVRO');
 
  Message
 ---------------
- Table created
+ Stream created
 ---------------
 ----
 
