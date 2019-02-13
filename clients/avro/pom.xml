@@ -56,11 +56,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <artifactId>gson</artifactId>
       <version>2.2.4</version>
     </dependency>
-    <dependency>
-      <groupId>io.confluent</groupId>
-       <artifactId>kafka-connect-replicator</artifactId>
-       <version>${confluent.version}</version>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
