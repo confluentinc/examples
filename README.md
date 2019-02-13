@@ -12,7 +12,7 @@ Some demos run on local Confluent Platform installs (download [Confluent Platfor
 
 ## Where to start
 
-The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo), which spins up a Kafka streaming ETL using KSQL for stream processing.
+The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo), which spins up a Kafka event streaming application using KSQL for stream processing.
 cp-demo also comes with a playbook and video series, and is a great configuration reference for Confluent Platform.
 
 
