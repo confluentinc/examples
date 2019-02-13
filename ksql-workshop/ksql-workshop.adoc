@@ -246,7 +246,7 @@ Launch the CLI:
 ----
 docker run --network ksql-workshop_default \
            --tty --interactive --rm \
-           confluentinc/cp-ksql-cli:5.1.0 http://ksql-server:8088
+           confluentinc/cp-ksql-cli:5.1.1 http://ksql-server:8088
 ----
 
 Make sure that you get a successful start up screen:
@@ -266,7 +266,7 @@ Make sure that you get a successful start up screen:
 
 Copyright 2017-2018 Confluent Inc.
 
-CLI v5.1.0, Server v5.1.0 located at http://ksql-server:8088
+CLI v5.1.1, Server v5.1.1 located at http://ksql-server:8088
 
 Having trouble? Type 'help' (case-insensitive) for a rundown of how things work!
 
@@ -359,7 +359,7 @@ ksql> CREATE STREAM ratings WITH (KAFKA_TOPIC='ratings', VALUE_FORMAT='AVRO');
 
  Message
 ---------------
- Table created
+ Stream created
 ---------------
 ----
 
