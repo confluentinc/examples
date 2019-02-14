@@ -105,6 +105,8 @@ if is_ce; then
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   echo "confluent.controlcenter.schema.registry.url=http://localhost:$SR_LISTENER" >> $C3_CONFIG
+  # Workaround for MMA-3564
+  echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
 
