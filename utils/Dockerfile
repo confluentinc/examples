@@ -7,4 +7,3 @@ RUN apk add --update sqlite
 RUN sqlite3 microservices.db < /db/customers.sql
 
 ENTRYPOINT ["sqlite3"]
-#CMD [".read customers.sql"]
