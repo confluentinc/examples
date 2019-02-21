@@ -84,7 +84,6 @@ services:
       CONNECT_PLUGIN_PATH: /usr/share/java
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
-
   control-center:
     image: confluentinc/cp-enterprise-control-center:5.1.1
     hostname: control-center
