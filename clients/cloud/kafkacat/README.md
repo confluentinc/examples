@@ -29,7 +29,7 @@ $ ccloud topic create test1
 * `-K ,`: pass key and value, separated by a comma
 
 ```bash
-$ kafkacat -F /Users/yeva/.ccloud/config -K , -P -t test1
+$ kafkacat -F $HOME/.ccloud/config -K , -P -t test1
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -48,13 +48,13 @@ When you are done, press `<ctrl>-d`.
 * `-K ,`: pass key and value, separated by a comma
 
 ```bash
-$ kafkacat -F /Users/yeva/.ccloud/config -K , -C -t test1
+$ kafkacat -F $HOME/.ccloud/config -K , -C -t test1
 ```
 
 You should see the messages you typed in the previous step.
 
 ```bash
-% Reading configuration from file /Users/yeva/.ccloud/config
+% Reading configuration from file $HOME/.ccloud/config
 % Reached end of topic test2 [3] at offset 0
 alice,{"count":0}
 alice,{"count":1}
