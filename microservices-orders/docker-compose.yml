@@ -58,7 +58,7 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - mi2:/usr/share/java/monitoring-interceptors/
+      - mi4:/tmp/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
@@ -167,7 +167,7 @@ services:
     volumes:
       - $PWD/services-start.sh:/tmp/services-start.sh
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:9092 1 20 && \
+                       cub kafka-ready -b broker:9092 1 30 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
@@ -214,17 +214,6 @@ services:
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
-  postgres:
-    image: debezium/postgres:10.0
-    hostname: postgres
-    container_name: postgres
-    environment:
-     - POSTGRES_USER=postgres
-     - POSTGRES_PASSWORD=postgres
-    volumes:
-     - $PWD/../utils/customers.sql:/docker-entrypoint-initdb.d/z98_customers.sql
-     - $PWD/../utils/table.customers:/tmp/table.customers
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.5
     hostname: elasticsearch
@@ -264,6 +253,20 @@ services:
       XPACK_SECURITY_ENABLED: "false"
     command: [ "/bin/bash", "-c", "/usr/share/kibana/bin/kibana-plugin remove x-pack; /usr/local/bin/kibana-docker" ]
 
+  
+  sqlite:
+    image: sqlite:latest
+    build:
+      context: ../utils/
+      dockerfile: Dockerfile
+    hostname: sqlite
+    container_name: sqlite
+    stdin_open: true
+    tty: true
+    volumes:
+      - $PWD/../utils/table.customers:/db/table.customers
+      - $PWD/../utils/customers.sql:/db/customers.sql
+      - mi4:/db/
 
 volumes:
-    mi2: {}
+    mi4: {}

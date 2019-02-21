@@ -1,3 +1,4 @@
-DROP TABLE IF EXISTS CUSTOMERS;
-CREATE TABLE CUSTOMERS (id INTEGER PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255), level VARCHAR(255));
-COPY CUSTOMERS FROM '/tmp/table.customers' DELIMITER '|';
+DROP TABLE IF EXISTS customers;
+CREATE TABLE customers (id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255), level VARCHAR(255));
+.separator '|'
+.import table.customers customers
