@@ -167,7 +167,7 @@ services:
     volumes:
       - $PWD/services-start.sh:/tmp/services-start.sh
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:9092 1 20 && \
+                       cub kafka-ready -b broker:9092 1 30 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
