@@ -58,7 +58,8 @@ services:
     ports:
       - "8083:8083"
     volumes:
-      - mi2:/usr/share/java/monitoring-interceptors/
+      - mi4:/tmp/
+      - $PWD/microservices-local.db:/tmp/microservices-local.db
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
@@ -83,6 +84,8 @@ services:
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_PLUGIN_PATH: /usr/share/java
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      #CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
+
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:5.1.1
@@ -204,7 +207,7 @@ services:
                        echo Waiting 60 seconds for Connect to be ready... && \
                        sleep 60 && \
                        curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
-                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config && \
+                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers.config && \
                        echo Waiting 90 seconds for Elasticsearch and Kibana to be ready... && \
                        sleep 90 && \
                        /tmp/dashboard/docker-combined.sh'"
@@ -213,17 +216,6 @@ services:
       # We override the image's `command` anyways, hence this container will not start a broker.
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
-
-  postgres:
-    image: debezium/postgres:10.0
-    hostname: postgres
-    container_name: postgres
-    environment:
-     - POSTGRES_USER=postgres
-     - POSTGRES_PASSWORD=postgres
-    volumes:
-     - $PWD/../utils/customers.sql:/docker-entrypoint-initdb.d/z98_customers.sql
-     - $PWD/../utils/table.customers:/tmp/table.customers
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.5
@@ -264,6 +256,20 @@ services:
       XPACK_SECURITY_ENABLED: "false"
     command: [ "/bin/bash", "-c", "/usr/share/kibana/bin/kibana-plugin remove x-pack; /usr/local/bin/kibana-docker" ]
 
+  
+  #sqlite:
+  #  image: sqlite:latest
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile
+  #  hostname: sqlite
+  #  container_name: sqlite
+  #  stdin_open: true
+  #  tty: true
+  #  volumes:
+  #    - $PWD/../utils/table.customers:/db/table.customers
+  #    - $PWD/customers.sql:/db/customers.sql
+  #    - mi4:/db/
 
 volumes:
-    mi2: {}
+    mi4: {}
