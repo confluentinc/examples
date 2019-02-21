@@ -28,7 +28,7 @@ const requiredOpts = [
 ];
 
 const requiredConfig = [
-  ['bootstrap.servers', 'bootstrap.servers=<URIs>', 'One or more Kafka bootstrap server addresses. Separate multiple with commas.'],
+  ['bootstrap.servers', 'bootstrap.servers=<host1:port1...>', 'Your Confluent Cloud cluster bootstrap server(s). Separate multiple host/port pairs with commas.'],
   ['sasl.username', 'sasl.username=<string>', 'Your Confluent Cloud API key'],
   ['sasl.password', 'sasl.password=<string>', 'Your Confluent Cloud API secret'],
 ];

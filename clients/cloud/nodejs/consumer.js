@@ -25,7 +25,7 @@ const { configFromCli } = require('./config');
 
 function createConsumer(config, onData) {
   const consumer = new Kafka.KafkaConsumer({
-    'metadata.broker.list': config['bootstrap.servers'],
+    'bootstrap.servers': config['bootstrap.servers'],
     'sasl.username': config['sasl.username'],
     'sasl.password': config['sasl.password'],
     'security.protocol': 'SASL_SSL',

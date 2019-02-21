@@ -27,7 +27,7 @@ const ERR_TOPIC_ALREADY_EXISTS = 36;
 
 function ensureTopicExists(config) {
   const adminClient = Kafka.AdminClient.create({
-    'metadata.broker.list': config['bootstrap.servers'],
+    'bootstrap.servers': config['bootstrap.servers'],
     'sasl.username': config['sasl.username'],
     'sasl.password': config['sasl.password'],
     'security.protocol': 'SASL_SSL',
@@ -56,7 +56,7 @@ function ensureTopicExists(config) {
 
 function createProducer(config, onDeliveryReport) {
   const producer = new Kafka.Producer({
-    'metadata.broker.list': config['bootstrap.servers'],
+    'bootstrap.servers': config['bootstrap.servers'],
     'sasl.username': config['sasl.username'],
     'sasl.password': config['sasl.password'],
     'security.protocol': 'SASL_SSL',
