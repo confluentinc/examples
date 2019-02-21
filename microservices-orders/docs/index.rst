@@ -202,7 +202,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
      .. sourcecode:: bash
 
-        docker-compose up -d
+        docker-compose up -d --build
 
 #. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
 
