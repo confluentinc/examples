@@ -74,7 +74,7 @@ services:
 
   # KSQL
   ksql-server:
-    image: confluentinc/ksql-cli:5.1.1
+    image: confluentinc/ksql-cli:5.1.2
     depends_on:
       - kafka
       - schema-registry
@@ -126,7 +126,7 @@ services:
 
   # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
-    image: confluentinc/ksql-examples:5.1.1
+    image: confluentinc/ksql-examples:5.1.2
     depends_on:
       - kafka
       - schema-registry
@@ -149,7 +149,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   ksql-cli:
-    image: confluentinc/ksql-cli:5.1.1
+    image: confluentinc/ksql-cli:5.1.2
     depends_on:
       - kafka
       - schema-registry
