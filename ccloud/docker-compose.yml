@@ -149,7 +149,7 @@ services:
 
   # Runs the Kafka KSQL data generator for topic called "pageviews"
   ksql-datagen-pageviews:
-    image: confluentinc/ksql-examples:5.1.1
+    image: confluentinc/ksql-examples:5.1.2
     hostname: ksql-datagen-pageviews
     container_name: ksql-datagen-pageviews
     depends_on:
@@ -176,7 +176,7 @@ services:
 
   # Runs the Kafka KSQL data generator for topic called "users"
   ksql-datagen-users:
-    image: confluentinc/ksql-examples:5.1.1
+    image: confluentinc/ksql-examples:5.1.2
     hostname: ksql-datagen-users
     container_name: ksql-datagen-users
     depends_on:
@@ -195,7 +195,7 @@ services:
                        cub sr-ready schema-registry 8085 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 2 && \
-                       cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.1.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.1.1.jar && \
+                       cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.1.2.jar && \
                        /usr/bin/ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://schema-registry:8085 propertiesFile=/tmp/ksql-datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
@@ -260,7 +260,7 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.1.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar
       CONNECT_REQUEST_TIMEOUT_MS: 20000
       CONNECT_RETRY_BACKOFF_MS: 500
       # Connect worker
