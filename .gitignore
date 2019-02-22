@@ -7,3 +7,4 @@ img_data
 python_notify/
 .Python
 .vscode
+node_modules/
