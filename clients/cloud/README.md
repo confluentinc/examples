@@ -8,6 +8,7 @@ This directory includes examples of Kafka client applications connecting to [Con
 [![](images/scala.png)](scala/)
 [![](images/confluent-cli.png)](confluent-cli/)
 [![](images/ruby.png)](ruby/)
+[![](images/nodejs.png)](nodejs/)
 
 # Other Confluent Cloud Demos
 
