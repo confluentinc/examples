@@ -25,14 +25,14 @@ $ ccloud topic create test1
 
 2. Run `kafkacat`, writing messages to topic `test1`, passing in additional arguments:
 
-* `-F $HOME/.ccloud/config`: write messages to the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
+* `-F $HOME/.ccloud/config`: configuration file for connecting to the Confluent Cloud cluster
 * `-K ,`: pass key and value, separated by a comma
 
 ```bash
 $ kafkacat -F $HOME/.ccloud/config -K , -P -t test1
 ```
 
-At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
+Type a few messages, using a `,` as the separator between the message key and value:
 
 ```bash
 alice,{"count":0}
@@ -44,34 +44,33 @@ When you are done, press `<ctrl>-d`.
 
 2. Run `kafkacat` again, reading messages from topic `test`, passing in additional arguments:
 
-* `-F $HOME/.ccloud/config`: write messages to the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
+* `-F $HOME/.ccloud/config`: configuration file for connecting to the Confluent Cloud cluster
 * `-K ,`: pass key and value, separated by a comma
+* `-e`: exit successfully when last message received
 
 ```bash
-$ kafkacat -F $HOME/.ccloud/config -K , -C -t test1
+$ kafkacat -F $HOME/.ccloud/config -K , -C -t test1 -e
 ```
 
 You should see the messages you typed in the previous step.
 
 ```bash
 % Reading configuration from file $HOME/.ccloud/config
-% Reached end of topic test2 [3] at offset 0
+% Reached end of topic test1 [3] at offset 0
 alice,{"count":0}
 alice,{"count":1}
 alice,{"count":2}
-% Reached end of topic test2 [7] at offset 0
-% Reached end of topic test2 [4] at offset 0
-% Reached end of topic test2 [6] at offset 0
-% Reached end of topic test2 [5] at offset 0
-% Reached end of topic test2 [1] at offset 0
-% Reached end of topic test2 [2] at offset 0
-% Reached end of topic test2 [9] at offset 0
-% Reached end of topic test2 [10] at offset 0
-% Reached end of topic test2 [0] at offset 0
-% Reached end of topic test2 [8] at offset 0
-% Reached end of topic test2 [11] at offset 3
+% Reached end of topic test1 [7] at offset 0
+% Reached end of topic test1 [4] at offset 0
+% Reached end of topic test1 [6] at offset 0
+% Reached end of topic test1 [5] at offset 0
+% Reached end of topic test1 [1] at offset 0
+% Reached end of topic test1 [2] at offset 0
+% Reached end of topic test1 [9] at offset 0
+% Reached end of topic test1 [10] at offset 0
+% Reached end of topic test1 [0] at offset 0
+% Reached end of topic test1 [8] at offset 0
+% Reached end of topic test1 [11] at offset 3: exiting
 ```
-
-When you are done, press `<ctrl>-c`.
 
 3. To demo the above commands, you may also run the provided script [kafkacat-example.sh](kafkacat-example.sh).
