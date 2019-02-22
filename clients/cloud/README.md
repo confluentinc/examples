@@ -7,6 +7,8 @@ This directory includes examples of Kafka client applications connecting to [Con
 | [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/go.png)](go/)         |
 | [![](images/scala.png)](scala/)   | [![](images/confluent-cli.png)](confluent-cli/) | [![](images/ruby.png)](ruby/)     |
 | [![](images/groovy.png)](groovy/) | [![](images/kotlin.png)](kotlin/)               | [![](images/nodejs.png)](nodejs/) |
+| [kafkacat](kafkacat/)            |                                                 |                                   |
+
 
 # Other Confluent Cloud Demos
 
