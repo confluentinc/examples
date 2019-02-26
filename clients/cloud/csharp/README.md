@@ -5,7 +5,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* .NET Core 2.1 or higher to run the demo application.
+* [.NET Core 2.1](https://dotnet.microsoft.com/download) or higher to run the demo application
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config` (`%HOMEPATH%/.ccloud/config` on Windows).

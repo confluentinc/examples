@@ -1,4 +1,18 @@
-﻿using Confluent.Kafka;
+﻿// Copyright 2019 Confluent Inc.
+
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+
+// http://www.apache.org/licenses/LICENSE-2.0
+
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using Confluent.Kafka;
 using Confluent.Kafka.Admin;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -14,6 +28,10 @@ namespace CCloud
 {
     class Program
     {
+        /// <summary>
+        ///     Extract the value associated with key <paramref name="key"/> from the
+        ///     sasl.jaas.config (<paramref name="jaasConfig"/>) configuration value.
+        /// </summary>
         static string ExtractJaasValue(string jaasConfig, string key)
         {
             var beginToken = key + "\\=\"";
@@ -35,8 +53,6 @@ namespace CCloud
                 var clientConfig = new ClientConfig
                 {
                     BootstrapServers = cloudConfig["bootstrap.servers"].Replace("\\", ""),
-                    BrokerVersionFallback = "0.10.0.0",
-                    ApiVersionFallbackMs = 0,
                     SaslMechanism = SaslMechanism.Plain,
                     SecurityProtocol = SecurityProtocol.SaslSsl,
                     SaslUsername = ExtractJaasValue(cloudConfig["sasl.jaas.config"], "username"),
@@ -50,9 +66,9 @@ namespace CCloud
 
                 return clientConfig;
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine($"An error occured reading the config file from: {configPath}");
+                Console.WriteLine($"An error occured reading the config file from '{configPath}': {e.Message}");
                 System.Environment.Exit(1);
                 return null; // avoid not-all-paths-return-value compiler error.
             }
@@ -136,7 +152,7 @@ namespace CCloud
                 {
                     while (true)
                     {
-                        var cr = consumer.Consume();
+                        var cr = consumer.Consume(cts.Token);
                         totalCount += JObject.Parse(cr.Value).Value<int>("count");
                         Console.WriteLine($"Consumed record with key {cr.Key} and value {cr.Value}, and updated total count to {totalCount}");
                     }
@@ -144,18 +160,23 @@ namespace CCloud
                 catch (OperationCanceledException)
                 {
                     // Ctrl-C was pressed.
-                    Console.WriteLine("closed");
+                }
+                finally
+                {
                     consumer.Close();
                 }
             }
         }
 
+        static void PrintUsage()
+        {
+            Console.WriteLine("usage: .. <produce|consume> topic configPath [certDir]");
+            System.Environment.Exit(1);
+        }
+
         static async Task Main(string[] args)
         {
-            if (args.Length != 3 && args.Length != 4) {
-                Console.WriteLine("usage: .. <produce|consume> topic configPath [certDir]");
-                System.Environment.Exit(1);
-            }
+            if (args.Length != 3 && args.Length != 4) { PrintUsage(); }
             
             var mode = args[0];
             var topic = args[1];
@@ -174,8 +195,7 @@ namespace CCloud
                     Consume(topic, config);
                     break;
                 default:
-                    Console.WriteLine($"First command line argument must be 'produce' or 'consume'. It was: {mode}");
-                    System.Environment.Exit(1);
+                    PrintUsage();
                     break;
             }
         }
