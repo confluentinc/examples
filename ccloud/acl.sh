@@ -167,7 +167,7 @@ sleep 30
 echo -e "----------- Run produce client to $TOPIC2: wilcard ACLs -----------"
 LOG3="/tmp/log.3"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
   echo "Producer passes"
 fi
@@ -185,7 +185,7 @@ sleep 30
 echo -e "----------- Run consume client from $TOPIC2: prefix ACLs -----------"
 LOG4="/tmp/log.4"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+OUTPUT=$(grep "BUILD SUCCESS" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
   echo "Consumer passes"
 fi
@@ -194,6 +194,8 @@ fi
 ##################################################
 # Cleanup
 ##################################################
+
+exit
 
 echo -e "----------- Cleanup -----------"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
