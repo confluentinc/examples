@@ -1,18 +1,24 @@
 #!/bin/bash
 
 
-##################################################
+################################################################################
 # Overview
-##################################################
-# Demo ACL functionality in Confluent Cloud Enterprise using the new Confluent Cloud CLI
+################################################################################
+#
+# Demo the new Confluent Cloud CLI and ACL functionality in your
+# Confluent Cloud Enterprise cluster that has been enabled for ACLs
 #
 # DISCLAIMER:
-# This script creates and deletes topics, service accounts, API keys, and ACLs
-# For demo purposes only
-# Use only on a non-production cluster
+#
+#   This is mostly for reference to see a workflow using Confluent Cloud CLI
+#   If you choose to run it against your Confluent Cloud cluster, be aware that it:
+#      creates and deletes topics, service accounts, API keys, and ACLs
+#      is for demo purposes only
+#      should be used only on a non-production cluster
 #
 # Usage ./acl.sh <url to cloud> <cloud email> <cloud password> <cluster>
-##################################################
+#
+################################################################################
 
 
 
@@ -78,7 +84,7 @@ ccloud kafka cluster use $CLUSTER
 echo -e "\n-- Create API key and set context --"
 echo "ccloud kafka cluster auth"
 OUTPUT=$(ccloud kafka cluster auth | grep "Bootstrap Servers")
-BOOTSTRAP_SERVERS=$(echo $OUTPUT | awk '{print $3;}')
+BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | awk '{print $3;}')
 
 
 ##################################################
@@ -151,7 +157,7 @@ LOG1="/tmp/log.1"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException"
+  echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException" (error is expected because there are no ACLs)
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
