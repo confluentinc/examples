@@ -20,7 +20,6 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud || exit 1
 check_ccloud_v2 v0.25.1-39-ga58b1c2 || exit 1
 
 
@@ -78,7 +77,6 @@ ccloud kafka cluster use $CLUSTER
 echo -e "\n-- Create API key and set context --"
 OUTPUT=$(ccloud kafka cluster auth | grep "Bootstrap Servers")
 BOOTSTRAP_SERVERS=$(echo $OUTPUT | awk '{print $3;}')
-#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 
 ##################################################
@@ -107,10 +105,7 @@ echo -e "\n-- Create service account --"
 RANDOM_NUM=$((1 + RANDOM % 100))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
 ccloud service-account create --name $SERVICE_NAME --description $SERVICE_NAME || true
-
-echo -e "\n-- Get service account id --"
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
-echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
 
 echo -e "\n-- Create API keys for service account --"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
@@ -217,7 +212,7 @@ ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n-- Run consumer from $TOPIC2: wilcard ACLs --"
+echo -e "\n-- Run consumer from $TOPIC2: wildcard ACLs --"
 LOG4="/tmp/log.4"
 timeout 15s mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
 OUTPUT=$(grep "Successfully joined group with" $LOG4)
