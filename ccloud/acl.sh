@@ -63,25 +63,25 @@ ccloud kafka cluster use $CLUSTER
 echo -e "----------- Create API key and set context -----------"
 OUTPUT=$(ccloud kafka cluster auth | grep "Bootstrap Servers")
 BOOTSTRAP_SERVERS=$(echo $OUTPUT | awk '{print $3;}')
-echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
+#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 
 ##################################################
 # Produce and consume with Confluent Cloud CLI
 ##################################################
 
-TOPIC="demo-topic-1"
-echo -e "----------- Create topic $TOPIC -----------"
-echo "Creating topic $TOPIC"
-ccloud kafka topic create $TOPIC || true
+TOPIC1="demo-topic-1"
+echo -e "----------- Create topic $TOPIC1 -----------"
+echo "Creating topic $TOPIC1"
+ccloud kafka topic create $TOPIC1 || true
 
-echo -e "----------- Produce to topic $TOPIC -----------"
-echo "Producing messages to topic $TOPIC"
-(for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC
+echo -e "----------- Produce to topic $TOPIC1 -----------"
+echo "Producing messages to topic $TOPIC1"
+(for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
 
-echo -e "----------- Consume from topic $TOPIC -----------"
-echo "Consuming messages from topic $TOPIC"
-timeout 10s ccloud kafka topic consume $TOPIC
+echo -e "----------- Consume from topic $TOPIC1 -----------"
+echo "Consuming messages from topic $TOPIC1"
+timeout 10s ccloud kafka topic consume $TOPIC1
 
 
 ##################################################
@@ -101,13 +101,8 @@ echo -e "----------- Create API keys for service account -----------"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
-echo -e "----------- Sleeping 40 seconds to wait for keys to propagate -----------"
-sleep 40
-
-
-##################################################
-# Produce and consume with a Java client
-##################################################
+echo -e "----------- Sleeping 60 seconds to wait for keys to propagate -----------"
+sleep 60
 
 CLIENT_CONFIG="/tmp/client.config"
 echo -e "----------- Create a file with the API key and secret at $CLIENT_CONFIG -----------"
@@ -121,31 +116,96 @@ bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY}" password\="${API_SECRET}";
 EOF
 
-echo -e "----------- Run produce client (it should fail) -----------"
-LOG="/tmp/log.1"
+
+##################################################
+# Java client: before and after ACLs
+##################################################
+
+echo -e "----------- Run produce client to $TOPIC1: before ACLs -----------"
 mvn -q -f clients/java/pom.xml clean package
 if [[ $? != 0 ]]; then
   echo "ERROR: There seems to be a BUILD FAILURE error? Please troubleshoot"
   exit 1
 fi
-mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC" > $LOG 2>&1
-grep "Exception" $LOG
+LOG1="/tmp/log.1"
+mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
+OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
+if [[ ! -z $OUTPUT ]]; then
+  echo "Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected)"
+fi
 
-echo -e "----------- Create CREATE and WRITE ACLs for the topic and now run produce client (it should pass) -----------"
-LOG="/tmp/log.2"
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC
-echo -e "----------- Sleeping 40 seconds to wait for ACLs to propagate -----------"
-sleep 40
-mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC" > $LOG 2>&1
-grep "BUILD SUCCESS" $LOG
+echo -e "----------- Create ACLs 'CREATE' and 'WRITE' and sleeping 30 seconds to wait for ACLs to propagate -----------"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
+ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
+sleep 30
 
-exit
+echo -e "----------- Run produce client to $TOPIC1: after ACLs -----------"
+LOG2="/tmp/log.2"
+mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
+OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+if [[ ! -z $OUTPUT ]]; then
+  echo "Producer now passes"
+fi
 
-# Consume with wildcard ACL
-# Try to run consume client (it should fail)
-# Create READ ACL with wildcard on topic and consume client should pass
-# Consume with prefixed ACL
-# Create topic2
-# Try to run produce client (it should fail)
-# Create WRITE ACL with prefix on topic (specifically `--prefix`) and produce client should pass
+
+##################################################
+# Wildcard ACL
+##################################################
+
+TOPIC2="demo-topic-2"
+echo -e "----------- Create topic $TOPIC2 -----------"
+echo "Creating topic $TOPIC2"
+ccloud kafka topic create $TOPIC2 || true
+
+echo -e "----------- Create ACLs 'CREATE' and 'WRITE' with wildcard and sleeping 30 seconds to wait for ACLs to propagate -----------"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
+sleep 30
+
+echo -e "----------- Run produce client to $TOPIC2: wilcard ACLs -----------"
+LOG3="/tmp/log.3"
+mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
+OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+if [[ ! -z $OUTPUT ]]; then
+  echo "Producer passes"
+fi
+
+
+##################################################
+# Prefix ACL
+##################################################
+
+echo -e "----------- Create ACLs 'READ' with prefix and sleeping 30 seconds to wait for ACLs to propagate -----------"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --prefix --topic demo --consumer-group java_example_group_1
+ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
+sleep 30
+
+echo -e "----------- Run consume client from $TOPIC2: prefix ACLs -----------"
+LOG4="/tmp/log.4"
+mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
+OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+if [[ ! -z $OUTPUT ]]; then
+  echo "Consumer passes"
+fi
+
+
+##################################################
+# Cleanup
+##################################################
+
+echo -e "----------- Cleanup -----------"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --prefix --topic demo --consumer-group java_example_group_1
+ccloud service-account delete --service-account-id $SERVICE_ACCOUNT_ID
+ccloud kafka topic delete $TOPIC1
+ccloud kafka topic delete $TOPIC2
+rm -f "$LOG1"
+rm -f "$LOG2"
+rm -f "$LOG3"
+rm -f "$LOG4"
+rm -f "$CLIENT_CONFIG"
