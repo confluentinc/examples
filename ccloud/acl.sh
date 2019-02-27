@@ -7,7 +7,7 @@ check_env || exit 1
 check_jq || exit 1
 check_running_cp 5.1 || exit 1
 check_ccloud || exit 1
-check_ccloud_v2 || exit 1
+check_ccloud_v2 v0.25.1-30-gcd7934b-dirty-ryan || exit 1
 
 
 ##################################################
@@ -70,7 +70,7 @@ echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 # Produce and consume with Confluent Cloud CLI
 ##################################################
 
-TOPIC="topic3"
+TOPIC="demo-topic-1"
 echo -e "----------- Create topic $TOPIC -----------"
 echo "Creating topic $TOPIC"
 ccloud kafka topic create $TOPIC || true
@@ -89,7 +89,8 @@ timeout 10s ccloud kafka topic consume $TOPIC
 ##################################################
 
 echo -e "----------- Create service account -----------"
-SERVICE_NAME="app1"
+RANDOM_NUM=$((1 + RANDOM % 100))
+SERVICE_NAME="demo-app-$RANDOM_NUM"
 ccloud service-account create --name $SERVICE_NAME --description $SERVICE_NAME || true
 
 echo -e "----------- Get service account id -----------"
@@ -120,18 +121,24 @@ bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY}" password\="${API_SECRET}";
 EOF
 
-echo -e "----------- Try to run produce client (it should fail) -----------"
+echo -e "----------- Run produce client (it should fail) -----------"
 LOG="/tmp/log.1"
-mvn -f clients/java/pom.xml clean package
-mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC" 
+mvn -q -f clients/java/pom.xml clean package
+if [[ $? != 0 ]]; then
+  echo "ERROR: There seems to be a BUILD FAILURE error? Please troubleshoot"
+  exit 1
+fi
+mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC" > $LOG 2>&1
+grep "Exception" $LOG
 
-echo -e "----------- Create CREATE and WRITE ACLs for the topic and now produce client should pass -----------"
+echo -e "----------- Create CREATE and WRITE ACLs for the topic and now run produce client (it should pass) -----------"
+LOG="/tmp/log.2"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC
 echo -e "----------- Sleeping 40 seconds to wait for ACLs to propagate -----------"
 sleep 40
-mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC" 
-echo "CLIENT_CONFIG: $CLIENT_CONFIG, TOPIC: $TOPIC"
+mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC" > $LOG 2>&1
+grep "BUILD SUCCESS" $LOG
 
 exit
 

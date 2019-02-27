@@ -29,8 +29,11 @@ function check_ccloud() {
 }
 
 function check_ccloud_v2() {
-  if [[ ! $(ccloud version | grep "Go Version") ]]; then
-    echo "This demo requires the new 'ccloud' CLI. Please contact Confluent to get the newest CLI"
+  expected_version=$1
+
+  actual_version=$(ccloud version | grep "Version:     v" | awk '{print $2;}')
+  if [[ $expected_version != $actual_version ]]; then
+    echo "This demo requires the new 'ccloud' CLI version $expected_version. Cannot run demo."
     exit 1
   fi
 
