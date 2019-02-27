@@ -28,6 +28,15 @@ function check_ccloud() {
   return 0
 }
 
+function check_ccloud_v2() {
+  if [[ ! $(ccloud version | grep "Go Version") ]]; then
+    echo "This demo requires the new 'ccloud' CLI. Please contact Confluent to get the newest CLI"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_jq() {
   if [[ $(type jq 2>&1) =~ "not found" ]]; then
     echo "'jq' is not found. Install 'jq' and try again"
