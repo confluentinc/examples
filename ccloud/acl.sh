@@ -5,18 +5,30 @@
 # Overview
 ################################################################################
 #
-# Demo the new Confluent Cloud CLI and ACL functionality in your
-# Confluent Cloud Enterprise cluster that has been enabled for ACLs
+# Demo the new Confluent Cloud CLI and Access Control List (ACL) functionality
+# in your Confluent Cloud Enterprise cluster that has been enabled for ACLs
+#
+# ACLs are only available in Confluent Cloud Enterprise,
+# not in Confluent Cloud Professional
 #
 # DISCLAIMER:
 #
 #   This is mostly for reference to see a workflow using Confluent Cloud CLI
-#   If you choose to run it against your Confluent Cloud cluster, be aware that it:
-#      creates and deletes topics, service accounts, API keys, and ACLs
-#      is for demo purposes only
-#      should be used only on a non-production cluster
 #
-# Usage ./acl.sh <url to cloud> <cloud email> <cloud password> <cluster>
+#   If you choose to run it against your Confluent Cloud cluster, be aware that it:
+#      - creates and deletes topics, service accounts, API keys, and ACLs
+#      - is for demo purposes only
+#      - should be used only on a non-production cluster
+#
+# Usage:
+#
+#   ./acl.sh <url to cloud> <cloud email> <cloud password> <cluster>
+#
+# Requirements:
+#   - Access to a Confluent Cloud Enterprise cluster
+#   - Local install of the new Confluent Cloud CLI
+#   - `timeout` installed on your host
+#   - `mvn` installed on your host
 #
 ################################################################################
 
@@ -27,10 +39,14 @@
 
 check_ccloud_v2 v0.25.1-39-ga58b1c2 || exit 1
 check_timeout || exit 1
+check_mvn || exit 1
 
 
 ##################################################
-# Read URL, EMAIL, PASSWORD, CLUSTER
+# Read URL, EMAIL, PASSWORD, CLUSTER from command line arguments
+#
+#  Rudimentary argument processing and must be in order:
+#    <url to cloud> <cloud email> <cloud password> <cluster id>
 ##################################################
 URL=$1
 EMAIL=$2
@@ -108,6 +124,8 @@ timeout 10s ccloud kafka topic consume $TOPIC1
 
 ##################################################
 # Create a Service Account and API key and secret
+#
+#   A service account represents an application access 
 ##################################################
 
 echo -e "\n-- Create service account --"
@@ -141,6 +159,13 @@ EOF
 
 ##################################################
 # Java client: before and after ACLs
+#
+# When ACLs are enabled on your Confluent Cloud Enterprise cluster,
+# by default no client applications are authorized.
+#
+# The following steps show the same Java producer failing at first due to
+# `TopicAuthorizationException` and then passing once the appropriate
+# ACLs are configured
 ##################################################
 
 echo -e "\n-- No ACLs to start --"
@@ -157,7 +182,7 @@ LOG1="/tmp/log.1"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException" (error is expected because there are no ACLs)
+  echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs)"
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
@@ -189,6 +214,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Prefix ACL
+#
+# The following steps configure ACLs to match topics prefixed with a value
 ##################################################
 
 TOPIC2="demo-topic-2"
@@ -223,6 +250,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Wildcard ACL
+#
+# The following steps configure ACLs to match topics using a wildcard
 ##################################################
 
 echo -e "\n-- Create ACLs for the consumer using a wildcard --"
@@ -251,6 +280,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Cleanup
+#
+# Delete the API key, service account, Kafka topics, and some of the local files
 ##################################################
 
 echo -e "\n-- Cleanup --"
