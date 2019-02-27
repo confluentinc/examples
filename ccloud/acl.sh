@@ -1,7 +1,6 @@
 #!/bin/bash
 
 
-
 ##################################################
 # Overview
 ##################################################
@@ -21,6 +20,7 @@
 . ../utils/helper.sh
 
 check_ccloud_v2 v0.25.1-39-ga58b1c2 || exit 1
+check_timeout || exit 1
 
 
 ##################################################
@@ -72,9 +72,11 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 echo -e "\n-- Set cluster --"
+echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 
 echo -e "\n-- Create API key and set context --"
+echo "ccloud kafka cluster auth"
 OUTPUT=$(ccloud kafka cluster auth | grep "Bootstrap Servers")
 BOOTSTRAP_SERVERS=$(echo $OUTPUT | awk '{print $3;}')
 
@@ -85,16 +87,17 @@ BOOTSTRAP_SERVERS=$(echo $OUTPUT | awk '{print $3;}')
 
 TOPIC1="demo-topic-1"
 echo -e "\n-- Create topic $TOPIC1 --"
-echo "Creating topic $TOPIC1"
+echo "ccloud kafka topic create $TOPIC1"
 ccloud kafka topic create $TOPIC1 || true
 
 echo -e "\n-- Produce to topic $TOPIC1 --"
-echo "Producing messages to topic $TOPIC1"
+echo "ccloud kafka topic produce $TOPIC1"
 (for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
 
 echo -e "\n-- Consume from topic $TOPIC1 --"
-echo "Consuming messages from topic $TOPIC1"
+echo "ccloud kafka topic consume $TOPIC1"
 timeout 10s ccloud kafka topic consume $TOPIC1
+
 
 
 ##################################################
@@ -104,10 +107,12 @@ timeout 10s ccloud kafka topic consume $TOPIC1
 echo -e "\n-- Create service account --"
 RANDOM_NUM=$((1 + RANDOM % 100))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
+echo "ccloud service-account create --name $SERVICE_NAME --description $SERVICE_NAME"
 ccloud service-account create --name $SERVICE_NAME --description $SERVICE_NAME || true
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
 
 echo -e "\n-- Create API keys for service account --"
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
@@ -115,7 +120,8 @@ echo -e "\n-- Sleeping 90 seconds to wait for keys to propagate --"
 sleep 90
 
 CLIENT_CONFIG="/tmp/client.config"
-echo -e "\n-- Create a file with the API key and secret at $CLIENT_CONFIG --"
+echo -e "\n-- Create a file with the API key and secret --"
+echo "Writing to $CLIENT_CONFIG"
 cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
@@ -132,6 +138,7 @@ EOF
 ##################################################
 
 echo -e "\n-- No ACLs to start --"
+echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 
 echo -e "\n-- Run producer to $TOPIC1: before ACLs --"
@@ -149,9 +156,12 @@ else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
 
-echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' --"
+echo -e "\n-- Create ACLs for the producer --"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
+echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
@@ -160,12 +170,12 @@ LOG2="/tmp/log.2"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer now works"
+  echo "PASS: Producer works"
 else
   echo "FAIL: Something went wrong, check $LOG2"
 fi
 
-echo -e "\n-- Cleanup ACLs --"
+echo -e "\n-- Delete ACLs --"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 
@@ -177,13 +187,16 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 TOPIC2="demo-topic-2"
 echo -e "\n-- Create topic $TOPIC2 --"
-echo "Creating topic $TOPIC2"
+echo "ccloud kafka topic create $TOPIC2"
 ccloud kafka topic create $TOPIC2 || true
 
-echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' with prefix --"
+echo -e "\n-- Create ACLs for the producer using a prefix --"
 PREFIX=${TOPIC2/%??/}
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
+echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
@@ -197,7 +210,7 @@ else
   echo "FAIL: Something went wrong, check $LOG3"
 fi
 
-echo -e "\n-- Cleanup ACLs --"
+echo -e "\n-- Delete ACLs --"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
 
@@ -206,9 +219,12 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 # Wildcard ACL
 ##################################################
 
-echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' with wildcard --"
+echo -e "\n-- Create ACLs for the consumer using a wildcard --"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
+echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
@@ -222,7 +238,7 @@ else
   echo "FAIL: Something went wrong, check $LOG4"
 fi
 
-echo -e "\n-- Cleanup ACLs --"
+echo -e "\n-- Delete ACLs --"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
@@ -231,7 +247,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 # Cleanup
 ##################################################
 
-echo -e "\n-- Cleanup Everything --"
+echo -e "\n-- Cleanup --"
 ccloud api-key delete --api-key $API_KEY
 ccloud service-account delete --service-account-id $SERVICE_ACCOUNT_ID
 ccloud kafka topic delete $TOPIC1

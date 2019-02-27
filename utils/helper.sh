@@ -42,6 +42,15 @@ function check_ccloud_v2() {
   return 0
 }
 
+function check_timeout() {
+  if [[ $(type timeout 2>&1) =~ "not found" ]]; then
+    echo "'timeout' is not found. Install 'timeout' and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_jq() {
   if [[ $(type jq 2>&1) =~ "not found" ]]; then
     echo "'jq' is not found. Install 'jq' and try again"
