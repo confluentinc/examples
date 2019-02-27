@@ -101,8 +101,8 @@ echo -e "----------- Create API keys for service account -----------"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
-echo -e "----------- Sleeping 60 seconds to wait for keys to propagate -----------"
-sleep 60
+echo -e "----------- Sleeping 90 seconds to wait for keys to propagate -----------"
+sleep 90
 
 CLIENT_CONFIG="/tmp/client.config"
 echo -e "----------- Create a file with the API key and secret at $CLIENT_CONFIG -----------"
@@ -134,11 +134,11 @@ if [[ ! -z $OUTPUT ]]; then
   echo "Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected)"
 fi
 
-echo -e "----------- Create ACLs 'CREATE' and 'WRITE' and sleeping 30 seconds to wait for ACLs to propagate -----------"
+echo -e "----------- Create ACLs 'CREATE' and 'WRITE' and sleeping 10 seconds to wait for ACLs to propagate -----------"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
-sleep 30
+sleep 10
 
 echo -e "----------- Run produce client to $TOPIC1: after ACLs -----------"
 LOG2="/tmp/log.2"
@@ -148,6 +148,9 @@ if [[ ! -z $OUTPUT ]]; then
   echo "Producer now passes"
 fi
 
+echo -e "----------- Cleanup ACLs -----------"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 
 ##################################################
 # Wildcard ACL
@@ -158,11 +161,11 @@ echo -e "----------- Create topic $TOPIC2 -----------"
 echo "Creating topic $TOPIC2"
 ccloud kafka topic create $TOPIC2 || true
 
-echo -e "----------- Create ACLs 'CREATE' and 'WRITE' with wildcard and sleeping 30 seconds to wait for ACLs to propagate -----------"
+echo -e "----------- Create ACLs 'CREATE' and 'WRITE' with wildcard and sleeping 10 seconds to wait for ACLs to propagate -----------"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
-sleep 30
+sleep 10
 
 echo -e "----------- Run produce client to $TOPIC2: wilcard ACLs -----------"
 LOG3="/tmp/log.3"
@@ -172,37 +175,36 @@ if [[ ! -z $OUTPUT ]]; then
   echo "Producer passes"
 fi
 
+echo -e "----------- Cleanup ACLs -----------"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
 
 ##################################################
 # Prefix ACL
 ##################################################
 
-echo -e "----------- Create ACLs 'READ' with prefix and sleeping 30 seconds to wait for ACLs to propagate -----------"
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --prefix --topic demo --consumer-group java_example_group_1
+echo -e "----------- Create ACLs 'READ' with prefix and sleeping 10 seconds to wait for ACLs to propagate -----------"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1 --topic $TOPIC2 --prefix
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
-sleep 30
+sleep 10
 
 echo -e "----------- Run consume client from $TOPIC2: prefix ACLs -----------"
 LOG4="/tmp/log.4"
-mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG4)
+timeout 30s mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
+OUTPUT=$(grep "Not authorized to access topics" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
   echo "Consumer passes"
 fi
 
+echo -e "----------- Cleanup ACLs -----------"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1 --topic $TOPIC2 --prefix
 
 ##################################################
 # Cleanup
 ##################################################
 
-exit
-
-echo -e "----------- Cleanup -----------"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --prefix --topic demo --consumer-group java_example_group_1
+echo -e "----------- Cleanup Everything -----------"
+ccloud api-key delete --api-key $API_KEY
 ccloud service-account delete --service-account-id $SERVICE_ACCOUNT_ID
 ccloud kafka topic delete $TOPIC1
 ccloud kafka topic delete $TOPIC2
