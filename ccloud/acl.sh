@@ -139,6 +139,9 @@ EOF
 # Java client: before and after ACLs
 ##################################################
 
+echo -e "\n-- No ACLs to start --"
+ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
+
 echo -e "\n-- Run producer to $TOPIC1: before ACLs --"
 mvn -q -f clients/java/pom.xml clean package
 if [[ $? != 0 ]]; then
@@ -174,8 +177,10 @@ echo -e "\n-- Cleanup ACLs --"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 
+
+
 ##################################################
-# Wildcard ACL
+# Prefix ACL
 ##################################################
 
 TOPIC2="demo-topic-2"
@@ -183,13 +188,14 @@ echo -e "\n-- Create topic $TOPIC2 --"
 echo "Creating topic $TOPIC2"
 ccloud kafka topic create $TOPIC2 || true
 
-echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' with wildcard --"
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' with prefix --"
+PREFIX=${TOPIC2/%??/}
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n-- Run producer to $TOPIC2: wilcard ACLs --"
+echo -e "\n-- Run producer to $TOPIC2: prefix ACLs --"
 LOG3="/tmp/log.3"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
@@ -200,34 +206,33 @@ else
 fi
 
 echo -e "\n-- Cleanup ACLs --"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
 
 
 ##################################################
-# Prefix ACL
+# Wildcard ACL
 ##################################################
 
-echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' with prefix --"
-PREFIX=${TOPIC2/%??/}
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
+echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' with wildcard --"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n-- Run producer to $TOPIC2: prefix ACLs --"
+echo -e "\n-- Run consumer from $TOPIC2: wilcard ACLs --"
 LOG4="/tmp/log.4"
-mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG4)
+timeout 15s mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
+OUTPUT=$(grep "Successfully joined group with" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer works"
+  echo "PASS: Consumer works"
 else
   echo "FAIL: Something went wrong, check $LOG4"
 fi
 
 echo -e "\n-- Cleanup ACLs --"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
 
 ##################################################
