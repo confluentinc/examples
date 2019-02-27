@@ -24,7 +24,7 @@ check_env || exit 1
 check_jq || exit 1
 check_running_cp 5.1 || exit 1
 check_ccloud || exit 1
-check_ccloud_v2 v0.25.1-30-gcd7934b-dirty-ryan || exit 1
+check_ccloud_v2 v0.25.1-39-ga58b1c2 || exit 1
 
 
 ##################################################
@@ -149,9 +149,9 @@ LOG1="/tmp/log.1"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
-  echo "Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected)"
+  echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException"
 else
-  echo "Something went wrong, check $LOG1"
+  echo "FAIL: Something went wrong, check $LOG1"
 fi
 
 echo -e "\n-- Create ACLs 'CREATE' and 'WRITE' --"
@@ -165,9 +165,9 @@ LOG2="/tmp/log.2"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
-  echo "Producer now passes"
+  echo "PASS: Producer now works"
 else
-  echo "Something went wrong, check $LOG2"
+  echo "FAIL: Something went wrong, check $LOG2"
 fi
 
 echo -e "\n-- Cleanup ACLs --"
@@ -194,9 +194,9 @@ LOG3="/tmp/log.3"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
-  echo "Producer passes"
+  echo "PASS: Producer works"
 else
-  echo "Something went wrong, check $LOG3"
+  echo "FAIL: Something went wrong, check $LOG3"
 fi
 
 echo -e "\n-- Cleanup ACLs --"
@@ -220,9 +220,9 @@ LOG4="/tmp/log.4"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
-  echo "Producer passes"
+  echo "PASS: Producer works"
 else
-  echo "Something went wrong, check $LOG4"
+  echo "FAIL: Something went wrong, check $LOG4"
 fi
 
 echo -e "\n-- Cleanup ACLs --"
