@@ -204,8 +204,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ccloud service-account delete --service-account-id $SERVICE_ACCOUNT_ID
 ccloud kafka topic delete $TOPIC1
 ccloud kafka topic delete $TOPIC2
-rm -f "$LOG1"
-rm -f "$LOG2"
-rm -f "$LOG3"
-rm -f "$LOG4"
-rm -f "$CLIENT_CONFIG"
+#rm -f "$LOG1"
+#rm -f "$LOG2"
+#rm -f "$LOG3"
+#rm -f "$LOG4"
+#rm -f "$CLIENT_CONFIG"
