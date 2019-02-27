@@ -1,5 +1,23 @@
 #!/bin/bash
 
+
+
+##################################################
+# Overview
+##################################################
+# Demo ACL functionality in Confluent Cloud Enterprise using the new Confluent Cloud CLI
+#
+# DISCLAIMER:
+# This script creates topics, service accounts, and ACLs
+# For demo purposes only
+# Use only on a non-production cluster
+#
+# Usage ./acl.sh <url to cloud> <cloud email> <cloud password> <cluster>
+##################################################
+
+
+
+
 # Source library
 . ../utils/helper.sh
 
@@ -184,7 +202,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ##################################################
 
 echo -e "----------- Create ACLs 'READ' with prefix and sleeping 10 seconds to wait for ACLs to propagate -----------"
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1 --topic $TOPIC2 --prefix
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1 --topic demo --prefix
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 10
 
@@ -199,9 +217,12 @@ fi
 echo -e "----------- Cleanup ACLs -----------"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1 --topic $TOPIC2 --prefix
 
+
 ##################################################
 # Cleanup
 ##################################################
+
+exit
 
 echo -e "----------- Cleanup Everything -----------"
 ccloud api-key delete --api-key $API_KEY
