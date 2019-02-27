@@ -20,9 +20,6 @@
 # Source library
 . ../utils/helper.sh
 
-check_env || exit 1
-check_jq || exit 1
-check_running_cp 5.1 || exit 1
 check_ccloud || exit 1
 check_ccloud_v2 v0.25.1-39-ga58b1c2 || exit 1
 
