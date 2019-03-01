@@ -170,7 +170,7 @@ namespace CCloud
 
         static void PrintUsage()
         {
-            Console.WriteLine("usage: .. <produce|consume> topic configPath [certDir]");
+            Console.WriteLine("usage: .. produce|consume <topic> <configPath> [<certDir>]");
             System.Environment.Exit(1);
         }
 
