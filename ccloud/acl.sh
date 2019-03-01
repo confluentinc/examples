@@ -37,7 +37,7 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud_v2 v0.25.1-39-ga58b1c2 || exit 1
+check_ccloud_v2 v0.35.0 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 
