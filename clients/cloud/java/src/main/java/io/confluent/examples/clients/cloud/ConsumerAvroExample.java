@@ -20,11 +20,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import io.confluent.examples.clients.cloud.model.DataRecord;
-import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig;
 import io.confluent.kafka.serializers.KafkaAvroDeserializer;
 import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,26 +45,25 @@ public class ConsumerAvroExample {
     final Properties props = loadConfig(args[0]);
 
     // Add additional properties.
-    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+    props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
     props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
     props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "java_example_group_1");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    final Consumer<String, Payment> consumer = new KafkaConsumer<String, Payment>(props);
+    final Consumer<String, DataRecordAvro> consumer = new KafkaConsumer<String, DataRecordAvro>(props);
     consumer.subscribe(Arrays.asList(topic));
 
     Long total_count = 0L;
 
     try {
       while (true) {
-        ConsumerRecords<String, Payment> records = consumer.poll(100);
-        for (ConsumerRecord<String, Payment> record : records) {
+        ConsumerRecords<String, DataRecordAvro> records = consumer.poll(100);
+        for (ConsumerRecord<String, DataRecordAvro> record : records) {
           String key = record.key();
-          Payment value = record.value();
-          System.out.printf("Received %s%n", value);
-          //total_count += value.getCount();
-          //System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
+          DataRecordAvro value = record.value();
+          total_count += value.getCount();
+          System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }
       }
     } finally {

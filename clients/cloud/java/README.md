@@ -131,3 +131,54 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 
 # Example 2: With Fully-managed Confluent Schema Registry
 
+This example is similar to the previous example, except the value is formatted as Avro and integrates with the fully-managed Confluent Schema Registry in Confluent Cloud.
+
+1. Create your API key and secret to Confluent Schema Registry in Confluent Cloud.
+
+2. Add the necessary lines to your local Confluent Cloud configuration file. You should use the actual values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>.
+
+        ```shell
+        $ cat $HOME/.ccloud/config
+        ...
+        basic.auth.credentials.source=USER_INFO
+        schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+        schema.registry.url=https://<SR ENDPOINT>
+        ...
+        ```
+
+3. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+
+        ```shell
+        # Build the client examples
+        $ mvn clean package
+
+        # Run the producer
+        $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
+          -Dexec.args="$HOME/.ccloud/config test2"
+        ```
+
+4. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+
+        ```shell
+        # Build the client examples
+        $ mvn clean package
+
+        # Run the producer
+        $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerConsumerExample" \
+          -Dexec.args="$HOME/.ccloud/config test2"
+        ```
+
+5. View the schema information registered in Schema Registry. You should use the actual values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>
+
+        ```shell
+        $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 -w 0)
+
+        # View the list of registered subjects
+        $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}"  https://<SR ENDPOINT>/subjects      
+        ["test2-value"]%   
+
+        # View the schema information for subject `test2-value`
+        $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}"  https://<SR ENDPOINT>/subjects/test2-value/versions/1
+        {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}%                                                                                                                            
+        ```
+

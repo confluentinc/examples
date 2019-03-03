@@ -158,9 +158,6 @@
                 </goals>
                 <configuration>
                   <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/cloud/</sourceDirectory>
-                  <includes>
-                    <include>Payment.avsc</include>
-                  </includes>
                   <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                 </configuration>
               </execution>

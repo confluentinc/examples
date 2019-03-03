@@ -71,7 +71,7 @@ When you are done, press `<ctrl>-c`.
 
 # Example 2: With Fully-managed Confluent Schema Registry
 
-In this example, the producer writes Kafka data to a topic in Confluent Cloud, with fully-managed Confluent Schema Registry
+In this example, the producer writes Kafka data in Avro format to a topic in Confluent Cloud, integrated with fully-managed Confluent Schema Registry.
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
 The consumer reads the same topic from Confluent Cloud.
 
@@ -83,8 +83,11 @@ $ ccloud topic create test2
 
 2. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test2`, passing in additional arguments:
 
-* `--cloud`: write messages to the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
-* `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
+* `--value-format avro`: 
+* `value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"integer"}]}'`:
+* `schema.registry.url`:
+* `--property basic.auth.credentials.source=USER_INFO`:
+* `--property schema.registry.basic.auth.user.info=<schema-registry-key>:<schema-registry-password>`:
 
 ```bash
 $ confluent produce test2 --cloud --property parse.key=true --property key.separator=, --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"integer"}]}' --property schema.registry.url=<schema-registry-url> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=<schema-registry-key>:<schema-registry-password>
