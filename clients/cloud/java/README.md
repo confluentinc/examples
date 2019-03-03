@@ -132,10 +132,12 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 # Example 2: With Fully-managed Confluent Schema Registry
 
 This example is similar to the previous example, except the value is formatted as Avro and integrates with the fully-managed Confluent Schema Registry in Confluent Cloud.
+Check availability of Confluent Schema Registry in Confluent Cloud at https://www.confluent.io/confluent-cloud/
+You may also run Confluent Schema Registry locally and connect to that instead (requires code modification).
 
 1. Create your API key and secret to Confluent Schema Registry in Confluent Cloud.
 
-2. Add the necessary lines to your local Confluent Cloud configuration file. You should use the actual values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>.
+2. Add the required configuration to your local Confluent Cloud configuration file. You should use the actual values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>.
 
         ```shell
         $ cat $HOME/.ccloud/config
