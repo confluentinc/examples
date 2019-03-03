@@ -11,6 +11,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
 
+
 # Example 1: Hello World!
 
 In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
@@ -126,3 +127,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	```
 
         When you are done, press `<ctrl>-c`.
+
+
+# Example 2: With Fully-managed Confluent Schema Registry
+

@@ -37,11 +37,18 @@
             <url>http://packages.confluent.io/maven/</url>
         </repository>
     </repositories>
+    <pluginRepositories>
+      <pluginRepository>
+        <id>confluent</id>
+        <url>https://packages.confluent.io/maven/</url>
+      </pluginRepository>
+    </pluginRepositories>
 
     <properties>
         <java.version>1.8</java.version>
         <slf4j-api.version>1.7.6</slf4j-api.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <avro.version>1.8.2</avro.version>
     </properties>
 
     <dependencies>
@@ -49,6 +56,16 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
             <version>${kafka.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-avro-serializer</artifactId>
+          <version>${confluent.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.avro</groupId>
+          <artifactId>avro</artifactId>
+          <version>${avro.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -128,6 +145,26 @@
                         <param>../../license-mappings.xml</param>
                     </licenseMapping>
                 </configuration>
+            </plugin>
+            <plugin>
+              <groupId>org.apache.avro</groupId>
+              <artifactId>avro-maven-plugin</artifactId>
+              <version>${avro.version}</version>
+              <executions>
+                <execution>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>schema</goal>
+                </goals>
+                <configuration>
+                  <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/cloud/</sourceDirectory>
+                  <includes>
+                    <include>Payment.avsc</include>
+                  </includes>
+                  <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
