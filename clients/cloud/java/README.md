@@ -87,7 +87,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 
         When you are done, press `<ctrl>-c`.
 
-3. Run the Kafka Streams application, , passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+3. Run the Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
 
         ```shell
         # Build the client examples
@@ -168,7 +168,18 @@ This example is similar to the previous example, except the value is formatted a
           -Dexec.args="$HOME/.ccloud/config test2"
         ```
 
-5. View the schema information registered in Schema Registry. You should use the actual values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>
+5. Run the Avro Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
+
+        ```shell
+        # Build the client examples
+        $ mvn clean package
+
+        # Run the consumer
+        $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsAvroExample" \
+          -Dexec.args="$HOME/.ccloud/config test2"
+        ```
+
+6. View the schema information registered in Schema Registry. You should use the actual values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>
 
         ```shell
         $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 -w 0)

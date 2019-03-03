@@ -33,13 +33,11 @@ import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.state.KeyValueStore;
 
-import io.confluent.examples.clients.cloud.model.DataRecord;
-import org.apache.kafka.common.serialization.Deserializer;
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.serialization.Serializer;
-import io.confluent.kafka.serializers.KafkaJsonSerializer;
-import io.confluent.kafka.serializers.KafkaJsonDeserializer;
 
 import java.util.Collections;
 import java.io.IOException;
@@ -50,7 +48,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StreamsExample {
+public class StreamsAvroExample {
 
     public static void main(String[] args) throws Exception {
 
@@ -63,16 +61,24 @@ public class StreamsExample {
     
         // Load properties from disk.
         final Properties props = loadConfig(args[0]);
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "demo-streams-1");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "demo-streams-avro-1");
         // Disable caching to print the aggregation value after each record
         props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        final Serde<DataRecord> DataRecord = getJsonSerde();
+        final Serde<DataRecordAvro> dataRecordAvroSerde = new SpecificAvroSerde<>();
+        final boolean isKeySerde = false;
+        Map<String, Object> SRconfig = new HashMap<>();
+        SRconfig.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, props.getProperty(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG));
+        SRconfig.put("schema.registry.basic.auth.user.info", props.getProperty("schema.registry.basic.auth.user.info"));
+        SRconfig.put("basic.auth.credentials.source", props.getProperty("basic.auth.credentials.source"));
+        dataRecordAvroSerde.configure(
+            SRconfig,
+            isKeySerde);
 
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, DataRecord> records = builder.stream(topic, Consumed.with(Serdes.String(), DataRecord));
+        final KStream<String, DataRecordAvro> records = builder.stream(topic, Consumed.with(Serdes.String(), dataRecordAvroSerde));
 
         KStream<String,Long> counts = records.map((k, v) -> new KeyValue<String, Long>(k, v.getCount()));
         counts.print(Printed.<String,Long>toSysOut().withLabel("Consumed record"));
@@ -90,20 +96,6 @@ public class StreamsExample {
         // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
-    }
-
-    private static Serde<DataRecord> getJsonSerde(){
-
-        Map<String, Object> serdeProps = new HashMap<>();
-        serdeProps.put("json.value.type", DataRecord.class);
-
-        final Serializer<DataRecord> mySerializer = new KafkaJsonSerializer<>();
-        mySerializer.configure(serdeProps, false);
-
-        final Deserializer<DataRecord> myDeserializer = new KafkaJsonDeserializer<>();
-        myDeserializer.configure(serdeProps, false);
-
-        return Serdes.serdeFrom(mySerializer, myDeserializer);
     }
 
     public static Properties loadConfig(final String configFile) throws IOException {
