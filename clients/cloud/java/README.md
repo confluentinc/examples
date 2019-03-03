@@ -22,7 +22,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 	```shell
-	# Build the client examples
+	# Compile the Java code
 	$ mvn clean package
 	
 	# Run the producer
@@ -61,7 +61,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
     ```shell
-    # Build the client examples
+    # Compile the Java code
     $ mvn clean package
     
     # Run the consumer
@@ -90,7 +90,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 3. Run the Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
 
     ```shell
-    # Build the client examples
+    # Compile the Java code
     $ mvn clean package
 
     # Run the consumer
@@ -161,7 +161,7 @@ You may also run Confluent Schema Registry locally and connect to that instead (
 4. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
     ```shell
-    # Build the client examples
+    # Compile the Java code
     $ mvn clean package
 
     # Run the producer
@@ -172,7 +172,7 @@ You may also run Confluent Schema Registry locally and connect to that instead (
 5. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
     ```shell
-    # Build the client examples
+    # Compile the Java code
     $ mvn clean package
     
     # Run the producer
@@ -183,7 +183,7 @@ You may also run Confluent Schema Registry locally and connect to that instead (
 6. Run the Avro Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
 
     ```
-    # Build the client examples
+    # Compile the Java code
     $ mvn clean package
 
     # Run the consumer
