@@ -89,7 +89,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 
 3. Run the Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
 
-        ```shell
+        ```
         # Build the client examples
         $ mvn clean package
 
@@ -137,7 +137,7 @@ You may also run Confluent Schema Registry locally and connect to that instead (
 
 1. Create your API key and secret to Confluent Schema Registry in Confluent Cloud.
 
-2. Verify your Schema Registry credentials work from your host. In the output below, substitute your values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>.
+2. Verify your Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
         ```shell
         $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 -w 0)
@@ -182,7 +182,7 @@ You may also run Confluent Schema Registry locally and connect to that instead (
 
 6. Run the Avro Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
 
-        ```shell
+        ```
         # Build the client examples
         $ mvn clean package
 
@@ -191,9 +191,9 @@ You may also run Confluent Schema Registry locally and connect to that instead (
           -Dexec.args="$HOME/.ccloud/config test2"
         ```
 
-7. View the schema information registered in Schema Registry. In the output below, substitute your values for <SR API KEY>, <SR API SECRET>, and <SR ENDPOINT>.
+7. View the schema information registered in Schema Registry. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
-        ```shell
+        ```
         $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 -w 0)
 
         # View the list of registered subjects
