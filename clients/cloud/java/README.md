@@ -140,7 +140,7 @@ Check availability of Confluent Schema Registry in Confluent Cloud at https://ww
 2. Verify your Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```shell
-    $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 -w 0)
+    $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 | tr -d \\n)
 
     # View the list of registered subjects
     $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}" <SR ENDPOINT>/subjects
@@ -194,7 +194,7 @@ Check availability of Confluent Schema Registry in Confluent Cloud at https://ww
 7. View the schema information registered in Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```
-    $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 -w 0)
+    $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 | tr -d \\n)
     
     # View the list of registered subjects
     $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}" <SR ENDPOINT>/subjects
