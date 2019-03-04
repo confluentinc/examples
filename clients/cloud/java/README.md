@@ -140,10 +140,8 @@ Check availability of Confluent Schema Registry in Confluent Cloud at https://ww
 2. Verify your Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```shell
-    $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 | tr -d \\n)
-
     # View the list of registered subjects
-    $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}" <SR ENDPOINT>/subjects
+    $ curl https://<SR API KEY>:<SR API SECRET>@<SR ENDPOINT>/subjects
     %
     ```
 
@@ -154,7 +152,7 @@ Check availability of Confluent Schema Registry in Confluent Cloud at https://ww
     ...
     basic.auth.credentials.source=USER_INFO
     schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-    schema.registry.url=<SR ENDPOINT>
+    schema.registry.url=https://<SR ENDPOINT>
     ...
     ```
 
@@ -194,14 +192,12 @@ Check availability of Confluent Schema Registry in Confluent Cloud at https://ww
 7. View the schema information registered in Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```
-    $ BASIC_AUTH_HEADER=$(echo -n <SR API KEY>:<SR API SECRET> | base64 | tr -d \\n)
-    
     # View the list of registered subjects
-    $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}" <SR ENDPOINT>/subjects
+    $ curl https://<SR API KEY>:<SR API SECRET>@<SR ENDPOINT>/subjects
     ["test2-value"]%   
     
     # View the schema information for subject `test2-value`
-    $ curl -H "Content-Type: application/vnd.schemaregistry.v1+json" -H "Authorization: Basic ${BASIC_AUTH_HEADER}" <SR ENDPOINT>/subjects/test2-value/versions/1
+    $ curl https://<SR API KEY>:<SR API SECRET>@<SR ENDPOINT>/subjects/test2-value/versions/1
     {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}%                                                                                                                            
     ```
 
