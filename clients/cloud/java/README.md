@@ -142,7 +142,6 @@ Check availability of Confluent Cloud Schema Registry at https://www.confluent.i
     ```shell
     # View the list of registered subjects
     $ curl https://<SR API KEY>:<SR API SECRET>@<SR ENDPOINT>/subjects
-    %
     ```
 
 3. Add the following configuration to your local Confluent Cloud configuration file. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
@@ -194,10 +193,10 @@ Check availability of Confluent Cloud Schema Registry at https://www.confluent.i
     ```
     # View the list of registered subjects
     $ curl https://<SR API KEY>:<SR API SECRET>@<SR ENDPOINT>/subjects
-    ["test2-value"]%   
+    ["test2-value"]
     
     # View the schema information for subject `test2-value`
     $ curl https://<SR API KEY>:<SR API SECRET>@<SR ENDPOINT>/subjects/test2-value/versions/1
-    {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}%                                                                                                                            
+    {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
     ```
 
