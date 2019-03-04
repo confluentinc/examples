@@ -129,15 +129,15 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
     When you are done, press `<ctrl>-c`.
 
 
-# Example 2: Avro And Confluent Schema Registry in Confluent Cloud
+# Example 2: Avro And Confluent Cloud Schema Registry
 
-This example is similar to the previous example, except the value is formatted as Avro and integrates with the Confluent Schema Registry in Confluent Cloud.
-Check availability of Confluent Schema Registry in Confluent Cloud at https://www.confluent.io/confluent-cloud/ .
+This example is similar to the previous example, except the value is formatted as Avro and integrates with the Confluent Cloud Schema Registry.
+Check availability of Confluent Cloud Schema Registry at https://www.confluent.io/confluent-cloud/ .
 (Alternatively, you may run Confluent Schema Registry yourself. In your local Confluent Cloud configuration file, configure the `schema.registry.url` parameter to connect to your instance.)
 
-1. In the Confluent Cloud GUI, create an API key and secret to Confluent Schema Registry.
+1. In the Confluent Cloud GUI, create an API key and secret to Confluent Cloud Schema Registry.
 
-2. Verify your Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```shell
     # View the list of registered subjects
@@ -189,7 +189,7 @@ Check availability of Confluent Schema Registry in Confluent Cloud at https://ww
       -Dexec.args="$HOME/.ccloud/config test2"
     ```
 
-7. View the schema information registered in Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+7. View the schema information registered in Confluent Cloud Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```
     # View the list of registered subjects
