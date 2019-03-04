@@ -64,7 +64,7 @@ docker-compose pull
 * Mac: `brew install jq`
 * RHEL-based: `sudo yum install -y jq`
 * Debian-based: `sudo apt install -y jq`
-* Windows: `¯\_(ツ)_/¯` -> send me a PR for these instructions on how to do it :)
+* Windows: `choco install jq` (or download from https://stedolan.github.io/jq/download/[the official `jq` website] and add to Path)
 
 4. Linux only:
 + 
