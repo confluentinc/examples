@@ -26,6 +26,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	$ mvn clean package
 	
 	# Run the producer
+        # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
 	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
 	  -Dexec.args="$HOME/.ccloud/config test1"
 	```
@@ -161,6 +162,7 @@ Check availability of Confluent Cloud Schema Registry at https://www.confluent.i
     $ mvn clean package
 
     # Run the producer
+    # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
       -Dexec.args="$HOME/.ccloud/config test2"
     ```
