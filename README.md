@@ -22,6 +22,7 @@ cp-demo also comes with a playbook and video series, and is a great configuratio
 | ------------------------------------------ | ----- | ------ | -------- | ---------------------------------------------------------------------------
 | [Avro](clients/README.md)               |   [Y](clients/README.md)   |   N    | Confluent Platform | Examples of client applications using Avro and Confluent Schema Registry
 | [CDC with MySQL](https://github.com/confluentinc/demo-scene/blob/master/no-more-silos-mysql/demo_no-more-silos.adoc) | N | [Y](https://github.com/confluentinc/demo-scene/blob/master/no-more-silos-mysql/demo_no-more-silos.adoc) | Data Pipelines | Self-paced steps to setup a change data capture (CDC) pipeline
+| [CDC with Postgres](postgres-debezium-ksql-elasticsearch/README.md) |   N   |   [Y](postgres-debezium-ksql-elasticsearch/README.md)    | Data Pipelines | Enrich event stream data with CDC data from Postgres and then stream into Elasticsearch
 | [Clickstream](clickstream/README.md)       |   [Y](clickstream/README.md)   |   [Y](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker)    | Stream Processing | Automated version of the [KSQL Clickstream demo](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker)
 | [Cloud clients](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Confluent Cloud | Examples of client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/)
 | [Connect and Kafka Streams](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | Data Pipeline | Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API
@@ -37,7 +38,6 @@ cp-demo also comes with a playbook and video series, and is a great configuratio
 | [Music demo](music/README.md)                   |   [Y](music/README.md)   |   [Y](music/README.md)    | Stream Processing | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html)
 | [MySQL and Debezium](mysql-debezium/README.md) |   [Y](mysql-debezium/README.md)   |   N    | Data Pipelines | End-to-end streaming ETL with KSQL for stream processing using the [Debezium Connector for MySQL](http://debezium.io/docs/connectors/mysql/)
 | [Oracle, KSQL, Elasticsearch](https://github.com/confluentinc/demo-scene/blob/master/oracle-ksql-elasticsearch/oracle-ksql-elasticsearch-docker.adoc) |   N   |   Y    | Data Pipelines | Stream data from Oracle, enrich and filter with KSQL, and then stream into Elasticsearch
-| [Postgres, Debezium, KSQL, Elasticsearch](postgres-debezium-ksql-elasticsearch/README.md) |   N   |   [Y](postgres-debezium-ksql-elasticsearch/README.md)    | Data Pipelines | Enrich event stream data with CDC data from Postgres and then stream into Elasticsearch
 
 
 # Prerequisites
