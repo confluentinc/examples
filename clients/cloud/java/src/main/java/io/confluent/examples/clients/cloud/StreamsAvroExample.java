@@ -59,8 +59,21 @@ public class StreamsAvroExample {
     
         final String topic = args[1];
     
-        // Load properties from disk.
+        // Load properties from a configuration file
+        // The configuration properties defined in the configuration file are assumed to include:
+        //   ssl.endpoint.identification.algorithm=https
+        //   sasl.mechanism=PLAIN
+        //   request.timeout.ms=20000
+        //   bootstrap.servers=<CLUSTER_BOOTSTRAP_SERVER>
+        //   retry.backoff.ms=500
+        //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CLUSTER_API_KEY>" password="<CLUSTER_API_SECRET>";
+        //   security.protocol=SASL_SSL
+        //   basic.auth.credentials.source=USER_INFO
+        //   schema.registry.basic.auth.user.info=<SR_API_KEY>:<SR_API_SECRET>
+        //   schema.registry.url=https://<SR ENDPOINT>
         final Properties props = loadConfig(args[0]);
+
+        // Add additional properties.
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "demo-streams-avro-1");
         // Disable caching to print the aggregation value after each record
         props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
