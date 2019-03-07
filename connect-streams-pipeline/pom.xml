@@ -15,7 +15,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </repositories>
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
-    <confluent.version>4.1.3-SNAPSHOT</confluent.version>
+    <confluent.version>4.1.4-SNAPSHOT</confluent.version>
     <kafka.version>1.1.2-SNAPSHOT</kafka.version>
     <avro.version>1.8.2</avro.version>
     <!-- Maven properties for compilation -->
