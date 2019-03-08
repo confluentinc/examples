@@ -194,7 +194,11 @@ echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
 while read -r line
 do
-  echo "ksql.$line" >> $KSQL_SERVER_DELTA
+  if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
+    echo "ksql.schema.registry.$line" >> $KSQL_SERVER_DELTA
+  else
+    echo "ksql.$line" >> $KSQL_SERVER_DELTA
+  fi
 done < $SR_PROPERTIES
 chmod $PERM $KSQL_SERVER_DELTA
 
