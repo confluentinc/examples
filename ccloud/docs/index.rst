@@ -48,11 +48,16 @@ Run demo
 
      $ cd examples/ccloud
 
-3. Start the entire demo by running a single command that brings up the local self-managed Confluent Platform using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
+3. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
+      # For Confluent Platform local install using Confluent CLI
       $ ./start.sh
+
+      # For Docker Compose
+      $ ./start-docker.sh
+      
 
 4. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
 
@@ -393,11 +398,16 @@ Troubleshooting the demo
 Teardown
 ========
 
-1. Stop the demo, destroy all local components created by `Confluent CLI`, delete topics backing KSQL queries.
+1. Stop the demo, destroy all local components.
 
    .. sourcecode:: bash
 
-        $ ./stop.sh
+      # For Confluent Platform local install using Confluent CLI
+      $ ./stop.sh
+
+      # For Docker Compose
+      $ ./stop-docker.sh
+
 
 2. Delete all |cp| internal topics in CCloud, including topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry.
 

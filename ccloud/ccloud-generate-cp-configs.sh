@@ -230,6 +230,10 @@ while read -r line
     fi
   fi
 done < "$CCLOUD_CONFIG"
+while read -r line
+do
+  echo "confluent.controlcenter.$line" >> $C3_DELTA
+done < $SR_PROPERTIES
 chmod $PERM $C3_DELTA
 
 ################################################################################

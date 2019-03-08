@@ -57,7 +57,7 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 #ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
 ./submit_datagen_pageviews_config.sh
-sleep 5
+#sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
@@ -93,6 +93,7 @@ ccloud topic create users
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud topic create pageviews
 ./submit_replicator_config.sh
+echo "Starting Replicator and sleeping 60 seconds"
 sleep 60
 
 # KSQL Server runs locally and connects to Confluent Cloud
@@ -125,6 +126,7 @@ if is_ce; then
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
+  cat $SR_PROPERTIES_FILE >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
