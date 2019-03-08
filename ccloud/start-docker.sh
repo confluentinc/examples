@@ -30,19 +30,21 @@ if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   docker-compose kill schema-registry
 fi
 
-echo "Sleeping 70 seconds to wait for all services to come up"
-sleep 70
+echo "Sleeping 120 seconds to wait for all services to come up"
+sleep 120
 
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
-./submit_replicator_config.sh
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 docker-compose kill ksql-datagen-users
 docker-compose kill ksql-datagen-pageviews
 ./submit_datagen_users_config.sh
 ./submit_datagen_pageviews_docker_config.sh
 
-sleep 10
+# Replicator
+./submit_replicator_docker_config.sh
+
+sleep 30
 
 docker-compose exec ksql-cli bash -c "ksql http://ksql-server:8089 <<EOF
 run script '/tmp/ksql.commands';

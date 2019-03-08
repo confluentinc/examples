@@ -56,7 +56,7 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 #echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
 #ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
-confluent config datagen-pageviews -d ./connector_datagen-pageviews.config
+./submit_datagen_pageviews_config.sh
 sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
