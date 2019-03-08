@@ -71,7 +71,7 @@ else
   # BSD
   PERM=$(stat -f "%OLp" $HOME/.ccloud/config)
 fi
-echo "INFO: setting file permission to $PERM"
+#echo "INFO: setting file permission to $PERM"
 
 ################################################################################
 # Destination directory
@@ -98,12 +98,21 @@ CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
 #echo "sasl.jaas.config: $SASL_JAAS_CONFIG"
 #echo "key: $CLOUD_KEY"
 #echo "secret: $CLOUD_SECRET"
+
 SR_CRED_SOURCE=$( grep "^basic.auth.credentials.source" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
 SR_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
 SR_URL=$( grep "^schema.registry.url" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
 #echo "basic.auth.credentials.source: $SR_CRED_SOURCE"
 #echo "schema.registry.basic.auth.user.info: $SR_BASIC_AUTH_USER_INFO"
 #echo "schema.registry.url: $SR_URL"
+SR_PROPERTIES=$DEST/confluent-cloud-schema-registry.properties
+echo "$SR_PROPERTIES"
+cat <<EOF > $SR_PROPERTIES
+basic.auth.credentials.source=$SR_CRED_SOURCE
+schema.registry.basic.auth.user.info=$SR_BASIC_AUTH_USER_INFO
+schema.registry.url=$SR_URL
+EOF
+
 
 
 ################################################################################
