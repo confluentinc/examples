@@ -15,6 +15,11 @@ ccloud topic create pageviews
 
 docker-compose up -d
 
+USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
+if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
+  docker-compose down schema-registry
+fi
+
 echo "Sleeping 60 seconds to wait for all services to come up"
 sleep 60
 

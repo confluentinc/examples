@@ -163,7 +163,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8085 40 && \
+                       sleep 40
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 2 && \
                        /usr/bin/ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://schema-registry:8085 bootstrap-server=kafka:29092'"

@@ -24,6 +24,7 @@ DELTA_CONFIGS_DIR="delta_configs"
 source delta_configs/env.delta
 
 SR_PROPERTIES_FILE=$CONFLUENT_CURRENT/schema-registry/confluent-cloud-schema-registry.properties
+USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   # Use Confluent Cloud Schema Registry
   cp $DELTA_CONFIGS_DIR/confluent-cloud-schema-registry.properties $SR_PROPERTIES_FILE
