@@ -94,7 +94,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
     # Compile the Java code
     $ mvn clean package
 
-    # Run the consumer
+    # Run the Kafka streams application
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.ccloud/config test1"
     ```
@@ -162,7 +162,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     # Compile the Java code
     $ mvn clean package
 
-    # Run the producer
+    # Run the Avro producer
     # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
       -Dexec.args="$HOME/.ccloud/config test2"
@@ -174,7 +174,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     # Compile the Java code
     $ mvn clean package
     
-    # Run the producer
+    # Run the Avro consumer
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
       -Dexec.args="$HOME/.ccloud/config test2"
     ```
@@ -185,7 +185,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     # Compile the Java code
     $ mvn clean package
 
-    # Run the consumer
+    # Run the Avro Kafka streams application
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsAvroExample" \
       -Dexec.args="$HOME/.ccloud/config test2"
     ```
