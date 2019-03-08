@@ -39,7 +39,7 @@ sleep 60
 
 sleep 10
 
-docker-compose exec ksql-cli  bash -c "ksql http://ksql-server:8089 <<EOF
+docker-compose exec ksql-cli bash -c "ksql http://ksql-server:8089 <<EOF
 run script '/tmp/ksql.commands';
 exit ;
 EOF
