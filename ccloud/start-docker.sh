@@ -24,7 +24,7 @@ fi
 ccloud topic create users
 ccloud topic create pageviews
 
-docker-compose up -d
+docker-compose up -d --build
 
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   docker-compose kill schema-registry
@@ -36,6 +36,9 @@ sleep 60
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 ./submit_replicator_config.sh
+# Use kafka-connect-datagen for 'users' topic instead of ksql-datagen due to KSQL-2278
+docker-compose kill ksql-datagen-users
+./submit_datagen_users_config.sh
 
 sleep 10
 

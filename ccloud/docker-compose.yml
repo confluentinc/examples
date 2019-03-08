@@ -124,7 +124,6 @@ services:
     depends_on:
       - zookeeper
       - kafka
-      - schema-registry
     ports:
       - "9021:9021"
     environment:
@@ -132,7 +131,7 @@ services:
       CONTROL_CENTER_KSQL_URL: "http://ksql-server:8089"
       CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8089"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
-      CONTROL_CENTER_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
       CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
       CONTROL_CENTER_CONNECT_CLUSTER: "connect:8083"
       CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SASL_SSL
@@ -158,7 +157,6 @@ services:
     container_name: ksql-datagen-pageviews
     depends_on:
       - kafka
-      - schema-registry
       - kafka-create-topics
     # Note: The container's `run` script will perform the same readiness checks
     # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
@@ -188,7 +186,6 @@ services:
     container_name: ksql-datagen-users
     depends_on:
       - kafka
-      - schema-registry
     # Note: The container's `run` script will perform the same readiness checks
     # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
     # The reason we check for readiness here is that we can insert a sleep time
@@ -220,7 +217,6 @@ services:
     container_name: kafka-create-topics
     depends_on:
       - kafka
-      - schema-registry
     # We defined a dependency on "kafka", but `depends_on` will NOT wait for the
     # dependencies to be "ready" before starting the "kafka-create-topics"
     # container;  it waits only until the dependencies have started.  Hence we
@@ -237,13 +233,15 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.1.2
+    image: confluentinc/kafka-connect-datagen:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     hostname: connect
     container_name: connect
     depends_on:
       - zookeeper
       - kafka
-      - schema-registry
     ports:
       - "8083:8083"
     volumes:
@@ -265,7 +263,7 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
-      CONNECT_PLUGIN_PATH: "/usr/share/java"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar
