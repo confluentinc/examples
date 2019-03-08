@@ -179,6 +179,7 @@ services:
       STREAMS_BOOTSTRAP_SERVERS: kafka:29092
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8085
+      SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
 
   # Runs the Kafka KSQL data generator for topic called "users"
   ksql-datagen-users:
@@ -209,6 +210,7 @@ services:
       STREAMS_BOOTSTRAP_SERVERS: kafka:29092
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
       STREAMS_SCHEMA_REGISTRY_PORT: 8085
+      SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
 
 
   # This "container" is a workaround to pre-create topics

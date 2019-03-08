@@ -18,7 +18,7 @@ if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY != 1 ]]; then
   unset SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
   echo "schema.registry.url=$SCHEMA_REGISTRY_URL" > $SR_PROPERTIES_FILE
 else
-  validate_confluent_cloud_schema_registry || exit 1
+  validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 fi
 
 ccloud topic create users
@@ -27,7 +27,7 @@ ccloud topic create pageviews
 docker-compose up -d
 
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
-  docker-compose down schema-registry
+  docker-compose kill schema-registry
 fi
 
 echo "Sleeping 60 seconds to wait for all services to come up"

@@ -28,7 +28,7 @@ USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   # Use Confluent Cloud Schema Registry
   cp $DELTA_CONFIGS_DIR/confluent-cloud-schema-registry.properties $SR_PROPERTIES_FILE
-  validate_confluent_cloud_schema_registry || exit 1
+  validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 else
   # Confluent Schema Registry runs locally and connects to Confluent Cloud
   # Set this new Schema Registry listener to port $SR_LISTENER instead of the default 8081 which is already in use
@@ -97,10 +97,6 @@ cache.max.bytes.buffering=0
 auto.offset.reset=earliest
 state.dir=$CONFLUENT_CURRENT/ksql-server/data-ccloud/kafka-streams
 EOF
-while read -r line
-do
-  echo "ksql.$line" >> $KSQL_SERVER_CONFIG
-done < "$SR_PROPERTIES_FILE"
 echo "Starting KSQL Server for Confluent Cloud and sleeping 25 seconds"
 ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
 sleep 25
@@ -123,9 +119,5 @@ if is_ce; then
   echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
-while read -r line
-do
-  echo "confluent.controlcenter.$line" >> $C3_CONFIG
-done < "$SR_PROPERTIES_FILE"
 
 sleep 10

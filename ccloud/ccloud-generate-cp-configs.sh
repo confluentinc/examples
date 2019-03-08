@@ -54,6 +54,9 @@
 
 set -eu
 
+# Source library
+. ../utils/helper.sh
+
 ################################################################################
 # Confluent Cloud configuration
 ################################################################################
@@ -188,6 +191,10 @@ echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
+while read -r line
+do
+  echo "ksql.$line" >> $KSQL_SERVER_DELTA
+done < $SR_PROPERTIES
 chmod $PERM $KSQL_SERVER_DELTA
 
 ################################################################################
@@ -198,6 +205,10 @@ echo "$KSQL_DATAGEN_DELTA"
 rm -f $KSQL_DATAGEN_DELTA
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
+while read -r line
+do
+  echo "ksql.$line" >> $KSQL_DATAGEN_DELTA
+done < $SR_PROPERTIES
 chmod $PERM $KSQL_DATAGEN_DELTA
 
 ################################################################################
