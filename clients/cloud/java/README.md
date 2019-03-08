@@ -145,7 +145,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
     ```
 
-3. Add the following parameters to your local Confluent Cloud configuration file. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```shell
     $ cat $HOME/.ccloud/config
