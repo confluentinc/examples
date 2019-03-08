@@ -175,7 +175,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     $ mvn clean package
     
     # Run the producer
-    $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerConsumerExample" \
+    $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
       -Dexec.args="$HOME/.ccloud/config test2"
     ```
 
