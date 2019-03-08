@@ -72,7 +72,9 @@ services:
       KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_COMMIT_INTERVAL_MS: 0
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8085"
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      KSQL_KSQL_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
       KSQL_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       KSQL_SECURITY_PROTOCOL: "SASL_SSL"
       KSQL_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
@@ -129,7 +131,9 @@ services:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONTROL_CENTER_KSQL_URL: "http://ksql-server:8089"
       CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8089"
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8085"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      CONTROL_CENTER_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
       CONTROL_CENTER_CONNECT_CLUSTER: "connect:8083"
       CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SASL_SSL
       CONTROL_CENTER_STREAMS_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
@@ -160,13 +164,15 @@ services:
     # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
     # The reason we check for readiness here is that we can insert a sleep time
     # for topic creation before we start the application.
+    volumes:
+      - $PWD/delta_configs/confluent-cloud-schema-registry.properties:/tmp/ksql-datagen.properties
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
-                       sleep 40
+                       sleep 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 2 && \
-                       /usr/bin/ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://schema-registry:8085 bootstrap-server=kafka:29092'"
+                       /usr/bin/ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=/tmp/ksql-datagen.properties bootstrap-server=kafka:29092'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
@@ -192,11 +198,11 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8085 40 && \
+                       sleep 40 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 2 && \
                        cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.1.2.jar && \
-                       /usr/bin/ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://schema-registry:8085 propertiesFile=/tmp/ksql-datagen.properties'"
+                       /usr/bin/ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=/tmp/ksql-datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"

@@ -28,7 +28,7 @@ USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   # Use Confluent Cloud Schema Registry
   cp $DELTA_CONFIGS_DIR/confluent-cloud-schema-registry.properties $SR_PROPERTIES_FILE
-  curl --silent -u $SR_BASIC_AUTH_USER_INFO $SR_URL
+  curl --silent -u $SCHEMA_REGISTR_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL
   if [[ "$?" -ne 0 ]]; then
     echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
     exit
@@ -56,8 +56,8 @@ fi
 
 # Produce to topic pageviews in local cluster
 kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
-echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SR_URL propertiesFile=$SR_PROPERTIES"
-ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SR_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
+echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
+ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
 sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
@@ -67,7 +67,7 @@ sleep 5
 ccloud topic create users
 KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
 cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
-ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SR_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
+ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9

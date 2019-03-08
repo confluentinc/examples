@@ -99,18 +99,18 @@ CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
 #echo "key: $CLOUD_KEY"
 #echo "secret: $CLOUD_SECRET"
 
-SR_CRED_SOURCE=$( grep "^basic.auth.credentials.source" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
-SR_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
-SR_URL=$( grep "^schema.registry.url" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
-#echo "basic.auth.credentials.source: $SR_CRED_SOURCE"
-#echo "schema.registry.basic.auth.user.info: $SR_BASIC_AUTH_USER_INFO"
-#echo "schema.registry.url: $SR_URL"
+BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
+SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
+SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
+#echo "basic.auth.credentials.source: $BASIC_AUTH_CREDENTIALS_SOURCE"
+#echo "schema.registry.basic.auth.user.info: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO"
+#echo "schema.registry.url: $SCHEMA_REGISTRY_URL"
 SR_PROPERTIES=$DEST/confluent-cloud-schema-registry.properties
 echo "$SR_PROPERTIES"
 cat <<EOF > $SR_PROPERTIES
-basic.auth.credentials.source=$SR_CRED_SOURCE
-schema.registry.basic.auth.user.info=$SR_BASIC_AUTH_USER_INFO
-schema.registry.url=$SR_URL
+basic.auth.credentials.source=$BASIC_AUTH_CREDENTIALS_SOURCE
+schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+schema.registry.url=$SCHEMA_REGISTRY_URL
 EOF
 
 
@@ -245,9 +245,9 @@ props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
 props.put(SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
 
 // Confluent Cloud Schema Registry
-props.put("basic.auth.credentials.source", "$SR_CRED_SOURCE");
-props.put("schema.registry.basic.auth.user.info", "$SR_BASIC_AUTH_USER_INFO");
-props.put("schema.registry.url", "$SR_URL");
+props.put("basic.auth.credentials.source", "$BASIC_AUTH_CREDENTIALS_SOURCE");
+props.put("schema.registry.basic.auth.user.info", "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO");
+props.put("schema.registry.url", "$SCHEMA_REGISTRY_URL");
 
 // Optimize Performance for Confluent Cloud
 props.put(ProducerConfig.RETRIES_CONFIG, 2147483647);
@@ -295,9 +295,9 @@ props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
 props.put(SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
 
 // Confluent Cloud Schema Registry
-props.put("basic.auth.credentials.source", "$SR_CRED_SOURCE");
-props.put("schema.registry.basic.auth.user.info", "$SR_BASIC_AUTH_USER_INFO");
-props.put("schema.registry.url", "$SR_URL");
+props.put("basic.auth.credentials.source", "$BASIC_AUTH_CREDENTIALS_SOURCE");
+props.put("schema.registry.basic.auth.user.info", "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO");
+props.put("schema.registry.url", "$SCHEMA_REGISTRY_URL");
 
 // Optimize Performance for Confluent Cloud
 props.put(StreamsConfig.producerPrefix(ProducerConfig.RETRIES_CONFIG), 2147483647);
@@ -532,8 +532,8 @@ export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
 export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
 export BOOTSTRAP_SERVERS_SR_FORMAT='$BOOTSTRAP_SERVERS_SR_FORMAT'
 export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
-export SR_CRED_SOURCE='$SR_CRED_SOURCE'
-export SR_BASIC_AUTH_USER_INFO='$SR_BASIC_AUTH_USER_INFO'
-export SR_URL='$SR_URL'
+export BASIC_AUTH_CREDENTIALS_SOURCE='$BASIC_AUTH_CREDENTIALS_SOURCE'
+export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO='$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO'
+export SCHEMA_REGISTRY_URL='$SCHEMA_REGISTRY_URL'
 EOF
 chmod $PERM $ENV_CONFIG

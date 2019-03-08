@@ -10,12 +10,20 @@ check_jq || exit
 
 source delta_configs/env.delta
 
+USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
+SR_PROPERTIES_FILE=delta_configs/confluent-cloud-schema-registry.properties
+if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY != 1 ]]; then
+  export SCHEMA_REGISTRY_URL=http://schema-registry:8085
+  unset BASIC_AUTH_CREDENTIALS_SOURCE
+  unset SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+  echo "schema.registry.url=$SCHEMA_REGISTRY_URL" > $SR_PROPERTIES_FILE
+fi
+
 ccloud topic create users
 ccloud topic create pageviews
 
 docker-compose up -d
 
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   docker-compose down schema-registry
 fi
