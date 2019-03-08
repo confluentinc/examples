@@ -3,22 +3,23 @@
 Hybrid Kafka Clusters
 =====================
 
-This Confluent Cloud demo showcases a hybrid Kafka cluster, with a self-managed cluster and |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__. Instead of the Kafka cluster backing the KSQL stream processing running on your local machine, it runs on your |ccloud| cluster. There are also additional |cp| components including |c3| and Confluent Replicator.
+This Confluent Cloud demo showcases a hybrid Kafka cluster, with a self-managed cluster and |ccloud| with Confluent Cloud Schema Registry.
+
 
 ========
 Overview
 ========
 
-This |ccloud| demo showcases a hybrid Kafka cluster. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
+This |ccloud| demo showcases a hybrid Kafka cluster with Confluent Replicator. This automated demo shows stream processing highlights similar to the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
 
-This demo uses the Confluent Replicator executable to copy the topic `pageviews from self-managed Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
-
-By default, it runs with Confluent Cloud Schema Registry which you must have configured prior to running.
-To disable it (and run with a local Schema Registry), modify the `start.sh` or `start-docker.sh` script and set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=0`.
+This demo uses Confluent Replicator to copy the topic `pageviews` from self-managed Confluent Platform to |ccloud|. In general, Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
 
 .. figure:: images/confluent-cloud-demo-diagram.png
     :alt: image
 
+
+By default, it runs with Confluent Cloud Schema Registry which you must have configured prior to running.
+If you choose to not use Confluent Cloud Schema Registry and instead want to run with a local Schema Registry, in `start.sh` or `start-docker.sh`, set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=0`.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
@@ -102,13 +103,6 @@ Playbook
 
 |c3|
 ----
-
-1. View the Confluent Control Center configuration file.
-
-   .. sourcecode:: bash
-
-        # Control Center servers point to Confluent Cloud
-        $ cat `confluent current | tail -1`/control-center/control-center-ccloud.properties
 
 1. **Monitoring –> Data Streams –> Message Delivery**: hover over
    any chart to see number of messages and average latency within a
