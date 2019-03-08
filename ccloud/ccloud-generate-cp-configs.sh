@@ -232,7 +232,11 @@ while read -r line
 done < "$CCLOUD_CONFIG"
 while read -r line
 do
-  echo "confluent.controlcenter.$line" >> $C3_DELTA
+  if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
+    echo "confluent.controlcenter.schema.registry.$line" >> $C3_DELTA
+  else
+    echo "confluent.controlcenter.$line" >> $C3_DELTA
+  fi
 done < $SR_PROPERTIES
 chmod $PERM $C3_DELTA
 
