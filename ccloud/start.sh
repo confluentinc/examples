@@ -28,11 +28,7 @@ USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
   # Use Confluent Cloud Schema Registry
   cp $DELTA_CONFIGS_DIR/confluent-cloud-schema-registry.properties $SR_PROPERTIES_FILE
-  curl --silent -u $SCHEMA_REGISTR_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL
-  if [[ "$?" -ne 0 ]]; then
-    echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
-    exit
-  fi
+  validate_confluent_cloud_schema_registry || exit 1
 else
   # Confluent Schema Registry runs locally and connects to Confluent Cloud
   # Set this new Schema Registry listener to port $SR_LISTENER instead of the default 8081 which is already in use

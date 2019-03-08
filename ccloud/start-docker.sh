@@ -17,6 +17,8 @@ if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY != 1 ]]; then
   unset BASIC_AUTH_CREDENTIALS_SOURCE
   unset SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
   echo "schema.registry.url=$SCHEMA_REGISTRY_URL" > $SR_PROPERTIES_FILE
+else
+  validate_confluent_cloud_schema_registry || exit 1
 fi
 
 ccloud topic create users
