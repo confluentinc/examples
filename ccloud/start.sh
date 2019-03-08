@@ -52,34 +52,47 @@ fi
 
 # Produce to topic pageviews in local cluster
 kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
-echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
-ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
+# Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
+#echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
+#ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
+confluent config datagen-pageviews -d ./connector_datagen-pageviews.config
 sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
+# Start Connect that connects to CCloud cluster
+CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
+cp $CONFLUENT_CURRENT/connect/connect.properties $CONNECT_CONFIG
+cat $DELTA_CONFIGS_DIR/connect-ccloud.delta >> $CONNECT_CONFIG
+CONNECT_REST_PORT=8087
+cat <<EOF >> $CONNECT_CONFIG
+rest.port=$CONNECT_REST_PORT
+rest.advertised.name=connect-cloud
+rest.hostname=connect-cloud
+group.id=connect-cloud
+request.timeout.ms=20000
+retry.backoff.ms=500
+EOF
+connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
+sleep 40
+
 # Produce to topic users in CCloud cluster
 ccloud topic create users
-KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
-cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
-ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
+# Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
+#KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
+#cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
+#ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
+./submit_datagen_users_config.sh
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
-jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
-jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
+#jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
+#jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 
-# Replicate local topic `pageviews` to Confluent Cloud topic `pageviews`
+# Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud topic create pageviews
-PRODUCER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-producer.properties
-cp $DELTA_CONFIGS_DIR/replicator-to-ccloud-producer.delta $PRODUCER_PROPERTIES
-CONSUMER_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud-consumer.properties
-echo "bootstrap.servers=localhost:9092" > $CONSUMER_PROPERTIES
-REPLICATOR_PROPERTIES=$CONFLUENT_CURRENT/connect/replicator-to-ccloud.properties
-echo "topic.whitelist=pageviews" > $REPLICATOR_PROPERTIES
-#echo "topic.rename.format=\${topic}.replica" >> $REPLICATOR_PROPERTIES
-echo "Starting Confluent Replicator and sleeping 60 seconds"
-replicator --cluster.id replicator-to-ccloud --consumer.config $CONSUMER_PROPERTIES --producer.config $PRODUCER_PROPERTIES --replication.config $REPLICATOR_PROPERTIES > $CONFLUENT_CURRENT/connect/replicator-to-ccloud.stdout 2>&1 &
+./submit_replicator_config.sh
 sleep 60
 
 # KSQL Server runs locally and connects to Confluent Cloud
@@ -112,7 +125,7 @@ if is_ce; then
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=localhost:8083" >> $C3_CONFIG
+  echo "confluent.controlcenter.connect.cluster=localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   # Workaround for MMA-3564

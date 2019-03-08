@@ -11,7 +11,10 @@ Overview
 
 This |ccloud| demo showcases a hybrid Kafka cluster. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
 
-You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent Replicator executable for self-hosted Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
+This demo uses the Confluent Replicator executable to copy the topic `pageviews from self-managed Confluent to |ccloud|. Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
+
+By default, it runs with Confluent Cloud Schema Registry which you must have configured prior to running.
+To disable it (and run with a local Schema Registry), modify the `start.sh` or `start-docker.sh` script and set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=0`.
 
 .. figure:: images/confluent-cloud-demo-diagram.png
     :alt: image
@@ -45,7 +48,7 @@ Run demo
 
      $ cd examples/ccloud
 
-3. Start the entire demo by running a single command that brings up the local self-hosted Confluent Platform using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
+3. Start the entire demo by running a single command that brings up the local self-managed Confluent Platform using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -264,7 +267,7 @@ Replicator
 
 Confluent Replicator copies data from a source Kafka cluster to a
 destination Kafka cluster. In this demo, the source cluster is a local install that represents
-a self-hosted cluster, and the destination cluster is |ccloud|.
+a self-managed cluster, and the destination cluster is |ccloud|.
 
 1. View the Confluent Replicator configuration files.  Note that in this demo, Replicator is run as a standalone binary.
 

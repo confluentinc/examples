@@ -38,6 +38,7 @@
 # - KSQL server 
 # - Confluent Replicator (standalone binary)
 # - Confluent Control Center
+# - Kafka Connect
 #
 # Kafka Clients:
 # - Java (Producer/Consumer)
@@ -230,6 +231,41 @@ while read -r line
   fi
 done < "$CCLOUD_CONFIG"
 chmod $PERM $C3_DELTA
+
+################################################################################
+# Kafka Connect runs locally and connects to Confluent Cloud
+################################################################################
+CONNECT_DELTA=$DEST/connect-ccloud.delta
+echo "$CONNECT_DELTA"
+rm -f $CONNECT_DELTA
+cat <<EOF > $CONNECT_DELTA
+replication.factor=3
+config.storage.replication.factor=3
+offset.storage.replication.factor=3
+status.storage.replication.factor=3
+EOF
+while read -r line
+  do
+  if [[ ! -z $line && ${line:0:1} != '#' ]]; then
+    if [[ ${line:0:9} == 'bootstrap' ]]; then
+      line=${line/\\/}
+      echo "$line" >> $CONNECT_DELTA
+    fi
+    if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
+      echo "$line" >> $CONNECT_DELTA
+      echo "producer.$line" >> $CONNECT_DELTA
+      echo "producer.confluent.monitoring.interceptor.$line" >> $CONNECT_DELTA
+      echo "consumer.$line" >> $CONNECT_DELTA
+      echo "consumer.confluent.monitoring.interceptor.$line" >> $CONNECT_DELTA
+    fi
+  fi
+done < "$CCLOUD_CONFIG"
+chmod $PERM $CONNECT_DELTA
+
+
+
+
+
 
 echo -e "\nKafka Clients:"
 

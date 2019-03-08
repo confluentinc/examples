@@ -134,7 +134,7 @@ services:
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
       CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
       CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-      CONTROL_CENTER_CONNECT_CLUSTER: "connect-cloud:8083"
+      CONTROL_CENTER_CONNECT_CLUSTER: "connect-cloud:8087"
       CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SASL_SSL
       CONTROL_CENTER_STREAMS_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONTROL_CENTER_STREAMS_SASL_MECHANISM: PLAIN
@@ -244,14 +244,14 @@ services:
       - zookeeper
       - kafka
     ports:
-      - "8087:8087"
+      - "8083:8083"
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'kafka:29092'
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-local
-      CONNECT_REST_PORT: 8087
+      CONNECT_REST_PORT: 8083
       CONNECT_GROUP_ID: "connect-local"
       CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
@@ -281,14 +281,14 @@ services:
       - zookeeper
       - kafka
     ports:
-      - "8083:8083"
+      - "8087:8087"
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
       - mi3:/usr/share/java/kafka-connect-replicator/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-cloud
-      CONNECT_REST_PORT: 8083
+      CONNECT_REST_PORT: 8087
       CONNECT_GROUP_ID: "connect-cloud"
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets

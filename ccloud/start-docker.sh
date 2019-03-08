@@ -40,7 +40,7 @@ sleep 70
 docker-compose kill ksql-datagen-users
 docker-compose kill ksql-datagen-pageviews
 ./submit_datagen_users_config.sh
-./submit_datagen_pageviews_config.sh
+./submit_datagen_pageviews_docker_config.sh
 
 sleep 10
 
