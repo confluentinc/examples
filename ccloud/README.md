@@ -25,7 +25,7 @@ This demo showcases:
 
 ## Automated Configurations
 
-It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud, including the following:
+It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud.  See the [template examples](template_delta_configs) for examples of lines to add to each component or client.
 
 * Confluent Platform Components:
   * Confluent Schema Registry
