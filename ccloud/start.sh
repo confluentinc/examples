@@ -18,22 +18,25 @@ fi
 confluent start
 CONFLUENT_CURRENT=`confluent current | tail -1`
 
-DELTA_CONFIGS_DIR="delta_configs"
-./ccloud-generate-cp-configs.sh $DELTA_CONFIGS_DIR
+USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true
+if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
+  SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
+else
+  SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
+fi
+./ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
 
-source delta_configs/env.delta
+DELTA_CONFIGS_DIR=delta_configs
+source $DELTA_CONFIGS_DIR/env.delta
 
-SR_PROPERTIES_FILE=$CONFLUENT_CURRENT/schema-registry/confluent-cloud-schema-registry.properties
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
-if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
+if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   # Use Confluent Cloud Schema Registry
-  cp $DELTA_CONFIGS_DIR/confluent-cloud-schema-registry.properties $SR_PROPERTIES_FILE
   validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 else
   # Confluent Schema Registry runs locally and connects to Confluent Cloud
   # Set this new Schema Registry listener to port $SR_LISTENER instead of the default 8081 which is already in use
   SR_LISTENER=8085
-  echo "schema.registry.url=http://localhost:$SR_LISTENER" > $SR_PROPERTIES_FILE
+  SCHEMA_REGISTRY_URL=http://localhost:$SR_LISTENER
   SR_CONFIG=$CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.properties
   cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $SR_CONFIG
   sed -i '' "s/listeners=http:\/\/0.0.0.0:8081/listeners=http:\/\/0.0.0.0:$SR_LISTENER/g" $SR_CONFIG
@@ -126,7 +129,6 @@ if is_ce; then
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  cat $SR_PROPERTIES_FILE >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG

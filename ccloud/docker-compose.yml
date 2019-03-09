@@ -52,7 +52,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_REQUEST_TIMEOUT_MS: 20000
       SCHEMA_REGISTRY_KAFKASTORE_RETRY_BACKOFF_MS: 500
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: "SASL_SSL"
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: $SR_BOOTSTRAP_SERVERS
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS_SR_FORMAT
       SCHEMA_REGISTRY_KAFKASTORE_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
@@ -150,65 +150,6 @@ services:
       CONTROL_CENTER_METRICS_TOPIC_MAX_MESSAGE_BYTES: 8388608
       CONFLUENT_METRICS_TOPIC_REPLICATION: 3
       PORT: 9021
-
-  # Runs the Kafka KSQL data generator for topic called "pageviews"
-  ksql-datagen-pageviews:
-    image: confluentinc/ksql-examples:5.1.2
-    hostname: ksql-datagen-pageviews
-    container_name: ksql-datagen-pageviews
-    depends_on:
-      - kafka
-      - kafka-create-topics
-    # Note: The container's `run` script will perform the same readiness checks
-    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
-    # The reason we check for readiness here is that we can insert a sleep time
-    # for topic creation before we start the application.
-    volumes:
-      - $PWD/delta_configs/confluent-cloud-schema-registry.properties:/tmp/ksql-datagen.properties
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 20 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       sleep 40 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 2 && \
-                       /usr/bin/ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=/tmp/ksql-datagen.properties bootstrap-server=kafka:29092'"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8085
-      SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
-
-  # Runs the Kafka KSQL data generator for topic called "users"
-  ksql-datagen-users:
-    image: confluentinc/ksql-examples:5.1.2
-    hostname: ksql-datagen-users
-    container_name: ksql-datagen-users
-    depends_on:
-      - kafka
-    # Note: The container's `run` script will perform the same readiness checks
-    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
-    # The reason we check for readiness here is that we can insert a sleep time
-    # for topic creation before we start the application.
-    volumes:
-      - mi2:/usr/share/java/monitoring-interceptors/
-      - $PWD/delta_configs/ksql-datagen.delta:/tmp/ksql-datagen.properties
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 20 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       sleep 40 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 2 && \
-                       cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.1.2.jar && \
-                       /usr/bin/ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=/tmp/ksql-datagen.properties'"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8085
-      SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
 
 
   # This "container" is a workaround to pre-create topics

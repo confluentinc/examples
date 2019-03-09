@@ -6,6 +6,8 @@
 check_env || exit 1
 check_ccloud || exit
 
+DELTA_CONFIGS_DIR="delta_configs"
+./ccloud-generate-cp-configs.sh
 source delta_configs/env.delta
 
 # Kill processes
@@ -18,11 +20,11 @@ jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 
 # Delete subjects from Confluent Schema Registry
-#schema_registry_subjects_to_delete="users-value pageviews-value"
-#for subject in $schema_registry_subjects_to_delete
-#do
-#  curl -X DELETE -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
-#done
+schema_registry_subjects_to_delete="users-value pageviews-value"
+for subject in $schema_registry_subjects_to_delete
+do
+  curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
+done
 
 # Delete topics in Confluent Cloud
 topics=$(ccloud topic list)

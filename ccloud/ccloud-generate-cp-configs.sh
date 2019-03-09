@@ -78,13 +78,14 @@ fi
 #echo "INFO: setting file permission to $PERM"
 
 ################################################################################
-# Destination directory
+# Specify configuration file for Confluent Schema Registry
 ################################################################################
+SR_CONFIG_FILE=$CCLOUD_CONFIG
 if [[ $# -ne 0 ]] && [[ ! -z "$1" ]]; then
-  DEST=$1
-else
-  DEST="delta_configs"
+  SR_CONFIG_FILE=$1
 fi
+# Make destination
+DEST="delta_configs"
 mkdir -p $DEST
 
 ################################################################################
@@ -103,20 +104,12 @@ CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
 #echo "key: $CLOUD_KEY"
 #echo "secret: $CLOUD_SECRET"
 
-BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
-SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
-SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
+BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
+SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
+SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 #echo "basic.auth.credentials.source: $BASIC_AUTH_CREDENTIALS_SOURCE"
 #echo "schema.registry.basic.auth.user.info: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO"
 #echo "schema.registry.url: $SCHEMA_REGISTRY_URL"
-SR_PROPERTIES=$DEST/confluent-cloud-schema-registry.properties
-echo "$SR_PROPERTIES"
-cat <<EOF > $SR_PROPERTIES
-basic.auth.credentials.source=$BASIC_AUTH_CREDENTIALS_SOURCE
-schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-schema.registry.url=$SCHEMA_REGISTRY_URL
-EOF
-
 
 
 ################################################################################
@@ -158,7 +151,9 @@ do
       line=${line//,/,SASL_SSL:\/\/}
       line=${line/\\/}
     fi
-    echo "kafkastore.$line" >> $SR_CONFIG_DELTA
+    if [[ ${line:0:29} != 'basic.auth.credentials.source' && ${line:0:15} != 'schema.registry' ]]; then
+      echo "kafkastore.$line" >> $SR_CONFIG_DELTA
+    fi
   fi
 done < "$CCLOUD_CONFIG"
 chmod $PERM $SR_CONFIG_DELTA
@@ -199,7 +194,7 @@ do
   else
     echo "ksql.$line" >> $KSQL_SERVER_DELTA
   fi
-done < $SR_PROPERTIES
+done < $SR_CONFIG_FILE
 chmod $PERM $KSQL_SERVER_DELTA
 
 ################################################################################
@@ -213,7 +208,7 @@ echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.Monitoring
 while read -r line
 do
   echo "ksql.$line" >> $KSQL_DATAGEN_DELTA
-done < $SR_PROPERTIES
+done < $SR_CONFIG_FILE
 chmod $PERM $KSQL_DATAGEN_DELTA
 
 ################################################################################
@@ -241,7 +236,7 @@ do
   else
     echo "confluent.controlcenter.$line" >> $C3_DELTA
   fi
-done < $SR_PROPERTIES
+done < $SR_CONFIG_FILE
 chmod $PERM $C3_DELTA
 
 ################################################################################
@@ -591,8 +586,8 @@ export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
 export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
 export BOOTSTRAP_SERVERS_SR_FORMAT='$BOOTSTRAP_SERVERS_SR_FORMAT'
 export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
-export BASIC_AUTH_CREDENTIALS_SOURCE='$BASIC_AUTH_CREDENTIALS_SOURCE'
-export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO='$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO'
-export SCHEMA_REGISTRY_URL='$SCHEMA_REGISTRY_URL'
+export BASIC_AUTH_CREDENTIALS_SOURCE=$BASIC_AUTH_CREDENTIALS_SOURCE
+export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+export SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
 EOF
 chmod $PERM $ENV_CONFIG

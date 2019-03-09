@@ -6,18 +6,18 @@
 check_ccloud || exit
 check_jq || exit
 
-./ccloud-generate-cp-configs.sh
-
-source delta_configs/env.delta
-
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=1
-SR_PROPERTIES_FILE=delta_configs/confluent-cloud-schema-registry.properties
-if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY != 1 ]]; then
-  export SCHEMA_REGISTRY_URL=http://schema-registry:8085
-  unset BASIC_AUTH_CREDENTIALS_SOURCE
-  unset SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-  echo "schema.registry.url=$SCHEMA_REGISTRY_URL" > $SR_PROPERTIES_FILE
+USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true
+if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
+  SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 else
+  SCHEMA_REGISTRY_CONFIG_FILE=schema_registry_docker.config
+fi
+./ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+
+DELTA_CONFIGS_DIR=delta_configs
+source $DELTA_CONFIGS_DIR/env.delta
+
+if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 fi
 
@@ -26,18 +26,17 @@ ccloud topic create pageviews
 
 docker-compose up -d --build
 
-if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == 1 ]]; then
+if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == true ]]; then
   docker-compose kill schema-registry
 fi
 
 echo "Sleeping 120 seconds to wait for all services to come up"
 sleep 120
 
+# Reregister a schema for a topic with a different name
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
-# Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
-docker-compose kill ksql-datagen-users
-docker-compose kill ksql-datagen-pageviews
+# kafka-connect-datagen
 ./submit_datagen_users_config.sh
 ./submit_datagen_pageviews_config.sh
 
