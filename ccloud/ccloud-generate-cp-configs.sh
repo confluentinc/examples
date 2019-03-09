@@ -191,7 +191,7 @@ while read -r line
 do
   if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
     echo "ksql.schema.registry.$line" >> $KSQL_SERVER_DELTA
-  else
+  elif [[ ${line:0:15} == 'schema.registry' ]]; then
     echo "ksql.$line" >> $KSQL_SERVER_DELTA
   fi
 done < $SR_CONFIG_FILE
@@ -233,7 +233,7 @@ while read -r line
 do
   if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
     echo "confluent.controlcenter.schema.registry.$line" >> $C3_DELTA
-  else
+  elif [[ ${line:0:15} == 'schema.registry' ]]; then
     echo "confluent.controlcenter.$line" >> $C3_DELTA
   fi
 done < $SR_CONFIG_FILE
