@@ -15,7 +15,8 @@ fi
 
 ./stop.sh
 
-confluent start
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
+confluent start connect
 CONFLUENT_CURRENT=`confluent current | tail -1`
 
 USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true
@@ -33,6 +34,7 @@ if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   # Use Confluent Cloud Schema Registry
   validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 else
+  mkdir -p $CONFLUENT_CURRENT/schema-registry
   # Confluent Schema Registry runs locally and connects to Confluent Cloud
   # Set this new Schema Registry listener to port $SR_LISTENER instead of the default 8081 which is already in use
   SR_LISTENER=8085
@@ -43,7 +45,7 @@ else
   # Avoid clash between two local SR instances
   sed -i '' 's/kafkastore.connection.url=localhost:2181/#kafkastore.connection.url=localhost:2181/g' $SR_CONFIG
   cat $DELTA_CONFIGS_DIR/schema-registry-ccloud.delta >> $SR_CONFIG
-  echo "Starting Confluent Schema Registry for Confluent Cloud and sleeping 40 seconds"
+  echo "Starting Confluent Schema Registry to Confluent Cloud and sleeping 40 seconds"
   schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
   sleep 40
   ccloud topic describe _schemas
@@ -58,7 +60,7 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 #echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
 #ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
+sleep 20
 ./submit_datagen_pageviews_config.sh
 #sleep 5
 
@@ -66,6 +68,7 @@ confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 # Start Connect that connects to CCloud cluster
+mkdir -p $CONFLUENT_CURRENT/connect
 CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
 cp $CONFLUENT_CURRENT/connect/connect.properties $CONNECT_CONFIG
 cat $DELTA_CONFIGS_DIR/connect-ccloud.delta >> $CONNECT_CONFIG
@@ -101,6 +104,7 @@ sleep 60
 
 # KSQL Server runs locally and connects to Confluent Cloud
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
+mkdir -p $CONFLUENT_CURRENT/ksql-server
 KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
 cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
 # Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
@@ -114,7 +118,7 @@ cache.max.bytes.buffering=0
 auto.offset.reset=earliest
 state.dir=$CONFLUENT_CURRENT/ksql-server/data-ccloud/kafka-streams
 EOF
-echo "Starting KSQL Server for Confluent Cloud and sleeping 25 seconds"
+echo "Starting KSQL Server to Confluent Cloud and sleeping 25 seconds"
 ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
 sleep 25
 ksql http://localhost:$KSQL_LISTENER <<EOF
@@ -124,6 +128,7 @@ EOF
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 if is_ce; then
+  mkdir -p $CONFLUENT_CURRENT/control-center
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
   cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
