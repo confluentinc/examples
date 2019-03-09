@@ -3,14 +3,14 @@
 Hybrid Kafka Clusters
 =====================
 
-This Confluent Cloud demo showcases a hybrid Kafka cluster, with a self-managed cluster and |ccloud| with Confluent Cloud Schema Registry.
+This Confluent Cloud demo showcases a hybrid Kafka cluster: one self-managed cluster running locally and one |ccloud| cluster.
 
 
 ========
 Overview
 ========
 
-This |ccloud| demo showcases a hybrid Kafka cluster with Confluent Replicator. This automated demo shows stream processing highlights similar to the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL stream processing running on your local install, it runs on your |ccloud| cluster.
+This |ccloud| demo showcases a hybrid Kafka cluster with Confluent Replicator. This automated demo shows stream processing highlights similar to the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams on your local cluster, it is on your |ccloud| cluster.
 
 This demo uses Confluent Replicator to copy the topic `pageviews` from self-managed Confluent Platform to |ccloud|. In general, Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
 
@@ -18,8 +18,8 @@ This demo uses Confluent Replicator to copy the topic `pageviews` from self-mana
     :alt: image
 
 
-By default, it runs with Confluent Cloud Schema Registry which you must have configured prior to running.
-If you choose to not use Confluent Cloud Schema Registry and instead want to run with a local Schema Registry, in `start.sh` or `start-docker.sh`, set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=0`.
+By default, the demo runs with Confluent Cloud Schema Registry which you must have enabled prior to running.
+If you choose to not use Confluent Cloud Schema Registry and instead want to run with a local Schema Registry, in `start.sh` or `start-docker.sh`, set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false`.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
