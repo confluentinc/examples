@@ -3,23 +3,25 @@
 Hybrid Kafka Clusters
 =====================
 
-This Confluent Cloud demo showcases a hybrid Kafka cluster: one self-managed cluster running locally and one |ccloud| cluster.
+This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+
+.. figure:: images/confluent-cloud-demo-diagram.png
+    :alt: image
 
 
 ========
 Overview
 ========
 
-This |ccloud| demo showcases a hybrid Kafka cluster with Confluent Replicator. This automated demo shows stream processing highlights similar to the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams on your local cluster, it is on your |ccloud| cluster.
+The major components of the demo are:
 
-This demo uses Confluent Replicator to copy the topic `pageviews` from self-managed Confluent Platform to |ccloud|. In general, Confluent Replicator can be used to transfer data from another cluster into |ccloud|, or it can be used for Disaster Recovery scenarios. In this case demo, Replicator is used to bootstrap the topic `pageviews` into Confluent Cloud which is used for KSQL stream processing.
-
-.. figure:: images/confluent-cloud-demo-diagram.png
-    :alt: image
-
-
-By default, the demo runs with Confluent Cloud Schema Registry which you must have enabled prior to running.
-If you choose to not use Confluent Cloud Schema Registry and instead want to run with a local Schema Registry, in `start.sh` or `start-docker.sh`, set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false`.
+* Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+* Confluent Replicator copies data from the local cluster, a topic called `pageviews`, to the |ccloud| cluster.
+* Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster (but the Connect worker process itself is running locally).
+* Two instances of `kafka-connect-datagen`: these are source connectors that produce mock data to prepopulate the topics `pageviews` and `users`.
+* KSQL queries consume topics that were produced directly to |ccloud|, a topic called `users`, as well as topics produced locally and then copied to |ccloud|, the topic `pageviews`. The KSQL queries resemble those in the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster (but the KSQL server itself is running locally).
+* By default, the demo runs with Confluent Cloud |sr|, which you must have enabled prior to running.  If you prefer to not use Confluent Cloud |sr| and instead want to run with a local |sr|, then modify `start.sh` or `start-docker.sh` to set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false`.
+* |c3| manages and monitors the deployment. Use it for topic inspection, looking at the schema, viewing and creating KSQL queries, streams monitoring, and more.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
