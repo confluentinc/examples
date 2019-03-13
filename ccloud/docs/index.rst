@@ -16,12 +16,15 @@ Overview
 The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-* Confluent Replicator copies data from the local cluster, a topic called `pageviews`, to the |ccloud| cluster.
-* Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster (but the Connect worker process itself is running locally).
-* Two instances of `kafka-connect-datagen`: these are source connectors that produce mock data to prepopulate the topics `pageviews` and `users`.
-* KSQL queries consume topics that were produced directly to |ccloud|, a topic called `users`, as well as topics produced locally and then copied to |ccloud|, the topic `pageviews`. The KSQL queries resemble those in the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster (but the KSQL server itself is running locally).
-* By default, the demo runs with Confluent Cloud |sr|, which you must have enabled prior to running.  If you prefer to not use Confluent Cloud |sr| and instead want to run with a local |sr|, then modify `start.sh` or `start-docker.sh` to set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false`.
-* |c3| manages and monitors the deployment. Use it for topic inspection, looking at the schema, viewing and creating KSQL queries, streams monitoring, and more.
+* Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
+
+  * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
+  * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `users` in the |ccloud| cluster
+  * Confluent Replicator: copies the topic `pageviews` from the local cluster to the |ccloud| cluster
+
+* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
+* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is writtin in Avro format.
+* |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
@@ -51,7 +54,12 @@ Run demo
 
      $ cd examples/ccloud
 
-3. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
+3. By default, the demo runs with a locally running |sr|. If you prefer to use Confluent Cloud |sr| instead:
+
+   a. `Enable <http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud>`__ Confluent Cloud |sr| prior to running the demo
+   b.  Modify the appropriate start script (see next step) and set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
+
+4. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -60,9 +68,8 @@ Run demo
 
       # For Docker Compose
       $ ./start-docker.sh
-      
 
-4. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
+5. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
 
 
 
@@ -263,8 +270,8 @@ For example, view throughput and latency of the incoming records for the persist
 
 
 
-Replicator
-------------
+Confluent Replicator
+--------------------
 
 Confluent Replicator copies data from a source Kafka cluster to a
 destination Kafka cluster. In this demo, the source cluster is a local install that represents
@@ -331,11 +338,40 @@ a self-managed cluster, and the destination cluster is |ccloud|.
          :alt: image
 
 
+Confluent Schema Registry
+-------------------------
+
+The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the `Confluent Schema Registry <https://docs.confluent.io/current/schema-registry/docs/index.html>`__ .  
+Depending on how you set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY` in the start script, you may be running |sr-long| locally or |ccloud| |sr|.
+Either way, you will get a consistent experience with |sr|.
+
+1. View all the |sr| subjects.
+
+   .. sourcecode:: bash
+
+        # Locally running Schema Registry
+        $ curl http://localhost:8085/subjects/ | jq .
+
+        # Confluent Cloud Schema Registry
+        $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+
+2. From |c3|, under **MANAGEMENT –> Topics -> Schema**: view the schema for `pageviews` and `users`.  The topic value is using a Schema registered with |sr| (the topic key is just a String).
+
+   .. figure:: images/topic_schema.png
+      :alt: image
+
+3. From |c3|, view the KSQL streams which are configured for Avro format.
+
+   .. figure:: images/ksql_dataformat.png
+      :alt: image
+
+
+
 ===============================
 Confluent Cloud Configurations
 ===============================
 
-This demo uses Confluent CLI (for development and demos only!) and saves all modified configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory.
+If you ran this demo as `start.sh` which uses Confluent CLI, it saves all modified configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory. If you ran this demo as `start-docker.sh`, the configuration is available in the `docker-compose.yml` file.
 
 1. View your Confluent Cloud configuration file
 
@@ -353,27 +389,42 @@ This demo uses Confluent CLI (for development and demos only!) and saves all mod
 
    .. sourcecode:: bash
 
+        # For Confluent Platform local install using Confluent CLI
         $ cat `confluent current | tail -1`/ksql-server/ksql-server-ccloud.properties
 
-4. View the full configuration file for Confluent Replicator that copies data from your local cluster to your Confluent Cloud cluster (requires demo to be actively running):
+        # For Docker Compose
+        $ cat docker-compose.yml
+
+4. View the full configuration file for Kafka Connect that runs the source connectors (requires demo to be actively running):
 
    .. sourcecode:: bash
 
-        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
-        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
-        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
+        # For Confluent Platform local install using Confluent CLI
+        $ cat `confluent current | tail -1`/connect/connect-ccloud.properties
+
+        # For Docker Compose
+        $ cat docker-compose.yml
 
 5. View the full configuration file for Confluent control Center that connects to your Confluent Cloud cluster (requires demo to be actively running):
 
    .. sourcecode:: bash
 
+        # For Confluent Platform local install using Confluent CLI
         $ cat `confluent current | tail -1`/control-center/control-center-ccloud.properties
 
-6. View the full configuration file for Confluent Schema Registry that connects to your Confluent Cloud cluster (requires demo to be actively running):
+        # For Docker Compose
+        $ cat docker-compose.yml
+
+6. View the full configuration file for Confluent Schema Registry (if you are running locally instead of Confluent Cloud |sr|) that connects to your Confluent Cloud cluster (requires demo to be actively running):
 
    .. sourcecode:: bash
 
+        # For Confluent Platform local install using Confluent CLI
         $ cat `confluent current | tail -1`/schema-registry/schema-registry-ccloud.properties
+
+        # For Docker Compose
+        $ cat docker-compose.yml
+
 
 
 ========================
@@ -388,6 +439,8 @@ Troubleshooting the demo
    .. sourcecode:: bash
 
         $ ls `confluent current | tail -1`
+
+3. Or if you ran with Docker, then run `docker-compose logs`.
 
 
 ========
@@ -405,7 +458,7 @@ Teardown
       $ ./stop-docker.sh
 
 
-2. Delete all |cp| internal topics in CCloud, including topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry.
+2. Delete all |cp| topics in CCloud that this demo used, including topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry. Warning: this may have unintended consequence of deleting topics that you wanted to keep.
 
    .. sourcecode:: bash
 

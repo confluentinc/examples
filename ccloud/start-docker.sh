@@ -6,7 +6,7 @@
 check_ccloud || exit
 check_jq || exit
 
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true
+USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false
 if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 else
