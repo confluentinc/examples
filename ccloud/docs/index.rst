@@ -6,7 +6,7 @@ Hybrid Kafka Clusters
 This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.
 
-.. figure:: images/confluent-cloud-demo-diagram.png
+.. figure:: images/schema-registry-local.jpg
     :alt: image
 
 
@@ -56,6 +56,9 @@ Run demo
      $ cd examples/ccloud
 
 3. By default, the demo runs with a locally running |sr|. If you prefer to use Confluent Cloud |sr| instead:
+
+.. figure:: images/schema-registry-cloud.jpg
+    :alt: image
 
    a. `Enable <http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud>`__ Confluent Cloud |sr| prior to running the demo
    b.  Modify the appropriate start script (see next step) and set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
