@@ -129,7 +129,7 @@ When you are done, press `<ctrl>-d`.
 * `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
 
 ```bash
-$ confluent consume test2 --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ confluent consume test2 --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 ```
 
 You should see the messages you typed in the previous step.
