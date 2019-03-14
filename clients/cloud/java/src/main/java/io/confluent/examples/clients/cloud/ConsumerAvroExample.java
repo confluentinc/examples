@@ -20,8 +20,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import io.confluent.examples.clients.cloud.model.DataRecord;
-import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig;
+import io.confluent.kafka.serializers.KafkaAvroDeserializer;
+import io.confluent.kafka.serializers.KafkaAvroDeserializerConfig;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class ConsumerExample {
+public class ConsumerAvroExample {
 
   public static void main(final String[] args) throws Exception {
     if (args.length != 2) {
@@ -50,26 +50,29 @@ public class ConsumerExample {
     //   retry.backoff.ms=500
     //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CLUSTER_API_KEY>" password="<CLUSTER_API_SECRET>";
     //   security.protocol=SASL_SSL
+    //   basic.auth.credentials.source=USER_INFO
+    //   schema.registry.basic.auth.user.info=<SR_API_KEY>:<SR_API_SECRET>
+    //   schema.registry.url=https://<SR ENDPOINT>
     final Properties props = loadConfig(args[0]);
 
     // Add additional properties.
     props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
-    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "io.confluent.kafka.serializers.KafkaJsonDeserializer");
-    props.put(KafkaJsonDeserializerConfig.JSON_VALUE_TYPE, DataRecord.class);
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, "demo-consumer-1");
+    props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
+    props.put(KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG, true);
+    props.put(ConsumerConfig.GROUP_ID_CONFIG, "demo-consumer-avro-1");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-    final Consumer<String, DataRecord> consumer = new KafkaConsumer<String, DataRecord>(props);
+    final Consumer<String, DataRecordAvro> consumer = new KafkaConsumer<String, DataRecordAvro>(props);
     consumer.subscribe(Arrays.asList(topic));
 
     Long total_count = 0L;
 
     try {
       while (true) {
-        ConsumerRecords<String, DataRecord> records = consumer.poll(100);
-        for (ConsumerRecord<String, DataRecord> record : records) {
+        ConsumerRecords<String, DataRecordAvro> records = consumer.poll(100);
+        for (ConsumerRecord<String, DataRecordAvro> record : records) {
           String key = record.key();
-          DataRecord value = record.value();
+          DataRecordAvro value = record.value();
           total_count += value.getCount();
           System.out.printf("Consumed record with key %s and value %s, and updated total count to %d%n", key, value, total_count);
         }

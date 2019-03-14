@@ -44,7 +44,7 @@ alice,{"count":2}
 
 When you are done, press `<ctrl>-d`.
 
-2. Run the [Confluent CLI consumer](https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume), reading messages from topic `test`, passing in additional arguments:
+2. Run the [Confluent CLI consumer](https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume), reading messages from topic `test1`, passing in additional arguments:
 
 * `--cloud`: read messages from the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
 * `--property print.key=true`: print key and value (by default, it only prints value)
@@ -144,4 +144,5 @@ You should see the messages you typed in the previous step.
 When you are done, press `<ctrl>-c`.
 
 7. To demo the above commands, you may also run the provided script [confluent-cli-ccsr-example.sh](confluent-cli-ccsr-example.sh).
+
 
