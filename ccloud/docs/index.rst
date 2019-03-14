@@ -57,8 +57,8 @@ Run demo
 
 3. By default, the demo runs with a locally running |sr|. If you prefer to use Confluent Cloud |sr| instead:
 
-.. figure:: images/schema-registry-cloud.jpg
-    :alt: image
+   .. figure:: images/schema-registry-cloud.jpg
+       :alt: image
 
    a. `Enable <http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud>`__ Confluent Cloud |sr| prior to running the demo
    b.  Modify the appropriate start script (see next step) and set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
