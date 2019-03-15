@@ -1,0 +1,27 @@
+var Kafka = require('node-rdkafka');
+
+var producer = new Kafka.Producer({
+    'metadata.broker.list': '<CCLOUD_BOOTSTRAP_SERVER>',
+    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': 'SASL_SSL',
+    'sasl.username': '<CCLOUD_API_KEY>',
+    'sasl.password': '<CCLOUD_API_SECRET>',
+     // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
+    'plugin.library.paths': 'monitoring-interceptor',
+    // .... additional configuration settings
+  });
+
+var consumer = Kafka.KafkaConsumer.createReadStream({
+    'metadata.broker.list': '<CCLOUD_BOOTSTRAP_SERVER>',
+    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': 'SASL_SSL',
+    'sasl.username': '<CCLOUD_API_KEY>',
+    'sasl.password': '<CCLOUD_API_SECRET>',
+     // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
+    'plugin.library.paths': 'monitoring-interceptor',
+    // .... additional configuration settings
+  }, {}, {
+    topics: '<topic name>',
+    waitInterval: 0,
+    objectMode: false
+});
