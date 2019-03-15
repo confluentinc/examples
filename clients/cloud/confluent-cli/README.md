@@ -66,3 +66,80 @@ When you are done, press `<ctrl>-c`.
 
 3. To demo the above commands, you may also run the provided script [confluent-cli-example.sh](confluent-cli-example.sh).
 
+
+# Example 2: Avro And Confluent Cloud Schema Registry
+
+This example is similar to the previous example, except the value is formatted as Avro and integrates with the Confluent Cloud Schema Registry.
+Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html).
+Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
+
+1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart.html), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+
+2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+
+    ```shell
+    # View the list of registered subjects
+    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+    ```
+
+3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+
+    ```shell
+    $ cat $HOME/.ccloud/config
+    ...
+    basic.auth.credentials.source=USER_INFO
+    schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+    schema.registry.url=https://<SR ENDPOINT>
+    ...
+    ```
+
+4. Create the topic in Confluent Cloud
+
+```bash
+$ ccloud topic create test2
+```
+
+5. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test2`, passing in additional arguments:
+
+* `--value-format avro`: use Avro data format for the value part of the message
+* `--property value.schema`: define the schema 
+* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint http://<SR ENDPOINT>
+* `--property basic.auth.credentials.source`: specify `USER_INFO`
+* `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
+
+```bash
+$ confluent produce test2 --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+```
+
+At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
+
+```bash
+{"count":0}
+{"count":1}
+{"count":2}
+```
+
+When you are done, press `<ctrl>-d`.
+
+6. Run the [Confluent CLI consumer](https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume), reading messages from topic `test`, passing in additional arguments:
+
+* `--value-format avro`: use Avro data format for the value part of the message
+* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint http://<SR ENDPOINT>
+* `--property basic.auth.credentials.source`: specify `USER_INFO`
+* `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
+
+```bash
+$ confluent consume test2 --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+```
+
+You should see the messages you typed in the previous step.
+
+```bash
+{"count":0}
+{"count":1}
+{"count":2}
+```
+
+When you are done, press `<ctrl>-c`.
+
+7. To demo the above commands, you may also run the provided script [confluent-cli-ccsr-example.sh](confluent-cli-ccsr-example.sh).
