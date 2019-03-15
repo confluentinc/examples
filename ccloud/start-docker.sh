@@ -27,6 +27,7 @@ ccloud topic create pageviews
 docker-compose up -d --build
 
 if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == true ]]; then
+  echo "Killing the local schema-registry Docker container to use Confluent Cloud Schema Registry instead"
   docker-compose kill schema-registry
 fi
 
