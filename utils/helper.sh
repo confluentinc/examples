@@ -217,3 +217,16 @@ function error_not_compatible_confluent_cli() {
 
   return 0
 }
+
+
+function validate_confluent_cloud_schema_registry() {
+  auth=$1
+  sr_endpoint=$2
+
+  curl --silent -u $auth $sr_endpoint
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
+    exit 1
+  fi
+  return 0
+}
