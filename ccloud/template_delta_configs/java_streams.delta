@@ -13,7 +13,7 @@ props.put(StreamsConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
 props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
 props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";");
 
-// Confluent Cloud Schema Registry
+// Confluent Schema Registry for Java
 props.put("basic.auth.credentials.source", "USER_INFO");
 props.put("schema.registry.basic.auth.user.info", "<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>");
 props.put("schema.registry.url", "https://<SCHEMA_REGISTRY_ENDPOINT>");
