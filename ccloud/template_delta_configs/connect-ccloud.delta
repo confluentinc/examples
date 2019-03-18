@@ -3,23 +3,31 @@ config.storage.replication.factor=3
 offset.storage.replication.factor=3
 status.storage.replication.factor=3
 ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+security.protocol=SASL_SSL
+bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+
+# Connect producer and consumer specific configuration
 producer.ssl.endpoint.identification.algorithm=https
 producer.confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
 consumer.ssl.endpoint.identification.algorithm=https
 consumer.confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
-sasl.mechanism=PLAIN
 producer.sasl.mechanism=PLAIN
 producer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
 consumer.sasl.mechanism=PLAIN
 consumer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
-security.protocol=SASL_SSL
 producer.security.protocol=SASL_SSL
 producer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
 consumer.security.protocol=SASL_SSL
 consumer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
-bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
 producer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
 producer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
 consumer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
 consumer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+# Confluent Schema Registry for Kafka Connect
+value.converter=io.confluent.connect.avro.AvroConverter
+value.converter.schemas.enable=true
+value.converter.basic.auth.credentials.source=USER_INFO
+value.converter.schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
+value.converter.schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>

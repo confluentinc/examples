@@ -1,8 +1,12 @@
+
+# Confluent Control Center specific configuration
 confluent.controlcenter.streams.ssl.endpoint.identification.algorithm=https
 confluent.controlcenter.streams.sasl.mechanism=PLAIN
 confluent.controlcenter.streams.security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
 confluent.controlcenter.streams.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+
+# Confluent Schema Registry configuration for Confluent Control Center
 confluent.controlcenter.schema.registry.basic.auth.credentials.source=USER_INFO
 confluent.controlcenter.schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
 confluent.controlcenter.schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>

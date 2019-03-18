@@ -36,9 +36,10 @@
 # - Confluent Schema Registry
 # - KSQL Data Generator
 # - KSQL server 
-# - Confluent Replicator (standalone binary)
+# - Confluent Replicator (executable)
 # - Confluent Control Center
 # - Kafka Connect
+# - Kafka connector
 #
 # Kafka Clients:
 # - Java (Producer/Consumer)
@@ -115,12 +116,36 @@ SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '
 ################################################################################
 INTERCEPTORS_CCLOUD_CONFIG=$DEST/interceptors-ccloud.config
 rm -f $INTERCEPTORS_CCLOUD_CONFIG
+echo "# Configuration derived from $CCLOUD_CONFIG" > $INTERCEPTORS_CCLOUD_CONFIG
 while read -r line
 do
+  # Skip lines that are commented out
+  if [[ ! -z $line && ${line:0:1} == '#' ]]; then
+    continue
+  fi
+  # Skip lines that contain just whitespace
+  if [[ -z "${line// }" ]]; then
+    continue
+  fi
   if [[ ${line:0:9} == 'bootstrap' ]]; then
     line=${line/\\/}
   fi
   echo $line >> $INTERCEPTORS_CCLOUD_CONFIG
+done < "$CCLOUD_CONFIG"
+echo -e "\n# Confluent Monitoring Interceptor specific configuration" >> $INTERCEPTORS_CCLOUD_CONFIG
+while read -r line
+do
+  # Skip lines that are commented out
+  if [[ ! -z $line && ${line:0:1} == '#' ]]; then
+    continue
+  fi
+  # Skip lines that contain just whitespace
+  if [[ -z "${line// }" ]]; then
+    continue
+  fi
+  if [[ ${line:0:9} == 'bootstrap' ]]; then
+    line=${line/\\/}
+  fi
   if [[ ${line:0:4} == 'sasl' ||
         ${line:0:3} == 'ssl' ||
         ${line:0:8} == 'security' ||
@@ -156,12 +181,13 @@ done < "$CCLOUD_CONFIG"
 chmod $PERM $SR_CONFIG_DELTA
 
 ################################################################################
-# Confluent Replicator for Confluent Cloud
+# Confluent Replicator (executable) for Confluent Cloud
 ################################################################################
 REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
 echo "$REPLICATOR_PRODUCER_DELTA"
 rm -f $REPLICATOR_PRODUCER_DELTA
 cp $INTERCEPTORS_CCLOUD_CONFIG $REPLICATOR_PRODUCER_DELTA
+echo -e "\n# Confluent Replicator (executable) specific configuration" >> $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
 echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
 echo "retry.backoff.ms=500" >> $REPLICATOR_PRODUCER_DELTA
@@ -176,6 +202,7 @@ chmod $PERM $REPLICATOR_PRODUCER_DELTA
 KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
 echo "$KSQL_SERVER_DELTA"
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_SERVER_DELTA
+echo -e "\n# KSQL Server specific configuration" >> $KSQL_SERVER_DELTA
 echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_SERVER_DELTA
 echo "consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.producer.retries=2147483647" >> $KSQL_SERVER_DELTA
@@ -184,6 +211,7 @@ echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
+echo -e "\n# Confluent Schema Registry configuration for KSQL Server" >> $KSQL_SERVER_DELTA
 while read -r line
 do
   if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
@@ -201,10 +229,16 @@ KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
 echo "$KSQL_DATAGEN_DELTA"
 rm -f $KSQL_DATAGEN_DELTA
 cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
+echo -e "\n# KSQL DataGen specific configuration" >> $KSQL_DATAGEN_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
+echo -e "\n# Confluent Schema Registry configuration for KSQL DataGen" >> $KSQL_DATAGEN_DELTA
 while read -r line
 do
-  echo "ksql.$line" >> $KSQL_DATAGEN_DELTA
+  if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
+    echo "ksql.schema.registry.$line" >> $KSQL_DATAGEN_DELTA
+  elif [[ ${line:0:15} == 'schema.registry' ]]; then
+    echo "ksql.$line" >> $KSQL_DATAGEN_DELTA
+  fi
 done < $SR_CONFIG_FILE
 chmod $PERM $KSQL_DATAGEN_DELTA
 
@@ -214,6 +248,7 @@ chmod $PERM $KSQL_DATAGEN_DELTA
 C3_DELTA=$DEST/control-center-ccloud.delta
 echo "$C3_DELTA"
 rm -f $C3_DELTA
+echo -e "\n# Confluent Control Center specific configuration" >> $C3_DELTA
 while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -226,6 +261,7 @@ while read -r line
     fi
   fi
 done < "$CCLOUD_CONFIG"
+echo -e "\n# Confluent Schema Registry configuration for Confluent Control Center" >> $C3_DELTA
 while read -r line
 do
   if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
@@ -257,6 +293,17 @@ while read -r line
     fi
     if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
       echo "$line" >> $CONNECT_DELTA
+    fi
+  fi
+done < "$CCLOUD_CONFIG"
+echo -e "\n# Connect producer and consumer specific configuration" >> $CONNECT_DELTA
+while read -r line
+  do
+  if [[ ! -z $line && ${line:0:1} != '#' ]]; then
+    if [[ ${line:0:9} == 'bootstrap' ]]; then
+      line=${line/\\/}
+    fi
+    if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
       echo "producer.$line" >> $CONNECT_DELTA
       echo "producer.confluent.monitoring.interceptor.$line" >> $CONNECT_DELTA
       echo "consumer.$line" >> $CONNECT_DELTA
@@ -264,11 +311,31 @@ while read -r line
     fi
   fi
 done < "$CCLOUD_CONFIG"
+cat <<EOF >> $CONNECT_DELTA
+# Confluent Schema Registry for Kafka Connect
+value.converter=io.confluent.connect.avro.AvroConverter
+value.converter.schemas.enable=true
+value.converter.basic.auth.credentials.source=$BASIC_AUTH_CREDENTIALS_SOURCE
+value.converter.schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+value.converter.schema.registry.url=$SCHEMA_REGISTRY_URL
+EOF
 chmod $PERM $CONNECT_DELTA
 
-
-
-
+################################################################################
+# Kafka connector
+################################################################################
+CONNECTOR_DELTA=$DEST/connector-ccloud.delta
+echo "$CONNECTOR_DELTA"
+rm -f $CONNECTOR_DELTA
+cat <<EOF >> $CONNECTOR_DELTA
+// Confluent Schema Registry for Kafka connectors
+value.converter=io.confluent.connect.avro.AvroConverter
+value.converter.schemas.enable=true
+value.converter.basic.auth.credentials.source=$BASIC_AUTH_CREDENTIALS_SOURCE
+value.converter.schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+value.converter.schema.registry.url=$SCHEMA_REGISTRY_URL
+EOF
+chmod $PERM $CONNECTOR_DELTA
 
 
 echo -e "\nKafka Clients:"
@@ -295,7 +362,7 @@ props.put(ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
 props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
 props.put(SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
 
-// Confluent Cloud Schema Registry
+// Confluent Schema Registry for Java
 props.put("basic.auth.credentials.source", "$BASIC_AUTH_CREDENTIALS_SOURCE");
 props.put("schema.registry.basic.auth.user.info", "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO");
 props.put("schema.registry.url", "$SCHEMA_REGISTRY_URL");
@@ -345,7 +412,7 @@ props.put(StreamsConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
 props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
 props.put(SaslConfigs.SASL_JAAS_CONFIG, "$SASL_JAAS_CONFIG");
 
-// Confluent Cloud Schema Registry
+// Confluent Schema Registry for Java
 props.put("basic.auth.credentials.source", "$BASIC_AUTH_CREDENTIALS_SOURCE");
 props.put("schema.registry.basic.auth.user.info", "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO");
 props.put("schema.registry.url", "$SCHEMA_REGISTRY_URL");
