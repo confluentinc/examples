@@ -312,6 +312,7 @@ while read -r line
   fi
 done < "$CCLOUD_CONFIG"
 cat <<EOF >> $CONNECT_DELTA
+
 # Confluent Schema Registry for Kafka Connect
 value.converter=io.confluent.connect.avro.AvroConverter
 value.converter.schemas.enable=true
