@@ -1,0 +1,31 @@
+#include <librdkafka/rdkafkacpp.h>
+
+RdKafka::Conf *producerConfig = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
+if (producerConfig->set("metadata.broker.list", "<CCLOUD_BOOTSTRAP_SERVER>", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("sasl.mechanisms", "PLAIN", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("security.protocol", "SASL_SSL", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("sasl.username", "<CCLOUD_API_KEY>", errstr) != RdKafka::Conf::CONF_OK ||
+    producerConfig->set("sasl.password", "<CCLOUD_API_SECRET>", errstr) != RdKafka::Conf::CONF_OK ||
+    // producerConfig->set("ssl.ca.location", "/usr/local/etc/openssl/cert.pem", errstr) != RdKafka::Conf::CONF_OK || // varies by distro
+    producerConfig->set("plugin.library.paths", "monitoring-interceptor", errstr) != RdKafka::Conf::CONF_OK ||
+    // .... additional configuration settings
+   ) {
+        std::cerr << "Configuration failed: " << errstr << std::endl;
+        exit(1);
+}
+RdKafka::Producer *producer = RdKafka::Producer::create(producerConfig, errstr);
+
+RdKafka::Conf *consumerConfig = RdKafka::Conf::create(RdKafka::Conf::CONF_GLOBAL);
+if (consumerConfig->set("metadata.broker.list", "<CCLOUD_BOOTSTRAP_SERVER>", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("sasl.mechanisms", "PLAIN", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("security.protocol", "SASL_SSL", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("sasl.username", "<CCLOUD_API_KEY>", errstr) != RdKafka::Conf::CONF_OK ||
+    consumerConfig->set("sasl.password", "<CCLOUD_API_SECRET>", errstr) != RdKafka::Conf::CONF_OK ||
+    // consumerConfig->set("ssl.ca.location", "/usr/local/etc/openssl/cert.pem", errstr) != RdKafka::Conf::CONF_OK || // varies by distro
+    consumerConfig->set("plugin.library.paths", "monitoring-interceptor", errstr) != RdKafka::Conf::CONF_OK ||
+    // .... additional configuration settings
+   ) {
+        std::cerr << "Configuration failed: " << errstr << std::endl;
+        exit(1);
+}
+RdKafka::Consumer *consumer = RdKafka::Consumer::create(consumerConfig, errstr);

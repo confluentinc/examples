@@ -52,7 +52,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_REQUEST_TIMEOUT_MS: 20000
       SCHEMA_REGISTRY_KAFKASTORE_RETRY_BACKOFF_MS: 500
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: "SASL_SSL"
-      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: $SR_BOOTSTRAP_SERVERS
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS_SR_FORMAT
       SCHEMA_REGISTRY_KAFKASTORE_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
@@ -72,7 +72,9 @@ services:
       KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_COMMIT_INTERVAL_MS: 0
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8085"
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      KSQL_KSQL_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
       KSQL_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       KSQL_SECURITY_PROTOCOL: "SASL_SSL"
       KSQL_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
@@ -122,15 +124,16 @@ services:
     depends_on:
       - zookeeper
       - kafka
-      - schema-registry
     ports:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONTROL_CENTER_KSQL_URL: "http://ksql-server:8089"
       CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8089"
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8085"
-      CONTROL_CENTER_CONNECT_CLUSTER: "connect:8083"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+      CONTROL_CENTER_CONNECT_CLUSTER: "connect-cloud:8087"
       CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SASL_SSL
       CONTROL_CENTER_STREAMS_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONTROL_CENTER_STREAMS_SASL_MECHANISM: PLAIN
@@ -147,63 +150,6 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 3
       PORT: 9021
 
-  # Runs the Kafka KSQL data generator for topic called "pageviews"
-  ksql-datagen-pageviews:
-    image: confluentinc/ksql-examples:5.1.2
-    hostname: ksql-datagen-pageviews
-    container_name: ksql-datagen-pageviews
-    depends_on:
-      - kafka
-      - schema-registry
-      - kafka-create-topics
-    # Note: The container's `run` script will perform the same readiness checks
-    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
-    # The reason we check for readiness here is that we can insert a sleep time
-    # for topic creation before we start the application.
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 20 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8085 40 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 2 && \
-                       /usr/bin/ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=http://schema-registry:8085 bootstrap-server=kafka:29092'"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8085
-
-  # Runs the Kafka KSQL data generator for topic called "users"
-  ksql-datagen-users:
-    image: confluentinc/ksql-examples:5.1.2
-    hostname: ksql-datagen-users
-    container_name: ksql-datagen-users
-    depends_on:
-      - kafka
-      - schema-registry
-    # Note: The container's `run` script will perform the same readiness checks
-    # for Kafka and Confluent Schema Registry, but that's ok because they complete fast.
-    # The reason we check for readiness here is that we can insert a sleep time
-    # for topic creation before we start the application.
-    volumes:
-      - mi2:/usr/share/java/monitoring-interceptors/
-      - $PWD/delta_configs/ksql-datagen.delta:/tmp/ksql-datagen.properties
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 20 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8085 40 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 2 && \
-                       cp /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar /usr/share/java/ksql-examples/monitoring-interceptors-5.1.2.jar && \
-                       /usr/bin/ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=http://schema-registry:8085 propertiesFile=/tmp/ksql-datagen.properties'"
-    environment:
-      KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
-      STREAMS_BOOTSTRAP_SERVERS: kafka:29092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8085
-
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
@@ -212,7 +158,6 @@ services:
     container_name: kafka-create-topics
     depends_on:
       - kafka
-      - schema-registry
     # We defined a dependency on "kafka", but `depends_on` will NOT wait for the
     # dependencies to be "ready" before starting the "kafka-create-topics"
     # container;  it waits only until the dependencies have started.  Hence we
@@ -228,23 +173,79 @@ services:
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
-  connect:
-    image: confluentinc/cp-kafka-connect:5.2.0-SNAPSHOT
-    hostname: connect
-    container_name: connect
+  connect-local:
+    image: confluentinc/kafka-connect-datagen:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: connect-local
+    container_name: connect-local
     depends_on:
       - zookeeper
       - kafka
-      - schema-registry
     ports:
       - "8083:8083"
+    volumes:
+      - mi2:/usr/share/java/monitoring-interceptors/
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'kafka:29092'
+      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-local
+      CONNECT_PRODUCER_CLIENT_ID: "connect-local-worker-producer"
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: "connect-local"
+      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-status
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "true"
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      # Connect producer
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_SECURITY_PROTOCOL: SASL_SSL
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
+      # Connect consumer
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SECURITY_PROTOCOL: SASL_SSL
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
+
+  connect-cloud:
+    image: confluentinc/kafka-connect-datagen:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: connect-cloud
+    container_name: connect-cloud
+    depends_on:
+      - zookeeper
+      - kafka
+    ports:
+      - "8087:8087"
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
       - mi3:/usr/share/java/kafka-connect-replicator/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: "connect"
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-cloud
+      CONNECT_PRODUCER_CLIENT_ID: "connect-cloud-worker-producer"
+      CONNECT_REST_PORT: 8087
+      CONNECT_GROUP_ID: "connect-cloud"
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
       CONNECT_STATUS_STORAGE_TOPIC: connect-status
@@ -253,11 +254,14 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 3
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 3
       CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
-      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_VALUE_CONVERTER: "io.confluent.connect.avro.AvroConverter"
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "true"
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
-      CONNECT_PLUGIN_PATH: "/usr/share/java"
+      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.1.2.jar
@@ -273,6 +277,7 @@ services:
       CONNECT_PRODUCER_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONNECT_PRODUCER_SASL_MECHANISM: PLAIN
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
@@ -281,12 +286,15 @@ services:
       CONNECT_CONSUMER_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONNECT_CONSUMER_SASL_MECHANISM: PLAIN
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
-  replicator:
-    image: confluentinc/cp-enterprise-replicator:5.2.0-SNAPSHOT
+  # This container is just to transfer Replicator jars to the Connect worker
+  # It is not used as a Connect worker
+  replicator-for-jar-transfer:
+    image: confluentinc/cp-enterprise-replicator:5.1.2
     hostname: replicator
     container_name: replicator
     volumes:

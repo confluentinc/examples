@@ -22,7 +22,7 @@ DATA=$( cat << EOF
     "dest.kafka.sasl.mechanism": "PLAIN",
     "dest.kafka.sasl.jaas.config": "$REPLICATOR_SASL_JAAS_CONFIG",
     "dest.kafka.replication.factor": 3,
-    "src.kafka.bootstrap.servers": "localhost:9092",
+    "src.kafka.bootstrap.servers": "kafka:29092",
     "src.consumer.group.id": "connect-replicator",
     "src.consumer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor",
     "src.consumer.confluent.monitoring.interceptor.bootstrap.servers": "$BOOTSTRAP_SERVERS",
