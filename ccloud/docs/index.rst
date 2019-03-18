@@ -375,56 +375,32 @@ Either way, you will get a consistent experience with |sr|.
 Confluent Cloud Configurations
 ===============================
 
-If you ran this demo as `start.sh` which uses Confluent CLI, it saves all modified configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory. If you ran this demo as `start-docker.sh`, the configuration is available in the `docker-compose.yml` file.
+1. View the the template delta configuration for Confluent Platform components and clients to connect to Confluent Cloud:
 
-1. View your Confluent Cloud configuration file
+   .. sourcecode:: bash
+
+        $ ls template_delta_configs/
+
+2. View your Confluent Cloud configuration file
 
    .. sourcecode:: bash
 
         $ cat $HOME/.ccloud/config
 
-2. Generate the per-component delta configuration parameters, automatically derived from your Confluent Cloud cluster configuration:
+3. Generate the per-component delta configuration parameters, automatically derived from your Confluent Cloud configuration file:
 
    .. sourcecode:: bash
 
         $ ./ccloud-generate-cp-configs.sh
 
-3. View the full configuration file for the KSQL server that connects to your Confluent Cloud cluster (requires demo to be actively running):
+4. If you ran this demo as `start.sh` which uses Confluent CLI, it saves all configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory (requires demo to be actively running):
 
    .. sourcecode:: bash
 
         # For Confluent Platform local install using Confluent CLI
-        $ cat `confluent current | tail -1`/ksql-server/ksql-server-ccloud.properties
+        $ ls `confluent current | tail -1`
 
-        # For Docker Compose
-        $ cat docker-compose.yml
-
-4. View the full configuration file for Kafka Connect that runs the source connectors (requires demo to be actively running):
-
-   .. sourcecode:: bash
-
-        # For Confluent Platform local install using Confluent CLI
-        $ cat `confluent current | tail -1`/connect/connect-ccloud.properties
-
-        # For Docker Compose
-        $ cat docker-compose.yml
-
-5. View the full configuration file for Confluent control Center that connects to your Confluent Cloud cluster (requires demo to be actively running):
-
-   .. sourcecode:: bash
-
-        # For Confluent Platform local install using Confluent CLI
-        $ cat `confluent current | tail -1`/control-center/control-center-ccloud.properties
-
-        # For Docker Compose
-        $ cat docker-compose.yml
-
-6. View the full configuration file for Confluent Schema Registry (if you are running locally instead of Confluent Cloud |sr|) that connects to your Confluent Cloud cluster (requires demo to be actively running):
-
-   .. sourcecode:: bash
-
-        # For Confluent Platform local install using Confluent CLI
-        $ cat `confluent current | tail -1`/schema-registry/schema-registry-ccloud.properties
+5. If you ran this demo as `start-docker.sh`, the configuration is available in the `docker-compose.yml` file.
 
         # For Docker Compose
         $ cat docker-compose.yml
