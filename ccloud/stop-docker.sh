@@ -1,7 +1,25 @@
+#!/bin/bash
+
+# Source library
+. ../utils/helper.sh
+
+check_env || exit 1
+check_ccloud || exit
+
+./ccloud-generate-cp-configs.sh
+source delta_configs/env.delta
+
 docker-compose down
 
 for v in $(docker volume ls -q --filter="dangling=true"); do
         docker volume rm "$v"
+done
+
+# Delete subjects from Confluent Schema Registry
+schema_registry_subjects_to_delete="users-value pageviews-value"
+for subject in $schema_registry_subjects_to_delete
+do
+  curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
 
 topics=$(ccloud topic list)

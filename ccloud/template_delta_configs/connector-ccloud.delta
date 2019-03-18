@@ -1,0 +1,6 @@
+// Confluent Schema Registry for Kafka connectors
+value.converter=io.confluent.connect.avro.AvroConverter
+value.converter.schemas.enable=true
+value.converter.basic.auth.credentials.source=USER_INFO
+value.converter.schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
+value.converter.schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>

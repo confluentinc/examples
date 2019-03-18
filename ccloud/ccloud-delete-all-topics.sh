@@ -15,7 +15,7 @@ do
   fi
 done
 
-topics_to_delete="_schemas connect-configs connect-status connect-offsets"
+topics_to_delete="_schemas connect-configs connect-status connect-statuses connect-offsets"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null

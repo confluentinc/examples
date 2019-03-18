@@ -1,0 +1,38 @@
+import java.util.Properties;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ConsumerConfig;
+import org.apache.kafka.common.config.SaslConfigs;
+
+Properties props = new Properties();
+
+// Basic Confluent Cloud Connectivity
+props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "<CCLOUD_BOOTSTRAP_SERVER>");
+props.put(ProducerConfig.REPLICATION_FACTOR_CONFIG, 3);
+props.put(ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
+props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";");
+
+// Confluent Schema Registry for Java
+props.put("basic.auth.credentials.source", "USER_INFO");
+props.put("schema.registry.basic.auth.user.info", "<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>");
+props.put("schema.registry.url", "https://<SCHEMA_REGISTRY_ENDPOINT>");
+
+// Optimize Performance for Confluent Cloud
+props.put(ProducerConfig.RETRIES_CONFIG, 2147483647);
+props.put("producer.confluent.batch.expiry.ms", 9223372036854775807);
+props.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 300000);
+props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 9223372036854775807);
+
+// Required for Streams Monitoring in Confluent Control Center
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, confluent.monitoring.interceptor.bootstrap.servers, "<CCLOUD_BOOTSTRAP_SERVER>");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_MECHANISM, "PLAIN");
+props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, confluent.monitoring.interceptor.bootstrap.servers, "<CCLOUD_BOOTSTRAP_SERVER>");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + ProducerConfig.SECURITY_PROTOCOL_CONFIG, "SASL_SSL");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_MECHANISM, "PLAIN");
+props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG + SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";");
+
+// .... additional configuration settings

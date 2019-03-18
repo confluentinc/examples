@@ -1,0 +1,23 @@
+# Configuration derived from /Users/yeva/.ccloud/template.config
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+request.timeout.ms=20000
+retry.backoff.ms=500
+security.protocol=SASL_SSL
+bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+basic.auth.credentials.source=USER_INFO
+schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
+schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>
+
+# Confluent Monitoring Interceptor specific configuration
+confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
+confluent.monitoring.interceptor.sasl.mechanism=PLAIN
+confluent.monitoring.interceptor.security.protocol=SASL_SSL
+confluent.monitoring.interceptor.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
+confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+
+# Confluent Replicator (executable) specific configuration
+interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
+request.timeout.ms=200000
+retry.backoff.ms=500
