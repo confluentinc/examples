@@ -6,4 +6,4 @@ How to use these examples:
 
 * [ProducerExample.java](src/main/java/io/confluent/examples/clients/basicavro/ProducerExample.java): see [Confluent Schema Registry tutorial](https://docs.confluent.io/current/schema-registry/docs/schema_registry_tutorial.html)
 * [ConsumerExample.java](src/main/java/io/confluent/examples/clients/basicavro/ConsumerExample.java): see [Confluent Schema Registry tutorial](https://docs.confluent.io/current/schema-registry/docs/schema_registry_tutorial.html)
-* [ConsumerMultiDatacenterExample.java](src/main/java/io/confluent/examples/clients/basicavro/ConsumerMultiDatacenterExample.java): see [Active-active Multi-datacenter Docker setup](https://github.com/confluentinc/cp-docker-images/blob/5.0.1-post/examples/multi-datacenter/README.md)
+* [ConsumerMultiDatacenterExample.java](src/main/java/io/confluent/examples/clients/basicavro/ConsumerMultiDatacenterExample.java): see [Active-active Multi-datacenter Docker setup](https://github.com/confluentinc/cp-docker-images/blob/5.0.4-SNAPSHOT-post/examples/multi-datacenter/README.md)
