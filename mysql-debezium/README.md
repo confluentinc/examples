@@ -10,7 +10,7 @@ The MySQL Debezium demo shows an end-to-end streaming ETL with KSQL for stream p
 
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.2](https://www.confluent.io/download/)
 * MySQL
   * [Binary log should be enabled](http://debezium.io/docs/connectors/mysql/)
 * [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka

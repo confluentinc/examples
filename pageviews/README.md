@@ -7,7 +7,7 @@ The Pageviews demo is the automated version of the [Confluent Platform Quickstar
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.2](https://www.confluent.io/download/)
 
 # What Should I see?
 

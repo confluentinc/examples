@@ -5,7 +5,7 @@
 
 check_env || exit 1
 check_jq || exit 1
-check_running_cp 5.1 || exit 1
+check_running_cp 5.2 || exit 1
 check_running_elasticsearch 5.6.5 || exit 1
 check_running_grafana 5.0.3 || exit 1
 
