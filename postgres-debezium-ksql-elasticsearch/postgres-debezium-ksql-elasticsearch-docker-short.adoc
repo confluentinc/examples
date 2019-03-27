@@ -1,15 +1,24 @@
-= Streaming ETL demo - Enriching event stream data with CDC data from Postgres, stream into Elasticsearch
+= Streaming ETL demo
 Robin Moffatt <robin@confluent.io>
 v1.03, 05 Jul 2018
+:revdate: 2019-03-22 11:14:37 -0600
+:revby: viktor at confluent dot io 
 
-This is designed to be run as a step-by-step demo. The `ksql_commands.sql` should match those run in this doc end-to-end and in theory you can just run the file, but I have not tested it. PRs welcome for a one-click script that just demonstrates the end-to-end running demo :)
+Enriching event stream data with CDC data from Postgres, stream into Elasticsearch
+
+toc::[]
+
+image:images/ksql-debezium-es.png[Kafka Connect / KSQL / Elasticsearch]
+
+This is designed to be run as a step-by-step demo. 
+The `ksql_commands.sql` should match those run in this doc end-to-end and in theory you can just run the file, but I have not tested it. 
+PRs welcome for a one-click script that just demonstrates the end-to-end running demo :)
 
 c.10 minutes
 
-*Slides: https://speakerdeck.com/rmoff/streaming-etl-in-practice-with-postgresql-apache-kafka-and-ksql[Streaming ETL in Practice with PostgreSQL, Apache Kafka, and KSQL]*
+== Slides
 
-
-image:images/ksql-debezium-es.png[Kafka Connect / KSQL / Elasticsearch]
+* https://speakerdeck.com/rmoff/streaming-etl-in-practice-with-postgresql-apache-kafka-and-ksql[Streaming ETL in Practice with PostgreSQL, Apache Kafka, and KSQL] by https://twitter.com/rmoff/[Robin Moffat]
 
 == Pre-reqs
 
@@ -37,10 +46,8 @@ Run setup:
 $ scripts/setup.sh
 ----
 
-
-In a browser, go to Kibana at http://localhost:5601/app/kibana#/management/kibana/indices/ and set an index (any index) as default
-
-Import dashboard `kibana_objects.json` using the **Import** button at http://localhost:5601/app/kibana#/management/kibana/objects
+. In a browser, go to Kibana at http://localhost:5601/app/kibana#/management/kibana/indices/ and set an index (any index) as default
+. Import dashboard `kibana_objects.json` using the **Import** button at http://localhost:5601/app/kibana#/management/kibana/objects
 
 image::images/kibana_ix01.png[Kibana indexes]
 
@@ -48,30 +55,30 @@ Load the Kibana dashboard http://localhost:5601/app/kibana#/dashboard/02028f30-4
 
 === Run KSQL CLI and Postgres CLI
 
-Optionally, use something like `screen` or `tmux` to have these both easily to hand. Or multiple Terminal tabs. Whatever works for you :)
-KSQL CLI:
+Optionally, use something like `screen` or `tmux` to have these both easily to hand. Or multiple Terminal tabs. 
+Whatever works for you :)
 
+.KSQL CLI
 [source,bash]
 ----
 cd docker-compose
 docker-compose exec ksql-cli ksql http://ksql-server:8088
 ----
 
-Postgres CLI:
-
+.Postgres CLI
 [source,bash]
 ----
-cd docker-compose
 docker-compose exec postgres bash -c 'psql --username postgres'
 ----
 
 == Pre-flight checklist
 
-Is the stack up?
+=== Is the stack up?
 
 [source,bash]
 ----
 $ docker-compose ps
+
 Name                             Command               State                          Ports
 ---------------------------------------------------------------------------------------------------------------------------------
 docker-compose_connect-debezium_1   /docker-entrypoint.sh start      Up      0.0.0.0:8083->8083/tcp, 8778/tcp, 9092/tcp, 9779/tcp
@@ -87,20 +94,22 @@ elasticsearch                       /usr/local/bin/docker-entr ...   Up      0.0
 kibana                              /usr/local/bin/kibana-docker     Up      0.0.0.0:5601->5601/tcp
 ----
 
-Are the connectors running?
+=== Are the connectors running?
 
 [source,bash]
 ----
-$ curl -s "http://localhost:8083/connectors"| jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:8083/connectors/"{connector_name}"/status"| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+$ curl -s "http://localhost:8083/connectors" | jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:8083/connectors/"{connector_name}"/status" | jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+
 pg-source  |  RUNNING  |  RUNNING
 
-$ curl -s "http://localhost:18083/connectors"| jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:18083/connectors/"{connector_name}"/status"| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+$ curl -s "http://localhost:18083/connectors" | jq '.[]'| xargs -I{connector_name} curl -s "http://localhost:18083/connectors/"{connector_name}"/status" | jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'| column -s : -t| sed 's/\"//g'| sort
+
 es_sink_ratings-with-customer-data  |  RUNNING  |  RUNNING
 es_sink_unhappy_platinum_customers  |  RUNNING  |  RUNNING
 jdbc_sink_postgres                  |  RUNNING  |  RUNNING
 ----
 
-Is ratings data being produced?
+=== Is ratings data being produced?
 
 [source,bash]
 ----
@@ -111,19 +120,20 @@ docker-compose exec kafka-connect-cp \
                     --topic ratings
 ----
 
-[source,bash]
+[source,json]
 ----
 {"rating_id":{"long":13323},"user_id":{"int":19},"stars":{"int":3},"route_id":{"int":5676},"rating_time":{"long":1528279580480},"channel":{"string":"iOS"},"message":{"string":"your team here rocks!"}}
 ----
 
-Is Elasticsearch running?
+=== Is Elasticsearch running?
 
 [source,bash]
 ----
 curl http://localhost:9200
 ----
 
-[source,bash]
+.Response
+[source,json]
 ----
 {
   "name" : "0-JgLQj",
@@ -147,7 +157,7 @@ curl http://localhost:9200
 * Load this instructions doc into Chrome
 * Close all other apps
 
-Prep KSQL:
+=== Prep KSQL
 
 [source,sql]
 ----
@@ -229,7 +239,6 @@ update CUSTOMERS set first_name='Bob' where id=1;
 ----
 
 === Persist stream-table join
-
 
 [source,sql]
 ----
