@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.2.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.2.0
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.2.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-kafka:5.2.0
     hostname: kafka
     container_name: kafka
     ports:
@@ -37,7 +37,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.2.0-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.2.0
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -57,7 +57,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.2.0-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.2.0
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -107,7 +107,7 @@ services:
       #KSQL_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.2.0-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.2.0
     container_name: ksql-cli
     volumes:
       - $PWD/ksql.commands:/tmp/ksql.commands
@@ -118,7 +118,7 @@ services:
     tty: true
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.2.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-control-center:5.2.0
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -153,7 +153,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
-    image: confluentinc/cp-kafka:5.2.0-SNAPSHOT
+    image: confluentinc/cp-kafka:5.2.0
     hostname: kafka-create-topics
     container_name: kafka-create-topics
     depends_on:
@@ -294,7 +294,7 @@ services:
   # This container is just to transfer Replicator jars to the Connect worker
   # It is not used as a Connect worker
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.1.2
+    image: confluentinc/cp-enterprise-replicator:5.2.0
     hostname: replicator
     container_name: replicator
     volumes:
