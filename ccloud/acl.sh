@@ -119,12 +119,11 @@ END
 if [[ ! "$OUTPUT" =~ "Bootstrap Servers" ]]; then
   ccloud kafka cluster auth
   OUTPUT=$(ccloud kafka cluster auth)
+  echo -e "\n-- Sleeping 60 seconds to wait for user key to propagate --"
+  sleep 60
 fi
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}')
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
-
-echo -e "\n-- Sleeping 60 seconds to wait for user key to propagate --"
-sleep 60
 
 
 ##################################################
