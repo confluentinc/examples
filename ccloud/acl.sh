@@ -107,14 +107,19 @@ expect <<END
     "Bootstrap Servers" {
       set result $expect_out(buffer)
     }
-    "Do you have an API key for * \[N/y\]" {
-      send "N"
-      expect "Bootstrap Servers"
+    "\[N/y\]" {
+      send "N\r"
+      expect "Okay, we've created an API key"
+      sleep 2
       set result $expect_out(buffer)
     }
   }
 END
 )
+if [[ ! "$OUTPUT" =~ "Bootstrap Servers" ]]; then
+  ccloud kafka cluster auth
+  OUTPUT=$(ccloud kafka cluster auth)
+fi
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}')
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
@@ -127,6 +132,8 @@ TOPIC1="demo-topic-1"
 echo -e "\n-- Create topic $TOPIC1 --"
 echo "ccloud kafka topic create $TOPIC1"
 ccloud kafka topic create $TOPIC1 || true
+
+sleep 10
 
 echo -e "\n-- Produce to topic $TOPIC1 --"
 echo "ccloud kafka topic produce $TOPIC1"
