@@ -27,6 +27,7 @@
 # Requirements:
 #   - Access to a Confluent Cloud Enterprise cluster
 #   - Local install of the new Confluent Cloud CLI
+#   - At least one successful manual run up to `ccloud kafka cluster auth`
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
 #
@@ -37,7 +38,7 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud_v2 v0.35.0 || exit 1
+check_ccloud_v2 v0.48.0 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 
