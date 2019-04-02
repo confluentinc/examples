@@ -123,8 +123,8 @@ fi
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}')
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
-echo -e "\n-- Sleeping 30 seconds to wait for user key to propagate --"
-sleep 30
+echo -e "\n-- Sleeping 60 seconds to wait for user key to propagate --"
+sleep 60
 
 
 ##################################################
