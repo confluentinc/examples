@@ -27,7 +27,6 @@
 # Requirements:
 #   - Access to a Confluent Cloud Enterprise cluster
 #   - Local install of the new Confluent Cloud CLI
-#   - At least one successful manual run up to `ccloud kafka cluster auth`
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
 #
@@ -100,8 +99,24 @@ ccloud kafka cluster use $CLUSTER
 
 echo -e "\n-- Create API key and set context --"
 echo "ccloud kafka cluster auth"
-OUTPUT=$(ccloud kafka cluster auth | grep "Bootstrap Servers")
-BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | awk '{print $3;}')
+OUTPUT=$(
+expect <<END
+  log_user 1
+  spawn ccloud kafka cluster auth
+  expect {
+    "Bootstrap Servers" {
+      set result $expect_out(buffer)
+    }
+    "Do you have an API key for * \[N/y\]" {
+      send "N"
+      expect "Bootstrap Servers"
+      set result $expect_out(buffer)
+    }
+  }
+END
+)
+BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}')
+#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 
 ##################################################
@@ -120,7 +135,6 @@ echo "ccloud kafka topic produce $TOPIC1"
 echo -e "\n-- Consume from topic $TOPIC1 --"
 echo "ccloud kafka topic consume $TOPIC1"
 timeout 10s ccloud kafka topic consume $TOPIC1
-
 
 
 ##################################################
