@@ -123,6 +123,9 @@ fi
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}')
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
+echo -e "\n-- Sleeping 30 seconds to wait for user key to propagate --"
+sleep 30
+
 
 ##################################################
 # Produce and consume with Confluent Cloud CLI
@@ -132,8 +135,6 @@ TOPIC1="demo-topic-1"
 echo -e "\n-- Create topic $TOPIC1 --"
 echo "ccloud kafka topic create $TOPIC1"
 ccloud kafka topic create $TOPIC1 || true
-
-sleep 10
 
 echo -e "\n-- Produce to topic $TOPIC1 --"
 echo "ccloud kafka topic produce $TOPIC1"
@@ -162,7 +163,7 @@ echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
-echo -e "\n-- Sleeping 90 seconds to wait for keys to propagate --"
+echo -e "\n-- Sleeping 90 seconds to wait for service-account key to propagate --"
 sleep 90
 
 CLIENT_CONFIG="/tmp/client.config"
