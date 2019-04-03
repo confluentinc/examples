@@ -16,24 +16,21 @@
 
 package io.confluent.examples.connectandstreams.javaproducer;
 
-import java.util.Properties;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-
-import org.apache.kafka.common.serialization.LongSerializer;
-
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
-import io.confluent.examples.connectandstreams.avro.Location;
-
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.serialization.LongSerializer;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
+
+import io.confluent.examples.connectandstreams.avro.Location;
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
 
 
 public class Driver {
@@ -43,13 +40,15 @@ public class Driver {
   static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
   static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
 
-  public static void main(String[] args) throws Exception {
+  public static void main(final String[] args) throws Exception {
 
     if (args.length > 3) {
       throw new IllegalArgumentException("usage: ... "
-          + "[<bootstrap.servers> (optional, default: " + DEFAULT_BOOTSTRAP_SERVERS + ")] "
-          + "[<schema.registry.url> (optional, default: " + DEFAULT_SCHEMA_REGISTRY_URL + ")] "
-          + "[<table.locations> (optional, default: " + DEFAULT_TABLE_LOCATIONS + ")] ");
+                                         + "[<bootstrap.servers> (optional, default: " + DEFAULT_BOOTSTRAP_SERVERS
+                                         + ")] "
+                                         + "[<schema.registry.url> (optional, default: " + DEFAULT_SCHEMA_REGISTRY_URL
+                                         + ")] "
+                                         + "[<table.locations> (optional, default: " + DEFAULT_TABLE_LOCATIONS + ")] ");
     }
 
     final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
@@ -60,13 +59,13 @@ public class Driver {
     System.out.println("Connecting to Confluent schema registry at " + schemaRegistryUrl);
     System.out.println("Reading locations table from file " + tableLocations);
 
-    final List<Location> locationsList = new ArrayList<Location>();
-    try (BufferedReader br = new BufferedReader(new FileReader(tableLocations))) {
+    final List<Location> locationsList = new ArrayList<>();
+    try (final BufferedReader br = new BufferedReader(new FileReader(tableLocations))) {
       String line;
       while ((line = br.readLine()) != null) {
-        String[] parts = line.split("\\|");
+        final String[] parts = line.split("\\|");
         locationsList.add(new Location(Long.parseLong(parts[0]), parts[1],
-            Long.parseLong(parts[2])));
+                                       Long.parseLong(parts[2])));
       }
     }
 
@@ -74,18 +73,19 @@ public class Driver {
     final boolean isKeySerde = false;
     locationSerializer.configure(
         Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
-           schemaRegistryUrl),isKeySerde);
+                                 schemaRegistryUrl), isKeySerde);
 
     final Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-    KafkaProducer<Long, Location> locationProducer = new KafkaProducer<Long, Location>(props,
-        new LongSerializer(), locationSerializer);
+    final KafkaProducer<Long, Location>
+        locationProducer =
+        new KafkaProducer<Long, Location>(props, new LongSerializer(), locationSerializer);
 
     locationsList.forEach(t -> {
-      System.out.println("Writing location information for '" + t.getId() 
-          + "' to input topic " + INPUT_TOPIC);
-      ProducerRecord<Long, Location> record = new ProducerRecord<Long, Location>(INPUT_TOPIC,
-          t.getId(), t);
+      System.out.println("Writing location information for '" + t.getId()
+                         + "' to input topic " + INPUT_TOPIC);
+      final ProducerRecord<Long, Location> record = new ProducerRecord<Long, Location>(INPUT_TOPIC,
+                                                                                       t.getId(), t);
       locationProducer.send(record);
     });
 

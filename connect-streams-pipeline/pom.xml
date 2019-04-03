@@ -7,11 +7,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>5.1.2</version>
+      <version>5.2.1</version>
   </parent>
 
   <artifactId>connect-streams-examples</artifactId>
-  <version>5.1.2</version>
+  <version>5.2.1</version>
   <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -104,7 +104,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>8.12</version> <!-- bumping to latest checkstyle version -->
+                        <version>[8.18,)</version> <!-- bumping to latest checkstyle version -->
                     </dependency>
                 </dependencies>
                 <executions>

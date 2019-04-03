@@ -7,12 +7,12 @@
     <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>5.1.2</version>
+      <version>5.2.1</version>
     </parent>
 
     <artifactId>clients-example</artifactId>
     <packaging>jar</packaging>
-    <version>5.1.2</version>
+    <version>5.2.1</version>
 
     <organization>
         <name>Confluent, Inc.</name>
@@ -175,7 +175,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>8.12</version> <!-- bumping to latest checkstyle version -->
+                        <version>[8.18,)</version> <!-- bumping to latest checkstyle version -->
                     </dependency>
                 </dependencies>
                 <executions>
