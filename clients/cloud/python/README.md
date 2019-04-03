@@ -17,6 +17,24 @@ sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
 ```
 
+* Properly configured trust store on client system
+
+In order for the producer to verify the certificate of the brokers make the trust store is set up correctly on your system. 
+
+** CentOS
+
+```bash
+$ sudo reinstall ca-certificates
+```
+
+Add the following property to the `Producer` and `AdminClient` constructors in `producer.py`:
+
+```
+ssl.ca.location='/etc/pki/tls/cert.pem'
+```
+
+or symlink or copy `/usr/ssl/cert.pem` to `/etc/pki/tls/cert.pem`. This is the default location used by the python producer. For more information see the librdkafka docs on which this python producer is built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
+
 # Example 1: Hello World!
 
 In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
