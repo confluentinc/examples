@@ -19,12 +19,12 @@ sasl.password=<secret-access-key>
 
 * Properly configured trust store on client system
 
-In order for the producer to verify the certificate of the brokers make the trust store is set up correctly on your system. 
+In order for the producer to verify the certificate of the brokers make sure the trust store is set up correctly on your system. 
 
 ** CentOS
 
 ```bash
-$ sudo reinstall ca-certificates
+$ sudo yum reinstall ca-certificates
 ```
 
 Add the following property to the `Producer` and `AdminClient` constructors in `producer.py`:
