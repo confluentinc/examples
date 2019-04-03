@@ -18,26 +18,26 @@ package io.confluent.examples.connectandstreams.jdbcjson.model;
 
 public class LocationJSON {
 
-    Long id;
-    String name;
-    Long sale;
+  private Long id;
+  private String name;
+  private Long sale;
 
-    public LocationJSON(Long id, String name, Long sale) {
-        this.id = id;
-        this.name = name;
-        this.sale = sale;
-    }
+  public LocationJSON(final Long id, final String name, final Long sale) {
+    this.id = id;
+    this.name = name;
+    this.sale = sale;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Long getSale() {
-        return sale;
-    }
+  public Long getSale() {
+    return sale;
+  }
 }
 
