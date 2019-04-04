@@ -140,6 +140,7 @@ services:
   # Runs the Kafka KSQL data generator
   datagen:
     container_name: datagen
+    # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
     image: confluentinc/ksql-examples:5.1.2
     depends_on:
       - kafka
