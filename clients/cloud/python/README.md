@@ -17,9 +17,9 @@ sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
 ```
 
-* Properly configured trust store on client system
+## Configure SSL trust store
 
-In order for the producer to verify the certificate of the brokers make sure the trust store is set up correctly on your system. 
+Depending on your operating system or Linux distro you may need to take extra steps to set up the SSL CA root certificates.
 
 ### CentOS
 
