@@ -21,7 +21,7 @@ sasl.password=<secret-access-key>
 
 In order for the producer to verify the certificate of the brokers make sure the trust store is set up correctly on your system. 
 
-** CentOS
+### CentOS
 
 ```bash
 $ sudo yum reinstall ca-certificates
