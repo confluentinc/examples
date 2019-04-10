@@ -27,26 +27,26 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 
 ```bash
 $ ./producer.py -f ~/.ccloud/example.config -t test1
-Preparing to produce record: alice 	 {"count": 0}
-Preparing to produce record: alice 	 {"count": 1}
-Preparing to produce record: alice 	 {"count": 2}
-Preparing to produce record: alice 	 {"count": 3}
-Preparing to produce record: alice 	 {"count": 4}
-Preparing to produce record: alice 	 {"count": 5}
-Preparing to produce record: alice 	 {"count": 6}
-Preparing to produce record: alice 	 {"count": 7}
-Preparing to produce record: alice 	 {"count": 8}
-Preparing to produce record: alice 	 {"count": 9}
-Successfully produced record to topic test1 partition [0] @ offset 0
-Successfully produced record to topic test1 partition [0] @ offset 1
-Successfully produced record to topic test1 partition [0] @ offset 2
-Successfully produced record to topic test1 partition [0] @ offset 3
-Successfully produced record to topic test1 partition [0] @ offset 4
-Successfully produced record to topic test1 partition [0] @ offset 5
-Successfully produced record to topic test1 partition [0] @ offset 6
-Successfully produced record to topic test1 partition [0] @ offset 7
-Successfully produced record to topic test1 partition [0] @ offset 8
-Successfully produced record to topic test1 partition [0] @ offset 9
+Producing record: alice 	 {"count": 0}
+Producing record: alice 	 {"count": 1}
+Producing record: alice 	 {"count": 2}
+Producing record: alice 	 {"count": 3}
+Producing record: alice 	 {"count": 4}
+Producing record: alice 	 {"count": 5}
+Producing record: alice 	 {"count": 6}
+Producing record: alice 	 {"count": 7}
+Producing record: alice 	 {"count": 8}
+Producing record: alice 	 {"count": 9}
+Produced record to topic test1 partition [0] @ offset 0
+Produced record to topic test1 partition [0] @ offset 1
+Produced record to topic test1 partition [0] @ offset 2
+Produced record to topic test1 partition [0] @ offset 3
+Produced record to topic test1 partition [0] @ offset 4
+Produced record to topic test1 partition [0] @ offset 5
+Produced record to topic test1 partition [0] @ offset 6
+Produced record to topic test1 partition [0] @ offset 7
+Produced record to topic test1 partition [0] @ offset 8
+Produced record to topic test1 partition [0] @ offset 9
 10 messages were produced to topic test1!
 ```
 
@@ -107,26 +107,26 @@ $ ccloud topic create test2
 
 ```bash
 $ ./producer_ccsr.py -f ~/.ccloud/example.config -t test2
-Preparing to produce record: alice       {"count": 0}
-Preparing to produce record: alice       {"count": 1}
-Preparing to produce record: alice       {"count": 2}
-Preparing to produce record: alice       {"count": 3}
-Preparing to produce record: alice       {"count": 4}
-Preparing to produce record: alice       {"count": 5}
-Preparing to produce record: alice       {"count": 6}
-Preparing to produce record: alice       {"count": 7}
-Preparing to produce record: alice       {"count": 8}
-Preparing to produce record: alice       {"count": 9}
-Successfully produced record to topic test2 partition [0] @ offset 0
-Successfully produced record to topic test2 partition [0] @ offset 1
-Successfully produced record to topic test2 partition [0] @ offset 2
-Successfully produced record to topic test2 partition [0] @ offset 3
-Successfully produced record to topic test2 partition [0] @ offset 4
-Successfully produced record to topic test2 partition [0] @ offset 5
-Successfully produced record to topic test2 partition [0] @ offset 6
-Successfully produced record to topic test2 partition [0] @ offset 7
-Successfully produced record to topic test2 partition [0] @ offset 8
-Successfully produced record to topic test2 partition [0] @ offset 9
+Producing Avro record: alice	0
+Producing Avro record: alice	1
+Producing Avro record: alice	2
+Producing Avro record: alice	3
+Producing Avro record: alice	4
+Producing Avro record: alice	5
+Producing Avro record: alice	6
+Producing Avro record: alice	7
+Producing Avro record: alice	8
+Producing Avro record: alice	9
+Produced record to topic test2 partition [0] @ offset 0
+Produced record to topic test2 partition [0] @ offset 1
+Produced record to topic test2 partition [0] @ offset 2
+Produced record to topic test2 partition [0] @ offset 3
+Produced record to topic test2 partition [0] @ offset 4
+Produced record to topic test2 partition [0] @ offset 5
+Produced record to topic test2 partition [0] @ offset 6
+Produced record to topic test2 partition [0] @ offset 7
+Produced record to topic test2 partition [0] @ offset 8
+Produced record to topic test2 partition [0] @ offset 9
 10 messages were produced to topic test2!
 ```
 
@@ -136,17 +136,16 @@ Successfully produced record to topic test2 partition [0] @ offset 9
 $ ./consumer_ccsr.py -f ~/.ccloud/example.config -t test2
 ...
 Waiting for message or event/error in poll()
-Consumed record with key alice and value {"count": 0}, and updated total count to 0
-Consumed record with key alice and value {"count": 1}, and updated total count to 1
-Consumed record with key alice and value {"count": 2}, and updated total count to 3
-Consumed record with key alice and value {"count": 3}, and updated total count to 6
-Consumed record with key alice and value {"count": 4}, and updated total count to 10
-Consumed record with key alice and value {"count": 5}, and updated total count to 15
-Consumed record with key alice and value {"count": 6}, and updated total count to 21
-Consumed record with key alice and value {"count": 7}, and updated total count to 28
-Consumed record with key alice and value {"count": 8}, and updated total count to 36
-Consumed record with key alice and value {"count": 9}, and updated total count to 45
-Waiting for message or event/error in poll()
+Consumed record with key alice and value 0,                       and updated total count to 0
+Consumed record with key alice and value 1,                       and updated total count to 1
+Consumed record with key alice and value 2,                       and updated total count to 3
+Consumed record with key alice and value 3,                       and updated total count to 6
+Consumed record with key alice and value 4,                       and updated total count to 10
+Consumed record with key alice and value 5,                       and updated total count to 15
+Consumed record with key alice and value 6,                       and updated total count to 21
+Consumed record with key alice and value 7,                       and updated total count to 28
+Consumed record with key alice and value 8,                       and updated total count to 36
+Consumed record with key alice and value 9,                       and updated total count to 45
 ...
 ```
 

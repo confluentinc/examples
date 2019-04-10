@@ -94,7 +94,7 @@ if __name__ == '__main__':
         count_object = ccloud_lib.Count()
         count_object.count = n
         record_value = count_object.to_dict()
-        print("Producing Avro record with key {}\tvalue {}".format(name_object.name, count_object.count))
+        print("Producing Avro record: {}\t{}".format(name_object.name, count_object.count))
         p.produce(topic=topic, key=record_key, value=record_value, on_delivery=acked)
         # p.poll() serves delivery reports (on_delivery)
         # from previous produce() calls.
