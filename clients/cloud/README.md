@@ -13,7 +13,7 @@ Of these, the following languages have examples using Confluent Cloud Schema Reg
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
-| [![](images/java.png)](java/)     | [![](images/confluent-cli.png)](confluent-cli/) |                                   |
+| [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/confluent-cli.png)](confluent-cli/) |
 
 
 

@@ -69,3 +69,38 @@ Consumed record with key alice and value {"count": 9}, and updated total count t
 Waiting for message or event/error in poll()
 ...
 ```
+
+
+# Example 2: Avro And Confluent Cloud Schema Registry
+
+This example is similar to the previous example, except the value is formatted as Avro and integrates with the Confluent Cloud Schema Registry.
+Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html).
+Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
+
+1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart.html), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+
+2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+
+    ```shell
+    # View the list of registered subjects
+    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+    ```
+
+3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+
+    ```shell
+    $ cat $HOME/.ccloud/config
+    ...
+    basic.auth.credentials.source=USER_INFO
+    schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+    schema.registry.url=https://<SR ENDPOINT>
+    ...
+    ```
+
+4. Create the topic in Confluent Cloud
+
+```bash
+$ ccloud topic create test2
+```
+
+5. ....

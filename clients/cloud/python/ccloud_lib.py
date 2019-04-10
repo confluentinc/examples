@@ -22,6 +22,42 @@
 # =============================================================================
 
 import argparse
+from confluent_kafka import avro
+
+# Parse Schema used for serializing Count class
+schema = avro.loads("""
+    {
+        "namespace": "confluent.io.examples.serialization.avro",
+        "name": "Count",
+        "type": "record",
+        "fields": [
+            {"name": "count", "type": "int"}
+        ]
+    }
+""")
+
+class Count(object):
+    """
+        Count stores the deserialized Avro record.
+    """
+
+    # Use __slots__ to explicitly declare all data members.
+    __slots__ = ["count", "id"]
+
+    def __init__(self, count=None):
+        self.count = count
+        # Unique id used to track produce request success/failures.
+        # Do *not* include in the serialized object.
+        self.id = uuid4()
+
+    def to_dict(self):
+        """
+            The Avro Python library does not support code generation.
+            For this reason we must provide a dict representation of our class for serialization.
+        """
+        return {
+            "count": self.count
+        }
 
 
 def parse_args():
