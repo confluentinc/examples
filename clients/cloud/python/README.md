@@ -103,4 +103,61 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 $ ccloud topic create test2
 ```
 
-5. ....
+5. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+
+```bash
+$ ./producer_ccsr.py -f ~/.ccloud/example.config -t test2
+Preparing to produce record: alice       {"count": 0}
+Preparing to produce record: alice       {"count": 1}
+Preparing to produce record: alice       {"count": 2}
+Preparing to produce record: alice       {"count": 3}
+Preparing to produce record: alice       {"count": 4}
+Preparing to produce record: alice       {"count": 5}
+Preparing to produce record: alice       {"count": 6}
+Preparing to produce record: alice       {"count": 7}
+Preparing to produce record: alice       {"count": 8}
+Preparing to produce record: alice       {"count": 9}
+Successfully produced record to topic test2 partition [0] @ offset 0
+Successfully produced record to topic test2 partition [0] @ offset 1
+Successfully produced record to topic test2 partition [0] @ offset 2
+Successfully produced record to topic test2 partition [0] @ offset 3
+Successfully produced record to topic test2 partition [0] @ offset 4
+Successfully produced record to topic test2 partition [0] @ offset 5
+Successfully produced record to topic test2 partition [0] @ offset 6
+Successfully produced record to topic test2 partition [0] @ offset 7
+Successfully produced record to topic test2 partition [0] @ offset 8
+Successfully produced record to topic test2 partition [0] @ offset 9
+10 messages were produced to topic test2!
+```
+
+6. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+
+```bash
+$ ./consumer_ccsr.py -f ~/.ccloud/example.config -t test2
+...
+Waiting for message or event/error in poll()
+Consumed record with key alice and value {"count": 0}, and updated total count to 0
+Consumed record with key alice and value {"count": 1}, and updated total count to 1
+Consumed record with key alice and value {"count": 2}, and updated total count to 3
+Consumed record with key alice and value {"count": 3}, and updated total count to 6
+Consumed record with key alice and value {"count": 4}, and updated total count to 10
+Consumed record with key alice and value {"count": 5}, and updated total count to 15
+Consumed record with key alice and value {"count": 6}, and updated total count to 21
+Consumed record with key alice and value {"count": 7}, and updated total count to 28
+Consumed record with key alice and value {"count": 8}, and updated total count to 36
+Consumed record with key alice and value {"count": 9}, and updated total count to 45
+Waiting for message or event/error in poll()
+...
+```
+
+7. View the schema information registered in Confluent Cloud Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+
+    ```
+    # View the list of registered subjects
+    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+    ["test2-value"]
+
+    # View the schema information for subject `test2-value`
+    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+    {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
+    ```
