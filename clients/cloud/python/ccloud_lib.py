@@ -23,11 +23,49 @@
 
 import argparse
 from confluent_kafka import avro
+from uuid import uuid4
 
-# Parse Schema used for serializing Count class
-schema = avro.loads("""
+
+# Schema used for serializing Name class, passed in as the Kafka key
+schema_key = avro.loads("""
     {
-        "namespace": "confluent.io.examples.serialization.avro",
+        "namespace": "io.confluent.examples.clients.cloud",
+        "name": "Name",
+        "type": "record",
+        "fields": [
+            {"name": "name", "type": "string"}
+        ]
+    }
+""")
+
+class Name(object):
+    """
+        Name stores the deserialized Avro record for the Kafka key.
+    """
+
+    # Use __slots__ to explicitly declare all data members.
+    __slots__ = ["name", "id"]
+
+    def __init__(self, name=None):
+        self.name = name
+        # Unique id used to track produce request success/failures.
+        # Do *not* include in the serialized object.
+        self.id = uuid4()
+
+    def to_dict(self):
+        """
+            The Avro Python library does not support code generation.
+            For this reason we must provide a dict representation of our class for serialization.
+        """
+        return {
+            "name": self.name
+        }
+
+
+# Schema used for serializing Count class, passed in as the Kafka value
+schema_value = avro.loads("""
+    {
+        "namespace": "io.confluent.examples.clients.cloud",
         "name": "Count",
         "type": "record",
         "fields": [
@@ -38,7 +76,7 @@ schema = avro.loads("""
 
 class Count(object):
     """
-        Count stores the deserialized Avro record.
+        Count stores the deserialized Avro record for the Kafka value.
     """
 
     # Use __slots__ to explicitly declare all data members.

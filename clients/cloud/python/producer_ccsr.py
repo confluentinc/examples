@@ -38,7 +38,7 @@ if __name__ == '__main__':
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
 
-    # Create Producer instance
+    # Create AvroProducer instance
     p = AvroProducer({
            'bootstrap.servers': conf['bootstrap.servers'],
            'sasl.mechanisms': 'PLAIN',
@@ -48,7 +48,7 @@ if __name__ == '__main__':
            'schema.registry.url': conf['schema.registry.url'],
            'schema.registry.basic.auth.credentials.source': conf['basic.auth.credentials.source'],
            'schema.registry.basic.auth.user.info': conf['schema.registry.basic.auth.user.info']
-    }, default_value_schema=ccloud_lib.schema)
+    }, default_key_schema=ccloud_lib.schema_key, default_value_schema=ccloud_lib.schema_value)
 
     # Create topic if needed
     # Examples of additional admin API functionality:
@@ -88,11 +88,12 @@ if __name__ == '__main__':
                   .format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
-        record_key = "alice"
+        record_key = ccloud_lib.Name()
+        record_key.name = "alice"
         record_value = ccloud_lib.Count()
         record_value.count = n
-        print("Producing record: {}\t{}".format(record_key, record_value))
-        p.produce(topic, key=record_key, value=record_value.to_dict(), on_delivery=acked)
+        print("Producing record: {}\t{}".format(record_key.name, record_value.count))
+        p.produce(topic=topic, key=record_key.to_dict(), value=record_value.to_dict(), on_delivery=acked)
         # p.poll() serves delivery reports (on_delivery)
         # from previous produce() calls.
         p.poll(0)

@@ -38,7 +38,7 @@ if __name__ == '__main__':
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
 
-    # Create Consumer instance
+    # Create Avro Consumer instance
     # 'auto.offset.reset=earliest' to start reading from the beginning of the
     #   topic if no committed offsets exist
     c = AvroConsumer({
@@ -71,8 +71,8 @@ if __name__ == '__main__':
                 continue
             elif not msg.error():
                 # Check for Kafka message
-                record_key = msg.key()
-                record_value = Count(msg.value())
+                record_key = ccloud_lib.Name(msg.key())
+                record_value = ccloud_lib.Count(msg.value())
                 count = record_value.count
                 total_count += count
                 print("Consumed record with key {} and value {}, \
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     except SerializerError as e:
         # Report malformed record, discard results, continue polling
         print("Message deserialization failed {}".format(e))
-        continue
+        pass
     except KeyboardInterrupt:
         pass
     finally:
