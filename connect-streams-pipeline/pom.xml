@@ -100,13 +100,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.18</version> <!-- bumping to latest checkstyle version -->
-                    </dependency>
-                </dependencies>
                 <executions>
                     <!--
                      This declaration merges with the one in the parent, rather
