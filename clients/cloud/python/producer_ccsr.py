@@ -88,12 +88,14 @@ if __name__ == '__main__':
                   .format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
-        record_key = ccloud_lib.Name()
-        record_key.name = "alice"
-        record_value = ccloud_lib.Count()
-        record_value.count = n
-        print("Producing record: {}\t{}".format(record_key.name, record_value.count))
-        p.produce(topic=topic, key=record_key.to_dict(), value=record_value.to_dict(), on_delivery=acked)
+        name_object = ccloud_lib.Name()
+        name_object.name = "alice"
+        record_key = name_object.to_dict()
+        count_object = ccloud_lib.Count()
+        count_object.count = n
+        record_value = count_object.to_dict()
+        print("Producing Avro record with key {}\tvalue {}".format(name_object.name, count_object.count))
+        p.produce(topic=topic, key=record_key, value=record_value, on_delivery=acked)
         # p.poll() serves delivery reports (on_delivery)
         # from previous produce() calls.
         p.poll(0)

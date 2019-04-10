@@ -72,12 +72,15 @@ if __name__ == '__main__':
             elif not msg.error():
                 # Check for Kafka message
                 record_key = ccloud_lib.Name(msg.key())
+                name_object = record_key.name
+                name = name_object['name']
                 record_value = ccloud_lib.Count(msg.value())
-                count = record_value.count
+                count_object = record_value.count
+                count = count_object['count']
                 total_count += count
                 print("Consumed record with key {} and value {}, \
                       and updated total count to {}"
-                      .format(record_key, record_value, total_count))
+                      .format(name, count, total_count))
             else:
                 print('error: {}'.format(msg.error()))
     except SerializerError as e:
