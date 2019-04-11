@@ -73,7 +73,7 @@ Waiting for message or event/error in poll()
 
 # Example 2: Avro And Confluent Cloud Schema Registry
 
-This example is similar to the previous example, except the value is formatted as Avro and integrates with the Confluent Cloud Schema Registry.
+This example is similar to the previous example, except the key and value are formatted as Avro and integrates with the Confluent Cloud Schema Registry.
 Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html).
 Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
 
