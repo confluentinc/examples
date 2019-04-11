@@ -55,13 +55,13 @@ if __name__ == '__main__':
     total_count = 0
     try:
         while True:
-            print("Waiting for message or event/error in poll()")
             msg = c.poll(1.0)
             if msg is None:
                 # No message available within timeout.
                 # Initial message consumption may take up to
                 # `session.timeout.ms` for the consumer group to
                 # rebalance and start consuming
+                print("Waiting for message or event/error in poll()")
                 continue
             elif not msg.error():
                 # Check for Kafka message
