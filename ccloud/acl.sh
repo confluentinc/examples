@@ -11,6 +11,10 @@
 # ACLs are only available in Confluent Cloud Enterprise,
 # not in Confluent Cloud Professional
 #
+# Documentation accompanying this tutorial:
+#
+#   https://docs.confluent.io/current/cloud/access-management/user-service-example.html
+#
 # DISCLAIMER:
 #
 #   This is mostly for reference to see a workflow using Confluent Cloud CLI
@@ -25,6 +29,7 @@
 #   ./acl.sh <url to cloud> <cloud email> <cloud password> <cluster>
 #
 # Requirements:
+#
 #   - Access to a Confluent Cloud Enterprise cluster
 #   - Local install of the new Confluent Cloud CLI
 #   - `timeout` installed on your host
