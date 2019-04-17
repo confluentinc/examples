@@ -30,7 +30,7 @@ $ sudo yum reinstall ca-certificates
 Add the following property to the config dict in the `Producer` and `AdminClient` objects in `producer.py`:
 
 ```
-ssl.ca.location='/etc/ssl/certs/ca-bundle.crt'
+ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
 ```
 
 For more information see the librdkafka docs on which this python producer is built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
