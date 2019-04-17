@@ -27,7 +27,7 @@ Depending on your operating system or Linux distro you may need to take extra st
 $ sudo yum reinstall ca-certificates
 ```
 
-Add the following property to the config dict in the `Producer` and `AdminClient` objects in `producer.py`:
+Add the following property to the config dict objects in `producer.py` and `consumer.py`:
 
 ```
 ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
