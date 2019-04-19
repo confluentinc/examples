@@ -19,9 +19,10 @@ This demo showcases:
 * Confluent Replicator
 * Confluent Control Center
 
-## Automated Configurations
 
-It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud, including the following:
+## Per-component Delta Configurations to Connect to Confluent Cloud
+
+This [script](ccloud-generate-cp-configs.sh) reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud, including the following:
 
 * Confluent Platform Components:
   * Confluent Schema Registry
@@ -37,6 +38,11 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
   * Go
   * Node.js (https://github.com/Blizzard/node-rdkafka)
   * C++
+
+## ACL Demo
+
+This [demo script](acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI which currently has limited availability.
+
 
 # Prerequisites
 
