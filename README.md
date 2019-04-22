@@ -1,6 +1,6 @@
 ![image](images/confluent-logo-300-2.png)
 
-* [Demo](#demo-list)
+* [Demos](#demos)
 * [Prerequisities](#prerequisites)
 * [Next steps](#next-steps)
 
