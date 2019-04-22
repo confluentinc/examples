@@ -22,7 +22,8 @@
 # =============================================================================
 
 import argparse
-from confluent_kafka import avro
+from confluent_kafka import avro, KafkaError
+from confluent_kafka.admin import AdminClient, NewTopic
 from uuid import uuid4
 
 
@@ -131,3 +132,32 @@ def read_ccloud_config(config_file):
                 conf[parameter] = value.strip()
 
     return conf
+
+
+def create_topic(conf, topic):
+    """
+        Create a topic if needed
+        Examples of additional admin API functionality:
+        https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
+    """
+
+    a = AdminClient({
+           'bootstrap.servers': conf['bootstrap.servers'],
+           'sasl.mechanisms': 'PLAIN',
+           'security.protocol': 'SASL_SSL',
+           'sasl.username': conf['sasl.username'],
+           'sasl.password': conf['sasl.password']
+    })
+    fs = a.create_topics([NewTopic(
+         topic,
+         num_partitions=1,
+         replication_factor=3
+    )])
+    for topic, f in fs.items():
+        try:
+            f.result()  # The result itself is None
+            print("Topic {} created".format(topic))
+        except Exception as e:
+            # Continue if error code TOPIC_ALREADY_EXISTS, which may be true
+            if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
+                print("Failed to create topic {}: {}".format(topic, e))

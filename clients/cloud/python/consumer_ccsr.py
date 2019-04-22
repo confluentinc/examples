@@ -69,7 +69,9 @@ if __name__ == '__main__':
                 # rebalance and start consuming
                 print("Waiting for message or event/error in poll()")
                 continue
-            elif not msg.error():
+            elif msg.error():
+                print('error: {}'.format(msg.error()))
+            else:
                 # Check for Kafka message
                 record_key = ccloud_lib.Name(msg.key())
                 name_object = record_key.name
@@ -81,8 +83,6 @@ if __name__ == '__main__':
                 print("Consumed record with key {} and value {}, \
                       and updated total count to {}"
                       .format(name, count, total_count))
-            else:
-                print('error: {}'.format(msg.error()))
     except SerializerError as e:
         # Report malformed record, discard results, continue polling
         print("Message deserialization failed {}".format(e))
