@@ -19,10 +19,12 @@
 #
 # Produce messages to Confluent Cloud
 # Using Confluent Python Client for Apache Kafka
+# Writes Avro data, integration with Confluent Cloud Schema Registry
 #
 # =============================================================================
 
 from confluent_kafka import Producer, KafkaError
+from confluent_kafka.avro import AvroProducer
 import json
 import ccloud_lib
 
@@ -35,14 +37,17 @@ if __name__ == '__main__':
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
 
-    # Create Producer instance
-    p = Producer({
+    # Create AvroProducer instance
+    p = AvroProducer({
            'bootstrap.servers': conf['bootstrap.servers'],
            'sasl.mechanisms': 'PLAIN',
            'security.protocol': 'SASL_SSL',
            'sasl.username': conf['sasl.username'],
-           'sasl.password': conf['sasl.password']
-    })
+           'sasl.password': conf['sasl.password'],
+           'schema.registry.url': conf['schema.registry.url'],
+           'schema.registry.basic.auth.credentials.source': conf['basic.auth.credentials.source'],
+           'schema.registry.basic.auth.user.info': conf['schema.registry.basic.auth.user.info']
+    }, default_key_schema=ccloud_lib.schema_key, default_value_schema=ccloud_lib.schema_value)
 
     # Create topic if needed
     ccloud_lib.create_topic(conf, topic)
@@ -61,10 +66,14 @@ if __name__ == '__main__':
                   .format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
-        record_key = "alice"
-        record_value = json.dumps({'count': n})
-        print("Producing record: {}\t{}".format(record_key, record_value))
-        p.produce(topic, key=record_key, value=record_value, on_delivery=acked)
+        name_object = ccloud_lib.Name()
+        name_object.name = "alice"
+        record_key = name_object.to_dict()
+        count_object = ccloud_lib.Count()
+        count_object.count = n
+        record_value = count_object.to_dict()
+        print("Producing Avro record: {}\t{}".format(name_object.name, count_object.count))
+        p.produce(topic=topic, key=record_key, value=record_value, on_delivery=acked)
         # p.poll() serves delivery reports (on_delivery)
         # from previous produce() calls.
         p.poll(0)

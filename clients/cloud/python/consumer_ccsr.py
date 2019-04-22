@@ -19,10 +19,13 @@
 #
 # Consume messages from Confluent Cloud
 # Using Confluent Python Client for Apache Kafka
+# Reads Avro data, integration with Confluent Cloud Schema Registry
 #
 # =============================================================================
 
 from confluent_kafka import Consumer
+from confluent_kafka.avro import AvroConsumer
+from confluent_kafka.avro.serializer import SerializerError
 import json
 import ccloud_lib
 
@@ -35,16 +38,19 @@ if __name__ == '__main__':
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
 
-    # Create Consumer instance
+    # Create Avro Consumer instance
     # 'auto.offset.reset=earliest' to start reading from the beginning of the
     #   topic if no committed offsets exist
-    c = Consumer({
+    c = AvroConsumer({
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': 'PLAIN',
         'security.protocol': 'SASL_SSL',
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
-        'group.id': 'python_example_group_1',
+        'schema.registry.url': conf['schema.registry.url'],
+        'schema.registry.basic.auth.credentials.source': conf['basic.auth.credentials.source'],
+        'schema.registry.basic.auth.user.info': conf['schema.registry.basic.auth.user.info'],
+        'group.id': 'python_example_group_2',
         'auto.offset.reset': 'earliest'
     })
 
@@ -67,14 +73,20 @@ if __name__ == '__main__':
                 print('error: {}'.format(msg.error()))
             else:
                 # Check for Kafka message
-                record_key = msg.key()
-                record_value = msg.value()
-                data = json.loads(record_value)
-                count = data['count']
+                record_key = ccloud_lib.Name(msg.key())
+                name_object = record_key.name
+                name = name_object['name']
+                record_value = ccloud_lib.Count(msg.value())
+                count_object = record_value.count
+                count = count_object['count']
                 total_count += count
                 print("Consumed record with key {} and value {}, \
                       and updated total count to {}"
-                      .format(record_key, record_value, total_count))
+                      .format(name, count, total_count))
+    except SerializerError as e:
+        # Report malformed record, discard results, continue polling
+        print("Message deserialization failed {}".format(e))
+        pass
     except KeyboardInterrupt:
         pass
     finally:
