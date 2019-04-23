@@ -6,8 +6,8 @@
 check_ccloud || exit
 check_jq || exit
 
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false
-if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
+. ./config.sh
+if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 else
   SCHEMA_REGISTRY_CONFIG_FILE=schema_registry_docker.config
@@ -26,9 +26,13 @@ ccloud topic create pageviews
 
 docker-compose up -d --build
 
-if [[ $USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY == true ]]; then
+if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   echo "Killing the local schema-registry Docker container to use Confluent Cloud Schema Registry instead"
   docker-compose kill schema-registry
+fi
+if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == true ]]; then
+  echo "Killing the local ksql-server Docker container to use Confluent Cloud KSQL instead"
+  docker-compose kill ksql-server
 fi
 
 echo "Sleeping 120 seconds to wait for all services to come up"
@@ -46,8 +50,10 @@ sleep 120
 
 sleep 30
 
-docker-compose exec ksql-cli bash -c "ksql http://ksql-server:8089 <<EOF
+if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == false ]]; then
+  docker-compose exec ksql-cli bash -c "ksql http://ksql-server:8089 <<EOF
 run script '/tmp/ksql.commands';
 exit ;
 EOF
 "
+fi

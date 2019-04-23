@@ -15,12 +15,12 @@ fi
 
 ./stop.sh
 
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
 confluent start connect
 CONFLUENT_CURRENT=`confluent current | tail -1`
 
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false
-if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
+. ./config.sh
+if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 else
   SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
@@ -103,13 +103,14 @@ echo "Starting Replicator and sleeping 60 seconds"
 sleep 60
 
 # KSQL Server runs locally and connects to Confluent Cloud
-jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
-mkdir -p $CONFLUENT_CURRENT/ksql-server
-KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
-cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
-# Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
-KSQL_LISTENER=8089
-cat <<EOF >> $KSQL_SERVER_CONFIG
+if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == false ]]; then
+  jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
+  mkdir -p $CONFLUENT_CURRENT/ksql-server
+  KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
+  cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
+  # Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
+  KSQL_LISTENER=8089
+  cat <<EOF >> $KSQL_SERVER_CONFIG
 listeners=http://localhost:$KSQL_LISTENER
 ksql.server.ui.enabled=true
 auto.offset.reset=earliest
@@ -118,13 +119,14 @@ cache.max.bytes.buffering=0
 auto.offset.reset=earliest
 state.dir=$CONFLUENT_CURRENT/ksql-server/data-ccloud/kafka-streams
 EOF
-echo "Starting KSQL Server to Confluent Cloud and sleeping 25 seconds"
-ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
-sleep 25
-ksql http://localhost:$KSQL_LISTENER <<EOF
+  echo "Starting KSQL Server to Confluent Cloud and sleeping 25 seconds"
+  ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
+  sleep 25
+  ksql http://localhost:$KSQL_LISTENER <<EOF
 run script 'ksql.commands';
 exit ;
 EOF
+fi
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 if is_ce; then
@@ -143,3 +145,5 @@ if is_ce; then
 fi
 
 sleep 10
+
+echo -e "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"

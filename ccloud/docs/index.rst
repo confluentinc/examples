@@ -55,13 +55,20 @@ Run demo
 
      $ cd examples/ccloud
 
-3. By default, the demo runs with a locally running |sr|. If you prefer to use Confluent Cloud |sr| instead:
+3. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in Confluent Cloud and if you prefer to use either of those Confluent Cloud services instead:
 
    .. figure:: images/schema-registry-cloud.jpg
        :alt: image
 
+   For Confluent Cloud |sr| (in `preview`):
+
    a. `Enable <http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud>`__ Confluent Cloud |sr| prior to running the demo
-   b.  Modify the appropriate start script (see next step) and set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
+   b.  Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
+
+   For Confluent Cloud KSQL server (contact Confluent for access):
+
+   a. Enable Confluent Cloud KSQL server prior to running the demo
+   b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
 
 4. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
 
@@ -153,14 +160,9 @@ Playbook
 KSQL
 ----
 
-1. View the KSQL server configuration file.
+1. If you are running Confluent Cloud KSQL, you will need to use the Cloud UI to copy/paste the KSQL queries from the `ksql.commands` file.  Otherwise, for locally running KSQL server, the KSQL are automatically created.
 
-   .. sourcecode:: bash
-
-        # KSQL bootstrap servers point to Confluent Cloud
-        $ cat `confluent current | tail -1`/ksql-server/ksql-server-ccloud.properties
-
-2. The KSQL server that is connected to |ccloud| is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL.
+2. If you are running KSQL server locally, it is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL.
 
    (a) Run KSQL CLI to get to the KSQL CLI prompt.
 
