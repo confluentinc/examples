@@ -56,7 +56,7 @@ else
 fi
 
 # Produce to topic pageviews in local cluster
-kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
+kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 6 --replication-factor 1
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 #echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
 #ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
