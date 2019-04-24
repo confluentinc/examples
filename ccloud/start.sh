@@ -147,3 +147,8 @@ fi
 sleep 10
 
 echo -e "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
+
+if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == true ]]; then
+  echo -e "\nSince you are running Confluent Cloud KSQL, use the Cloud UI to copy/paste the KSQL queries from the `ksql.commands` file\n"
+fi
+

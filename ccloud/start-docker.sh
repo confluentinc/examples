@@ -56,4 +56,6 @@ run script '/tmp/ksql.commands';
 exit ;
 EOF
 "
+else
+  echo -e "\nSince you are running Confluent Cloud KSQL, use the Cloud UI to copy/paste the KSQL queries from the `ksql.commands` file\n"
 fi
