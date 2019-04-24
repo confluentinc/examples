@@ -48,7 +48,7 @@ else
   echo "Starting Confluent Schema Registry to Confluent Cloud and sleeping 40 seconds"
   schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
   sleep 40
-  ccloud topic describe _schemas
+  ccloud kafka topic describe _schemas
   if [[ $? == 1 ]]; then
     echo "ERROR: Schema Registry could not create topic '_schemas' in Confluent Cloud. Please troubleshoot"
     exit
@@ -85,7 +85,7 @@ connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.
 sleep 40
 
 # Produce to topic users in CCloud cluster
-ccloud topic create users
+ccloud kafka topic create users
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 #KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
 #cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
@@ -97,7 +97,7 @@ ccloud topic create users
 #jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
-ccloud topic create pageviews
+ccloud kafka topic create pageviews
 ./submit_replicator_config.sh
 echo "Starting Replicator and sleeping 60 seconds"
 sleep 60
