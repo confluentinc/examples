@@ -42,7 +42,7 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud_v2 v0.48.0 || exit 1
+check_ccloud_v2 v0.61.0 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 
@@ -136,13 +136,23 @@ BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}
 ##################################################
 
 TOPIC1="demo-topic-1"
-echo -e "\n-- Create topic $TOPIC1 --"
-echo "ccloud kafka topic create $TOPIC1"
-ccloud kafka topic create $TOPIC1 || true
+
+echo -e "\n-- Check if topic $TOPIC1 exists --"
+echo "ccloud kafka topic create $TOPIC1 --dry-run 2>/dev/null"
+ccloud kafka topic create $TOPIC1 --dry-run 2>/dev/null
+if [[ $? == 0 ]]; then
+  echo -e "\n-- Create topic $TOPIC1 --"
+  echo "ccloud kafka topic create $TOPIC1"
+  ccloud kafka topic create $TOPIC1 || true
+fi
 
 echo -e "\n-- Produce to topic $TOPIC1 --"
 echo "ccloud kafka topic produce $TOPIC1"
 (for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
+if [[ $? != 0 ]]; then
+  echo "ERROR: There seems to be a failure with 'ccloud kafka topic produce' command. Please troubleshoot"
+  exit 1
+fi
 
 echo -e "\n-- Consume from topic $TOPIC1 --"
 echo "ccloud kafka topic consume $TOPIC1"
@@ -158,8 +168,8 @@ timeout 10s ccloud kafka topic consume $TOPIC1
 echo -e "\n-- Create service account --"
 RANDOM_NUM=$((1 + RANDOM % 100))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
-echo "ccloud service-account create --name $SERVICE_NAME --description $SERVICE_NAME"
-ccloud service-account create --name $SERVICE_NAME --description $SERVICE_NAME || true
+echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
+ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
 
 echo -e "\n-- Create API keys for service account --"

@@ -34,7 +34,7 @@ function check_ccloud_v2() {
   check_ccloud || exit 1
 
   actual_version=$(ccloud version | grep "Version:     v" | awk '{print $2;}')
-  if [[ $expected_version != $actual_version ]]; then
+  if ! [[ $actual_version =~ $expected_version ]]; then
     echo "This demo requires the new 'ccloud' CLI version $expected_version but the running version is $actual_version. Cannot run demo."
     exit 1
   fi
