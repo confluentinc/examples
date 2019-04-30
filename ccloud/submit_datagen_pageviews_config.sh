@@ -18,7 +18,6 @@ DATA=$( cat << EOF
     "quickstart": "pageviews",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "io.confluent.connect.avro.AvroConverter",
-    "value.converter.schemas.enable": "true",
     "value.converter.basic.auth.credentials.source": "$BASIC_AUTH_CREDENTIALS_SOURCE",
     "value.converter.schema.registry.basic.auth.user.info": "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO",
     "value.converter.schema.registry.url": "$SCHEMA_REGISTRY_URL",

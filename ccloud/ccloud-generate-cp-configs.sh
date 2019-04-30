@@ -315,7 +315,6 @@ cat <<EOF >> $CONNECT_DELTA
 
 # Confluent Schema Registry for Kafka Connect
 value.converter=io.confluent.connect.avro.AvroConverter
-value.converter.schemas.enable=true
 value.converter.basic.auth.credentials.source=$BASIC_AUTH_CREDENTIALS_SOURCE
 value.converter.schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
 value.converter.schema.registry.url=$SCHEMA_REGISTRY_URL
@@ -331,7 +330,6 @@ rm -f $CONNECTOR_DELTA
 cat <<EOF >> $CONNECTOR_DELTA
 // Confluent Schema Registry for Kafka connectors
 value.converter=io.confluent.connect.avro.AvroConverter
-value.converter.schemas.enable=true
 value.converter.basic.auth.credentials.source=$BASIC_AUTH_CREDENTIALS_SOURCE
 value.converter.schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
 value.converter.schema.registry.url=$SCHEMA_REGISTRY_URL
