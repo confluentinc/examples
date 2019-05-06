@@ -57,7 +57,7 @@ Run demo
 
 3. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in Confluent Cloud and if you prefer to use either of those Confluent Cloud services instead:
 
-   .. figure:: images/schema-registry-cloud.jpg
+   .. figure:: images/services-in-cloud.jpg
        :alt: image
 
    For Confluent Cloud |sr| (in `preview`):
