@@ -2,7 +2,7 @@
 
 # Overview
 
-The Pageviews demo is the automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html)
+The Confluent Platform Quickstart demo is the automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html)
 
 # Prerequisites
 
