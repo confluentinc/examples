@@ -18,7 +18,6 @@ DATA=$( cat << EOF
     "value.converter": "io.confluent.connect.avro.AvroConverter",
     "value.converter.schema.registry.url": "http://localhost:8081",
     "max.interval": 1000,
-    "iterations": 1000000000,
     "tasks.max": "1"
   }
 }

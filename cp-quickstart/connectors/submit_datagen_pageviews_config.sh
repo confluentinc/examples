@@ -19,7 +19,6 @@ DATA=$( cat << EOF
     "value.converter.schema.registry.url": "http://localhost:8081",
     "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor",
     "max.interval": 100,
-    "iterations": 1000000000,
     "tasks.max": "1"
   }
 }
