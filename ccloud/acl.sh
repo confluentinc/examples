@@ -103,14 +103,14 @@ echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 
 echo -e "\n# Create API key for $EMAIL"
-echo "ccloud api-key create --description \"API key and secret for $EMAIL\""
-OUTPUT=$(ccloud api-key create --description "API key and secret for $EMAIL")
+echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
+OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 #echo "API_KEY: $API_KEY"
 
 OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
-echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
+#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 echo -e "\n# Sleeping 60 seconds to wait for user key to propagate"
 sleep 60
