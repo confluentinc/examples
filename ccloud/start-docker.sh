@@ -5,6 +5,8 @@
 
 check_ccloud || exit
 check_jq || exit
+check_ccloud_v1 || exit 1
+
 
 . ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then

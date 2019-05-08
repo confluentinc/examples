@@ -7,6 +7,7 @@ check_env || exit 1
 check_jq || exit 1
 check_running_cp 5.2 || exit 1
 check_ccloud || exit 1
+check_ccloud_v1 || exit 1
 
 if ! is_ce ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community software. Exiting"

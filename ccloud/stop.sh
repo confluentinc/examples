@@ -5,6 +5,8 @@
 
 check_env || exit 1
 check_ccloud || exit
+check_ccloud_v1 || exit 1
+
 
 DELTA_CONFIGS_DIR="delta_configs"
 ./ccloud-generate-cp-configs.sh

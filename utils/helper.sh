@@ -28,6 +28,20 @@ function check_ccloud() {
   return 0
 }
 
+function check_ccloud_v1() {
+  expected_version="0.2.0"
+
+  check_ccloud || exit 1
+
+  actual_version=$(ccloud version | grep -i "version" | awk '{print $3;}')
+  if ! [[ $actual_version =~ $expected_version ]]; then
+    echo "This demo requires Confluent Cloud CLI version $expected_version but the running version is '$actual_version'. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_jq() {
   if [[ $(type jq 2>&1) =~ "not found" ]]; then
     echo "'jq' is not found. Install 'jq' and try again"
