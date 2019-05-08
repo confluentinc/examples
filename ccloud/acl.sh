@@ -42,7 +42,7 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud_v2 v0.61.0 || exit 1
+#check_ccloud_v2 v0.61.0 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 
@@ -102,33 +102,18 @@ echo -e "\n# Set cluster"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 
-echo -e "\n# Create API key and set context"
-echo "ccloud kafka cluster auth"
-OUTPUT=$(
-expect <<END
-  log_user 1
-  spawn ccloud kafka cluster auth
-  expect {
-    "Bootstrap Servers" {
-      set result $expect_out(buffer)
-    }
-    "\[N/y\]" {
-      send "N\r"
-      expect "Okay, we've created an API key"
-      sleep 2
-      set result $expect_out(buffer)
-    }
-  }
-END
-)
-if [[ ! "$OUTPUT" =~ "Bootstrap Servers" ]]; then
-  ccloud kafka cluster auth
-  OUTPUT=$(ccloud kafka cluster auth)
-  echo -e "\n# Sleeping 60 seconds to wait for user key to propagate"
-  sleep 60
-fi
-BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Bootstrap Servers" | awk '{print $3;}')
-#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
+echo -e "\n# Create API key for $EMAIL"
+echo "ccloud api-key create --description \"API key and secret for $EMAIL\""
+OUTPUT=$(ccloud api-key create --description "API key and secret for $EMAIL")
+API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
+#echo "API_KEY: $API_KEY"
+
+OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
+BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
+echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
+
+echo -e "\n# Sleeping 60 seconds to wait for user key to propagate"
+sleep 60
 
 
 ##################################################
@@ -177,8 +162,8 @@ SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{pr
 echo -e "\n# Create an API key and secret for the new service account"
 echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
-API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
-API_SECRET=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
+API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
+API_SECRET_SA=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
 echo -e "\n# Sleeping 90 seconds to wait for the service account key and secret to propagate"
 sleep 90
 
@@ -192,7 +177,7 @@ request.timeout.ms=20000
 retry.backoff.ms=500
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY}" password\="${API_SECRET}";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
 EOF
 
 
@@ -324,10 +309,11 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ##################################################
 
 echo -e "\n# Cleanup"
-ccloud api-key delete --api-key $API_KEY
 ccloud service-account delete --service-account-id $SERVICE_ACCOUNT_ID
 ccloud kafka topic delete $TOPIC1
 ccloud kafka topic delete $TOPIC2
+ccloud api-key delete --api-key $API_KEY_SA
+ccloud api-key delete --api-key $API_KEY
 rm -f "$LOG1"
 rm -f "$LOG2"
 rm -f "$LOG3"
