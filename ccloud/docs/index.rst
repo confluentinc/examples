@@ -371,7 +371,7 @@ Either way, you will get a consistent experience with |sr|.
    .. figure:: images/ksql_dataformat.png
       :alt: image
 
-4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this `step-by-step guide<https://docs.confluent.io/current/schema-registry/docs/migrate.html>`__. Refer to the file `submit_replicator_schema_migration_config.sh<https://github.com/confluentinc/examples/tree/5.1.2-post/ccloud/submit_replicator_schema_migration_config.sh#L13-L33>`__ for an example of a working Replicator configuration for schema migration.
+4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this `step-by-step guide<https://docs.confluent.io/current/schema-registry/docs/migrate.html>`__. Refer to the file `submit_replicator_schema_migration_config.sh<https://github.com/confluentinc/examples/tree/5.1.2-post/ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>`__ for an example of a working Replicator configuration for schema migration.
 
 
 

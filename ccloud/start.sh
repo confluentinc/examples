@@ -48,7 +48,7 @@ else
   echo "Starting Confluent Schema Registry to Confluent Cloud and sleeping 40 seconds"
   schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
   sleep 40
-  ccloud kafka topic describe _schemas
+  ccloud topic describe _schemas
   if [[ $? == 1 ]]; then
     echo "ERROR: Schema Registry could not create topic '_schemas' in Confluent Cloud. Please troubleshoot"
     exit
@@ -61,7 +61,7 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 #echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
 #ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
 sleep 20
-./submit_datagen_pageviews_config.sh
+. ./connectors/submit_datagen_pageviews_config.sh
 #sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
@@ -85,20 +85,20 @@ connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.
 sleep 40
 
 # Produce to topic users in CCloud cluster
-ccloud kafka topic create users
+ccloud topic create users
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 #KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
 #cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
 #ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
-./submit_datagen_users_config.sh
+. ./connectors/submit_datagen_users_config.sh
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
 #jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 #jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
-ccloud kafka topic create pageviews
-./submit_replicator_config.sh
+ccloud topic create pageviews
+. ./connectors/submit_replicator_config.sh
 echo "Starting Replicator and sleeping 60 seconds"
 sleep 60
 

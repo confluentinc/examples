@@ -6,12 +6,12 @@
 check_env || exit 1
 check_ccloud || exit
 
-topics=$(ccloud kafka topic list)
+topics=$(ccloud topic list)
 
 for topic in $topics
 do
   if [[ ${topic:0:10} == '_confluent' ]]; then
-    ccloud kafka topic delete $topic
+    ccloud topic delete $topic
   fi
 done
 
@@ -20,6 +20,6 @@ for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
   if [[ $? == 0 ]]; then
-    ccloud kafka topic delete $topic
+    ccloud topic delete $topic
   fi
 done

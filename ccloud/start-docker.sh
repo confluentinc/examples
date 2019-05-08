@@ -21,8 +21,8 @@ if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 fi
 
-ccloud kafka topic create users
-ccloud kafka topic create pageviews
+ccloud topic create users
+ccloud topic create pageviews
 
 docker-compose up -d --build
 
@@ -42,11 +42,11 @@ sleep 120
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 # kafka-connect-datagen
-./submit_datagen_users_config.sh
-./submit_datagen_pageviews_config.sh
+. ./connectors/submit_datagen_users_config.sh
+. ./connectors/submit_datagen_pageviews_config.sh
 
 # Replicator
-./submit_replicator_docker_config.sh
+. ./connectors/submit_replicator_docker_config.sh
 
 sleep 30
 

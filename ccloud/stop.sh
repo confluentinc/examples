@@ -30,13 +30,13 @@ if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
 fi
 
 # Delete topics in Confluent Cloud
-topics=$(ccloud kafka topic list)
+topics=$(ccloud topic list)
 topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
   if [[ $? == 0 ]]; then
-    ccloud kafka topic delete $topic
+    ccloud topic delete $topic
   fi
 done
 
