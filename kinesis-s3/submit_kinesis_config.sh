@@ -26,7 +26,7 @@ DATA=$( cat << EOF
     "confluent.topic.bootstrap.servers": "$BOOTSTRAP_SERVERS",
     "confluent.topic.security.protocol": "SASL_SSL",
     "confluent.topic.sasl.mechanism": "PLAIN",
-    "confluent.topic.sasl.jaas.config": "REPLICATOR_SASL_JAAS_CONFIG",
+    "confluent.topic.sasl.jaas.config": "$REPLICATOR_SASL_JAAS_CONFIG",
     "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
   }
 }
