@@ -14,12 +14,33 @@ check_aws || exit
 # Install Connectors and start Confluent Platform
 confluent-hub install confluentinc/kafka-connect-kinesis:latest --no-prompt
 confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
-confluent start
-sleep 10
+
+# Start Connect that connects to CCloud cluster
+CONFLUENT_CURRENT=`confluent current | tail -1`
+SCHEMA_REGISTRY_CONFIG_FILE=../ccloud/schema_registry.config
+../ccloud/ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+DELTA_CONFIGS_DIR=delta_configs
+source $DELTA_CONFIGS_DIR/env.delta
+mkdir -p $CONFLUENT_CURRENT/connect
+CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
+cp $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties $CONNECT_CONFIG
+cat $DELTA_CONFIGS_DIR/connect-ccloud.delta >> $CONNECT_CONFIG
+CONNECT_REST_PORT=8087
+cat <<EOF >> $CONNECT_CONFIG
+rest.port=$CONNECT_REST_PORT
+rest.advertised.name=connect-cloud
+rest.hostname=connect-cloud
+group.id=connect-cloud
+request.timeout.ms=20000
+retry.backoff.ms=500
+plugin.path=$CONFLUENT_HOME/share/java,$CONFLUENT_HOME/share/confluent-hub-components
+EOF
+export CLASSPATH=$CONFLUENT_HOME/kafka-connect-replicator/kafka-connect-replicator-5.2.1.jar && connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
+sleep 40
 
 # Verify connector plugins are found
-curl -sS localhost:8083/connector-plugins | jq '.[].class' | grep Kinesis
-curl -sS localhost:8083/connector-plugins | jq '.[].class' | grep S3
+curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep Kinesis
+curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep S3
 
 # Setup Kinesis streams
 aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1
@@ -41,13 +62,14 @@ fi
 
 # Submit connectors
 if is_ce; then
-  . ./connectors/submit_kinesis_config.sh
-  . ./connectors/submit_s3_config.sh
+  ccloud topic create $KAFKA_TOPIC_NAME
+  . ./submit_kinesis_config.sh
+  . ./submit_s3_config.sh
 fi
-sleep 5
+sleep 20
 
 # Read data
-echo -e "\ntimeout 10 confluent consume $KAFKA_TOPIC_NAME --from-beginning"
+echo -e "\ntimeout 10 confluent consume $KAFKA_TOPIC_NAME --cloud --from-beginning"
 timeout 10 confluent consume $KAFKA_TOPIC_NAME --from-beginning
 echo "aws s3api list-objects --bucket $DEMO_BUCKET_NAME"
 aws s3api list-objects --bucket $DEMO_BUCKET_NAME
