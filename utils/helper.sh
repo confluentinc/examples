@@ -37,6 +37,15 @@ function check_jq() {
   return 0
 }
 
+function check_aws() {
+  if [[ $(type aws 2>&1) =~ "not found" ]]; then
+    echo "AWS CLI is not found. Install AWS CLI and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_running_cp() {
   expected_version=$1
 
