@@ -1,7 +1,7 @@
 #!/bin/bash
 
 source $HOME/.aws/credentials-demo
-
+source ../config/demo.cfg
 
 CONNECT_HOST=localhost
 
@@ -12,16 +12,14 @@ fi
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
-  "name": "kinesis-source-1",
+  "name": "kinesis-source",
   "config": {
-    "name": "kinesis-source-1",
+    "name": "kinesis-source",
     "connector.class": "io.confluent.connect.kinesis.KinesisSourceConnector",
     "tasks.max": "1",
-    "kafka.topic": "t1",
-    "aws.access.key.id" : "$AWS_ACCESS_KEY_ID",
-    "aws.secret.key.id" : "$AWS_SECRET_ACCESS_KEY",
-    "kinesis.region": "US_WEST_2",
-    "kinesis.stream": "s1",
+    "kafka.topic": "$KAFKA_TOPIC_NAME",
+    "kinesis.region": "$DEMO_REGION_UC",
+    "kinesis.stream": "$KINESIS_STREAM_NAME",
     "confluent.topic.bootstrap.servers": "localhost:9092",
     "confluent.topic.replication.factor": "1",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",

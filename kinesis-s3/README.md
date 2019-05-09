@@ -4,6 +4,13 @@
 
 This demo showcases a Kinesis -> Kafka -> AWS S3 pipeline.
 
+Benefits:
+
+* Leverage rich ecosystem of a full streaming event platform
+* Spans datacenters and cloud providers
+* Aggregate data in single source of truth
+
+
 # Prerequisites
 
 ## Local
