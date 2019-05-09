@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source $HOME/.aws/credentials-demo
 source ../config/demo.cfg
 
 

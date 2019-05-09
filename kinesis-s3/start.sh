@@ -3,7 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-source $HOME/.aws/credentials-demo
 source config/demo.cfg
 
 check_env || exit 1
@@ -29,7 +28,7 @@ sleep 60
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME
 for i in {1..10}
 do
-  aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key alice --data x$i
+  aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key alice --data m$i
 done
 while read -r line ; do echo "$line" | base64 -id; echo; done <<< $(aws kinesis get-records --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator') | jq '.Records[].Data')
 
