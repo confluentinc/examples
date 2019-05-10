@@ -21,7 +21,7 @@ DATA=$( cat << EOF
     "s3.region": "$DEMO_REGION_LC",
     "s3.bucket.name": "$DEMO_BUCKET_NAME",
     "s3.part.size": "5242880",
-    "flush.size": "8",
+    "flush.size": "3",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
     "format.class": "io.confluent.connect.s3.format.avro.AvroFormat",
     "schema.generator.class": "io.confluent.connect.storage.hive.schema.DefaultSchemaGenerator",

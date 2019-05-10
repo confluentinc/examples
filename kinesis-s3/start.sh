@@ -16,9 +16,11 @@ confluent-hub install confluentinc/kafka-connect-kinesis:latest --no-prompt
 confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
 
 # Start Connect that connects to CCloud cluster
-CONFLUENT_CURRENT=`confluent current | tail -1`
+confluent start schema-registry
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
+#SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
 ../ccloud/ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+CONFLUENT_CURRENT=`confluent current | tail -1`
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 mkdir -p $CONFLUENT_CURRENT/connect
@@ -92,8 +94,8 @@ EOF
 echo "Sleeping 20 seconds after submitting KSQL queries"
 sleep 20
 
-#. ./submit_s3_config_no_avro.sh
-#. ./submit_s3_config_avro.sh
+. ./submit_s3_config_no_avro.sh
+. ./submit_s3_config_avro.sh
 
 sleep 10
 
