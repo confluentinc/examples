@@ -17,7 +17,7 @@ DATA=$( cat << EOF
     "name": "kinesis-source",
     "connector.class": "io.confluent.connect.kinesis.KinesisSourceConnector",
     "tasks.max": "1",
-    "kafka.topic": "$KAFKA_TOPIC_NAME",
+    "kafka.topic": "$KAFKA_TOPIC_NAME_IN",
     "kinesis.region": "$DEMO_REGION_UC",
     "kinesis.stream": "$KINESIS_STREAM_NAME",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
