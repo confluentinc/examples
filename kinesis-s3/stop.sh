@@ -38,5 +38,4 @@ jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
 confluent destroy
 
-../ccloud/ccloud-delete-all-topics.sh
-
+#../ccloud/ccloud-delete-all-topics.sh

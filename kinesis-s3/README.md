@@ -8,9 +8,10 @@ This demo showcases a Kinesis -> Kafka -> AWS S3 pipeline.
 
 Benefits:
 
-* Leverage rich ecosystem of a full event streaming platform
-* Spans datacenters and cloud providers
+* Leverage Kafka's rich ecosystem of a full event streaming platform
+* Span datacenters and cloud providers
 * Aggregate data in single source of truth
+* Use KSQL
 
 
 # Prerequisites
@@ -23,12 +24,28 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Confluent Platform 5.2](https://www.confluent.io/download/)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * `jq`
-* `aws cli`
-* AWS credentials setup on your host
+* AWS related requirements
+  * `aws cli`
+  * AWS properly credentials configured on your host
+  * Access to Kinesis S3
 
-To run the local setup:
+
+# Run the demo
+
+1. Run the demo:
 
 ```bash
 $ ./start.sh
 ```
 
+2. View all the Kinesis, Kafka, and S3 data after bring-up:
+
+```bash
+$ ./read-data.sh
+```
+
+3. Stop the demo and clean up:
+
+```bash
+$ ./stop.sh
+```

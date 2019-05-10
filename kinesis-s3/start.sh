@@ -15,14 +15,22 @@ check_aws || exit
 confluent-hub install confluentinc/kafka-connect-kinesis:latest --no-prompt
 confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
 
-# Start Connect that connects to CCloud cluster
+#---------------------------------
+# Option 1: Confluent Cloud SR
+#SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
+
+# Option 2: local Confluent SR
+SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
 confluent start schema-registry
-SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
-#SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
+#---------------------------------
+
+# Generate CCloud configurations
 ../ccloud/ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
 CONFLUENT_CURRENT=`confluent current | tail -1`
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
+
+# Start Connect that connects to CCloud cluster
 mkdir -p $CONFLUENT_CURRENT/connect
 CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
 cp $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties $CONNECT_CONFIG
