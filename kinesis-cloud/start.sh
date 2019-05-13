@@ -76,15 +76,15 @@ done < ../utils/table.locations.csv
 # Setup cloud storage
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   # Setup S3 bucket
-  bucket_exists=$(aws s3api list-buckets --query "Buckets[].Name" --region $STORAGE_REGION | grep $STORAGE_BUCKET_NAME)
-  if [[ ! "$bucket_exists" =~ "$STORAGE_BUCKET_NAME" ]]; then
+  bucket_list=$(aws s3api list-buckets --query "Buckets[].Name" --region $STORAGE_REGION | grep $STORAGE_BUCKET_NAME)
+  if [[ ! "$bucket_list" =~ "$STORAGE_BUCKET_NAME" ]]; then
     echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION"
     aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION
   fi
 else
   # Setup GCS
-  bucket_exists=$(gsutil ls | grep $DMEO_BUCKET_NAME)
-  if [[ ! "$bucket_exists" =~ "$STORAGE_BUCKET_NAME" ]]; then
+  bucket_list=$(gsutil ls | grep $STORAGE_BUCKET_NAME)
+  if [[ ! "$bucket_list" =~ "$STORAGE_BUCKET_NAME" ]]; then
     echo "gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME"
     gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME
   fi
