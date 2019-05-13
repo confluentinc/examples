@@ -13,18 +13,16 @@ fi
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
-  "name": "aws-s3-sink-no-avro",
+  "name": "gcs-sink-no-avro",
   "config": {
-    "name": "aws-s3-sink-no-avro",
-    "connector.class": "io.confluent.connect.s3.S3SinkConnector",
+    "name": "gcs-sink-no-avro",
+    "connector.class": "io.confluent.connect.gcs.GcsSinkConnector",
     "tasks.max": "1",
-    "s3.region": "$STORAGE_REGION",
-    "s3.bucket.name": "$STORAGE_BUCKET_NAME",
-    "s3.part.size": "5242880",
+    "gcs.bucket.name": "$STORAGE_BUCKET_NAME",
+    "gcs.part.size": "5242880",
     "flush.size": "3",
-    "storage.class": "io.confluent.connect.s3.storage.S3Storage",
-    "format.class": "io.confluent.connect.s3.format.avro.AvroFormat",
-    "schema.generator.class": "io.confluent.connect.storage.hive.schema.DefaultSchemaGenerator",
+    "storage.class": "io.confluent.connect.gcs.storage.GcsStorage",
+    "format.class": "io.confluent.connect.gcs.format.avro.AvroFormat",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
     "schema.compatibility": "NONE",
     "topics": "COUNT_PER_CITY",

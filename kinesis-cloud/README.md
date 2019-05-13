@@ -23,29 +23,33 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [Confluent Platform 5.2](https://www.confluent.io/download/)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
-* AWS related requirements
+* Access to Kinesis S3
+* Google GCS storage related requirements
+  * `gsutils`: Cloud SDK https://cloud.google.com/sdk/
+* AWS S3 storage related requirements
   * `aws cli`
   * AWS properly credentials configured on your host
-  * Access to Kinesis S3
 * `jq`
 * `curl`
 
 
 # Run the demo
 
-1. Run the demo:
+1. Configure the destination cloud storage and other demo parameters in the `config/demo.cfg` file. In particular, be sure to configure the `DESTINATION_STORAGE` parameter appropriately for Google GCS or AWS S3, and set the appropriate region.
+
+2. Run the demo:
 
 ```bash
 $ ./start.sh
 ```
 
-2. View all the Kinesis, Kafka, and cloud storage after bring-up:
+3. View all the Kinesis, Kafka, and cloud storage data after running the demo:
 
 ```bash
 $ ./read-data.sh
 ```
 
-3. Stop the demo and clean up:
+4. Stop the demo and clean up:
 
 ```bash
 $ ./stop.sh

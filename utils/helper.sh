@@ -46,6 +46,15 @@ function check_aws() {
   return 0
 }
 
+function check_gsutil() {
+  if [[ $(type gsutil 2>&1) =~ "not found" ]]; then
+    echo "Google Cloud gsutil is not found. Install Google Cloud gsutil and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_running_cp() {
   expected_version=$1
 

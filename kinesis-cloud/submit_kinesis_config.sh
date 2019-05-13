@@ -10,7 +10,7 @@ if [[ $1 ]];then
 fi
 
 # CC-4652: Kinesis connector uses enum names
-DEMO_REGION_UC=$(echo "$DEMO_REGION" | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g')
+KINESIS_REGION_UC=$(echo "$KINESIS_REGION" | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g')
 
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
@@ -21,7 +21,7 @@ DATA=$( cat << EOF
     "connector.class": "io.confluent.connect.kinesis.KinesisSourceConnector",
     "tasks.max": "1",
     "kafka.topic": "$KAFKA_TOPIC_NAME_IN",
-    "kinesis.region": "$DEMO_REGION_UC",
+    "kinesis.region": "$KINESIS_REGION_UC",
     "kinesis.stream": "$KINESIS_STREAM_NAME",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",

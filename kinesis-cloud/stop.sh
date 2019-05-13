@@ -10,17 +10,19 @@ SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 source delta_configs/env.delta
 
 check_env || exit 1
+check_aws || exit
+
 
 # Clean up AWS Kinesis and cloud storage
 echo "Clean up AWS Kinesis and cloud storage"
-aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $DEMO_REGION
+aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  aws s3 rm --recursive s3://$DEMO_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT} --region $DEMO_REGION
-  aws s3 rm --recursive s3://$DEMO_BUCKET_NAME/topics/COUNT_PER_CITY --region $DEMO_REGION
+  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT} --region $STORAGE_REGION
+  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/COUNT_PER_CITY --region $STORAGE_REGION
 else
+  check_gsutil || exit
   # Clean up GCS
-  echo "Insert code to clean up GCS"
-  exit 1
+  gsutil rm -r gs://$STORAGE_BUCKET_NAME/**
 fi
 rm -f data.avro
 
