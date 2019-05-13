@@ -86,7 +86,7 @@ else
   bucket_exists=$(gsutil ls | grep $DMEO_BUCKET_NAME)
   if [[ ! "$bucket_exists" =~ "$STORAGE_BUCKET_NAME" ]]; then
     echo "gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME"
-    gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME"
+    gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME
   fi
 fi
 

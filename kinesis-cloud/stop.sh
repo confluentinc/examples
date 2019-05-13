@@ -15,7 +15,10 @@ check_aws || exit
 
 # Clean up AWS Kinesis and cloud storage
 echo "Clean up AWS Kinesis and cloud storage"
-aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
+aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION > /dev/null 2>&1
+if [[ $? -eq 0 ]]; then
+  aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
+fi
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT} --region $STORAGE_REGION
   aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/COUNT_PER_CITY --region $STORAGE_REGION
