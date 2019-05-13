@@ -2,16 +2,15 @@
 
 # Overview
 
-This demo showcases a AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline.
-
-![image](images/topology.jpg)
-
+This demo showcases a `AWS Kinesis -> Confluent Cloud -> cloud storage` pipeline.
 Benefits:
 
-* Span cloud providers and datacenters
+* Span multiple cloud providers and datacenters
 * Leverage Kafka's rich ecosystem of a full event streaming platform
 * Aggregate data in single source of truth
 * Use power of KSQL
+
+![image](images/topology.jpg)
 
 
 # Prerequisites
