@@ -13,6 +13,29 @@ Benefits of Confluent Cloud:
 
 ![image](images/topology.jpg)
 
+# End-to-end Streaming ETL
+
+This demo showcases an entire end-to-end streaming ETL deployment, built for 100% cloud services.
+It is built on the |cp|, including:
+
+* Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic
+* KSQL: another variant of a fraud detection microservice
+* GCS or S3 sink connector: pushes data from Kafka topics to cloud storage
+
++-------------------------------------+---------------------------+-------------------------+
+| Other Clients                       | Consumes From             | Produces To             |
++=====================================+===========================+=========================+
+| Kinesis source connector            | Kinesis stream `demo-s1`  | `kinesis-topic1`        |
++-------------------------------------+---------------------------+-------------------------+
+| KSQL                                | `kinesis-topic1`          | KSQL streams and tables |
+|                                     |                           | (see [ksql.commands](ksql.commands) |
++-------------------------------------+---------------------------+-------------------------+
+| GCS (or S3) sink connector          | `COUNT_PER_CITY`,         | GCS (or S3)             |
+|                                     | `SUM_PER_CITY`            |                         |
+|                                     | (KSQL output streams)     |                         |
++-------------------------------------+---------------------------+-------------------------+
+
+
 
 # Prerequisites
 
