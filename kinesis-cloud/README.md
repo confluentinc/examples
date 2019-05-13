@@ -23,12 +23,9 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [Confluent Platform 5.2](https://www.confluent.io/download/)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
-* Access to Kinesis S3
-* Google GCS storage related requirements
-  * `gsutils`: Cloud SDK https://cloud.google.com/sdk/
-* AWS S3 storage related requirements
-  * `aws cli`
-  * AWS properly credentials configured on your host
+* GCS: `gsutils`
+* AWS properly credentials configured on your host
+* AWS CLI: `aws cli`
 * `jq`
 * `curl`
 
