@@ -11,6 +11,7 @@ check_running_cp 5.2 || exit
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   check_aws || exit
 else
+  check_gcp_creds || exit
   check_gsutil || exit
 fi
 

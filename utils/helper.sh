@@ -55,6 +55,13 @@ function check_gsutil() {
   return 0
 }
 
+function check_gcp_creds() {
+  if [[ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]] && [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
+    echo "To run this demo to GCS, either set the env parameter 'GOOGLE_APPLICATION_CREDENTIALS' or run 'gcloud auth application-default login', and then try again."
+    exit 1
+  fi
+}
+
 function check_running_cp() {
   expected_version=$1
 
