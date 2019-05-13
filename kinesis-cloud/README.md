@@ -3,12 +3,13 @@
 # Overview
 
 This demo showcases a `AWS Kinesis -> Confluent Cloud -> cloud storage` pipeline.
-Benefits:
+You have freedom of choice in selecting the cloud storage provider that is right for your business needs.
+Benefits of Confluent Cloud:
 
-* Span multiple cloud providers and datacenters
-* Leverage Kafka's rich ecosystem of a full event streaming platform
-* Aggregate data in single source of truth
-* Use power of KSQL
+* Build business applications on a full event streaming platform
+* Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
+* Use Kafka to aggregate data in single source of truth
+* Harness the power of [KSQL](https://www.confluent.io/product/ksql/)
 
 ![image](images/topology.jpg)
 
@@ -31,7 +32,7 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 
 # Run the demo
 
-1. Configure the destination cloud storage and other demo parameters in the `config/demo.cfg` file. In particular, be sure to configure the `DESTINATION_STORAGE` parameter appropriately for Google GCS or AWS S3, and set the appropriate region.
+1. Configure the cloud storage provider and other demo parameters in the `config/demo.cfg` file. In particular, be sure to configure the `DESTINATION_STORAGE` parameter appropriately for Google GCS or AWS S3, and set the appropriate region.
 
 2. Run the demo:
 
