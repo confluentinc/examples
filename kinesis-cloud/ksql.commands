@@ -1,0 +1,3 @@
+CREATE STREAM locations (id bigint, city varchar, value bigint) WITH (kafka_topic='kinesis-topic1', value_format='DELIMITED');
+CREATE TABLE count_per_city AS SELECT city, count(*) FROM locations GROUP BY city;
+CREATE TABLE sum_per_city WITH (KAFKA_TOPIC='SUM_PER_CITY', PARTITIONS=12, VALUE_FORMAT='AVRO') AS SELECT city, sum(value) FROM locations GROUP BY city;

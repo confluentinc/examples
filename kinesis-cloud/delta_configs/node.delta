@@ -1,0 +1,27 @@
+var Kafka = require('node-rdkafka');
+
+var producer = new Kafka.Producer({
+    'metadata.broker.list': 'pkc-4k32l.us-east-1.aws.stag.cpdev.cloud:9092',
+    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': 'SASL_SSL',
+    'sasl.username': 'L2DW7AQ5IUKSCZYO',
+    'sasl.password': 'eaJt3ET81Xaw1hO+pFXSXx1G0oaGDkhje3aJNAazP/12D0Qotn8AxoqQBqxnDgVH',
+     // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
+    'plugin.library.paths': 'monitoring-interceptor',
+    // .... additional configuration settings
+  });
+
+var consumer = Kafka.KafkaConsumer.createReadStream({
+    'metadata.broker.list': 'pkc-4k32l.us-east-1.aws.stag.cpdev.cloud:9092',
+    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': 'SASL_SSL',
+    'sasl.username': 'L2DW7AQ5IUKSCZYO',
+    'sasl.password': 'eaJt3ET81Xaw1hO+pFXSXx1G0oaGDkhje3aJNAazP/12D0Qotn8AxoqQBqxnDgVH',
+     // 'ssl.ca.location': '/usr/local/etc/openssl/cert.pem', // varies by distro
+    'plugin.library.paths': 'monitoring-interceptor',
+    // .... additional configuration settings
+  }, {}, {
+    topics: '<topic name>',
+    waitInterval: 0,
+    objectMode: false
+});

@@ -1,0 +1,12 @@
+
+# Confluent Control Center specific configuration
+confluent.controlcenter.streams.ssl.endpoint.identification.algorithm=https
+confluent.controlcenter.streams.sasl.mechanism=PLAIN
+confluent.controlcenter.streams.security.protocol=SASL_SSL
+bootstrap.servers=pkc-4k32l.us-east-1.aws.stag.cpdev.cloud:9092
+confluent.controlcenter.streams.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="L2DW7AQ5IUKSCZYO" password\="eaJt3ET81Xaw1hO+pFXSXx1G0oaGDkhje3aJNAazP/12D0Qotn8AxoqQBqxnDgVH";
+
+# Confluent Schema Registry configuration for Confluent Control Center
+confluent.controlcenter.schema.registry.basic.auth.credentials.source=USER_INFO
+confluent.controlcenter.schema.registry.basic.auth.user.info=JJ2Q2AHE7WFUCPAS:AO4Oe2hbY0PuCJu1S3KbZSMbedaz3EtviSec9hsQ66tMBUaGWP8CVP1uDByOpaQz
+confluent.controlcenter.schema.registry.url=https://psrc-4kxrg.us-west-2.aws.stag.cpdev.cloud

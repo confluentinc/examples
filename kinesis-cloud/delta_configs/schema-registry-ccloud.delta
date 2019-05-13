@@ -1,0 +1,7 @@
+kafkastore.ssl.endpoint.identification.algorithm=https
+kafkastore.sasl.mechanism=PLAIN
+kafkastore.request.timeout.ms=20000
+kafkastore.retry.backoff.ms=500
+kafkastore.security.protocol=SASL_SSL
+kafkastore.bootstrap.servers=SASL_SSL://pkc-4k32l.us-east-1.aws.stag.cpdev.cloud:9092
+kafkastore.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="L2DW7AQ5IUKSCZYO" password\="eaJt3ET81Xaw1hO+pFXSXx1G0oaGDkhje3aJNAazP/12D0Qotn8AxoqQBqxnDgVH";
