@@ -11,10 +11,17 @@ source delta_configs/env.delta
 
 check_env || exit 1
 
-# Clean up AWS Kinesis and S3
+# Clean up AWS Kinesis and cloud storage
+echo "Clean up AWS Kinesis and cloud storage"
 aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $DEMO_REGION
-aws s3 rm --recursive s3://$DEMO_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT} --region $DEMO_REGION
-aws s3 rm --recursive s3://$DEMO_BUCKET_NAME/topics/COUNT_PER_CITY --region $DEMO_REGION
+if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
+  aws s3 rm --recursive s3://$DEMO_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT} --region $DEMO_REGION
+  aws s3 rm --recursive s3://$DEMO_BUCKET_NAME/topics/COUNT_PER_CITY --region $DEMO_REGION
+else
+  # Clean up GCS
+  echo "Insert code to clean up GCS"
+  exit 1
+fi
 rm -f data.avro
 
 # Delete topics in Confluent Cloud

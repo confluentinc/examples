@@ -7,13 +7,22 @@ source config/demo.cfg
 
 check_env || exit 1
 check_running_cp 5.2 || exit
-check_aws || exit
+
+if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
+  check_aws || exit
+else
+  check_gcp || exit
+fi
 
 ./stop.sh
 
 # Install Connectors and start Confluent Platform
 confluent-hub install confluentinc/kafka-connect-kinesis:latest --no-prompt
-confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
+if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
+  confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
+else
+  confluent-hub install confluentinc/kafka-connect-gcs:latest --no-prompt
+fi
 
 #---------------------------------
 # Option 1: Confluent Cloud SR
@@ -64,11 +73,18 @@ while read -r line ; do
   aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key $key --data $line --region $DEMO_REGION
 done < ../utils/table.locations.csv
 
-# Setup AWS S3 bucket
-bucket_exists=$(aws s3api list-buckets --query "Buckets[].Name" --region $DEMO_REGION | grep $DEMO_BUCKET_NAME)
-if [[ ! "$bucket_exists" =~ "$DEMO_BUCKET_NAME" ]]; then
-  echo "aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION --create-bucket-configuration LocationConstraint=$DEMO_REGION"
-  aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION --create-bucket-configuration LocationConstraint=$DEMO_REGION
+# Setup cloud storage
+if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
+  # Setup AWS S3 bucket
+  bucket_exists=$(aws s3api list-buckets --query "Buckets[].Name" --region $DEMO_REGION | grep $DEMO_BUCKET_NAME)
+  if [[ ! "$bucket_exists" =~ "$DEMO_BUCKET_NAME" ]]; then
+    echo "aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION --create-bucket-configuration LocationConstraint=$DEMO_REGION"
+    aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION --create-bucket-configuration LocationConstraint=$DEMO_REGION
+  fi
+else
+  # Setup GCS
+  echo "Insert code to setup GCS"
+  exit 1
 fi
 
 # Submit connectors
@@ -107,8 +123,15 @@ EOF
 echo "Sleeping 20 seconds after submitting KSQL queries"
 sleep 20
 
-. ./submit_s3_config_no_avro.sh
-. ./submit_s3_config_avro.sh
+if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
+  # Submit connectors to S3
+  . ./submit_s3_config_no_avro.sh
+  . ./submit_s3_config_avro.sh
+else
+  # Submit connectors to GCS
+  echo "Insert code to submit connectors to GCS"
+  exit 1
+fi
 
 sleep 10
 
