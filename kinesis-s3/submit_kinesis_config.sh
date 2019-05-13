@@ -9,6 +9,9 @@ if [[ $1 ]];then
     CONNECT_HOST=$1
 fi
 
+# CC-4652: Kinesis connector uses enum names
+DEMO_REGION_UC=$(echo "$DEMO_REGION" | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g')
+
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {

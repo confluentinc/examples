@@ -25,7 +25,7 @@ echo -e "\nS3 data:"
 if [[ ! -f avro-tools-1.8.2.jar ]]; then
   curl -L http://mirror.metrocast.net/apache/avro/avro-1.8.2/java/avro-tools-1.8.2.jar --output avro-tools-1.8.2.jar
 fi
-for key in $(aws s3api list-objects --bucket confluent-kafka-connect-s3-demo | jq -r '.Contents[].Key'); do
+for key in $(aws s3api list-objects --bucket $DEMO_BUCKET_NAME | jq -r '.Contents[].Key'); do
   aws s3 cp s3://$DEMO_BUCKET_NAME/$key data.avro
   echo "java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-1.8.2.jar tojson data.avro"
   java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-1.8.2.jar tojson data.avro

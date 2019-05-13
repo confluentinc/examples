@@ -18,7 +18,7 @@ DATA=$( cat << EOF
     "name": "aws-s3-sink-no-avro",
     "connector.class": "io.confluent.connect.s3.S3SinkConnector",
     "tasks.max": "1",
-    "s3.region": "$DEMO_REGION_LC",
+    "s3.region": "$DEMO_REGION",
     "s3.bucket.name": "$DEMO_BUCKET_NAME",
     "s3.part.size": "5242880",
     "flush.size": "3",

@@ -45,25 +45,26 @@ request.timeout.ms=20000
 retry.backoff.ms=500
 plugin.path=$CONFLUENT_HOME/share/java,$CONFLUENT_HOME/share/confluent-hub-components
 EOF
-export CLASSPATH=$CONFLUENT_HOME/kafka-connect-replicator/kafka-connect-replicator-5.2.1.jar && connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
+connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
 #echo "Sleeping 40 seconds waiting for Connect to start"
 #sleep 40
 
-# Setup Kinesis streams
-aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1
+# Create and populate Kinesis streams
+echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $DEMO_REGION"
+aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $DEMO_REGION
 echo "Sleeping 60 seconds waiting for Kinesis stream to be created"
 sleep 60
-aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME
+aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $DEMO_REGION
 while read -r line ; do
   key=$(echo "$line" | awk -F',' '{print $1;}')
-  aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key $key --data $line
+  aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key $key --data $line --region $DEMO_REGION
 done < ../utils/table.locations.csv
 
 # Setup AWS S3 bucket
-bucket_exists=$(aws s3api list-buckets --query "Buckets[].Name" | grep $DEMO_BUCKET_NAME)
+bucket_exists=$(aws s3api list-buckets --query "Buckets[].Name" --region $DEMO_REGION | grep $DEMO_BUCKET_NAME)
 if [[ ! "$bucket_exists" =~ "$DEMO_BUCKET_NAME" ]]; then
-  echo "aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION_LC --create-bucket-configuration LocationConstraint=$DEMO_REGION_LC"
-  aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION_LC --create-bucket-configuration LocationConstraint=$DEMO_REGION_LC
+  echo "aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION --create-bucket-configuration LocationConstraint=$DEMO_REGION"
+  aws s3api create-bucket --bucket $DEMO_BUCKET_NAME --region $DEMO_REGION --create-bucket-configuration LocationConstraint=$DEMO_REGION
 fi
 
 # Submit connectors
