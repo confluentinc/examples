@@ -52,6 +52,10 @@ connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.
 # Create and populate Kinesis streams
 echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $DEMO_REGION"
 aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $DEMO_REGION
+if [[ $? != 0 ]]; then
+  echo "ERROR: Received a non-zero exit code when trying to create the AWS Kinesis stream. Please troubleshoot"
+  exit $?
+fi
 echo "Sleeping 60 seconds waiting for Kinesis stream to be created"
 sleep 60
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $DEMO_REGION
