@@ -16,7 +16,7 @@ Benefits of Confluent Cloud:
 # End-to-end Streaming ETL
 
 This demo showcases an entire end-to-end streaming ETL deployment, built for 100% cloud services.
-It is built on the |cp|, including:
+It is built on the Confluent Platform, including:
 
 * Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic
 * KSQL: another variant of a fraud detection microservice
