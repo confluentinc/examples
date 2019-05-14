@@ -38,8 +38,8 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [Confluent Platform 5.2](https://www.confluent.io/download/)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
-* AWS: `aws cli`, properly initialized with your creditials
-* GCS: `gsutils` and `gcloud`, properly initialized with your creditials
+* AWS: `aws cli`, properly initialized with your credentials
+* GCS: `gsutils`, properly initialized with your credentials
 * `jq`
 * `curl`
 
