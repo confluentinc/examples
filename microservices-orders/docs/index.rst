@@ -368,7 +368,7 @@ To test your code, save off the project's working solution, copy your version of
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
       # Run the test and validate that it passes
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsService test -f kafka-streams-examples/pom.xml
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.OrderDetailsServiceTest test -f kafka-streams-examples/pom.xml
 
 
 Exercise 3: Enriching streams with joins
@@ -439,7 +439,7 @@ To test your code, save off the project's working solution, copy your version of
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
       # Run the test and validate that it passes
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailService test -f kafka-streams-examples/pom.xml
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.EmailServiceTest test -f kafka-streams-examples/pom.xml
 
 
 Exercise 4: Filtering and branching
@@ -493,7 +493,7 @@ To test your code, save off the project's working solution, copy your version of
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
       # Run the test and validate that it passes
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudService test -f kafka-streams-examples/pom.xml
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.FraudServiceTest test -f kafka-streams-examples/pom.xml
 
 
 Exercise 5: Stateful operations
@@ -547,7 +547,7 @@ To test your code, save off the project's working solution, copy your version of
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
       # Run the test and validate that it passes
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorService test -f kafka-streams-examples/pom.xml
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.ValidationsAggregatorServiceTest test -f kafka-streams-examples/pom.xml
 
 
 Exercise 6: State stores
@@ -613,7 +613,7 @@ To test your code, save off the project's working solution, copy your version of
       mvn clean compile -DskipTests -f kafka-streams-examples/pom.xml
 
       # Run the test and validate that it passes
-      mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryService test -f kafka-streams-examples/pom.xml
+      mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryServiceTest test -f kafka-streams-examples/pom.xml
 
 
 Exercise 7: Enrichment with KSQL
