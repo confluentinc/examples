@@ -11,7 +11,7 @@ check_env || exit 1
 check_aws || exit
 
 echo -e "\n\nKinesis data:"
-while read -r line ; do echo "$line" | base64 -id; echo; done <<< "$(aws kinesis get-records --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator') | jq '.Records[].Data')"
+while read -r line ; do echo "$line" | base64 -id; echo; done <<< "$(aws kinesis get-records --region $KINESIS_REGION --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator' --region $KINESIS_REGION) | jq '.Records[].Data')"
 
 echo -e "\nKafka topic data:"
 echo -e "confluent consume $KAFKA_TOPIC_NAME_IN --cloud --from-beginning --property print.key=true"
