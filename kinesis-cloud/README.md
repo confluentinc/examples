@@ -22,16 +22,11 @@ It is built on the Confluent Platform, including:
 * KSQL: another variant of a fraud detection microservice
 * GCS or S3 sink connector: pushes data from Kafka topics to cloud storage
 
-| Other Clients                       | Consumes From             | Produces To             |
-|-------------------------------------|---------------------------|-------------------------|
-| Kinesis source connector            | Kinesis stream `s1`       | `locations`             |
-|-------------------------------------|---------------------------|-------------------------|
-| KSQL                                | `locations`               | KSQL streams and tables |
-|                                     |                           | (see [ksql.commands](ksql.commands)) |
-|-------------------------------------|---------------------------|-------------------------|
-| GCS (or S3) sink connector          | KSQL tables `COUNT_PER_CITY`, | GCS (or S3)         |
-|                                     | `SUM_PER_CITY`            |                         |
-
+| Other Clients              | Consumes From             | Produces To             |
+|----------------------------|---------------------------|-------------------------|
+| Kinesis source connector   | Kinesis stream `s1`       | `locations`             |
+| KSQL                       | `locations`               | KSQL streams and tables ([ksql.commands](ksql.commands)) |
+| GCS (or S3) sink connector | KSQL tables `COUNT_PER_CITY`, `SUM_PER_CITY` | GCS (or S3)         |
 
 
 # Prerequisites
