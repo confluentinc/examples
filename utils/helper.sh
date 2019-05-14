@@ -29,13 +29,11 @@ function check_ccloud() {
 }
 
 function check_ccloud_v2() {
-  expected_version=$1
 
   check_ccloud || exit 1
 
-  actual_version=$(ccloud version | grep -i "version" | grep -v "Go")
-  if ! [[ $actual_version =~ $expected_version ]]; then
-    echo "This demo requires the new Confluent Cloud CLI version $expected_version but the running version is '$actual_version'. Please update your version and try again."
+  if [[ -z $(ccloud version | grep "Go") ]]; then
+    echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
     exit 1
   fi
 

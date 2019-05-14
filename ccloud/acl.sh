@@ -42,7 +42,7 @@
 # Source library
 . ../utils/helper.sh
 
-#check_ccloud_v2 v0.61.0 || exit 1
+check_ccloud_v2 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 
@@ -108,6 +108,10 @@ OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 #echo "API_KEY: $API_KEY"
 
+echo -e "\n# Set API key that was just created"
+echo "ccloud api-key use $API_KEY"
+ccloud api-key use $API_KEY
+
 OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
@@ -136,7 +140,8 @@ fi
 echo -e "\n# Produce to topic $TOPIC1"
 echo "ccloud kafka topic produce $TOPIC1"
 (for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
-if [[ $? != 0 ]]; then
+status=$?
+if [[ $status != 0 && $status != 124 ]]; then
   echo "ERROR: There seems to be a failure with 'ccloud kafka topic produce' command. Please troubleshoot"
   exit 1
 fi
