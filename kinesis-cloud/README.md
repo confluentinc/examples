@@ -19,10 +19,10 @@ This demo showcases an entire end-to-end streaming ETL deployment, built for 100
 It is built on the Confluent Platform, including:
 
 * Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic
-* KSQL: another variant of a fraud detection microservice
+* KSQL: streaming SQL engine that enables real-time data processing against Kafka
 * GCS or S3 sink connector: pushes data from Kafka topics to cloud storage
 
-| Other Clients              | Consumes From             | Produces To             |
+| Component                  | Consumes From             | Produces To             |
 |----------------------------|---------------------------|-------------------------|
 | Kinesis source connector   | Kinesis stream `s1`       | `locations`             |
 | KSQL                       | `locations`               | KSQL streams and tables ([ksql.commands](ksql.commands)) |
