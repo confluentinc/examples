@@ -1,6 +1,6 @@
 .idea/
 */kafka-streams-examples
-ccloud/delta_configs/
+*/delta_configs/
 */target
 */*/target
 img_data

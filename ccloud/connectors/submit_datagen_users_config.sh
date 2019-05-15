@@ -32,4 +32,7 @@ EOF
 
 echo "curl -X POST -H \"${HEADER}\" --data \"${DATA}\" http://${CONNECT_HOST}:8087/connectors"
 curl -X POST -H "${HEADER}" --data "${DATA}" http://${CONNECT_HOST}:8087/connectors
-echo
+if [[ $? != 0 ]]; then
+  echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
+  exit $?
+fi
