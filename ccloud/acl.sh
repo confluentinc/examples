@@ -74,7 +74,7 @@ fi
 
 
 ##################################################
-# Init user
+# Log in, specify active cluster, and create a user key/secret 
 ##################################################
 
 echo -e "\n# Login"
@@ -114,8 +114,41 @@ OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
-echo -e "\n# Sleeping 60 seconds to wait for user key to propagate"
-sleep 60
+
+##################################################
+# Create a Service Account and API key and secret
+#
+#   A service account represents an application access 
+##################################################
+
+echo -e "\n# Create a new service account"
+RANDOM_NUM=$((1 + RANDOM % 100))
+SERVICE_NAME="demo-app-$RANDOM_NUM"
+echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
+ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
+SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
+
+echo -e "\n# Create an API key and secret for the new service account"
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
+OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
+API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
+API_SECRET_SA=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
+
+echo -e "\n# Sleeping 90 seconds to wait for the user and service account key and secret to propagate"
+sleep 90
+
+CLIENT_CONFIG="/tmp/client.config"
+echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
+echo "Writing to $CLIENT_CONFIG"
+cat <<EOF > $CLIENT_CONFIG
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+request.timeout.ms=20000
+retry.backoff.ms=500
+security.protocol=SASL_SSL
+bootstrap.servers=${BOOTSTRAP_SERVERS}
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
+EOF
 
 
 ##################################################
@@ -136,7 +169,8 @@ else
 fi
 
 echo -e "\n# Produce to topic $TOPIC1"
-echo "ccloud kafka topic produce $TOPIC1"
+echo '(for i in `seq 1 10`; do echo "${i}" ; done) | \'
+echo "timeout 10s ccloud kafka topic produce $TOPIC1"
 (for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
 status=$?
 if [[ $status != 0 && $status != 124 ]]; then
@@ -145,43 +179,8 @@ if [[ $status != 0 && $status != 124 ]]; then
 fi
 
 echo -e "\n# Consume from topic $TOPIC1"
-echo "ccloud kafka topic consume $TOPIC1"
-timeout 10s ccloud kafka topic consume $TOPIC1
-
-
-##################################################
-# Create a Service Account and API key and secret
-#
-#   A service account represents an application access 
-##################################################
-
-echo -e "\n# Create a new service account"
-RANDOM_NUM=$((1 + RANDOM % 100))
-SERVICE_NAME="demo-app-$RANDOM_NUM"
-echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
-ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
-SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
-
-echo -e "\n# Create an API key and secret for the new service account"
-echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
-OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
-API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
-API_SECRET_SA=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
-echo -e "\n# Sleeping 90 seconds to wait for the service account key and secret to propagate"
-sleep 90
-
-CLIENT_CONFIG="/tmp/client.config"
-echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
-echo "Writing to $CLIENT_CONFIG"
-cat <<EOF > $CLIENT_CONFIG
-ssl.endpoint.identification.algorithm=https
-sasl.mechanism=PLAIN
-request.timeout.ms=20000
-retry.backoff.ms=500
-security.protocol=SASL_SSL
-bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
-EOF
+echo "ccloud kafka topic consume $TOPIC1 -b"
+timeout 10s ccloud kafka topic consume $TOPIC1 -b
 
 
 ##################################################
@@ -199,7 +198,7 @@ echo -e "\n# By default, no ACLs are configured"
 echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 
-echo -e "\n# Run the producer to $TOPIC1: before ACLs"
+echo -e "\n# Run the Java producer to $TOPIC1: before ACLs"
 mvn -q -f clients/java/pom.xml clean package
 if [[ $? != 0 ]]; then
   echo "ERROR: There seems to be a build failure error compiling the client code? Please troubleshoot"
@@ -223,7 +222,7 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n# Run the producer to $TOPIC1: after ACLs"
+echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
@@ -260,7 +259,7 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n# Run the producer to $TOPIC2: prefix ACLs"
+echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
 mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
@@ -290,7 +289,7 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n# Run the consumer from $TOPIC2: wildcard ACLs"
+echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
 LOG4="/tmp/log.4"
 timeout 15s mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
 OUTPUT=$(grep "Successfully joined group with" $LOG4)
