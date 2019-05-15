@@ -20,7 +20,7 @@ cp-demo also comes with a playbook and video series, and is a great configuratio
 
 | Demo                                       | Local | Docker | Description 
 | ------------------------------------------ | ----- | ------ | -------------------------------------------------------------------------------- 
-| [ccloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | end-to-end demo of a hybrid Kafka Cluster between Confluent Cloud and on-prem, with sample ACL functionality
+| [ccloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | end-to-end demo of a hybrid Kafka Cluster between Confluent Cloud and on-prem, with sample ACL demo
 | [clickstream](clickstream/README.md)       |   [Y](clickstream/README.md)   |   [Y](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker)    | automated version of the [KSQL Clickstream demo](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker)
 | [clients](clients/README.md)               |   [Y](clients/README.md)   |   N    | Examples of client applications in different programming languages: producers/consumers to Confluent Cloud, Avro/SR to local install
 | [connect-streams-pipeline](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API

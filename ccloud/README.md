@@ -41,8 +41,19 @@ This [script](ccloud-generate-cp-configs.sh) reads the Confluent Cloud configura
 
 ## ACL Demo
 
-This [demo script](acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI which currently has limited availability.
+This [demo script](acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI (check your version with `ccloud version`).
 
+```bash
+$ ccloud version
+ccloud - Confluent Cloud CLI
+
+Version:     v0.84.0
+Git Ref:     ec7a5d50818561a5969591ff83f958a8a93b7496
+Build Date:  2019-05-15T05:40:46Z
+Build Host:  semaphore@semaphore-vm
+Go Version:  go1.12.1 (darwin/amd64)
+Development: false
+```
 
 # Prerequisites
 
