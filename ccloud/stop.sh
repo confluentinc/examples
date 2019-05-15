@@ -5,6 +5,8 @@
 
 check_env || exit 1
 check_ccloud || exit
+check_ccloud_v1 || exit 1
+
 
 DELTA_CONFIGS_DIR="delta_configs"
 ./ccloud-generate-cp-configs.sh
@@ -19,12 +21,15 @@ jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 
-# Delete subjects from Confluent Schema Registry
-schema_registry_subjects_to_delete="users-value pageviews-value"
-for subject in $schema_registry_subjects_to_delete
-do
-  curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
-done
+# Delete subjects from Confluent Cloud Schema Registry
+. ./config.sh
+if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
+  schema_registry_subjects_to_delete="users-value pageviews-value"
+  for subject in $schema_registry_subjects_to_delete
+  do
+    curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
+  done
+fi
 
 # Delete topics in Confluent Cloud
 topics=$(ccloud topic list)
