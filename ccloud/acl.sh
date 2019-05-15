@@ -37,8 +37,6 @@
 #
 ################################################################################
 
-
-
 # Source library
 . ../utils/helper.sh
 
@@ -98,7 +96,7 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
   exit 1
 fi
 
-echo -e "\n# Set cluster"
+echo -e "\n# Specify active cluster to use"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 
@@ -108,7 +106,7 @@ OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 #echo "API_KEY: $API_KEY"
 
-echo -e "\n# Set API key that was just created"
+echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY"
 ccloud api-key use $API_KEY
 
@@ -314,11 +312,11 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ##################################################
 
 echo -e "\n# Cleanup"
-ccloud service-account delete --service-account-id $SERVICE_ACCOUNT_ID
+ccloud service-account delete $SERVICE_ACCOUNT_ID
 ccloud kafka topic delete $TOPIC1
 ccloud kafka topic delete $TOPIC2
-ccloud api-key delete --api-key $API_KEY_SA
-ccloud api-key delete --api-key $API_KEY
+ccloud api-key delete $API_KEY_SA
+ccloud api-key delete $API_KEY
 rm -f "$LOG1"
 rm -f "$LOG2"
 rm -f "$LOG3"
