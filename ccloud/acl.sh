@@ -109,13 +109,17 @@ echo -e "\n# Specify active environment to use"
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
 if [[ $? != 0 ]]; then
-  echo "Failed to set environment $ENVIRONMENT.  Please troubleshoot and run again"
+  echo "Failed to set environment $ENVIRONMENT.  Please troubleshoot, confirm environment, and run again"
   exit 1
 fi
 
 echo -e "\n# Specify active cluster to use"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
+if [[ $? != 0 ]]; then
+  echo "Failed to set cluster. Please troubleshoot, confirm cluster id, and run again"
+  exit 1
+fi
 
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
