@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.0.3
+    image: confluentinc/cp-zookeeper:5.0.3-cp1
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-enterprise-kafka:5.0.3
+    image: confluentinc/cp-enterprise-kafka:5.0.3-cp1
     hostname: broker
     container_name: broker
     depends_on:
@@ -35,7 +35,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.0.3
+    image: confluentinc/cp-schema-registry:5.0.3-cp1
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -48,7 +48,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.0.3
+    image: confluentinc/cp-kafka-connect:5.0.3-cp1
     hostname: connect
     container_name: connect
     depends_on:
@@ -78,14 +78,14 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_INTERNAL_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.3.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.3-cp1.jar
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_PLUGIN_PATH: /usr/share/java
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.0.3
+    image: confluentinc/cp-enterprise-control-center:5.0.3-cp1
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -110,7 +110,7 @@ services:
       PORT: 9021
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.0.3
+    image: confluentinc/cp-ksql-server:5.0.3-cp1
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -132,7 +132,7 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.0.3
+    image: confluentinc/cp-ksql-cli:5.0.3-cp1
     container_name: ksql-cli
     depends_on:
       - broker
@@ -142,7 +142,7 @@ services:
     tty: true
 
   ksql-query-setup:
-    image: confluentinc/cp-ksql-cli:5.0.3
+    image: confluentinc/cp-ksql-cli:5.0.3-cp1
     container_name: ksql-query-setup
     depends_on:
       - broker
@@ -156,7 +156,7 @@ services:
     command: "/tmp/run-ksql.sh"
 
   microservices-app:
-    image: confluentinc/kafka-streams-examples:5.0.3
+    image: confluentinc/kafka-streams-examples:5.0.3-cp1
     hostname: microservices-app
     container_name: microservices-app
     depends_on:
@@ -181,7 +181,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-setup:
-    image: confluentinc/cp-kafka:5.0.3
+    image: confluentinc/cp-kafka:5.0.3-cp1
     hostname: kafka-setup
     container_name: kafka-setup
     depends_on:
