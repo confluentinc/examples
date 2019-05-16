@@ -26,12 +26,16 @@
 #
 # Usage:
 #
-#   ./acl.sh <url to cloud> <cloud email> <cloud password> <cluster>
+#   # Provide all arguments on command line
+#   ./acl.sh <url to cloud> <cloud email> <environment> <cluster> <cloud password>
+#
+#   # Provide all arguments on command line, except password for which you will be prompted
+#   ./acl.sh <url to cloud> <cloud email> <environment> <cluster>
 #
 # Requirements:
 #
 #   - Access to a Confluent Cloud Enterprise cluster
-#   - Local install of the new Confluent Cloud CLI
+#   - Local install of the new Confluent Cloud CLI (v0.84.0 or above)
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
 #
@@ -46,15 +50,16 @@ check_mvn || exit 1
 
 
 ##################################################
-# Read URL, EMAIL, PASSWORD, CLUSTER from command line arguments
+# Read URL, EMAIL, ENVIRONMENT, CLUSTER, PASSWORD from command line arguments
 #
 #  Rudimentary argument processing and must be in order:
-#    <url to cloud> <cloud email> <cloud password> <cluster id>
+#    <url to cloud> <cloud email> <environment> <cluster> <cloud password>
 ##################################################
 URL=$1
 EMAIL=$2
-PASSWORD=$3
+ENVIRONMENT=$3
 CLUSTER=$4
+PASSWORD=$5
 if [[ -z "$URL" ]]; then
   read -s -p "Cloud cluster: " URL
   echo ""
@@ -63,12 +68,16 @@ if [[ -z "$EMAIL" ]]; then
   read -s -p "Cloud user email: " EMAIL
   echo ""
 fi
-if [[ -z "$PASSWORD" ]]; then
-  read -s -p "Cloud user password: " PASSWORD
+if [[ -z "$ENVIRONMENT" ]]; then
+  read -s -p "Environment id: " ENVIRONMENT
   echo ""
 fi
 if [[ -z "$CLUSTER" ]]; then
   read -s -p "Cluster id: " CLUSTER
+  echo ""
+fi
+if [[ -z "$PASSWORD" ]]; then
+  read -s -p "Cloud user password: " PASSWORD
   echo ""
 fi
 
@@ -96,6 +105,14 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
   exit 1
 fi
 
+echo -e "\n# Specify active environment to use"
+echo "ccloud environment use $ENVIRONMENT"
+ccloud environment use $ENVIRONMENT
+if [[ $? != 0 ]]; then
+  echo "Failed to set environment $ENVIRONMENT.  Please troubleshoot and run again"
+  exit 1
+fi
+
 echo -e "\n# Specify active cluster to use"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
@@ -103,6 +120,10 @@ ccloud kafka cluster use $CLUSTER
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
 OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
+if [[ $? != 0 ]]; then
+  echo "Failed to create an API key.  Please troubleshoot and run again"
+  exit 1
+fi
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 #echo "API_KEY: $API_KEY"
 
@@ -111,6 +132,10 @@ echo "ccloud api-key use $API_KEY"
 ccloud api-key use $API_KEY
 
 OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
+if [[ $? != 0 ]]; then
+  echo "Failed to describe the cluster $CLUSTER (does it exist in this environment?).  Please troubleshoot and run again"
+  exit 1
+fi
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
