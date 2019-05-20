@@ -3,7 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-check_env || exit 1
 check_ccloud || exit
 
 ./ccloud-generate-cp-configs.sh
