@@ -193,6 +193,8 @@ function check_netstat() {
 }
 
 function check_mysql() {
+  expected_version=$1
+
   if [[ $(type mysql 2>&1) =~ "not found" ]]; then
     echo "'mysql' is not found. Install MySQL and try again"
     exit 1
@@ -201,6 +203,12 @@ function check_mysql() {
     exit 1
   elif [[ $(echo "show variables;" | mysql -uroot | grep "log_bin\t" 2>&1) =~ "OFF" ]]; then
     echo "The Debezium connector expects MySQL binary logging is enabled. Assuming you installed MySQL on mac with homebrew, modify `/usr/local/etc/my.cnf` and then `brew services restart mysql`"
+    exit 1
+  fi
+
+  actual_version=$(mysql -V | awk '{print $5;}' | rev | cut -c 2- | rev)
+  if [[ $expected_version != $actual_version ]]; then
+    echo -e "\nThis demo expects MySQL version $expected_version but the running version is $actual_version. Please run the correct version of MySQL to proceed, or comment out the line 'check_mysql' in the start script and run at your own risk.\n"
     exit 1
   fi
 
