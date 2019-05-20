@@ -194,18 +194,12 @@ Run consumer, one for raw, one for flattened :
 
 [source,bash]
 ----
-kafka-avro-console-consumer \
- --bootstrap-server localhost:9092 \
- --property schema.registry.url=http://localhost:8081 \
- --topic asgard.demo.customers --from-beginning  | jq  '.'
+confluent consume asgard.demo.customers-raw --from-beginning --value-format avro
 ----
 
 [source,bash]
 ----
-kafka-avro-console-consumer \
- --bootstrap-server localhost:9092 \
- --property schema.registry.url=http://localhost:8081 \
- --topic asgard.demo.customers-raw --from-beginning  | jq '.'
+confluent consume asgard.demo.customers --from-beginning --value-format avro
 ----
 
 ==== Insert a row in MySQL, observe it in Kafka

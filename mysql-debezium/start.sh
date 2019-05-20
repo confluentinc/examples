@@ -4,8 +4,8 @@
 . ../utils/helper.sh
 
 check_env || exit 1
-check_running_cp 5.1 || exit 
-check_mysql || exit
+check_running_cp 5.2 || exit
+check_mysql 5.7.25 || exit
 check_running_elasticsearch 5.6.5 || exit 1
 check_running_kibana || exit 1
 
@@ -20,7 +20,7 @@ confluent start
 # MySQL: Drop & repopulate data
 echo "CREATE DATABASE IF NOT EXISTS demo;" | mysql -uroot
 mysql demo -uroot < customers.sql
-echo "GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium@localhost' IDENTIFIED BY 'dbz';" | mysql -uroot
+echo "GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium'@'localhost' IDENTIFIED BY 'dbz';" | mysql -uroot
 
 # Source Kafka connectors
 confluent config mysql-source-demo-customers -d ./connector_debezium_customers.config
