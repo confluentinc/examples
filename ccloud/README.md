@@ -23,7 +23,8 @@ This demo showcases:
 * Kafka Connect
 * `kafka-connect-datagen` connectors
 
-## Automated Configurations
+
+## Per-component Delta Configurations to Connect to Confluent Cloud
 
 It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud.  See the [template examples](template_delta_configs) for examples of lines to add to each component or client.
 
@@ -42,6 +43,22 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
   * Go
   * Node.js (https://github.com/Blizzard/node-rdkafka)
   * C++
+
+## ACL Demo
+
+This [demo script](acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI (check your version with `ccloud version`).
+
+```bash
+$ ccloud version
+ccloud - Confluent Cloud CLI
+
+Version:     v0.87.0
+Git Ref:     3199a5156710e24e383d00ef1bd636e64bdd0187
+Build Date:  2019-05-25T01:10:40Z
+Build Host:  semaphore@semaphore-vm
+Go Version:  go1.12.1 (darwin/amd64)
+Development: false
+```
 
 # Prerequisites
 
