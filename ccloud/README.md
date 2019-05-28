@@ -47,9 +47,9 @@ This [demo script](acl.sh) showcases the Access Control List (ACL) functionality
 $ ccloud version
 ccloud - Confluent Cloud CLI
 
-Version:     v0.84.0
-Git Ref:     ec7a5d50818561a5969591ff83f958a8a93b7496
-Build Date:  2019-05-15T05:40:46Z
+Version:     v0.87.0
+Git Ref:     3199a5156710e24e383d00ef1bd636e64bdd0187
+Build Date:  2019-05-25T01:10:40Z
 Build Host:  semaphore@semaphore-vm
 Go Version:  go1.12.1 (darwin/amd64)
 Development: false
