@@ -99,6 +99,7 @@ $ docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bo
 
 When you are done, press `<ctrl>-c`.
 
+8. To demo the above commands, you may also run the provided script [start-docker.sh](start-docker.sh)
 
 
 # Example 2: Avro And Confluent Cloud Schema Registry
@@ -201,4 +202,6 @@ $ docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2
 ```
 
 When you are done, press `<ctrl>-c`.
+
+11. To demo the above commands, you may also run the provided script [start-docker-avro.sh](start-docker-avro.sh)
 
