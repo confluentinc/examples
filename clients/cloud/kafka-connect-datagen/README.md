@@ -91,7 +91,7 @@ $ ./submit_datagen_orders_config.sh
 7. Consume from topic `test1`. You should see messages as follows:
 
 ```bash
-$ docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta'
+$ docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --max-messages 5'
 
 03153607,"orderid":3092,"itemid":"Item_659","orderunits":2.9849009420758397,"address":{"city":"City_74","state":"State_67","zipcode":42799}}}
 {"schema":{"type":"struct","fields":[{"type":"int64","optional":false,"field":"ordertime"},{"type":"int32","optional":false,"field":"orderid"},{"type":"string","optional":false,"field":"itemid"},{"type":"double","optional":false,"field":"orderunits"},{"type":"struct","fields":[{"type":"string","optional":false,"field":"city"},{"type":"string","optional":false,"field":"state"},{"type":"int64","optional":false,"field":"zipcode"}],"optional":false,"name":"ksql.address","field":"address"}],"optional":false,"name":"ksql.orders"},"payload":{"ordertime":15124
@@ -198,7 +198,7 @@ $ ./submit_datagen_orders_config_avro.sh
 10. Consume from topic `test2`. You should see messages as follows:
 
 ```bash
-$ docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --property basic.auth.credentials.source=$CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE --property schema.registry.basic.auth.user.info=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL'
+$ docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --property basic.auth.credentials.source=$CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE --property schema.registry.basic.auth.user.info=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL --max-messages 5'
 ```
 
 When you are done, press `<ctrl>-c`.
