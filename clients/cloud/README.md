@@ -19,7 +19,7 @@ The following subset includes examples with Confluent Cloud Schema Registry and 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
 | [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/confluent-cli.png)](confluent-cli/) |
-| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | | |
+| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [ksql-datagen](ksql-datagen/) | |
 
 
 # Other Confluent Cloud Demos
