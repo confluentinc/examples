@@ -93,8 +93,7 @@ $ ./submit_datagen_orders_config.sh
 ```bash
 $ docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --max-messages 5'
 
-03153607,"orderid":3092,"itemid":"Item_659","orderunits":2.9849009420758397,"address":{"city":"City_74","state":"State_67","zipcode":42799}}}
-{"schema":{"type":"struct","fields":[{"type":"int64","optional":false,"field":"ordertime"},{"type":"int32","optional":false,"field":"orderid"},{"type":"string","optional":false,"field":"itemid"},{"type":"double","optional":false,"field":"orderunits"},{"type":"struct","fields":[{"type":"string","optional":false,"field":"city"},{"type":"string","optional":false,"field":"state"},{"type":"int64","optional":false,"field":"zipcode"}],"optional":false,"name":"ksql.address","field":"address"}],"optional":false,"name":"ksql.orders"},"payload":{"ordertime":15124
+{"ordertime":1489322485717,"orderid":15,"itemid":"Item_352","orderunits":9.703502112840228,"address":{"city":"City_48","state":"State_21","zipcode":32731}}
 ```
 
 When you are done, press `<ctrl>-c`.
@@ -132,6 +131,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 
 ```bash
 $ ccloud topic create test2
+```
 
 5. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
 
@@ -199,9 +199,22 @@ $ ./submit_datagen_orders_config_avro.sh
 
 ```bash
 $ docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --property basic.auth.credentials.source=$CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE --property schema.registry.basic.auth.user.info=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL --max-messages 5'
+
+{"ordertime":{"long":1494153923330},"orderid":{"int":25},"itemid":{"string":"Item_441"},"orderunits":{"double":0.9910185646928878},"address":{"io.confluent.ksql.avro_schemas.KsqlDataSourceSchema_address":{"city":{"string":"City_61"},"state":{"string":"State_41"},"zipcode":{"long":60468}}}}
 ```
 
 When you are done, press `<ctrl>-c`.
 
 11. To demo the above commands, you may also run the provided script [start-docker-avro.sh](start-docker-avro.sh)
 
+12. View the schema information registered in Confluent Cloud Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+
+```bash
+# View the list of registered subjects
+$ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+["test2-value"]
+
+# View the schema information for subject `test2-value`
+$ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+{"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema\",\"namespace\":\"io.confluent.ksql.avro_schemas\",\"fields\":[{\"name\":\"ordertime\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"orderid\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"itemid\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderunits\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"address\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema_address\",\"fields\":[{\"name\":\"city\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"state\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"zipcode\",\"type\":[\"null\",\"long\"],\"default\":null}]}],\"default\":null}]}"}
+```
