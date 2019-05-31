@@ -131,6 +131,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 
 ```bash
 $ ccloud topic create test2
+```
 
 5. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
 

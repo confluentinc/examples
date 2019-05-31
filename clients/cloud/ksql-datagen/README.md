@@ -1,6 +1,6 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using [KSQL Datagen](https://docs.confluent.io/current/ksql/docs/tutorials/generate-custom-test-data.html)
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the [KSQL datagen](https://docs.confluent.io/current/ksql/docs/tutorials/generate-custom-test-data.html) command-line tool.
 
 *Note: `ksql-datagen` is meant for development purposes only and is not suitable for a production environment*
 
@@ -87,6 +87,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 
 ```bash
 $ ccloud topic create test2
+```
 
 5. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
 
