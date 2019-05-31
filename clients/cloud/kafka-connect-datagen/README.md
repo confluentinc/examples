@@ -93,8 +93,7 @@ $ ./submit_datagen_orders_config.sh
 ```bash
 $ docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --max-messages 5'
 
-03153607,"orderid":3092,"itemid":"Item_659","orderunits":2.9849009420758397,"address":{"city":"City_74","state":"State_67","zipcode":42799}}}
-{"schema":{"type":"struct","fields":[{"type":"int64","optional":false,"field":"ordertime"},{"type":"int32","optional":false,"field":"orderid"},{"type":"string","optional":false,"field":"itemid"},{"type":"double","optional":false,"field":"orderunits"},{"type":"struct","fields":[{"type":"string","optional":false,"field":"city"},{"type":"string","optional":false,"field":"state"},{"type":"int64","optional":false,"field":"zipcode"}],"optional":false,"name":"ksql.address","field":"address"}],"optional":false,"name":"ksql.orders"},"payload":{"ordertime":15124
+{"ordertime":1489322485717,"orderid":15,"itemid":"Item_352","orderunits":9.703502112840228,"address":{"city":"City_48","state":"State_21","zipcode":32731}}
 ```
 
 When you are done, press `<ctrl>-c`.
@@ -199,6 +198,8 @@ $ ./submit_datagen_orders_config_avro.sh
 
 ```bash
 $ docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/connect-ccloud.delta --property basic.auth.credentials.source=$CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE --property schema.registry.basic.auth.user.info=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL --max-messages 5'
+
+{"ordertime":{"long":1494153923330},"orderid":{"int":25},"itemid":{"string":"Item_441"},"orderunits":{"double":0.9910185646928878},"address":{"io.confluent.ksql.avro_schemas.KsqlDataSourceSchema_address":{"city":{"string":"City_61"},"state":{"string":"State_41"},"zipcode":{"long":60468}}}}
 ```
 
 When you are done, press `<ctrl>-c`.
