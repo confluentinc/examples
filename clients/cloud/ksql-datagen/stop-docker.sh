@@ -22,7 +22,7 @@ do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
 
-topics_to_delete="test1 test2 connect-configs connect-status connect-statuses connect-offsets"
+topics_to_delete="test1 test2"
 topics=$(ccloud topic list)
 for topic in $topics_to_delete
 do
