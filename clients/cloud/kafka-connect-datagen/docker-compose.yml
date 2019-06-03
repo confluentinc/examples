@@ -9,7 +9,7 @@ services:
     hostname: connect
     container_name: connect
     volumes:
-      - $PWD/delta_configs/connect-ccloud.delta:/tmp/connect-ccloud.delta
+      - $PWD/delta_configs/ak-tools-ccloud.delta:/tmp/ak-tools-ccloud.delta
     ports:
       - "8083:8083"
     environment:
@@ -41,6 +41,7 @@ services:
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
+      SASL_JAAS_CONFIG_PROPERTY_FORMAT: '$SASL_JAAS_CONFIG_PROPERTY_FORMAT'
       CONNECT_SASL_MECHANISM: PLAIN
       CONNECT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
       # Connect producer

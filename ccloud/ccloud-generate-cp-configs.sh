@@ -40,6 +40,7 @@
 # - Confluent Control Center
 # - Kafka Connect
 # - Kafka connector
+# - AK command line tools
 #
 # Kafka Clients:
 # - Java (Producer/Consumer)
@@ -95,6 +96,8 @@ BOOTSTRAP_SERVERS_SR_FORMAT="SASL_SSL://${BOOTSTRAP_SERVERS}"
 BOOTSTRAP_SERVERS_SR_FORMAT=${BOOTSTRAP_SERVERS_SR_FORMAT//,/,SASL_SSL:\/\/}
 BOOTSTRAP_SERVERS_SR_FORMAT=${BOOTSTRAP_SERVERS_SR_FORMAT/\\/}
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CCLOUD_CONFIG | cut -d'=' -f2- )
+SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
+SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
 CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
 CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
 #echo "bootstrap.servers: $BOOTSTRAP_SERVERS"
@@ -335,6 +338,15 @@ value.converter.schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH
 value.converter.schema.registry.url=$SCHEMA_REGISTRY_URL
 EOF
 chmod $PERM $CONNECTOR_DELTA
+
+################################################################################
+# AK command line tools
+################################################################################
+AK_TOOLS_DELTA=$DEST/ak-tools-ccloud.delta
+echo "$AK_TOOLS_DELTA"
+rm -f $AK_TOOLS_DELTA
+cp $CCLOUD_CONFIG $AK_TOOLS_DELTA
+chmod $PERM $AK_TOOLS_DELTA
 
 
 echo -e "\nKafka Clients:"
@@ -647,6 +659,7 @@ rm -f $ENV_CONFIG
 cat <<EOF >> $ENV_CONFIG
 export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
 export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
+export SASL_JAAS_CONFIG_PROPERTY_FORMAT='$SASL_JAAS_CONFIG_PROPERTY_FORMAT'
 export BOOTSTRAP_SERVERS_SR_FORMAT='$BOOTSTRAP_SERVERS_SR_FORMAT'
 export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
 export BASIC_AUTH_CREDENTIALS_SOURCE=$BASIC_AUTH_CREDENTIALS_SOURCE
