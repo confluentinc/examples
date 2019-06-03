@@ -54,6 +54,16 @@ function check_ccloud_v2() {
   return 0
 }
 
+function check_cli_v2() {
+
+  if [[ -z $(confluent version | grep "Go") ]]; then
+    echo "This demo requires the new Confluent CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_timeout() {
   if [[ $(type timeout 2>&1) =~ "not found" ]]; then
     echo "'timeout' is not found. Install 'timeout' and try again"
