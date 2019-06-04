@@ -108,6 +108,8 @@ EOF
 # --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 # Should fail
+export CLASSPATH=$CONFLUENT_HOME/share/java/kafka-client-plugins-5.3.0-ce-SNAPSHOT.jar
+
 kafka-topics \
   --bootstrap-server localhost:9092 \
   --create \
@@ -130,4 +132,4 @@ kafka-topics \
 ##################################################
 
 echo -e "\n# Cleanup"
-rm -f temp.properties
+#rm -f temp.properties
