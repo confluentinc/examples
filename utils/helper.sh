@@ -1,6 +1,11 @@
 #!/bin/bash
 
 function check_env() {
+  if [[ $(type curl 2>&1) =~ "not found" ]]; then
+    echo "'curl' is not found.  Install curl to continue"
+    exit 1
+  fi
+
   if [[ -z "$CONFLUENT_HOME" ]]; then
     echo "\$CONFLUENT_HOME is not defined. Run 'export CONFLUENT_HOME=/path/to/confluentplatform' and try again"
     exit 1
