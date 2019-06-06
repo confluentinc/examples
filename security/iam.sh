@@ -108,7 +108,7 @@ EOF
 # --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 # Should fail
-export CLASSPATH=$CONFLUENT_HOME/share/java/kafka-client-plugins-5.3.0-ce-SNAPSHOT.jar
+export CLASSPATH=$CONFLUENT_HOME/share/java/authorizer-5.3.0-ce-SNAPSHOT.jar:$CONFLUENT_HOME/share/java/kafka-client-plugins-5.3.0-ce-SNAPSHOT.jar
 
 kafka-topics \
   --bootstrap-server localhost:9092 \
