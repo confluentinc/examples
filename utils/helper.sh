@@ -1,11 +1,6 @@
 #!/bin/bash
 
 function check_env() {
-  if [[ $(type curl 2>&1) =~ "not found" ]]; then
-    echo "'curl' is not found.  Install curl to continue"
-    exit 1
-  fi
-
   if [[ -z "$CONFLUENT_HOME" ]]; then
     echo "\$CONFLUENT_HOME is not defined. Run 'export CONFLUENT_HOME=/path/to/confluentplatform' and try again"
     exit 1
@@ -103,6 +98,7 @@ function check_gcp_creds() {
 }
 
 function check_running_cp() {
+  check_curl
   expected_version=$1
 
   actual_version=$( confluent version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
@@ -238,6 +234,14 @@ function check_mysql() {
     exit 1
   fi
 
+  return 0
+}
+
+function check_curl() {
+  if [[ $(type curl 2>&1) =~ "not found" ]]; then
+    echo "'curl' is not found.  Install curl to continue"
+    exit 1
+  fi
   return 0
 }
 
