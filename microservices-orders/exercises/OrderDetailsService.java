@@ -13,6 +13,8 @@ import io.confluent.examples.streams.avro.microservices.OrderValidation;
 import io.confluent.examples.streams.avro.microservices.OrderValidationResult;
 import io.confluent.examples.streams.microservices.util.MicroserviceUtils;
 import io.confluent.examples.streams.utils.MonitoringInterceptorUtils;
+
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -50,7 +52,7 @@ public class OrderDetailsService implements Service {
   private final String CONSUMER_GROUP_ID = getClass().getSimpleName();
   private KafkaConsumer<String, Order> consumer;
   private KafkaProducer<String, OrderValidation> producer;
-  private ExecutorService executorService = Executors.newSingleThreadExecutor();
+  private final ExecutorService executorService = Executors.newSingleThreadExecutor();
   private volatile boolean running;
 
   // Disable Exactly Once Semantics to enable Confluent Monitoring Interceptors
@@ -63,12 +65,12 @@ public class OrderDetailsService implements Service {
     log.info("Started Service " + getClass().getSimpleName());
   }
 
-  private void startService(String bootstrapServers) {
+  private void startService(final String bootstrapServers) {
     startConsumer(bootstrapServers);
     startProducer(bootstrapServers);
 
     try {
-      Map<TopicPartition, OffsetAndMetadata> consumedOffsets = new HashMap<>();
+      final Map<TopicPartition, OffsetAndMetadata> consumedOffsets = new HashMap<>();
 
       // TODO 2.1: subscribe the local `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
       // ...
@@ -78,13 +80,13 @@ public class OrderDetailsService implements Service {
       }
 
       while (running) {
-        ConsumerRecords<String, Order> records = consumer.poll(100);
+        final ConsumerRecords<String, Order> records = consumer.poll(Duration.ofMillis(100));
         if (records.count() > 0) {
           if (eosEnabled) {
             producer.beginTransaction();
           }
-          for (ConsumerRecord<String, Order> record : records) {
-            Order order = record.value();
+          for (final ConsumerRecord<String, Order> record : records) {
+            final Order order = record.value();
             if (OrderState.CREATED.equals(order.getState())) {
               //Validate the order then send the result (but note we are in a transaction so
               //nothing will be "seen" downstream until we commit the transaction below)
@@ -114,14 +116,14 @@ public class OrderDetailsService implements Service {
     }
   }
 
-  private void recordOffset(Map<TopicPartition, OffsetAndMetadata> consumedOffsets,
-      ConsumerRecord<String, Order> record) {
-    OffsetAndMetadata nextOffset = new OffsetAndMetadata(record.offset() + 1);
+  private void recordOffset(final Map<TopicPartition, OffsetAndMetadata> consumedOffsets,
+                            final ConsumerRecord<String, Order> record) {
+    final OffsetAndMetadata nextOffset = new OffsetAndMetadata(record.offset() + 1);
     consumedOffsets.put(new TopicPartition(record.topic(), record.partition()), nextOffset);
   }
 
-  private ProducerRecord<String, OrderValidation> result(Order order,
-      OrderValidationResult passOrFail) {
+  private ProducerRecord<String, OrderValidation> result(final Order order,
+                                                         final OrderValidationResult passOrFail) {
     return new ProducerRecord<>(
         Topics.ORDER_VALIDATIONS.name(),
         order.getId(),
@@ -129,8 +131,8 @@ public class OrderDetailsService implements Service {
     );
   }
 
-  private void startProducer(String bootstrapServers) {
-    Properties producerConfig = new Properties();
+  private void startProducer(final String bootstrapServers) {
+    final Properties producerConfig = new Properties();
     producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     if (eosEnabled) {
       producerConfig.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "OrderDetailsServiceInstance1");
@@ -146,8 +148,8 @@ public class OrderDetailsService implements Service {
         Topics.ORDER_VALIDATIONS.valueSerde().serializer());
   }
 
-  private void startConsumer(String bootstrapServers) {
-    Properties consumerConfig = new Properties();
+  private void startConsumer(final String bootstrapServers) {
+    final Properties consumerConfig = new Properties();
     consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP_ID);
     consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -174,13 +176,13 @@ public class OrderDetailsService implements Service {
     running = false;
     try {
       executorService.awaitTermination(1000, TimeUnit.MILLISECONDS);
-    } catch (InterruptedException e) {
+    } catch (final InterruptedException e) {
       log.info("Failed to stop " + getClass().getSimpleName() + " in 1000ms");
     }
     log.info(getClass().getSimpleName() + " was stopped");
   }
 
-  private boolean isValid(Order order) {
+  private boolean isValid(final Order order) {
     if (order.getCustomerId() == null) {
       return false;
     }
@@ -193,12 +195,12 @@ public class OrderDetailsService implements Service {
     return order.getProduct() != null;
   }
 
-  public void setEosEnabled(boolean value) {
+  public void setEosEnabled(final boolean value) {
     this.eosEnabled = value;
   }
 
-  public static void main(String[] args) throws Exception {
-    OrderDetailsService service = new OrderDetailsService();
+  public static void main(final String[] args) throws Exception {
+    final OrderDetailsService service = new OrderDetailsService();
     service.start(MicroserviceUtils.parseArgsAndConfigure(args), "/tmp/kafka-streams");
     addShutdownHookAndBlock(service);
   }
