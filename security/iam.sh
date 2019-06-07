@@ -22,10 +22,10 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./iam.sh <url to metadata server> <username> <password>
+#   ./iam.sh <url to metadata server> <broker> <username> <password>
 #
 #   # Provide all arguments on command line, except password for which you will be prompted
-#   ./iam.sh <url to metadata server> <username>
+#   ./iam.sh <url to metadata server> <broker> <username>
 #
 # Requirements:
 #
@@ -48,10 +48,15 @@ check_jq || exit 1
 #    <url to metadata server> <username> <password>
 ##################################################
 URL=$1
-USERNAME=$2
-PASSWORD=$3
+BROKER=$2
+USERNAME=$3
+PASSWORD=$4
 if [[ -z "$URL" ]]; then
   read -s -p "Metadata Server (MDS): " URL
+  echo ""
+fi
+if [[ -z "$BROKER" ]]; then
+  read -s -p "Broker: " BROKER
   echo ""
 fi
 if [[ -z "$USERNAME" ]]; then
@@ -88,17 +93,18 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 # Get Kafka cluster ID from ZooKeeper
-KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
-if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
-  echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
-  exit 1
-fi
+#KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
+KAFKA_CLUSTER_ID=buPgrSh4T268bk7xIuF2NQ
+#if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
+#  echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
+#  exit 1
+#fi
 
 # Create properties file for communicating with MDS
 rm -f temp.properties
 cp client.properties temp.properties
 cat <<EOF >> temp.properties
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="alice" password="alice-password" metadataServerUrls="$URL";
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="$USERNAME" password="$PASSWORD" metadataServerUrls="$URL";
 EOF
 
 # Create a role binding for admin
@@ -107,16 +113,15 @@ EOF
 # --role SystemAdmin \
 # --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-# Should fail
-export CLASSPATH=$CONFLUENT_HOME/share/java/authorizer-5.3.0-ce-SNAPSHOT.jar:$CONFLUENT_HOME/share/java/kafka-client-plugins-5.3.0-ce-SNAPSHOT.jar
+export CLASSPATH=~/code/ce-kafka/*
 
 kafka-topics \
-  --bootstrap-server localhost:9092 \
+  --bootstrap-server $BROKER \
   --create \
   --topic test-topic-1 \
   --replication-factor 1 \
   --partitions 3 \
-  --command-config temp.properties
+  --command-config ~/temp.properties
 
 # Create a role binding to create topic
 # confluent iam rolebinding create \
