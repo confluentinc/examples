@@ -10,7 +10,7 @@ This directory includes examples of Kafka client applications connecting to [Con
 | [![](images/scala.png)](scala/)   | [![](images/confluent-cli.png)](confluent-cli/) | [![](images/ruby.png)](ruby/)     |
 | [![](images/groovy.png)](groovy/) | [![](images/kotlin.png)](kotlin/)               | [![](images/nodejs.png)](nodejs/) |
 | [![](images/kafkacat.jpg)](kafkacat/) | [![](images/dotnet.png)](csharp/)           | [![](images/c.png)](c/) |
-| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [ksql-datagen](ksql-datagen/) | |
+| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [ksql-datagen](ksql-datagen/) | [![](images/rust.png)](rust/) |
 
 ## Confluent Cloud and Confluent Cloud Schema Registry
 
