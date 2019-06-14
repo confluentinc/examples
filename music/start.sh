@@ -10,7 +10,7 @@ check_running_cp 5.1 || exit
 ./stop.sh
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
-confluent start
+confluent local start
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 (cd kafka-streams-examples && git checkout 5.2.1-post)

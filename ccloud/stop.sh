@@ -13,7 +13,7 @@ DELTA_CONFIGS_DIR="delta_configs"
 source delta_configs/env.delta
 
 # Kill processes
-confluent destroy
+confluent local destroy
 jps | grep DataGen | awk '{print $1;}' | xargs kill -9
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
 jps | grep SchemaRegistry | awk '{print $1;}' | xargs kill -9

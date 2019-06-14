@@ -7,7 +7,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version 5.1.2 or higher. It is provided as part of the [Confluent Platform](https://www.confluent.io/download/).
+* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version 5.3.0 or higher. It is provided as part of the [Confluent Platform](https://www.confluent.io/download/).
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
@@ -31,7 +31,7 @@ $ ccloud topic create test1
 * `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
 
 ```bash
-$ confluent produce test1 --cloud --property parse.key=true --property key.separator=,
+$ confluent local produce test1 --cloud --property parse.key=true --property key.separator=,
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -51,7 +51,7 @@ When you are done, press `<ctrl>-d`.
 * `--from-beginning`: print all messages from the beginning of the topic
 
 ```bash
-$ confluent consume test1 --cloud --property print.key=true --from-beginning     
+$ confluent local consume test1 --cloud --property print.key=true --from-beginning
 ```
 
 You should see the messages you typed in the previous step.
@@ -108,7 +108,7 @@ $ ccloud topic create test2
 * `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
 
 ```bash
-$ confluent produce test2 --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ confluent local produce test2 --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -129,7 +129,7 @@ When you are done, press `<ctrl>-d`.
 * `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
 
 ```bash
-$ confluent consume test2 --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+$ confluent local consume test2 --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 ```
 
 You should see the messages you typed in the previous step.

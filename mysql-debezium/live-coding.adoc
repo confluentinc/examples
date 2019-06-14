@@ -6,8 +6,8 @@
 
 [source,bash]
 ----
-confluent destroy
-confluent start
+confluent local destroy
+confluent local start
 ----
 
 === Prep MySQL
@@ -133,7 +133,7 @@ curl -i -X POST -H "Accept:application/json" \
 
 [source,bash]
 ----
-confluent status connectors|grep -v Writing| jq '.[]'|  xargs -I{connector} confluent status {connector}|  grep -v Writing| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'|  column -s : -t|  sed 's/\"//g'|  sort
+confluent local status connectors|grep -v Writing| jq '.[]'|  xargs -I{connector} confluent local status {connector}|  grep -v Writing| jq -c -M '[.name,.connector.state,.tasks[].state]|join(":|:")'|  column -s : -t|  sed 's/\"//g'|  sort
 mysql-source-demo-customers  |  RUNNING  |  RUNNING
 mysql-source-demo-customers-raw  |  RUNNING  |  RUNNING
 ----
@@ -194,12 +194,12 @@ Run consumer, one for raw, one for flattened :
 
 [source,bash]
 ----
-confluent consume asgard.demo.customers-raw --from-beginning --value-format avro
+confluent local consume asgard.demo.customers-raw --from-beginning --value-format avro
 ----
 
 [source,bash]
 ----
-confluent consume asgard.demo.customers --from-beginning --value-format avro
+confluent local consume asgard.demo.customers --from-beginning --value-format avro
 ----
 
 ==== Insert a row in MySQL, observe it in Kafka
