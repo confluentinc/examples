@@ -356,10 +356,15 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ##################################################
 
 echo -e "\n# Cleanup"
+echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
+echo "ccloud kafka topic delete $TOPIC1"
 ccloud kafka topic delete $TOPIC1
+echo "ccloud kafka topic delete $TOPIC2"
 ccloud kafka topic delete $TOPIC2
+echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
+echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
 rm -f "$LOG1"
 rm -f "$LOG2"
