@@ -121,6 +121,14 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
+echo -e "\n# Verify cluster is a Confluent Cloud Enterprise cluster"
+echo "ccloud kafka acl list"
+OUTPUT=$(ccloud kafka acl list 2>&1)
+if [[ "$OUTPUT" =~ "Confluent Cloud Professional does not support ACLs" ]]; then
+  echo "This demo does not work on a Confluent Cloud Professional cluster. Please run this demo in a Confluent Cloud Enterprise cluster." 
+  exit 1
+fi
+
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
 OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
@@ -161,7 +169,7 @@ echo -e "\n# Create an API key and secret for the new service account"
 echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
-API_SECRET_SA=$(echo "$OUTPUT" | grep "\| Secret" | awk '{print $4;}')
+API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
 echo -e "\n# Sleeping 90 seconds to wait for the user and service account key and secret to propagate"
 sleep 90
@@ -262,6 +270,8 @@ else
 fi
 
 echo -e "\n# Delete ACLs"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 
@@ -299,6 +309,8 @@ else
 fi
 
 echo -e "\n# Delete ACLs"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
 
@@ -309,10 +321,12 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 # The following steps configure ACLs to match topics using a wildcard
 ##################################################
 
+CONSUMER_GROUP="demo-consumer-1"
+
 echo -e "\n# Create ACLs for the consumer using a wildcard"
-echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
@@ -329,7 +343,9 @@ else
 fi
 
 echo -e "\n# Delete ACLs"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group java_example_group_1
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
 
@@ -340,10 +356,15 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ##################################################
 
 echo -e "\n# Cleanup"
+echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
+echo "ccloud kafka topic delete $TOPIC1"
 ccloud kafka topic delete $TOPIC1
+echo "ccloud kafka topic delete $TOPIC2"
 ccloud kafka topic delete $TOPIC2
+echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
+echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
 rm -f "$LOG1"
 rm -f "$LOG2"
