@@ -9,7 +9,7 @@ The MySQL Debezium demo shows an end-to-end streaming ETL with KSQL for stream p
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
 * MySQL
   * Validated on MacOS 10.14.3 with MySQL server version 5.7.25
   * [Enable binary log](http://debezium.io/docs/connectors/mysql/)
