@@ -45,7 +45,7 @@ $ docker-compose up -d --build
 
 Creating network "kafkaconnectdatagen_default" with the default driver
 Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.1
+Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
  ---> 4fbfbb11e4bf
 Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
  ---> Using cache
@@ -160,7 +160,7 @@ $ docker-compose up -d --build
 
 Creating network "kafkaconnectdatagen_default" with the default driver
 Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.1
+Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
  ---> 4fbfbb11e4bf
 Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
  ---> Using cache
