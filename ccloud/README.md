@@ -67,7 +67,7 @@ Development: false
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class

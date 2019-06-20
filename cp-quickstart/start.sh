@@ -9,7 +9,7 @@ check_running_cp 5.2 || exit
 ./stop.sh
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
-confluent start
+confluent local start
 sleep 10
 
 if is_ce; then
