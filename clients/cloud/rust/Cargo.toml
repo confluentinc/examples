@@ -1,0 +1,23 @@
+[package]
+name    = "rust-kafka-client-example"
+version = "0.1.0"
+authors = ["GRECO, FRANK <frank@confluent.io>"]
+edition = "2018"
+build   = "build.rs"
+
+[dependencies]
+futures = "0.1"
+tokio   = "0.1.21"
+clap    = "2.33.0"
+
+    [dependencies.rdkafka]
+    version     = "~0.21"
+    features    = ["ssl", "sasl"]
+
+[[bin]]
+name = "producer"
+path = "src/producer.rs"
+
+[[bin]]
+name = "consumer"
+path = "src/consumer.rs"
