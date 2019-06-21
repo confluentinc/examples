@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.3.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.3.0-beta190621193232
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.3.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-kafka:5.3.0-beta190621193232
     hostname: kafka
     container_name: kafka
     ports:
@@ -37,7 +37,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.3.0-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.3.0-beta190621193232
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -57,7 +57,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.3.0-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.3.0-beta190621193232
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -107,7 +107,7 @@ services:
       #KSQL_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.3.0-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.3.0-beta190621193232
     container_name: ksql-cli
     volumes:
       - $PWD/ksql.commands:/tmp/ksql.commands
@@ -118,7 +118,7 @@ services:
     tty: true
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.3.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-control-center:5.3.0-beta190621193232
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -153,7 +153,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
-    image: confluentinc/cp-kafka:5.3.0-SNAPSHOT
+    image: confluentinc/cp-kafka:5.3.0-beta190621193232
     hostname: kafka-create-topics
     container_name: kafka-create-topics
     depends_on:
@@ -209,7 +209,7 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0-beta190621193232.jar
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
       # Connect producer
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
@@ -262,7 +262,7 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0-beta190621193232.jar
       CONNECT_REQUEST_TIMEOUT_MS: 20000
       CONNECT_RETRY_BACKOFF_MS: 500
       # Connect worker
@@ -292,7 +292,7 @@ services:
   # This container is just to transfer Replicator jars to the Connect worker
   # It is not used as a Connect worker
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.3.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-replicator:5.3.0-beta190621193232
     hostname: replicator
     container_name: replicator
     volumes:
