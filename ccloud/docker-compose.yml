@@ -85,6 +85,7 @@ services:
       KSQL_KSQL_STREAMS_PRODUCER_REQUEST_TIMEOUT_MS: 300000
       KSQL_KSQL_STREAMS_PRODUCER_MAX_BLOCK_MS: 9223372036854775807
       KSQL_KSQL_STREAMS_REPLICATION_FACTOR: 3
+      KSQL_KSQL_INTERNAL_TOPIC_REPLICAS: 3
       KSQL_KSQL_SINK_REPLICAS: 3
       # Producer Confluent Monitoring Interceptors for Control Center streams monitoring
       KSQL_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
