@@ -6,7 +6,7 @@
 source config/demo.cfg
 
 check_env || exit 1
-check_running_cp 5.2 || exit
+check_running_cp 5.3 || exit
 
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   check_aws || exit
