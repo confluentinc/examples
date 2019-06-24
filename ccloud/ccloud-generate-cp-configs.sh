@@ -203,6 +203,7 @@ echo "ksql.streams.producer.confluent.batch.expiry.ms=9223372036854775807" >> $K
 echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
+echo "ksql.internal.topic.replicas=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
 echo -e "\n# Confluent Schema Registry configuration for KSQL Server" >> $KSQL_SERVER_DELTA
 while read -r line
