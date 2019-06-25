@@ -12,3 +12,4 @@ Confluent Platform offers a rich set of security features.
 # Examples
 
 * [Password Protection](password-protection)
+* [End-to-end security in Confluent Platform](https://github.com/confluentinc/cp-demo)
