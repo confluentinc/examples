@@ -39,6 +39,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [Music demo](music/README.md)                   |   [Y](music/README.md)   |   [Y](music/README.md)    | Stream Processing | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html)
 | [MySQL and Debezium](mysql-debezium/README.md) |   [Y](mysql-debezium/README.md)   |   [Y](https://github.com/confluentinc/demo-scene/tree/master/build-a-streaming-pipeline) | Data Pipelines | End-to-end streaming ETL with KSQL for stream processing using the [Debezium Connector for MySQL](http://debezium.io/docs/connectors/mysql/)
 | [Oracle, KSQL, Elasticsearch](https://github.com/confluentinc/demo-scene/blob/master/oracle-ksql-elasticsearch/oracle-ksql-elasticsearch-docker.adoc) |   N   |   Y    | Data Pipelines | Stream data from Oracle, enrich and filter with KSQL, and then stream into Elasticsearch
+| [Security](security/README.md) |  Y  |  N  | Confluent Platform | Examples of Confluent Platform security features including Password Protection
 | [Syslog](https://github.com/confluentinc/demo-scene/tree/master/syslog) |   N   |   Y    | Data Pipelines | Real-time syslog processing with Apache Kafka and KSQL: filtering logs, event-driven alerting, enriching events
 
 
