@@ -49,15 +49,17 @@ unset CONFLUENT_SECURITY_MASTER_KEY
 ##################################################
 # Generate the master key based on a passphrase
 ##################################################
+echo -e "\nconfluent secret master-key generate --passphrase @passphrase.txt --local-secrets-file $LOCAL_SECRETS_FILE"
 OUTPUT=$(confluent secret master-key generate --passphrase @passphrase.txt --local-secrets-file $LOCAL_SECRETS_FILE)
 if [[ $? != 0 ]]; then
   echo "Failed to create master-key. Please troubleshoot and run again"
   exit 1
 fi
 MASTER_KEY=$(echo "$OUTPUT" | grep '| Master Key' | awk '{print $5;}')
-echo "MASTER_KEY: $MASTER_KEY"
+#echo "MASTER_KEY: $MASTER_KEY"
 
 # Export the master key
+echo -e "\nexport CONFLUENT_SECURITY_MASTER_KEY=$MASTER_KEY"
 export CONFLUENT_SECURITY_MASTER_KEY=$MASTER_KEY
 
 ##################################################
@@ -67,35 +69,48 @@ export CONFLUENT_SECURITY_MASTER_KEY=$MASTER_KEY
 ##################################################
 cp $ORIGINAL_CONFIGURATION_FILE $CONFIGURATION_FILE
 
+echo -e "\nCurrent value of $CONFIG in $CONFIGURATION_FILE"
+grep "^$CONFIG" $CONFIGURATION_FILE
+
 # Explicitly specify which configuration parameters should be encrypted
+echo -e "\nconfluent secret file encrypt --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --config $CONFIG"
 confluent secret file encrypt --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --config $CONFIG
 
 ##################################################
 # Update the secret
 ##################################################
-# Check the metadata again
+# Check the secrets
+echo -e "\nCurrent value of $CONFIG in $CONFIGURATION_FILE"
 grep "^$CONFIG" $CONFIGURATION_FILE
+echo -e "\nCurrent value of $CONFIG in $LOCAL_SECRETS_FILE"
 grep $CONFIG $LOCAL_SECRETS_FILE
 
 # Updated the parameter value
+echo -e "\nconfluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --config \"${CONFIG}=newTopicName\""
 confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --config "${CONFIG}=newTopicName"
 
-# Check the metadata again
+# Check the secrets again
+echo -e "\nCurrent value of $CONFIG in $CONFIGURATION_FILE"
 grep "^$CONFIG" $CONFIGURATION_FILE
+echo -e "\nCurrent value of $CONFIG in $LOCAL_SECRETS_FILE"
 grep $CONFIG $LOCAL_SECRETS_FILE
 
 ##################################################
 # Decrypt the file
 ##################################################
 # Print the decrypted configuration values
+echo -e "\nconfluent secret file decrypt --local-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --output-file $OUTPUT_FILE"
 confluent secret file decrypt --local-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --output-file $OUTPUT_FILE
 cat $OUTPUT_FILE
 
 # Rotate datakey
+echo -e "\nconfluent secret file rotate --data-key --local-secrets-file $LOCAL_SECRETS_FILE --passphrase @passphrase.txt"
 confluent secret file rotate --data-key --local-secrets-file $LOCAL_SECRETS_FILE --passphrase @passphrase.txt
 
 # Print the decrypted configuration values
+echo -e "\nconfluent secret file decrypt --local-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --output-file $OUTPUT_FILE"
 confluent secret file decrypt --local-secrets-file $LOCAL_SECRETS_FILE --config-file $CONFIGURATION_FILE --output-file $OUTPUT_FILE
+echo -e "\nConfiguration decrypted to:"
 cat $OUTPUT_FILE
 
 ##################################################
