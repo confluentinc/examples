@@ -135,6 +135,30 @@ $ cat /path/to/secrets.txt
 connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CblF3k1ieNkFJzlJ51qAAA==,iv:dnZwEAm1rpLyf48pvy/T6w==,type:str]
 ----
 
+=== Trust but verify
+
+That's cool, but does it work?
+Try it out yourself.
+Run Kafka and start the modified connect worker with the encrypted value of `config.storage.topic=newTopicName`
+
+[source,bash]
+----
+# Start ZooKeeper and a Kafka broker
+$ confluent local start kafka
+
+# Run the modified connect worker
+$ connect-distributed connect-avro-distributed.properties > connect.stdout 2>&1 &
+
+# List the topics
+$ kafka-topics --bootstrap-server localhost:9092 --list
+__confluent.support.metrics
+__consumer_offsets
+_confluent-metrics
+connect-offsets
+connect-statuses
+newTopicName   <<<<<<<
+----
+
 === Going to production
 
 So far we have covered how to create the master encryption key and encrypt sensitive data in the configuration files.
