@@ -43,16 +43,16 @@ Therefore, instead of encrypting a password, we will encrypt a basic configurati
 
 === Generate the master encryption key based on a passphrase
 
-First choose your master encryption key passphrase, a phrase that is much longer than a typical password and is easily remembered as a string of words.
+First choose your master encryption key passphrase, a phrase that is much longer than a typical password and is easily remembered as a string of words, and enter this passphrase into a file to be passed into the CLI, to avoid logging history showing the passphrase.
 Then choose the location of where the secrets file will reside on your local host (not where the Confluent Platform services run).
 The secrets file will contain encrypted secrets for the master encryption key, data encryption key, and configuration parameters, along with their metadata such as which cipher was used for encryption.
 Now you are ready to generate the master encryption key:
 
 [source,bash]
 ----
-# passphrase: secure_your_data_with_Confluent_Platform_security
+# passphrase: /path/to/passphrase.txt
 # local-secrets-file: /path/to/secrets.txt
-$ confluent secret master-key generate --local-secrets-file /path/to/secrets.txt --passphrase secure_your_data_with_Confluent_Platform_security
+$ confluent secret master-key generate --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
 
 Save the master key. It cannot be retrieved later.
 +------------+----------------------------------------------+
@@ -60,6 +60,7 @@ Save the master key. It cannot be retrieved later.
 +------------+----------------------------------------------+
 ----
 
+As the output indicates, the master encryption key cannot be retrieved later so save it somewhere.
 Export this key into the environment on the local host, as well as every host that will have a configuration file with password protection:
 
 [source,bash]
@@ -73,7 +74,7 @@ Let's use a configuration parameter available in a configuration file example th
 We will encrypt the parameter `config.storage.topic` in `$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties`.
 
 First make a backup of this file, because the CLI currently does in-place modification on the original file.
-Then choose the location of where the secrets file will reside on the remote hosts where the Confluent Platform services run.
+Then choose the exact path for where the secrets file will reside on the remote hosts where the Confluent Platform services run.
 Now you are ready to encrypt this field:
 
 [source,bash]
@@ -117,11 +118,11 @@ config.storage.topic = connect-configs
 You may have a requirement to update sensitive data on a regular basis, to help them from getting stale.
 The configuration parameter `config.storage.topic` was originally set to `connect-configs`.
 If you need to change the value in the future, you can update it directly using the CLI.
-Let's say the new value is `newTopicName`.
+In the CLI below, pass in a file `/path/to/updated-config-and-value` that has written `config.storage.topic=newTopicName`, to avoid logging history showing the new value.
 
 [source,bash]
 ----
-$ confluent secret file update --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config config.storage.topic=newTopicName
+$ confluent secret file update --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config @/path/to/updated-config-and-value
 ----
 
 The configuration file `connect-avro-distributed.properties` does not change because it's just a pointer to the secrets file.
@@ -153,7 +154,7 @@ You can do either of these with the CLI, and the example blow is for rotating ju
 
 [source,bash]
 ----
-$ confluent secret file rotate --data-key --local-secrets-file /path/to/secrets.txt --passphrase secure_your_data_with_Confluent_Platform_security
+$ confluent secret file rotate --data-key --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
 ----
 
 == Next Steps

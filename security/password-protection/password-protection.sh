@@ -37,7 +37,7 @@ function cleanup() {
 
 
 # Source library
-. ../utils/helper.sh
+. ../../utils/helper.sh
 
 check_cli_v2 || exit 1
 
@@ -104,8 +104,8 @@ grep $CONFIG $LOCAL_SECRETS_FILE
 
 # Update the parameter value
 echo -e "\nUpdate the configuration parameter $CONFIG to a new value"
-echo -e "confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config \"${CONFIG}=newTopicName\""
-confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config "${CONFIG}=newTopicName"
+echo -e "confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config @new-config-value.txt"
+confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config @new-config-value.txt
 
 # Check the secrets again
 echo -e "\nvalue of $CONFIG in $MODIFIED_CONFIGURATION_FILE (this has not changed)"
