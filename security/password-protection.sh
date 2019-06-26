@@ -72,7 +72,7 @@ echo -e "export CONFLUENT_SECURITY_MASTER_KEY=$MASTER_KEY"
 export CONFLUENT_SECURITY_MASTER_KEY=$MASTER_KEY
 
 ##################################################
-# Encrypt a configuration file
+# Encrypt the value of a configuration parameter
 # - configuration file is a copy of $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
 # - configuration parameter is config.storage.topic
 ##################################################
@@ -92,7 +92,7 @@ grep "^$CONFIG" $MODIFIED_CONFIGURATION_FILE
 
 
 ##################################################
-# Update the secret
+# Update the value of the configuration parameter
 ##################################################
 # Check the secrets
 
