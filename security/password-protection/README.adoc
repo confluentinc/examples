@@ -17,7 +17,7 @@ Taking on a bit more complexity, you could encrypt data at the storage layer wit
 If needed you could also use the capabilities in link:https://cwiki.apache.org/confluence/display/KAFKA/KIP-226+-+Dynamic+Broker+Configuration#KIP-226-DynamicBrokerConfiguration-SecuringpasswordsinZooKeeper[KIP-226] to store encrypted passwords in ZooKeeper.
 
 Confluent Platform 5.3 now introduces a much simpler solution with data encryption at the application layer.
-We developed a new security feature called Password Protection that encrypts sensitive data within the configuration file itself.
+The Password Protection feature encrypts sensitive data within the configuration file itself.
 Instead of storing passwords or other sensitive data as clear text, password protection encrypts it within the configuration file itself.
 Password Protection uses "envelope encryption", which is a standard way to protect encrypt sensitive data in a highly secure method.
 First a user specifies a master passphrase which is used, along with a cryptographic salt value, to derive a master encryption key.
@@ -173,7 +173,7 @@ There are four required tasks:
 . Restart the services if they were already running.
 
 You may also have a requirement to rotate the master encryption key or data encryption key on a regular basis.
-You can do either of these with the CLI, and the example blow is for rotating just the data encryption key.
+You can do either of these with the CLI, and the example below is for rotating just the data encryption key.
 
 [source,bash]
 ----
