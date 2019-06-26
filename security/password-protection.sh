@@ -21,8 +21,6 @@
 #
 #   - Confluent Platform 5.3 or higher (https://www.confluent.io/download/)
 #   - Local install of the new Confluent CLI (v0.103.0 or above)
-#   - `timeout` installed on your host
-#   - `mvn` installed on your host
 #
 ################################################################################
 
@@ -42,8 +40,6 @@ function cleanup() {
 . ../utils/helper.sh
 
 check_cli_v2 || exit 1
-check_timeout || exit 1
-check_mvn || exit 1
 
 ##################################################
 # Initialize parameters
