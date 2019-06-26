@@ -162,11 +162,10 @@ newTopicName   <<<<<<<
 === Going to production
 
 So far we have covered how to create the master encryption key and encrypt sensitive data in the configuration files.
-We recommend that you operationalize this workflow by augmenting your orchestration tooling to distribute this to the destination hosts.
+We recommend that you operationalize this workflow by augmenting your orchestration tooling to distribute everything that you need for password protection to work to the destination hosts.
 These hosts may include Kafka brokers, Connect workers, Confluent Schema Registry instances, KSQL servers, Confluent Control Center, etc., any service using password encryption.
-The CLI is flexible to accommodate whatever secret distribution model you prefer.
-You can either do the secret generation and configuration modification on each destination host directly, or do it all one host and then distribute the secret data to the destination hosts.
-There are three tasks to distribute the secret data:
+The CLI is flexible to accommodate whatever secret distribution model you prefer: you can either do the secret generation and configuration modification on each destination host directly, or do it all a single host and then distribute the secret data to the destination hosts.
+There are four required tasks:
 
 . Export the master encryption key into the environment on every host that will have a configuration file with password protection.
 . Distribute the secrets file: copy the secrets file `/path/to/secrets.txt` from the local host on which you have been working to `/path/to/secrets-remote.txt` on the destination hosts.
