@@ -2,7 +2,7 @@
 
 # Overview
 
-Confluent Platform offers a rich set of security features.
+Demo security features in Confluent Platform.
 
 # Prerequisites
 
@@ -11,5 +11,6 @@ Confluent Platform offers a rich set of security features.
 
 # Examples
 
+* [ACLs for Confluent Cloud Enterprise](acl.sh)
 * [Password Protection](password-protection.sh)
 * [End-to-end security in Confluent Platform](https://github.com/confluentinc/cp-demo)
