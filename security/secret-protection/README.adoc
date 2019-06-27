@@ -1,4 +1,4 @@
-= Tutorial: Password Protection
+= Tutorial: Secret Protection
 
 == Introduction
 
@@ -17,9 +17,9 @@ Taking on a bit more complexity, you could encrypt data at the storage layer wit
 If needed you could also use the capabilities in link:https://cwiki.apache.org/confluence/display/KAFKA/KIP-226+-+Dynamic+Broker+Configuration#KIP-226-DynamicBrokerConfiguration-SecuringpasswordsinZooKeeper[KIP-226] to store encrypted passwords in ZooKeeper.
 
 Confluent Platform 5.3 now introduces a much simpler solution with data encryption at the application layer.
-The Password Protection feature encrypts sensitive data within the configuration file itself.
-Instead of storing passwords or other sensitive data as clear text, password protection encrypts it within the configuration file itself.
-Password Protection uses "envelope encryption", which is a standard way to protect encrypt sensitive data in a highly secure method.
+The Secret Protection feature encrypts sensitive data within the configuration file itself.
+Instead of storing passwords or other sensitive data as clear text, Secret Protection encrypts it within the configuration file itself.
+Secret Protection uses "envelope encryption", which is a standard way to protect encrypt sensitive data in a highly secure method.
 First a user specifies a master passphrase which is used, along with a cryptographic salt value, to derive a master encryption key.
 In turn, it is then used to generate a separate data encryption key.
 Both the master encryption key and the data encryption key are then used to encrypt the sensitive data in the configuration files, which the service can later decrypted thanks to link:https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=100829515[KIP-421] which supports automatic resolution of indirect variables.
@@ -61,7 +61,7 @@ Save the master key. It cannot be retrieved later.
 ----
 
 As the output indicates, the master encryption key cannot be retrieved later so save it somewhere.
-Export this key into the environment on the local host, as well as every host that will have a configuration file with password protection:
+Export this key into the environment on the local host, as well as every host that will have a configuration file with secret protection:
 
 [source,bash]
 ----
@@ -162,12 +162,12 @@ newTopicName   <<<<<<<
 === Going to production
 
 So far we have covered how to create the master encryption key and encrypt sensitive data in the configuration files.
-We recommend that you operationalize this workflow by augmenting your orchestration tooling to distribute everything that you need for password protection to work to the destination hosts.
+We recommend that you operationalize this workflow by augmenting your orchestration tooling to distribute everything that you need for secret protection to work to the destination hosts.
 These hosts may include Kafka brokers, Connect workers, Confluent Schema Registry instances, KSQL servers, Confluent Control Center, etc., any service using password encryption.
 The CLI is flexible to accommodate whatever secret distribution model you prefer: you can either do the secret generation and configuration modification on each destination host directly, or do it all a single host and then distribute the secret data to the destination hosts.
 There are four required tasks:
 
-. Export the master encryption key into the environment on every host that will have a configuration file with password protection.
+. Export the master encryption key into the environment on every host that will have a configuration file with secret protection.
 . Distribute the secrets file: copy the secrets file `/path/to/secrets.txt` from the local host on which you have been working to `/path/to/secrets-remote.txt` on the destination hosts.
 . Propagate the necessary configuration file changes: update the configuration file on all hosts so that the configuration parameter now has the tuple for secrets.
 . Restart the services if they were already running.
@@ -185,6 +185,6 @@ $ confluent secret file rotate --data-key --local-secrets-file /path/to/secrets.
 Explore our security tutorials to help you gain a deeper understanding:
 
 * link:https://docs.confluent.io/current/tutorials/security_tutorial.html[Security tutorial]: step-by-step example to enable SSL encryption, SASL authentication, and authorization on the Confluent Platform with monitoring via Confluent Control Center
-* link:https://github.com/confluentinc/examples/blob/DEVX-903/security/tutorial-password-protection.adoc[Password Protection Tutorial]: up-to-date tutorial with similar coverage to this blog post, along with an link:https://github.com/confluentinc/examples/blob/DEVX-903/security/password-protection.sh[automated demo] that programmatically runs through these steps
+* link:https://github.com/confluentinc/examples/blob/master/security/secret-protection/README.adoc[Secret Protection Tutorial]: up-to-date tutorial with similar coverage to this blog post, along with an link:https://github.com/confluentinc/examples/blob/master/security/secret-protection/demo-secret-protection.sh[automated demo] that programmatically runs through these steps
 
 Get started by link:https://www.confluent.io/download/[downloading Confluent Platform 5.3] today!

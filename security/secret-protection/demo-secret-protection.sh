@@ -5,8 +5,7 @@
 # Overview
 ################################################################################
 #
-# Demo the new Password Protection functionality
-# using the updated Confluent CLI
+# Demo Secret Protection functionality using the updated Confluent CLI
 #
 # Documentation accompanying this tutorial:
 #
@@ -15,7 +14,7 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./password-protection.sh
+#   ./demo-secret-protection.sh
 #
 # Requirements:
 #
