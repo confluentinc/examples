@@ -6,6 +6,8 @@ Compliance requirements often dictate that services should not store sensitive d
 This sensitive data may include passwords, such as in the configuration parameters `ssl.key.password`, `ssl.keystore.password`, `ssl.truststore.password`, or any other sensitive data in configuration files.
 For Apache Kafka in which services read configuration files on startup, the question arises how should you protect the sensitive data?
 
+image::images/secret-original.png[width=600]
+
 Before Confluent Platform 5.3, you would have considered:
 
 * restricting network access to the hosts running the services
@@ -24,6 +26,8 @@ First a user specifies a master passphrase which is used, along with a cryptogra
 In turn, it is then used to generate a separate data encryption key.
 Both the master encryption key and the data encryption key are then used to encrypt the sensitive data in the configuration files, which the service can later decrypted thanks to link:https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=100829515[KIP-421] which supports automatic resolution of indirect variables.
 Even if someone gains access to a configuration file, all they would be able to see are encrypted values and they have no way to decrypt them without knowing the master encryption key.
+
+image::images/secret-encrypted.png[width=700]
 
 We will step through a few examples to get you started with this feature.
 For a list of all relevant commands, please review link:https://docs.confluent.io/current/security/secrets.html[CLI reference].
