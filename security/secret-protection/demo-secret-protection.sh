@@ -56,8 +56,8 @@ cleanup
 ##################################################
 echo -e "\n----- Generate the master key -----"
 echo -e "\nGenerate the master key based on a passphrase"
-echo -e "confluent secret master-key generate --passphrase @passphrase.txt --local-secrets-file $LOCAL_SECRETS_FILE"
-OUTPUT=$(confluent secret master-key generate --passphrase @passphrase.txt --local-secrets-file $LOCAL_SECRETS_FILE)
+echo -e "confluent secret master-key generate --passphrase @etc/passphrase.txt --local-secrets-file $LOCAL_SECRETS_FILE"
+OUTPUT=$(confluent secret master-key generate --passphrase @etc/passphrase.txt --local-secrets-file $LOCAL_SECRETS_FILE)
 if [[ $? != 0 ]]; then
   echo "Failed to create master-key. Please troubleshoot and run again"
   exit 1
@@ -103,8 +103,8 @@ grep $CONFIG $LOCAL_SECRETS_FILE
 
 # Update the parameter value
 echo -e "\nUpdate the configuration parameter $CONFIG to a new value"
-echo -e "confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config @new-config-value.txt"
-confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config @new-config-value.txt
+echo -e "confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config @etc/new-config-value.txt"
+confluent secret file update --local-secrets-file $LOCAL_SECRETS_FILE --remote-secrets-file $REMOTE_SECRETS_FILE --config-file $MODIFIED_CONFIGURATION_FILE --config @etc/new-config-value.txt
 
 # Check the secrets again
 echo -e "\nvalue of $CONFIG in $MODIFIED_CONFIGURATION_FILE (this has not changed)"
@@ -126,8 +126,8 @@ cat $OUTPUT_FILE
 
 # Rotate datakey
 echo -e "\nRotate the datakey"
-echo -e "confluent secret file rotate --data-key --local-secrets-file $LOCAL_SECRETS_FILE --passphrase @passphrase.txt"
-confluent secret file rotate --data-key --local-secrets-file $LOCAL_SECRETS_FILE --passphrase @passphrase.txt
+echo -e "confluent secret file rotate --data-key --local-secrets-file $LOCAL_SECRETS_FILE --passphrase @etc/passphrase.txt"
+confluent secret file rotate --data-key --local-secrets-file $LOCAL_SECRETS_FILE --passphrase @etc/passphrase.txt
 
 # Print the decrypted configuration values
 echo -e "\nDecrypt the secret after the datakey has been rotated"
