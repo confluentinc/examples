@@ -6,10 +6,9 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 # Prerequisites
 
 * [kafkacat](https://github.com/edenhill/kafkacat) installed on your machine.  You must [build](https://github.com/edenhill/kafkacat#build) `kafkacat` from the latest master branch to get the `-F` functionality that makes it easy to pass in the configuration to your Confluent Cloud configuration file.
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
-
+* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
+* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
 
 # Example 1: Hello World!
 

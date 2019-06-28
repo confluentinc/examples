@@ -7,10 +7,9 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version 5.3.0 or higher. It is provided as part of the [Confluent Platform](https://www.confluent.io/download/).
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
+* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
+* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
 * Docker
 
 
