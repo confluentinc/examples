@@ -5,12 +5,14 @@ This directory includes projects demonstrating how to use the Scala producer and
 For more information, please see the [application development documentation](https://docs.confluent.io/current/api-javadoc.html)
 
 
+# Prerequisites
+
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
+* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
+* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
+
+
 # Quickstart
-
-Before running the examples, **you should setup the Confluent Cloud CLI** by running the [quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart.html#cloud-quickstart).
-
-
-
 
 1. Now we can turn our attention to the client examples in this directory.
 
