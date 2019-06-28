@@ -27,12 +27,12 @@ sleep 2
 
 # Write the contents of the file TABLE_LOCATIONS to a Topic, where the id is the message key and the name and sale are the message value.
 cat $TABLE_LOCATIONS | \
-confluent local produce $TOPIC \
+confluent local produce $TOPIC -- \
 --property parse.key=true \
 --property key.separator='|' &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local consume $TOPIC \
+confluent local consume $TOPIC -- \
 --from-beginning \
 --property print.key=true \
 --max-messages 10
@@ -52,7 +52,7 @@ confluent local unload $PACKAGE &>/dev/null
 confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local consume $TOPIC \
+confluent local consume $TOPIC -- \
 --from-beginning \
 --property print.key=true \
 --key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
@@ -73,7 +73,7 @@ confluent local unload $PACKAGE &>/dev/null
 confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local consume $TOPIC \
+confluent local consume $TOPIC -- \
 --value-format avro \
 --from-beginning \
 --property print.key=true \
@@ -94,7 +94,7 @@ confluent local unload $PACKAGE &>/dev/null
 confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local consume $TOPIC \
+confluent local consume $TOPIC -- \
 --value-format avro \
 --from-beginning \
 --property print.key=true \
@@ -116,7 +116,7 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local consume $TOPIC \
+confluent local consume $TOPIC -- \
 --value-format avro \
 --key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
 --from-beginning \
@@ -138,7 +138,7 @@ confluent local unload $PACKAGE &>/dev/null
 confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local consume $TOPIC \
+confluent local consume $TOPIC -- \
 --value-format avro \
 --from-beginning \
 --property print.key=true \

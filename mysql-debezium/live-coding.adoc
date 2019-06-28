@@ -194,12 +194,12 @@ Run consumer, one for raw, one for flattened :
 
 [source,bash]
 ----
-confluent local consume asgard.demo.customers-raw --from-beginning --value-format avro
+confluent local consume asgard.demo.customers-raw -- --from-beginning --value-format avro
 ----
 
 [source,bash]
 ----
-confluent local consume asgard.demo.customers --from-beginning --value-format avro
+confluent local consume asgard.demo.customers -- --from-beginning --value-format avro
 ----
 
 ==== Insert a row in MySQL, observe it in Kafka
