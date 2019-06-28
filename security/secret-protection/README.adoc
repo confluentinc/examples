@@ -4,33 +4,33 @@
 
 Compliance requirements often dictate that services should not store sensitive data as clear text in files.
 This sensitive data may include passwords, such as in the configuration parameters `ssl.key.password`, `ssl.keystore.password`, `ssl.truststore.password`, or any other sensitive data in configuration files.
-For Apache Kafka in which services read configuration files on startup, the question arises how should you protect the sensitive data?
+For Apache Kafka^®^ in which services read configuration files on startup, the question arises—how should you protect sensitive data?
 
 image::images/secret-original.png[width=600]
 
 Before Confluent Platform 5.3, you would have considered:
 
-* restricting network access to the hosts running the services
-* setting permissions on the configuration files using standard linux `ugo/rwx` settings
-* adding OS-level ACLs for more user granularity
+* Restricting network access to the hosts running the services
+* Setting permissions on the configuration files using standard linux `ugo/rwx` settings
+* Adding OS-level ACLs for more user granularity
 
-There was still a risk that a bad actor—a rogue employee or shoulder-surfer or hacker—could gain access to those files that contain that clear text sensitive data.
-Taking on a bit more complexity, you could encrypt data at the storage layer with encrypted volumes with specialized kernel modules that supported process-based ACLs.
-If needed you could also use the capabilities in link:https://cwiki.apache.org/confluence/display/KAFKA/KIP-226+-+Dynamic+Broker+Configuration#KIP-226-DynamicBrokerConfiguration-SecuringpasswordsinZooKeeper[KIP-226] to store encrypted passwords in ZooKeeper.
+There was still a risk that a bad actor—a rogue employee, shoulder surfer, or hacker—could gain access to those files that contain that clear text sensitive data.
+Taking on a bit more complexity, you could encrypt data at the storage layer with encrypted volumes using specialized kernel modules that support process-based ACLs.
+If needed, you could also use the capabilities in link:https://cwiki.apache.org/confluence/display/KAFKA/KIP-226+-+Dynamic+Broker+Configuration#KIP-226-DynamicBrokerConfiguration-SecuringpasswordsinZooKeeper[KIP-226] to store encrypted passwords in ZooKeeper.
 
 Confluent Platform 5.3 now introduces a much simpler solution with data encryption at the application layer.
 The Secret Protection feature encrypts sensitive data within the configuration file itself.
 Instead of storing passwords or other sensitive data as clear text, Secret Protection encrypts it within the configuration file itself.
-Secret Protection uses "envelope encryption", which is a standard way to protect encrypt sensitive data in a highly secure method.
-First a user specifies a master passphrase which is used, along with a cryptographic salt value, to derive a master encryption key.
+Secret Protection uses _envelope encryption_, which is a standard way to protect encrypted sensitive data in a highly secure method.
+First, a user specifies a master passphrase that is used, along with a cryptographic salt value, to derive a master encryption key.
 In turn, it is then used to generate a separate data encryption key.
-Both the master encryption key and the data encryption key are then used to encrypt the sensitive data in the configuration files, which the service can later decrypted thanks to link:https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=100829515[KIP-421] which supports automatic resolution of indirect variables.
-Even if someone gains access to a configuration file, all they would be able to see are encrypted values and they have no way to decrypt them without knowing the master encryption key.
+Both the master encryption key and the data encryption key are then used to encrypt the sensitive data in the configuration files, which the service can later decrypt thanks to link:https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=100829515[KIP-421], which supports automatic resolution of indirect variables.
+Even if someone gains access to a configuration file, all they would be able to see are encrypted values, and they have no way to decrypt them without knowing the master encryption key.
 
 image::images/secret-encrypted.png[width=700]
 
 We will step through a few examples to get you started with this feature.
-For a list of all relevant commands, please review link:https://docs.confluent.io/current/security/secrets.html[CLI reference].
+For a list of all relevant commands, please review the link:https://docs.confluent.io/current/security/secrets.html[CLI reference].
 
 == Setup
 
