@@ -31,7 +31,7 @@ $ ccloud topic create test1
 * `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
 
 ```bash
-$ confluent local produce test1 --cloud --property parse.key=true --property key.separator=,
+$ confluent local produce test1 -- --cloud --property parse.key=true --property key.separator=,
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -51,7 +51,7 @@ When you are done, press `<ctrl>-d`.
 * `--from-beginning`: print all messages from the beginning of the topic
 
 ```bash
-$ confluent local consume test1 --cloud --property print.key=true --from-beginning
+$ confluent local consume test1 -- --cloud --property print.key=true --from-beginning
 ```
 
 You should see the messages you typed in the previous step.
@@ -108,7 +108,7 @@ $ ccloud topic create test2
 * `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
 
 ```bash
-$ confluent local produce test2 --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ confluent local produce test2 -- --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -129,7 +129,7 @@ When you are done, press `<ctrl>-d`.
 * `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
 
 ```bash
-$ confluent local consume test2 --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+$ confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 ```
 
 You should see the messages you typed in the previous step.
