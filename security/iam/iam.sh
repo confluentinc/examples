@@ -88,33 +88,55 @@ if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
   exit 1
 fi
 
+##################################################
+# Grant the SystemAdmin role to User:admin
+##################################################
+
+# Create a role binding for User:admin
+confluent iam rolebinding create \
+--principal User:admin \
+--role SystemAdmin \
+--kafka-cluster-id $KAFKA_CLUSTER_ID
+
+# List role bindings for User:admin
+confluent iam rolebinding list \
+--principal User:admin \
+--kafka-cluster-id $KAFKA_CLUSTER_ID
+
+##################################################
+# Create a topic
+##################################################
+
 # Create properties file for communicating with MDS
 rm -f temp.properties
 cp client.properties temp.properties
 cat <<EOF >> temp.properties
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="$USERNAME" password="$PASSWORD" metadataServerUrls="$MDS";
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="alice" password="alice1" metadataServerUrls="$MDS";
 EOF
 
-# Create a role binding for admin
-#confluent iam rolebinding create \
-# --principal User:admin-bob \
-# --role SystemAdmin \
-# --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-kafka-topics \
-  --bootstrap-server $BOOTSTRAP_SERVER \
-  --create \
-  --topic test-topic-1 \
-  --replication-factor 1 \
-  --partitions 3 \
-  --command-config temp.properties
+#kafka-topics \
+#  --bootstrap-server $BOOTSTRAP_SERVER \
+#  --create \
+#  --topic test-topic-1 \
+#  --replication-factor 1 \
+#  --partitions 3 \
+#  --command-config temp.properties
 
 # Create a role binding to create topic
 #confluent iam rolebinding create \
-# --principal User:my-user-name \
+# --principal User:alice \
 # --role ResourceOwner \
 # --resource Topic:topic1 \
 # --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+#kafka-topics \
+#  --bootstrap-server $BOOTSTRAP_SERVER \
+#  --create \
+#  --topic test-topic-1 \
+#  --replication-factor 1 \
+#  --partitions 3 \
+#  --command-config temp.properties
+
 
 
 ##################################################
