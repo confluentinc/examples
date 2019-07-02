@@ -22,10 +22,7 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./iam.sh <url to metadata server> <broker> <username> <password>
-#
-#   # Provide all arguments on command line, except password for which you will be prompted
-#   ./iam.sh <url to metadata server> <broker> <username>
+#   ./iam.sh <config>
 #
 # Requirements:
 #
@@ -34,40 +31,32 @@
 ################################################################################
 
 # Source library
-. ../utils/helper.sh
+. ../../utils/helper.sh
 
 export PATH="/Users/yeva/code/bin:$PATH"
 check_cli_v2 || exit 1
 check_jq || exit 1
 
+##################################################
+# Configure MDS
+##################################################
+cp $CONFLUENT_HOME/etc/kafka/server.properties server.properties.original
+cat kafka-server-delta.properties >> $CONFLUENT_HOME/etc/kafka/server.properties
+cp login.properties /tmp/login.properties
+
+# Generate keys
+openssl genrsa -out /tmp/tokenKeypair.pem 2048 
+openssl rsa -in /tmp/tokenKeypair.pem -outform PEM -pubout -out /tmp/tokenPublicKey.pem
+
+confluent local destroy
+confluent local start kafka
 
 ##################################################
-# Read URL, USERNAME, PASSWORD from command line arguments
-#
-#  Rudimentary argument processing and must be in order:
-#    <url to metadata server> <username> <password>
+# Read config
 ##################################################
-URL=$1
-BROKER=$2
-USERNAME=$3
-PASSWORD=$4
-if [[ -z "$URL" ]]; then
-  read -s -p "Metadata Server (MDS): " URL
-  echo ""
-fi
-if [[ -z "$BROKER" ]]; then
-  read -s -p "Broker: " BROKER
-  echo ""
-fi
-if [[ -z "$USERNAME" ]]; then
-  read -s -p "Username: " USERNAME
-  echo ""
-fi
-if [[ -z "$PASSWORD" ]]; then
-  read -s -p "Password: " PASSWORD
-  echo ""
-fi
-
+. config
+USERNAME=mds
+PASSWORD=mds1
 
 ##################################################
 # Log in to Metadata Server (MDS)
@@ -77,7 +66,7 @@ echo -e "\n# Login"
 OUTPUT=$(
 expect <<END
   log_user 1
-  spawn confluent login --url $URL
+  spawn confluent login --url $MDS
   expect "Username: "
   send "$USERNAME\r";
   expect "Password: "
@@ -93,38 +82,35 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 # Get Kafka cluster ID from ZooKeeper
-#KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
-KAFKA_CLUSTER_ID=buPgrSh4T268bk7xIuF2NQ
-#if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
-#  echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
-#  exit 1
-#fi
+KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
+if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
+  echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
+  exit 1
+fi
 
 # Create properties file for communicating with MDS
 rm -f temp.properties
 cp client.properties temp.properties
 cat <<EOF >> temp.properties
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="$USERNAME" password="$PASSWORD" metadataServerUrls="$URL";
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="$USERNAME" password="$PASSWORD" metadataServerUrls="$MDS";
 EOF
 
 # Create a role binding for admin
-# confluent iam rolebinding create \
+#confluent iam rolebinding create \
 # --principal User:admin-bob \
 # --role SystemAdmin \
 # --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-export CLASSPATH=~/code/ce-kafka/*
-
 kafka-topics \
-  --bootstrap-server $BROKER \
+  --bootstrap-server $BOOTSTRAP_SERVER \
   --create \
   --topic test-topic-1 \
   --replication-factor 1 \
   --partitions 3 \
-  --command-config ~/temp.properties
+  --command-config temp.properties
 
 # Create a role binding to create topic
-# confluent iam rolebinding create \
+#confluent iam rolebinding create \
 # --principal User:my-user-name \
 # --role ResourceOwner \
 # --resource Topic:topic1 \
@@ -137,4 +123,9 @@ kafka-topics \
 ##################################################
 
 echo -e "\n# Cleanup"
-#rm -f temp.properties
+cp server.properties.original $CONFLUENT_HOME/etc/kafka/server.properties
+rm server.properties.original
+rm /tmp/tokenKeyPair.pem
+rm /tmp/tokenPublicKey.pem
+rm /tmp/login.properties
+rm temp.properties

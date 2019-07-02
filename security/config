@@ -1,3 +1,0 @@
-broker=localhost:9092
-mds=localhost:8090
-zookeeper=localhost:2181

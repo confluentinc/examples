@@ -1,0 +1,3 @@
+MDS=http://localhost:8090
+BOOTSTRAP_SERVER=localhost:9092
+SCHEMA_REGISTRY=localhost:8081
