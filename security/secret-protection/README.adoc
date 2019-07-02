@@ -49,6 +49,9 @@ Export this key into the environment on the local host, as well as every host th
 $ export CONFLUENT_SECURITY_MASTER_KEY=Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao=
 ----
 
+To protect this environment variable in a production host, you can set the master encryption key at the process level instead of the global machine level.
+For example, you could set it in the systemd overrides for executed processes, restricting the environment directives file to root-only access.
+
 === Encrypt the value of a configuration parameter
 
 Let's use a configuration parameter available in a configuration file example that ships with Confluent Platform.
