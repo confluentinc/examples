@@ -41,38 +41,41 @@ check_jq || exit 1
 # Configure MDS
 ##################################################
 
+mkdir original_configs
 BANNER=$(cat <<-END
+
 
 ------------------------------------------------------
 The following lines are added by the IAM demo
 ------------------------------------------------------
+
 
 END
 )
 
 # Kafka broker
 cp $CONFLUENT_HOME/etc/kafka/server.properties original_configs/server.properties
-cat $BANNER >> $CONFLUENT_HOME/etc/kafka/server.properties
+echo "$BANNER" >> $CONFLUENT_HOME/etc/kafka/server.properties
 cat delta_configs/server.properties.delta >> $CONFLUENT_HOME/etc/kafka/server.properties
 
 # Schema Registry
 #cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties original_configs/schema-registry.properties
-#cat $BANNER >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+#echo "$BANNER" >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
 #cat delta_configs/schema-registry.properties.delta >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
 
 # Connect
 #cp $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties original_configs/connect-avro-distributed.properties
-#cat $BANNER >> $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
+#echo "$BANNER" >> $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
 #cat delta_configs/connect-avro-distributed.properties.delta >> $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
 
 # KSQL server
 #cp $CONFLUENT_HOME/etc/ksql/ksql-server.properties original_configs/ksql-server.properties
-#cat $BANNER >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+#echo "$BANNER" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 #cat delta_configs/ksql-server.properties.delta >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
 
 # Control Center
 #cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties original_configs/control-center-dev.properties
-#cat $BANNER >> $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
+#echo $BANNER >> $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
 #cat delta_configs/control-center-dev.properties.delta >> $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
 
 # Copy login.properties
@@ -158,9 +161,15 @@ confluent iam rolebinding list \
 ##################################################
 
 # Create properties file for communicating with MDS
-rm -f temp.properties
-cp client.properties temp.properties
-cat <<EOF >> temp.properties
+rm -f client.properties
+CLIENT_PROPS=$(cat <<-END
+sasl.mechanism=OAUTHBEARER
+security.protocol=SASL_PLAINTEXT
+sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+END
+)
+echo "$CLIENT_PROPS" > client.properties
+cat <<EOF >> client.properties
 sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="client" password="client1" metadataServerUrls="$MDS";
 EOF
 
@@ -172,7 +181,7 @@ kafka-topics \
   --topic $TOPIC \
   --replication-factor 1 \
   --partitions 3 \
-  --command-config temp.properties
+  --command-config client.properties
 
 # Create a role binding to create topic
 confluent iam rolebinding create \
@@ -187,11 +196,11 @@ kafka-topics \
   --topic $TOPIC \
   --replication-factor 1 \
   --partitions 3 \
-  --command-config temp.properties
+  --command-config client.properties
 
 kafka-topics \
   --bootstrap-server $BOOTSTRAP_SERVER \
-  --list --command-config temp.properties
+  --list --command-config client.properties
 
 
 ##################################################
@@ -203,7 +212,7 @@ echo -e "\n# Cleanup"
 rm /tmp/tokenKeyPair.pem
 rm /tmp/tokenPublicKey.pem
 rm /tmp/login.properties
-#rm temp.properties
+#rm client.properties
 
 cp original_configs/server.properties $CONFLUENT_HOME/etc/kafka/server.properties
 rm original_configs/server.properties
