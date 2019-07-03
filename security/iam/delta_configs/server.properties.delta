@@ -1,12 +1,3 @@
-
-
-
-
-
-######################################################
-# The following lines are added by the IAM demo
-######################################################
-
 # Confluent Authorizer Settings
 # Semi-colon separated list of super users in the format <principalType>:<principalName>
 # For example super.users=User:admin;User:mds

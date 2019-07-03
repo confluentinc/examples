@@ -40,8 +40,42 @@ check_jq || exit 1
 ##################################################
 # Configure MDS
 ##################################################
-cp $CONFLUENT_HOME/etc/kafka/server.properties server.properties.original
+
+BANNER=$(cat <<-END
+
+------------------------------------------------------
+The following lines are added by the IAM demo
+------------------------------------------------------
+
+END
+)
+
+# Kafka broker
+cp $CONFLUENT_HOME/etc/kafka/server.properties original_configs/server.properties
+cat $BANNER >> $CONFLUENT_HOME/etc/kafka/server.properties
 cat delta_configs/server.properties.delta >> $CONFLUENT_HOME/etc/kafka/server.properties
+
+# Schema Registry
+#cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties original_configs/schema-registry.properties
+#cat $BANNER >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+#cat delta_configs/schema-registry.properties.delta >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+
+# Connect
+#cp $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties original_configs/connect-avro-distributed.properties
+#cat $BANNER >> $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
+#cat delta_configs/connect-avro-distributed.properties.delta >> $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
+
+# KSQL server
+#cp $CONFLUENT_HOME/etc/ksql/ksql-server.properties original_configs/ksql-server.properties
+#cat $BANNER >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+#cat delta_configs/ksql-server.properties.delta >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+
+# Control Center
+#cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties original_configs/control-center-dev.properties
+#cat $BANNER >> $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
+#cat delta_configs/control-center-dev.properties.delta >> $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
+
+# Copy login.properties
 cp login.properties /tmp/login.properties
 
 # Generate keys
@@ -166,9 +200,18 @@ kafka-topics \
 ##################################################
 
 echo -e "\n# Cleanup"
-cp server.properties.original $CONFLUENT_HOME/etc/kafka/server.properties
-rm server.properties.original
 rm /tmp/tokenKeyPair.pem
 rm /tmp/tokenPublicKey.pem
 rm /tmp/login.properties
 #rm temp.properties
+
+cp original_configs/server.properties $CONFLUENT_HOME/etc/kafka/server.properties
+rm original_configs/server.properties
+#cp original_configs/schema-registry.properties $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+#rm original_configs/schema-registry.properties
+#cp original_configs/connect-avro-distributed.properties $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
+#rm original_configs/connect-avro-distributed.properties
+#cp original_configs/ksql-server.properties $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+#rm original_configs/ksql-server.properties
+#cp original_configs/control-center-dev.properties $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
+#rm original_configs/control-center-dev.properties
