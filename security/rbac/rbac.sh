@@ -35,6 +35,7 @@
 . ../../utils/helper.sh
 
 export PATH="/Users/yeva/code/bin:$PATH"
+check_env || exit 1
 check_cli_v2 || exit 1
 check_jq || exit 1
 
@@ -129,10 +130,11 @@ fi
 
 # Access to the Kafka cluster
 get_cluster_id_kafka
+echo -e "\n# Bind the principal User:MySystemAdmin to the SystemAdmin role access to the Kafka cluster"
 echo "confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-# List role bindings for User:MySystemAdmin
+echo -e "\n# List the role bindings for User:MySystemAdmin"
 echo "confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -141,61 +143,56 @@ confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id
 #
 ##################################################
 TOPIC=test-topic-1
-echo "Create a topic called $TOPIC"
+echo -e "\n# Create a topic called $TOPIC"
 
-echo "  1st attempt to create the topic fails"
-kafka-topics \
-  --bootstrap-server $BOOTSTRAP_SERVER \
-  --create \
-  --topic $TOPIC \
-  --replication-factor 1 \
-  --partitions 3 \
-  --command-config delta_configs/client.properties.delta
+echo -e "\n# Try to create topic $TOPIC, before authorization (should fail)"
+echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta"
+OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta)
+if [[ $OUTPUT =~ "org.apache.kafka.common.errors.TopicAuthorizationException" ]]; then
+  echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:client is not allowed to create topics)"
+else
+  echo "FAIL: Something went wrong, check output"
+fi
 
-echo "  Create a role binding to the resource Topic:$TOPIC"
-confluent iam rolebinding create \
- --principal User:client \
- --role ResourceOwner \
- --resource Topic:$TOPIC \
- --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Bind the principal User:client to the ResourceOwner role for Topic:$TOPIC"
+echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo "  2nd attempt to create the topic succeeds"
-kafka-topics \
-  --bootstrap-server $BOOTSTRAP_SERVER \
-  --create \
-  --topic $TOPIC \
-  --replication-factor 1 \
-  --partitions 3 \
-  --command-config delta_configs/client.properties.delta
+echo -e "\n# Try to create topic $TOPIC, after authorization (should pass)"
+echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta"
+kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta
 
-echo "  Listing topics shows only topic $TOPIC"
-kafka-topics \
-  --bootstrap-server $BOOTSTRAP_SERVER \
-  --list --command-config delta_configs/client.properties.delta
+echo -e "\n# List topics, it should show only topic $TOPIC"
+echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config delta_configs/client.properties.delta"
+kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config delta_configs/client.properties.delta
 
 
 ##################################################
 # Produce/consume to a topic
-#
 ##################################################
-echo "Produce to topic $TOPIC"
+echo -e "\n# Produce to topic $TOPIC"
+echo "seq 10 | confluent local produce $TOPIC -- --producer.config delta_configs/client.properties.delta"
 seq 10 | confluent local produce $TOPIC -- --producer.config delta_configs/client.properties.delta
 
-echo "Consume from topic $TOPIC (RBAC endpoint)"
+echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should fail)"
+echo "confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10"
+OUTPUT=$(confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10 2>&1)
+if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
+  echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:client is not allowed access to consumer groups)"
+else
+  echo "FAIL: Something went wrong, check output"
+fi
+
+echo -e "#\n Create a role binding to the resource Group:console-consumer-"
+echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Consume from topic $TOPIC RBAC endpoint (should pass)"
+echo "confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10"
 confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10
 
-echo "Create a role binding to the resource Group:console-consumer-"
-confluent iam rolebinding create \
- --principal User:client \
- --role ResourceOwner \
- --resource Group:console-consumer- \
- --prefix \
- --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-echo "Consume from topic $TOPIC (RBAC endpoint)"
-confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10
-
-echo "Consume from topic $TOPIC (PLAINTEXT endpoint)"
+echo -e "\n# Consume from topic $TOPIC from PLAINTEXT endpoint"
+echo "confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
 confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
 
 ##################################################
