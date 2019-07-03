@@ -92,9 +92,6 @@ mkdir -p $DEST
 ################################################################################
 BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
 BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS/\\/}
-BOOTSTRAP_SERVERS_SR_FORMAT="SASL_SSL://${BOOTSTRAP_SERVERS}"
-BOOTSTRAP_SERVERS_SR_FORMAT=${BOOTSTRAP_SERVERS_SR_FORMAT//,/,SASL_SSL:\/\/}
-BOOTSTRAP_SERVERS_SR_FORMAT=${BOOTSTRAP_SERVERS_SR_FORMAT/\\/}
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CCLOUD_CONFIG | cut -d'=' -f2- )
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
@@ -169,13 +166,6 @@ rm -f $SR_CONFIG_DELTA
 while read -r line
 do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
-    if [[ ${line:0:9} == 'bootstrap' && ! "$line" =~ "SASL_SSL:" ]]; then
-      # Schema Registry requires security protocol, i.e. "SASL_SSL://", in kafkastore.bootstrap.servers
-      # Workaround until this issue is resolved https://github.com/confluentinc/schema-registry/issues/790
-      line=${line/=/=SASL_SSL:\/\/}
-      line=${line//,/,SASL_SSL:\/\/}
-      line=${line/\\/}
-    fi
     if [[ ${line:0:29} != 'basic.auth.credentials.source' && ${line:0:15} != 'schema.registry' ]]; then
       echo "kafkastore.$line" >> $SR_CONFIG_DELTA
     fi
@@ -213,6 +203,7 @@ echo "ksql.streams.producer.confluent.batch.expiry.ms=9223372036854775807" >> $K
 echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
 echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
+echo "ksql.internal.topic.replicas=3" >> $KSQL_SERVER_DELTA
 echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
 echo -e "\n# Confluent Schema Registry configuration for KSQL Server" >> $KSQL_SERVER_DELTA
 while read -r line
@@ -660,7 +651,6 @@ cat <<EOF >> $ENV_CONFIG
 export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
 export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
 export SASL_JAAS_CONFIG_PROPERTY_FORMAT='$SASL_JAAS_CONFIG_PROPERTY_FORMAT'
-export BOOTSTRAP_SERVERS_SR_FORMAT='$BOOTSTRAP_SERVERS_SR_FORMAT'
 export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
 export BASIC_AUTH_CREDENTIALS_SOURCE=$BASIC_AUTH_CREDENTIALS_SOURCE
 export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO

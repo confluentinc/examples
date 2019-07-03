@@ -9,7 +9,7 @@ The MySQL Debezium demo shows an end-to-end streaming ETL with KSQL for stream p
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.2](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
 * MySQL
   * Validated on MacOS 10.14.3 with MySQL server version 5.7.25
   * [Enable binary log](http://debezium.io/docs/connectors/mysql/)
@@ -25,6 +25,6 @@ After you run `./start.sh`:
 * If you are running Confluent Platform, open your browser and navigate to the Control Center web interface Monitoring -> Data streams tab at http://localhost:9021/monitoring/streams to see throughput and latency performance of the KSQL queries
 * If you are running Confluent Platform, use Control Center to view and create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`.
 * Navigate to the Kibana dashboard at http://localhost:5601/app/kibana#/dashboard/Ratings
-* Consult [live-coding.adoc](https://github.com/confluentinc/examples/blob/5.2.1-post/mysql-debezium/live-coding.adoc#show-cdc-in-action) to inspect the topics.
+* Consult [live-coding.adoc](https://github.com/confluentinc/examples/blob/5.3.0-SNAPSHOT-post/mysql-debezium/live-coding.adoc#show-cdc-in-action) to inspect the topics.
 
 ![image](images/kibana-dashboard.png)

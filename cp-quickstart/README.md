@@ -7,7 +7,7 @@ The Confluent Platform Quickstart demo is the automated version of the [Confluen
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.2](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
 
 # What Should I see?
 

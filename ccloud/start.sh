@@ -5,7 +5,7 @@
 
 check_env || exit 1
 check_jq || exit 1
-check_running_cp 5.2 || exit 1
+check_running_cp 5.3 || exit 1
 check_ccloud || exit 1
 check_ccloud_v1 || exit 1
 
@@ -17,8 +17,8 @@ fi
 ./stop.sh
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
-confluent start connect
-CONFLUENT_CURRENT=`confluent current | tail -1`
+confluent local start connect
+CONFLUENT_CURRENT=`confluent local current | tail -1`
 
 . ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then

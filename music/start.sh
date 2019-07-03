@@ -5,17 +5,17 @@
 
 check_env || exit 1
 check_mvn || exit 1
-check_running_cp 5.2 || exit
+check_running_cp 5.3 || exit 
 
 ./stop.sh
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
-confluent start
+confluent local start
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-(cd kafka-streams-examples && git checkout 5.2.1-post)
-[[ -f "kafka-streams-examples/target/kafka-streams-examples-5.2.1-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
-java -cp kafka-streams-examples/target/kafka-streams-examples-5.2.1-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
+(cd kafka-streams-examples && git checkout 5.2.2-post)
+[[ -f "kafka-streams-examples/target/kafka-streams-examples-5.2.2-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
+java -cp kafka-streams-examples/target/kafka-streams-examples-5.2.2-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
 
 sleep 5
 

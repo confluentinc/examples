@@ -108,9 +108,10 @@ function check_gcp_creds() {
 }
 
 function check_running_cp() {
+  check_curl
   expected_version=$1
 
-  actual_version=$( confluent version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
+  actual_version=$( confluent local version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
   if [[ $expected_version != $actual_version ]]; then
     echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
@@ -120,13 +121,13 @@ function check_running_cp() {
 }
 
 function is_ce() {
-  type=$( confluent version | tail -1 | awk -F: '{print $1;}' )
+  type=$( confluent local version | tail -1 | awk -F: '{print $1;}' )
   if [[ "$type" == "Confluent Platform" ]]; then
     return 0
   elif [[ "$type" == "Confluent Community software" ]]; then
     return 1
   else
-    echo -e "\nCannot determine if Confluent Platform or Confluent Community software from `confluent version`. Assuming Confluent Community\n"
+    echo -e "\nCannot determine if Confluent Platform or Confluent Community software from `confluent local version`. Assuming Confluent Community\n"
     return 1
   fi
 }
@@ -243,6 +244,14 @@ function check_mysql() {
     exit 1
   fi
 
+  return 0
+}
+
+function check_curl() {
+  if [[ $(type curl 2>&1) =~ "not found" ]]; then
+    echo "'curl' is not found.  Install curl to continue"
+    exit 1
+  fi
   return 0
 }
 

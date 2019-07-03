@@ -6,7 +6,7 @@
 source config/demo.cfg
 
 check_env || exit 1
-check_running_cp 5.2 || exit
+check_running_cp 5.3 || exit
 
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   check_aws || exit
@@ -31,12 +31,12 @@ fi
 
 # Option 2: local Confluent SR
 SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
-confluent start schema-registry
+confluent local start schema-registry
 #---------------------------------
 
 # Generate CCloud configurations
 ../ccloud/ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
-CONFLUENT_CURRENT=`confluent current | tail -1`
+CONFLUENT_CURRENT=`confluent local current | tail -1`
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 

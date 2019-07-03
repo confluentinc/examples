@@ -4,7 +4,6 @@ import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS_ENRICHED;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.PAYMENTS;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.MIN;
 import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.addShutdownHookAndBlock;
 import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.baseStreamsConfig;
 import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.parseArgsAndConfigure;
@@ -17,6 +16,9 @@ import io.confluent.examples.streams.avro.microservices.Payment;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import org.apache.kafka.streams.KafkaStreams.State;
 import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.JoinWindows;
 import org.apache.kafka.streams.kstream.Joined;
@@ -24,6 +26,8 @@ import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.time.Duration;
 
 
 /**
@@ -47,8 +51,23 @@ public class EmailService implements Service {
   public void start(final String bootstrapServers, final String stateDir) {
     streams = processStreams(bootstrapServers, stateDir);
     streams.cleanUp(); //don't do this in prod as it clears your state stores
+    final CountDownLatch startLatch = new CountDownLatch(1);
+    streams.setStateListener((newState, oldState) -> {
+      if (newState == State.RUNNING && oldState == State.REBALANCING) {
+        startLatch.countDown();
+      }
+
+    });
     streams.start();
+    try {
+      if (!startLatch.await(60, TimeUnit.SECONDS)) {
+        throw new RuntimeException("Streams never finished rebalancing on startup");
+      }
+    } catch (final InterruptedException e) {
+       Thread.currentThread().interrupt();
+    }
     log.info("Started Service " + SERVICE_APP_ID);
+
   }
 
   private KafkaStreams processStreams(final String bootstrapServers, final String stateDir) {
@@ -74,7 +93,7 @@ public class EmailService implements Service {
     //Join the two streams and the table then send an email for each
     orders.join(payments, EmailTuple::new,
         //Join Orders and Payments streams
-        JoinWindows.of(MIN), serdes)
+        JoinWindows.of(Duration.ofMinutes(1)), serdes)
 
             // TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
             // 1) the GlobalKTable for the stream-table join

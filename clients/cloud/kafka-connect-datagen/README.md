@@ -7,10 +7,10 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 # Prerequisites
 
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version 5.1.2 or higher. It is provided as part of the [Confluent Platform](https://www.confluent.io/download/).
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
+* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version `v0.119.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
+* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
+* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
 * Docker
 
 
@@ -45,7 +45,7 @@ $ docker-compose up -d --build
 
 Creating network "kafkaconnectdatagen_default" with the default driver
 Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.1
+Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
  ---> 4fbfbb11e4bf
 Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
  ---> Using cache
@@ -160,7 +160,7 @@ $ docker-compose up -d --build
 
 Creating network "kafkaconnectdatagen_default" with the default driver
 Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.1
+Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
  ---> 4fbfbb11e4bf
 Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
  ---> Using cache

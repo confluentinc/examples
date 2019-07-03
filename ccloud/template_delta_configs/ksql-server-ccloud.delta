@@ -25,6 +25,7 @@ ksql.streams.producer.confluent.batch.expiry.ms=9223372036854775807
 ksql.streams.producer.request.timeout.ms=300000
 ksql.streams.producer.max.block.ms=9223372036854775807
 ksql.streams.replication.factor=3
+ksql.internal.topic.replicas=3
 ksql.sink.replicas=3
 
 # Confluent Schema Registry configuration for KSQL Server

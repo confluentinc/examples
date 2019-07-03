@@ -9,7 +9,7 @@ check_jot || exit 1
 check_netstat || exit 1
 check_running_elasticsearch 5.6.5 || exit 1
 check_running_kibana || exit 1
-check_running_cp 5.2 || exit 1
+check_running_cp 5.3 || exit 1
 
 ./stop.sh
 
@@ -19,7 +19,7 @@ if [[ $? != 0 ]]; then
 fi
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
-confluent start
+confluent local start
 sleep 5
 
 # Get random port number
@@ -61,10 +61,10 @@ COUNT_JUMPERS=20
 
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
 prep_sqltable_customers
-if is_ce; then confluent config jdbc-customers -d ./connectors/connector_jdbc_customers.config; else confluent config jdbc-customers -d ./connectors/connector_jdbc_customers_oss.config; fi
+if is_ce; then confluent local config jdbc-customers -d ./connectors/connector_jdbc_customers.config; else confluent local config jdbc-customers -d ./connectors/connector_jdbc_customers_oss.config; fi
 
 # Sink Connector -> Elasticsearch -> Kibana
-if is_ce; then confluent config elasticsearch -d ./connectors/connector_elasticsearch.config; else confluent config elasticsearch -d ./connectors/connector_elasticsearch_oss.config; fi
+if is_ce; then confluent local config elasticsearch -d ./connectors/connector_elasticsearch.config; else confluent local config elasticsearch -d ./connectors/connector_elasticsearch_oss.config; fi
 ./dashboard/set_elasticsearch_mapping.sh
 ./dashboard/configure_kibana_dashboard.sh
 
