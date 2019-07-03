@@ -89,11 +89,12 @@ confluent local destroy
 confluent local start kafka
 
 ##################################################
-# Read config
+# Initialize
 ##################################################
-. config
 USERNAME=mds
 PASSWORD=mds1
+BOOTSTRAP_SERVER=localhost:9092
+MDS=http://localhost:8090
 
 ##################################################
 # Log in to Metadata Server (MDS)
@@ -122,6 +123,7 @@ fi
 # Grant the principal User:MySystemAdmin 
 # the SystemAdmin role
 # access to different service clusters
+#
 ##################################################
 
 # Access to the Kafka cluster
@@ -135,6 +137,7 @@ confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id
 
 ##################################################
 # Create a topic
+#
 ##################################################
 TOPIC=test-topic-1
 echo "Create a topic called $TOPIC"
@@ -148,7 +151,7 @@ kafka-topics \
   --partitions 3 \
   --command-config delta_configs/client.properties.delta
 
-echo "  Create a role binding to create topic $TOPIC"
+echo "  Create a role binding to the resource Topic:$TOPIC"
 confluent iam rolebinding create \
  --principal User:client \
  --role ResourceOwner \
@@ -169,6 +172,30 @@ kafka-topics \
   --bootstrap-server $BOOTSTRAP_SERVER \
   --list --command-config delta_configs/client.properties.delta
 
+
+##################################################
+# Produce/consume to a topic
+#
+##################################################
+echo "Produce to topic $TOPIC"
+seq 10 | confluent local produce $TOPIC -- --producer.config delta_configs/client.properties.delta
+
+echo "Consume from topic $TOPIC (RBAC endpoint)"
+confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10
+
+echo "Create a role binding to the resource Group:console-consumer-"
+confluent iam rolebinding create \
+ --principal User:client \
+ --role ResourceOwner \
+ --resource Group:console-consumer- \
+ --prefix \
+ --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo "Consume from topic $TOPIC (RBAC endpoint)"
+confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10
+
+echo "Consume from topic $TOPIC (PLAINTEXT endpoint)"
+confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
 
 ##################################################
 # Cleanup
