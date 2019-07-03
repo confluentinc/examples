@@ -308,3 +308,12 @@ function validate_confluent_cloud_schema_registry() {
   fi
   return 0
 }
+
+function get_cluster_id_kafka () { 
+  KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
+  if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
+    echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}

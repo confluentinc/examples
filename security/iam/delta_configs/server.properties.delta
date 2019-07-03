@@ -1,0 +1,57 @@
+
+
+
+
+
+######################################################
+# The following lines are added by the IAM demo
+######################################################
+
+# Confluent Authorizer Settings
+# Semi-colon separated list of super users in the format <principalType>:<principalName>
+# For example super.users=User:admin;User:mds
+super.users=User:ANONYMOUS;User:mds
+
+# MDS Server Settings
+# Enable all authenticated users to connect to the HTTP service.
+confluent.metadata.server.authentication.roles=**
+confluent.metadata.topic.replication.factor=1
+
+# MDS Token Service Settings
+confluent.metadata.server.token.key.path=/tmp/tokenKeypair.pem
+confluent.metadata.server.token.signature.algorithm=RS256
+confluent.metadata.server.public.key.path=/tmp/tokenPublicKey.pem
+
+# Configure the RBAC Metadata Service authorizer
+authorizer.class.name=io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
+confluent.authorizer.access.rule.providers=ACL,RBAC
+confluent.authorizer.scope=myCluster
+confluent.authorizer.metadata.provider=RBAC
+confluent.metadata.server.scope=
+# Bind Metadata Service HTTP service to port 8090
+confluent.metadata.server.listeners=http://0.0.0.0:8090
+# Configure HTTP service advertised hostname. Set this to http://127.0.0.1:8090 if running locally.
+confluent.metadata.server.advertised.listeners=http://127.0.0.1:8090
+
+# HashLoginService Initializer
+confluent.metadata.server.hash.login.path=/tmp/login.properties
+confluent.metadata.server.rest.servlet.initializor.classes=io.confluent.rbacapi.login.initializer.InstallHashLoginServiceSecurityHandler
+
+# Add named listener RBAC to existing listeners and advertised.listeners
+listeners=PLAINTEXT://:9093,RBAC://:9092
+advertised.listeners=PLAINTEXT://localhost:9093,RBAC://localhost:9092
+ 
+# Add protocol mapping for newly added named listener RBAC
+listener.security.protocol.map=PLAINTEXT:PLAINTEXT,RBAC:SASL_PLAINTEXT
+
+listener.name.rbac.sasl.enabled.mechanisms=OAUTHBEARER
+ 
+# Configure the public key used to verify RBAC Metadata Service signatures
+# Note: username, password and metadataServerUrls must be set if used for inter-broker communication
+listener.name.rbac.oauthbearer.sasl.jaas.config= \
+    org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required \
+        publicKeyPath="/tmp/tokenPublicKey.pem";
+# Set SASL callback handler for verifying authentication token signatures
+listener.name.rbac.oauthbearer.sasl.server.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerValidatorCallbackHandler
+# Set SASL callback handler for handling tokens on login. This is essentially a noop if not used for inter-broker communication.
+listener.name.rbac.oauthbearer.sasl.login.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerServerLoginCallbackHandler

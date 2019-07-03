@@ -41,7 +41,7 @@ check_jq || exit 1
 # Configure MDS
 ##################################################
 cp $CONFLUENT_HOME/etc/kafka/server.properties server.properties.original
-cat kafka-server-delta.properties >> $CONFLUENT_HOME/etc/kafka/server.properties
+cat delta_configs/server.properties.delta >> $CONFLUENT_HOME/etc/kafka/server.properties
 cp login.properties /tmp/login.properties
 
 # Generate keys
@@ -50,6 +50,9 @@ openssl rsa -in /tmp/tokenKeypair.pem -outform PEM -pubout -out /tmp/tokenPublic
 
 confluent local destroy
 confluent local start kafka
+
+# Get KAFKA_CLUSTER_ID
+get_cluster_id_kafka
 
 ##################################################
 # Read config
@@ -81,26 +84,39 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
   exit 1
 fi
 
-# Get Kafka cluster ID from ZooKeeper
-KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
-if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
-  echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
-  exit 1
-fi
-
 ##################################################
-# Grant the SystemAdmin role to User:admin
+# Grant the principal User:MySystemAdmin 
+# the SystemAdmin role
+# access to different service clusters
 ##################################################
 
-# Create a role binding for User:admin
+# Access to the Kafka cluster
 confluent iam rolebinding create \
---principal User:admin \
+--principal User:MySystemAdmin \
 --role SystemAdmin \
 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-# List role bindings for User:admin
+# Access to the Schema Registry cluster
+confluent iam rolebinding create \
+--principal User:MySystemAdmin \
+--role SystemAdmin \
+--kafka-cluster-id $KAFKA_CLUSTER_ID
+
+# Access to the Connect cluster
+confluent iam rolebinding create \
+--principal User:MySystemAdmin \
+--role SystemAdmin \
+--kafka-cluster-id $KAFKA_CLUSTER_ID
+
+# Access to the KSQL cluster
+confluent iam rolebinding create \
+--principal User:MySystemAdmin \
+--role SystemAdmin \
+--kafka-cluster-id $KAFKA_CLUSTER_ID
+
+# List role bindings for User:MySystemAdmin
 confluent iam rolebinding list \
---principal User:admin \
+--principal User:MySystemAdmin \
 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
@@ -111,32 +127,37 @@ confluent iam rolebinding list \
 rm -f temp.properties
 cp client.properties temp.properties
 cat <<EOF >> temp.properties
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="alice" password="alice1" metadataServerUrls="$MDS";
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="client" password="client1" metadataServerUrls="$MDS";
 EOF
 
-#kafka-topics \
-#  --bootstrap-server $BOOTSTRAP_SERVER \
-#  --create \
-#  --topic test-topic-1 \
-#  --replication-factor 1 \
-#  --partitions 3 \
-#  --command-config temp.properties
+TOPIC=test-topic-1
+
+kafka-topics \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --create \
+  --topic $TOPIC \
+  --replication-factor 1 \
+  --partitions 3 \
+  --command-config temp.properties
 
 # Create a role binding to create topic
-#confluent iam rolebinding create \
-# --principal User:alice \
-# --role ResourceOwner \
-# --resource Topic:topic1 \
-# --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create \
+ --principal User:client \
+ --role ResourceOwner \
+ --resource Topic:$TOPIC \
+ --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-#kafka-topics \
-#  --bootstrap-server $BOOTSTRAP_SERVER \
-#  --create \
-#  --topic test-topic-1 \
-#  --replication-factor 1 \
-#  --partitions 3 \
-#  --command-config temp.properties
+kafka-topics \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --create \
+  --topic $TOPIC \
+  --replication-factor 1 \
+  --partitions 3 \
+  --command-config temp.properties
 
+kafka-topics \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --list --command-config temp.properties
 
 
 ##################################################
@@ -150,4 +171,4 @@ rm server.properties.original
 rm /tmp/tokenKeyPair.pem
 rm /tmp/tokenPublicKey.pem
 rm /tmp/login.properties
-rm temp.properties
+#rm temp.properties
