@@ -88,9 +88,6 @@ openssl rsa -in /tmp/tokenKeypair.pem -outform PEM -pubout -out /tmp/tokenPublic
 confluent local destroy
 confluent local start kafka
 
-# Get KAFKA_CLUSTER_ID
-get_cluster_id_kafka
-
 ##################################################
 # Read config
 ##################################################
@@ -128,79 +125,49 @@ fi
 ##################################################
 
 # Access to the Kafka cluster
-confluent iam rolebinding create \
---principal User:MySystemAdmin \
---role SystemAdmin \
---kafka-cluster-id $KAFKA_CLUSTER_ID
-
-# Access to the Schema Registry cluster
-confluent iam rolebinding create \
---principal User:MySystemAdmin \
---role SystemAdmin \
---kafka-cluster-id $KAFKA_CLUSTER_ID
-
-# Access to the Connect cluster
-confluent iam rolebinding create \
---principal User:MySystemAdmin \
---role SystemAdmin \
---kafka-cluster-id $KAFKA_CLUSTER_ID
-
-# Access to the KSQL cluster
-confluent iam rolebinding create \
---principal User:MySystemAdmin \
---role SystemAdmin \
---kafka-cluster-id $KAFKA_CLUSTER_ID
+get_cluster_id_kafka
+echo "confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 # List role bindings for User:MySystemAdmin
-confluent iam rolebinding list \
---principal User:MySystemAdmin \
---kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
 # Create a topic
 ##################################################
-
-# Create properties file for communicating with MDS
-rm -f client.properties
-CLIENT_PROPS=$(cat <<-END
-sasl.mechanism=OAUTHBEARER
-security.protocol=SASL_PLAINTEXT
-sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
-END
-)
-echo "$CLIENT_PROPS" > client.properties
-cat <<EOF >> client.properties
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="client" password="client1" metadataServerUrls="$MDS";
-EOF
-
 TOPIC=test-topic-1
+echo "Create a topic called $TOPIC"
 
+echo "  1st attempt to create the topic fails"
 kafka-topics \
   --bootstrap-server $BOOTSTRAP_SERVER \
   --create \
   --topic $TOPIC \
   --replication-factor 1 \
   --partitions 3 \
-  --command-config client.properties
+  --command-config delta_configs/client.properties.delta
 
-# Create a role binding to create topic
+echo "  Create a role binding to create topic $TOPIC"
 confluent iam rolebinding create \
  --principal User:client \
  --role ResourceOwner \
  --resource Topic:$TOPIC \
  --kafka-cluster-id $KAFKA_CLUSTER_ID
 
+echo "  2nd attempt to create the topic succeeds"
 kafka-topics \
   --bootstrap-server $BOOTSTRAP_SERVER \
   --create \
   --topic $TOPIC \
   --replication-factor 1 \
   --partitions 3 \
-  --command-config client.properties
+  --command-config delta_configs/client.properties.delta
 
+echo "  Listing topics shows only topic $TOPIC"
 kafka-topics \
   --bootstrap-server $BOOTSTRAP_SERVER \
-  --list --command-config client.properties
+  --list --command-config delta_configs/client.properties.delta
 
 
 ##################################################
@@ -212,7 +179,6 @@ echo -e "\n# Cleanup"
 rm /tmp/tokenKeyPair.pem
 rm /tmp/tokenPublicKey.pem
 rm /tmp/login.properties
-#rm client.properties
 
 cp original_configs/server.properties $CONFLUENT_HOME/etc/kafka/server.properties
 rm original_configs/server.properties
