@@ -326,3 +326,12 @@ function get_cluster_id_kafka () {
   fi
   return 0
 }
+
+function get_cluster_id_schema_registry () {
+  SCHEMA_REGISTRY_CLUSTER_ID=$(curl --silent -u sr:sr1 http://localhost:8081/permissions | jq -r '.scope.clusters."schema-registry-cluster"')
+  if [[ -z "$SCHEMA_REGISTRY_CLUSTER_ID" ]]; then
+    echo "Failed to get Schema Registry cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}

@@ -61,9 +61,9 @@ echo "$BANNER" >> $CONFLUENT_HOME/etc/kafka/server.properties
 cat delta_configs/server.properties.delta >> $CONFLUENT_HOME/etc/kafka/server.properties
 
 # Schema Registry
-#cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties original_configs/schema-registry.properties
-#echo "$BANNER" >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
-#cat delta_configs/schema-registry.properties.delta >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+cp $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties original_configs/schema-registry.properties
+echo "$BANNER" >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+cat delta_configs/schema-registry.properties.delta >> $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
 
 # Connect
 #cp $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties original_configs/connect-avro-distributed.properties
@@ -122,13 +122,10 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 ##################################################
-# Grant the principal User:MySystemAdmin 
-# the SystemAdmin role
-# access to different service clusters
-#
+# Grant the principal User:MySystemAdmin the SystemAdmin role # access to different service clusters
 ##################################################
 
-# Access to the Kafka cluster
+# Grant access to the Kafka cluster
 get_cluster_id_kafka
 echo -e "\n# Bind the principal User:MySystemAdmin to the SystemAdmin role access to the Kafka cluster"
 echo "confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
@@ -139,8 +136,14 @@ echo "confluent iam rolebinding list --principal User:MySystemAdmin --kafka-clus
 confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
-# Create a topic
-#
+# Topics: create, producer, consume
+# - Bind the principal User:client to the ResourceOwner role for Topic:$TOPIC
+# - Create topic $TOPIC
+# - List topics, it should show only topic $TOPIC
+# - Produce to topic $TOPIC
+# - Create a role binding to the resource Group:console-consumer-
+# - Consume from topic $TOPIC from RBAC endpoint
+# - Consume from topic $TOPIC from PLAINTEXT endpoint
 ##################################################
 TOPIC=test-topic-1
 echo -e "\n# Create a topic called $TOPIC"
@@ -166,10 +169,6 @@ echo -e "\n# List topics, it should show only topic $TOPIC"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config delta_configs/client.properties.delta"
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config delta_configs/client.properties.delta
 
-
-##################################################
-# Produce/consume to a topic
-##################################################
 echo -e "\n# Produce to topic $TOPIC"
 echo "seq 10 | confluent local produce $TOPIC -- --producer.config delta_configs/client.properties.delta"
 seq 10 | confluent local produce $TOPIC -- --producer.config delta_configs/client.properties.delta
@@ -187,7 +186,7 @@ echo -e "#\n Create a role binding to the resource Group:console-consumer-"
 echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Consume from topic $TOPIC RBAC endpoint (should pass)"
+echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should pass)"
 echo "confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10"
 confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10
 
@@ -195,9 +194,32 @@ echo -e "\n# Consume from topic $TOPIC from PLAINTEXT endpoint"
 echo "confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
 confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
 
+
+##################################################
+# Schema Registry
+# - Bind the principal User:sr to the ResourceOwner role for Topic:_schemas
+# - Bring up Schema Registry
+##################################################
+
+echo -e "\n# Bind the principal User:sr to the ResourceOwner role for Topic:_schemas"
+echo "confluent iam rolebinding create --principal User:sr --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:sr --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Bring up Schema Registry"
+confluent local start schema-registry
+
+# Grant access to the Schema Registry cluster
+get_cluster_id_schema_registry
+echo -e "\n# Bind the principal User:MySystemAdmin to the SystemAdmin role access to the Schema Registry cluster"
+echo "confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
+echo -e "\n# List the role bindings for User:MySystemAdmin"
+echo "confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
 ##################################################
 # Cleanup
-#
 ##################################################
 
 echo -e "\n# Cleanup"
@@ -207,8 +229,8 @@ rm /tmp/login.properties
 
 cp original_configs/server.properties $CONFLUENT_HOME/etc/kafka/server.properties
 rm original_configs/server.properties
-#cp original_configs/schema-registry.properties $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
-#rm original_configs/schema-registry.properties
+cp original_configs/schema-registry.properties $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties
+rm original_configs/schema-registry.properties
 #cp original_configs/connect-avro-distributed.properties $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties
 #rm original_configs/connect-avro-distributed.properties
 #cp original_configs/ksql-server.properties $CONFLUENT_HOME/etc/ksql/ksql-server.properties
