@@ -5,7 +5,8 @@
 # Overview
 ################################################################################
 #
-# Demo the new Confluent CLI and Identiy Access Management (IAM) functionality
+# Demo the Role Based Access Control (RBAC) and Identity Access Management (IAM) functionality
+# with the new Confluent CLI
 #
 # Documentation accompanying this tutorial:
 #
@@ -22,7 +23,7 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./iam.sh <config>
+#   ./rbac.sh
 #
 # Requirements:
 #
