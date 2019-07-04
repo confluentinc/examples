@@ -7,7 +7,7 @@ function check_env() {
   fi
 
   if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Run 'export PATH=\${CONFLUENT_HOME}/bin:\${PATH}' and try again"
+    echo "'confluent' is not found. Since CP 5.3, the Confluent CLI is a separate download. Install the new Confluent CLI (https://docs.confluent.io/current/cli/installing.html) and try again"
     exit 1
   fi
 
