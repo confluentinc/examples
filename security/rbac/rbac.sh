@@ -97,6 +97,8 @@ USERNAME=mds
 PASSWORD=mds1
 BOOTSTRAP_SERVER=localhost:9092
 MDS=http://localhost:8090
+ADMIN_SYSTEM=MySystemAdmin
+CLIENT=client
 ADMIN_SCHEMA_REGISTRY=sr
 
 ##################################################
@@ -123,22 +125,22 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 ##################################################
-# Grant the principal User:MySystemAdmin the SystemAdmin role # access to different service clusters
+# Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
 ##################################################
 
 # Grant access to the Kafka cluster
 get_cluster_id_kafka
-echo -e "\n# Bind the principal User:MySystemAdmin to the SystemAdmin role access to the Kafka cluster"
-echo "confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:MySystemAdmin --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Bind the principal User:$ADMIN_SYSTEM to the SystemAdmin role access to the Kafka cluster"
+echo "confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for User:MySystemAdmin"
-echo "confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:MySystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# List the role bindings for User:$ADMIN_SYSTEM"
+echo "confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
 # Topics: create, producer, consume
-# - Bind the principal User:client to the ResourceOwner role for Topic:$TOPIC
+# - Bind the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC
 # - Create topic $TOPIC
 # - List topics, it should show only topic $TOPIC
 # - Produce to topic $TOPIC
@@ -153,14 +155,14 @@ echo -e "\n# Try to create topic $TOPIC, before authorization (should fail)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta"
 OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.TopicAuthorizationException" ]]; then
-  echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:client is not allowed to create topics)"
+  echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:$CLIENT is not allowed to create topics)"
 else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Bind the principal User:client to the ResourceOwner role for Topic:$TOPIC"
-echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Bind the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Try to create topic $TOPIC, after authorization (should pass)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config delta_configs/client.properties.delta"
@@ -178,14 +180,14 @@ echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should fail)"
 echo "confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10"
 OUTPUT=$(confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
-  echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:client is not allowed access to consumer groups)"
+  echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$CLIENT is not allowed access to consumer groups)"
 else
   echo "FAIL: Something went wrong, check output"
 fi
 
 echo -e "#\n Create a role binding to the resource Group:console-consumer-"
-echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should pass)"
 echo "confluent local consume test-topic-1 -- --consumer.config delta_configs/client.properties.delta --from-beginning --max-messages 10"
@@ -204,9 +206,9 @@ confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from
 # - Grant SecurityAdmin access to the Schema Registry cluster administrator $ADMIN_SCHEMA_REGISTRY
 # - Bind the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID
 # - List the role bindings for User:$ADMIN_SCHEMA_REGISTRY
-# - Bind the principal User:client to the ResourceOwner role for Subject:$SUBJECT
-# - List the role bindings for User:client
-# - Register new schema
+# - Bind the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT
+# - List the role bindings for User:$CLIENT
+# - Register new schema for subject $SUBJECT
 # - View schema
 ##################################################
 
@@ -231,26 +233,39 @@ echo -e "\n# Bind the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$S
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY"
+echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY for the Kafka cluster"
+echo "confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY for the Schema Registry cluster"
 echo "confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 SUBJECT="new-topic-value"
-echo -e "\n# Bind the principal User:client to the ResourceOwner role for Subject:$SUBJECT"
-echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+echo -e "\n# Register new schema for subject $SUBJECT (should fail)"
+echo "curl --silent -u $CLIENT:client1 -X POST -H \"Content-Type: application/vnd.schemaregistry.v1+json\" --data '"'{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}'"' http://localhost:8081/subjects/$SUBJECT/versions"
+OUTPUT=$(curl --silent -u $CLIENT:client1 -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}' http://localhost:8081/subjects/$SUBJECT/versions)
+if [[ $OUTPUT =~ "User cannot access the resource" ]]; then
+  echo "PASS: Schema registration failed due to 'User cannot access the resource'"
+else
+  echo "FAIL: Something went wrong, check output"
+fi
 
-echo -e "\n# List the role bindings for User:client"
-echo "confluent iam rolebinding list --principal User:client --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding list --principal User:client --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+echo -e "\n# Bind the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# Register new schema"
-echo 'curl -u '"$ADMIN_SCHEMA_REGISTRY"':sr1 -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}' http://localhost:8081/subjects/'"$SUBJECT"'/versions'
-curl -u $ADMIN_SCHEMA_REGISTRY:sr1 -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}' http://localhost:8081/subjects/$SUBJECT/versions
+echo -e "\n# List the role bindings for User:$CLIENT"
+echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
+echo -e "\n# Register new schema for subject $SUBJECT (should pass)"
+echo "curl --silent -u $CLIENT:client1 -X POST -H \"Content-Type: application/vnd.schemaregistry.v1+json\" --data '"'{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}'"' http://localhost:8081/subjects/$SUBJECT/versions"
+curl --silent -u $CLIENT:client1 -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}' http://localhost:8081/subjects/$SUBJECT/versions
 
 echo -e "\n\n# View new schema"
-echo "curl --silent -u client:client1 http://localhost:8081/subjects/$SUBJECT/versions/latest | jq ."
-curl --silent -u client:client1 http://localhost:8081/subjects/$SUBJECT/versions/latest | jq .
+echo "curl --silent -u $CLIENT:client1 http://localhost:8081/subjects/$SUBJECT/versions/latest | jq ."
+curl --silent -u $CLIENT:client1 http://localhost:8081/subjects/$SUBJECT/versions/latest | jq .
 
 
 ##################################################
