@@ -65,10 +65,10 @@ Produced record to topic test1 partition [0] @ offset 9
 Run the consumer, passing in arguments for (a) whether to produce or consume (consume) (b) the same topic name as used above (c) the local file with configuration parameters to connect to your Confluent Cloud instance and (d, Windows only) a local file with default trusted root CA certificates. Verify that the consumer received all the messages:
 
 ```shell
-# Run the producer (Windows)
+# Run the consumer (Windows)
 $ dotnet run consume test1 %HOMEPATH%/.ccloud/config /path/to/curl/cacert.pem
 
-# Run the producer (other)
+# Run the consumer (other)
 $ dotnet run consume test1 $HOME/.ccloud/config
 ```
 
