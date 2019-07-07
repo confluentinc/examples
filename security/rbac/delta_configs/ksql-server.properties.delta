@@ -1,0 +1,23 @@
+# Specify KSQL service id used to bind user/roles to this cluster
+ksql.service.id=iam_demo_ksql
+
+# Enable KSQL authorization and impersonation
+ksql.security.extension.class=io.confluent.ksql.security.KsqlConfluentSecurityExtension
+
+# Enable KSQL Basic+Bearer authentication
+rest.servlet.initializor.classes=\
+io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+websocket.servlet.initializor.classes=\
+io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+public.key.path=/tmp/tokenPublicKey.pem
+
+# Metadata URL and access credentials
+confluent.metadata.bootstrap.server.urls=http://localhost:8090
+confluent.metadata.http.auth.credentials.provider=BASIC
+confluent.metadata.basic.auth.credentials.provider=USER_INFO
+confluent.metadata.basic.auth.user.info=ksql:ksql1
+
+# Credentials for Schema Registry access
+ksql.schema.registry.url=http://localhost:8081
+ksql.schema.registry.basic.auth.credentials.source=USER_INFO
+ksql.schema.registry.basic.auth.user.info=sr:sr1

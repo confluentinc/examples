@@ -317,3 +317,21 @@ function validate_confluent_cloud_schema_registry() {
   fi
   return 0
 }
+
+function get_cluster_id_kafka () { 
+  KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
+  if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
+    echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+
+function get_cluster_id_schema_registry () {
+  SCHEMA_REGISTRY_CLUSTER_ID=$(curl --silent -u sr:sr1 http://localhost:8081/permissions | jq -r '.scope.clusters."schema-registry-cluster"')
+  if [[ -z "$SCHEMA_REGISTRY_CLUSTER_ID" ]]; then
+    echo "Failed to get Schema Registry cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
