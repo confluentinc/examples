@@ -32,5 +32,6 @@ $ ./run.sh
 $ ./init.sh
 $ ./broker.sh
 $ ./schema-registry.sh
+$ ./connect.sh
 $ ./cleanup.sh
 ```

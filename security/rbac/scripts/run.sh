@@ -40,5 +40,6 @@ check_jq || exit 1
 
 ./broker.sh
 ./schema-registry.sh
+./connect.sh
 
 ./cleanup.sh

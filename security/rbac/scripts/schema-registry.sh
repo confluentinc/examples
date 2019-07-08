@@ -22,7 +22,8 @@ check_jq || exit 1
 . ../config/local-demo.cfg
 ORIGINAL_CONFIGS_DIR=../original_configs
 DELTA_CONFIGS_DIR=../delta_configs
-create_temp_configs $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $ORIGINAL_CONFIGS_DIR/schema-registry.properties $DELTA_CONFIGS_DIR/schema-registry.properties.delta
+FILENAME=schema-registry.properties
+create_temp_configs $CONFLUENT_HOME/etc/schema-registry/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
 
 # Log in to Metadata Server (MDS)
 login_mds $MDS
@@ -110,4 +111,4 @@ curl --silent -u $CLIENT:client1 http://localhost:8081/subjects/$SUBJECT/version
 ##################################################
 
 SAVE_CONFIGS_DIR=../rbac_configs
-restore_configs $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $ORIGINAL_CONFIGS_DIR/schema-registry.properties $SAVE_CONFIGS_DIR/schema-registry.properties.rbac
+restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac

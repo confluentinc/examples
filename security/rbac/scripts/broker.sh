@@ -22,7 +22,8 @@ check_jq || exit 1
 . ../config/local-demo.cfg
 ORIGINAL_CONFIGS_DIR=../original_configs
 DELTA_CONFIGS_DIR=../delta_configs
-create_temp_configs $CONFLUENT_HOME/etc/kafka/server.properties $ORIGINAL_CONFIGS_DIR/server.properties $DELTA_CONFIGS_DIR/server.properties.delta
+FILENAME=server.properties
+create_temp_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
 confluent local start kafka
 
 # Log in to Metadata Server (MDS)
@@ -108,4 +109,4 @@ confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from
 ##################################################
 
 SAVE_CONFIGS_DIR=../rbac_configs
-restore_configs $CONFLUENT_HOME/etc/kafka/server.properties $ORIGINAL_CONFIGS_DIR/server.properties $SAVE_CONFIGS_DIR/server.properties.rbac
+restore_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $SAVE_CONFIGS_DIR/${FILENAME}.rbac
