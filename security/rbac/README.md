@@ -35,3 +35,18 @@ $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
 $ ./cleanup.sh
 ```
+
+4. After you run the demo, view the configuration files:
+
+```bash
+$ cd ..
+$ ls delta_configs/
+$ ls original_configs/
+$ ls rbac_configs/
+```
+
+5. To stop Confluent Platform
+
+```bash
+$ confluent local destroy
+```
