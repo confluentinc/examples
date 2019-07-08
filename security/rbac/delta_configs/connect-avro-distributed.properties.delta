@@ -1,11 +1,7 @@
-bootstrap.servers=SASL_PLAINTEXT://localhost:9092
-
-# Can also be SASL_SSL; if so, make sure to change the protocol on the line above as well
+bootstrap.servers=localhost:9092
 security.protocol=SASL_PLAINTEXT
 sasl.mechanism=OAUTHBEARER
-
 sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
-
 sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
 
 ## Connector client (producer, consumer, admin client) properties ##
@@ -20,17 +16,14 @@ producer.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.au
 
 # Default consumer configs to use for connectors
 consumer.security.protocol=SASL_PLAINTEXT
-consumer... # Should use same configs as consumer
 
 # Default admin client configs to use for connectors
 admin.security.protocol=SASL_PLAINTEXT
-admin... # Should use same configs as consumer
 
 ## REST extensions: RBAC and Secret Registry ##
 
 # Installs the RBAC and Secret Registry REST extensions
 rest.extension.classes=io.confluent.connect.security.ConnectSecurityExtension,io.confluent.connect.secretregistry.ConnectSecretRegistryExtension
-
 
 ## RBAC Authentication ##
 
@@ -53,10 +46,13 @@ confluent.metadata.http.auth.credentials.provider=BASIC
 
 config.providers=secret
 config.providers.secret.class=io.confluent.connect.secretregistry.rbac.config.provider.InternalSecretConfigProvider
+config.providers.secret.param.master.encryption.key=password1234
 
-config.providers.secret.param.master.encryption.key=<encryption key>
+config.providers.secret.param.kafkastore.topic=_secrets
 config.providers.secret.param.kafkastore.bootstrap.servers=localhost:9092
-# Can also be SASL_SSL
-config.providers.secret.param.kafkastore.security.protocol=SASL_PLAINTEXT config.providers.secret.param.kafkastore.sasl.mechanism=OAUTHBEARER
+config.providers.secret.param.kafkastore.security.protocol=SASL_PLAINTEXT
+config.providers.secret.param.kafkastore.sasl.mechanism=OAUTHBEARER
 config.providers.secret.param.kafkastore.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
 config.providers.secret.param.kafkastore.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
+
+rest.advertised.host.name=localhost

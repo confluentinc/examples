@@ -32,6 +32,9 @@ login_mds $MDS
 # Administrative Functions
 ##################################################
 
+echo -e "\n# Bring up Connect"
+confluent local start connect
+
 # Get the Kafka cluster id
 get_cluster_id_kafka
 
