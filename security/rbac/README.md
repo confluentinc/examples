@@ -2,11 +2,11 @@
 
 # Overview
 
-This demo showcases the Role Based Access Control (RBAC) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new functionality.
+This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
 
-## Running the demo
+# Run the demo
 
-1. Change directory into the scripts folder:
+1. Change directory into the `scripts` folder:
 
 ```bash
 $ cd scripts
