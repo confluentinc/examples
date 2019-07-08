@@ -10,15 +10,25 @@ sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginMo
 connector.client.config.override.policy=All
 
 # Default producer configs to use for connectors
+producer.bootstrap.servers=localhost:9092
 producer.security.protocol=SASL_PLAINTEXT
 producer.sasl.mechanism=OAUTHBEARER
 producer.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+producer.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
 
 # Default consumer configs to use for connectors
+consumer.bootstrap.servers=localhost:9092
 consumer.security.protocol=SASL_PLAINTEXT
+consumer.sasl.mechanism=OAUTHBEARER
+consumer.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+consumer.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
 
 # Default admin client configs to use for connectors
+admin.bootstrap.servers=localhost:9092
 admin.security.protocol=SASL_PLAINTEXT
+admin.sasl.mechanism=OAUTHBEARER
+admin.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+admin.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
 
 ## REST extensions: RBAC and Secret Registry ##
 
