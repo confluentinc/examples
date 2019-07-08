@@ -24,7 +24,7 @@ kafka-topics --zookeeper localhost:2181 --topic WIKIPEDIANOBOT --create --replic
 kafka-topics --zookeeper localhost:2181 --topic EN_WIKIPEDIA_GT_1 --create --replication-factor 1 --partitions 2
 kafka-topics --zookeeper localhost:2181 --topic EN_WIKIPEDIA_GT_1_COUNTS --create --replication-factor 1 --partitions 2
 
-if is_ce; then confluent local config wikipedia-irc -d ./connector_irc.config; else confluent local config wikipedia-irc -d ./connector_irc_oss.config; fi
+if is_ce; then confluent local config wikipedia-irc -- -d ./connector_irc.config; else confluent local config wikipedia-irc -d ./connector_irc_oss.config; fi
 sleep 10
 
 #kafka-avro-console-consumer --bootstrap-server localhost:9092 --topic wikipedia.parsed --property schema.registry.url=http://localhost:8081 --max-messages 5
@@ -35,8 +35,8 @@ exit ;
 EOF
 sleep 10
 
-if is_ce; then confluent local config replicate-topic -d ./connector_replicator.config; fi
-if is_ce; then confluent local config elasticsearch -d ./connector_elasticsearch.config; else confluent local config elasticsearch -d ./connector_elasticsearch_oss.config; fi
+if is_ce; then confluent local config replicate-topic -- -d ./connector_replicator.config; fi
+if is_ce; then confluent local config elasticsearch -- -d ./connector_elasticsearch.config; else confluent local config elasticsearch -- -d ./connector_elasticsearch_oss.config; fi
 
 ./dashboard/set_elasticsearch_mapping_bot.sh
 ./dashboard/set_elasticsearch_mapping_count.sh

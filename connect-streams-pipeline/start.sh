@@ -49,7 +49,7 @@ sleep 2
 
 # Run source connector
 confluent local unload $PACKAGE &>/dev/null
-confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
 confluent local consume $TOPIC -- \
@@ -70,7 +70,7 @@ sleep 2
 
 # Run source connector
 confluent local unload $PACKAGE &>/dev/null
-confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
 confluent local consume $TOPIC -- \
@@ -91,7 +91,7 @@ sleep 2
 
 # Run source connector
 confluent local unload $PACKAGE &>/dev/null
-confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
 confluent local consume $TOPIC -- \
@@ -135,7 +135,7 @@ sleep 2
 
 # Run source connector
 confluent local unload $PACKAGE &>/dev/null
-confluent local config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
 confluent local consume $TOPIC -- \
