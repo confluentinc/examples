@@ -13,6 +13,7 @@ check_jq || exit 1
 ##################################################
 
 mkdir -p ../original_configs
+mkdir -p ../rbac_configs
 
 # Copy login.properties
 cp ../login.properties /tmp/login.properties

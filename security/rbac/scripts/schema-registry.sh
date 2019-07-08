@@ -24,47 +24,23 @@ ORIGINAL_CONFIGS_DIR=../original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 create_temp_configs $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $ORIGINAL_CONFIGS_DIR/schema-registry.properties $DELTA_CONFIGS_DIR/schema-registry.properties.delta
 
-##################################################
 # Log in to Metadata Server (MDS)
-##################################################
-
-echo -e "\n# Login"
-OUTPUT=$(
-expect <<END
-  log_user 1
-  spawn confluent login --url $MDS
-  expect "Username: "
-  send "$USERNAME\r";
-  expect "Password: "
-  send "$PASSWORD\r";
-  expect "Logged in as "
-  set result $expect_out(buffer)
-END
-)
-echo "$OUTPUT"
-if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
-  echo "Failed to log into your Metadata Server.  Please check all parameters and run again"
-  exit 1
-fi
+login_mds $MDS
 
 ##################################################
-# Schema Registry
-# - Bind the principal User:$ADMIN_SCHEMA_REGISTRY to the ResourceOwner role for Topic:_schemas
+# Administrative Functions
+# - Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the ResourceOwner role for Topic:_schemas
 # - Bring up Schema Registry
 # - Grant SystemAdmin access to the Schema Registry cluster administrator $ADMIN_SCHEMA_REGISTRY
 # - Grant SecurityAdmin access to the Schema Registry cluster administrator $ADMIN_SCHEMA_REGISTRY
-# - Bind the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID
+# - Grant the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID
 # - List the role bindings for User:$ADMIN_SCHEMA_REGISTRY
-# - Bind the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT
-# - List the role bindings for User:$CLIENT
-# - Register new schema for subject $SUBJECT
-# - View schema
 ##################################################
 
 # Get the Kafka cluster id
 get_cluster_id_kafka
 
-echo -e "\n# Bind the principal User:$ADMIN_SCHEMA_REGISTRY to the ResourceOwner role for Topic:_schemas"
+echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the ResourceOwner role for Topic:_schemas"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -73,15 +49,15 @@ confluent local start schema-registry
 
 # Grant SystemAdmin and SecurityAdmin access to the Schema Registry cluster administrator `$ADMIN_SCHEMA_REGISTRY`
 get_cluster_id_schema_registry
-echo -e "\n# Bind the principal User:$ADMIN_SCHEMA_REGISTRY to the SystemAdmin role access to the Schema Registry cluster"
+echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the SystemAdmin role access to the Schema Registry cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# Bind the principal User:$ADMIN_SCHEMA_REGISTRY to the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
+echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# Bind the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID"
+echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -93,6 +69,15 @@ echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY for the Sche
 echo "confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
+
+##################################################
+# Schema Registry client functions
+# - Grant the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT
+# - List the role bindings for User:$CLIENT
+# - Register new schema for subject $SUBJECT
+# - View schema
+##################################################
+
 SUBJECT="new-topic-value"
 echo -e "\n# Register new schema for subject $SUBJECT (should fail)"
 echo "curl --silent -u $CLIENT:client1 -X POST -H \"Content-Type: application/vnd.schemaregistry.v1+json\" --data '"'{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}'"' http://localhost:8081/subjects/$SUBJECT/versions"
@@ -103,7 +88,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Bind the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT"
+echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 

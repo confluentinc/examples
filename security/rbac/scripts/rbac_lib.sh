@@ -36,3 +36,31 @@ function restore_configs() {
 
   return 0
 }
+
+
+function login_mds() {
+
+  MDS_URL=$1
+
+  echo -e "\n# Login"
+  OUTPUT=$(
+expect <<END
+  log_user 1
+  spawn confluent login --url $MDS_URL
+  expect "Username: "
+  send "$USERNAME\r";
+  expect "Password: "
+  send "$PASSWORD\r";
+  expect "Logged in as "
+  set result $expect_out(buffer)
+END
+)
+
+  echo "$OUTPUT"
+  if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
+    echo "Failed to log into your Metadata Server.  Please check all parameters and run again"
+    exit 1
+  fi
+
+  return 0
+}

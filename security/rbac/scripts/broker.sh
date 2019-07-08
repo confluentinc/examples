@@ -25,36 +25,17 @@ DELTA_CONFIGS_DIR=../delta_configs
 create_temp_configs $CONFLUENT_HOME/etc/kafka/server.properties $ORIGINAL_CONFIGS_DIR/server.properties $DELTA_CONFIGS_DIR/server.properties.delta
 confluent local start kafka
 
-##################################################
 # Log in to Metadata Server (MDS)
-##################################################
-
-echo -e "\n# Login"
-OUTPUT=$(
-expect <<END
-  log_user 1
-  spawn confluent login --url $MDS
-  expect "Username: "
-  send "$USERNAME\r";
-  expect "Password: "
-  send "$PASSWORD\r";
-  expect "Logged in as "
-  set result $expect_out(buffer)
-END
-)
-echo "$OUTPUT"
-if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
-  echo "Failed to log into your Metadata Server.  Please check all parameters and run again"
-  exit 1
-fi
+login_mds $MDS
 
 ##################################################
+# Administrative Functions
+# - Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
+##################################################
+
 # Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
-##################################################
-
-# Grant access to the Kafka cluster
 get_cluster_id_kafka
-echo -e "\n# Bind the principal User:$ADMIN_SYSTEM to the SystemAdmin role access to the Kafka cluster"
+echo -e "\n# Grant the principal User:$ADMIN_SYSTEM to the SystemAdmin role access to the Kafka cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -64,7 +45,7 @@ confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id
 
 ##################################################
 # Topics: create, producer, consume
-# - Bind the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC
+# - Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC
 # - Create topic $TOPIC
 # - List topics, it should show only topic $TOPIC
 # - Produce to topic $TOPIC
@@ -84,7 +65,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Bind the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC"
+echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
