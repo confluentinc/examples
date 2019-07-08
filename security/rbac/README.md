@@ -4,6 +4,10 @@
 
 This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
 
+## Notes
+
+* For simplicity, this demo does not require the use of LDAP. Instead it uses the Hash Login service with users/passwords defined in the `login.properties` file.
+
 # Run the demo
 
 1. Change directory into the `scripts` folder:
@@ -30,4 +34,3 @@ $ ./broker.sh
 $ ./schema-registry.sh
 $ ./cleanup.sh
 ```
-
