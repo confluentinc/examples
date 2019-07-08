@@ -35,6 +35,10 @@ login_mds $MDS
 echo -e "\n# Bring up Connect"
 confluent local start connect
 
+# Check for errors
+sleep 10
+grep ERROR `confluent local current | tail -1`/connect/connect.stdout
+
 # Get the Kafka cluster id
 get_cluster_id_kafka
 

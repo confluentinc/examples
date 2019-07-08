@@ -30,8 +30,8 @@ $ ./run.sh
 
 ```bash
 $ ./init.sh
-$ ./broker.sh
-$ ./schema-registry.sh
-$ ./connect.sh
+$ ./enable-rbac-broker.sh
+$ ./enable-rbac-schema-registry.sh
+$ ./enable-rbac-connect.sh
 $ ./cleanup.sh
 ```
