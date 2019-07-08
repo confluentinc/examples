@@ -11,7 +11,6 @@
 . ../../../utils/helper.sh
 . ./rbac_lib.sh
 
-export PATH="/Users/yeva/code/bin:$PATH"
 check_env || exit 1
 check_cli_v2 || exit 1
 check_jq || exit 1
