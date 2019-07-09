@@ -71,6 +71,16 @@ confluent local start connect
 # Connect client functions
 ##################################################
 
+# Need to sleep some time before getting the cluster ID
+sleep 20
+get_cluster_id_connect
+confluent iam rolebinding create --principal User:connector --role ResourceOwner --resource Group:$CONNECT_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:connector --role DeveloperManage --resource Group:$CONNECT_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:connector --role DeveloperWrite --resource Group:$CONNECT_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:connector --role ResourceOwner --resource Topic:pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
+
 cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
 cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
 confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg

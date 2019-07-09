@@ -42,4 +42,4 @@ check_jq || exit 1
 ./enable-rbac-schema-registry.sh
 ./enable-rbac-connect.sh
 
-./cleanup.sh
+#./cleanup.sh

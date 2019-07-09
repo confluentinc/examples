@@ -33,7 +33,6 @@ $ ./init.sh
 $ ./enable-rbac-broker.sh
 $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
-$ ./cleanup.sh
 ```
 
 4. After you run the demo, view the configuration files:
@@ -49,8 +48,9 @@ $ ls delta_configs/
 $ ls /tmp/rbac_configs/
 ```
 
-5. To stop Confluent Platform
+5. To stop the demo, stop Confluent Platform, and delete files in `/tmp/`
 
 ```bash
-$ confluent local destroy
+$ cd scripts
+$ ./cleanup.sh
 ```

@@ -335,3 +335,13 @@ function get_cluster_id_schema_registry () {
   fi
   return 0
 }
+
+function get_cluster_id_connect () {
+  CONNECT_CLUSTER_ID=$(curl --silent -u connect:connect1 http://localhost:8083/permissions | jq -r '.scope.clusters."connect-cluster"')
+  if [[ -z "$CONNECT_CLUSTER_ID" ]]; then
+    echo "Failed to get Connect cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+
