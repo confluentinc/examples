@@ -9,6 +9,21 @@ sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginMo
 # Allow producer/consumer/admin client overrides (this enables per-connector principals)
 connector.client.config.override.policy=All
 
+producer.security.protocol=SASL_PLAINTEXT
+producer.sasl.mechanism=OAUTHBEARER
+producer.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+# Intentionally omitting `producer.sasl.jaas.config` to force connectors to use their own
+
+consumer.security.protocol=SASL_PLAINTEXT
+consumer.sasl.mechanism=OAUTHBEARER
+consumer.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+# Intentionally omitting `consumer.sasl.jaas.config` to force connectors to use their own
+
+admin.security.protocol=SASL_PLAINTEXT
+admin.sasl.mechanism=OAUTHBEARER
+admin.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+# Intentionally omitting `admin.sasl.jaas.config` to force connectors to use their own
+
 ## REST extensions: RBAC and Secret Registry ##
 
 # Installs the RBAC and Secret Registry REST extensions
@@ -43,5 +58,3 @@ config.providers.secret.param.kafkastore.security.protocol=SASL_PLAINTEXT
 config.providers.secret.param.kafkastore.sasl.mechanism=OAUTHBEARER
 config.providers.secret.param.kafkastore.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
 config.providers.secret.param.kafkastore.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
-
-rest.advertised.host.name=localhost
