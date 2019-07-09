@@ -80,12 +80,12 @@ confluent local start connect
 # - List roles
 ##################################################
 
-# Need to sleep some time before getting the cluster ID
-sleep 20
-get_cluster_id_connect
-
 DATA_TOPIC=pageviews
 CONNECTOR_NAME=datagen-pageviews
+
+echo -e "Sleeping 20 seconds before getting the Connect cluster ID"
+sleep 20
+get_cluster_id_connect
 
 echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Connector:$CONNECTOR_NAME"
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
@@ -107,8 +107,11 @@ echo -e "\n# Grant the principal User:connector to the ResourceOwner role for To
 echo "confluent iam rolebinding create --principal User:connector --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:connector --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
+echo -e "\n# List the role bindings for the principal User:connector for the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:connector for the Connect cluster"
 echo "confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
@@ -118,6 +121,7 @@ confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KA
 ./submit_datagen_pageviews_config.sh 
 
 # Consume messages from the $DATA_TOPIC topic
+echo "confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
 confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
 
 ##################################################
