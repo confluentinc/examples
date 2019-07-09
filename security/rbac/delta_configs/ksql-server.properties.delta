@@ -1,3 +1,9 @@
+bootstrap.servers=localhost:9092
+security.protocol=SASL_PLAINTEXT
+sasl.mechanism=OAUTHBEARER
+sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="ksql" password="ksql1" metadataServerUrls="http://localhost:8090";
+
 # Specify KSQL service id used to bind user/roles to this cluster
 ksql.service.id=default_
 
@@ -5,10 +11,8 @@ ksql.service.id=default_
 ksql.security.extension.class=io.confluent.ksql.security.KsqlConfluentSecurityExtension
 
 # Enable KSQL Basic+Bearer authentication
-rest.servlet.initializor.classes=\
-io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
-websocket.servlet.initializor.classes=\
-io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+websocket.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
 public.key.path=/tmp/tokenPublicKey.pem
 
 # Metadata URL and access credentials
