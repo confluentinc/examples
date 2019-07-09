@@ -48,11 +48,7 @@ confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role 
 echo -e "\n# Bring up Schema Registry"
 confluent local start schema-registry
 
-# Grant SystemAdmin and SecurityAdmin access to the Schema Registry cluster administrator `$ADMIN_SCHEMA_REGISTRY`
 get_cluster_id_schema_registry
-echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the SystemAdmin role access to the Schema Registry cluster"
-echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
