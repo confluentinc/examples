@@ -78,6 +78,8 @@ confluent local start connect
 # - Grant the principal User:connector to the DeveloperWrite role for Connector:$CONNECTOR_NAME
 # - Grant the principal User:connector to the ResourceOwner role for Topic:$DATA_TOPIC
 # - List roles
+# - Create the connector
+# - Consume messages from the $DATA_TOPIC topic
 ##################################################
 
 DATA_TOPIC=pageviews
@@ -123,10 +125,18 @@ confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner -
 #cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
 #cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
 #confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg
+echo -e "\n# Create the connector"
 ./submit_datagen_pageviews_config_avro.sh 
 
 # Consume messages from the $DATA_TOPIC topic
-echo "confluent local consume $DATA_TOPIC -- value-format avro...."
+echo -e "\n# Consume messages from the $DATA_TOPIC topic"
+cat << EOF
+confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \\
+  --value-format avro \\
+  --property basic.auth.credentials.source=USER_INFO \\
+  --property schema.registry.basic.auth.user.info=client:client1 \\
+  --property schema.registry.url=http://localhost:8081
+EOF
 confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \
   --value-format avro \
   --property basic.auth.credentials.source=USER_INFO \
