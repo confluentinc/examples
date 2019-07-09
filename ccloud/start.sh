@@ -137,7 +137,7 @@ if is_ce; then
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
+  echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   # Workaround for MMA-3564

@@ -23,8 +23,8 @@ mysql demo -uroot < customers.sql
 echo "GRANT SELECT, RELOAD, SHOW DATABASES, REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'debezium'@'localhost' IDENTIFIED BY 'dbz';" | mysql -uroot
 
 # Source Kafka connectors
-confluent local config mysql-source-demo-customers -d ./connector_debezium_customers.config
-confluent local config mysql-source-demo-customers-raw -d ./connector_debezium_customers-raw.config
+confluent local config mysql-source-demo-customers -- -d ./connector_debezium_customers.config
+confluent local config mysql-source-demo-customers-raw -- -d ./connector_debezium_customers-raw.config
 sleep 10
 
 if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
@@ -41,4 +41,4 @@ EOF
 ./dashboard/configure_kibana_objects.sh
 
 # Sink Kafka connector
-confluent local config es_sink_RATINGS_ENRICHED -d ./connector_elasticsearch.config
+confluent local config es_sink_RATINGS_ENRICHED -- -d ./connector_elasticsearch.config

@@ -33,7 +33,7 @@ fi
 
 # Delete topics in Confluent Cloud
 topics=$(ccloud topic list)
-topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
+topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS PAGEVIEWS_FEMALE_LIKE_89"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
