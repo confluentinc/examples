@@ -19,7 +19,7 @@ DATA=$( cat << EOF
     "max.interval": 100,
     "producer.override.sasl.mechanism": "OAUTHBEARER",
     "producer.override.sasl.login.callback.handler.class": "io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler",
-    "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"connect\" password=\"connect1\" metadataServerUrls=\"http://localhost:8090\";",
+    "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"connector\" password=\"connector1\" metadataServerUrls=\"http://localhost:8090\";",
     "tasks.max": "1"
   }
 }
