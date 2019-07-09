@@ -1,5 +1,5 @@
 # Specify KSQL service id used to bind user/roles to this cluster
-ksql.service.id=iam_demo_ksql
+ksql.service.id=default_
 
 # Enable KSQL authorization and impersonation
 ksql.security.extension.class=io.confluent.ksql.security.KsqlConfluentSecurityExtension
