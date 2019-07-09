@@ -71,6 +71,10 @@ confluent local start connect
 # Connect client functions
 ##################################################
 
+cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
+cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
+confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg
+
 
 ##################################################
 # Cleanup
@@ -78,3 +82,4 @@ confluent local start connect
 
 SAVE_CONFIGS_DIR=/tmp/rbac_configs
 restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac
+mv /tmp/kafka-connect-datagen-connector.cfg ${SAVE_CONFIGS_DIR}/kafka-connect-datagen-connector.cfg.rbac
