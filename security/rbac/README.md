@@ -39,10 +39,14 @@ $ ./cleanup.sh
 4. After you run the demo, view the configuration files:
 
 ```bash
-$ cd ..
+# The original configuration bundled with Confluent Platform
+$ ls /tmp/original_configs/
+
+# Configurations added to each components' properties file
 $ ls delta_configs/
-$ ls original_configs/
-$ ls rbac_configs/
+
+# The modified configuration = original + delta
+$ ls /tmp/rbac_configs/
 ```
 
 5. To stop Confluent Platform

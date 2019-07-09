@@ -20,7 +20,7 @@ check_jq || exit 1
 ##################################################
 
 . ../config/local-demo.cfg
-ORIGINAL_CONFIGS_DIR=../original_configs
+ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=connect-avro-distributed.properties
 create_temp_configs $CONFLUENT_HOME/etc/schema-registry/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
@@ -66,13 +66,6 @@ confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-i
 echo -e "\n# Bring up Connect"
 confluent local start connect
 
-# Check for errors
-sleep 10
-grep ERROR `confluent local current | tail -1`/connect/connect.stdout
-
-# Get the Kafka cluster id
-get_cluster_id_kafka
-
 
 ##################################################
 # Connect client functions
@@ -83,5 +76,5 @@ get_cluster_id_kafka
 # Cleanup
 ##################################################
 
-SAVE_CONFIGS_DIR=../rbac_configs
+SAVE_CONFIGS_DIR=/tmp/rbac_configs
 restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac

@@ -20,7 +20,7 @@ check_jq || exit 1
 ##################################################
 
 . ../config/local-demo.cfg
-ORIGINAL_CONFIGS_DIR=../original_configs
+ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=schema-registry.properties
 create_temp_configs $CONFLUENT_HOME/etc/schema-registry/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
@@ -110,5 +110,5 @@ curl --silent -u $CLIENT:client1 http://localhost:8081/subjects/$SUBJECT/version
 # Cleanup
 ##################################################
 
-SAVE_CONFIGS_DIR=../rbac_configs
+SAVE_CONFIGS_DIR=/tmp/rbac_configs
 restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac

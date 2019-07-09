@@ -20,7 +20,7 @@ check_jq || exit 1
 ##################################################
 
 . ../config/local-demo.cfg
-ORIGINAL_CONFIGS_DIR=../original_configs
+ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=server.properties
 create_temp_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
@@ -108,5 +108,5 @@ confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from
 # Cleanup
 ##################################################
 
-SAVE_CONFIGS_DIR=../rbac_configs
+SAVE_CONFIGS_DIR=/tmp/rbac_configs
 restore_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $SAVE_CONFIGS_DIR/${FILENAME}.rbac
