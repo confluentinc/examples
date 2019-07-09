@@ -63,6 +63,10 @@ echo -e "\n# List the role bindings for User:$ADMIN_CONNECT for the Kafka cluste
 echo "confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID
 
+echo -e "\n# Install kafka-connect-datagen"
+echo "confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest"
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
+
 echo -e "\n# Bring up Connect"
 confluent local start connect
 
@@ -74,17 +78,24 @@ confluent local start connect
 # Need to sleep some time before getting the cluster ID
 sleep 20
 get_cluster_id_connect
-confluent iam rolebinding create --principal User:connector --role ResourceOwner --resource Group:$CONNECT_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding create --principal User:connector --role DeveloperManage --resource Group:$CONNECT_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding create --principal User:connector --role DeveloperWrite --resource Group:$CONNECT_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding create --principal User:connector --role ResourceOwner --resource Topic:pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
-cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
-confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg
+echo "confluent iam rolebinding create --principal User:connect --role ResourceOwner --resource Connector:datagen-pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding create --principal User:connect --role ResourceOwner --resource Connector:datagen-pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo "confluent iam rolebinding create --principal User:connect --role DeveloperManage --resource Connector:datagen-pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding create --principal User:connect --role DeveloperManage --resource Connector:datagen-pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo "confluent iam rolebinding create --principal User:connect --role DeveloperWrite --resource Connector:datagen-pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding create --principal User:connect --role DeveloperWrite --resource Connector:datagen-pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo "confluent iam rolebinding create --principal User:connect --role ResourceOwner --resource Topic:pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:connect --role ResourceOwner --resource Topic:pageviews --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rolebinding list --principal User:connect --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:connect --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rolebinding list --principal User:connect --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding list --principal User:connect --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
+#cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
+#cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
+#confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg
+./submit_datagen_pageviews_config.sh 
 
 ##################################################
 # Cleanup
@@ -92,4 +103,4 @@ confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-co
 
 SAVE_CONFIGS_DIR=/tmp/rbac_configs
 restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac
-mv /tmp/kafka-connect-datagen-connector.cfg ${SAVE_CONFIGS_DIR}/kafka-connect-datagen-connector.cfg.rbac
+#mv /tmp/kafka-connect-datagen-connector.cfg ${SAVE_CONFIGS_DIR}/kafka-connect-datagen-connector.cfg.rbac
