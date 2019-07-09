@@ -115,14 +115,23 @@ echo -e "\n# List the role bindings for the principal User:connector for the Con
 echo "confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding list --principal User:connector --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
+get_cluster_id_schema_registry
+echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Subject:${DATA_TOPIC}-value"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
 #cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
 #cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
 #confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg
-./submit_datagen_pageviews_config.sh 
+./submit_datagen_pageviews_config_avro.sh 
 
 # Consume messages from the $DATA_TOPIC topic
-echo "confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
-confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
+echo "confluent local consume $DATA_TOPIC -- value-format avro...."
+confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \
+  --value-format avro \
+  --property basic.auth.credentials.source=USER_INFO \
+  --property schema.registry.basic.auth.user.info=client:client1 \
+  --property schema.registry.url=http://localhost:8081
 
 ##################################################
 # Cleanup
