@@ -36,7 +36,9 @@ login_mds $MDS
 # - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Group:connect-cluster
 # - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:_secrets (for Secret Registry)
 # - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Group:secret-registry (for Secret Registry)
+# - Start connect
 # - Grant principal User:$ADMIN_CONNECT the SecurityAdmin role to the Connect cluster
+# - List role bindings
 ##################################################
 
 # Get the Kafka cluster id

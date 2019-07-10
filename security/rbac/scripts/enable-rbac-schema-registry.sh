@@ -31,7 +31,7 @@ login_mds $MDS
 ##################################################
 # Administrative Functions
 # - Grant principal User:$ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas
-# - Bring up Schema Registry
+# - Start Schema Registry
 # - Grant principal User:$ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster
 # - Grant principal User:$ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:$SCHEMA_REGISTRY_CLUSTER_ID
 # - List the role bindings for User:$ADMIN_SCHEMA_REGISTRY
