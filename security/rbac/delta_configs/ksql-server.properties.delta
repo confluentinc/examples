@@ -20,6 +20,9 @@ confluent.metadata.bootstrap.server.urls=http://localhost:8090
 confluent.metadata.http.auth.credentials.provider=BASIC
 confluent.metadata.basic.auth.credentials.provider=USER_INFO
 confluent.metadata.basic.auth.user.info=ksql:ksql1
+http.auth.credentials.provider=BASIC
+basic.auth.credentials.provider=USER_INFO
+basic.auth.user.info=ksql:synt@x3rror
 
 # Credentials for Schema Registry access
 ksql.schema.registry.url=http://localhost:8081
