@@ -73,8 +73,9 @@ confluent local start connect
 
 ##################################################
 # Connect client functions
-# - Grant the principal User:client to the ResourceOwner role for Connector:$CONNECTOR_NAME
-# - Grant the principal User:client to the ResourceOwner role for Topic:$DATA_TOPIC
+# - Grant the principal User:$CLIENT to the ResourceOwner role for Connector:$CONNECTOR_NAME
+# - Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$DATA_TOPIC
+# - Grant the principal User:$CLIENT to the ResourceOwner role for Subject:${DATA_TOPIC}-value"
 # - List roles
 # - Create the connector
 # - Consume messages from the $DATA_TOPIC topic
@@ -87,21 +88,21 @@ echo -e "Sleeping 20 seconds before getting the Connect cluster ID"
 sleep 20
 get_cluster_id_connect
 
-echo -e "\n# Grant the principal User:client to the ResourceOwner role for Connector:$CONNECTOR_NAME"
-echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
-confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Connector:$CONNECTOR_NAME"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# Grant the principal User:client to the ResourceOwner role for Topic:$DATA_TOPIC"
-echo "confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:client --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$DATA_TOPIC"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:client for the Kafka cluster"
-echo "confluent iam rolebinding list --principal User:client --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:client --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# List the role bindings for the principal User:$CLIENT for the Kafka cluster"
+echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:client for the Connect cluster"
-echo "confluent iam rolebinding list --principal User:client --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
-confluent iam rolebinding list --principal User:client --kafka-cluster-id $KAFKA_CLUSTER_I --connect-cluster-id $CONNECT_CLUSTER_IDD
+echo -e "\n# List the role bindings for the principal User:$CLIENT for the Connect cluster"
+echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_I --connect-cluster-id $CONNECT_CLUSTER_IDD
 
 get_cluster_id_schema_registry
 echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Subject:${DATA_TOPIC}-value"
@@ -120,13 +121,13 @@ cat << EOF
 confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \\
   --value-format avro \\
   --property basic.auth.credentials.source=USER_INFO \\
-  --property schema.registry.basic.auth.user.info=client:client1 \\
+  --property schema.registry.basic.auth.user.info=$CLIENT:client1 \\
   --property schema.registry.url=http://localhost:8081
 EOF
 confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \
   --value-format avro \
   --property basic.auth.credentials.source=USER_INFO \
-  --property schema.registry.basic.auth.user.info=client:client1 \
+  --property schema.registry.basic.auth.user.info=$CLIENT:client1 \
   --property schema.registry.url=http://localhost:8081
 
 ##################################################
