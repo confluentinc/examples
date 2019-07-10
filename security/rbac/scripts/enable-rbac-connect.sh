@@ -44,11 +44,17 @@ login_mds $MDS
 # Get the Kafka cluster id
 get_cluster_id_kafka
 
-for CONNECT_TOPIC in connect-configs connect-offsets connect-statuses; do
-  echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:${CONNECT_TOPIC}"
-  echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:${CONNECT_TOPIC} --kafka-cluster-id $KAFKA_CLUSTER_ID"
-  confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:${CONNECT_TOPIC} --kafka-cluster-id $KAFKA_CLUSTER_ID
-done
+echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:connect-configs"
+echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-configs --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-configs --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:connect-offsets"
+echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-offsets --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-offsets --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:connect-statuses"
+echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-statuses --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-statuses --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Grant principal User:$ADMIN_CONNECT to the ResourceOwner role to Group:connect-cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:connect-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID"
