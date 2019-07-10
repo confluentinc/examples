@@ -20,59 +20,55 @@ check_jq || exit 1
 ##################################################
 
 . ../config/local-demo.cfg
-ORIGINAL_CONFIGS_DIR=../original_configs
+ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
-create_temp_configs $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $ORIGINAL_CONFIGS_DIR/schema-registry.properties $DELTA_CONFIGS_DIR/schema-registry.properties.delta
+FILENAME=schema-registry.properties
+create_temp_configs $CONFLUENT_HOME/etc/schema-registry/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
 
 # Log in to Metadata Server (MDS)
 login_mds $MDS
 
 ##################################################
 # Administrative Functions
-# - Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the ResourceOwner role for Topic:_schemas
-# - Bring up Schema Registry
-# - Grant SystemAdmin access to the Schema Registry cluster administrator $ADMIN_SCHEMA_REGISTRY
-# - Grant SecurityAdmin access to the Schema Registry cluster administrator $ADMIN_SCHEMA_REGISTRY
-# - Grant the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID
+# - Grant principal User:$ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas
+# - Start Schema Registry
+# - Grant principal User:$ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster
+# - Grant principal User:$ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:$SCHEMA_REGISTRY_CLUSTER_ID
 # - List the role bindings for User:$ADMIN_SCHEMA_REGISTRY
 ##################################################
 
 # Get the Kafka cluster id
 get_cluster_id_kafka
 
-echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the ResourceOwner role for Topic:_schemas"
+echo -e "\n# Grant principal User:$ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Schema Registry"
 confluent local start schema-registry
 
-# Grant SystemAdmin and SecurityAdmin access to the Schema Registry cluster administrator `$ADMIN_SCHEMA_REGISTRY`
 get_cluster_id_schema_registry
-echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the SystemAdmin role access to the Schema Registry cluster"
-echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
+echo -e "\n# Grant principal User:$ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# Grant the principal User:$ADMIN_SCHEMA_REGISTRY to Resource Group:$SCHEMA_REGISTRY_CLUSTER_ID"
+echo -e "\n# Grant principal User:$ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:$SCHEMA_REGISTRY_CLUSTER_ID"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY for the Kafka cluster"
+echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY to the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY for the Schema Registry cluster"
+echo -e "\n# List the role bindings for User:$ADMIN_SCHEMA_REGISTRY to the Schema Registry cluster"
 echo "confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 
 ##################################################
 # Schema Registry client functions
-# - Grant the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT
+# - Grant principal User:$CLIENT the ResourceOwner role to Subject:$SUBJECT
 # - List the role bindings for User:$CLIENT
 # - Register new schema for subject $SUBJECT
 # - View schema
@@ -88,7 +84,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Subject:$SUBJECT"
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Subject:$SUBJECT"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
@@ -109,5 +105,5 @@ curl --silent -u $CLIENT:client1 http://localhost:8081/subjects/$SUBJECT/version
 # Cleanup
 ##################################################
 
-SAVE_CONFIGS_DIR=../rbac_configs
-restore_configs $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties $ORIGINAL_CONFIGS_DIR/schema-registry.properties $SAVE_CONFIGS_DIR/schema-registry.properties.rbac
+SAVE_CONFIGS_DIR=/tmp/rbac_configs
+restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac
