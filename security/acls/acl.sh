@@ -42,7 +42,7 @@
 ################################################################################
 
 # Source library
-. ../utils/helper.sh
+. ../../utils/helper.sh
 
 check_ccloud_v2 || exit 1
 check_timeout || exit 1
