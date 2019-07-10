@@ -27,6 +27,6 @@ DATA=$( cat << EOF
 EOF
 )
 
-echo "curl -X POST -H \"${HEADER}\" -u connect:connect1 --data \"${DATA}\" http://${CONNECT_HOST}:8083/connectors"
-curl -X POST -H "${HEADER}" -u connect:connect1 --data "${DATA}" http://${CONNECT_HOST}:8083/connectors
+echo "curl -X POST -H \"${HEADER}\" -u connector:connector1 --data \"${DATA}\" http://${CONNECT_HOST}:8083/connectors"
+curl -X POST -H "${HEADER}" -u connector:connector1 --data "${DATA}" http://${CONNECT_HOST}:8083/connectors
 echo
