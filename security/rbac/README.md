@@ -55,16 +55,15 @@ $ cd scripts
 $ ./cleanup.sh
 ```
 
-# Cheat sheet
+# Summary of Role Bindings
 
-Here are all the RBAC commands, by component.
+Here is a summary of the required role bindings, by component.
 
 ## Broker
 
 ```bash
 # Broker Admin
 confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 # Producer/Consumer
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
@@ -78,12 +77,9 @@ confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner -
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:$ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 # Client connecting to Schema Registry
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 ```
 
 ## Connect
@@ -96,15 +92,10 @@ confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role Resource
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:connect-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:_secrets --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:secret-registry --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
-confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
 # Connector
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
-confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 ```
