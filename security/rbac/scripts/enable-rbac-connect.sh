@@ -36,6 +36,7 @@ login_mds $MDS
 # - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Group:connect-cluster
 # - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:_secrets (for Secret Registry)
 # - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Group:secret-registry (for Secret Registry)
+# - Grant SecurityAdmin access to the Connect cluster administrator $ADMIN_CONNECT
 ##################################################
 
 # Get the Kafka cluster id
@@ -70,6 +71,13 @@ confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
 echo -e "\n# Bring up Connect"
 confluent local start connect
 
+echo -e "Sleeping 20 seconds before getting the Connect cluster ID"
+sleep 20
+get_cluster_id_connect
+
+echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
+echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
 ##################################################
 # Connect client functions
@@ -83,10 +91,6 @@ confluent local start connect
 
 DATA_TOPIC=pageviews
 CONNECTOR_NAME=datagen-pageviews
-
-echo -e "Sleeping 20 seconds before getting the Connect cluster ID"
-sleep 20
-get_cluster_id_connect
 
 echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Connector:$CONNECTOR_NAME"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
