@@ -31,12 +31,11 @@ login_mds $MDS
 
 ##################################################
 # Administrative Functions
-# - Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
+# - Grant principal User:$ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster
 ##################################################
 
-# Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
 get_cluster_id_kafka
-echo -e "\n# Grant the principal User:$ADMIN_SYSTEM to the SystemAdmin role access to the Kafka cluster"
+echo -e "\n# Grant principal User:$ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -46,11 +45,11 @@ confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id
 
 ##################################################
 # Topics: create, producer, consume
-# - Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC
+# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC
 # - Create topic $TOPIC
 # - List topics, it should show only topic $TOPIC
 # - Produce to topic $TOPIC
-# - Create a role binding to the resource Group:console-consumer-
+# - Grant principal User:$CLIENT the ResourceOwner role to Group:console-consumer-
 # - Consume from topic $TOPIC from RBAC endpoint
 # - Consume from topic $TOPIC from PLAINTEXT endpoint
 ##################################################
@@ -66,7 +65,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC"
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -91,7 +90,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "#\n Create a role binding to the resource Group:console-consumer-"
+echo -e "#\n Grant principal User:$CLIENT the ResourceOwner role to Group:console-consumer-"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 

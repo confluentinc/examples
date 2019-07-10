@@ -30,37 +30,37 @@ login_mds $MDS
 
 ##################################################
 # Administrative Functions
-# - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:connect-configs
-# - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:connect-offsets
-# - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:connect-statuses
-# - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Group:connect-cluster
-# - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:_secrets (for Secret Registry)
-# - Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Group:secret-registry (for Secret Registry)
-# - Grant SecurityAdmin access to the Connect cluster administrator $ADMIN_CONNECT
+# - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:connect-configs
+# - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:connect-offsets
+# - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:connect-statuses
+# - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Group:connect-cluster
+# - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:_secrets (for Secret Registry)
+# - Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Group:secret-registry (for Secret Registry)
+# - Grant principal User:$ADMIN_CONNECT the SecurityAdmin role to the Connect cluster
 ##################################################
 
 # Get the Kafka cluster id
 get_cluster_id_kafka
 
 for CONNECT_TOPIC in connect-configs connect-offsets connect-statuses; do
-  echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:${CONNECT_TOPIC}"
+  echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:${CONNECT_TOPIC}"
   echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:${CONNECT_TOPIC} --kafka-cluster-id $KAFKA_CLUSTER_ID"
   confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:${CONNECT_TOPIC} --kafka-cluster-id $KAFKA_CLUSTER_ID
 done
 
-echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Group:connect-cluster"
+echo -e "\n# Grant principal User:$ADMIN_CONNECT to the ResourceOwner role to Group:connect-cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:connect-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:connect-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Topic:_secrets (for Secret Registry)"
+echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Topic:_secrets (for Secret Registry)"
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:_secrets --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Topic:_secrets --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the ResourceOwner role for Group:secret-registry (for Secret Registry)"
+echo -e "\n# Grant principal User:$ADMIN_CONNECT the ResourceOwner role to Group:secret-registry (for Secret Registry)"
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:secret-registry --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role ResourceOwner --resource Group:secret-registry --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for User:$ADMIN_CONNECT for the Kafka cluster"
+echo -e "\n# List the role bindings for User:$ADMIN_CONNECT to the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -75,19 +75,19 @@ echo -e "Sleeping 20 seconds before getting the Connect cluster ID"
 sleep 20
 get_cluster_id_connect
 
-echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
+echo -e "\n# Grant principal User:$ADMIN_CONNECT the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$ADMIN_CONNECT for the Connect cluster"
+echo -e "\n# List the role bindings for the principal User:$ADMIN_CONNECT to the Connect cluster"
 echo "confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
 ##################################################
 # Connect client functions
-# - Grant the principal User:$CLIENT to the ResourceOwner role for Connector:$CONNECTOR_NAME
-# - Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$DATA_TOPIC
-# - Grant the principal User:$CLIENT to the ResourceOwner role for Subject:${DATA_TOPIC}-value"
+# - Grant principal User:$CLIENT the ResourceOwner role to Connector:$CONNECTOR_NAME
+# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$DATA_TOPIC
+# - Grant principal User:$CLIENT the ResourceOwner role to Subject:${DATA_TOPIC}-value"
 # - List roles
 # - Create the connector
 # - Consume messages from the $DATA_TOPIC topic
@@ -96,28 +96,28 @@ confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-i
 DATA_TOPIC=pageviews
 CONNECTOR_NAME=datagen-pageviews
 
-echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Connector:$CONNECTOR_NAME"
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Connector:$CONNECTOR_NAME"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$CLIENT for the Connect cluster"
+echo -e "\n# List the role bindings for the principal User:$CLIENT to the Connect cluster"
 echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$DATA_TOPIC"
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$DATA_TOPIC"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$CLIENT for the Kafka cluster"
+echo -e "\n# List the role bindings for the principal User:$CLIENT to the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 get_cluster_id_schema_registry
-echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Subject:${DATA_TOPIC}-value"
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Subject:${DATA_TOPIC}-value"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$CLIENT for the Schema Registry cluster"
+echo -e "\n# List the role bindings for the principal User:$CLIENT to the Schema Registry cluster"
 echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
