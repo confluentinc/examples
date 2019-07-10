@@ -79,6 +79,10 @@ echo -e "\n# Grant the principal User:$ADMIN_CONNECT to the SecurityAdmin role t
 echo "confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
+echo -e "\n# List the role bindings for the principal User:$ADMIN_CONNECT for the Connect cluster"
+echo "confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_I --connect-cluster-id $CONNECT_CLUSTER_IDD
+
 ##################################################
 # Connect client functions
 # - Grant the principal User:$CLIENT to the ResourceOwner role for Connector:$CONNECTOR_NAME
