@@ -42,7 +42,7 @@
 ################################################################################
 
 # Source library
-. ../utils/helper.sh
+. ../../utils/helper.sh
 
 check_ccloud_v2 || exit 1
 check_timeout || exit 1
@@ -231,18 +231,20 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 # ACLs are configured
 ##################################################
 
+POM=../../clients/cloud/java/pom.xml
+
 echo -e "\n# By default, no ACLs are configured"
 echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 
 echo -e "\n# Run the Java producer to $TOPIC1: before ACLs"
-mvn -q -f ../clients/cloud/java/pom.xml clean package
+mvn -q -f $POM clean package
 if [[ $? != 0 ]]; then
   echo "ERROR: There seems to be a build failure error compiling the client code? Please troubleshoot"
   exit 1
 fi
 LOG1="/tmp/log.1"
-mvn -f ../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
+mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs to allow this client application)"
@@ -261,7 +263,7 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
-mvn -f ../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
+mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer works"
@@ -300,7 +302,7 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
-mvn -f ../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
+mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer works"
@@ -334,7 +336,7 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
 LOG4="/tmp/log.4"
-timeout 15s mvn -f clients/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
+timeout 15s mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
 OUTPUT=$(grep "Successfully joined group with" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Consumer works"
