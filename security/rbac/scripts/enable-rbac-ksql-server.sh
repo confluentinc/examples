@@ -59,7 +59,7 @@ confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwn
 echo -e "\n# Bring up KSQL server"
 confluent local start ksql-server
 
-echo -e "\n# Grant principal User:$ADMIN_KSQL the SecurityAdmin role to th KSQL Cluster to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
+echo -e "\n# Grant principal User:$ADMIN_KSQL the SecurityAdmin role to the KSQL Cluster to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
 echo "confluent iam rolebinding create --principal User:$ADMIN_KSQL --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding create --principal User:$ADMIN_KSQL --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
@@ -79,6 +79,11 @@ confluent iam rolebinding list --principal User:$ADMIN_KSQL --kafka-cluster-id $
 ##################################################
 # KSQL client functions
 ##################################################
+
+KSQL_USER=ksqluser
+
+confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --prefix --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:${KSQL_USER} --role DeveloperRead --resource Topic:test-topic-1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 
 ##################################################
