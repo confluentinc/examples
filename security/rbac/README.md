@@ -13,7 +13,8 @@ This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluen
 ## Prerequisites
 
 1. [Confluent CLI](https://docs.confluent.io/current/cli/installing.html): `confluent` CLI must be installed on your machine, version `v0.127.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
-2. `jq`
+2. [Confluent Platform 5.3](https://www.confluent.io/download/): use clean install of Confluent Platform, or else demo is not guaranteed to work
+3. `jq`
 
 ## Execute the demo
 
