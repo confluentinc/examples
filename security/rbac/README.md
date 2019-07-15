@@ -129,7 +129,7 @@ confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner -
 * Role bindings:
 
 ```bash
-# REST Proxy Admin: no rolebindings required because REST Proxy just does impersonation
+# REST Proxy Admin: no additional administrative rolebindings required because REST Proxy just does impersonation
 
 # Producer/Consumer
  confluent iam rolebinding create --principal User $CLIENTB --role ResourceOwner --resource Topic $TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
