@@ -79,8 +79,8 @@ confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
 echo -e "\n# Bring up Connect"
 confluent local start connect
 
-echo -e "Sleeping 20 seconds before getting the Connect cluster ID"
-sleep 20
+echo -e "Sleeping 30 seconds before getting the Connect cluster ID"
+sleep 30
 get_cluster_id_connect
 
 echo -e "\n# Grant principal User:$ADMIN_CONNECT the SecurityAdmin role to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
