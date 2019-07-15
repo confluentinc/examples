@@ -20,22 +20,25 @@ check_jq || exit 1
 ##################################################
 
 . ../config/local-demo.cfg
-ORIGINAL_CONFIGS_DIR=../original_configs
+ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
-create_temp_configs $CONFLUENT_HOME/etc/kafka/server.properties $ORIGINAL_CONFIGS_DIR/server.properties $DELTA_CONFIGS_DIR/server.properties.delta
+FILENAME=server.properties
+create_temp_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
 confluent local start kafka
+
+echo -e "Sleeping 5 seconds before login"
+sleep 5
 
 # Log in to Metadata Server (MDS)
 login_mds $MDS
 
 ##################################################
 # Administrative Functions
-# - Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
+# - Grant principal User:$ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster
 ##################################################
 
-# Grant the principal User:$ADMIN_SYSTEM the SystemAdmin role # access to different service clusters
 get_cluster_id_kafka
-echo -e "\n# Grant the principal User:$ADMIN_SYSTEM to the SystemAdmin role access to the Kafka cluster"
+echo -e "\n# Grant principal User:$ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -45,11 +48,11 @@ confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id
 
 ##################################################
 # Topics: create, producer, consume
-# - Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC
+# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC
 # - Create topic $TOPIC
 # - List topics, it should show only topic $TOPIC
 # - Produce to topic $TOPIC
-# - Create a role binding to the resource Group:console-consumer-
+# - Grant principal User:$CLIENT the ResourceOwner role to Group:console-consumer-
 # - Consume from topic $TOPIC from RBAC endpoint
 # - Consume from topic $TOPIC from PLAINTEXT endpoint
 ##################################################
@@ -65,7 +68,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Grant the principal User:$CLIENT to the ResourceOwner role for Topic:$TOPIC"
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -90,7 +93,7 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "#\n Create a role binding to the resource Group:console-consumer-"
+echo -e "#\n Grant principal User:$CLIENT the ResourceOwner role to Group:console-consumer-"
 echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
@@ -107,5 +110,5 @@ confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from
 # Cleanup
 ##################################################
 
-SAVE_CONFIGS_DIR=../rbac_configs
-restore_configs $CONFLUENT_HOME/etc/kafka/server.properties $ORIGINAL_CONFIGS_DIR/server.properties $SAVE_CONFIGS_DIR/server.properties.rbac
+SAVE_CONFIGS_DIR=/tmp/rbac_configs
+restore_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $SAVE_CONFIGS_DIR/${FILENAME}.rbac

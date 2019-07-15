@@ -38,7 +38,9 @@ check_jq || exit 1
 
 ./init.sh
 
-./broker.sh
-./schema-registry.sh
+./enable-rbac-broker.sh
+./enable-rbac-schema-registry.sh
+./enable-rbac-connect.sh
+./enable-rbac-rest-proxy.sh
 
-./cleanup.sh
+#./cleanup.sh

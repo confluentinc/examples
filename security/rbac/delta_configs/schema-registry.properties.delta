@@ -22,5 +22,3 @@ public.key.path=/tmp/tokenPublicKey.pem
 # This enables anonymous access with a principal of User:ANONYMOUS
 confluent.schema.registry.anonymous.principal=true
 authentication.skip.paths=/*
-
-authentication.roles=**

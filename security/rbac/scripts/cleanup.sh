@@ -9,3 +9,4 @@ rm /tmp/tokenKeyPair.pem
 rm /tmp/tokenPublicKey.pem
 rm /tmp/login.properties
 
+confluent local destroy
