@@ -103,6 +103,7 @@ confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner -
 
 * [delta_configs/connect-avro-distributed.properties.delta](delta_configs/connect-avro-distributed.properties.delta)
 * [delta_configs/connector-source.properties.delta](delta_configs/connector-source.properties.delta)
+* [delta_configs/connector-sink.properties.delta](delta_configs/connector-sink.properties.delta)
 * Role bindings:
 
 ```bash
