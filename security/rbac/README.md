@@ -38,6 +38,7 @@ $ ./init.sh
 $ ./enable-rbac-broker.sh
 $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
+$ ./enable-rbac-rest-proxy.sh
 ```
 
 3. After you run the demo, view the configuration files:
