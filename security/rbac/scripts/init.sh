@@ -12,8 +12,8 @@ check_jq || exit 1
 # Initialize
 ##################################################
 
-mkdir -p ../original_configs
-mkdir -p ../rbac_configs
+mkdir -p /tmp/original_configs
+mkdir -p /tmp/rbac_configs
 
 # Copy login.properties
 cp ../login.properties /tmp/login.properties
