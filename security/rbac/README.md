@@ -58,8 +58,7 @@ $ ls /tmp/rbac_configs/
 4. After you run the demo, view the log files for each of the services. Since this demo uses Confluent CLI, all logs are saved in a temporary directory specified by `confluent local current`.
 
 ```bash
-$ cd `confluent local current | tail -1`
-$ ls
+$ ls `confluent local current | tail -1`
 connect
 kafka
 kafka-rest
