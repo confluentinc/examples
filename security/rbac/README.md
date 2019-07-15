@@ -39,6 +39,7 @@ $ ./init.sh
 $ ./enable-rbac-broker.sh
 $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
+$ ./enable-rbac-rest-proxy.sh
 ```
 
 3. After you run the demo, view the configuration files:
@@ -63,11 +64,17 @@ $ cd scripts
 $ ./cleanup.sh
 ```
 
-# Summary of Role Bindings
+# Summary of Configurations and Role Bindings
 
-Here is a summary of the required role bindings, by component.
+Here is a summary of the delta configurations and required role bindings, by component.
+
+Reminder: for simplicity, this demo uses the Hash Login service instead of LDAP.
+If you are using LDAP in your environment, extra configurations are required.
 
 ## Broker
+
+* [delta_configs/server.properties.delta](delta_configs/server.properties.delta)
+* Role bindings:
 
 ```bash
 # Broker Admin
@@ -80,6 +87,9 @@ confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner -
 
 ## Schema Registry
 
+* [delta_configs/schema-registry.properties.delta](delta_configs/schema-registry.properties.delta)
+* Role bindings:
+
 ```bash
 # Schema Registry Admin
 confluent iam rolebinding create --principal User:$ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
@@ -91,6 +101,11 @@ confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner -
 ```
 
 ## Connect
+
+* [delta_configs/connect-avro-distributed.properties.delta](delta_configs/connect-avro-distributed.properties.delta)
+* [delta_configs/connector-source.properties.delta](delta_configs/connector-source.properties.delta)
+* [delta_configs/connector-sink.properties.delta](delta_configs/connector-sink.properties.delta)
+* Role bindings:
 
 ```bash
 # Connect Admin
@@ -106,4 +121,18 @@ confluent iam rolebinding create --principal User:$ADMIN_CONNECT --role Security
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+```
+
+
+## REST Proxy
+
+* [delta_configs/kafka-rest.properties.delta](delta_configs/kafka-rest.properties.delta)
+* Role bindings:
+
+```bash
+# REST Proxy Admin: no additional administrative rolebindings required because REST Proxy just does impersonation
+
+# Producer/Consumer
+ confluent iam rolebinding create --principal User $CLIENTB --role ResourceOwner --resource Topic $TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+ confluent iam rolebinding create --principal User $CLIENTB --role ResourceOwner --resource Group $CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
 ```

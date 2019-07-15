@@ -1,0 +1,17 @@
+bootstrap.servers=localhost:9092
+schema.registry.url=http://localhost:8081
+
+client.security.protocol=SASL_PLAINTEXT
+
+kafka.rest.resource.extension.class=io.confluent.kafkarest.security.KafkaRestSecurityResourceExtension
+rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+
+confluent.metadata.bootstrap.server.urls=http://localhost:8090
+confluent.metadata.server.urls.max.age.ms=60000
+client.confluent.metadata.server.urls.max.age.ms=60000
+
+public.key.path=/tmp/tokenPublicKey.pem
+
+# Credentials to use with the MDS
+confluent.metadata.basic.auth.user.info=rp:rp1
+confluent.metadata.http.auth.credentials.provider=BASIC
