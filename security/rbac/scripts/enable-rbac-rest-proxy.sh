@@ -30,7 +30,8 @@ login_mds $MDS
 
 ##################################################
 # Administrative Functions
-# - Aside from starting REST Proxy, no additional role bindings are required because REST Proxy just does impersonation
+# - Start REST Proxy
+# - No additional role bindings are required because REST Proxy just does impersonation
 ##################################################
 
 # Get the Kafka cluster id
@@ -40,30 +41,60 @@ confluent local start kafka-rest
 
 ##################################################
 # REST Proxy client functions
+# - Try to view topics, before authorization (should see no topics)
+# - Grant the principal User:$CLIENTB to the ResourceOwner role for Topic:$TOPIC
+# - Try to view topics, after authorization (should see one topic $TOPIC)
+# - Create a consumer group $CONSUMER_GROUP
+# - Subscribe to the topic $TOPIC
+# - Consume messages from the topic $TOPIC, before authorization (should fail)
+# - Grant the principal User:$CLIENTB to the ResourceOwner role for Group:$CONSUMER_GROUP
+# - Consume messages from the topic $TOPIC, after authorization (should pass)
 ##################################################
 
-echo -e "\n# View topics"
-echo "curl -u client:client1 http://localhost:8082/topics"
-curl -u client:client1 http://localhost:8082/topics
-
 TOPIC=test-topic-1
+
+echo -e "\n# Try to view topics, before authorization (should see no topics)"
+echo "curl -u clientb:clientb1 http://localhost:8082/topics"
+curl -u clientb:clientb1 http://localhost:8082/topics
+echo
+
+echo -e "\n# Grant the principal User:$CLIENTB to the ResourceOwner role for Topic:$TOPIC"
+echo "confluent iam rolebinding create --principal User:$CLIENTB --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENTB --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Try to view topics, after authorization (should see one topic $TOPIC)"
+echo "curl -u clientb:clientb1 http://localhost:8082/topics"
+curl -u clientb:clientb1 http://localhost:8082/topics
+echo
+
 CONSUMER_GROUP=rest_proxy_consumer_group
 
-echo -e "\n# Create a role binding to the resource Group:$CONSUMER_GROUP"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
-
 echo -e "\n# Create a consumer group $CONSUMER_GROUP"
-echo 'curl -u client:client1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' http://localhost:8082/consumers/'"$CONSUMER_GROUP"
-curl -u client:client1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' http://localhost:8082/consumers/$CONSUMER_GROUP
+echo 'curl -u clientb:clientb1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '"'"'{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}'"'"' http://localhost:8082/consumers/'"$CONSUMER_GROUP"
+curl -u clientb:clientb1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' http://localhost:8082/consumers/$CONSUMER_GROUP
+echo
 
 echo -e "\n# Subscribe to the topic $TOPIC"
-curl -u client:client1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"topics":["test-topic-1"]}' http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/subscription
+echo 'curl -u clientb:clientb1 --silent -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '"'"'{"topics":["'"$TOPIC"'"]}'"'"' http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/subscription'
+curl -u clientb:clientb1 --silent -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"topics":["'"$TOPIC"'"]}' http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/subscription
 
-echo -e "\n# Consume messages from the topic $TOPIC"
-curl -u client:client1 -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/records
+echo -e "\n# Consume messages from the topic $TOPIC, before authorization (should fail)"
+OUTPUT=$(curl -u $CLIENTB:clientb1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/records)
+echo $OUTPUT
+if [[ $OUTPUT =~ "Not authorized to access group" ]]; then
+  echo "PASS: Consuming messages from topic $TOPIC failed due to Not authorized to access group (expected because User:$CLIENTB is not allowed access to the consumer group)"
+else
+  echo "FAIL: Something went wrong, check output"
+fi
 
-#curl -u client:client1 -X DELETE -H "Accept: application/vnd.kafka.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance
+echo -e "\n# Grant the principal User:$CLIENTB to the ResourceOwner role for Group:$CONSUMER_GROUP"
+echo "confluent iam rolebinding create --principal User:$CLIENTB --role ResourceOwner --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENTB --role ResourceOwner --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Consume messages from the topic $TOPIC, after authorization (should pass)"
+echo 'curl -u clientb:clientb1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/records'
+curl -u $CLIENTB:clientb1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/records
+
 
 ##################################################
 # Cleanup
