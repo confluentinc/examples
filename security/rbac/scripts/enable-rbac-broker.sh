@@ -48,45 +48,42 @@ confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id
 
 ##################################################
 # Topics: create, producer, consume
-# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC
-# - Create topic $TOPIC
-# - List topics, it should show only topic $TOPIC
-# - Produce to topic $TOPIC
+# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC1
+# - Create topic $TOPIC1
+# - List topics, it should show only topic $TOPIC1
+# - Produce to topic $TOPIC1
 # - Grant principal User:$CLIENT the DeveloperRead role to Group:console-consumer-
-# - Consume from topic $TOPIC from RBAC endpoint
-# - Consume from topic $TOPIC from PLAINTEXT endpoint
+# - Consume from topic $TOPIC1 from RBAC endpoint
+# - Consume from topic $TOPIC1 from PLAINTEXT endpoint
 ##################################################
-TOPIC=test-topic-1
-echo -e "\n# Create a topic called $TOPIC"
-
-echo -e "\n# Try to create topic $TOPIC, before authorization (should fail)"
-echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
-OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta)
+echo -e "\n# Try to create topic $TOPIC1, before authorization (should fail)"
+echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
+OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.TopicAuthorizationException" ]]; then
   echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:$CLIENT is not allowed to create topics)"
 else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC1"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Try to create topic $TOPIC, after authorization (should pass)"
-echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
-kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta
+echo -e "\n# Try to create topic $TOPIC1, after authorization (should pass)"
+echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
+kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
-echo -e "\n# List topics, it should show only topic $TOPIC"
+echo -e "\n# List topics, it should show only topic $TOPIC1"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
-echo -e "\n# Produce to topic $TOPIC"
-echo "seq 10 | confluent local produce $TOPIC -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta"
-seq 10 | confluent local produce $TOPIC -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta
+echo -e "\n# Produce to topic $TOPIC1"
+echo "seq 10 | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta"
+seq 10 | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta
 
-echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should fail)"
-echo "confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
-OUTPUT=$(confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10 2>&1)
+echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
+echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
+OUTPUT=$(confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$CLIENT is not allowed access to consumer groups)"
 else
@@ -97,13 +94,13 @@ echo -e "#\n Grant principal User:$CLIENT the DeveloperRead role to Group:consol
 echo "confluent iam rolebinding create --principal User:$CLIENT --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$CLIENT --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should pass)"
-echo "confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
-confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10
+echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should pass)"
+echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
+confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10
 
-echo -e "\n# Consume from topic $TOPIC from PLAINTEXT endpoint"
-echo "confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
-confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
+echo -e "\n# Consume from topic $TOPIC1 from PLAINTEXT endpoint"
+echo "confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
+confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
 
 
 ##################################################
