@@ -94,14 +94,13 @@ confluent iam rolebinding list --principal User:$ADMIN_CONNECT --kafka-cluster-i
 ##################################################
 # Connect client functions
 # - Grant principal User:$CLIENT the ResourceOwner role to Connector:$CONNECTOR_NAME
-# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$DATA_TOPIC
-# - Grant principal User:$CLIENT the ResourceOwner role to Subject:${DATA_TOPIC}-value"
+# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC2_AVRO
+# - Grant principal User:$CLIENT the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
 # - List roles
 # - Create the connector
-# - Consume messages from the $DATA_TOPIC topic
+# - Consume messages from the $TOPIC2_AVRO topic
 ##################################################
 
-DATA_TOPIC=pageviews
 CONNECTOR_NAME=datagen-pageviews
 
 echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Connector:$CONNECTOR_NAME"
@@ -112,18 +111,18 @@ echo -e "\n# List the role bindings for the principal User:$CLIENT to the Connec
 echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$DATA_TOPIC"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC2_AVRO"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for the principal User:$CLIENT to the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 get_cluster_id_schema_registry
-echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Subject:${DATA_TOPIC}-value"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${DATA_TOPIC}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 echo -e "\n# List the role bindings for the principal User:$CLIENT to the Schema Registry cluster"
 echo "confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
@@ -135,16 +134,16 @@ confluent iam rolebinding list --principal User:$CLIENT --kafka-cluster-id $KAFK
 echo -e "\n# Create the connector"
 ./submit_datagen_pageviews_config_avro.sh 
 
-# Consume messages from the $DATA_TOPIC topic
-echo -e "\n# Consume messages from the $DATA_TOPIC topic"
+# Consume messages from the $TOPIC2_AVRO topic
+echo -e "\n# Consume messages from the $TOPIC2_AVRO topic"
 cat << EOF
-confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \\
+confluent local consume $TOPIC2_AVRO -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \\
   --value-format avro \\
   --property basic.auth.credentials.source=USER_INFO \\
   --property schema.registry.basic.auth.user.info=$CLIENT:client1 \\
   --property schema.registry.url=http://localhost:8081
 EOF
-confluent local consume $DATA_TOPIC -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \
+confluent local consume $TOPIC2_AVRO -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \
   --value-format avro \
   --property basic.auth.credentials.source=USER_INFO \
   --property schema.registry.basic.auth.user.info=$CLIENT:client1 \
