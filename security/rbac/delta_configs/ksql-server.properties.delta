@@ -2,7 +2,7 @@ bootstrap.servers=localhost:9092
 security.protocol=SASL_PLAINTEXT
 sasl.mechanism=OAUTHBEARER
 sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
-sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="ksql" password="ksql1" metadataServerUrls="http://localhost:8090";
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="ksqlserver" password="ksqlserver1" metadataServerUrls="http://localhost:8090";
 
 # Specify KSQL service id used to bind user/roles to this cluster
 ksql.service.id=rbac-ksql
@@ -19,9 +19,9 @@ public.key.path=/tmp/tokenPublicKey.pem
 confluent.metadata.bootstrap.server.urls=http://localhost:8090
 confluent.metadata.http.auth.credentials.provider=BASIC
 confluent.metadata.basic.auth.credentials.provider=USER_INFO
-confluent.metadata.basic.auth.user.info=ksql:ksql1
+confluent.metadata.basic.auth.user.info=ksqlserver:ksqlserver1
 
 # Credentials for Schema Registry access
 ksql.schema.registry.url=http://localhost:8081
 ksql.schema.registry.basic.auth.credentials.source=USER_INFO
-ksql.schema.registry.basic.auth.user.info=sr:sr1
+ksql.schema.registry.basic.auth.user.info=ksqlserver:ksqlserver1
