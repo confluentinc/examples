@@ -31,8 +31,7 @@ login_mds $MDS
 ##################################################
 # Administrative Functions
 # - Grant principal User:$ADMIN_KSQL the ResourceOwner role to Topic:_confluent-ksql-${KSQL_SERVICE_ID}_command_topic
-# - Grant principal User:$ADMIN_KSQL the ResourceOwner role to Topic:${KSQL_SERVICE_ID}ksql_processing_log
-# - Grant principal User:$ADMIN_KSQL the ResourceOwner role to Group:_confluent-ksql-${KSQL_SERVICE_ID} prefix
+# - Grant principal User:$ADMIN_KSQL the ResourceOwner role to Topic:${KSQL_SERVICE_ID}_ksql_processing_log
 # - Start KSQL
 # - Grant principal User:$ADMIN_KSQL the SecurityAdmin role to the KSQL Cluster
 # - Grant principal User:$ADMIN_KSQL the ResourceOwner role to KsqlCluster:ksql-cluster
@@ -52,10 +51,6 @@ echo -e "\n# Grant principal User:$ADMIN_KSQL the ResourceOwner role to Topic:${
 echo "confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Grant principal User:$ADMIN_KSQL the ResourceOwner role to Group:_confluent-ksql-${KSQL_SERVICE_ID} prefix"
-echo "confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
-
 echo -e "\n# Bring up KSQL server"
 confluent local start ksql-server
 
@@ -66,6 +61,8 @@ confluent iam rolebinding create --principal User:$ADMIN_KSQL --role SecurityAdm
 echo -e "\n# Grant principal User:$ADMIN_KSQL the ResourceOwner role to KsqlCluster:ksql-cluster"
 echo "confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+
+confluent iam rolebinding create --principal User:$ADMIN_KSQL --role ResourceOwner --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for the principal User:$ADMIN_KSQL"
 echo "confluent iam rolebinding list --principal User:$ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
@@ -81,10 +78,23 @@ confluent iam rolebinding list --principal User:$ADMIN_KSQL --kafka-cluster-id $
 ##################################################
 
 KSQL_USER=ksqluser
+DATA_TOPIC=test-topic-1
 
-confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --prefix --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding create --principal User:${KSQL_USER} --role DeveloperRead --resource Topic:test-topic-1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --resource Group:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:${KSQL_USER} --role DeveloperRead --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
+echo -e "\n# List the role bindings for the principal User:${KSQL_USER}"
+echo "confluent iam rolebinding list --principal User:${KSQL_USER} --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:${KSQL_USER} --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:${KSQL_USER} to the KSQL cluster"
+echo "confluent iam rolebinding list --principal User:${KSQL_USER} --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
+confluent iam rolebinding list --principal User:${KSQL_USER} --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+
+# ksql http://ksqluser:ksqluser1@localhost:8088
+# ksql -u ksqluser -p ksqluser1 http://localhost:8088
 
 ##################################################
 # Cleanup
