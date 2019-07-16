@@ -78,7 +78,7 @@ confluent iam rolebinding list --principal User:$ADMIN_KSQL --kafka-cluster-id $
 ##################################################
 
 KSQL_USER=ksqluser
-DATA_TOPIC=test-topic-1
+DATA_TOPIC=topic3
 
 confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 confluent iam rolebinding create --principal User:${KSQL_USER} --role ResourceOwner --resource Group:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
@@ -93,8 +93,12 @@ echo -e "\n# List the role bindings for the principal User:${KSQL_USER} to the K
 echo "confluent iam rolebinding list --principal User:${KSQL_USER} --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding list --principal User:${KSQL_USER} --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
-# ksql http://ksqluser:ksqluser1@localhost:8088
-# ksql -u ksqluser -p ksqluser1 http://localhost:8088
+echo -e "\n# Authenticate to KSQL CLI: list topics and print messages from topic $DATA_TOPIC"
+ksql -u $KSQL_USER -p ksqluser1 http://localhost:8088 <<EOF
+list topics;
+print 'topic3' from beginning limit 5;
+exit ;
+EOF
 
 ##################################################
 # Cleanup
