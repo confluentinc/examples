@@ -16,6 +16,9 @@ END
   FILE_ORIGINAL=$1
   FILE_BACKUP=$2
   FILE_DELTA=$3
+
+  echo -e "\n\n\n*** $FILE_ORIGINAL ***\n\n\n"
+
   cp $FILE_ORIGINAL $FILE_BACKUP
   echo "$BANNER" >> $FILE_ORIGINAL
   cat $FILE_DELTA >> $FILE_ORIGINAL

@@ -52,7 +52,7 @@ confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id
 # - Create topic $TOPIC
 # - List topics, it should show only topic $TOPIC
 # - Produce to topic $TOPIC
-# - Grant principal User:$CLIENT the ResourceOwner role to Group:console-consumer-
+# - Grant principal User:$CLIENT the DeveloperRead role to Group:console-consumer-
 # - Consume from topic $TOPIC from RBAC endpoint
 # - Consume from topic $TOPIC from PLAINTEXT endpoint
 ##################################################
@@ -93,9 +93,9 @@ else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "#\n Grant principal User:$CLIENT the ResourceOwner role to Group:console-consumer-"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "#\n Grant principal User:$CLIENT the DeveloperRead role to Group:console-consumer-"
+echo "confluent iam rolebinding create --principal User:$CLIENT --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$CLIENT --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should pass)"
 echo "confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
