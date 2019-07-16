@@ -56,7 +56,7 @@ confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id
 # - Consume from topic $TOPIC from RBAC endpoint
 # - Consume from topic $TOPIC from PLAINTEXT endpoint
 ##################################################
-TOPIC=test-topic-1
+TOPIC=topic3
 echo -e "\n# Create a topic called $TOPIC"
 
 echo -e "\n# Try to create topic $TOPIC, before authorization (should fail)"
@@ -85,8 +85,8 @@ echo "seq 10 | confluent local produce $TOPIC -- --producer.config $DELTA_CONFIG
 seq 10 | confluent local produce $TOPIC -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta
 
 echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should fail)"
-echo "confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
-OUTPUT=$(confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10 2>&1)
+echo "confluent local consume topic3 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
+OUTPUT=$(confluent local consume topic3 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$CLIENT is not allowed access to consumer groups)"
 else
@@ -98,12 +98,12 @@ echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceO
 confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC from RBAC endpoint (should pass)"
-echo "confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
-confluent local consume test-topic-1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10
+echo "confluent local consume topic3 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
+confluent local consume topic3 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10
 
 echo -e "\n# Consume from topic $TOPIC from PLAINTEXT endpoint"
-echo "confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
-confluent local consume test-topic-1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
+echo "confluent local consume topic3 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
+confluent local consume topic3 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
 
 
 ##################################################
