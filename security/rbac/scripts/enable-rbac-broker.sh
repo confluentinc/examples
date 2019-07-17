@@ -77,11 +77,12 @@ echo -e "\n# List topics, it should show only topic $TOPIC1"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
-echo -e "\n# Produce to topic $TOPIC1"
 NUM_MESSAGES=3
-for i in {1..$NUM_MESSAGES}; do
-  echo '"$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,'
+echo -e "\n# Produce $NUM_MESSAGES messages to topic $TOPIC1"
+for i in $(seq 1 $NUM_MESSAGES); do
+  set -x
   echo "$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
+  set +x
 done
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
