@@ -1,6 +1,7 @@
-confluent.controlcenter.rest.authentication.method=OAUTHBEARER
-confluent.controlcenter.auth.oauthbearer.public.key.path=/tmp/tokenPublicKey.pem
+confluent.controlcenter.rest.authentication.method=BEARER
+confluent.controlcenter.auth.bearer.public.key.path=/tmp/tokenPublicKey.pem
 confluent.controlcenter.streams.security.protocol=SASL_PLAINTEXT
+
 confluent.controlcenter.metadata.username=c3
 confluent.controlcenter.metadata.password=c31
-confluent.controlcenter.metadata.url=http://localhost:8090
+confluent.controlcenter.metadata.urls=http://localhost:8090
