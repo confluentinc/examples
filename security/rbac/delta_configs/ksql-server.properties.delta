@@ -18,10 +18,8 @@ public.key.path=/tmp/tokenPublicKey.pem
 # Metadata URL and access credentials
 confluent.metadata.bootstrap.server.urls=http://localhost:8090
 confluent.metadata.http.auth.credentials.provider=BASIC
-confluent.metadata.basic.auth.credentials.provider=USER_INFO
 confluent.metadata.basic.auth.user.info=ksqlserver:ksqlserver1
 
 # Credentials for Schema Registry access
 ksql.schema.registry.url=http://localhost:8081
-ksql.schema.registry.basic.auth.credentials.source=USER_INFO
 ksql.schema.registry.basic.auth.user.info=ksqlserver:ksqlserver1
