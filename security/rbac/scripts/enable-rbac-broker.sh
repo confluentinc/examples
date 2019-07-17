@@ -52,7 +52,7 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-clust
 # - Create topic $TOPIC1
 # - List topics, it should show only topic $TOPIC1
 # - Produce to topic $TOPIC1
-# - Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer-
+# - Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer- prefix
 # - Consume from topic $TOPIC1 from RBAC endpoint
 # - Consume from topic $TOPIC1 from PLAINTEXT endpoint
 ##################################################
@@ -78,29 +78,31 @@ echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config 
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
 echo -e "\n# Produce to topic $TOPIC1"
-echo "seq 10 | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta"
-seq 10 | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta
+for i in {1..10}; do
+  echo '"$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta" --property parse.key=true --property key.separator=,'
+  echo "$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta" --property parse.key=true --property key.separator=,
+done
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
-echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
-OUTPUT=$(confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10 2>&1)
+echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10"
+OUTPUT=$(confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$USER_CLIENT_A is not allowed access to consumer groups)"
 else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "#\n Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer-"
+echo -e "#\n Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer- prefix"
 echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should pass)"
-echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
-confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10
+echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10"
+confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10
 
 echo -e "\n# Consume from topic $TOPIC1 from PLAINTEXT endpoint"
-echo "confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10"
-confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10
+echo "confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages 10"
+confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages 10
 
 
 ##################################################

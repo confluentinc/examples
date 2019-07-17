@@ -80,15 +80,13 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster
 # - Grant principal User:${USER_KSQL} the DeveloperManage role to Cluster:kafka-cluster
 # - Grant principal User:${USER_KSQL} the ResourceOwner role to Group:_confluent-ksql-${KSQL_SERVICE_ID} prefix
 # - Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${KSQL_SERVICE_ID}ksql_processing_log
-# - Grant principal User:${USER_KSQL} the DeveloperRead role to Topic:$DATA_TOPIC
+# - Grant principal User:${USER_KSQL} the DeveloperRead role to Topic:$TOPIC1
 # - List the role bindings for the principal User:${USER_KSQL}
 # - Grant principal User:${USER_ADMIN_KSQL} the DeveloperManage role to Cluster:kafka-cluster"
 # - Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Group:_confluent-ksql-${KSQL_SERVICE_ID} prefix"
-# - Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$DATA_TOPIC"
+# - Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$TOPIC1"
 # - List the role bindings for the principal User:$USER_ADMIN_KSQL"
 ##################################################
-
-DATA_TOPIC=topic3
 
 # Because KSQL server ultimately executes all the commands that the KSQL client issues
 # all permissions need to be duplicated for both ${USER_KSQL} and ${USER_ADMIN_KSQL}
@@ -109,9 +107,9 @@ echo -e "\n# Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:$
 echo "confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Grant principal User:${USER_KSQL} the DeveloperRead role to Topic:$DATA_TOPIC"
-echo "confluent iam rolebinding create --principal User:$user --role DeveloperRead --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:${USER_KSQL} the DeveloperRead role to Topic:$TOPIC1"
+echo "confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for the principal User:${USER_KSQL}"
 echo "confluent iam rolebinding list --principal User:${USER_KSQL} --kafka-cluster-id $KAFKA_CLUSTER_ID"
@@ -139,9 +137,9 @@ confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role Reso
 #echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID"
 #confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$DATA_TOPIC"
-echo "confluent iam rolebinding create --principal User:$user --role DeveloperRead --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$DATA_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$TOPIC1"
+echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL"
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
@@ -151,32 +149,48 @@ echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to t
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
-echo -e "\n# KSQL CLI: list topics and print messages from topic $DATA_TOPIC"
-echo "ksql -u $USER_KSQL -p ksqlclient1 http://localhost:8088"
+echo -e "\n# KSQL CLI: list topics and print messages from topic $TOPIC1"
+echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
 echo
-ksql -u $USER_KSQL -p ksqlclient1 http://localhost:8088 <<EOF
+ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
 list topics;
-PRINT '$DATA_TOPIC' FROM BEGINNING LIMIT 3;
+PRINT '$TOPIC1' FROM BEGINNING LIMIT 3;
 exit ;
 EOF
 
-echo -e "\n# KSQL CLI: create a new stream and select * from that stream"
-echo "ksql -u $USER_KSQL -p ksqlclient1 http://localhost:8088"
+STREAM=stream1
+echo -e "\n# KSQL CLI: create a new stream $STREAM and select * from that stream"
+echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
 echo
-ksql -u $USER_KSQL -p ksqlclient1 http://localhost:8088 <<EOF
-CREATE STREAM stream1 (id varchar) WITH (kafka_topic='$DATA_TOPIC', value_format='delimited');
-SELECT * FROM stream1 LIMIT 3;
+ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+CREATE STREAM $STREAM (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited');
+SELECT * FROM $STREAM LIMIT 3;
 exit ;
 EOF
 
 echo -e "\n# KSQL CLI: create a new table and select * from that table"
-echo "ksql -u $USER_KSQL -p ksqlclient1 http://localhost:8088"
+echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
 echo
-ksql -u $USER_KSQL -p ksqlclient1 http://localhost:8088 <<EOF
-CREATE STREAM table1 (id varchar) WITH (kafka_topic='$DATA_TOPIC', value_format='delimited', key='id');
-SELECT * FROM table1 LIMIT 3;
+ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+CREATE TABLE table1 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
+SELECT * FROM table1 LIMIT 1;
 exit ;
 EOF
+
+confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+#confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+#confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# KSQL CLI: create a new table and select * from that table"
+echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
+echo
+ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+CREATE TABLE table2 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
+SELECT * FROM table2 LIMIT 3;
+exit ;
+EOF
+
 
 
 ##################################################
