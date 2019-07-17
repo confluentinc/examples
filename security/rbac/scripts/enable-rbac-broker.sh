@@ -19,7 +19,7 @@ check_jq || exit 1
 # Initialize
 ##################################################
 
-. ../config/local-demo.cfg
+. ../config/local-demo.env
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=server.properties
@@ -34,25 +34,25 @@ login_mds $MDS
 
 ##################################################
 # Administrative Functions
-# - Grant principal User:$ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster
+# - Grant principal User:$USER_ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster
 ##################################################
 
 get_cluster_id_kafka
-echo -e "\n# Grant principal User:$ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster"
-echo "confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:$USER_ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster"
+echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for User:$ADMIN_SYSTEM"
-echo "confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# List the role bindings for User:$USER_ADMIN_SYSTEM"
+echo "confluent iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
 # Topics: create, producer, consume
-# - Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC1
+# - Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC1
 # - Create topic $TOPIC1
 # - List topics, it should show only topic $TOPIC1
 # - Produce to topic $TOPIC1
-# - Grant principal User:$CLIENT the DeveloperRead role to Group:console-consumer-
+# - Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer-
 # - Consume from topic $TOPIC1 from RBAC endpoint
 # - Consume from topic $TOPIC1 from PLAINTEXT endpoint
 ##################################################
@@ -60,14 +60,14 @@ echo -e "\n# Try to create topic $TOPIC1, before authorization (should fail)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
 OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.TopicAuthorizationException" ]]; then
-  echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:$CLIENT is not allowed to create topics)"
+  echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:$USER_CLIENT_A is not allowed to create topics)"
 else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "\n# Grant principal User:$CLIENT the ResourceOwner role to Topic:$TOPIC1"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC1"
+echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Try to create topic $TOPIC1, after authorization (should pass)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
@@ -85,14 +85,14 @@ echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
 echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
 OUTPUT=$(confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
-  echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$CLIENT is not allowed access to consumer groups)"
+  echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$USER_CLIENT_A is not allowed access to consumer groups)"
 else
   echo "FAIL: Something went wrong, check output"
 fi
 
-echo -e "#\n Grant principal User:$CLIENT the DeveloperRead role to Group:console-consumer-"
-echo "confluent iam rolebinding create --principal User:$CLIENT --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$CLIENT --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "#\n Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer-"
+echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should pass)"
 echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --max-messages 10"
