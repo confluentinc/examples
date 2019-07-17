@@ -51,9 +51,9 @@ expect <<END
   log_user 1
   spawn confluent login --url $MDS_URL
   expect "Username: "
-  send "$USERNAME\r";
+  send "${USER_ADMIN_MDS}\r";
   expect "Password: "
-  send "$PASSWORD\r";
+  send "${USER_ADMIN_MDS}1\r";
   expect "Logged in as "
   set result $expect_out(buffer)
 END
