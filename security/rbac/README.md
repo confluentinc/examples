@@ -40,6 +40,7 @@ $ ./enable-rbac-broker.sh
 $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
 $ ./enable-rbac-rest-proxy.sh
+$ ./enable-rbac-ksql-server.sh
 ```
 
 3. After you run the demo, view the configuration files:
@@ -62,6 +63,7 @@ $ ls `confluent local current | tail -1`
 connect
 kafka
 kafka-rest
+ksql-server
 schema-registry
 zookeeper
 ```
