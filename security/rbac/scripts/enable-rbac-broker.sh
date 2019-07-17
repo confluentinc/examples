@@ -78,14 +78,15 @@ echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config 
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
 echo -e "\n# Produce to topic $TOPIC1"
-for i in {1..10}; do
-  echo '"$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta" --property parse.key=true --property key.separator=,'
-  echo "$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta" --property parse.key=true --property key.separator=,
+NUM_MESSAGES=3
+for i in {1..$NUM_MESSAGES}; do
+  echo '"$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,'
+  echo "$i,$i" | confluent local produce $TOPIC1 -- --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
 done
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
-echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10"
-OUTPUT=$(confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10 2>&1)
+echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+OUTPUT=$(confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$USER_CLIENT_A is not allowed access to consumer groups)"
 else
@@ -97,12 +98,12 @@ echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role De
 confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should pass)"
-echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10"
-confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages 10
+echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
 
 echo -e "\n# Consume from topic $TOPIC1 from PLAINTEXT endpoint"
-echo "confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages 10"
-confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages 10
+echo "confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
 
 
 ##################################################
