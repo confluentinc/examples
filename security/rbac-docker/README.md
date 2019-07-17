@@ -1,0 +1,5 @@
+- First, pull docker images via `./pull-docker-images.sh [tag]` - if testing 5.3, use `5.3.x-latest` as a tag
+- This will pull all confluent platform docker images and tag them as `confluentinc/<image>:sanity`
+- Then start confluent platform via `./confluent-start.sh [project-name]` where `project-name` is optional name of docker-compose project (-p flag), defaults to `rbac`
+- This creates a docker-compose project called `[project-name]` (or `rbac`)
+- Now you can use standard docker-compose commands like this: `docker-compose -p [project-name] ps` or `docker-compose -p [project-name] logs --t 200 -f control-center`
