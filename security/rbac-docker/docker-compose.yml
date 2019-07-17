@@ -476,6 +476,8 @@ services:
       CONTROL_CENTER_METADATA_URLS: http://broker:8090
       
       CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SASL_PLAINTEXT
+      # The following configs are not required by C3 itself, but are required by cub to be able to connect to kafka to check if its ready
+      # Seems like C3 would generate these configs when started, but cub runs before C3 starts, so it doesn't have access to these configs
       CONTROL_CENTER_STREAMS_SASL_MECHANISM: OAUTHBEARER
       CONTROL_CENTER_STREAMS_SASL_LOGIN_CALLBACK_HANDLER_CLASS: io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
       CONTROL_CENTER_STREAMS_SASL_JAAS_CONFIG: |
