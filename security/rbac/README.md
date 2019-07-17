@@ -12,7 +12,7 @@ This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluen
 
 ## Prerequisites
 
-1. [Confluent CLI](https://docs.confluent.io/current/cli/installing.html): `confluent` CLI must be installed on your machine, version `v0.127.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
+1. [Confluent CLI](https://docs.confluent.io/current/cli/installing.html): `confluent` CLI must be installed on your machine, version `v0.127.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html))
 2. [Confluent Platform 5.3](https://www.confluent.io/download/): use a clean install of Confluent Platform without modified properties files, or else the demo is not guaranteed to work
 3. `jq`
 
@@ -48,11 +48,28 @@ $ ./enable-rbac-rest-proxy.sh
 # The original configuration bundled with Confluent Platform
 $ ls /tmp/original_configs/
 
-# Configurations added to each components' properties file
+# Configurations added to each service's properties file
 $ ls ../delta_configs/
 
 # The modified configuration = original + delta
 $ ls /tmp/rbac_configs/
+```
+
+4. After you run the demo, view the log files for each of the services. Since this demo uses Confluent CLI, all logs are saved in a temporary directory specified by `confluent local current`.
+
+```bash
+$ ls `confluent local current | tail -1`
+connect
+kafka
+kafka-rest
+schema-registry
+zookeeper
+```
+
+5. In this demo, the metadata service (MDS) logs are saved in the above temporary directory.
+
+```bash
+$ cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
 ```
 
 ## Stop the demo
@@ -66,7 +83,7 @@ $ ./cleanup.sh
 
 # Summary of Configurations and Role Bindings
 
-Here is a summary of the delta configurations and required role bindings, by component.
+Here is a summary of the delta configurations and required role bindings, by service.
 
 Reminder: for simplicity, this demo uses the Hash Login service instead of LDAP.
 If you are using LDAP in your environment, extra configurations are required.
