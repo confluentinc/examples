@@ -425,8 +425,7 @@ services:
                                                                           username="fry" \
                                                                           password="fry" \
                                                                           metadataServerUrls="http://broker:8090";
-    
-  # C3 DOESN'T WORK YET
+
   control-center:
     image: confluentinc/cp-enterprise-control-center:sanity
     hostname: control-center
