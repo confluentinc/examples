@@ -30,10 +30,14 @@ login_mds $MDS
 
 ##################################################
 # Administrative Functions
+# - Grant principal User:$USER_ADMIN_C3 the SystemAdmin role to the Kafka cluster
 ##################################################
 
 # Get the Kafka cluster id
 get_cluster_id_kafka
+echo -e "\n# Grant principal User:$USER_ADMIN_C3 the SystemAdmin role to the Kafka cluster"
+echo "confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Control Center"
 confluent local start control-center
