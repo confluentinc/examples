@@ -1,0 +1,4 @@
+sasl.mechanism=OAUTHBEARER
+security.protocol=SASL_PLAINTEXT
+sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="clientrp" password="clientrp1" metadataServerUrls="http://localhost:8090";
