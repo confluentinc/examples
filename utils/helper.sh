@@ -345,3 +345,12 @@ function get_cluster_id_connect () {
   return 0
 }
 
+function get_service_id_ksql () {
+  KSQL_SERVICE_ID=$(curl --silent -u ksql:ksql1 http://localhost:8088/info | jq -r '.KsqlServerInfo."ksqlServiceId"')
+  if [[ -z "$KSQL_SERVICE_ID" ]]; then
+    echo "Failed to get KSQL service ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+

@@ -128,9 +128,6 @@ echo -e "\n# List the role bindings for the principal User:$USER_CLIENT_A to the
 echo "confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-#cp ../config/kafka-connect-datagen-connector.cfg /tmp/kafka-connect-datagen-connector.cfg
-#cat ${DELTA_CONFIGS_DIR}/connector-source.properties.delta >> /tmp/kafka-connect-datagen-connector.cfg
-#confluent local config kafka-connect-datagen -- -d /tmp/kafka-connect-datagen-connector.cfg
 echo -e "\n# Create the connector"
 ./submit_datagen_pageviews_config_avro.sh 
 
@@ -155,4 +152,3 @@ confluent local consume $TOPIC2_AVRO -- --bootstrap-server localhost:9093 --from
 
 SAVE_CONFIGS_DIR=/tmp/rbac_configs
 restore_configs $CONFLUENT_HOME/etc/schema-registry/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac
-#mv /tmp/kafka-connect-datagen-connector.cfg ${SAVE_CONFIGS_DIR}/kafka-connect-datagen-connector.cfg.rbac
