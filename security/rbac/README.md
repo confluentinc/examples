@@ -41,6 +41,7 @@ $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
 $ ./enable-rbac-rest-proxy.sh
 $ ./enable-rbac-ksql-server.sh
+$ ./enable-rbac-control-center.sh
 ```
 
 3. After you run the demo, view the configuration files:
@@ -61,6 +62,7 @@ $ ls /tmp/rbac_configs/
 ```bash
 $ ls `confluent local current | tail -1`
 connect
+control-center
 kafka
 kafka-rest
 ksql-server
@@ -169,7 +171,6 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role Resour
 confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
-
 # KSQL CLI queries
 confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperWrite --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
@@ -180,3 +181,10 @@ confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role Deve
 confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 ```
+
+
+## Control Center
+
+* [delta_configs/control-center-dev.properties.delta](delta_configs/control-center-dev.properties.delta)
+* Role bindings:
+
