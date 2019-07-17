@@ -133,7 +133,6 @@ confluent iam rolebinding create --principal User $USER_CLIENT_A --role Resource
 # REST Proxy Admin: no additional administrative rolebindings required because REST Proxy just does impersonation
 
 # Producer/Consumer
-<<<<<<< HEAD
 confluent iam rolebinding create --principal User $USER_CLIENT_RP --role ResourceOwner --resource Topic $TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User $USER_CLIENT_RP --role DeveloperRead --resource Group $CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
 ```
