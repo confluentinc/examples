@@ -4,9 +4,10 @@
 
 This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
 
-## Notes
+## Caveats
 
-* For simplicity, this demo does not require the use of LDAP. Instead it uses the Hash Login service with statically defined users/passwords
+* For simplicity, this demo does not use LDAP, instead it uses the Hash Login service with statically defined users/passwords. Additional configurations would be required if you wanted to augment the demo to connect to your LDAP server.
+* The RBAC configurations and role bindings in this demo are not comprehensive, they are only for development to get minimum RBAC functionality set up across all the services in Confluent Platform. Please refer to the [RBAC documentation](https://docs.confluent.io/current/security/rbac/index.html) for comprehensive configuration and production guidance.
 
 # Run the demo
 
@@ -41,6 +42,7 @@ $ ./enable-rbac-schema-registry.sh
 $ ./enable-rbac-connect.sh
 $ ./enable-rbac-rest-proxy.sh
 $ ./enable-rbac-ksql-server.sh
+$ ./enable-rbac-control-center.sh
 ```
 
 3. After you run the demo, view the configuration files:
@@ -61,6 +63,7 @@ $ ls /tmp/rbac_configs/
 ```bash
 $ ls `confluent local current | tail -1`
 connect
+control-center
 kafka
 kafka-rest
 ksql-server
@@ -169,7 +172,6 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role Resour
 confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
-
 # KSQL CLI queries
 confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperWrite --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
@@ -179,4 +181,22 @@ confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role Deve
 confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+```
+
+
+## Control Center
+
+* [delta_configs/control-center-dev.properties.delta](delta_configs/control-center-dev.properties.delta)
+* Role bindings:
+
+```bash
+# Control Center Admin
+confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+# Control Center user
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 ```
