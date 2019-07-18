@@ -18,4 +18,7 @@
 - All other services are at localhost with standard ports (e.g. C3 is 9091 etc)
 - Login to CLI as `professor:professor` as a super user to grant initial role bindings
 - User `bender:bender` doesn't have any role bindings set up and can be used as a user under test
+    - You can use `./client-configs/bender.properties` file to authenticate as `bender` from kafka console commands (like `kafka-console-producer`, `kafka-console-consumer`, `kafka-topics` and the like)
+    - This file is also mounted into broker docker container, so you can `docker-compose -p [project-name] exec broker /bin/bash` to open bash on broker and then use console commands with `/etc/client-configs/bender.properties`
+    - When running console commands from inside the broker container, use `localhost:9092`
 - All users have password which is the same as their user name, except `amy`. Her password I don't know, so I usually connect to OpenLDAP via Apache Directory Studio and change her password to `amy`. Then use her as a second user under test.
