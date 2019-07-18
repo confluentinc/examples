@@ -5,3 +5,5 @@ confluent.controlcenter.streams.security.protocol=SASL_PLAINTEXT
 confluent.controlcenter.metadata.username=c3
 confluent.controlcenter.metadata.password=c31
 confluent.controlcenter.metadata.urls=http://localhost:8090
+
+confluent.controlcenter.schema.registry.basic.auth.user.info=c3:c31
