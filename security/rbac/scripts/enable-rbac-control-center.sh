@@ -47,7 +47,22 @@ sleep 10
 
 ##################################################
 # Control Center client functions
+# From the Control Center UI, login with username=clientc and password=clientc1
 ##################################################
+
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+get_cluster_id_schema_registry
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
+get_cluster_id_connect
+confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+
+echo -e "\n# List the role bindings for User:$USER_CLIENT_C to the Kafka cluster"
+echo "confluent iam rolebinding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID
+
 
 
 ##################################################
