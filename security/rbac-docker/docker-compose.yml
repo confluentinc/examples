@@ -187,7 +187,9 @@ services:
       CUB_CLASSPATH: '/etc/confluent/docker/docker-utils.jar:/usr/share/java/confluent-security/schema-registry/*:/usr/share/java/schema-registry/*'
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      # Uncomment if you don't have a license and would like to test as part of a trial period
+      # SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      
       # configure how to connect to kafka for SR to store its internal info
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker:9092
       SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: SASL_PLAINTEXT
@@ -212,7 +214,6 @@ services:
       SCHEMA_REGISTRY_CONFLUENT_METADATA_BASIC_AUTH_USER_INFO: leela:leela
       # public key to verify tokens during authentication
       SCHEMA_REGISTRY_PUBLIC_KEY_PATH: /tmp/conf/public.pem
-      SCHEMA_REGISTRY_AUTHENTICATION_ROLES: '**'
   
   ksql-server:
     image: confluentinc/cp-ksql-server:sanity
@@ -366,10 +367,18 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: connect-status
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
       
-      # key and value converter
+      # Key and value converters
+      # Example of String converter:
       # CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      
+      # Example of Avro converter:
       # CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       # CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      # CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'true'
+      # CONNECT_VALUE_CONVERTER_BASIC_AUTH_USER_INFO: bender:bender
+      # CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE: USER_INFO
+      
+      # Default to Json converters:
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_INTERNAL_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
