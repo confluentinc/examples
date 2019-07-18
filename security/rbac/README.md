@@ -6,8 +6,8 @@ This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluen
 
 ## Caveats
 
-* For simplicity, this demo does not require the use of LDAP. Instead it uses the Hash Login service with statically defined users/passwords
-* The RBAC configurations and role bindings in this demo are not comprehensive, they are for development to get minimum RBAC functionality across all the services in Confluent Platform. Please refer to the [RBAC documentation](https://docs.confluent.io/current/security/rbac/index.html) for comprehensive configuration and production guidance. 
+* For simplicity, this demo does not use LDAP, instead it uses the Hash Login service with statically defined users/passwords. Additional configurations would be required if you wanted to augment the demo to connect to your LDAP server.
+* The RBAC configurations and role bindings in this demo are not comprehensive, they are only for development to get minimum RBAC functionality set up across all the services in Confluent Platform. Please refer to the [RBAC documentation](https://docs.confluent.io/current/security/rbac/index.html) for comprehensive configuration and production guidance.
 
 # Run the demo
 
