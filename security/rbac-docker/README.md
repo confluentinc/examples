@@ -1,5 +1,21 @@
+- This docker-based setup includes:
+    - zookeeper
+    - openldap
+    - kafka with MDS, connected to the openLDAP
+    - schema registry
+    - ksql
+    - connect
+    - rest proxy
+    - C3
 - First, pull docker images via `./pull-docker-images.sh [tag]` - if testing 5.3, use `5.3.x-latest` as a tag
 - This will pull all confluent platform docker images and tag them as `confluentinc/<image>:sanity`
 - Then start confluent platform via `./confluent-start.sh [project-name]` where `project-name` is optional name of docker-compose project (-p flag), defaults to `rbac`
 - This creates a docker-compose project called `[project-name]` (or `rbac`)
 - Now you can use standard docker-compose commands like this: `docker-compose -p [project-name] ps` or `docker-compose -p [project-name] logs --t 200 -f control-center`
+- The script will print you cluster ids to use in assigning role bindings
+- Kafka broker is available at `localhost:9094`
+- OpenLDAP is `localhost:389`
+- All other services are at localhost with standard ports (e.g. C3 is 9091 etc)
+- Login to CLI as `professor:professor` as a super user to grant initial role bindings
+- User `bender:bender` doesn't have any role bindings set up and can be used as a user under test
+- All users have password which is the same as their user name, except `amy`. Her password I don't know, so I usually connect to OpenLDAP via Apache Directory Studio and change her password to `amy`. Then use her as a second user under test.
