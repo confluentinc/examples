@@ -64,6 +64,8 @@ echo "confluent iam rolebinding list --principal User:$USER_CLIENT_C --kafka-clu
 confluent iam rolebinding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 
+curl --silent -u $USER_CLIENT_C:${USER_CLIENT_C}1 http://localhost:8081/subjects/${TOPIC2_AVRO}-value/versions/latest | jq .
+
 
 ##################################################
 # Cleanup
