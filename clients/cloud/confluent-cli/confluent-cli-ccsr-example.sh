@@ -1,5 +1,13 @@
 #!/bin/bash
 
+CONFIG_FILE=~/.ccloud/config
+
+source ../../../utils/helper.sh
+
+check_env || exit
+check_cli_v2 || exit
+check_ccloud_config $CONFIG_FILE || exit
+
 set -eu
 
 ../../../ccloud/ccloud-generate-cp-configs.sh
@@ -9,9 +17,11 @@ source delta_configs/env.delta
 topic_name=test2
 
 # Create topic in Confluent Cloud
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic $topic_name --create --replication-factor 3 --partitions 6
+echo -e "\n# Create topic $topic_name"
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $topic_name --create --replication-factor 3 --partitions 6 2>/dev/null || true
 
 # Produce messages
+echo -e "\n# Produce messages to $topic_name"
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "{\"count\":${i}}" ; done) | \
    confluent local produce $topic_name -- \
@@ -20,13 +30,15 @@ num_messages=10
                                        --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' \
                                        --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} \
                                        --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} \
-                                       --property schema.registry.url=${SCHEMA_REGISTRY_URL}
+                                       --property schema.registry.url=${SCHEMA_REGISTRY_URL} 2>/dev/null
 
 # Consume messages
+echo -e "\n# Consume messages from $topic_name"
 confluent local consume $topic_name -- \
                                     --cloud \
                                     --value-format avro \
                                     --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} \
                                     --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} \
                                     --property schema.registry.url=${SCHEMA_REGISTRY_URL} \
-                                    --from-beginning
+                                    --from-beginning \
+                                    --timeout-ms 10000 2>/dev/null
