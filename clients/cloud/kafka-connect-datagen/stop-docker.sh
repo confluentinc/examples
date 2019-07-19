@@ -3,9 +3,6 @@
 # Source library
 . ../../../utils/helper.sh
 
-check_ccloud || exit
-check_ccloud_v1 || exit 1
-
 ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
 source ./delta_configs/env.delta
 
@@ -23,11 +20,11 @@ do
 done
 
 topics_to_delete="test1 test2 connect-configs connect-status connect-statuses connect-offsets"
-topics=$(ccloud topic list)
+topics=$(kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list)
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
   if [[ $? == 0 ]]; then
-    ccloud topic delete $topic
+    kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --delete --topic $topic
   fi
 done

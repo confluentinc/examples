@@ -9,7 +9,7 @@ source delta_configs/env.delta
 topic_name=test2
 
 # Create topic in Confluent Cloud
-ccloud topic create $topic_name || true
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic $topic_name --create --replication-factor 3 --partitions 6
 
 # Produce messages
 num_messages=10

@@ -22,7 +22,7 @@ The consumer reads the same topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test1
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test1`, passing in additional arguments:
@@ -96,7 +96,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 4. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test2
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
 5. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test2`, passing in additional arguments:
