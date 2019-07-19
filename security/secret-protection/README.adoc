@@ -2,8 +2,8 @@
 
 == Introduction
 
-Confluent's Secret Protection feature encrypts sensitive data.
-Instead of storing passwords or other sensitive data as clear text, Secret Protection encrypts it within the configuration file itself.
+Confluent's Secret Protection feature encrypts secrets in configuration files.
+Instead of storing passwords or other sensitive data as cleartext, Secret Protection encrypts it within the configuration file itself.
 
 === How to Use This Tutorial
 
@@ -14,7 +14,7 @@ You may either step through this tutorial manually, or run the link:demo-secret-
 Before you start:
 
 . Download link:https://www.confluent.io/download/[Confluent Platform 5.3] or higher
-. Get the new link:https://docs.confluent.io/current/cli/installing.html[Confluent CLI] (v0.103.0 or above)
+. Get the new link:https://docs.confluent.io/current/cli/installing.html[Confluent CLI] (v0.128.0 or above)
 
 == Workflow
 
@@ -26,7 +26,7 @@ Therefore, instead of encrypting a password, we will encrypt a basic configurati
 
 First choose your master encryption key passphrase, a phrase that is much longer than a typical password and is easily remembered as a string of words, and enter this passphrase into a file to be passed into the CLI, to avoid logging history showing the passphrase.
 Then choose the location of where the secrets file will reside on your local host (not where the Confluent Platform services run).
-The secrets file will contain encrypted secrets for the master encryption key, data encryption key, and configuration parameters, along with their metadata such as which cipher was used for encryption.
+The secrets file will contain encrypted secrets for the master encryption key, secret encryption key, and configuration parameters, along with their metadata such as which cipher was used for encryption.
 Now you are ready to generate the master encryption key:
 
 [source,bash]
@@ -99,7 +99,7 @@ config.storage.topic = connect-configs
 
 === Update the value of the configuration parameter
 
-You may have a requirement to update sensitive data on a regular basis, to help them from getting stale.
+You may have a requirement to update secrets on a regular basis, to help them from getting stale.
 The configuration parameter `config.storage.topic` was originally set to `connect-configs`.
 If you need to change the value in the future, you can update it directly using the CLI.
 In the CLI below, pass in a file `/path/to/updated-config-and-value` that has written `config.storage.topic=newTopicName`, to avoid logging history showing the new value.
@@ -145,10 +145,10 @@ newTopicName   <<<<<<<
 
 === Going to production
 
-So far we have covered how to create the master encryption key and encrypt sensitive data in the configuration files.
+So far we have covered how to create the master encryption key and encrypt secrets in the configuration files.
 We recommend that you operationalize this workflow by augmenting your orchestration tooling to distribute everything that you need for secret protection to work to the destination hosts.
 These hosts may include Kafka brokers, Connect workers, Confluent Schema Registry instances, KSQL servers, Confluent Control Center, etc., any service using password encryption.
-The CLI is flexible to accommodate whatever secret distribution model you prefer: you can either do the secret generation and configuration modification on each destination host directly, or do it all a single host and then distribute the secret data to the destination hosts.
+The CLI is flexible to accommodate whatever secret distribution model you prefer: you can either do the secret generation and configuration modification on each destination host directly, or do it all a single host and then distribute the encrypted secrets to the destination hosts.
 There are four required tasks:
 
 . Export the master encryption key into the environment on every host that will have a configuration file with secret protection.
@@ -156,8 +156,8 @@ There are four required tasks:
 . Propagate the necessary configuration file changes: update the configuration file on all hosts so that the configuration parameter now has the tuple for secrets.
 . Restart the services if they were already running.
 
-You may also have a requirement to rotate the master encryption key or data encryption key on a regular basis.
-You can do either of these with the CLI, and the example below is for rotating just the data encryption key.
+You may also have a requirement to rotate the master encryption key or secret encryption key on a regular basis.
+You can do either of these with the CLI, and the example below is for rotating just the secret encryption key.
 
 [source,bash]
 ----
