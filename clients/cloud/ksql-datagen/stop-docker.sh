@@ -9,15 +9,7 @@ check_ccloud_config $CONFIG_FILE || exit
 ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
 source ./delta_configs/env.delta
 
-topics_to_delete="test1 test2"
-topics=$(docker-compose exec connect bash -c 'kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" /tmp/ak-tools-ccloud.delta | tail -1` --command-config /tmp/ak-tools-ccloud.delta --list 2>/dev/null')
-for topic in $topics_to_delete
-do
-  echo $topics | grep $topic &>/dev/null
-  if [[ $? == 0 ]]; then
-    docker-compose exec connect bash -c 'kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" /tmp/ak-tools-ccloud.delta | tail -1` --command-config /tmp/ak-tools-ccloud.delta --topic $topic --delete'
-  fi
-done
+./delete-topics.sh
 
 docker-compose down
 

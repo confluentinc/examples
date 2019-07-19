@@ -13,6 +13,8 @@ source ./delta_configs/env.delta
 
 docker-compose up -d connect
 sleep 5
+./delete-topics.sh
+
 docker-compose exec connect bash -c 'kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" /tmp/ak-tools-ccloud.delta | tail -1` --command-config /tmp/ak-tools-ccloud.delta --topic test2 --create --replication-factor 3 --partitions 6'
 docker-compose up -d ksql-datagen-avro
 sleep 15
