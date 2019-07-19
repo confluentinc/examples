@@ -3,23 +3,29 @@
 # Source library 
 . ../utils/helper.sh
 
-check_env || exit 1
-check_ccloud || exit
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
 
-topics=$(ccloud topic list)
+./ccloud-generate-cp-configs.sh
+source delta_configs/env.delta
+
+check_env || exit 1
+
+topics=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --list)
 
 for topic in $topics
 do
   if [[ ${topic:0:10} == '_confluent' ]]; then
-    ccloud topic delete $topic
+    echo "Deleting $topic"
+    kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta -delete --topic $topic 2>/dev/null
   fi
 done
 
 topics_to_delete="_schemas connect-configs connect-status connect-statuses connect-offsets"
 for topic in $topics_to_delete
 do
-  echo $topics | grep $topic &>/dev/null
-  if [[ $? == 0 ]]; then
-    ccloud topic delete $topic
+  if [[ $(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --describe --topic $topic 2>/dev/null) =~ "Topic:${topic}"$'\t' ]]; then
+    echo "Deleting $topic"
+    kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta -delete --topic $topic 2>/dev/null
   fi
 done

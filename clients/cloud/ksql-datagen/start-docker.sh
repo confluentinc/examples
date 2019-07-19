@@ -12,8 +12,7 @@ check_ccloud_config $CONFIG_FILE || exit
 source ./delta_configs/env.delta 
 
 docker-compose up -d connect
-echo "Sleeping 10 seconds"
-sleep 10
+sleep 5
 ./delete-topics.sh
 
 docker-compose exec connect bash -c 'kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" /tmp/ak-tools-ccloud.delta | tail -1` --command-config /tmp/ak-tools-ccloud.delta --topic test1 --create --replication-factor 3 --partitions 6'

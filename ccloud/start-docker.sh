@@ -4,7 +4,8 @@
 . ../utils/helper.sh
 
 check_jq || exit
-
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
 
 . ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
@@ -21,9 +22,6 @@ if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 fi
 
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic users --create --replication-factor 3 --partitions 6
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic pageviews --create --replication-factor 3 --partitions 6
-
 docker-compose up -d --build
 
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
@@ -37,6 +35,9 @@ fi
 
 echo "Sleeping 120 seconds to wait for all services to come up"
 sleep 120
+
+docker-compose exec connect-cloud bash -c 'kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --topic users --create --replication-factor 3 --partitions 6'
+docker-compose exec connect-cloud bash -c 'kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --topic pageviews --create --replication-factor 3 --partitions 6'
 
 # Reregister a schema for a topic with a different name
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
