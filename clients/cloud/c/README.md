@@ -28,7 +28,7 @@ the SASL username and password, as shown in your Confluent Cloud settings.
 Additional configuration properties are supported, see [CONFIGURATION.md](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md) for the full list.
 
 ```bash
-$ cat ~/.ccloud/example.config
+$ cat $HOME/.ccloud/example.config
 bootstrap.servers=<broker-1,broker-2,broker-3>
 sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
@@ -43,7 +43,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 1. Run the producer, passing in arguments for (a) the topic name, and (b) the local file with configuration parameters to connect to your Confluent Cloud instance:
 
 ```bash
-$ ./producer test1 ~/.ccloud/example.config
+$ ./producer test1 $HOME/.ccloud/example.config
 Creating topic test1
 Topic test1 successfully created
 Producing message #0 to test1: alice={ "count": 1 }
@@ -74,7 +74,7 @@ Message delivered to test1 [0] at offset 9 in 22.81ms: { "count": 10 }
 2. Run the consumer, passing in arguments for (a) the same topic name as used above, (b) the local file with configuration parameters to connect to your Confluent Cloud instance. Verify that the consumer received all the messages, then press Ctrl-C to exit.
 
 ```bash
-$ ./consumer test1 ~/.ccloud/example.config
+$ ./consumer test1 $HOME/.ccloud/example.config
 Subscribing to test1, waiting for assignment and messages...
 Press Ctrl-C to exit.
 Received message on test1 [0] at offset 0: { "count": 1 }
