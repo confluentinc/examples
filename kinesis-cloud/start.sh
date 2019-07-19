@@ -95,8 +95,8 @@ fi
 # Verify connector plugins are found
 curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep Kinesis
 curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep S3
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic $KAFKA_TOPIC_NAME_OUT --create --replication-factor 3 --partitions 6
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic $KAFKA_TOPIC_NAME_OUT --create --replication-factor 3 --partitions 6
 . ./submit_kinesis_config.sh
 sleep 20
 
