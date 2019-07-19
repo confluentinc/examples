@@ -59,10 +59,20 @@ set -eu
 
 ################################################################################
 # Confluent Cloud configuration
+#
+# Example file at $HOME/.ccloud/config
+#
+#   $ cat $HOME/.ccloud/config
+#   bootstrap.servers=<BROKER ENDPOINT>
+#   ssl.endpoint.identification.algorithm=https
+#   security.protocol=SASL_SSL
+#   sasl.mechanism=PLAIN
+#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#
 ################################################################################
 CCLOUD_CONFIG=$HOME/.ccloud/config
 if [[ ! -f $CCLOUD_CONFIG ]]; then
-  echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
+  echo "File at $CCLOUD_CONFIG is not found.  Please create this properties file to connect to your Confluent Cloud cluster and then try again"
   exit 1
 fi
 
