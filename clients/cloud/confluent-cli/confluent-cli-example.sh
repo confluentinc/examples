@@ -23,6 +23,7 @@ num_messages=10
 (for i in `seq 1 $num_messages`; do echo "alice,{\"count\":${i}}" ; done) | \
    confluent local produce $topic_name -- \
                                        --cloud \
+                                       --config $CONFIG_FILE \
                                        --property parse.key=true \
                                        --property key.separator=, 2>/dev/null
 
@@ -30,6 +31,7 @@ num_messages=10
 echo -e "\n# Consume messages from $topic_name"
 confluent local consume $topic_name -- \
                                     --cloud \
+                                    --config $CONFIG_FILE \
                                     --property print.key=true \
                                     --from-beginning \
                                     --timeout-ms 10000 2>/dev/null
