@@ -3,9 +3,7 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud || exit
 check_jq || exit
-check_ccloud_v1 || exit 1
 
 
 . ./config.sh
@@ -23,8 +21,8 @@ if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
   validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 fi
 
-ccloud topic create users
-ccloud topic create pageviews
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic users --create --replication-factor 3 --partitions 6
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic pageviews --create --replication-factor 3 --partitions 6
 
 docker-compose up -d --build
 

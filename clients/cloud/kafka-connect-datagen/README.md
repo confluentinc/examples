@@ -23,7 +23,7 @@ Use CLI to read that topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test1
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
@@ -138,7 +138,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 4. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test2
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
 5. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.

@@ -6,7 +6,7 @@ set -eu
 topic_name=test1
 
 # Create topic in Confluent Cloud
-ccloud topic create $topic_name || true
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic $topic_name --create --replication-factor 3 --partitions 6
 
 # To specify the configuration file for connecting to the Confluent Cloud cluster
 #  option 1: use `-F <path>` argument (shown in the code below)

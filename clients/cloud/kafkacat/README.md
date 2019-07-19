@@ -19,7 +19,7 @@ The consumer reads the same topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test1
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Run `kafkacat`, writing messages to topic `test1`, passing in additional arguments:

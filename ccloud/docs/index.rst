@@ -107,7 +107,7 @@ Playbook
 
    .. sourcecode:: bash
 
-     $ ccloud topic create test
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test --create --replication-factor 3 --partitions 6
      Topic "test" created.
      $ ccloud produce -t test  
      a

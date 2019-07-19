@@ -3,9 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-check_ccloud || exit
-check_ccloud_v1 || exit 1
-
 ./ccloud-generate-cp-configs.sh
 source delta_configs/env.delta
 
@@ -25,13 +22,13 @@ if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   done
 fi
 
-topics=$(ccloud topic list)
+topics=$(kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list)
 
 topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
   if [[ $? == 0 ]]; then
-    ccloud topic delete $topic
+    kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --delete --topic $topic
   fi
 done

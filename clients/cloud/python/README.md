@@ -100,7 +100,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 4. Create the topic in Confluent Cloud
 
 ```bash
-$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/example.config | tail -1` --command-config ~/.ccloud/example.config --topic test2 --create --replication-factor 3 --partitions 12
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/example.config | tail -1` --command-config ~/.ccloud/example.config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
 5. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
