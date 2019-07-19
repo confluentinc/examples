@@ -79,10 +79,10 @@ fi
 PERM=600
 if ls --version 2>/dev/null | grep -q 'coreutils' ; then
   # GNU binutils
-  PERM=$(stat -c "%a" $HOME/.ccloud/config)
+  PERM=$(stat -c "%a" $CCLOUD_CONFIG)
 else
   # BSD
-  PERM=$(stat -f "%OLp" $HOME/.ccloud/config)
+  PERM=$(stat -f "%OLp" $CCLOUD_CONFIG)
 fi
 #echo "INFO: setting file permission to $PERM"
 

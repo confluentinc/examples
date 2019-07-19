@@ -7,6 +7,9 @@ check_env || exit 1
 check_jq || exit 1
 check_running_cp 5.3 || exit 1
 
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
+
 if ! is_ce ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community software. Exiting"
   exit 1
@@ -20,7 +23,7 @@ CONFLUENT_CURRENT=`confluent local current | tail -1`
 
 . ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
-  SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
+  SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 else
   SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
 fi
@@ -47,7 +50,7 @@ else
   echo "Starting Confluent Schema Registry to Confluent Cloud and sleeping 40 seconds"
   schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
   sleep 40
-  kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --describe --topic _schemas
+  kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --describe --topic _schemas
   if [[ $? == 1 ]]; then
     echo "ERROR: Schema Registry could not create topic '_schemas' in Confluent Cloud. Please troubleshoot"
     exit
@@ -84,7 +87,7 @@ connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.
 sleep 40
 
 # Produce to topic users in CCloud cluster
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic users --create --replication-factor 3 --partitions 6
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic users --create --replication-factor 3 --partitions 6
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 #KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
 #cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
@@ -96,7 +99,7 @@ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | 
 #jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic pageviews --create --replication-factor 3 --partitions 6
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic pageviews --create --replication-factor 3 --partitions 6
 . ./connectors/submit_replicator_config.sh
 echo "Starting Replicator and sleeping 60 seconds"
 sleep 60

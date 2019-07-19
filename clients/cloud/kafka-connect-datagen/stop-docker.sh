@@ -3,17 +3,13 @@
 # Source library
 . ../../../utils/helper.sh
 
-../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
+
+../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source ./delta_configs/env.delta
 
-topics_to_delete="test1 test2 connect-configs connect-status connect-statuses connect-offsets"
-for topic in $topics_to_delete
-do
-  if [[ $(docker-compose exec connect kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --describe --topic $topic) =~ "Topic:${topic}"$'\t' ]]; then
-    echo "Deleting $topic"
-    docker-compose exec connect kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta -delete --topic $topic 2>/dev/null
-  fi
-done
+./delete-topics.sh
 
 docker-compose down
 

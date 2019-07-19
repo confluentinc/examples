@@ -6,7 +6,7 @@
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
 
-../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
+../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source ./delta_configs/env.delta
 
 ./delete-topics.sh
