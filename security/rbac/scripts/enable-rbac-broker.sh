@@ -109,8 +109,8 @@ echo "confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/cl
 confluent local consume $TOPIC1 -- --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
 
 echo -e "\n# Consume from topic $TOPIC1 from PLAINTEXT endpoint"
-echo "confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
-confluent local consume $TOPIC1 -- --bootstrap-server localhost:9093 --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
+echo "confluent local consume $TOPIC1 -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+confluent local consume $TOPIC1 -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
 
 
 ##################################################
