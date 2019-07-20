@@ -12,6 +12,8 @@ source delta_configs/env.delta
 check_env || exit 1
 check_aws || exit
 
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
 
 # Clean up AWS Kinesis and cloud storage
 echo "Clean up AWS Kinesis and cloud storage"
@@ -30,13 +32,13 @@ fi
 rm -f data.avro
 
 # Delete topics in Confluent Cloud
-topics=$(ccloud topic list)
+topics=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --list)
 topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT COUNT_PER_CITY connect-configs connect-statuses connect-offsets"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
   if [[ $? == 0 ]]; then
-    ccloud topic delete $topic
+    kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --delete --topic $topic
   fi
 done
 

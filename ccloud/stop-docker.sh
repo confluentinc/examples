@@ -3,8 +3,20 @@
 # Source library
 . ../utils/helper.sh
 
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
+
 ./ccloud-generate-cp-configs.sh
 source delta_configs/env.delta
+
+topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
+for topic in $topics_to_delete
+do
+  if [[ $(docker-compose exec connect-cloud kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --describe --topic $topic) =~ "Topic:${topic}"$'\t' ]]; then
+    echo "Deleting $topic"
+    docker-compose exec connect-cloud kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta -delete --topic $topic 2>/dev/null
+  fi
+done
 
 docker-compose down
 
@@ -21,14 +33,3 @@ if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
     curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
   done
 fi
-
-topics=$(kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list)
-
-topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
-for topic in $topics_to_delete
-do
-  echo $topics | grep $topic &>/dev/null
-  if [[ $? == 0 ]]; then
-    kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --delete --topic $topic
-  fi
-done
