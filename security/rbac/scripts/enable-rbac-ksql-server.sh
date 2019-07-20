@@ -127,6 +127,7 @@ echo -e "\n# KSQL CLI: create a new stream $STREAM and select * from that stream
 echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
 echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
 CREATE STREAM $STREAM (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited');
 SELECT * FROM $STREAM LIMIT 3;
 exit ;
@@ -153,6 +154,7 @@ echo -e "\n# KSQL CLI: create a new table and select * from that table, after au
 echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
 echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
 CREATE TABLE table2 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
 SELECT * FROM table2 LIMIT 3;
 exit ;
