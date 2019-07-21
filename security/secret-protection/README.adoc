@@ -26,7 +26,7 @@ Therefore, instead of encrypting a password, we will encrypt a basic configurati
 
 First choose your master encryption key passphrase, a phrase that is much longer than a typical password and is easily remembered as a string of words, and enter this passphrase into a file to be passed into the CLI, to avoid logging history showing the passphrase.
 Then choose the location of where the secrets file will reside on your local host (not where the Confluent Platform services run).
-The secrets file will contain encrypted secrets for the master encryption key, secret encryption key, and configuration parameters, along with their metadata such as which cipher was used for encryption.
+The secrets file will contain encrypted secrets for the master encryption key, data encryption key, and configuration parameters, along with their metadata such as which cipher was used for encryption.
 Now you are ready to generate the master encryption key:
 
 [source,bash]
@@ -156,8 +156,8 @@ There are four required tasks:
 . Propagate the necessary configuration file changes: update the configuration file on all hosts so that the configuration parameter now has the tuple for secrets.
 . Restart the services if they were already running.
 
-You may also have a requirement to rotate the master encryption key or secret encryption key on a regular basis.
-You can do either of these with the CLI, and the example below is for rotating just the secret encryption key.
+You may also have a requirement to rotate the master encryption key or data encryption key on a regular basis.
+You can do either of these with the CLI, and the example below is for rotating just the data encryption key.
 
 [source,bash]
 ----
