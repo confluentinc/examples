@@ -46,17 +46,17 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
 
 ## ACL Demo
 
-This [demo script](acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI (check your version with `ccloud version`).
+This [demo script](../security/acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI (check your version with `ccloud version`).
 
 ```bash
 $ ccloud version
 ccloud - Confluent Cloud CLI
 
-Version:     v0.87.0
-Git Ref:     3199a5156710e24e383d00ef1bd636e64bdd0187
-Build Date:  2019-05-25T01:10:40Z
+Version:     v0.103.0
+Git Ref:     3cf4086f89a8e06bb926bbf3589077e0bcad6a8e
+Build Date:  2019-06-12T23:54:46Z
 Build Host:  semaphore@semaphore-vm
-Go Version:  go1.12.1 (darwin/amd64)
+Go Version:  go1.12.5 (darwin/amd64)
 Development: false
 ```
 
@@ -67,7 +67,7 @@ Development: false
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class

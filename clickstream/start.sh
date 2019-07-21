@@ -5,14 +5,14 @@
 
 check_env || exit 1
 check_jq || exit 1
-check_running_cp 5.1 || exit 1
+check_running_cp 5.3 || exit 1
 check_running_elasticsearch 5.6.5 || exit 1
 check_running_grafana 5.0.3 || exit 1
 
 ./stop.sh
 
 cp -nR ksql/ksql-clickstream-demo/demo/connect-config/null-filter-4.0.0-SNAPSHOT.jar $CONFLUENT_HOME/share/java/kafka-connect-elasticsearch/.
-confluent start
+confluent local start
 
 if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
 ksql-datagen -daemon quickstart=clickstream format=json topic=clickstream maxInterval=100 iterations=500000 $PROPERTIES &>/dev/null &

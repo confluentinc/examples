@@ -6,9 +6,10 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 # Prerequisites
 
 * [.NET Core 2.1](https://dotnet.microsoft.com/download) or higher to run the demo application
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html) installed on your machine. It is provided as part of the Confluent Platform package or may be [installed separately](https://docs.confluent.io/current/cloud/cli/install.html).
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Initialize](https://docs.confluent.io/current/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config` (`%HOMEPATH%/.ccloud/config` on Windows).
+* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
+* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
+
 
 # Example
 
@@ -65,10 +66,10 @@ Produced record to topic test1 partition [0] @ offset 9
 Run the consumer, passing in arguments for (a) whether to produce or consume (consume) (b) the same topic name as used above (c) the local file with configuration parameters to connect to your Confluent Cloud instance and (d, Windows only) a local file with default trusted root CA certificates. Verify that the consumer received all the messages:
 
 ```shell
-# Run the producer (Windows)
+# Run the consumer (Windows)
 $ dotnet run consume test1 %HOMEPATH%/.ccloud/config /path/to/curl/cacert.pem
 
-# Run the producer (other)
+# Run the consumer (other)
 $ dotnet run consume test1 $HOME/.ccloud/config
 ```
 

@@ -7,11 +7,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>5.1.2</version>
+      <version>5.3.0</version>
   </parent>
 
   <artifactId>connect-streams-examples</artifactId>
-  <version>5.1.2</version>
+  <version>5.3.0</version>
   <packaging>jar</packaging>
     <repositories>
         <repository>
@@ -21,7 +21,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </repositories>
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
-    <licenses.version>5.1.2</licenses.version>
+    <licenses.version>5.3.0</licenses.version>
     <avro.version>1.8.2</avro.version>
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -100,13 +100,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.18</version> <!-- bumping to latest checkstyle version -->
-                    </dependency>
-                </dependencies>
                 <executions>
                     <!--
                      This declaration merges with the one in the parent, rather

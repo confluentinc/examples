@@ -7,11 +7,11 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>5.1.2</version>
+      <version>5.3.0</version>
   </parent>
 
   <artifactId>java-client-avro-examples</artifactId>
-  <version>5.1.2</version>
+  <version>5.3.0</version>
 
   <packaging>jar</packaging>
   <properties>
@@ -99,7 +99,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <plugin>
           <groupId>io.confluent</groupId>
           <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-          <version>5.1.2</version>
+          <version>5.3.0</version>
           <configuration>
               <schemaRegistryUrls>
                   <param>http://localhost:8081</param>
@@ -115,13 +115,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>8.18</version> <!-- bumping to latest checkstyle version -->
-                    </dependency>
-                </dependencies>
                 <executions>
                     <!--
                      This declaration merges with the one in the parent, rather

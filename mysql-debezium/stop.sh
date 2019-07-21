@@ -6,7 +6,7 @@
 check_env || exit 1
 
 jps | grep DataGen | awk '{print $1;}' | xargs kill -9
-confluent destroy
+confluent local destroy
 curl --silent --output /dev/null -XDELETE "http://localhost:9200/ratings_enriched"
 
 # ps -ef | grep kibana | awk '{print $1;}' | xargs kill -9

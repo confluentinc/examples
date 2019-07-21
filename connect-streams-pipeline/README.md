@@ -16,7 +16,7 @@ For more information, please read [this blogpost](https://www.confluent.io/blog/
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.1](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
 * Maven command `mvn` to compile Java code
 * By default the `timeout` command is available on most Linux distributions but not Mac OS. This `timeout` command is used by the bash scripts to terminate consumer processes after a period of time. To install it on a Mac:
 
@@ -32,14 +32,14 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 ## Example 1: Kafka console producer -> Key:String and Value:String
 
-* Command line `kafka-console-producer` produces `String` keys and `String` values to a Kafka topic.
+* Command line `confluent local produce` produces `String` keys and `String` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for both key and value.
 
 ![image](images/example_1.jpg)
 
 ### Notes
 
-[KAFKA-2526](https://issues.apache.org/jira/browse/KAFKA-2526): one cannot use the `--key-serializer` argument in the `kafka-console-producer` to serialize the key as a `Long`. As a result, in this example the key is serialized as a `String`. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify `--line-reader` argument in the `kafka-console-producer`.
+[KAFKA-2526](https://issues.apache.org/jira/browse/KAFKA-2526): one cannot use the `--key-serializer` argument in the `confluent local produce` to serialize the key as a `Long`. As a result, in this example the key is serialized as a `String`. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify `--line-reader` argument in the `confluent local produce`.
 
 ## Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 

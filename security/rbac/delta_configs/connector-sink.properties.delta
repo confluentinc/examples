@@ -1,0 +1,1 @@
+consumer.override.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connector" password="connector1" metadataServerUrls="http://localhost:8090";

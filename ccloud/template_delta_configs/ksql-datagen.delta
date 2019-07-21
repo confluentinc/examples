@@ -1,4 +1,4 @@
-# Configuration derived from /Users/yeva/.ccloud/template.config
+# Configuration derived from template_delta_configs/example_ccloud_config
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 request.timeout.ms=20000

@@ -7,7 +7,7 @@ function check_env() {
   fi
 
   if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Run 'export PATH=\${CONFLUENT_HOME}/bin:\${PATH}' and try again"
+    echo "'confluent' is not found. Since CP 5.3, the Confluent CLI is a separate download. Install the new Confluent CLI (https://docs.confluent.io/current/cli/installing.html) and try again"
     exit 1
   fi
 
@@ -28,12 +28,36 @@ function check_ccloud() {
   return 0
 }
 
+function check_ccloud_v1() {
+  expected_version="0.2.0"
+
+  check_ccloud || exit 1
+
+  actual_version=$(ccloud version | grep -i "version" | awk '{print $3;}')
+  if ! [[ $actual_version =~ $expected_version ]]; then
+    echo "This demo requires Confluent Cloud CLI version $expected_version but the running version is '$actual_version'. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_ccloud_v2() {
 
   check_ccloud || exit 1
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_cli_v2() {
+
+  if [[ -z $(confluent version | grep "Go") ]]; then
+    echo "This demo requires the new Confluent CLI. Please update your version and try again."
     exit 1
   fi
 
@@ -58,10 +82,36 @@ function check_jq() {
   return 0
 }
 
+function check_aws() {
+  if [[ $(type aws 2>&1) =~ "not found" ]]; then
+    echo "AWS CLI is not found. Install AWS CLI and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_gsutil() {
+  if [[ $(type gsutil 2>&1) =~ "not found" ]]; then
+    echo "Google Cloud gsutil is not found. Install Google Cloud gsutil and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_gcp_creds() {
+  if [[ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]] && [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
+    echo "To run this demo to GCS, either set the env parameter 'GOOGLE_APPLICATION_CREDENTIALS' or run 'gcloud auth application-default login', and then try again."
+    exit 1
+  fi
+}
+
 function check_running_cp() {
+  check_curl
   expected_version=$1
 
-  actual_version=$( confluent version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
+  actual_version=$( confluent local version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
   if [[ $expected_version != $actual_version ]]; then
     echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
@@ -71,13 +121,13 @@ function check_running_cp() {
 }
 
 function is_ce() {
-  type=$( confluent version | tail -1 | awk -F: '{print $1;}' )
+  type=$( confluent local version | tail -1 | awk -F: '{print $1;}' )
   if [[ "$type" == "Confluent Platform" ]]; then
     return 0
   elif [[ "$type" == "Confluent Community software" ]]; then
     return 1
   else
-    echo -e "\nCannot determine if Confluent Platform or Confluent Community software from `confluent version`. Assuming Confluent Community\n"
+    echo -e "\nCannot determine if Confluent Platform or Confluent Community software from `confluent local version`. Assuming Confluent Community\n"
     return 1
   fi
 }
@@ -175,6 +225,8 @@ function check_netstat() {
 }
 
 function check_mysql() {
+  expected_version=$1
+
   if [[ $(type mysql 2>&1) =~ "not found" ]]; then
     echo "'mysql' is not found. Install MySQL and try again"
     exit 1
@@ -186,6 +238,20 @@ function check_mysql() {
     exit 1
   fi
 
+  actual_version=$(mysql -V | awk '{print $5;}' | rev | cut -c 2- | rev)
+  if [[ $expected_version != $actual_version ]]; then
+    echo -e "\nThis demo expects MySQL version $expected_version but the running version is $actual_version. Please run the correct version of MySQL to proceed, or comment out the line 'check_mysql' in the start script and run at your own risk.\n"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_curl() {
+  if [[ $(type curl 2>&1) =~ "not found" ]]; then
+    echo "'curl' is not found.  Install curl to continue"
+    exit 1
+  fi
   return 0
 }
 
@@ -251,3 +317,40 @@ function validate_confluent_cloud_schema_registry() {
   fi
   return 0
 }
+
+function get_cluster_id_kafka () { 
+  KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
+  if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
+    echo "Failed to get Kafka cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+
+function get_cluster_id_schema_registry () {
+  SCHEMA_REGISTRY_CLUSTER_ID=$(curl --silent -u sr:sr1 http://localhost:8081/permissions | jq -r '.scope.clusters."schema-registry-cluster"')
+  if [[ -z "$SCHEMA_REGISTRY_CLUSTER_ID" ]]; then
+    echo "Failed to get Schema Registry cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+
+function get_cluster_id_connect () {
+  CONNECT_CLUSTER_ID=$(curl --silent -u connect:connect1 http://localhost:8083/permissions | jq -r '.scope.clusters."connect-cluster"')
+  if [[ -z "$CONNECT_CLUSTER_ID" ]]; then
+    echo "Failed to get Connect cluster ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+
+function get_service_id_ksql () {
+  KSQL_SERVICE_ID=$(curl --silent -u ksql:ksql1 http://localhost:8088/info | jq -r '.KsqlServerInfo."ksqlServiceId"')
+  if [[ -z "$KSQL_SERVICE_ID" ]]; then
+    echo "Failed to get KSQL service ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+

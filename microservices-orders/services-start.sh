@@ -1,7 +1,7 @@
 #!/bin/bash
 
 RESTPORT=18894
-JAR=/usr/share/java/kafka-streams-examples/kafka-streams-examples-5.1.2-standalone.jar
+JAR=/usr/share/java/kafka-streams-examples/kafka-streams-examples-5.3.0-standalone.jar
 
 java -cp $JAR io.confluent.examples.streams.microservices.OrdersService broker:9092 http://schema-registry:8081 localhost $RESTPORT > /dev/null 2>&1 &
 

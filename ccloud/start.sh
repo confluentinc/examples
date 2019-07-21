@@ -5,8 +5,9 @@
 
 check_env || exit 1
 check_jq || exit 1
-check_running_cp 5.1 || exit 1
+check_running_cp 5.3 || exit 1
 check_ccloud || exit 1
+check_ccloud_v1 || exit 1
 
 if ! is_ce ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community software. Exiting"
@@ -15,12 +16,12 @@ fi
 
 ./stop.sh
 
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.0
-confluent start connect
-CONFLUENT_CURRENT=`confluent current | tail -1`
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
+confluent local start connect
+CONFLUENT_CURRENT=`confluent local current | tail -1`
 
-USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=false
-if [[ "$USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY" == true ]]; then
+. ./config.sh
+if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 else
   SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
@@ -56,12 +57,12 @@ else
 fi
 
 # Produce to topic pageviews in local cluster
-kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 12 --replication-factor 1
+kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 6 --replication-factor 1
 # Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
 #echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
 #ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
 sleep 20
-./submit_datagen_pageviews_config.sh
+. ./connectors/submit_datagen_pageviews_config.sh
 #sleep 5
 
 # Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
@@ -90,7 +91,7 @@ ccloud topic create users
 #KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
 #cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
 #ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
-./submit_datagen_users_config.sh
+. ./connectors/submit_datagen_users_config.sh
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
 #jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
@@ -98,18 +99,19 @@ ccloud topic create users
 
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud topic create pageviews
-./submit_replicator_config.sh
+. ./connectors/submit_replicator_config.sh
 echo "Starting Replicator and sleeping 60 seconds"
 sleep 60
 
 # KSQL Server runs locally and connects to Confluent Cloud
-jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
-mkdir -p $CONFLUENT_CURRENT/ksql-server
-KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
-cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
-# Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
-KSQL_LISTENER=8089
-cat <<EOF >> $KSQL_SERVER_CONFIG
+if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == false ]]; then
+  jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
+  mkdir -p $CONFLUENT_CURRENT/ksql-server
+  KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
+  cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
+  # Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
+  KSQL_LISTENER=8089
+  cat <<EOF >> $KSQL_SERVER_CONFIG
 listeners=http://localhost:$KSQL_LISTENER
 ksql.server.ui.enabled=true
 auto.offset.reset=earliest
@@ -118,13 +120,14 @@ cache.max.bytes.buffering=0
 auto.offset.reset=earliest
 state.dir=$CONFLUENT_CURRENT/ksql-server/data-ccloud/kafka-streams
 EOF
-echo "Starting KSQL Server to Confluent Cloud and sleeping 25 seconds"
-ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
-sleep 25
-ksql http://localhost:$KSQL_LISTENER <<EOF
+  echo "Starting KSQL Server to Confluent Cloud and sleeping 25 seconds"
+  ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
+  sleep 25
+  ksql http://localhost:$KSQL_LISTENER <<EOF
 run script 'ksql.commands';
 exit ;
 EOF
+fi
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 if is_ce; then
@@ -134,7 +137,7 @@ if is_ce; then
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
+  echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   # Workaround for MMA-3564
@@ -143,3 +146,10 @@ if is_ce; then
 fi
 
 sleep 10
+
+echo -e "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
+
+if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == true ]]; then
+  echo -e "\nSince you are running Confluent Cloud KSQL, use the Cloud UI to copy/paste the KSQL queries from the 'ksql.commands' file\n"
+fi
+

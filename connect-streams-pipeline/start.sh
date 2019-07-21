@@ -5,14 +5,14 @@
 
 check_env || exit 1
 check_mvn || exit 1
-check_running_cp 5.1 || exit 
+check_running_cp 5.3 || exit 
 
 ./stop.sh
 
 mvn clean compile
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
-confluent start
+confluent local start
 
 # Create the SQL table
 TABLE_LOCATIONS=/usr/local/lib/table.locations
@@ -27,17 +27,13 @@ sleep 2
 
 # Write the contents of the file TABLE_LOCATIONS to a Topic, where the id is the message key and the name and sale are the message value.
 cat $TABLE_LOCATIONS | \
-kafka-console-producer \
---broker-list localhost:9092 \
---topic $TOPIC \
+confluent local produce $TOPIC -- \
 --property parse.key=true \
 --property key.separator='|' &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-console-consumer \
---bootstrap-server localhost:9092 \
+confluent local consume $TOPIC -- \
 --from-beginning \
---topic $TOPIC \
 --property print.key=true \
 --max-messages 10
 
@@ -52,14 +48,12 @@ echo -e "\n========== $PACKAGE: Example 2: JDBC source connector with Single Mes
 sleep 2
 
 # Run source connector
-confluent unload $PACKAGE &>/dev/null
-confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local unload $PACKAGE &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-console-consumer \
---bootstrap-server localhost:9092 \
+confluent local consume $TOPIC -- \
 --from-beginning \
---topic $TOPIC \
 --property print.key=true \
 --key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
 --max-messages 10
@@ -75,15 +69,13 @@ echo -e "\n========== $PACKAGE: Example 3a: JDBC source connector with SpecificA
 sleep 2
 
 # Run source connector
-confluent unload $PACKAGE &>/dev/null
-confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local unload $PACKAGE &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-avro-console-consumer \
---property schema.registry=http://localhost:8081 \
---bootstrap-server localhost:9092 \
+confluent local consume $TOPIC -- \
+--value-format avro \
 --from-beginning \
---topic $TOPIC \
 --property print.key=true \
 --max-messages 10
 
@@ -98,15 +90,13 @@ echo -e "\n========== $PACKAGE: Example 3b: JDBC source connector with GenericAv
 sleep 2
 
 # Run source connector
-confluent unload $PACKAGE &>/dev/null
-confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local unload $PACKAGE &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-avro-console-consumer \
---property schema.registry=http://localhost:8081 \
---bootstrap-server localhost:9092 \
+confluent local consume $TOPIC -- \
+--value-format avro \
 --from-beginning \
---topic $TOPIC \
 --property print.key=true \
 --max-messages 10
 
@@ -126,12 +116,10 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-avro-console-consumer \
---bootstrap-server localhost:9092 \
---property schema.registry=http://localhost:8081 \
+confluent local consume $TOPIC -- \
+--value-format avro \
 --key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
 --from-beginning \
---topic $TOPIC \
 --property print.key=true \
 --max-messages 10
 
@@ -146,15 +134,13 @@ echo -e "\n========== $PACKAGE: Example 5: JDBC source connector with Avro to KS
 sleep 2
 
 # Run source connector
-confluent unload $PACKAGE &>/dev/null
-confluent config $PACKAGE -d ./$PACKAGE-connector.properties &>/dev/null
+confluent local unload $PACKAGE &>/dev/null
+confluent local config $PACKAGE -- -d ./$PACKAGE-connector.properties &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-kafka-avro-console-consumer \
---property schema.registry=http://localhost:8081 \
---bootstrap-server localhost:9092 \
+confluent local consume $TOPIC -- \
+--value-format avro \
 --from-beginning \
---topic $TOPIC \
 --property print.key=true \
 --max-messages 10
 

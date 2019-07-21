@@ -6,6 +6,6 @@
 check_env || exit 1
 
 jps | grep DataGen | awk '{print $1;}' | xargs kill -9
-confluent destroy
+confluent local destroy
 
 # jps | grep Elasticsearch | awk '{print $1;}' | xargs kill -9
