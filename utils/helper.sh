@@ -11,6 +11,11 @@ function check_env() {
     exit 1
   fi
 
+  if [[ $(type kafka-server-start 2>&1) =~ "not found" ]]; then
+    echo "Cannot find 'kafka-server-start'. Please add \$CONFLUENT_HOME/bin to \$PATH (e.g. 'export PATH=\${CONFLUENT_HOME}/bin:\${PATH}') and try again."
+    exit 1
+  fi
+
   return 0
 }
 
