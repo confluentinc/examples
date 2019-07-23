@@ -73,8 +73,8 @@ echo "confluent iam rolebinding list --principal User:$USER_ADMIN_CONNECT --kafk
 confluent iam rolebinding list --principal User:$USER_ADMIN_CONNECT --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Install kafka-connect-datagen"
-echo "confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest"
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
+echo "$CONFLUENT_HOME/bin/confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest"
+$CONFLUENT_HOME/bin/confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
 
 echo -e "\n# Bring up Connect"
 confluent local start connect
