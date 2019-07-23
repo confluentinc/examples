@@ -134,13 +134,13 @@ echo -e "\n# Create the connector"
 # Consume messages from the $TOPIC2_AVRO topic
 echo -e "\n# Consume messages from the $TOPIC2_AVRO topic"
 cat << EOF
-confluent local consume $TOPIC2_AVRO -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \\
+confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
   --value-format avro \\
   --property basic.auth.credentials.source=USER_INFO \\
   --property schema.registry.basic.auth.user.info=$USER_CLIENT_A:${USER_CLIENT_A}1 \
   --property schema.registry.url=http://localhost:8081
 EOF
-confluent local consume $TOPIC2_AVRO -- --bootstrap-server localhost:9093 --from-beginning --max-messages 10 \
+confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \
   --value-format avro \
   --property basic.auth.credentials.source=USER_INFO \
   --property schema.registry.basic.auth.user.info=$USER_CLIENT_A:${USER_CLIENT_A}1 \
