@@ -14,6 +14,7 @@
 # Documentation accompanying this tutorial:
 #
 #   https://docs.confluent.io/current/cloud/access-management/user-service-example.html
+#   https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
 #
 # DISCLAIMER:
 #

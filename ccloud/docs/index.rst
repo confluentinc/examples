@@ -39,6 +39,7 @@ Run demo
 -  Confluent Platform 5.3
 -  |ccloud|
 -  |ccloud| CLI
+-  `Confluent CLI <https://docs.confluent.io/current/cli/installing.html>`__ installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download
 -  Java version 1.8.0_162
 -  MacOS 10.12
 
@@ -91,30 +92,36 @@ Playbook
 |ccloud|
 -------------------
 
-1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster.
+1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
 
    .. sourcecode:: bash
 
      $ cat ~/.ccloud/config
+     bootstrap.servers=<BROKER ENDPOINT>
+     ssl.endpoint.identification.algorithm=https
+     security.protocol=SASL_SSL
+     sasl.mechanism=PLAIN
+     sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
 
-2. You must have locally installed |ccloud| CLI. To install the CLI, follow `these steps <https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli>`__. Validate you can list topics in your cluster.
+
+2. Validate you can list topics in your cluster.
 
    .. sourcecode:: bash
 
-     $ ccloud topic list
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list
 
 3. Get familar with the |ccloud| CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
-     $ ccloud topic create test
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test --create --replication-factor 3 --partitions 6
      Topic "test" created.
-     $ ccloud produce -t test  
+     $ confluent local produce test -- --cloud --config ~/.ccloud/config 
      a
      b
      c
      ^C
-     $ ccloud consume -b -t test
+     $ confluent local consume test -- --cloud --config ~/.ccloud/config --from-beginning
      a
      b
      c
