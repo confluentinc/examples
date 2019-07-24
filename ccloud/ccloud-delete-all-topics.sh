@@ -6,7 +6,7 @@
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
 
-./ccloud-generate-cp-configs.sh
+./ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
 check_env || exit 1

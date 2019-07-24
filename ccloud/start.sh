@@ -7,7 +7,7 @@ check_env || exit 1
 check_jq || exit 1
 check_running_cp 5.3 || exit 1
 
-CONFIG_FILE=~/.ccloud/config
+. ./config.sh
 check_ccloud_config $CONFIG_FILE || exit
 
 if ! is_ce ; then
@@ -21,13 +21,12 @@ confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
 confluent local start connect
 CONFLUENT_CURRENT=`confluent local current | tail -1`
 
-. ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 else
   SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
 fi
-./ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta

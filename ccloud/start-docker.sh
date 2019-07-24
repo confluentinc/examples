@@ -4,16 +4,16 @@
 . ../utils/helper.sh
 
 check_jq || exit
-CONFIG_FILE=~/.ccloud/config
-check_ccloud_config $CONFIG_FILE || exit
 
 . ./config.sh
+check_ccloud_config $CONFIG_FILE || exit
+
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 else
   SCHEMA_REGISTRY_CONFIG_FILE=schema_registry_docker.config
 fi
-./ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta

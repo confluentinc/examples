@@ -5,11 +5,11 @@
 
 check_env || exit 1
 
-CONFIG_FILE=~/.ccloud/config
+. ./config.sh
 check_ccloud_config $CONFIG_FILE || exit
 
 DELTA_CONFIGS_DIR="delta_configs"
-./ccloud-generate-cp-configs.sh
+./ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
 # Kill processes
@@ -22,7 +22,6 @@ jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 
 # Delete subjects from Confluent Cloud Schema Registry
-. ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   schema_registry_subjects_to_delete="users-value pageviews-value"
   for subject in $schema_registry_subjects_to_delete

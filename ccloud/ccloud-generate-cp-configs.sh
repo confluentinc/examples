@@ -55,12 +55,12 @@
 # - ENV file
 ###############################################################################
 
-set -eu
-
 ################################################################################
-# Confluent Cloud configuration
-#
-# Example file at $HOME/.ccloud/config
+# Arguments 
+# 1 (optional) - CONFIG_FILE, defaults to ~/.ccloud/config, (required if specifying SR_CONFIG_FILE)
+# 2 (optional) - SR_CONFIG_FILE, defaults to CONFIG_FILE
+################################################################################
+# Example file at ~/.ccloud/config
 #
 #   $ cat $HOME/.ccloud/config
 #   bootstrap.servers=<BROKER ENDPOINT>
@@ -68,14 +68,29 @@ set -eu
 #   security.protocol=SASL_SSL
 #   sasl.mechanism=PLAIN
 #   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-#
 ################################################################################
-CONFIG_FILE=$HOME/.ccloud/config
-if [[ ! -f $CONFIG_FILE ]]; then
+
+CONFIG_FILE=$1
+if [[ -z "$CONFIG_FILE" ]]; then
+  CONFIG_FILE=~/.ccloud/config
+fi
+if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "File at $CONFIG_FILE is not found.  Please create this properties file to connect to your Confluent Cloud cluster and then try again"
   exit 1
 fi
+echo "CONFIG_FILE: $CONFIG_FILE"
 
+SR_CONFIG_FILE=$2
+if [[ -z "$SR_CONFIG_FILE" ]]; then
+  SR_CONFIG_FILE=$CONFIG_FILE
+fi
+if [[ ! -f "$SR_CONFIG_FILE" ]]; then
+  echo "File at $SR_CONFIG_FILE is not found.  Please create this properties file to connect to your Schema Registry and then try again"
+  exit 1
+fi
+echo "SR_CONFIG_FILE: $SR_CONFIG_FILE"
+
+# Set permissions
 PERM=600
 if ls --version 2>/dev/null | grep -q 'coreutils' ; then
   # GNU binutils
@@ -86,13 +101,6 @@ else
 fi
 #echo "INFO: setting file permission to $PERM"
 
-################################################################################
-# Specify configuration file for Confluent Schema Registry
-################################################################################
-SR_CONFIG_FILE=$CONFIG_FILE
-if [[ $# -ne 0 ]] && [[ ! -z "$1" ]]; then
-  SR_CONFIG_FILE=$1
-fi
 # Make destination
 DEST="delta_configs"
 mkdir -p $DEST

@@ -3,10 +3,10 @@
 # Source library
 . ../utils/helper.sh
 
-CONFIG_FILE=~/.ccloud/config
+. ./config.sh
 check_ccloud_config $CONFIG_FILE || exit
 
-./ccloud-generate-cp-configs.sh
+./ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
 topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
@@ -25,7 +25,6 @@ for v in $(docker volume ls -q --filter="dangling=true"); do
 done
 
 # Delete subjects from Confluent Cloud Schema Registry
-. ./config.sh
 if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
   schema_registry_subjects_to_delete="users-value pageviews-value"
   for subject in $schema_registry_subjects_to_delete

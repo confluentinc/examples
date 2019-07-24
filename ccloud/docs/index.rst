@@ -92,11 +92,17 @@ Playbook
 |ccloud|
 -------------------
 
-1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster.
+1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
 
    .. sourcecode:: bash
 
      $ cat ~/.ccloud/config
+     bootstrap.servers=<BROKER ENDPOINT>
+     ssl.endpoint.identification.algorithm=https
+     security.protocol=SASL_SSL
+     sasl.mechanism=PLAIN
+     sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+
 
 2. Validate you can list topics in your cluster.
 
