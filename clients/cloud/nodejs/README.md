@@ -16,7 +16,7 @@ _Note: Users of macOS 10.13 (High Sierra) and above should heed [node-rdkafka's 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster.
 * Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
 ```bash
-$ cat ~/.ccloud/example.config
+$ cat $HOME/.ccloud/example.config
 bootstrap.servers=<broker-1,broker-2,broker-3>
 sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
@@ -30,7 +30,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 ```bash
-$ node producer.js -f ~/.ccloud/example.config -t test1
+$ node producer.js -f $HOME/.ccloud/example.config -t test1
 Created topic test1
 Producing record alice	{"count":0}
 Producing record alice	{"count":1}
@@ -56,7 +56,7 @@ Successfully produced record to topic "test1" partition 0 {"count":9}
 
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 ```bash
-$ node consumer.js -f ~/.ccloud/example.config -t test1
+$ node consumer.js -f $HOME/.ccloud/example.config -t test1
 Consuming messages from test1
 Consumed record with key alice and value {"count":0} of partition 0 @ offset 0. Updated total count to 1
 Consumed record with key alice and value {"count":1} of partition 0 @ offset 1. Updated total count to 2
