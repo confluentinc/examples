@@ -8,6 +8,9 @@ source config/demo.cfg
 check_env || exit 1
 check_running_cp 5.3 || exit
 
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
+
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   check_aws || exit
 else
@@ -27,7 +30,7 @@ fi
 
 #---------------------------------
 # Option 1: Confluent Cloud SR
-#SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
+#SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 
 # Option 2: local Confluent SR
 SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
@@ -95,8 +98,8 @@ fi
 # Verify connector plugins are found
 curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep Kinesis
 curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep S3
-ccloud topic create $KAFKA_TOPIC_NAME_IN
-ccloud topic create $KAFKA_TOPIC_NAME_OUT
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_OUT --create --replication-factor 3 --partitions 6
 . ./submit_kinesis_config.sh
 sleep 20
 
