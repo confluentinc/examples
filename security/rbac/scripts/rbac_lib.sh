@@ -2,16 +2,8 @@
 
 function create_temp_configs() {
 
-  BANNER=$(cat <<-END
-
-
-------------------------------------------------------
-The following lines are added by the RBAC demo
-------------------------------------------------------
-
-
-END
-)
+  BANNER_START="##### RBAC demo start #####"
+  BANNER_END="##### RBAC demo end #####"
 
   FILE_ORIGINAL=$1
   FILE_BACKUP=$2
@@ -20,8 +12,9 @@ END
   echo -e "\n\n\n*** $FILE_ORIGINAL ***\n\n\n"
 
   cp $FILE_ORIGINAL $FILE_BACKUP
-  echo "$BANNER" >> $FILE_ORIGINAL
+  echo "$BANNER_START" >> $FILE_ORIGINAL
   cat $FILE_DELTA >> $FILE_ORIGINAL
+  echo "$BANNER_END" >> $FILE_ORIGINAL
 
   return 0
 

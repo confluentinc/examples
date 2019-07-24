@@ -36,6 +36,7 @@ check_cli_v2 || exit 1
 check_jq || exit 1
 
 
+./cleanup.sh
 ./init.sh
 
 ./enable-rbac-broker.sh
