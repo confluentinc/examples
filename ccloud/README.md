@@ -62,6 +62,22 @@ Development: false
 
 # Prerequisites
 
+## Confluent Cloud configuration file
+
+First create a Confluent Cloud configuration file with information on connecting to your Confluent Cloud cluster.
+By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
+
+
+```bash
+$ cat ~/.ccloud/config
+bootstrap.servers=<broker endpoint>
+sasl.username=<api-key-id>
+sasl.password=<secret-access-key>
+basic.auth.credentials.source=USER_INFO
+schema.registry.basic.auth.user.info=<username:password>
+schema.registry.url=<sr endpoint>
+```
+
 ## Local
 
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
