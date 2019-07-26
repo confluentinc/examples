@@ -3,8 +3,10 @@
 */delta_configs/
 */target
 */*/target
+*/*/*/target
 img_data
 python_notify/
 .Python
 .vscode
 node_modules/
+.DS_Store
