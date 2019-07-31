@@ -62,7 +62,7 @@ The Docker compose file includes a container that auto-generates source data to 
 
 image::images/ksql-music-demo-source-data.jpg[source-data]
 
-After you bring up the demo, use a web browser to navigate to http://localhost:9021[Confluent Control Center]. Select the `controlcenter.cluster` Cluster, then select `Topics`.  Find the topic and select `Inspect`.
+After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Select the `controlcenter.cluster` Cluster, then select `Topics`.  Find the topic and select `Inspect`.
 
 image::images/inspect_topic.png[inspect-topic]
 
@@ -110,11 +110,11 @@ To register the topic `play-events`, from the KSQL query editor:
 CREATE STREAM ksql_playevents WITH (KAFKA_TOPIC='play-events', VALUE_FORMAT='AVRO');
 ----
 
-Or from Control Center in the KSQL Streams view, select "Add a stream".
+Or from Control Center in the KSQL Streams view, select *Add a stream*.
 
 image::images/add_a_stream.png[add-stream] 
 
-Fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, it automatically detects the fields `song_id` and `duration` and their respective data types.
+Fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, KSQL automatically detects the fields `song_id` and `duration` and their respective data types.
 
 image::images/ksql_playevents.png[play-events]
 
