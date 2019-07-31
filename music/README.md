@@ -29,5 +29,6 @@ Follow the [step-by-step guide](live-coding-ksql-music.adoc). This requires the 
 
 # What Should I see?
 
-* If you are running Confluent Platform, use Confluent Control Center to view and create KSQL queries: http://localhost:9021/development/ksql/ 
+* If you are running Confluent Platform, use Confluent Control Center to view and create KSQL queries.  Open http://localhost:9021/clusters, click on  `controlcenter.cluster` -> `KSQL` -> `KSQL` to open the editor.
+![image](images/ksql-editor.png)
 * Instead of using the music demos's REST endpoints, use KSQL to inspect the data.
