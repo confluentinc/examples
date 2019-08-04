@@ -63,11 +63,20 @@
 # Example file at ~/.ccloud/config
 #
 #   $ cat $HOME/.ccloud/config
+#
 #   bootstrap.servers=<BROKER ENDPOINT>
 #   ssl.endpoint.identification.algorithm=https
 #   security.protocol=SASL_SSL
 #   sasl.mechanism=PLAIN
 #   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#
+# If you are using Confluent Cloud Schema Registry, add the following configuration parameters
+# either to file above (arg 1 CONFIG_FILE) or to a separate file (arg 2 SR_CONFIG_FILE)
+#
+#   basic.auth.credentials.source=USER_INFO
+#   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+#   schema.registry.url=https://<SR ENDPOINT>
+#
 ################################################################################
 
 CONFIG_FILE=$1
