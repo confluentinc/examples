@@ -102,7 +102,10 @@ Playbook
      security.protocol=SASL_SSL
      sasl.mechanism=PLAIN
      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-
+     # If you are using Confluent Cloud Schema Registry
+     basic.auth.credentials.source=USER_INFO
+     schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+     schema.registry.url=https://<SR ENDPOINT>
 
 2. Validate you can list topics in your cluster.
 
