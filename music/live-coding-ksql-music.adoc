@@ -60,39 +60,39 @@ The Docker compose file includes a container that auto-generates source data to 
 * `play-events` : stream of play events (“song X was played”)
 * `song-feed` : stream of song metadata (“song X was written by artist Y”)
 
-image:images/ksql-music-demo-source-data.jpg[source-data]
+image::images/ksql-music-demo-source-data.jpg[source-data]
 
-After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Under `MANAGEMENT` select `Topics`, then scroll down and click on the topic and select `Inspect`.
+After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Select the `controlcenter.cluster` Cluster, then select `Topics`.  Find the topic and select `Inspect`.
 
-image:images/inspect_topic.png[inspect-topic]
+image::images/inspect_topic.png[inspect-topic]
 
-* Inspect the topic `play-events` :
+Inspect the topic `play-events` :
 
-image:images/topic_inspect_play_events.png[play-events]
+image::images/topic_inspect_play_events.png[play-events]
 
-Or use the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center to inspect the topic:
+Or use the KSQL query editor in Control Center to inspect the topic:
 
 [source,bash]
 ----
 PRINT "play-events";
 ----
 
-image:images/topic_ksql_play_events.png[play-events-ksql]
+image::images/topic_ksql_play_events.png[play-events-ksql]
 
-* Inspect the topic `song-feed` : 
+Inspect the topic `song-feed` : 
 
-At this time, you cannot inspect data in the topic `song-feed` using the topic inspection capability in Confluent Control Center because topic inspection only works on new data, not previous data already produced to the topic, as is the case here.  Instead, from the http://localhost:9021/development/ksql/localhost%3A8088/editor[KSQL query editor] in Control Center, print the topic with the `FROM BEGINNING` clause:
+At this time, you cannot inspect data in the topic `song-feed` using the topic inspection capability in Confluent Control Center because topic inspection only works on new data, not previous data already produced to the topic, as is the case here.  Instead, from the KSQL query editor in Control Center, print the topic with the `FROM BEGINNING` clause:
 
 [source,bash]
 ----
 PRINT "song-feed" FROM BEGINNING;
 ----
 
-image:images/topic_ksql_song_feed.png[song-feed-ksql]
+image::images/topic_ksql_song_feed.png[song-feed-ksql]
 
 So the source data looks as follows
 
-image:images/ksql-music-demo-source-data-explore.jpg[source-data-explore]
+image::images/ksql-music-demo-source-data-explore.jpg[source-data-explore]
 
 === Create a new stream
 
@@ -110,9 +110,13 @@ To register the topic `play-events`, from the KSQL query editor:
 CREATE STREAM ksql_playevents WITH (KAFKA_TOPIC='play-events', VALUE_FORMAT='AVRO');
 ----
 
-Or from Control Center in the KSQL Streams view, select "Create Stream" and fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, it automatically detects the fields `song_id` and `duration` and their respective data types.
+Or from Control Center in the KSQL Streams view, select *Add a stream*.
 
-image:images/ksql_playevents.png[play-events]
+image::images/add_a_stream.png[add-stream] 
+
+Fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, KSQL automatically detects the fields `song_id` and `duration` and their respective data types.
+
+image::images/ksql_playevents.png[play-events]
 
 
 === Filter data
@@ -124,7 +128,7 @@ Do some basic filtering on the newly created stream `ksql_playevents`, e.g. to q
 SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 ----
 
-image:images/ksql_playevents_min_30_non_persistent.png[play-events]
+image::images/ksql_playevents_min_30_non_persistent.png[play-events]
 
 The above query is not persistent -- it will stop if this screen is closed. To make the query persistent and stay running until explicitly terminated, prepend the previous query with `CREATE STREAM <new stream name> AS`.  From the KSQL query editor:
 
@@ -133,7 +137,7 @@ The above query is not persistent -- it will stop if this screen is closed. To m
 CREATE STREAM ksql_playevents_min_duration AS SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 ----
 
-image:images/ksql_playevents_min_30_persistent.png[play-events]
+image::images/ksql_playevents_min_30_persistent.png[play-events]
 
 Now this persistent query will show in the queries list.
 
@@ -162,7 +166,7 @@ Then `DESCRIBE` the stream to see the fields associated with this topic and noti
 DESCRIBE ksql_songfeed;
 ----
 
-image:images/describe_songfeed.png[describe-song-feed]
+image::images/describe_songfeed.png[describe-song-feed]
  
 * Use the `PARTITION BY` clause to assign a key and use the `CAST` function to change the field type to `String`.
  
@@ -220,7 +224,7 @@ Congratulations, you built a streaming application that processes data in real-t
 
 [source,bash]
 ----
-SELECT * FROM ksql_songplaycounts30 LIMIT 5;
+SELECT * FROM ksql_songplaycounts30;
 ----
 
 image::images/counts_results.png[results]
@@ -239,6 +243,10 @@ We recommend using Confluent Control Center to manage your Kafka cluster, inspec
 ----
 $ docker-compose exec ksql-cli ksql http://ksql-server:8088
 ----
+
+=== Troubleshooting Control Center 
+
+Confluent Control Center typicially only displays output messages from topics, streams, and tables as new records arrive.  In this demo the data is sourced from an application called `kafka-music-data-generator`.  If you notice that Control Center is not displaying records, you can try restarting this application.  If you're using the docker-compose solution, you can generate new data by running `docker-compose restart kafka-music-data-generator`.
 
 === KSQL Command File
 
