@@ -2,14 +2,22 @@
 
 # Overview
 
-This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
+These demos showcase the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
+
+There are two demos.  Currently they have completely different workflows, and each can be used in different environments.
+
+* [Demo 1: Local install](#demo-1-local-install)
+* [Demo 2: Docker](#demo-2-docker)
+
+
+# Demo 1: Local install
+
+This demo is for users who have [downloaded](https://www.confluent.io/download/) Confluent Platform to their local hosts. 
 
 ## Caveats
 
 * For simplicity, this demo does not use LDAP, instead it uses the Hash Login service with statically defined users/passwords. Additional configurations would be required if you wanted to augment the demo to connect to your LDAP server.
 * The RBAC configurations and role bindings in this demo are not comprehensive, they are only for development to get minimum RBAC functionality set up across all the services in Confluent Platform. Please refer to the [RBAC documentation](https://docs.confluent.io/current/security/rbac/index.html) for comprehensive configuration and production guidance.
-
-# Run the demo
 
 ## Prerequisites
 
@@ -17,7 +25,7 @@ This demo showcases the [Role Based Access Control (RBAC)](https://docs.confluen
 2. [Confluent Platform 5.3](https://www.confluent.io/download/): use a clean install of Confluent Platform without modified properties files, or else the demo is not guaranteed to work
 3. `jq`
 
-## Execute the demo
+## Run the demo
 
 1. Change directory into the `scripts` folder:
 
@@ -86,14 +94,14 @@ $ cd scripts
 $ ./cleanup.sh
 ```
 
-# Summary of Configurations and Role Bindings
+## Summary of Configurations and Role Bindings
 
 Here is a summary of the delta configurations and required role bindings, by service.
 
 Reminder: for simplicity, this demo uses the Hash Login service instead of LDAP.
 If you are using LDAP in your environment, extra configurations are required.
 
-## Broker
+### Broker
 
 * [delta_configs/server.properties.delta](delta_configs/server.properties.delta)
 * Role bindings:
@@ -107,7 +115,7 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_A --role Resource
 confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 ```
 
-## Schema Registry
+### Schema Registry
 
 * [delta_configs/schema-registry.properties.delta](delta_configs/schema-registry.properties.delta)
 * Role bindings:
@@ -122,7 +130,7 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --
  confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 ```
 
-## Connect
+### Connect
 
 * [delta_configs/connect-avro-distributed.properties.delta](delta_configs/connect-avro-distributed.properties.delta)
 * [delta_configs/connector-source.properties.delta](delta_configs/connector-source.properties.delta)
@@ -146,7 +154,7 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_A --role Resource
 ```
 
 
-## REST Proxy
+### REST Proxy
 
 * [delta_configs/kafka-rest.properties.delta](delta_configs/kafka-rest.properties.delta)
 * Role bindings:
@@ -160,7 +168,7 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role Develop
 ```
 
 
-## KSQL
+### KSQL
 
 * [delta_configs/ksql-server.properties.delta](delta_configs/ksql-server.properties.delta)
 * Role bindings:
@@ -184,7 +192,7 @@ confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role Reso
 ```
 
 
-## Control Center
+### Control Center
 
 * [delta_configs/control-center-dev.properties.delta](delta_configs/control-center-dev.properties.delta)
 * Role bindings:
@@ -200,3 +208,8 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_C --role Develope
 confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 ```
+
+# Demo 2: Docker
+
+Follow directions in (rbac-docker/README.md)[rbac-docker/README.md].
+
