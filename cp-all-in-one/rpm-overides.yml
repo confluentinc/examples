@@ -1,0 +1,9 @@
+# to use this: docker-compose -f docker-compose.yml -f rpm-overides.yml up
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-rpm-zookeeper
+  broker:
+    image: confluentinc/cp-rpm-enterprise-kafka
+  control-center:
+    image: confluentinc/cp-rpm-enterprise-control-center

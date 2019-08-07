@@ -1,0 +1,19 @@
+{
+        "namespace": "ksql",
+        "name": "dcdata",
+        "type": "record",
+        "fields": [
+                {"name": "userid", "type": {
+                    "type": "string",
+                    "arg.properties": {
+                        "regex": "User_[1-9]{0,1}"
+                    }
+                }},
+                {"name": "dc", "type": {
+                    "type": "string",
+                    "arg.properties": {
+                        "regex": "dc[1-1]?"
+                    }
+                }}
+        ]
+}

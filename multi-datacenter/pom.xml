@@ -1,0 +1,154 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+      <groupId>io.confluent</groupId>
+      <artifactId>rest-utils-parent</artifactId>
+      <version>5.3.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>java-client-avro-examples</artifactId>
+  <version>5.2.2</version>
+
+  <packaging>jar</packaging>
+  <properties>
+    <!-- Keep versions as properties to allow easy modification -->
+    <avro.version>1.8.2</avro.version>
+    <!-- Maven properties for compilation -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <name>Confluent</name>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <dependencies>  
+    <!-- Add the Kafka dependencies -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>${confluent.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.avro</groupId>
+      <artifactId>avro</artifactId>
+      <version>${avro.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.2.4</version>
+    </dependency>
+    <dependency>		
+       <groupId>io.confluent</groupId>		
+        <artifactId>kafka-connect-replicator</artifactId>		
+        <version>${confluent.version}</version>		
+     </dependency>		
+     <dependency>		
+         <groupId>io.confluent</groupId>		
+         <artifactId>monitoring-interceptors</artifactId>		
+         <version>${confluent.version}</version>		
+     </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+      	<!-- Set the Java target version to 1.8 -->
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.0</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+            <downloadJavadocs>true</downloadJavadocs>
+        </configuration>
+      </plugin>
+      <plugin>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+          <version>5.2.2</version>
+          <configuration>
+              <schemaRegistryUrls>
+                  <param>http://localhost:8081</param>
+              </schemaRegistryUrls>
+              <subjects>
+                  <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2a.avsc</transactions-value>
+              </subjects>
+          </configuration>
+          <goals>
+              <goal>test-compatibility</goal>
+          </goals>
+      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <executions>
+                    <!--
+                     This declaration merges with the one in the parent, rather
+                     than overriding it, so we need to disable the "validate" phase
+                     execution that the parent declares and declare our own
+                     during "test-compile".
+
+                     One reason for this is that avro codegen runs during compile,
+                     and while it's not strictly a precondition, it's
+                     confusing to address style violations while the IDE is telling you
+                     that some generated class doesn't exist. Test-compile is the first phase
+                     that's guaranteed to run after compile and before any unit or integration
+                     tests.
+
+                     Also, we want to disable the parent's configuration because it declares stuff
+                     we don't care about, like suppressions. (Honestly, it shouldn't)
+                     -->
+                    <execution>
+                        <id>validate</id>
+                        <phase>none</phase>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <configuration>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failsOnError>true</failsOnError>
+                            <failOnViolation>true</failOnViolation>
+                            <includeResources>false</includeResources>
+                            <includeTestResources>false</includeTestResources>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <excludes>io/confluent/examples/streams/avro/**</excludes>
+                            <configLocation>checkstyle.xml</configLocation>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+    </plugins>
+  </build>
+</project>
