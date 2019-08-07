@@ -211,5 +211,5 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_C --role Develope
 
 # Demo 2: Docker
 
-Follow directions in (rbac-docker/README.md)[rbac-docker/README.md].
+Follow directions in [rbac-docker/README.md](rbac-docker/README.md).
 
