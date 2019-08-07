@@ -1,3 +1,5 @@
+![image](../images/confluent-logo-300-2.png)
+
 # Pre-requisites
 
 * Docker version 17.06.1-ce
