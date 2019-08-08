@@ -18,7 +18,7 @@ The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 * |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
-* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
+* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the :ref:`KSQL Tutorial <ksql-create-a-stream-and-table>`, but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
@@ -36,10 +36,10 @@ Run demo
 
 **Demo validated with:**
 
--  Confluent Platform 5.3
+-  Confluent Platform |version|
 -  |ccloud|
 -  |ccloud| CLI
--  `Confluent CLI <https://docs.confluent.io/current/cli/installing.html>`__ installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download
+-  :ref:`Confluent CLI <cli-install>` installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download
 -  Java version 1.8.0_162
 -  MacOS 10.12
 
@@ -63,12 +63,12 @@ Run demo
 
    For Confluent Cloud |sr| (in `preview`):
 
-   a. `Enable <http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud>`__ Confluent Cloud |sr| prior to running the demo
+   a. :ref:`Enable <cloud-sr-config>` Confluent Cloud |sr| prior to running the demo
    b.  Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
 
    For Confluent Cloud KSQL (in `preview`):
 
-   a. `Enable <https://docs.confluent.io/current/quickstart/cloud-quickstart.html#create-a-ksql-application-in-ccloud>`__ Confluent Cloud KSQL prior to running the demo
+   a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
    b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
 
 4. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
@@ -142,9 +142,9 @@ Playbook
       :alt: image
 
 
-2. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage `Kafka
-   connectors <https://docs.confluent.io/current/control-center/docs/connect.html>`__, and more
-   specifically for this demo, `Confluent Replicator <https://docs.confluent.io/current/multi-dc/index.html>`__.
+2. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage :ref:`Kafka
+   connectors <controlcenter_userguide_connect>`, and more
+   specifically for this demo, :ref:`Confluent Replicator <multi_dc>`.
 
    -  Kafka Connect **Sources** tab shows the connector
       ``replicator``. Click ``Edit`` to see the details of the connector configuration.
@@ -357,7 +357,7 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 Confluent Schema Registry
 -------------------------
 
-The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the `Confluent Schema Registry <https://docs.confluent.io/current/schema-registry/docs/index.html>`__ .  
+The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the :ref:`Confluent Schema Registry <schemaregistry_intro>`.
 Depending on how you set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY` in the start script, you may be running |sr-long| locally or |ccloud| |sr|.
 Either way, you will get a consistent experience with |sr|.
 
@@ -381,9 +381,7 @@ Either way, you will get a consistent experience with |sr|.
    .. figure:: images/ksql_dataformat.png
       :alt: image
 
-4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this `step-by-step guide<https://docs.confluent.io/current/schema-registry/docs/migrate.html>`__. Refer to the file `submit_replicator_schema_migration_config.sh<https://github.com/confluentinc/examples/tree/5.1.2-post/ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>`__ for an example of a working Replicator configuration for schema migration.
-
-
+4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this :ref:`step-by-step guide <schemaregistry_migrate>`. Refer to the file :devx-examples:`submit_replicator_schema_migration_config.sh|ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>` for an example of a working Replicator configuration for schema migration.
 
 ===============================
 Confluent Cloud Configurations
