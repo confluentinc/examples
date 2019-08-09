@@ -29,7 +29,7 @@ In this example, the system centers on an Orders Service which exposes a REST in
 Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
 This is picked up by different validation engines (Fraud Service, Inventory Service and Order Details Service), which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 
-The result of each validation is pushed through a separate topic, Order Validations, so that we retain the _single writer_ status of the Orders Service —> Orders Topic (Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__ discusses several options for managing consistency in event collaboration).
+The result of each validation is pushed through a separate topic, Order Validations, so that we retain the *single writer* status of the Orders Service —> Orders Topic (Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__ discusses several options for managing consistency in event collaboration).
 The results of the various validation checks are aggregated in the Validation Aggregator Service, which then moves the order to a Validated or Failed state, based on the combined result.
 
 To allow users to GET any order, the Orders Service creates a queryable materialized view (embedded inside the Orders Service), using a state store in each instance of the service, so that any Order can be requested historically. Note also that the Orders Service can be scaled out over a number of nodes, in which case GET requests must be routed to the correct node to get a certain key. This is handled automatically using the interactive queries functionality in Kafka Streams.

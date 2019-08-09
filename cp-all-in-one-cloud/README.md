@@ -1,3 +1,5 @@
+![image](../images/confluent-logo-300-2.png)
+
 # Pre-requisites
 
 * Docker version 17.06.1-ce
@@ -11,7 +13,21 @@ Note: Use this in a *non-production* Confluent Cloud instance for development pu
 
 ## Step 1
 
-On the host from which you are running Docker, ensure that you have properly initialized Confluent Cloud CLI and have a valid configuration file at `$HOME/.ccloud/config`.
+On the host from which you are running Docker, ensure that you have properly initialized Confluent Cloud CLI and have a valid configuration file at `$HOME/.ccloud/config`. Example file:
+
+```bash
+$ cat $HOME/.ccloud/config
+bootstrap.servers=<BROKER ENDPOINT>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+
+# If you are using Confluent Cloud Schema Registry, add the following configuration parameters
+basic.auth.credentials.source=USER_INFO
+schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+schema.registry.url=https://<SR ENDPOINT>
+```
 
 ## Step 2
 
@@ -32,13 +48,13 @@ Generate a file of ENV variables used by Docker to set the bootstrap servers and
    a. If you want to use Confluent Schema Registry running in a local Docker container:
 
    ```bash
-   $ ./ccloud-generate-env-vars.sh schema_registry_docker.config
+   $ ../ccloud/ccloud-generate-cp-configs.sh schema_registry_docker.config
    ```
 
    b. If you want to use Confluent Cloud Schema Registry:
 
    ```bash
-   $ ./ccloud-generate-env-vars.sh $HOME/.ccloud/config
+   $ ../ccloud/ccloud-generate-cp-configs.sh
    ```
 
 ## Step 4
