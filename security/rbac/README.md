@@ -152,7 +152,6 @@ confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --ro
 confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 ```
 
 

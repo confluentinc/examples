@@ -97,7 +97,6 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_CONNECT --kafka-clus
 # - Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Topic:$TOPIC2_AVRO
 # - Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix
 # - Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
-# - Grant principal User:$USER_CONNECTOR_SUBMITTER the DeveloperRead role to Subject:${TOPIC2_AVRO}-value"
 # - List roles
 # - Create the connector
 # - Consume messages from the $TOPIC2_AVRO topic
@@ -130,17 +129,9 @@ echo -e "\n# Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to
 echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# Grant principal User:$USER_CONNECTOR_SUBMITTER the DeveloperRead role to Subject:${TOPIC2_AVRO}-value"
-echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-
 echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_TASK to the Schema Registry cluster"
 echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-
-echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_SUBMITTER to the Schema Registry cluster"
-echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 echo -e "\n# Create the connector"
 ./submit_datagen_pageviews_config_avro.sh 
