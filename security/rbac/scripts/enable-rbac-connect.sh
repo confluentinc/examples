@@ -95,10 +95,10 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_CONNECT --kafka-clus
 # Connect client functions
 # - Grant principal User:$USER_CONNECTOR_SUBMITTER the ResourceOwner role to Connector:$CONNECTOR_NAME
 # - Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Topic:$TOPIC2_AVRO
-# - Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix
 # - Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
 # - List roles
 # - Create the connector
+# - Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix
 # - Consume messages from the $TOPIC2_AVRO topic
 ##################################################
 
@@ -115,10 +115,6 @@ confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafk
 echo -e "\n# Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Topic:$TOPIC2_AVRO"
 echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-echo -e "#\n Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix"
-echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_TASK to the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID"
@@ -137,6 +133,10 @@ echo -e "\n# Create the connector"
 ./submit_datagen_pageviews_config_avro.sh 
 
 # Consume messages from the $TOPIC2_AVRO topic
+echo -e "#\n Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix"
+echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+
 echo -e "\n# Consume from topic $TOPIC2_AVRO from PLAINTEXT endpoint"
 cat << EOF
 confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
