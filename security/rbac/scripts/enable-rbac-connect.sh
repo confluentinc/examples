@@ -93,9 +93,11 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_CONNECT --kafka-clus
 
 ##################################################
 # Connect client functions
-# - Grant principal User:$USER_CLIENT_A the ResourceOwner role to Connector:$CONNECTOR_NAME
-# - Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC2_AVRO
-# - Grant principal User:$USER_CLIENT_A the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
+# - Grant principal User:$USER_CONNECTOR_SUBMITTER the ResourceOwner role to Connector:$CONNECTOR_NAME
+# - Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Topic:$TOPIC2_AVRO
+# - Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix
+# - Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
+# - Grant principal User:$USER_CONNECTOR_SUBMITTER the DeveloperRead role to Subject:${TOPIC2_AVRO}-value"
 # - List roles
 # - Create the connector
 # - Consume messages from the $TOPIC2_AVRO topic
@@ -103,47 +105,59 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_CONNECT --kafka-clus
 
 CONNECTOR_NAME=datagen-pageviews
 
-echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Connector:$CONNECTOR_NAME"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo -e "\n# Grant principal User:$USER_CONNECTOR_SUBMITTER the ResourceOwner role to Connector:$CONNECTOR_NAME"
+echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$USER_CLIENT_A to the Connect cluster"
-echo "confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_SUBMITTER to the Connect cluster"
+echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
-echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC2_AVRO"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "\n# Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Topic:$TOPIC2_AVRO"
+echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$USER_CLIENT_A to the Kafka cluster"
-echo "confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo -e "#\n Grant principal User:$USER_CONNECTOR_TASK the DeveloperRead role to Group:console-consumer- prefix"
+echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_TASK to the Kafka cluster"
+echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 get_cluster_id_schema_registry
-echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+echo -e "\n# Grant principal User:$USER_CONNECTOR_TASK the ResourceOwner role to Subject:${TOPIC2_AVRO}-value"
+echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CONNECTOR_TASK --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$USER_CLIENT_A to the Schema Registry cluster"
-echo "confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_CLIENT_A --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+echo -e "\n# Grant principal User:$USER_CONNECTOR_SUBMITTER the DeveloperRead role to Subject:${TOPIC2_AVRO}-value"
+echo "confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_TASK to the Schema Registry cluster"
+echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_CONNECTOR_TASK --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:$USER_CONNECTOR_SUBMITTER to the Schema Registry cluster"
+echo "confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_CONNECTOR_SUBMITTER --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 echo -e "\n# Create the connector"
 ./submit_datagen_pageviews_config_avro.sh 
 
 # Consume messages from the $TOPIC2_AVRO topic
-echo -e "\n# Consume messages from the $TOPIC2_AVRO topic"
+echo -e "\n# Consume from topic $TOPIC2_AVRO from PLAINTEXT endpoint"
 cat << EOF
 confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
   --value-format avro \\
   --property basic.auth.credentials.source=USER_INFO \\
-  --property schema.registry.basic.auth.user.info=$USER_CLIENT_A:${USER_CLIENT_A}1 \
+  --property schema.registry.basic.auth.user.info=$USER_CONNECTOR_TASK:${USER_CONNECTOR_TASK}1 \
   --property schema.registry.url=http://localhost:8081
 EOF
 confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \
   --value-format avro \
   --property basic.auth.credentials.source=USER_INFO \
-  --property schema.registry.basic.auth.user.info=$USER_CLIENT_A:${USER_CLIENT_A}1 \
+  --property schema.registry.basic.auth.user.info=$USER_CONNECTOR_TASK:${USER_CONNECTOR_TASK}1 \
   --property schema.registry.url=http://localhost:8081
 
 ##################################################
