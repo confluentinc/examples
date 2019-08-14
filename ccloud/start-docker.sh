@@ -36,8 +36,10 @@ fi
 echo "Sleeping 120 seconds to wait for all services to come up"
 sleep 120
 
-docker-compose exec connect-cloud bash -c 'kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --topic users --create --replication-factor 3 --partitions 6'
-docker-compose exec connect-cloud bash -c 'kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --topic pageviews --create --replication-factor 3 --partitions 6'
+docker-compose exec connect-cloud bash -c 'kafka-topics --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --topic users --create --replication-factor 3 --partitions 6'
+docker-compose exec connect-cloud bash -c 'kafka-topics --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --topic pageviews --create --replication-factor 3 --partitions 6'
+
+exit
 
 # Reregister a schema for a topic with a different name
 #curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
