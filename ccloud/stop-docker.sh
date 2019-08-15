@@ -12,9 +12,9 @@ source delta_configs/env.delta
 topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS"
 for topic in $topics_to_delete
 do
-  if [[ $(docker-compose exec connect-cloud kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --describe --topic $topic) =~ "Topic:${topic}"$'\t' ]]; then
+  if [[ $(docker-compose exec connect-cloud kafka-topics --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta --describe --topic $topic) =~ "Topic:${topic}"$'\t' ]]; then
     echo "Deleting $topic"
-    docker-compose exec connect-cloud kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta -delete --topic $topic 2>/dev/null
+    docker-compose exec connect-cloud kafka-topics --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --command-config /tmp/ak-tools-ccloud.delta -delete --topic $topic 2>/dev/null
   fi
 done
 
