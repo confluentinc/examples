@@ -47,6 +47,9 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --
 echo -e "\n# Bring up Schema Registry"
 confluent local start schema-registry
 
+echo -e "Sleeping 10 seconds before getting the Schema Registry cluster ID"
+sleep 10
+
 get_cluster_id_schema_registry
 
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
