@@ -82,7 +82,7 @@ public class StreamsIngest {
                                                                        (Integer) v.get("sale")))));
     locations.print(Printed.toSysOut());
 
-    final KStream<Long, Long> sales = locations.map((k, v) -> new KeyValue<>(k, v.getSale()));
+    final KStream<Long, Long> sales = locations.mapValues(v -> v.getSale());
 
     // Count occurrences of each key
     final KStream<Long, Long> countKeys = sales.groupByKey(Grouped.with(Serdes.Long(), Serdes.Long()))
