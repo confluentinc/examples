@@ -81,8 +81,7 @@ public class StreamsIngest {
 
     // Count occurrences of each key
     final KStream<Long, Long> countKeys = sales.groupByKey(Grouped.with(Serdes.Long(), Serdes.Long()))
-        .count(Materialized.<Long, Long, KeyValueStore<Bytes, byte[]>>as(KEYS_STORE)
-                   .withValueSerde(Serdes.Long()))
+        .count()
         .toStream();
     countKeys.print(Printed.toSysOut());
 
