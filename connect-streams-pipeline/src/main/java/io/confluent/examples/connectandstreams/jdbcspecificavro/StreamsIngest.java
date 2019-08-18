@@ -81,7 +81,7 @@ public class StreamsIngest {
     locationsNoKey.print(Printed.toSysOut());
     final KStream<Long, Location>
         locations =
-        locationsNoKey.map((k, v) -> new KeyValue<>((Long) v.get("id"), v));
+        locationsNoKey.map((k, v) -> new KeyValue<>(v.getId(), v));
     locations.print(Printed.toSysOut());
 
     final KStream<Long, Long> sales = locations.mapValues(v -> v.getSale());
