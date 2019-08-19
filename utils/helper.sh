@@ -372,3 +372,24 @@ function check_ccloud_config() {
 
   return 0
 }
+
+# Converts properties file of key/value pairs into prefixed environment variables for Docker
+# Naming convention: convert properties file into env vars as uppercase and replace '.' with '_'
+# Inverse of env_to_props: https://github.com/confluentinc/confluent-docker-utils/blob/master/confluent/docker_utils/dub.py
+function props_to_env() {
+  properties_file=$1
+  prop_prefix=$2
+
+  env_file="${properties_file}.env"
+  rm -f $env_file
+  cat $properties_file | while IFS='=' read key value; do
+    if [[ $key != "" && ${key:0:1} != "#" ]] ; then
+      newkey=$(echo "${prop_prefix}_${key}" | tr '[:lower:]' '[:upper:]' | tr '.' '_')
+      if [[ "${newkey}" =~ "SASL_JAAS_CONFIG" ]]; then
+        value="\'${value}\'"
+      fi
+      echo "$newkey=$value" >> $env_file
+      echo "$newkey=$value"
+    fi
+  done
+}
