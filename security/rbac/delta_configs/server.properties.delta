@@ -45,6 +45,4 @@ listener.name.rbac.oauthbearer.sasl.server.callback.handler.class=io.confluent.k
 listener.name.rbac.oauthbearer.sasl.login.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerServerLoginCallbackHandler
 
 # Setup MetricsReporter (point at PLAINTEXT port)
-metric.reporters=io.confluent.metrics.reporter.ConfluentMetricsReporter
 confluent.metrics.reporter.bootstrap.servers=localhost:9093
-confluent.metrics.reporter.topic.replicas=1
