@@ -14,9 +14,9 @@ DATA=$( cat << EOF
     "value.converter": "io.confluent.connect.avro.AvroConverter",
     "value.converter.schema.registry.url": "http://localhost:8081",
     "value.converter.basic.auth.credentials.source": "USER_INFO",
-    "value.converter.basic.auth.user.info": "${USER_CONNECTOR_TASK}:${USER_CONNECTOR_TASK}1",
+    "value.converter.basic.auth.user.info": "${USER_CONNECTOR}:${USER_CONNECTOR}1",
     "max.interval": 100,
-    "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"${USER_CONNECTOR_TASK}\" password=\"${USER_CONNECTOR_TASK}1\" metadataServerUrls=\"http://localhost:8090\";",
+    "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"${USER_CONNECTOR}\" password=\"${USER_CONNECTOR}1\" metadataServerUrls=\"http://localhost:8090\";",
     "tasks.max": "1"
   }
 }
