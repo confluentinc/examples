@@ -170,9 +170,7 @@ services:
                                                     \
                                                     org.apache.kafka.common.security.plain.PlainLoginModule required \
                                                     username="admin" \
-                                                    password="admin-secret" \
-                                                    user_admin="admin-secret" \
-                                                    user_mds="mds-secret";
+                                                    password="admin-secret";
 
       # ======================= OTHER BROKER STUFF =================================
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
