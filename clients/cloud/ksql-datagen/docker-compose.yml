@@ -2,7 +2,7 @@
 version: '2'
 services:
   ksql-datagen:
-    image: confluentinc/ksql-examples:5.4.0-beta1
+    image: confluentinc/ksql-examples:5.4.0-beta190821200958
     hostname: ksql-datagen
     container_name: ksql-datagen
     volumes:
@@ -17,7 +17,7 @@ services:
       STREAMS_SASL_MECHANISM: "PLAIN"
       STREAMS_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
   ksql-datagen-avro:
-    image: confluentinc/ksql-examples:5.4.0-beta1
+    image: confluentinc/ksql-examples:5.4.0-beta190821200958
     hostname: ksql-datagen-avro
     container_name: ksql-datagen-avro
     volumes:
@@ -66,7 +66,7 @@ services:
       #CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.0-beta1.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.0-beta190821200958.jar
       CONNECT_REQUEST_TIMEOUT_MS: 20000
       CONNECT_RETRY_BACKOFF_MS: 500
       # Connect worker
