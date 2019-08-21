@@ -22,14 +22,33 @@
 # and writes delta configuration files into ./delta_configs for
 # Confluent Platform components and clients connecting to Confluent Cloud.
 #
+# Confluent Platform Components:
+# - Confluent Schema Registry
+# - KSQL Data Generator
+# - KSQL server
+# - Confluent Replicator (executable)
+# - Confluent Control Center
+# - Kafka Connect
+# - Kafka connector
+# - Kafka command line tools
+#
+# Kafka Clients:
+# - Java (Producer/Consumer)
+# - Java (Streams)
+# - Python
+# - .NET
+# - Go
+# - Node.js (https://github.com/Blizzard/node-rdkafka)
+# - C++
+#
 # Documentation for using this script:
 #
-#    https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html
+#   https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html
 #
 # Arguments:
 #
-# 1 (optional) - CONFIG_FILE, defaults to ~/.ccloud/config, (required if specifying SR_CONFIG_FILE)
-# 2 (optional) - SR_CONFIG_FILE, defaults to CONFIG_FILE
+#   1 (optional) - CONFIG_FILE, defaults to ~/.ccloud/config, (required if specifying SR_CONFIG_FILE)
+#   2 (optional) - SR_CONFIG_FILE, defaults to CONFIG_FILE
 #
 # Example CONFIG_FILE at ~/.ccloud/config
 #
