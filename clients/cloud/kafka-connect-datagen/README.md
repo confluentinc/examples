@@ -46,36 +46,10 @@ $ ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
 $ source ./delta_configs/env.delta
 ```
 
-4. Start Docker and note the `--build` argument which automatically pulls the Kafka Connect Datagen connector from Confluent Hub.
+4. Start Docker.
 
 ```bash
-$ docker-compose up -d --build
-
-Creating network "kafkaconnectdatagen_default" with the default driver
-Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
- ---> 4fbfbb11e4bf
-Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
- ---> Using cache
- ---> 13754183215d
-Step 3/3 : RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
- ---> Running in 8181e89baf6c
-Running in a "--no-prompt" mode 
-Implicit acceptance of the license below:  
-Apache License 2.0 
-https://www.apache.org/licenses/LICENSE-2.0 
-Downloading component Kafka Connect Datagen 0.1.3, provided by Confluent, Inc. from Confluent Hub and installing into /usr/share/confluent-hub-components 
-Adding installation directory to plugin path in the following files: 
-  /etc/kafka/connect-distributed.properties 
-  /etc/kafka/connect-standalone.properties 
-  /etc/schema-registry/connect-avro-distributed.properties 
-  /etc/schema-registry/connect-avro-standalone.properties 
- 
-Completed 
-Removing intermediate container 8181e89baf6c
- ---> b3c5a9e4a2d7
-Successfully built b3c5a9e4a2d7
-Successfully tagged confluentinc/kafka-connect-datagen:latest
+$ docker-compose up -d
 Creating connect ... done
 ```
 
@@ -161,36 +135,10 @@ $ ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
 $ source ./delta_configs/env.delta
 ```
 
-7. Start Docker and note the `--build` argument which automatically pulls the Kafka Connect Datagen connector from Confluent Hub.
+7. Start Docker.
 
 ```bash
-$ docker-compose up -d --build
-
-Creating network "kafkaconnectdatagen_default" with the default driver
-Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
- ---> 4fbfbb11e4bf
-Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
- ---> Using cache
- ---> 13754183215d
-Step 3/3 : RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
- ---> Running in 8181e89baf6c
-Running in a "--no-prompt" mode 
-Implicit acceptance of the license below:  
-Apache License 2.0 
-https://www.apache.org/licenses/LICENSE-2.0 
-Downloading component Kafka Connect Datagen 0.1.3, provided by Confluent, Inc. from Confluent Hub and installing into /usr/share/confluent-hub-components 
-Adding installation directory to plugin path in the following files: 
-  /etc/kafka/connect-distributed.properties 
-  /etc/kafka/connect-standalone.properties 
-  /etc/schema-registry/connect-avro-distributed.properties 
-  /etc/schema-registry/connect-avro-standalone.properties 
- 
-Completed 
-Removing intermediate container 8181e89baf6c
- ---> b3c5a9e4a2d7
-Successfully built b3c5a9e4a2d7
-Successfully tagged confluentinc/kafka-connect-datagen:latest
+$ docker-compose up -d
 Creating connect ... done
 ```
 
