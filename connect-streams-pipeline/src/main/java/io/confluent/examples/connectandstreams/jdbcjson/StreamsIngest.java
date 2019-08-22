@@ -71,11 +71,11 @@ public class StreamsIngest {
         builder.stream(INPUT_TOPIC, Consumed.with(Serdes.Long(), locationSerde));
     locationsJSON.print(Printed.toSysOut());
 
-    final KStream<Long, Long> sales = locationsJSON.map((k, v) -> new KeyValue<>(k, (Long) v.getSale()));
+    final KStream<Long, Long> sales = locationsJSON.mapValues(v -> v.getSale());
 
     // Count occurrences of each key
     final KStream<Long, Long> countKeys = sales.groupByKey(Grouped.with(Serdes.Long(), Serdes.Long()))
-        .count(Materialized.<Long, Long, KeyValueStore<Bytes, byte[]>>as(KEYS_STORE).withValueSerde(Serdes.Long()))
+        .count()
         .toStream();
     countKeys.print(Printed.toSysOut());
 
