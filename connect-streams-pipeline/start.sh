@@ -65,7 +65,7 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 
 PACKAGE="jdbcspecificavro"
 TOPIC="$PACKAGE-locations"
-echo -e "\n========== $PACKAGE: Example 3a: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro"
+echo -e "\n========== $PACKAGE: Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro"
 sleep 2
 
 # Run source connector
@@ -86,7 +86,7 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 
 PACKAGE="jdbcgenericavro"
 TOPIC="$PACKAGE-locations"
-echo -e "\n========== $PACKAGE: Example 3b: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro"
+echo -e "\n========== $PACKAGE: Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro"
 sleep 2
 
 # Run source connector
@@ -107,7 +107,7 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 
 PACKAGE="javaproducer"
 TOPIC="$PACKAGE-locations"
-echo -e "\n========== $PACKAGE: Example 4: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro"
+echo -e "\n========== $PACKAGE: Example 5: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro"
 sleep 2
 
 # Producer
@@ -130,7 +130,7 @@ timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 
 PACKAGE="jdbcavroksql"
 TOPIC="$PACKAGE-locations"
-echo -e "\n========== $PACKAGE: Example 5: JDBC source connector with Avro to KSQL -> Key:String(null) and Value:Avro"
+echo -e "\n========== $PACKAGE: Example 6: JDBC source connector with Avro to KSQL -> Key:String(null) and Value:Avro"
 sleep 2
 
 # Run source connector
