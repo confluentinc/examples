@@ -17,30 +17,20 @@
 
 ###############################################################################
 # Overview:
-# This code reads the Confluent Cloud configuration in $HOME/.ccloud/config
+#
+# This code reads a local Confluent Cloud configuration file
 # and writes delta configuration files into ./delta_configs for
 # Confluent Platform components and clients connecting to Confluent Cloud.
 #
-# Add the delta configurations to the respective component configuration files
-# or application code. Reminder: these are _delta_ configurations, not complete
-# configurations. See https://docs.confluent.io/ for complete examples.
-#
-# Delta configurations include customized settings for:
-# - bootstrap servers -> Confluent Cloud brokers
-# - sasl.username -> key
-# - sasl.password -> secret
-# - interceptors for Streams Monitoring in Confluent Control Center
-# - optimized performance to Confluent Cloud (varies based on client defaults)
-#
-# Confluent Platform Components: 
+# Confluent Platform Components:
 # - Confluent Schema Registry
 # - KSQL Data Generator
-# - KSQL server 
+# - KSQL server
 # - Confluent Replicator (executable)
 # - Confluent Control Center
 # - Kafka Connect
 # - Kafka connector
-# - AK command line tools
+# - Kafka command line tools
 #
 # Kafka Clients:
 # - Java (Producer/Consumer)
@@ -51,16 +41,16 @@
 # - Node.js (https://github.com/Blizzard/node-rdkafka)
 # - C++
 #
-# OS:
-# - ENV file
-###############################################################################
-
-################################################################################
-# Arguments 
-# 1 (optional) - CONFIG_FILE, defaults to ~/.ccloud/config, (required if specifying SR_CONFIG_FILE)
-# 2 (optional) - SR_CONFIG_FILE, defaults to CONFIG_FILE
-################################################################################
-# Example file at ~/.ccloud/config
+# Documentation for using this script:
+#
+#   https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html
+#
+# Arguments:
+#
+#   1 (optional) - CONFIG_FILE, defaults to ~/.ccloud/config, (required if specifying SR_CONFIG_FILE)
+#   2 (optional) - SR_CONFIG_FILE, defaults to CONFIG_FILE
+#
+# Example CONFIG_FILE at ~/.ccloud/config
 #
 #   $ cat $HOME/.ccloud/config
 #
