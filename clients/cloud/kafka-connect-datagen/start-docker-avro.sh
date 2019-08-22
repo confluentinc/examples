@@ -13,7 +13,7 @@ check_ccloud_config $CONFIG_FILE || exit
 ../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source ./delta_configs/env.delta 
 
-docker-compose up -d --build
+docker-compose up -d
 echo "Sleeping 90 seconds"
 sleep 90
 ./delete-topics.sh
