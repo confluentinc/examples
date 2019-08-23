@@ -14,13 +14,15 @@ confluent local start
 sleep 10
 
 if is_ce; then
-  ./connectors/submit_datagen_pageviews_config.sh
-  ./connectors/submit_datagen_users_config.sh
+  confluent local config datagen-pageviews -- -d connectors/datagen_pageviews.config
+  confluent local config datagen-users -- -d connectors/datagen_users.config
 else
-  ./connectors/submit_datagen_pageviews_config_oss.sh
-  ./connectors/submit_datagen_users_config_oss.sh
+  confluent local config datagen-pageviews -- -d connectors/datagen_pageviews_oss.config
+  confluent local config datagen-users -- -d connectors/datagen_users_oss.config
 fi
 sleep 20
+
+confluent local status connectors
 
 ksql http://localhost:8088 <<EOF
 run script 'ksql.commands';
