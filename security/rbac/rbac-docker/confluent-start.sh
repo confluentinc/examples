@@ -1,11 +1,14 @@
 #!/bin/bash -e
 
-# make sure confluent command is installed
-CONFLUENT_CMD="confluent"
-if ! check="$(type -p "$CONFLUENT_CMD")" || [[ -z check ]]; then
-    echo "error: please install '$CONFLUENT_CMD' and retry"
-    exit 1
-fi
+# make sure dependencies are installed
+depends="confluent jq"
+for value in $depends
+do
+    if ! check="$(type -p "$value")" || [[ -z check ]]; then
+        echo "error: please install '$value' and retry"
+        exit 1
+    fi
+done
 
 if [ -z "$1" ]; then
     PROJECT=rbac
