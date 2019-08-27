@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # make sure dependencies are installed
-depends="docker confluent jq"
+depends="openssl docker-compose docker confluent jq"
 for value in $depends
 do
     if ! check="$(type -p "$value")" || [[ -z check ]]; then
