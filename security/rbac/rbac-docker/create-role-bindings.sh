@@ -17,13 +17,40 @@ KSQL=ksql-cluster
 C3=c3-cluster
 
 SUPER_USER=professor
-SUPER_PASSWORD=professor
+SUPER_USER_PASSWORD=professor
+SUPER_USER_PRINCIPAL="User:$SUPER_USER"
 CONNECT_PRINCIPAL="User:fry"
 SR_PRINCIPAL="User:leela"
 KSQL_PRINCIPAL="User:zoidberg"
 C3_PRINCIPAL="User:hermes"
 
-XX_CONFLUENT_USERNAME=professor XX_CONFLUENT_PASSWORD=professor confluent login --url $MDS_URL
+XX_CONFLUENT_USERNAME=$SUPER_USER XX_CONFLUENT_PASSWORD=$SUPER_USER_PASSWORD confluent login --url $MDS_URL
+
+################################### SETUP SUPERUSER ###################################
+echo "Creating Super User role bindings"
+
+confluent iam rolebinding create \
+    --principal $SUPER_USER_PRINCIPAL  \
+    --role SystemAdmin \
+    --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+confluent iam rolebinding create \
+    --principal $SUPER_USER_PRINCIPAL \
+    --role SystemAdmin \
+    --kafka-cluster-id $KAFKA_CLUSTER_ID \
+    --schema-registry-cluster-id $SR
+
+confluent iam rolebinding create \
+    --principal $SUPER_USER_PRINCIPAL \
+    --role SystemAdmin \
+    --kafka-cluster-id $KAFKA_CLUSTER_ID \
+    --connect-cluster-id $CONNECT
+
+confluent iam rolebinding create \
+    --principal $SUPER_USER_PRINCIPAL \
+    --role SystemAdmin \
+    --kafka-cluster-id $KAFKA_CLUSTER_ID \
+    --ksql-cluster-id $KSQL
 
 ################################### SCHEMA REGISTRY ###################################
 echo "Creating Schema Registry role bindings"
@@ -120,7 +147,12 @@ echo "    connect cluster id: $CONNECT"
 echo "    schema registry cluster id: $SR"
 echo "    ksql cluster id: $KSQL"
 echo
+echo "    super user account: $SUPER_USER_PRINCIPAL"
 echo "    connect service account: $CONNECT_PRINCIPAL"
 echo "    schema registry service account: $SR_PRINCIPAL"
 echo "    KSQL service account: $KSQL_PRINCIPAL"
 echo "    C3 service account: $C3_PRINCIPAL"
+
+echo
+echo "To set service IDs as environment variables paste/run this in your shell:"
+echo "    export KAFKA_ID=$KAFKA_CLUSTER_ID ; export CONNECT_ID=$CONNECT ; export SR_ID=$SR ; export KSQL_ID=$KSQL"
