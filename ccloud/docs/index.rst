@@ -117,15 +117,14 @@ Playbook
 |c3|
 ----
 
-1. **Monitoring –> Data Streams –> Message Delivery**: hover over
+#. **Monitoring –> Data Streams –> Message Delivery**: hover over
    any chart to see number of messages and average latency within a
    minute time interval.
 
    .. figure:: images/message_delivery_ccloud.png
       :alt: image
 
-
-2. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage `Kafka
+#. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage `Kafka
    connectors <https://docs.confluent.io/current/control-center/docs/connect.html>`__, and more
    specifically for this demo, `Confluent Replicator <https://docs.confluent.io/current/multi-dc/index.html>`__.
 
@@ -135,7 +134,7 @@ Playbook
       .. figure:: images/connect_source_ccloud.png
          :alt: image
 
-3. **Management –> Topics –> Topic Information**: For a given topic,
+#. **Management –> Topics –> Topic Information**: For a given topic,
    click on the three dots ``...`` next to the topic name to see more
    options per topic including in sync replicas, schema, topic
    messages, and configuration settings. Shown below is replica info.
@@ -269,8 +268,8 @@ KSQL
 
 For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
 
-   .. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
-      :alt: image
+.. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
+    :alt: image
 
 
 
@@ -338,8 +337,8 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 
 4. You can manage Confluent Replicator in the **Management –> Kafka Connect** page. The **Sources** tab shows the connector ``replicator``. Click ``Edit`` to see the details of the connector configuration.
 
-      .. figure:: images/connect_source_ccloud.png
-         :alt: image
+   .. figure:: images/connect_source_ccloud.png
+    :alt: image
 
 
 Confluent Schema Registry
