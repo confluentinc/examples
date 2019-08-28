@@ -1,14 +1,5 @@
 #!/bin/bash -e
 
-################################## GET KAFKA CLUSTER ID ########################
-ZK_HOST=localhost:2181
-echo "Retrieving Kafka cluster id from zookeeper"
-KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep version | jq -r .id)
-if [ -z "$KAFKA_CLUSTER_ID" ]; then 
-    echo "Failed to retrieve kafka cluster id from zookeeper"
-    exit 1
-fi
-
 ################################## SETUP VARIABLES #############################
 MDS_URL=http://localhost:8090
 CONNECT=connect-cluster
@@ -23,6 +14,24 @@ SR_PRINCIPAL="User:leela"
 KSQL_PRINCIPAL="User:zoidberg"
 C3_PRINCIPAL="User:hermes"
 
+
+wait_200() {
+    curl -i http://professor:professor@localhost:8090/security/1.0/roleNames 2> /dev/null | grep "200 OK"
+}
+
+# wait until MDS is up
+echo -n "Waiting for MDS to be ready"
+until wait_200; do
+    if [ $? -eq 0 ]; then
+        break
+    else
+        echo "."
+        sleep 1
+    fi
+done
+echo "MDS is ready!"
+
+# login to mds
 XX_CONFLUENT_USERNAME=professor XX_CONFLUENT_PASSWORD=professor confluent login --url $MDS_URL
 
 ################################### SCHEMA REGISTRY ###################################
@@ -57,11 +66,11 @@ confluent iam rolebinding create \
 
 # ResourceOwner for groups and topics on broker
 declare -a ConnectResources=(
-    "Topic:connect-configs" 
-    "Topic:connect-offsets" 
-    "Topic:connect-status" 
-    "Group:connect-cluster" 
-    "Group:secret-registry" 
+    "Topic:connect-configs"
+    "Topic:connect-offsets"
+    "Topic:connect-status"
+    "Group:connect-cluster"
+    "Group:secret-registry"
     "Topic:_secrets"
 )
 for resource in ${ConnectResources[@]}
