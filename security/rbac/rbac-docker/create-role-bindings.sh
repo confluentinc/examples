@@ -152,3 +152,7 @@ echo "    connect service account: $CONNECT_PRINCIPAL"
 echo "    schema registry service account: $SR_PRINCIPAL"
 echo "    KSQL service account: $KSQL_PRINCIPAL"
 echo "    C3 service account: $C3_PRINCIPAL"
+
+echo
+echo "To set service IDs as environment variables paste/run this in your shell:"
+echo "    export KAFKA_ID=$KAFKA_CLUSTER_ID ; export CONNECT_ID=$CONNECT ; export SR_ID=$SR ; export KSQL_ID=$KSQL"
