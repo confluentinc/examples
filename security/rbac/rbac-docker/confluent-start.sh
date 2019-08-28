@@ -1,5 +1,15 @@
 #!/bin/bash -e
 
+# make sure dependencies are installed
+depends="openssl docker-compose docker confluent jq"
+for value in $depends
+do
+    if ! check="$(type -p "$value")" || [[ -z check ]]; then
+        echo "error: please install '$value' and retry"
+        exit 1
+    fi
+done
+
 if [ -z "$1" ]; then
     PROJECT=rbac
 else
