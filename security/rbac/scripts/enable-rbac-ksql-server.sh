@@ -85,6 +85,10 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster
 # - Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$TOPIC1"
 # - Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${KSQL_SERVICE_ID}transient prefix
 # - Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:${KSQL_SERVICE_ID}transient prefix
+# - Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${CSAS_STREAM1}
+# - Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:${CSAS_STREAM1}
+# - Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${CTAS_TABLE1}
+# - Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:${CTAS_TABLE1}
 # - List the role bindings for the principal User:${USER_KSQL}
 # - List the role bindings for the principal User:$USER_ADMIN_KSQL"
 ##################################################
@@ -160,22 +164,6 @@ SELECT * FROM table2 LIMIT 3;
 exit ;
 EOF
 
-echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL"
-echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to the KSQL cluster"
-echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
-confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
-
-echo -e "\n# List the role bindings for the principal User:$USER_KSQL"
-echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-echo -e "\n# List the role bindings for the principal User:$USER_KSQL to the KSQL cluster"
-echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
-confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
-
 CSAS_STREAM1=CSAS_STREAM1
 echo -e "\n# Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${CSAS_STREAM1}"
 echo "confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID"
@@ -213,6 +201,22 @@ CREATE TABLE $CTAS_TABLE1 AS SELECT * FROM table1;
 SELECT * FROM $CTAS_TABLE1 LIMIT 3;
 exit ;
 EOF
+
+echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL"
+echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to the KSQL cluster"
+echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
+confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+
+echo -e "\n# List the role bindings for the principal User:$USER_KSQL"
+echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# List the role bindings for the principal User:$USER_KSQL to the KSQL cluster"
+echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
+confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
 
 ##################################################
