@@ -17,14 +17,14 @@ KSQL=ksql-cluster
 C3=c3-cluster
 
 SUPER_USER=professor
-SUPER_PASSWORD=professor
+SUPER_USER_PASSWORD=professor
 SUPER_USER_PRINCIPAL="User:$SUPER_USER"
 CONNECT_PRINCIPAL="User:fry"
 SR_PRINCIPAL="User:leela"
 KSQL_PRINCIPAL="User:zoidberg"
 C3_PRINCIPAL="User:hermes"
 
-XX_CONFLUENT_USERNAME=professor XX_CONFLUENT_PASSWORD=professor confluent login --url $MDS_URL
+XX_CONFLUENT_USERNAME=$SUPER_USER XX_CONFLUENT_PASSWORD=$SUPER_USER_PASSWORD confluent login --url $MDS_URL
 
 ################################### SETUP SUPERUSER ###################################
 echo "Creating Super User role bindings"
