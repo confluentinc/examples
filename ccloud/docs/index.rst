@@ -25,7 +25,7 @@ The major components of the demo are:
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `users` in the |ccloud| cluster
   * Confluent Replicator: copies the topic `pageviews` from the local cluster to the |ccloud| cluster
 
-* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is writtin in Avro format.
+* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is written in Avro format.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
