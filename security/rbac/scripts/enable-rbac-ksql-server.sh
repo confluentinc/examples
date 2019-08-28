@@ -176,6 +176,44 @@ echo -e "\n# List the role bindings for the principal User:$USER_KSQL to the KSQ
 echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
+CSAS_STREAM1=CSAS_STREAM1
+echo -e "\n# Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${CSAS_STREAM1}"
+echo "confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:${CSAS_STREAM1}"
+echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# KSQL CLI: create a new stream as select from another stream and select * from that stream, after authorization (should pass)"
+echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
+echo
+ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
+CREATE STREAM $CSAS_STREAM1 AS SELECT * FROM stream1;
+SELECT * FROM $CSAS_STREAM1 LIMIT 3;
+exit ;
+EOF
+
+CTAS_TABLE1=CTAS_TABLE1
+echo -e "\n# Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${CTAS_TABLE1}"
+echo "confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:${CTAS_TABLE1}"
+echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# KSQL CLI: create a new table as select from another table and select * from that table, after authorization (should pass)"
+echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
+echo
+ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
+CREATE TABLE $CTAS_TABLE1 AS SELECT * FROM table1;
+SELECT * FROM $CTAS_TABLE1 LIMIT 3;
+exit ;
+EOF
+
 
 ##################################################
 # Cleanup
