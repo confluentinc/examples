@@ -1,7 +1,7 @@
 .. _quickstart-demos-ccloud:
 
 Hybrid Kafka Clusters from Self-Hosted to Confluent Cloud
-============================================================
+=========================================================
 
 This Confluent Cloud demo showcases Hybrid Kafka Clusters from Self-Hosted to |ccloud|. This automated demo is an expansion of the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__. Instead of the Kafka cluster backing the KSQL stream processing running on your local machine, it runs on your |ccloud| cluster. There are also additional |cp| components including |c3| and Confluent Replicator.
 
@@ -17,7 +17,8 @@ You can monitor the KSQL streams in |c3|. This demo also showcases the Confluent
     :alt: image
 
 
-.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
+.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
+          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
 
 ========
@@ -45,7 +46,8 @@ Run demo
 
      $ cd examples/ccloud
 
-3. Start the entire demo by running a single command that brings up the local self-hosted Confluent Platform using `confluent cli, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
+3. Start the entire demo by running a single command that brings up the local self-hosted Confluent Platform using
+   |confluent-cli|, Confluent Replicator, and the KSQL streaming application. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -74,7 +76,7 @@ Playbook
 
      $ ccloud topic list
 
-3. Get familar with the |ccloud| CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
+3. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
@@ -273,7 +275,8 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
         bootstrap.servers=localhost:9092
 
-        # Replicator's producer points to the |ccloud| cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
+        # Replicator's producer points to the Confluent Cloud cluster and configures
+        # Confluent Monitoring Interceptors for Control Center stream monitoring to work
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
         ssl.endpoint.identification.algorithm=https
         confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
@@ -291,7 +294,7 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
         topic.whitelist=pageviews
 
-2. View topics `pageviews` in the local cluster
+2. View topics ``pageviews`` in the local cluster
 
    .. sourcecode:: bash
 
@@ -311,7 +314,7 @@ a self-hosted cluster, and the destination cluster is |ccloud|.
 	     Topic: pageviews	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
 
 
-3. View the replicated topics `pageviews` in the |ccloud| cluster. In |c3|, for a given topic listed
+3. View the replicated topics ``pageviews`` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name to see more
    options per topic including in sync replicas, schema, topic
    messages, and configuration settings. Shown below is replica info.
@@ -389,7 +392,7 @@ Troubleshooting the demo
 Teardown
 ========
 
-1. Stop the demo, destroy all local components created by `Confluent CLI`, delete topics backing KSQL queries.
+1. Stop the demo, destroy all local components created by |confluent-cli|, delete topics backing KSQL queries.
 
    .. sourcecode:: bash
 
