@@ -9,7 +9,6 @@ The use case is "Bridge to Cloud" as customers migrate from on premises to cloud
 .. figure:: images/schema-registry-local.jpg
     :alt: image
 
-
 ========
 Overview
 ========
@@ -27,7 +26,8 @@ The major components of the demo are:
 
 * |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is written in Avro format.
 
-.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
+.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
+          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
 
 ========
@@ -103,7 +103,7 @@ Playbook
 
      $ ccloud topic list
 
-3. Get familar with the |ccloud| CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
+3. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
@@ -290,7 +290,8 @@ a self-managed cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
         bootstrap.servers=localhost:9092
 
-        # Replicator's producer points to the |ccloud| cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
+        # Replicator's producer points to the Confluent Cloud cluster and configures
+        # Confluent Monitoring Interceptors for Control Center stream monitoring to work
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
         ssl.endpoint.identification.algorithm=https
         confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
@@ -308,7 +309,7 @@ a self-managed cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
         topic.whitelist=pageviews
 
-2. View topics `pageviews` in the local cluster
+2. View topics ``pageviews`` in the local cluster
 
    .. sourcecode:: bash
 
@@ -328,7 +329,7 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 	     Topic: pageviews	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
 
 
-3. View the replicated topics `pageviews` in the |ccloud| cluster. In |c3|, for a given topic listed
+3. View the replicated topics ``pageviews`` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name to see more
    options per topic including in sync replicas, schema, topic
    messages, and configuration settings. Shown below is replica info.
