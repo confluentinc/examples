@@ -12,12 +12,12 @@ provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluenti
 
 The major components of this demo are:
 
-* A Kubernetes cluster running on GKE which the demo can create or the user can provide
-* |co-long|, which is used to deploy and manage the following |cp| components
-  * A three node |ak| & |zk| cluster
-  * A two node |sr| deployment
-  * A three node |kconnect-long| cluster
-  * One instance of `kafka-connect-datagen` to produce randomly generated data
+- A Kubernetes cluster running on GKE which the demo can create or the user can provide
+- |co-long|, which is used to deploy and manage the following |cp| components
+  - A three node |ak| & |zk| cluster
+  - A two node |sr| deployment
+  - A three node |kconnect-long| cluster
+  - One instance of `kafka-connect-datagen` to produce randomly generated data
 
 ==============
 Preqrequisites
@@ -91,7 +91,7 @@ To create a cluster with the default settings within your GCP Project ID (this c
 
 Alternatively, you can ``export`` the project id to make futher demo commands easier.  The following ``make`` commands do not show the explicit setting of the ``GCP_PROJECT_ID`` value.
 
-  .. sourcecode:: base
+  .. sourcecode:: bash
 
     $ export GCP_PROJECT_ID=<your-project-id>
 
