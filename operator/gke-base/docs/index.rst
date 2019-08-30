@@ -12,12 +12,13 @@ provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluenti
 
 The major components of this demo are:
 
-- A Kubernetes cluster running on GKE which the demo can create or the user can provide
-- |co-long|, which is used to deploy and manage the following |cp| components
-  - A three node |ak| & |zk| cluster
-  - A two node |sr| deployment
-  - A three node |kconnect-long| cluster
-  - One instance of `kafka-connect-datagen` to produce randomly generated data
+* A Kubernetes cluster running on GKE which the demo can create or the user can provide
+* |co-long|, which is used to deploy and manage the following |cp| components
+
+  * A three node |ak| & |zk| cluster
+  * A two node |sr| deployment
+  * A three node |kconnect-long| cluster
+  * One instance of `kafka-connect-datagen` to produce randomly generated data
 
 ==============
 Preqrequisites
@@ -47,7 +48,7 @@ The demo ``Makefile`` contains a target to create a cluster for you given your `
 is configured to control your ``GKE`` account.
 
 If you already have a cluster you will be using for the demo, ensure ``kubectl`` is configured with that
-cluster's context and skip to :ref:`_quickstart-demos-operator-gke-running`.
+cluster's context and skip to :ref:`running-the-demo`.
 
 The following table documents the variables that can be used to configure the GKE cluster creation.
 The cluster is created using the ``gcloud container clusters create`` command.  Most of the variables
