@@ -11,8 +11,9 @@ SHELL=/bin/bash -o pipefail
 
 echo_fail = printf "\e[31m✘ \033\e[0m$(1)\n"
 echo_pass = printf "\e[32m✔ \033\e[0m$(1)\n"
-echo_stdout_header = printf "\n++++++++++ $(1)\n"
-echo_stdout_footer = printf "++++++++++ $(1)\n"
+echo_stdout_header = printf "\n+++++++++++++ $(1)\n"
+echo_stdout_footer = printf "+++++++++++++ $(1)\n"
+echo_stdout_footer_pass = printf "\e[32m✔ \033\e[0m ++++++++++ $(1) \n"
 
 check-dependency = $(if $(shell command -v $(1)),$(call echo_pass,found $(1)),$(call echo_fail,$(1) not installed);exit 1)
 
@@ -46,16 +47,14 @@ endif
 ensure-tiller-serviceaccount: ## Ensures there is a service account for Tiller
 	@$(call echo_stdout_header,ensure tiller service account)	
 	kubectl apply -f $(COMMON_MKFILE_DIR)serviceaccount-tiller.yaml
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,tiller service account)
+	@$(call echo_stdout_footer_pass,tiller service account applied)
 
 helm-init:
 	@$(call echo_stdout_header,helm init)
 	helm init --upgrade --wait --service-account tiller
-	@$(call echo_stdout_footer)
-	@$(call echo_pass,helm init)
+	@$(call echo_stdout_footer_pass,helm initialized)
 
 init: check-dependencies get-helm-bundle ensure-tiller-serviceaccount helm-init
 	@echo
-	@$(call echo_pass,initialized)
+	@$(call echo_pass,common initialization complete)
 

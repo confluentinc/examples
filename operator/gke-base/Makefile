@@ -40,100 +40,161 @@ gke-check-dependencies: check-dependencies
 	@$(call echo_pass,gke-base dependencies verified)
 
 gke-create-cluster: gke-check-dependencies
-	@gcloud container --project $(GCP_PROJECT_ID) clusters create $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE) --no-enable-basic-auth --cluster-version $(GKE_BASE_CLUSTER_VERSION) --machine-type $(GKE_BASE_MACHINE_TYPE) --image-type $(GKE_BASE_IMAGE_TYPE) --disk-type $(GKE_BASE_DISK_TYPE) --disk-size $(GKE_BASE_DISK_SIZE) --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes $(GKE_BASE_NUM_NODES) --enable-cloud-logging --enable-cloud-monitoring --enable-ip-alias --network "projects/$(GCP_PROJECT_ID)/global/networks/default" --subnetwork "projects/$(GCP_PROJECT_ID)/regions/$(GKE_BASE_REGION)/subnetworks/$(GKE_BASE_SUBNET)" --default-max-pods-per-node "110" --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair
+	@$(call echo_stdout_header,Create GKE cluster)	
+	gcloud --quiet container --project $(GCP_PROJECT_ID) clusters create $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE) --no-enable-basic-auth --cluster-version $(GKE_BASE_CLUSTER_VERSION) --machine-type $(GKE_BASE_MACHINE_TYPE) --image-type $(GKE_BASE_IMAGE_TYPE) --disk-type $(GKE_BASE_DISK_TYPE) --disk-size $(GKE_BASE_DISK_SIZE) --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes $(GKE_BASE_NUM_NODES) --enable-cloud-logging --enable-cloud-monitoring --enable-ip-alias --network "projects/$(GCP_PROJECT_ID)/global/networks/default" --subnetwork "projects/$(GCP_PROJECT_ID)/regions/$(GKE_BASE_REGION)/subnetworks/$(GKE_BASE_SUBNET)" --default-max-pods-per-node "110" --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair
+	@$(call echo_stdout_footer_pass,GKE Cluster Created)
+
+gke-destroy-cluster: gke-check-dependencies
+	@$(call echo_stdout_header,Delete GKE cluster)
+	gcloud --quiet container clusters delete $(GKE_BASE_CLUSTER_ID)
+	@$(call echo_stdout_footer_pass,GKE Cluster Deleted)
 
 gke-base-validate: gke-check-dependencies init
-	@$(call echo_pass,validation complete)
+	@echo
+	@$(call echo_pass,gke-base demo validation complete)
 
 ###### OPERATOR MANAGEMENT ######
-gke-base-deploy-operator: gke-base-validate ## Deploys the Confluent Operator into the configured k8s cluster 
+gke-base-deploy-operator: ## Deploys the Confluent Operator into the configured k8s cluster 
 	@$(call echo_stdout_header,deploy operator)	
-	@helm upgrade --wait --install --namespace operator --set operator.enabled=true $(HELM_COMMON_FLAGS) operator $(OPERATOR_PATH)helm/confluent-operator
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,operator deployed)
+	helm upgrade --wait --install --namespace operator --set operator.enabled=true $(HELM_COMMON_FLAGS) operator $(OPERATOR_PATH)helm/confluent-operator
+	@$(call echo_stdout_footer_pass,operator deployed)
 
 gke-base-wait-for-operator: ## Waits until the Confluent Operator rollout status is complete
 	@$(call echo_stdout_header,wait for operator)	
 	$(call kubectl-cmd,rollout status deployment/cc-operator)
 	$(call kubectl-cmd,rollout status deployment/cc-manager)
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,operator ready)
+	@$(call echo_stdout_footer_pass,operator ready)
 
 gke-base-destroy-operator: ## Destroy the operator deployment on the configured k8s cluster
 	@$(call echo_stdout_header,destroy operator)
 	-helm delete --purge operator
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,operator destroyed)
+	@$(call echo_stdout_footer_pass,operator destroyed)
 
 gke-base-wait-for-operator-destruction: ## Will wait until the Confluent Operator & Manager are destroyed
 	@$(call echo_stdout_header,ensure operator destroyed)
 	-$(call kubectl-cmd,wait --timeout=60s --for=delete deployment/cc-manager)
 	-$(call kubectl-cmd,wait --timeout=60s --for=delete deployment/cc-operator)
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,zookeeper gone)
+	@$(call echo_stdout_footer_pass,operator gone)
 #################################
 
 ###### ZOOKEEPER MANAGEMENT ######
 gke-base-deploy-zookeeper: ## Deploys Zookeeper into the configured k8s cluster
-	@$(call echo_stdout_header,deploy zookeeper)
+	@$(call echo_stdout_header,Deploy Zookeeper)
 	helm upgrade --wait --install --namespace operator --set zookeeper.enabled=true --set zookeeper.replicas=3 --set zookeeper.resources.cpu=200m --set zookeeper.resources.memory=512Mi $(HELM_COMMON_FLAGS) zookeeper $(OPERATOR_PATH)helm/confluent-operator
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,zookeeper deployed)
+	@$(call echo_stdout_footer_pass,Zookeeper deployed)
 
 gke-base-wait-for-zookeeper: ## Waits until the Zookeeper rollout is complete
-	@$(call echo_stdout_header,wait for zookeper)
-	source $(COMMON_MKFILE_DIR)retry.sh; retry 50 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts zookeeper 
+	@$(call echo_stdout_header,Wait for Zookeper)
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts zookeeper 
 	$(call kubectl-cmd,rollout status statefulset/zookeeper)
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,zookeeper ready)
+	@$(call echo_stdout_footer_pass,Zookeeper ready)
 
-gke-base-destroy-zookeeper: ## Destroy the Zookeeper cluster
-	@$(call echo_stdout_header,destroy zookeeper)
+gke-base-destroy-zookeeper: ## Purge the Zookeeper package 
+	@$(call echo_stdout_header,Purge the Zookeeper package)
 	-helm delete --purge zookeeper
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,zookeeper destroyed)
+	@$(call echo_stdout_footer_pass,Zookeeper purged)
 
 gke-base-wait-for-zookeeper-destruction: ## Waits until the Zookeper cluster is destroyed
-	@$(call echo_stdout_header,ensure zookeeper destroyed)
+	@$(call echo_stdout_header,Ensure Zookeeper destroyed)
 	-$(call kubectl-cmd,wait --timeout=60s --for=delete statefulset/zookeeper)
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,zookeeper gone)
+	@$(call echo_stdout_footer_pass,Zookeeper gone)
 #################################
 
+######### KAFKA MANAGEMENT ######
 gke-base-deploy-kafka:
-	@$(call echo_stdout_header,deploy kafka)
+	@$(call echo_stdout_header,deploy kafka) ## Deploys Kafka into the configured k8s cluster
 	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.replicas=3 --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=false $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
-	@$(call kubectl-cmd,rollout status statefulset/zookeeper)
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,kafka deployed)
+	@$(call echo_stdout_footer_pass,Kafka deployed)
 
-gke-base-deploy-schemaregistry:
-	@$(call echo_stdout_header,deploy schema registry)
+gke-base-wait-for-kafka: ## Waits until the Kafka rollout is complete
+	@$(call echo_stdout_header,Wait for Kafka)
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts kafka 
+	$(call kubectl-cmd,rollout status statefulset/kafka)
+	@$(call echo_stdout_footer_pass,Kafka ready)
+
+gke-base-destroy-kafka: ## Purge the Kafka package 
+	@$(call echo_stdout_header,Purge the Kafka package)
+	-helm delete --purge kafka 
+	@$(call echo_stdout_footer_pass,Kafka purged)
+
+gke-base-wait-for-kafka-destruction: ## Waits until the Kafka cluster is destroyed
+	@$(call echo_stdout_header,Ensure Kafka destroyed)
+	-$(call kubectl-cmd,wait --timeout=60s --for=delete statefulset/kafka)
+	@$(call echo_stdout_footer_pass,Kafka gone)
+#################################
+
+### SCHEMA REGISTRY MANAGEMENT ##
+gke-base-deploy-schemaregistry: ## Deploys the Schmea Registry to the configured k8s cluster
+	@$(call echo_stdout_header,Deploy Schema Registry)
 	helm upgrade --install --namespace operator --set schemaregistry.enabled=true --set schemaregistry.dependencies.kafka.brokerCount=3 --set schemaregistry.dependencies.kafka.bootstrapEndpoint=kafka:9071 $(HELM_COMMON_FLAGS) schemaregistry $(OPERATOR_PATH)helm/confluent-operator
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,schema registry deployed)
+	@$(call echo_stdout_footer_pass,Schema Registry deployed)
 
+gke-base-wait-for-schemaregistry: ## Waits until the Schema Registry rollout is complete
+	@$(call echo_stdout_header,Wait for Schema Registry)
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts schemaregistry
+	$(call kubectl-cmd,rollout status statefulset/schemaregistry)
+	@$(call echo_stdout_footer_pass,Schema Registry ready)
+
+gke-base-destroy-schemaregistry: ## Purge the Schema Registry package
+	@$(call echo_stdout_header,Purge the Schema Registry package)
+	-helm delete --purge schemaregistry 
+	@$(call echo_stdout_footer_pass,Schema Registry purged) 
+
+gke-base-wait-for-schemaregistry-destruction: ## Waits until the Schema Registry is destroyed
+	@$(call echo_stdout_header,Ensure Schema Registry destroyed)
+	-$(call kubectl-cmd,wait --timeout=60s --for=delete statefulset/schemaregistry)
+	@$(call echo_stdout_footer_pass,Schema Registry gone)
+#################################
+
+######### CONNECT ###############
 gke-base-deploy-connect:
-	@$(call echo_stdout_header,deploy connect)
+	@$(call echo_stdout_header,Deploy Kafka Connect)
 	helm upgrade --install --namespace operator --set connect.enabled=true --set connect.tls.enabled=false --set connect.loadBalancer.enabled=false --set connect.dependencies.kafka.brokerCount=3 --set connect.dependencies.kafka.bootstrapEndpoint=kafka:9071 --set connect.dependencies.schemaregistry.enabled=true --set connect.dependencies.schemaregistry.url=http://schemaregistry:8081 $(HELM_COMMON_FLAGS) connect $(OPERATOR_PATH)helm/confluent-operator
-	@$(call echo_stdout_footer)	
-	@$(call echo_pass,schema registry deployed)
+	@$(call echo_stdout_footer_pass,Kafka Connect deployed)
 
-gke-base-demo: 
+gke-base-wait-for-connect: ## Waits until the Kafka Connect rollout is complete
+	@$(call echo_stdout_header,Wait for Kafka Connect)
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts connectors
+	$(call kubectl-cmd,rollout status statefulset/connectors)
+	@$(call echo_stdout_footer_pass,Kafka Connect ready)
+
+gke-base-destroy-connect: ## Destroy Kafka Connect 
+	@$(call echo_stdout_header,Purge the Kafka Connect package)
+	-helm delete --purge connect 
+	@$(call echo_stdout_footer_pass,Kafka Connect purged)
+
+gke-base-wait-for-connect-destruction: ## Waits until Kafka Connect is destroyed
+	@$(call echo_stdout_header,Ensure Kafka Connect destroyed)
+	-$(call kubectl-cmd,wait --timeout=60s --for=delete statefulset/connectors)
+	@$(call echo_stdout_footer_pass,Kafka Connect gone)
+#################################
+
+gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-deploy-operator
 	@make --no-print-directory gke-base-wait-for-operator
 	@make --no-print-directory gke-base-deploy-zookeeper
 	@make --no-print-directory gke-base-wait-for-zookeeper
+	@make --no-print-directory gke-base-deploy-kafka
+	@make --no-print-directory gke-base-wait-for-kafka
+	@make --no-print-directory gke-base-deploy-schemaregistry
+	@make --no-print-directory gke-base-wait-for-schemaregistry
+	@make --no-print-directory gke-base-deploy-connect
+	@make --no-print-directory gke-base-wait-for-connect
+	@echo
 	@$(call echo_pass,GKE Base Demo running)
 
 gke-base-destroy-demo: gke-base-validate
+	@make --no-print-directory gke-base-destroy-connect
+	@make --no-print-directory gke-base-wait-for-connect-destruction
+	@make --no-print-directory gke-base-destroy-schemaregistry
+	@make --no-print-directory gke-base-wait-for-schemaregistry-destruction
+	@make --no-print-directory gke-base-destroy-kafka
+	@make --no-print-directory gke-base-wait-for-kafka-destruction
 	@make --no-print-directory gke-base-destroy-zookeeper
 	@make --no-print-directory gke-base-wait-for-zookeeper-destruction
 	@make --no-print-directory gke-base-destroy-operator
 	@make --no-print-directory gke-base-wait-for-operator-destruction
-	@$(call echo_stdout_header,check for abandoned resources)
-	@$(call kubectl_cmd,get all)
-	@$(call echo_stdout_footer)
+	@echo
 	@$(call echo_pass,GKE Base Demo destroyed)
 
 demo:
