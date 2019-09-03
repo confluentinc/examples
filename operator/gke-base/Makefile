@@ -101,8 +101,8 @@ gke-base-wait-for-zookeeper-destruction: ## Waits until the Zookeper cluster is 
 #################################
 
 ######### KAFKA MANAGEMENT ######
-gke-base-deploy-kafka:
-	@$(call echo_stdout_header,deploy kafka) ## Deploys Kafka into the configured k8s cluster
+gke-base-deploy-kafka: ## Deploys Kafka into the configured k8s cluster
+	@$(call echo_stdout_header,deploy kafka) 
 	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.replicas=3 --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=false $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka deployed)
 

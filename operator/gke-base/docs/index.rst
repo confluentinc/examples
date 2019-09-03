@@ -3,9 +3,8 @@
 |cp| on Google Kubernetes Engine
 ======================================
 
-========
 Overview
-========
+--------
 
 Demonstrates a deployment of |cp| on Google Kubernetes Engine leveraging |co-long| with random data generation
 provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
@@ -20,9 +19,8 @@ The major components of this demo are:
   * A three node |kconnect-long| cluster
   * One instance of `kafka-connect-datagen` to produce randomly generated data
 
-===================
 Demo Preqrequisites
-===================
+-------------------
 
 +------------------+----------------+---------------------------------------------------------+
 | Application      | Tested Version | Info                                                    |
@@ -39,16 +37,15 @@ Demo Preqrequisites
 | ``GCP sdk core`` | ``2019.08.23`` |                                                         |
 +------------------+----------------+---------------------------------------------------------+
 
-==========================================
 Kubernetes Cluster Setup And Configuration
-==========================================
+------------------------------------------
 
 This demo requires a Kubenertes Cluster and your ``kubectl`` context configured to manage it.
 The demo ``Makefile`` contains a target to create a cluster for you given your ``gcloud`` SDK client 
 is configured to control your ``GKE`` account.
 
 If you already have a cluster you will be using for the demo, ensure ``kubectl`` is configured with that
-cluster's context and skip to :ref:`running-the-demo`.
+cluster's context and skip to :ref:`gke_base_running_the_demo`.
 
 The following table documents the variables that can be used to configure the GKE cluster creation.
 The cluster is created using the ``gcloud container clusters create`` command.  Most of the variables
@@ -106,9 +103,9 @@ After successful completion of the above command your ``kubectl`` context will h
 
     kubectl config current-context 
 
-================
+.. _gke_base_running_the_demo:
 Running the Demo
-================
+----------------
 
   .. sourcecode:: bash
 
