@@ -84,6 +84,9 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     ```shell
     # View the list of registered subjects
     $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+
+    # Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
+    $ curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2)/subjects
     ```
 
 3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
