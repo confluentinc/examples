@@ -109,12 +109,15 @@ $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/con
 5. Run the command `kafka-avro-console-producer`, writing messages to topic `test2`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
 
 * `--property value.schema`: define the schema 
-* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint http://<SR ENDPOINT>
+* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint `https://<SR ENDPOINT>`
 * `--property basic.auth.credentials.source`: specify `USER_INFO`
-* `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
+* `--property schema.registry.basic.auth.user.info`: `<SR API KEY>:<SR API SECRET>`
 
 ```bash
 $ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --producer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+
+# Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
+$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --producer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2)
 ```
 
 At the `>` prompt, type a few messages:
@@ -129,12 +132,15 @@ When you are done, press `<ctrl>-d`.
 
 6. Run the command `kafka-avro-console-consumer`, reading messages from topic `test`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
 
-* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint http://<SR ENDPOINT>
+* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint `https://<SR ENDPOINT>`
 * `--property basic.auth.credentials.source`: specify `USER_INFO`
-* `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
+* `--property schema.registry.basic.auth.user.info`: `<SR API KEY>:<SR API SECRET>`
 
 ```bash
-$ kafka-avro-console-consumer --topic test2 --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+
+# Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
+$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2)
 ```
 
 You should see the messages you typed in the previous step.
