@@ -89,6 +89,23 @@ Grant `User:bender` ResourceOwner to prefix `Topic:foo` on Kafka cluster `KAFKA_
 confluent iam rolebinding create --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID --resource Topic:foo --prefix
 ```
 
+List the roles of `User:bender` on Kafka cluster `KAFKA_CLUSTER_ID`
+```
+confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
+```
+
+General Listing syntax
+``` 
+confluent iam rolebinding list User:[username] [clusters and resources you want to view their roles on]
+```
+
+General rolebinding syntax
+```
+confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
+```
+available role types and permissions can be found [Here](https://docs.confluent.io/current/security/rbac/rbac-predefined-roles.html)
+
+resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic
 ### Users
 
 ---
