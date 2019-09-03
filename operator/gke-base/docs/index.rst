@@ -104,6 +104,7 @@ After successful completion of the above command your ``kubectl`` context will h
     kubectl config current-context 
 
 .. _gke_base_running_the_demo:
+
 Running the Demo
 ----------------
 
