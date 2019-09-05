@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: 0000-generator
+data:
+  0000-generator.json: '{
+  "namespace": "datagen",
+  "name": "0000-generator",
+  "type": "record",
+  "fields": [
+    {"name": "symbol", "type": {
+        "type": "string",
+        "arg.properties": {
+            "options": [
+              "0000"
+            ] 
+        }
+    }},
+    {"name": "bid", "type": {
+        "type": "int",
+        "arg.properties": {
+          "range": {
+              "min": 1,
+              "max": 5
+          }
+        }
+    }},
+    {"name": "ask", "type": {
+        "type": "int",
+        "arg.properties": {
+          "range": {
+              "min": 6,
+              "max": 10 
+          }
+        }
+    }},
+    {"name": "bidQty", "type": {
+        "type": "int",
+        "arg.properties": {
+          "range": {
+              "min": 1,
+              "max": 100 
+          }
+        }
+    }},
+    {"name": "askQty", "type": {
+        "type": "int",
+        "arg.properties": {
+          "range": {
+              "min": 1,
+              "max": 100 
+          }
+        }
+    }}
+  ]
+}'
+

@@ -46,15 +46,15 @@ endif
 
 ensure-tiller-serviceaccount: ## Ensures there is a service account for Tiller
 	@$(call echo_stdout_header,ensure tiller service account)	
-	kubectl apply -f $(COMMON_MKFILE_DIR)serviceaccount-tiller.yaml
+	kubectl apply -f $(COMMON_MKFILE_DIR)cfg/serviceaccount-tiller.yaml
 	@$(call echo_stdout_footer_pass,tiller service account applied)
 
-helm-init:
+helm-init: ## Installs helm 
 	@$(call echo_stdout_header,helm init)
 	helm init --upgrade --wait --service-account tiller
 	@$(call echo_stdout_footer_pass,helm initialized)
 
-init: check-dependencies get-helm-bundle ensure-tiller-serviceaccount helm-init
+init: check-dependencies get-helm-bundle ensure-tiller-serviceaccount helm-init ## Initializes the common dependencies 
 	@echo
 	@$(call echo_pass,common initialization complete)
 

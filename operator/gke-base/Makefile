@@ -1,8 +1,10 @@
 
 THIS_MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-THIS_MKFILE_DIR := $(dir $(MKFILE_PATH))
+THIS_MKFILE_DIR := $(dir $(THIS_MKFILE_PATH))
 
 include $(THIS_MKFILE_DIR)../common/Makefile
+
+GCP_PROJECT_ID ?= $(shell gcloud config list --format 'value(core.project)')
 
 GKE_BASE_CLUSTER_ID ?= cp-examples-operator
 GKE_BASE_REGION ?= us-central1
@@ -46,7 +48,7 @@ gke-create-cluster: gke-check-dependencies
 
 gke-destroy-cluster: gke-check-dependencies
 	@$(call echo_stdout_header,Delete GKE cluster)
-	gcloud --quiet container clusters delete $(GKE_BASE_CLUSTER_ID)
+	gcloud --quiet container clusters delete $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE)
 	@$(call echo_stdout_footer_pass,GKE Cluster Deleted)
 
 gke-base-validate: gke-check-dependencies init
@@ -103,7 +105,7 @@ gke-base-wait-for-zookeeper-destruction: ## Waits until the Zookeper cluster is 
 ######### KAFKA MANAGEMENT ######
 gke-base-deploy-kafka: ## Deploys Kafka into the configured k8s cluster
 	@$(call echo_stdout_header,deploy kafka) 
-	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.replicas=3 --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=false $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.replicas=3 --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=true $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka deployed)
 
 gke-base-wait-for-kafka: ## Waits until the Kafka rollout is complete
@@ -147,9 +149,9 @@ gke-base-wait-for-schemaregistry-destruction: ## Waits until the Schema Registry
 #################################
 
 ######### CONNECT ###############
-gke-base-deploy-connect:
+gke-base-deploy-connect: ## Deploys Kafka Connect to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Kafka Connect)
-	helm upgrade --install --namespace operator --set connect.enabled=true --set connect.tls.enabled=false --set connect.loadBalancer.enabled=false --set connect.dependencies.kafka.brokerCount=3 --set connect.dependencies.kafka.bootstrapEndpoint=kafka:9071 --set connect.dependencies.schemaregistry.enabled=true --set connect.dependencies.schemaregistry.url=http://schemaregistry:8081 $(HELM_COMMON_FLAGS) connect $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator --set connect.enabled=true --set connect.image.repository=cnfldemos/cp-server-connect-operator-with-datagen --set connect.image.tag=5.3.0.0_0.1.3 --set connect.tls.enabled=false --set connect.loadBalancer.enabled=false --set connect.dependencies.kafka.brokerCount=3 --set connect.dependencies.kafka.bootstrapEndpoint=kafka:9071 --set connect.dependencies.schemaregistry.enabled=true --set connect.dependencies.schemaregistry.url=http://schemaregistry:8081 $(HELM_COMMON_FLAGS) connect $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka Connect deployed)
 
 gke-base-wait-for-connect: ## Waits until the Kafka Connect rollout is complete
@@ -158,7 +160,7 @@ gke-base-wait-for-connect: ## Waits until the Kafka Connect rollout is complete
 	$(call kubectl-cmd,rollout status statefulset/connectors)
 	@$(call echo_stdout_footer_pass,Kafka Connect ready)
 
-gke-base-destroy-connect: ## Destroy Kafka Connect 
+gke-base-destroy-connect: ## Purge the Kafka Connect package 
 	@$(call echo_stdout_header,Purge the Kafka Connect package)
 	-helm delete --purge connect 
 	@$(call echo_stdout_footer_pass,Kafka Connect purged)
@@ -167,6 +169,29 @@ gke-base-wait-for-connect-destruction: ## Waits until Kafka Connect is destroyed
 	@$(call echo_stdout_header,Ensure Kafka Connect destroyed)
 	-$(call kubectl-cmd,wait --timeout=60s --for=delete statefulset/connectors)
 	@$(call echo_stdout_footer_pass,Kafka Connect gone)
+#################################
+
+######### Control Center ########
+gke-base-deploy-controlcenter: ## Deploys Confluent Control Center to the configured k8s cluster
+	@$(call echo_stdout_header,Deploy Control Center)
+	helm upgrade --install --namespace operator --set controlcenter.enabled=true --set controlcenter.dependencies.c3KafkaCluster.zookeeper.endpoint=zookeeper:2181 --set controlcenter.dependencies.c3KafkaCluster.bootstrapEndpoint=kafka:9071 --set controlcenter.connectCluster.enabled=true $(HELM_COMMON_FLAGS) controlcenter $(OPERATOR_PATH)helm/confluent-operator
+	@$(call echo_stdout_footer_pass,Control Center deployed)
+
+gke-base-wait-for-controlcenter: ## Waits until the Control Center rollout is complete
+	@$(call echo_stdout_header,Wait for Control Center)
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts controlcenter 
+	$(call kubectl-cmd,rollout status statefulset/controlcenter)
+	@$(call echo_stdout_footer_pass,Control Center ready)
+
+gke-base-destroy-controlcenter: ## Purge the Control Center package 
+	@$(call echo_stdout_header,Purge the Control Center package)
+	-helm delete --purge controlcenter 
+	@$(call echo_stdout_footer_pass,Control Center purged)
+
+gke-base-wait-for-controlcenter-destruction: ## Waits until Control Center is destroyed
+	@$(call echo_stdout_header,Ensure Control Center destroyed)
+	-$(call kubectl-cmd,wait --timeout=60s --for=delete statefulset/controlcenter)
+	@$(call echo_stdout_footer_pass,Control Center gone)
 #################################
 
 gke-base-demo: gke-base-validate

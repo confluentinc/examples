@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: 0000-datagen-connector-deploy
+spec:
+  template:
+    spec:
+      volumes:
+      - name: 0000-datagen-connector
+        configMap:
+          name: 0000-datagen-connector
+      containers:
+      - name: 0000-datagen-connector-deploy
+        image: cnfldemos/alpine-curl:3.10.2_7.65.1
+        args: [ 
+          "-s",
+          "-X", "POST",
+          "-H", "Content-Type: application/json",
+          "--data", "@/etc/config/connector/0000-datagen-connector.json",
+          "http://connectors:8083/connectors"
+        ]
+        volumeMounts:
+          - name: 0000-datagen-connector
+            mountPath: /etc/config/connector
+      restartPolicy: Never
+  backoffLimit: 1
