@@ -11,8 +11,8 @@ provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluenti
 
 The major components of this demo are:
 
-* A Kubernetes cluster running on GKE, which the demo can create or the user can provide
-* |co-long|, which is used to deploy and manage the following |cp| components
+* A Kubernetes cluster running on GKE.
+* |co-long| which is used to manage the following |cp| components
 
   * A single node |zk|
   * A single node |ak|
@@ -23,6 +23,7 @@ The major components of this demo are:
 
 Demo Preqrequisites
 -------------------
+The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
 +------------------+----------------+---------------------------------------------------------+
 | Application      | Tested Version | Info                                                    |
