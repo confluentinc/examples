@@ -14,10 +14,11 @@ The major components of this demo are:
 * A Kubernetes cluster running on GKE, which the demo can create or the user can provide
 * |co-long|, which is used to deploy and manage the following |cp| components
 
-  * A three node |ak| & |zk| cluster
-  * A two node |sr| deployment
+  * A single node |zk|
+  * A single node |ak|
+  * A single node |sr|
   * |c3|
-  * A three node |kconnect-long| cluster
+  * A single node |kconnect-long|
   * One instance of `kafka-connect-datagen` to produce randomly generated data
 
 Demo Preqrequisites
@@ -48,37 +49,6 @@ is configured to control your ``GKE`` account.
 If you already have a cluster you will be using for the demo, ensure ``kubectl`` is configured with that
 cluster's context and skip to :ref:`gke_base_running_the_demo`.
 
-The following table documents the variables that can be used to configure the GKE cluster creation.
-The cluster is created using the ``gcloud container clusters create`` command.  Most of the variables
-map to a flag for ``gcloud`` command.
-
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| Variable                 | Description                                                                  | Default                                                                        |
-+==========================+==============================================================================+================================================================================+
-| GCP_PROJECT_ID           | Maps to your GCP Project ID                                                  | The output of the command ``gcloud config list --format 'value(core.project)`` |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_CLUSTER_ID      | Identifies the GKE Cluster                                                   | ``cp-examples-operator``                                                       |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_REGION          | Used in the ``--subnetwork`` flag to define the networking region            | ``us-central1``                                                                |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_ZONE            | Maps to the ``--zone`` flag                                                  | ``us-central1-a``                                                              |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_SUBNET          | Used in the ``--subnetwork`` flag to define the subnet                       | ``default``                                                                    |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_CLUSTER_VERSION | Maps to the ``--cluster-version`` flag                                       | ``1.12.8-gke.10``                                                              |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_MACHINE_TYPE    | Maps to the ``--machine-type`` flag                                          | ``n1-highmem-2``                                                               |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_IMAGE_TYPE      | Maps to the ``--image-type`` flag.  Verify CPU Platform minimums if changing | ``COS``                                                                        |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_DISK_TYPE       | Maps to the ``--disk-type`` flag                                             | ``pd-standard``                                                                |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_DISK_SIZE       | Maps to the ``--disksize`` flag                                              | ``100``                                                                        |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_NUM_NODES       | Maps to the ``--num-nodes`` flag                                             | ``10``                                                                         |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo               | ``gke_$(GCP_PROJECT_ID)_$(GKE_BASE_ZONE)_$(GKE_BASE_CLUSTER_ID)``              |
-+--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
  
 .. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration. 
 
@@ -113,3 +83,35 @@ Running the Demo
 
     make demo
 
+
+The following table documents the variables that can be used to configure the GKE cluster creation.
+The cluster is created using the ``gcloud container clusters create`` command.  Most of the variables
+map to a flag for ``gcloud`` command.
+
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| Variable                 | Description                                                                  | Default                                                                        |
++==========================+==============================================================================+================================================================================+
+| GCP_PROJECT_ID           | Maps to your GCP Project ID                                                  | The output of the command ``gcloud config list --format 'value(core.project)`` |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_CLUSTER_ID      | Identifies the GKE Cluster                                                   | ``cp-examples-operator``                                                       |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_REGION          | Used in the ``--subnetwork`` flag to define the networking region            | ``us-central1``                                                                |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_ZONE            | Maps to the ``--zone`` flag                                                  | ``us-central1-a``                                                              |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_SUBNET          | Used in the ``--subnetwork`` flag to define the subnet                       | ``default``                                                                    |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_CLUSTER_VERSION | Maps to the ``--cluster-version`` flag                                       | ``1.12.8-gke.10``                                                              |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_MACHINE_TYPE    | Maps to the ``--machine-type`` flag                                          | ``n1-highmem-2``                                                               |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_IMAGE_TYPE      | Maps to the ``--image-type`` flag.  Verify CPU Platform minimums if changing | ``COS``                                                                        |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_DISK_TYPE       | Maps to the ``--disk-type`` flag                                             | ``pd-standard``                                                                |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_DISK_SIZE       | Maps to the ``--disksize`` flag                                              | ``100``                                                                        |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| GKE_BASE_NUM_NODES       | Maps to the ``--num-nodes`` flag                                             | ``10``                                                                         |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
+| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo               | ``gke_$(GCP_PROJECT_ID)_$(GKE_BASE_ZONE)_$(GKE_BASE_CLUSTER_ID)``              |
++--------------------------+------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
