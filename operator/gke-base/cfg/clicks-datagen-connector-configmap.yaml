@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: 0000-datagen-connector
+  name: clicks-datagen-connector
 data:
-  0000-datagen-connector.json: '{
-    "name":"0000-generator",
+  clicks-datagen-connector.json: '{
+    "name":"clicks",
     "config": {
       "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
       "kafka.topic": "clicks",

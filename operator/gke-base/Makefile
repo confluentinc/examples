@@ -105,7 +105,7 @@ gke-base-wait-for-zookeeper-destruction: ## Waits until the Zookeper cluster is 
 ######### KAFKA MANAGEMENT ######
 gke-base-deploy-kafka: ## Deploys Kafka into the configured k8s cluster
 	@$(call echo_stdout_header,deploy kafka) 
-	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.replicas=3 --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=true $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.replicas=3 --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=true --set kafka.configOverrides.server={"auto.create.topics.enable=true"} $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka deployed)
 
 gke-base-wait-for-kafka: ## Waits until the Kafka rollout is complete
@@ -148,7 +148,7 @@ gke-base-wait-for-schemaregistry-destruction: ## Waits until the Schema Registry
 	@$(call echo_stdout_footer_pass,Schema Registry gone)
 #################################
 
-######### CONNECT ###############
+##### CONNECT  MANAGEMENT #######
 gke-base-deploy-connect: ## Deploys Kafka Connect to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Kafka Connect)
 	helm upgrade --install --namespace operator --set connect.enabled=true --set connect.image.repository=cnfldemos/cp-server-connect-operator-with-datagen --set connect.image.tag=5.3.0.0_0.1.3 --set connect.tls.enabled=false --set connect.loadBalancer.enabled=false --set connect.dependencies.kafka.brokerCount=3 --set connect.dependencies.kafka.bootstrapEndpoint=kafka:9071 --set connect.dependencies.schemaregistry.enabled=true --set connect.dependencies.schemaregistry.url=http://schemaregistry:8081 $(HELM_COMMON_FLAGS) connect $(OPERATOR_PATH)helm/confluent-operator
@@ -171,10 +171,10 @@ gke-base-wait-for-connect-destruction: ## Waits until Kafka Connect is destroyed
 	@$(call echo_stdout_footer_pass,Kafka Connect gone)
 #################################
 
-######### Control Center ########
+### CONTROL CENTER MANAGEMENT ####
 gke-base-deploy-controlcenter: ## Deploys Confluent Control Center to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Control Center)
-	helm upgrade --install --namespace operator --set controlcenter.enabled=true --set controlcenter.dependencies.c3KafkaCluster.zookeeper.endpoint=zookeeper:2181 --set controlcenter.dependencies.c3KafkaCluster.bootstrapEndpoint=kafka:9071 --set controlcenter.connectCluster.enabled=true $(HELM_COMMON_FLAGS) controlcenter $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator --set controlcenter.enabled=true --set controlcenter.dependencies.c3KafkaCluster.zookeeper.endpoint=zookeeper:2181 --set controlcenter.dependencies.c3KafkaCluster.bootstrapEndpoint=kafka:9071 --set controlcenter.dependencies.connectCluster.enabled=true --set controlcenter.dependencies.connectCluster.url=http://connectors:8083 --set controlcenter.dependencies.schemaRegistry.enabled=true --set controlcenter.dependencies.schemaRegistry.url=http://schemaregistry:8081 $(HELM_COMMON_FLAGS) controlcenter $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Control Center deployed)
 
 gke-base-wait-for-controlcenter: ## Waits until the Control Center rollout is complete
@@ -194,6 +194,23 @@ gke-base-wait-for-controlcenter-destruction: ## Waits until Control Center is de
 	@$(call echo_stdout_footer_pass,Control Center gone)
 #################################
 
+### CLICKS DATA GEN CONNECTOR ###
+gke-base-deploy-clicks-connector-config:
+	@$(call echo_stdout_header,Deploy clicks datagen connector config)
+	$(call kubectl-cmd,apply -f $(THIS_MKFILE_DIR)cfg/clicks-datagen-connector-configmap.yaml)
+	@$(call echo_stdout_footer_pass,clicks datagen connector config deployed)
+
+gke-base-destroy-clicks-connector-deploy-job:
+	@$(call echo_stdout_header,destory Deploy clicks datagen connector job)
+	-$(call kubectl-cmd,delete jobs/clicks-datagen-connector-deploy) ## name dependnecy in file, required unless/until TTL works across all k8s configurations
+	@$(call echo_stdout_footer_pass,clicks datagen connector job destroyed)
+
+gke-base-deploy-clicks-connector: gke-base-deploy-clicks-connector-config gke-base-destroy-clicks-connector-deploy-job
+	@$(call echo_stdout_header,Deploy clicks datagen connector)
+	$(call kubectl-cmd,apply -f $(THIS_MKFILE_DIR)cfg/clicks-datagen-connector-deploy-job.yaml)
+	@$(call echo_stdout_footer_pass,clicks datagen connector deployed)
+#################################
+
 gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-deploy-operator
 	@make --no-print-directory gke-base-wait-for-operator
@@ -205,10 +222,15 @@ gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-wait-for-schemaregistry
 	@make --no-print-directory gke-base-deploy-connect
 	@make --no-print-directory gke-base-wait-for-connect
+	@make --no-print-directory gke-base-deploy-clicks-connector
+	@make --no-print-directory gke-base-deploy-controlcenter
+	@make --no-print-directory gke-base-wait-for-controlcenter
 	@echo
 	@$(call echo_pass,GKE Base Demo running)
 
 gke-base-destroy-demo: gke-base-validate
+	@make --no-print-directory gke-base-destroy-controlcenter
+	@make --no-print-directory gke-base-wait-for-controlcenter-destruction
 	@make --no-print-directory gke-base-destroy-connect
 	@make --no-print-directory gke-base-wait-for-connect-destruction
 	@make --no-print-directory gke-base-destroy-schemaregistry
