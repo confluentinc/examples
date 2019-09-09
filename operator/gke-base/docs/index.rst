@@ -135,11 +135,11 @@ The following table documents variables that can be used to configure various de
 
 .. sourcecode:: bash
 
-   GKE_BASE_REGION=non-default-region make <make-target>
+   VARIABLE=value make <make-target>
  
 .. sourcecode:: bash
 
-   make <make-target> GKE_BASE_REGION=non-default-region 
+   make <make-target> VARIABLE=value
 
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | Variable                 | Description                                                                                          | Default                                                                        |
