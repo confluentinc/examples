@@ -91,6 +91,8 @@ The demo uses ``kubectl`` to control the cluster.  To verify that your local ``k
 
 The context should contain the proper region and cluster name.
 
+.. _examples-operator-gke-base-run:
+
 Run
 ***
 
@@ -100,20 +102,15 @@ To deploy |cp| run (estimated execution time, 7 minutes):
 
     make demo
 
+.. _examples-operator-gke-verify-confluent-platform:
+
 Verify Confluent Platform
 *************************
 
+.. _examples-oeprator-gke-base-tear-down:
+
 Tear down
 *********
-
-
-.. _gke_base_running_the_demo:
-
-Verify
-
-.. sourcecode:: bash
-
-    make demo
 
 .. _examples-operator-gke-base-variable-reference:
 
