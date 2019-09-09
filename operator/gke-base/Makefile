@@ -225,6 +225,7 @@ gke-base-demo: gke-base-validate
 	@$(call echo_pass,GKE Base Demo running)
 
 gke-base-destroy-demo: gke-base-validate
+	@make --no-print-directory gke-base-destroy-clicks-connector-deploy-job
 	@make --no-print-directory gke-base-destroy-controlcenter
 	@make --no-print-directory gke-base-wait-for-controlcenter-destruction
 	@make --no-print-directory gke-base-destroy-connect
