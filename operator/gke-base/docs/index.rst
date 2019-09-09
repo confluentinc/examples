@@ -43,6 +43,8 @@ The following applications or libraries are required to be installed and availab
 Running the Demo
 ----------------
 
+.. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to |co| :ref:`Sizing Recommendations <co-env-sizing>` document for more information on required size for running |cp| on Kubernetes.
+ 
 Setup
 *****
 
@@ -104,21 +106,6 @@ Verify Confluent Platform
 Tear down
 *********
 
-.. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration. 
-
-Before creating the cluster be sure to refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>`.
-
-To create a cluster with the default settings within your GCP Project ID (this command will take a few minutes to complete):
-
-.. sourcecode:: bash
-
-    make gke-create-cluster
-
-After successful completion of the above command your ``kubectl`` context will have been configured to the new cluster.  The result of this command should contain your ``GCP_PROJECT_ID`` as well as the value of ``GKE_BASE_CLUSTER_ID``
-
-.. sourcecode:: bash
-
-    kubectl config current-context 
 
 .. _gke_base_running_the_demo:
 
