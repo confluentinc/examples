@@ -49,7 +49,7 @@ Setup
 This demo requires a Kubenertes Cluster and ``kubectl`` context configured properly to manage it.
 
 The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine.
-If you already have a cluster you wish to use for the demo, you can skip to the :ref:`Validate <validate>` section of these instructions.
+If you already have a cluster you wish to use for the demo, you can skip to the :ref:`Validate <examples-operator-gke-base-validate>` section of these instructions.
 
 To verify the GCP Project in which a new cluster will be created, run the following:
 
@@ -58,7 +58,7 @@ To verify the GCP Project in which a new cluster will be created, run the follow
     gcloud config list --format 'value(core.project)'
 
 .. note::
-    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`variable reference` section of these instrucitons.
+    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instrucitons.
 
 To create the cluster, run the following (estimated execution time, 4 minutes):
 
@@ -75,6 +75,8 @@ Verify that ``gcloud`` has created the cluster properly::
     NAME                            LOCATION  MASTER_VERSION  MASTER_IP     MACHINE_TYPE  NODE_VERSION   NUM_NODES  STATUS
     cp-examples-operator-<username> <zone>    1.12.8-gke.10   <ip-address>  n1-highmem-2  1.12.8-gke.10  3          RUNNING
     ✔  ++++++++++ GKE Cluster Created
+
+:: _examples-operator-gke-base-validate
 
 Validate
 ********
@@ -125,6 +127,8 @@ Verify
 .. sourcecode:: bash
 
     make demo
+
+.. _examples-operator-gke-base-variable-reference
 
 Variable Reference
 ------------------
