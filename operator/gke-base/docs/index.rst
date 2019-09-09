@@ -49,7 +49,7 @@ Setup
 This demo requires a Kubenertes Cluster and ``kubectl`` context configured properly to manage it.
 
 The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine.
-If you already have a cluster you wish to use for the demo, you can skip to the :ref:`Validate` section of these instructions.
+If you already have a cluster you wish to use for the demo, you can skip to the :ref:`validate` section of these instructions.
 
 To verify the GCP Project in which a new cluster will be created, run the following:
 
@@ -58,7 +58,7 @@ To verify the GCP Project in which a new cluster will be created, run the follow
     gcloud config list --format 'value(core.project)'
 
 .. note::
-    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`Variable Reference` section of these instrucitons.
+    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`variable reference` section of these instrucitons.
 
 To create the cluster, run the following (estimated execution time, 4 minutes):
 
