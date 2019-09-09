@@ -82,6 +82,7 @@ Validate
 The demo uses ``kubectl`` to control the cluster.  To verify that your local ``kubectl`` configured as intended, run:
 
 .. sourcecode:: bash
+
     kubectl config current-context
 
 The context should contain the proper region and cluster name.
@@ -92,6 +93,7 @@ Run
 To deploy |cp| run (estimated execution time, 7 minutes):
 
 .. sourcecode:: bash
+
     make demo
 
 Verify Confluent Platform
