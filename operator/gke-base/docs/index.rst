@@ -48,8 +48,8 @@ Setup
 
 This demo requires a Kubenertes Cluster and ``kubectl`` context configured properly to manage it.
 
-The remaining steps in the Setup section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine.
-If you already have a cluster you wish to use for the demo, you can skip to :ref:`Validate` section.
+The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine.
+If you already have a cluster you wish to use for the demo, you can skip to the :ref:`Validate` section of these instructions.
 
 To verify the GCP Project in which a new cluster will be created, run the following:
 
@@ -68,8 +68,7 @@ To create the cluster, run the following (estimated execution time, 4 minutes):
 
 Verify that ``gcloud`` has created the cluster properly:
 
-.. sourcecode:: bash
-
+::
     ...
     Created [https://container.googleapis.com/v1/projects/<project-id>/zones/us-central1-a/clusters/cp-examples-operator-<username>].
     To inspect the contents of your cluster, go to: <link> 
@@ -77,7 +76,6 @@ Verify that ``gcloud`` has created the cluster properly:
     NAME                            LOCATION  MASTER_VERSION  MASTER_IP     MACHINE_TYPE  NODE_VERSION   NUM_NODES  STATUS
     cp-examples-operator-<username> <zone>    1.12.8-gke.10   <ip-address>  n1-highmem-2  1.12.8-gke.10  3          RUNNING
     ✔  ++++++++++ GKE Cluster Created
-
 
 Validate
 ********
@@ -92,7 +90,7 @@ The context should contain the proper region and cluster name.
 Run
 ***
 
-To deploy |cp| run (estimated execution time, 11 minutes):
+To deploy |cp| run (estimated execution time, 7 minutes):
 
 .. sourcecode:: bash
     make demo
