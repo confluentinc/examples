@@ -103,11 +103,68 @@ To deploy |cp| run (estimated running time, 7 minutes):
 
 .. _examples-operator-gke-verify-confluent-platform:
 
-Verify Confluent Platform
-*************************
+Verify 
+******
+
+You can view the deploye components with:
+
+.. sourcecode: bash
+
+    kubectl -n operator get all
+
+Using the default demo variable values, ``kubectl`` should report something like the following::
+
+	NAME                                        READY   STATUS      RESTARTS   AGE
+	pod/cc-manager-566965d74f-fgqfb             1/1     Running     2          22m
+	pod/cc-operator-76c54d65cd-cjzk2            1/1     Running     0          22m
+	pod/clicks-datagen-connector-deploy-c2v69   0/1     Completed   0          16m
+	pod/connectors-0                            1/1     Running     0          18m
+	pod/controlcenter-0                         1/1     Running     0          16m
+	pod/kafka-0                                 1/1     Running     0          20m
+	pod/schemaregistry-0                        1/1     Running     0          19m
+	pod/zookeeper-0                             1/1     Running     0          21m
+
+	NAME                                TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)                                        AGE
+	service/connectors                  ClusterIP   None         <none>        8083/TCP,7203/TCP,7777/TCP                     18m
+	service/connectors-0-internal       ClusterIP   10.0.8.181   <none>        8083/TCP,7203/TCP,7777/TCP                     18m
+	service/controlcenter               ClusterIP   None         <none>        9021/TCP,7203/TCP,7777/TCP                     16m
+	service/controlcenter-0-internal    ClusterIP   10.0.8.123   <none>        9021/TCP,7203/TCP,7777/TCP                     16m
+	service/kafka                       ClusterIP   None         <none>        9071/TCP,9072/TCP,9092/TCP,7203/TCP,7777/TCP   20m
+	service/kafka-0-internal            ClusterIP   10.0.2.79    <none>        9071/TCP,9072/TCP,9092/TCP,7203/TCP,7777/TCP   20m
+	service/schemaregistry              ClusterIP   None         <none>        8081/TCP,7203/TCP,7777/TCP                     19m
+	service/schemaregistry-0-internal   ClusterIP   10.0.3.41    <none>        8081/TCP,7203/TCP,7777/TCP                     19m
+	service/zookeeper                   ClusterIP   None         <none>        3888/TCP,2888/TCP,2181/TCP,7203/TCP,7777/TCP   21m
+	service/zookeeper-0-internal        ClusterIP   10.0.6.153   <none>        3888/TCP,2888/TCP,2181/TCP,7203/TCP,7777/TCP   21m
+
+	NAME                          DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+	deployment.apps/cc-manager    1         1         1            1           22m
+	deployment.apps/cc-operator   1         1         1            1           22m
+
+	NAME                                     DESIRED   CURRENT   READY   AGE
+	replicaset.apps/cc-manager-566965d74f    1         1         1       22m
+	replicaset.apps/cc-operator-76c54d65cd   1         1         1       22m
+
+	NAME                              DESIRED   CURRENT   AGE
+	statefulset.apps/connectors       1         1         18m
+	statefulset.apps/controlcenter    1         1         16m
+	statefulset.apps/kafka            1         1         20m
+	statefulset.apps/schemaregistry   1         1         19m
+	statefulset.apps/zookeeper        1         1         21m
+
+	NAME                                        COMPLETIONS   DURATION   AGE
+	job.batch/clicks-datagen-connector-deploy   1/1           4s         16m
+
+	NAME                                       AGE
+	kafkacluster.cluster.confluent.com/kafka   20m
+
+	NAME                                               AGE
+	zookeepercluster.cluster.confluent.com/zookeeper   22m
+ 
 
 View Cluster with Confluent Control Center
 ``````````````````````````````````````````
+
+The Confluent Platform assets are now running inside the Kubernetes cluster
 
 View Cluster on the command line
 ````````````````````````````````
