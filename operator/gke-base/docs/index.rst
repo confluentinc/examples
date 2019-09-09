@@ -120,7 +120,7 @@ Be sure to destroy the cluster after you've completed running the demo (estimate
 
   make destroy-demo
 
-If you used the demo to create the Kubernetes cluster for you, destroy the cluster with:
+If you used the demo to create the Kubernetes cluster for you, destroy the cluster with (estimated running time, 3 minutes):
 
 .. sourcecode:: bash
 
@@ -131,7 +131,15 @@ If you used the demo to create the Kubernetes cluster for you, destroy the clust
 Variable Reference
 ------------------
 
-The following table documents variables that can be used to configure various demo behaviors.
+The following table documents variables that can be used to configure various demo behaviors.  Variables can be ``exported`` or set in each indvidual make command with either sample syntax below:
+
+.. sourcecode:: bash
+
+   GKE_BASE_REGION=non-default-region make <make-target>
+ 
+.. sourcecode:: bash
+
+   make <make-target> GKE_BASE_REGION=non-default-region 
 
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | Variable                 | Description                                                                                          | Default                                                                        |
