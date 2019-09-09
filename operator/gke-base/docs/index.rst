@@ -43,7 +43,7 @@ The following applications or libraries are required to be installed and availab
 Running the Demo
 ----------------
 
-.. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to |co| :ref:`Sizing Recommendations <co-env-sizing>` document for more information on required size for running |cp| on Kubernetes.
+.. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document for more information on required size for running |cp| on Kubernetes.
  
 Setup
 *****
@@ -62,7 +62,7 @@ To verify the GCP Project in which a new cluster will be created, run the follow
 .. note::
     For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instrucitons.
 
-To create the cluster, run the following (estimated execution time, 4 minutes):
+To create the cluster, run the following (estimated running time, 4 minutes):
 
 .. sourcecode:: bash
 
@@ -96,7 +96,7 @@ The context should contain the proper region and cluster name.
 Run
 ***
 
-To deploy |cp| run (estimated execution time, 7 minutes):
+To deploy |cp| run (estimated running time, 7 minutes):
 
 .. sourcecode:: bash
 
@@ -107,10 +107,24 @@ To deploy |cp| run (estimated execution time, 7 minutes):
 Verify Confluent Platform
 *************************
 
+**TODO** Document how to verify (Client and C3)
+
 .. _examples-oeprator-gke-base-tear-down:
 
 Tear down
 *********
+
+Be sure to destroy the cluster after you've completed running the demo (estimated running time, 4 minutes):
+
+.. sourcecode:: bash
+
+  make destroy-demo
+
+If you used the demo to create the Kubernetes cluster for you, destroy the cluster with:
+
+.. sourcecode:: bash
+
+  make gke-destroy-cluster
 
 .. _examples-operator-gke-base-variable-reference:
 
