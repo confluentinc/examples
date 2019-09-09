@@ -6,7 +6,7 @@
 Overview
 --------
 
-Demonstrates a deployment of |cp| on Google Kubernetes Engine leveraging |co-long| with random data generation
+Demonstrates a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| with random data generation
 provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
 
 The major components of this demo are:
@@ -43,24 +43,23 @@ The following applications or libraries are required to be installed and availab
 Running the Demo
 ----------------
 
-.. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required size for running |cp| on Kubernetes.
+.. warning:: This example uses a real provider to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
  
 Setup
 *****
 
 This demo requires a Kubenertes Cluster and ``kubectl`` context configured properly to manage it.
 
-The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine.
-If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-gke-base-validate` section of these instructions.
+The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine (GKE).  If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-gke-base-validate` section of these instructions.
 
-To verify the GCP Project in which a new cluster will be created, run the following:
+To verify the Goolge Cloud Platform (GCP) Project in which a new cluster will be created, run the following:
 
 .. sourcecode:: bash
 
     gcloud config list --format 'value(core.project)'
 
 .. note::
-    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instrucitons.
+    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instrucitons.  You may also use these variables to modify the default behavior of the demo create cluster functionality.
 
 To create the cluster, run the following (estimated running time, 4 minutes):
 
@@ -89,7 +88,7 @@ The demo uses ``kubectl`` to control the cluster.  To verify that your local ``k
 
     kubectl config current-context
 
-The context should contain the proper region and cluster name.
+The context should contain the proper region and cluster name.  If you used the demo ``gke-create-cluster`` function to create your cluster, the context name should have the format: ``gke_<google-project-id>_<region>_<cp-examples-operator>-<username>``
 
 .. _examples-operator-gke-base-run:
 
@@ -107,7 +106,11 @@ To deploy |cp| run (estimated running time, 7 minutes):
 Verify Confluent Platform
 *************************
 
-**TODO** Document how to verify (Client and C3)
+View Cluster with Confluent Control Center
+``````````````````````````````````````````
+
+View Cluster on the command line
+````````````````````````````````
 
 .. _examples-oeprator-gke-base-tear-down:
 
