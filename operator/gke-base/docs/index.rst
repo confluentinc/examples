@@ -66,9 +66,8 @@ To create the cluster, run the following (estimated execution time, 4 minutes):
 
     make gke-create-cluster
 
-Verify that ``gcloud`` has created the cluster properly:
+Verify that ``gcloud`` has created the cluster properly::
 
-::
     ...
     Created [https://container.googleapis.com/v1/projects/<project-id>/zones/us-central1-a/clusters/cp-examples-operator-<username>].
     To inspect the contents of your cluster, go to: <link> 
