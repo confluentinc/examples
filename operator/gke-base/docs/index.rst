@@ -49,7 +49,7 @@ Setup
 This demo requires a Kubenertes Cluster and ``kubectl`` context configured properly to manage it.
 
 The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine.
-If you already have a cluster you wish to use for the demo, you can skip to the :ref:`Validate <examples-operator-gke-base-validate>` section of these instructions.
+If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-gke-base-validate` section of these instructions.
 
 To verify the GCP Project in which a new cluster will be created, run the following:
 
