@@ -76,7 +76,7 @@ Verify that ``gcloud`` has created the cluster properly::
     cp-examples-operator-<username> <zone>    1.12.8-gke.10   <ip-address>  n1-highmem-2  1.12.8-gke.10  3          RUNNING
     ✔  ++++++++++ GKE Cluster Created
 
-:: _examples-operator-gke-base-validate
+.. _examples-operator-gke-base-validate:
 
 Validate
 ********
@@ -128,7 +128,7 @@ Verify
 
     make demo
 
-.. _examples-operator-gke-base-variable-reference
+.. _examples-operator-gke-base-variable-reference:
 
 Variable Reference
 ------------------
