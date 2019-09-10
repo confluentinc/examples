@@ -216,11 +216,13 @@ In order to view |c3|, network connectivity will need to be available between yo
 
 		kubectl -n operator port-forward controlcenter-0 12345:9021
 
-Now open a web-browser to http://localhost:12345, and you should see |c3| with your operational |ak| cluster, |sr|, and |kconnect-long|.
+Now open a web-browser to http://localhost:12345, and you should see |c3| with your operational |ak| cluster, |sr|, and |kconnect-long| with the running ``clicks`` connector.
 
-.. figure:: images/c3.png
+.. figure:: images/clicks-inspection.png
     :alt: c3
 
+.. figure:: images/clicks-schema.png
+    :alt: c3-schema
 
 Highlights 
 **********
