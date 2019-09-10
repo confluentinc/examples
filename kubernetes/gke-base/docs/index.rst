@@ -21,6 +21,9 @@ The major components of this demo are:
   * A single node |kconnect-long|
   * One instance of `kafka-connect-datagen` to produce randomly generated data
 
+.. figure:: images/operator.png
+    :alt: operator
+
 Demo Preqrequisites
 -------------------
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
@@ -176,10 +179,10 @@ Using the default demo variable values, ``kubectl`` should report something like
 	NAME                                       AGE
 	kafkacluster.cluster.confluent.com/kafka   10m
 
-By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
-
 Verify Confluent Platform on the command line
 `````````````````````````````````````````````
+
+By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
 
 The demo deploys a ``client-console`` pod that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
 
@@ -194,6 +197,9 @@ From here you can execute standard |ak| commands to validate the cluster.  You n
 You could view the output of the random click data generator with the console consumer::
 
 	kafka-console-consumer --bootstrap-server kafka:9071 --consumer.config /etc/kafka-client-properties/kafka-client.properties --topic clicks
+
+Example output might look like::
+
 	222.152.45.45F-
 	16141<GET /images/track.png HTTP/1.1204006-Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
 	122.173.165.203L-
@@ -203,7 +209,7 @@ You could view the output of the random click data generator with the console co
 Verify Confluent Platform Control Center
 ````````````````````````````````````````
 
-In order to view |c3|, network access will need to be available between your local machine and the Kubernetes pod running the |c3| service.  If you used an existing cluster you may already have external cluster access configured.  If you used the demo ``gke-create-cluster`` function, you can use the following ``kubectl`` command to open a forwrded port connection between your local host and |c3|.
+In order to view |c3|, network access will need to be available between your local machine and the Kubernetes pod running the |c3| service.  If you used an existing cluster you may already have external cluster access configured.  If you used the demo ``gke-create-cluster`` function, you can use the following ``kubectl`` command to open a forwarded port connection between your local host and |c3|.
 
 .. sourcecode:: bash
 
@@ -211,9 +217,9 @@ In order to view |c3|, network access will need to be available between your loc
 
 Now open a web-browser to http://localhost:12345, and you should see |c3| with operational |ak| clusters, |sr|, and |kconnect-long|.
 
-TODO: Screen shot
+.. figure:: images/c3.png
+    :alt: c3
 
-.. _examples-oeprator-gke-base-tear-down:
 
 Highlights 
 **********
@@ -244,14 +250,20 @@ Connector Deployments
 
 TODO: Document connector deployment job here...
 
+.. _examples-oeprator-gke-base-tear-down:
+
 Tear down
 *********
 
-If you used the demo to create the cluster, be sure to destroy it after you've completed running the demo (estimated running time, 4 minutes):
+To tear down the |cp| components inside the cluster, run the following (estimated running time, 4 minutes):
 
 .. sourcecode:: bash
 
   make destroy-demo
+
+You can verify that all resources are removed with::
+
+  kubectl -n operator get all
 
 If you used the demo to create the Kubernetes cluster for you, destroy the cluster with (estimated running time, 3 minutes):
 
