@@ -207,6 +207,18 @@ gke-base-deploy-clicks-connector: gke-base-deploy-clicks-connector-config gke-ba
 	@$(call echo_stdout_footer_pass,clicks datagen connector deployed)
 #################################
 
+########## JUMP BOX #############
+gke-base-deploy-jump-box:
+	@$(call echo_stdout_header,Deploy jump box)
+	$(call kubectl-cmd,apply -f $(THIS_MKFILE_DIR)cfg/jump-box-pod.yaml)
+	@$(call echo_stdout_footer_pass,jump box deployed)
+
+gke-base-destroy-jump-box:
+	@$(call echo_stdout_header,Delete jump box)
+	$(call kubectl-cmd,delete pod jump-box)
+	@$(call echo_stdout_footer_pass,jump box deleted)
+#################################
+
 gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-deploy-operator
 	@make --no-print-directory gke-base-wait-for-operator
@@ -214,6 +226,7 @@ gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-wait-for-zookeeper
 	@make --no-print-directory gke-base-deploy-kafka
 	@make --no-print-directory gke-base-wait-for-kafka
+	@make --no-print-directory gke-base-deploy-jump-box
 	@make --no-print-directory gke-base-deploy-schemaregistry
 	@make --no-print-directory gke-base-wait-for-schemaregistry
 	@make --no-print-directory gke-base-deploy-connect
@@ -225,6 +238,7 @@ gke-base-demo: gke-base-validate
 	@$(call echo_pass,GKE Base Demo running)
 
 gke-base-destroy-demo: gke-base-validate
+	@make --no-print-directory gke-base-destroy-jump-box
 	@make --no-print-directory gke-base-destroy-clicks-connector-deploy-job
 	@make --no-print-directory gke-base-destroy-controlcenter
 	@make --no-print-directory gke-base-wait-for-controlcenter-destruction
