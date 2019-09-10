@@ -237,7 +237,7 @@ Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__,
 
 Here is how it works:
 
-The configuration file values, including the SASL secrets, are defined in a Kubernetes Object file, like the following.  Note how everything beyond the ``kafka-client.properties`` line looks like a typical Java Properties file.
+The configuration file values, including the SASL secrets, are defined in a Kubernetes Object file, like the following.  Note how everything beyond the ``kafka-client.properties`` line looks like a typical Java Properties file::
 
   apiVersion: v1
   kind: Secret
