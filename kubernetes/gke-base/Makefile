@@ -89,6 +89,9 @@ gke-base-wait-for-zookeeper: #_ Waits until the Zookeeper rollout is complete
 gke-base-destroy-zookeeper: #_ Purge the Zookeeper package 
 	@$(call echo_stdout_header,Purge the Zookeeper package)
 	-helm delete --purge zookeeper
+# There are currently some issues with ZK cleanup in the Helm packages, for now i'm helping along with extra delete commands
+	-kubectl -n operator delete sts/zookeeper
+	-kubectl -n operator delete service/zookeeper;kubectl -n operator delete service/zookeeper-0-internal;
 	@$(call echo_stdout_footer_pass,Zookeeper purged)
 
 gke-base-wait-for-zookeeper-destruction: #_ Waits until the Zookeper cluster is destroyed
