@@ -6,7 +6,7 @@
 Overview
 --------
 
-This demo shows a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| with random data generation provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
+This demo shows a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| with mock data generation provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
 
 The major components of this demo are:
 
@@ -18,7 +18,7 @@ The major components of this demo are:
   * A single node |sr|
   * |c3|
   * A single node |kconnect-long|
-  * One instance of `kafka-connect-datagen` to produce randomly generated data
+  * One instance of `kafka-connect-datagen` to produce mock data
 
 .. figure:: images/operator.png
     :alt: operator
@@ -51,7 +51,7 @@ Running the Demo
 Setup
 *****
 
-Clone the Confluent examples repository and change directories on your termianl into the ``gke-base`` directory.
+Clone the Confluent examples repository and change directories on your terminal into the ``gke-base`` directory.
 
 .. sourcecode:: bash
 
@@ -111,7 +111,7 @@ To deploy |cp| run (estimated running time, 7 minutes):
 
     make demo
 
-The last output message you should see should be::
+The last output message you should see is::
 
 	✔ GKE Base Demo running
 
@@ -195,7 +195,7 @@ From here you can execute standard |ak| commands to validate the cluster.  You n
 
 		kafka-topics --bootstrap-server kafka:9071 --command-config /etc/kafka-client-properties/kafka-client.properties --list
 
-You could view the output of the random click data generator with the console consumer::
+You could view the output of the mock click data generator with the console consumer::
 
 	kafka-console-consumer --bootstrap-server kafka:9071 --consumer.config /etc/kafka-client-properties/kafka-client.properties --topic clicks
 
@@ -216,7 +216,7 @@ In order to view |c3|, network connectivity will need to be available between yo
 
 		kubectl -n operator port-forward controlcenter-0 12345:9021
 
-Now open a web-browser to http://localhost:12345, and you should see |c3| with operational |ak| clusters, |sr|, and |kconnect-long|.
+Now open a web-browser to http://localhost:12345, and you should see |c3| with your operational |ak| cluster, |sr|, and |kconnect-long|.
 
 .. figure:: images/c3.png
     :alt: c3
