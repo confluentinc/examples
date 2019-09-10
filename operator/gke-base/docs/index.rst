@@ -116,9 +116,9 @@ The last output message you should see should be::
 Verify 
 ******
 
-You can view the deploye components with:
+You can view the deployed components with:
 
-.. sourcecode: bash
+.. sourcecode:: bash
 
     kubectl -n operator get all
 
