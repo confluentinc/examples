@@ -179,16 +179,16 @@ Using the default demo variable values, ``kubectl`` should report something like
 	NAME                                       AGE
 	kafkacluster.cluster.confluent.com/kafka   10m
 
-Verify Confluent Platform on the command line
-`````````````````````````````````````````````
+Verify Confluent Platform on the CLI 
+````````````````````````````````````
 
-By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
+By default the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following validation instructions may not be applicable to your setup.
 
 The demo deploys a ``client-console`` pod that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
 
 	kubectl -n operator exec -it client-console bash
 
-From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the jump box host.  See :ref:`examples-operator-gke-base-client-configurations` for more information.
+From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the client-console pod.  See the :ref:`examples-operator-gke-base-client-configurations` Highlight for more information.
 
 .. sourcecode:: bash
 
@@ -229,15 +229,15 @@ Highlights
 Client Configurations
 `````````````````````
 
-Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will require secret configuration values.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files applications on Pods to use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  Here is how it works:
+Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will require secret configuration values.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files that applications on Pods can use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  Here is how it works:
 
-.. warn::
-
-  For production use, a more secure version of security is recommended.  Please see Kafka security documentation for further details. 
+.. warning:: The default security deployment for the |cp| Helm Charts is to use SASL/PLAIN security.  This is useful for demonstration purposes, however, you should use greater security for production environments.  See :ref:`Configuring security <https://docs.confluent.io/current/installation/operator/co-security.html>` for more details.
 
 The configuration file, including the SASL secret values are applied to the Kubernetes cluster with the following command::
 
 	kubectl --context <k8s-context> -n operator apply -f <path-to-cfg>/kafka-client-secrets.yaml
+
+The ``kafka-client-secrets.yaml`` file contents  
 
 TODO: Document config maps, etc...
 
