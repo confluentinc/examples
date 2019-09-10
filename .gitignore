@@ -9,4 +9,4 @@ python_notify/
 .vscode
 node_modules/
 *.tar.gz
-operator/common/cp/
+kubernetes/common/cp/

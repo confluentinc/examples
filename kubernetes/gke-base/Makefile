@@ -162,7 +162,7 @@ gke-base-destroy-connect: #_ Purge the Kafka Connect package
 
 gke-base-wait-for-connect-destruction: #_ Waits until Kafka Connect is destroyed
 	@$(call echo_stdout_header,Ensure Kafka Connect destroyed)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/connectors
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/connectors
 	@$(call echo_stdout_footer_pass,Kafka Connect gone)
 #################################
 
