@@ -171,14 +171,13 @@ Using the default demo variable values, ``kubectl`` should report something like
 	NAME                                       AGE
 	kafkacluster.cluster.confluent.com/kafka   10m
 
-By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/> resources`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
+By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
 
 View Cluster on the command line
 ````````````````````````````````
 The demo deploys a 'jump box' that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
 
 	kubectl -n operator exec -it jump-box bash
-	root@jump-box:/opt# 
 
 From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the jump box host.
 
