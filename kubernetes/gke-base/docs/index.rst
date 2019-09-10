@@ -6,8 +6,7 @@
 Overview
 --------
 
-Demonstrates a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| with random data generation
-provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
+This demo shows a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| with random data generation provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
 
 The major components of this demo are:
 
@@ -319,7 +318,7 @@ This ConfigMap is applied to the cluster with the following command::
 
 	kubectl --context <k8s-context> -n operator apply -f <path-to-examples-repo>kubernetes/gke-base/cfg/clicks-datagen-connector-configmap.yaml
 
-Next, a Kubernetes Job Object is defined.  Using a docker image with the ``curl`` program installed, the Job adds arguments to the ``curl`` command in order to deploy the connector configuration.  Note how the ConfigMap defined above is mounted to the Job specification and the config file passed into the ``curl`` command matches the path of the file mounted.
+Next, a Kubernetes Job Object is defined.  Using a docker image with the ``curl`` program installed, the Job adds arguments to the ``curl`` command in order to deploy the connector configuration.  Note how the ConfigMap defined above is mounted to the Job specification and the config file passed into the ``curl`` command matches the path of the file mounted::
 
 	apiVersion: batch/v1
 	kind: Job
