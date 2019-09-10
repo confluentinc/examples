@@ -129,7 +129,7 @@ gke-base-deploy-schemaregistry: #_ Deploys the Schmea Registry to the configured
 gke-base-wait-for-schemaregistry: #_ Waits until the Schema Registry rollout is complete
 	@$(call echo_stdout_header,Wait for Schema Registry)
 	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts schemaregistry
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/schemaregistry)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/schemaregistry
 	@$(call echo_stdout_footer_pass,Schema Registry ready)
 
 gke-base-destroy-schemaregistry: #_ Purge the Schema Registry package
@@ -206,6 +206,18 @@ gke-base-deploy-clicks-connector: gke-base-deploy-clicks-connector-config gke-ba
 	@$(call echo_stdout_footer_pass,clicks datagen connector deployed)
 #################################
 
+########## CLIENT SECRETS #######
+gke-base-deploy-client-secrets:
+	@$(call echo_stdout_header,Deploy client secrets)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/kafka-client-secrets.yaml
+	@$(call echo_stdout_footer_pass,client secrets deployed)
+
+gke-base-destroy-client-secrets:
+	@$(call echo_stdout_header,Delete client secrets)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete secret kafka-client.properties
+	@$(call echo_stdout_footer_pass,client secrets destroyed)
+#################################
+
 ########## CLIENT CONSOLE #######
 gke-base-deploy-client-console:
 	@$(call echo_stdout_header,Deploy client-console)
@@ -215,7 +227,7 @@ gke-base-deploy-client-console:
 gke-base-destroy-client-console:
 	@$(call echo_stdout_header,Delete client-console)
 	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pod client-console 
-	@$(call echo_stdout_footer_pass,client-console deleted)
+	@$(call echo_stdout_footer_pass,client-console destroyed)
 #################################
 
 gke-base-demo: gke-base-validate
@@ -225,6 +237,7 @@ gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-wait-for-zookeeper
 	@make --no-print-directory gke-base-deploy-kafka
 	@make --no-print-directory gke-base-wait-for-kafka
+	@make --no-print-directory gke-base-deploy-client-secrets
 	@make --no-print-directory gke-base-deploy-client-console
 	@make --no-print-directory gke-base-deploy-schemaregistry
 	@make --no-print-directory gke-base-wait-for-schemaregistry
@@ -238,6 +251,7 @@ gke-base-demo: gke-base-validate
 
 gke-base-destroy-demo: gke-base-validate
 	@make --no-print-directory gke-base-destroy-client-console
+	@make --no-print-directory gke-base-destroy-client-secrets
 	@make --no-print-directory gke-base-destroy-clicks-connector-deploy-job
 	@make --no-print-directory gke-base-destroy-controlcenter
 	@make --no-print-directory gke-base-wait-for-controlcenter-destruction

@@ -66,6 +66,7 @@ To verify the Goolge Cloud Platform (GCP) Project in which a new cluster will be
     gcloud config list --format 'value(core.project)'
 
 .. note::
+
     For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instrucitons.  You may also use these variables to modify the default behavior of the demo create cluster functionality.
 
 To create the cluster, run the following (estimated running time, 4 minutes):
@@ -134,7 +135,7 @@ Using the default demo variable values, ``kubectl`` should report something like
 	pod/clicks-datagen-connector-deploy-2vd8q   0/1     Completed   0          8m6s
 	pod/connectors-0                            1/1     Running     0          9m36s
 	pod/controlcenter-0                         1/1     Running     0          8m4s
-	pod/jump-box                                1/1     Running     0          10m
+	pod/client-console                          1/1     Running     0          10m
 	pod/kafka-0                                 1/1     Running     0          10m
 	pod/schemaregistry-0                        1/1     Running     0          9m59s
 	pod/zookeeper-0                             1/1     Running     0          11m
@@ -184,7 +185,7 @@ The demo deploys a ``client-console`` pod that can be used to open a terminal in
 
 	kubectl -n operator exec -it client-console bash
 
-From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the jump box host.  See :ref:`examples-operator-gke-base-client-configurations` for more information:
+From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the jump box host.  See :ref:`examples-operator-gke-base-client-configurations` for more information.
 
 .. sourcecode:: bash
 
@@ -210,6 +211,8 @@ In order to view |c3|, network access will need to be available between your loc
 
 Now open a web-browser to http://localhost:12345, and you should see |c3| with operational |ak| clusters, |sr|, and |kconnect-long|.
 
+TODO: Screen shot
+
 .. _examples-oeprator-gke-base-tear-down:
 
 Highlights 
@@ -220,12 +223,24 @@ Highlights
 Client Configurations
 `````````````````````
 
-TODO: Document config maps, etc... here
+Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will require secret configuration values.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files applications on Pods to use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  Here is how it works:
+
+.. warn::
+
+  For production use, a more secure version of security is recommended.  Please see Kafka security documentation for further details. 
+
+The configuration file, including the SASL secret values are applied to the Kubernetes cluster with the following command::
+
+	kubectl --context <k8s-context> -n operator apply -f <path-to-cfg>/kafka-client-secrets.yaml
+
+TODO: Document config maps, etc...
 
 .. _examples-operator-gke-base-connector-deployments:
 
 Connector Deployments
 `````````````````````
+
+|kconnect-long| utilizes a REST endpoint for Connector deployment.  
 
 TODO: Document connector deployment job here...
 

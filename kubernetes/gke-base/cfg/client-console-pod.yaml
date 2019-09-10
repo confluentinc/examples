@@ -2,10 +2,10 @@ apiVersion: v1
 kind: Pod
 metadata:
   namespace: operator
-  name: jump-box
+  name: client-console
 spec:
   containers:
-  - name: jump-box
+  - name: client-console
     image: docker.io/confluentinc/cp-server-operator:5.3.0.0
     command: [sleep, "86400"]
     volumeMounts:
