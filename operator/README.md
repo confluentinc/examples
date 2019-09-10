@@ -20,14 +20,8 @@ The following table indicates the applications required to be in the system PATH
 
 
 ## Compute Requirements
-Depending on the specific use case demo, you will require access to a Kubernetes Cluster (1.9 or later). 
 
-The demo provides tooling to create a cluster on popular Cloud Hosted Kubernetes Services.
-| Service | Instructions | Info |
-|---|---|---|
-| [GKE](https://cloud.google.com/kubernetes-engine/) | <TOOD: Link to doc/scripting> | Google Kubernetes Engine |
-| [EKS](https://aws.amazon.com/eks/) | <TODO: Link to doc/scripting> | AWS Elastic Kubernetes Service |
-| [AKS](https://azure.microsoft.com/en-us/services/kubernetes-service/) | <TODO: Link to doc/scripting> | Azure Kubernetes Service|
+Depending on the specific use case demo, you will require access to a Kubernetes Cluster (1.9 or later). 
 
 # Use Cases
 | Demo | Info |
