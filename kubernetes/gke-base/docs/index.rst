@@ -130,7 +130,9 @@ You can view the deployed components with:
 
     kubectl -n operator get all
 
-Using the default demo variable values, ``kubectl`` should report something like the following::
+Using the default demo variable values, ``kubectl`` should report something like the following
+
+::
 
 	NAME                                        READY   STATUS      RESTARTS   AGE
 	pod/cc-manager-566965d74f-4hblt             1/1     Running     0          11m
@@ -229,7 +231,7 @@ Highlights
 Client Configurations
 `````````````````````
 
-Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will require secret configuration values.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files that applications on Pods can use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  Here is how it works:
+Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will configuration values including SASL credentials.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files that applications on Pods can use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  Here is how it works:
 
 .. warning:: The default security deployment for the |cp| Helm Charts is to use SASL/PLAIN security.  This is useful for demonstration purposes, however, you should use greater security for production environments.  See `Configuring security <https://docs.confluent.io/current/installation/operator/co-security.html>`__ for more details.
 
