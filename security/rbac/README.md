@@ -2,13 +2,17 @@
 
 # Overview
 
-These demos showcase the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
+These demos showcase the Role Based Access Control (RBAC) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
 
 There are two demos.  Currently they have different configurations and can be used in different environments.
 
 * [Demo 1: Local install](#demo-1-local-install)
 * [Demo 2: Docker](#demo-2-docker)
 
+## Additional Reading
+
+* [RBAC for Kafka Connect whitepaper](https://www.confluent.io/resources/rbac-for-kafka-connect)
+* [RBAC documentation](https://docs.confluent.io/current/security/rbac/index.html)
 
 # Demo 1: Local install
 
