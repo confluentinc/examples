@@ -117,6 +117,9 @@ The last output message you should see should be::
 Verify 
 ******
 
+Verify the Kubernetes Deployment
+````````````````````````````````
+
 You can view the deployed components with:
 
 .. sourcecode:: bash
@@ -174,13 +177,14 @@ Using the default demo variable values, ``kubectl`` should report something like
 
 By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
 
-View Cluster on the command line
-````````````````````````````````
-The demo deploys a 'jump box' that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
+Verify Confluent Platform on the command line
+`````````````````````````````````````````````
 
-	kubectl -n operator exec -it jump-box bash
+The demo deploys a ``client-console`` pod that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
 
-From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the jump box host.
+	kubectl -n operator exec -it client-console bash
+
+From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the jump box host.  See :ref:`examples-operator-gke-base-client-configurations` for more information:
 
 .. sourcecode:: bash
 
@@ -195,8 +199,8 @@ You could view the output of the random click data generator with the console co
 	16151FGET /site/user_status.html HTTP/1.1401289-Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
 	...
 
-View Cluster with Confluent Control Center
-``````````````````````````````````````````
+Verify Confluent Platform Control Center
+````````````````````````````````````````
 
 In order to view |c3|, network access will need to be available between your local machine and the Kubernetes pod running the |c3| service.  If you used an existing cluster you may already have external cluster access configured.  If you used the demo ``gke-create-cluster`` function, you can use the following ``kubectl`` command to open a forwrded port connection between your local host and |c3|.
 
@@ -207,6 +211,23 @@ In order to view |c3|, network access will need to be available between your loc
 Now open a web-browser to http://localhost:12345, and you should see |c3| with operational |ak| clusters, |sr|, and |kconnect-long|.
 
 .. _examples-oeprator-gke-base-tear-down:
+
+Highlights 
+**********
+
+.. _examples-operator-gke-base-client-configurations:
+
+Client Configurations
+`````````````````````
+
+TODO: Document config maps, etc... here
+
+.. _examples-operator-gke-base-connector-deployments:
+
+Connector Deployments
+`````````````````````
+
+TODO: Document connector deployment job here...
 
 Tear down
 *********
@@ -223,10 +244,13 @@ If you used the demo to create the Kubernetes cluster for you, destroy the clust
 
   make gke-destroy-cluster
 
+Advanced Demo Usage
+*******************
+
 .. _examples-operator-gke-base-variable-reference:
 
 Variable Reference
-------------------
+``````````````````
 
 The following table documents variables that can be used to configure various demo behaviors.  Variables can be ``exported`` or set in each indvidual make command with either sample syntax below:
 
