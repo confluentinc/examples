@@ -58,8 +58,8 @@ gke-base-deploy-operator: #_ Deploys the Confluent Operator into the configured 
 
 gke-base-wait-for-operator: #_ Waits until the Confluent Operator rollout status is complete
 	@$(call echo_stdout_header,wait for operator)	
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-operator)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-manager)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-operator
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-manager
 	@$(call echo_stdout_footer_pass,operator ready)
 
 gke-base-destroy-operator: #_ Destroy the operator deployment on the configured k8s cluster
@@ -69,8 +69,8 @@ gke-base-destroy-operator: #_ Destroy the operator deployment on the configured 
 
 gke-base-wait-for-operator-destruction: #j Will wait until the Confluent Operator & Manager are destroyed
 	@$(call echo_stdout_header,ensure operator destroyed)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete deployment/cc-manager)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete deployment/cc-operator)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete deployment/cc-manager
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete deployment/cc-operator
 	@$(call echo_stdout_footer_pass,operator gone)
 #################################
 
@@ -83,7 +83,7 @@ gke-base-deploy-zookeeper: #_ Deploys Zookeeper into the configured k8s cluster
 gke-base-wait-for-zookeeper: #_ Waits until the Zookeeper rollout is complete
 	@$(call echo_stdout_header,Wait for Zookeper)
 	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts zookeeper 
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/zookeeper)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/zookeeper
 	@$(call echo_stdout_footer_pass,Zookeeper ready)
 
 gke-base-destroy-zookeeper: #_ Purge the Zookeeper package 
@@ -93,7 +93,7 @@ gke-base-destroy-zookeeper: #_ Purge the Zookeeper package
 
 gke-base-wait-for-zookeeper-destruction: #_ Waits until the Zookeper cluster is destroyed
 	@$(call echo_stdout_header,Ensure Zookeeper destroyed)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/zookeeper)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/zookeeper
 	@$(call echo_stdout_footer_pass,Zookeeper gone)
 #################################
 
@@ -106,7 +106,7 @@ gke-base-deploy-kafka: #_ Deploys Kafka into the configured k8s cluster
 gke-base-wait-for-kafka: #_ Waits until the Kafka rollout is complete
 	@$(call echo_stdout_header,Wait for Kafka)
 	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts kafka 
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/kafka)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/kafka
 	@$(call echo_stdout_footer_pass,Kafka ready)
 
 gke-base-destroy-kafka: #_ Purge the Kafka package 
@@ -116,7 +116,7 @@ gke-base-destroy-kafka: #_ Purge the Kafka package
 
 gke-base-wait-for-kafka-destruction: #_ Waits until the Kafka cluster is destroyed
 	@$(call echo_stdout_header,Ensure Kafka destroyed)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/kafka)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/kafka
 	@$(call echo_stdout_footer_pass,Kafka gone)
 #################################
 
@@ -139,7 +139,7 @@ gke-base-destroy-schemaregistry: #_ Purge the Schema Registry package
 
 gke-base-wait-for-schemaregistry-destruction: #_ Waits until the Schema Registry is destroyed
 	@$(call echo_stdout_header,Ensure Schema Registry destroyed)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/schemaregistry)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/schemaregistry
 	@$(call echo_stdout_footer_pass,Schema Registry gone)
 #################################
 
@@ -152,7 +152,7 @@ gke-base-deploy-connect: #_ Deploys Kafka Connect to the configured k8s cluster
 gke-base-wait-for-connect: #_ Waits until the Kafka Connect rollout is complete
 	@$(call echo_stdout_header,Wait for Kafka Connect)
 	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts connectors
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/connectors)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/connectors
 	@$(call echo_stdout_footer_pass,Kafka Connect ready)
 
 gke-base-destroy-connect: #_ Purge the Kafka Connect package 
@@ -162,7 +162,7 @@ gke-base-destroy-connect: #_ Purge the Kafka Connect package
 
 gke-base-wait-for-connect-destruction: #_ Waits until Kafka Connect is destroyed
 	@$(call echo_stdout_header,Ensure Kafka Connect destroyed)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/connectors)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/connectors
 	@$(call echo_stdout_footer_pass,Kafka Connect gone)
 #################################
 
@@ -175,7 +175,7 @@ gke-base-deploy-controlcenter: #_ Deploys Confluent Control Center to the config
 gke-base-wait-for-controlcenter: #_ Waits until the Control Center rollout is complete
 	@$(call echo_stdout_header,Wait for Control Center)
 	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts controlcenter 
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/controlcenter)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/controlcenter
 	@$(call echo_stdout_footer_pass,Control Center ready)
 
 gke-base-destroy-controlcenter: #_ Purge the Control Center package 
@@ -185,36 +185,36 @@ gke-base-destroy-controlcenter: #_ Purge the Control Center package
 
 gke-base-wait-for-controlcenter-destruction: #_ Waits until Control Center is destroyed
 	@$(call echo_stdout_header,Ensure Control Center destroyed)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/controlcenter)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/controlcenter
 	@$(call echo_stdout_footer_pass,Control Center gone)
 #################################
 
 ### CLICKS DATA GEN CONNECTOR ###
 gke-base-deploy-clicks-connector-config: #_ Deploys configuration for a connector that generates sample click data
 	@$(call echo_stdout_header,Deploy clicks datagen connector config)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/clicks-datagen-connector-configmap.yaml)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/clicks-datagen-connector-configmap.yaml
 	@$(call echo_stdout_footer_pass,clicks datagen connector config deployed)
 
 gke-base-destroy-clicks-connector-deploy-job: #_ Destroys the job that deployed the sample data generator connector
 	@$(call echo_stdout_header,destory Deploy clicks datagen connector job)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete jobs/clicks-datagen-connector-deploy) ## name dependnecy in file, required unless/until TTL works across all k8s configurations
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete jobs/clicks-datagen-connector-deploy ## name dependnecy in file, required unless/until TTL works across all k8s configurations
 	@$(call echo_stdout_footer_pass,clicks datagen connector job destroyed)
 
 gke-base-deploy-clicks-connector: gke-base-deploy-clicks-connector-config gke-base-destroy-clicks-connector-deploy-job #_ Deploys a connector that generates sample click data
 	@$(call echo_stdout_header,Deploy clicks datagen connector)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/clicks-datagen-connector-deploy-job.yaml)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/clicks-datagen-connector-deploy-job.yaml
 	@$(call echo_stdout_footer_pass,clicks datagen connector deployed)
 #################################
 
 ########## JUMP BOX #############
 gke-base-deploy-jump-box:
 	@$(call echo_stdout_header,Deploy jump box)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/jump-box-pod.yaml)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(THIS_MKFILE_DIR)cfg/jump-box-pod.yaml
 	@$(call echo_stdout_footer_pass,jump box deployed)
 
 gke-base-destroy-jump-box:
 	@$(call echo_stdout_header,Delete jump box)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pod jump-box)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pod jump-box
 	@$(call echo_stdout_footer_pass,jump box deleted)
 #################################
 
