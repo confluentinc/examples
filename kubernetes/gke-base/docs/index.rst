@@ -190,7 +190,7 @@ The demo deploys a ``client-console`` pod that can be used to open a terminal in
 
 	kubectl -n operator exec -it client-console bash
 
-From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the client-console pod.  See the :ref:`examples-operator-gke-base-client-configurations` Highlight for more information.
+From here you can execute standard |ak| commands to validate the cluster.  You need to provide the commands with the required connectivity and security configurations, which are provided in mapped files on the ``client-console`` pod.  See the :ref:`examples-operator-gke-base-client-configurations` Highlight for more information.
 
 .. sourcecode:: bash
 
@@ -211,7 +211,7 @@ Example output might look like::
 Verify Confluent Platform Control Center
 ````````````````````````````````````````
 
-In order to view |c3|, network access will need to be available between your local machine and the Kubernetes pod running the |c3| service.  If you used an existing cluster you may already have external cluster access configured.  If you used the demo ``gke-create-cluster`` function, you can use the following ``kubectl`` command to open a forwarded port connection between your local host and |c3|.
+In order to view |c3|, network connectivity will need to be available between your local machine and the Kubernetes pod running the |c3| service.  If you used an existing cluster you may already have external cluster access configured.  If you used the demo ``gke-create-cluster`` function, you can use the following ``kubectl`` command to open a forwarded port connection between your local host and |c3|.
 
 .. sourcecode:: bash
 
@@ -231,17 +231,51 @@ Highlights
 Client Configurations
 `````````````````````
 
-Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will configuration values including SASL credentials.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files that applications on Pods can use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  Here is how it works:
+Using the |cp| `Helm Charts <https://github.com/confluentinc/cp-helm-charts>`__, |ak| is deployed with Plaintext SASL security enabled.  In order for clients to authenticate, they will require configuration values including SASL credentials.   The Kubernetes API supports `Secrets <https://kubernetes.io/docs/concepts/configuration/secret/>`__ and `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ types which can be used to push configuration values into files that applications on Pods can use.   This demo uses these mechanisms to launch a ``client-console`` Pod preconfigured with the required client properties file.  The properties file on the Pod is a mapped version of the centrally stored Secret.  
 
 .. warning:: The default security deployment for the |cp| Helm Charts is to use SASL/PLAIN security.  This is useful for demonstration purposes, however, you should use greater security for production environments.  See `Configuring security <https://docs.confluent.io/current/installation/operator/co-security.html>`__ for more details.
 
-The configuration file, including the SASL secret values are applied to the Kubernetes cluster with the following command::
+Here is how it works:
+
+The configuration file values, including the SASL secrets, are defined in a Kubernetes Object file, like this::
+
+  apiVersion: v1
+  kind: Secret
+  metadata:
+    name: kafka-client.properties
+  type: Opaque
+  stringData:
+    kafka-client.properties: |-
+      bootstrap.servers=kafka:9071
+      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="test" password="test123";
+      sasl.mechanism=PLAIN
+      security.protocol=SASL_PLAINTEXT
+
+The demo applies this object to the cluster with the ``kubectl apply`` command::
 
 	kubectl --context <k8s-context> -n operator apply -f <path-to-cfg>/kafka-client-secrets.yaml
 
-The ``kafka-client-secrets.yaml`` file contents  
+The ``client-console`` is deployed with this Secret Object mapped as a volume to the Pod::
 
-TODO: Document config maps, etc...
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    namespace: operator
+    name: client-console
+  spec:
+    containers:
+    - name: client-console
+      image: docker.io/confluentinc/cp-server-operator:5.3.0.0
+      command: [sleep, "86400"]
+      volumeMounts:
+      - name: kafka-client-properties
+        mountPath: /etc/kafka-client-properties/
+    volumes:
+    - name: kafka-client-properties
+      secret:
+        secretName: kafka-client.properties
+
+The end result is a Secret object named ``kafka-client.properties`` is located on the Pod in the file location ``/etc/kafka-client-properties/kafka-client.properties``
 
 .. _examples-operator-gke-base-connector-deployments:
 
