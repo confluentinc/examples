@@ -29,8 +29,6 @@ gke-kubectl-current-context = $(shell kubectl config current-context 2>&1 /dev/n
 
 HELM_COMMON_FLAGS := --set global.provider.registry.fqdn=docker.io --set global.provider.name=gcp --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} --set global.provider.storage.provisioner=kubernetes.io/gce-pd --set global.provider.storage.reclaimPolicy=Delete --set global.provider.storage.parameters.type=pd-ssd --set global.provider.sasl.plain.username=test --set global.provider.sasl.plain.password=test123
 
-gke-cluster-exists = $(if $(shell gcloud --format json container clusters list | jq -r '.[] | select(.name == "$(GKE_BASE_CLUSTER_ID)") | .name'),,false)
-
 gke-check-dependencies: check-dependencies
 	@$(call check-var-defined,GCP_PROJECT_ID)
 	@$(call check-dependency,gcloud)
