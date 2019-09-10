@@ -58,7 +58,7 @@ This demo requires a Kubenertes Cluster and ``kubectl`` context configured prope
 
 The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine (GKE).  If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-gke-base-validate` section of these instructions.
 
-To verify the Goolge Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://cloud.google.com/resource-manager/docs/creating-managing-projects>`:
+To verify the Goolge Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://cloud.google.com/resource-manager/docs/creating-managing-projects>`__:
 
 .. sourcecode:: bash
 
@@ -171,7 +171,7 @@ Using the default demo variable values, ``kubectl`` should report something like
 	NAME                                       AGE
 	kafkacluster.cluster.confluent.com/kafka   10m
 
-By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/> resources`_, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
+By default, the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/> resources`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following connectivity instructions may not be applicable to your setup.
 
 View Cluster on the command line
 ````````````````````````````````
