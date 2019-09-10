@@ -215,7 +215,7 @@ gke-base-deploy-jump-box:
 
 gke-base-destroy-jump-box:
 	@$(call echo_stdout_header,Delete jump box)
-	$(call kubectl-cmd,delete pod jump-box)
+	-$(call kubectl-cmd,delete pod jump-box)
 	@$(call echo_stdout_footer_pass,jump box deleted)
 #################################
 
