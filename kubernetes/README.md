@@ -2,12 +2,12 @@
 
 # Overview
 
-This section of the examples repository will contain a variety of uses cases for deployment of Confluent Platform and supporting applications deployed via [Confluent Operator](https://docs.confluent.io/current/installation/operator/index.html).
+This section of the examples repository will contain a variety of uses cases leverging [Confluent Operator](https://docs.confluent.io/current/installation/operator/index.html)  to deploy and manage Confluent Platform.
 
-# Use Cases
+# Demos 
 | Demo | Info |
 |---|---|
-| [gke-base](https://docs.confluent.io/current/tutorials/kubernetes/gke-base/docs/index.html) | A base deployment of Confluent Platform on Google Kubernetes Engine (GKE) with sample data generation using [Kafka Connect](https://docs.confluent.io/current/connect/index.html)|
+| [gke-base](https://docs.confluent.io/current/tutorials/kubernetes/gke-base/docs/index.html) | A base deployment of Confluent Platform on Google Kubernetes Engine (GKE) with sample data generation using Kafka Connect|
 
 # Documentation
 See each individual use case above for detailed documentation on running the demos.
