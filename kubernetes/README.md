@@ -2,7 +2,7 @@
 
 # Overview
 
-This section of the examples repository will contain a variety of uses cases leverging [Confluent Operator](https://docs.confluent.io/current/installation/operator/index.html)  to deploy and manage Confluent Platform.
+This section of the examples repository will contain a variety of demos showcasing various uses cases leverging [Confluent Operator](https://docs.confluent.io/current/installation/operator/index.html) to deploy and manage Confluent Platform.
 
 # Demo List 
 | Demo     | Info |
