@@ -260,7 +260,7 @@ services:
 
       # Enable KSQL OAuth authentication
       KSQL_REST_SERVLET_INITIALIZOR_CLASSES: io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
-      KSQL_WEBSOCKET_SERVLET_INITIALIZOR_CLASSES: io.confluent.common.security.jetty.initializer.InstallOAuthSecurityHandler
+      KSQL_WEBSOCKET_SERVLET_INITIALIZOR_CLASSES: io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
       KSQL_OAUTH_JWT_PUBLIC_KEY_PATH: /tmp/conf/public.pem
       KSQL_CONFLUENT_METADATA_PUBLIC_KEY_PATH: /tmp/conf/public.pem
       KSQL_PUBLIC_KEY_PATH: /tmp/conf/public.pem

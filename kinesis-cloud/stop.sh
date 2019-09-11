@@ -3,17 +3,17 @@
 # Source library 
 . ../utils/helper.sh
 
+CONFIG_FILE=~/.ccloud/config
+check_ccloud_config $CONFIG_FILE || exit
+
 source config/demo.cfg
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 #SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
-../ccloud/ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 source delta_configs/env.delta
 
 check_env || exit 1
 check_aws || exit
-
-CONFIG_FILE=~/.ccloud/config
-check_ccloud_config $CONFIG_FILE || exit
 
 # Clean up AWS Kinesis and cloud storage
 echo "Clean up AWS Kinesis and cloud storage"

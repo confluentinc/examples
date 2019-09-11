@@ -36,6 +36,8 @@ function restore_configs() {
 
 function login_mds() {
 
+  check_expect || exit 1
+
   MDS_URL=$1
 
   echo -e "\n# Login"
