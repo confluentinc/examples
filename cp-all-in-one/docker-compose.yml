@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.3.1-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.4.0-beta190911193225
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-enterprise-kafka:5.3.1-SNAPSHOT
+    image: confluentinc/cp-enterprise-kafka:5.4.0-beta190911193225
     hostname: broker
     container_name: broker
     depends_on:
@@ -35,7 +35,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.3.1-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.4.0-beta190911193225
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -76,14 +76,14 @@ services:
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.0-beta190911193225.jar
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.3.1-SNAPSHOT
+    image: confluentinc/cp-enterprise-control-center:5.4.0-beta190911193225
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -108,7 +108,7 @@ services:
       PORT: 9021
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.3.1-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.4.0-beta190911193225
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -129,7 +129,7 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.3.1-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.4.0-beta190911193225
     container_name: ksql-cli
     depends_on:
       - broker
@@ -140,7 +140,7 @@ services:
 
   ksql-datagen:
     # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
-    image: confluentinc/ksql-examples:5.3.1-SNAPSHOT
+    image: confluentinc/ksql-examples:5.4.0-beta190911193225
     hostname: ksql-datagen
     container_name: ksql-datagen
     depends_on:
@@ -163,7 +163,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   rest-proxy:
-    image: confluentinc/cp-kafka-rest:5.3.1-SNAPSHOT
+    image: confluentinc/cp-kafka-rest:5.4.0-beta190911193225
     depends_on:
       - zookeeper
       - broker
