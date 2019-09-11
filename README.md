@@ -26,7 +26,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 | Demo                                       | Local | Docker | Category | Description
 | ------------------------------------------ | ----- | ------ | -------- | ---------------------------------------------------------------------------
-| [Clients to Cloud](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Confluent Cloud | Examples of client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/) <img src="clients/cloud/images/clients-all.png" width="450">
+| [Clients to Cloud](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Confluent Cloud | Client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/) <img src="clients/cloud/images/clients-all.png" width="450">
 | [Hybrid cloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | Confluent Cloud | End-to-end demo of a hybrid Kafka Cluster between [Confluent Cloud](https://www.confluent.io/confluent-cloud/) and on-prem using Confluent Replicator <img src="ccloud/docs/images/schema-registry-local.jpg" width="450">
 | [Kinesis to Cloud](kinesis-cloud/README.md)                 |   [Y](kinesis-cloud/README.md)   |   N   | Confluent Cloud | AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline <img src="kinesis-cloud/images/topology.jpg" width="450">
 
@@ -60,11 +60,11 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 | Demo                                       | Local | Docker | Category | Description
 | ------------------------------------------ | ----- | ------ | -------- | ---------------------------------------------------------------------------
-| [Avro](clients/README.md)               |   [Y](clients/README.md)   |   N    | Confluent Platform | Examples of client applications using Avro and Confluent Schema Registry <img src="https://www.confluent.io/wp-content/uploads/dwg_SchemaReg_howitworks.png" width="420">
+| [Avro](clients/README.md)               |   [Y](clients/README.md)   |   N    | Confluent Platform | Client applications using Avro and Confluent Schema Registry <img src="https://www.confluent.io/wp-content/uploads/dwg_SchemaReg_howitworks.png" width="420">
 | [CP Demo](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | Confluent Platform | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments <img src="https://github.com/confluentinc/cp-demo/blob/5.3.0-post/docs/images/drawing.png" width="420">
 | [CP Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | Confluent Platform | Automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html) <img src="https://docs.confluent.io/current/_images/confluentPlatform.png" width="420">
-| [Multi datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Confluent Platform | This demo deploys an active-active multi-datacenter design, with two instances of Confluent Replicator copying data bidirectionally between the datacenters <img src="https://docs.confluent.io/current/_images/mdc-level-1.png" width="420">
-| [Security](security/README.md) |  Y  |  Y  | Confluent Platform | Examples of Confluent Platform security features including ACLs, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="350">
+| [Multi datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Confluent Platform | Active-active multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters <img src="https://docs.confluent.io/current/_images/mdc-level-1.png" width="420">
+| [Security](security/README.md) |  Y  |  Y  | Confluent Platform | Confluent Platform security features including ACLs, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="350">
 
 
 # Build Your Own
