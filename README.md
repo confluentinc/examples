@@ -61,7 +61,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | ------------------------------------------ | ----- | ------ | -------- | ---------------------------------------------------------------------------
 | [Clients to Cloud](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Confluent Cloud | Examples of client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/)
 | [Hybrid cloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | Confluent Cloud | End-to-end demo of a hybrid Kafka Cluster between [Confluent Cloud](https://www.confluent.io/confluent-cloud/) and on-prem using Confluent Replicator
-| [Kinesis to Cloud](kinesis-cloud/README.md)                 |   [Y](kinesis-cloud/README.md)   |   N   | Confluent Cloud | AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline <img src="kinesis-cloud/images/topology.jpg" width="300">
+| [Kinesis to Cloud](kinesis-cloud/README.md)                 |   [Y](kinesis-cloud/README.md)   |   N   | Confluent Cloud | AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline <img src="kinesis-cloud/images/topology.jpg" width="500">
 
 
 # Prerequisites
