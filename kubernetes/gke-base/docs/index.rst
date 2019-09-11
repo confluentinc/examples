@@ -23,7 +23,7 @@ The major components of this demo are:
 .. figure:: images/operator.png
     :alt: operator
 
-Demo Preqrequisites
+Demo Prerequisites
 -------------------
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
@@ -54,11 +54,11 @@ Clone the Confluent examples repository and change directories on your terminal 
 		git clone git@github.com:confluentinc/examples.git
     cd examples/operator/gke-base
 
-This demo requires a Kubenertes Cluster and ``kubectl`` context configured properly to manage it.
+This demo requires a Kubernetes Cluster and ``kubectl`` context configured properly to manage it.
 
 The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine (GKE).  If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-gke-base-validate` section of these instructions.
 
-To verify the Goolge Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://support.google.com/googleapi/answer/7014113?hl=en>`__:
+To verify the Google Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://support.google.com/googleapi/answer/7014113?hl=en>`__:
 
 .. sourcecode:: bash
 
@@ -66,7 +66,7 @@ To verify the Goolge Cloud Platform (GCP) Project in which a new cluster will be
 
 .. note::
 
-    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instrucitons.  You may also use these variables to modify the default behavior of the demo create cluster functionality.
+    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instructions.  You may also use these variables to modify the default behavior of the demo create cluster functionality.
 
 To create the cluster, run the following (estimated running time, 4 minutes):
 
@@ -357,7 +357,7 @@ After the job is applied, the following command shows the deployed connector::
 	root@client-console:/opt# curl http://connectors:8083/connectors;echo;
 	["clicks"]
 
-.. _examples-oeprator-gke-base-tear-down:
+.. _examples-operator-gke-base-tear-down:
 
 Tear down
 *********
@@ -386,7 +386,7 @@ Advanced Demo Usage
 Variable Reference
 ``````````````````
 
-The following table documents variables that can be used to configure various demo behaviors.  Variables can be ``exported`` or set in each indvidual make command with either sample syntax below:
+The following table documents variables that can be used to configure various demo behaviors.  Variables can be ``exported`` or set in each individual ``make`` command with either sample syntax below:
 
 .. sourcecode:: bash
 
