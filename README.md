@@ -16,11 +16,16 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 ## Full demo list
 
+* [Confluent Platform](#confluent-platform)
+* [Data Pipelines](#data-pipelines)
+* [Stream Processing](#stream-processing)
+* [Confluent Cloud](#confluent-cloud)
+
 ### Confluent Platform
 
 | Demo                                       | Local | Docker | Category | Description 
 | ------------------------------------------ | ----- | ------ | -------- | ---------------------------------------------------------------------------
-| [Avro](clients/README.md)               |   [Y](clients/README.md)   |   N    | Confluent Platform | Examples of client applications using Avro and Confluent Schema Registry
+| [Avro](clients/README.md)               |   [Y](clients/README.md)   |   N    | Confluent Platform | Examples of client applications using Avro and Confluent Schema Registry <img src="https://www.confluent.io/wp-content/uploads/dwg_SchemaReg_howitworks.png" width="450">
 | [CP Demo](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | Confluent Platform | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments <img src="https://github.com/confluentinc/cp-demo/blob/5.3.0-post/docs/images/drawing.png" width="450">
 | [CP Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | Confluent Platform | Automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html)
 | [Multi datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Confluent Platform | This demo deploys an active-active multi-datacenter design, with two instances of Confluent Replicator copying data bidirectionally between the datacenters <img src="https://docs.confluent.io/current/_images/mdc-level-1.png" width="450">
@@ -45,8 +50,8 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | Demo                                       | Local | Docker | Category | Description 
 | ------------------------------------------ | ----- | ------ | -------- | ---------------------------------------------------------------------------
 | [Clickstream](clickstream/README.md)       |   [Y](clickstream/README.md)   |   [Y](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker)    | Stream Processing | Automated version of the [KSQL Clickstream demo](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html#ksql-clickstream-docker) <img src="https://docs.confluent.io/current/_images/grafana-success.png" width="450">
-| [Kafka Tutorials](https://kafka-tutorials.confluent.io)       |   [Y](https://kafka-tutorials.confluent.io)   |   [Y](https://kafka-tutorials.confluent.io)   | Stream Processing | Collection of common event streaming use cases, with each tutorial featuring an example scenario and several complete code solutions <img src="https://cdn.confluent.io/wp-content/uploads/Kafka-Tutorials-350x195.jpg" width="450">
-| [KSQL UDF](https://github.com/confluentinc/demo-scene/blob/master/ksql-udf-advanced-example/README.md) | [Y](https://github.com/confluentinc/demo-scene/blob/master/ksql-udf-advanced-example/README.md) | N | Stream Processing | Advanced KSQL [UDF](https://www.confluent.io/blog/build-udf-udaf-ksql-5-0) use case for connected cars <img src="https://www.confluent.io/wp-content/uploads/KSQL-1-350x195.png" width="450">
+| [Kafka Tutorials](https://kafka-tutorials.confluent.io)       |   [Y](https://kafka-tutorials.confluent.io)   |   [Y](https://kafka-tutorials.confluent.io)   | Stream Processing | Collection of common event streaming use cases, with each tutorial featuring an example scenario and several complete code solutions <img src="https://cdn.confluent.io/wp-content/uploads/Kafka-Tutorials-350x195.jpg" width="350">
+| [KSQL UDF](https://github.com/confluentinc/demo-scene/blob/master/ksql-udf-advanced-example/README.md) | [Y](https://github.com/confluentinc/demo-scene/blob/master/ksql-udf-advanced-example/README.md) | N | Stream Processing | Advanced KSQL [UDF](https://www.confluent.io/blog/build-udf-udaf-ksql-5-0) use case for connected cars <img src="https://www.confluent.io/wp-content/uploads/KSQL-1-350x195.png" width="350">
 | [KSQL workshop](https://github.com/confluentinc/demo-scene/blob/master/ksql-workshop/)   |   N   |   [Y](https://github.com/confluentinc/demo-scene/blob/master/ksql-workshop/)    | Stream Processing | showcases Kafka stream processing using KSQL and can run self-guided as a KSQL workshop <img src="https://github.com/confluentinc/demo-scene/blob/master/ksql-workshop/images/ksql_workshop_01.png" width="450">
 | [Microservices ecosystem](microservices-orders/README.md) |   [Y](microservices-orders/README.md)   |   N    | Stream Processing | [Microservices Orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.2.2-post/src/main/java/io/confluent/examples/streams/microservices) integrated into the Confluent Platform <img src="microservices-orders/docs/images/microservices-demo.jpg" width="450">
 | [Music demo](music/README.md)                   |   [Y](music/README.md)   |   [Y](music/README.md)    | Stream Processing | KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html) <img src="music/images/ksql-music-demo-overview.jpg" width="450">
