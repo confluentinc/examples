@@ -26,6 +26,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
+| [ACLs in Cloud](security/acls) |  Y  |  N  | ACLs in Confluent Cloud <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
 | [Clients to Cloud](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/) <img src="clients/cloud/images/clients-all.png" width="450">
 | [GCP pipeline](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | N | [Y](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | Work with [Confluent Cloud](https://www.confluent.io/confluent-cloud/) to build cool pipelines into Google Cloud Platform (GCP) <img src="https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/images/env-data-arch-01.png" width="450">
 | [Hybrid cloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | End-to-end demo of a hybrid Kafka Cluster between [Confluent Cloud](https://www.confluent.io/confluent-cloud/) and on-prem using Confluent Replicator <img src="ccloud/docs/images/schema-registry-local.jpg" width="450">
@@ -64,7 +65,8 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [CP Demo](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments <img src="https://github.com/confluentinc/cp-demo/blob/5.3.0-post/docs/images/drawing.png" width="420">
 | [Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | Automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html) <img src="https://docs.confluent.io/current/_images/confluentPlatform.png" width="420">
 | [Multi Datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Active-active multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters <img src="https://docs.confluent.io/current/_images/mdc-level-1.png" width="420">
-| [Security](security/README.md) |  Y  |  Y  | Confluent Platform security features including ACLs, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
+| [Role-Based Access Control](security/rbac/README.md) |  Y  |  Y  | Role-based Access Control (RBAC) provides granular privileges for users and service accounts <img src="https://docs.confluent.io/current/_images/rbac-overview.png" width="450">
+| [Secret Protection](security/secret-protection/README.md) |  Y  |  Y  | Secret Protection feature encrypts secrets in configuration files <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
 
 
 # Build Your Own
