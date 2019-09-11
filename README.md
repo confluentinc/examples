@@ -24,7 +24,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [CP Demo](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | Confluent Platform | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments <img src="https://github.com/confluentinc/cp-demo/blob/5.3.0-post/docs/images/drawing.png" width="450">
 | [CP Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | Confluent Platform | Automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html)
 | [Multi datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Confluent Platform | This demo deploys an active-active multi-datacenter design, with two instances of Confluent Replicator copying data bidirectionally between the datacenters <img src="https://docs.confluent.io/current/_images/mdc-level-1.png" width="450">
-| [Security](security/README.md) |  Y  |  Y  | Confluent Platform | Examples of Confluent Platform security features including ACLs for Confluent Cloud Enterprise, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="350">
+| [Security](security/README.md) |  Y  |  Y  | Confluent Platform | Examples of Confluent Platform security features including ACLs, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="350">
 
 
 ### Data Pipelines
@@ -69,7 +69,7 @@ Using these as a foundation, you can then add any connectors or applications.
 
 * [cp-all-in-one](cp-all-in-one/README.md): this Docker Compose file launches all services in Confluent Platform, and runs them in containers in your local host.
 * [cp-all-in-one-cloud](cp-all-in-one-cloud/README.md): use this with your pre-configured Confluent Cloud instance. This Docker Compose file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
-* [Confluent CLI](https://docs.confluent.io/current/cli/index.html): for local, non-Docker installs of Confluent Platform. This CLI launches all services in Confluent Platform, and runs them on your local host.
+* [Confluent CLI](https://docs.confluent.io/current/cli/index.html): for local, non-Docker installs of Confluent Platform. Using this CLI, you can launch all services in Confluent Platform with just one command `confluent local start`, and they will all run on your local host.
 * [Generate test data](https://www.confluent.io/blog/easy-ways-generate-test-data-kafka): Hello world for launching Confluent Platform, plus different ways to generate more interesting test data for your topics
 
 Additional documentation: [Getting Started](https://docs.confluent.io/current/getting-started.html)
