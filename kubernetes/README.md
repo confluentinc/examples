@@ -4,9 +4,9 @@
 
 This section of the examples repository will contain a variety of uses cases leverging [Confluent Operator](https://docs.confluent.io/current/installation/operator/index.html)  to deploy and manage Confluent Platform.
 
-# Demos 
-| Demo | Info |
-|---|---|
+# Demo List 
+| Demo     | Info |
+|----------|------|
 | [gke-base](https://docs.confluent.io/current/tutorials/kubernetes/gke-base/docs/index.html) | A base deployment of Confluent Platform on Google Kubernetes Engine (GKE) with sample data generation using Kafka Connect|
 
 # Documentation
