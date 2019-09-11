@@ -1,16 +1,14 @@
 ![image](images/confluent-logo-300-2.png)
 
 * [Demos](#demos)
+* [Build Your Own](#build-your-own)
 * [Prerequisities](#prerequisites)
-* [Next steps](#next-steps)
 
 
 # Demos
 
 This is a curated list of demos that showcase Apache Kafka® stream processing on the Confluent Platform.
 Some demos run on local Confluent Platform installs (download [Confluent Platform](https://www.confluent.io/download/)) and others run on Docker (install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)).
-
-## Where to start
 
 The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo), which spins up a Kafka event streaming application using KSQL for stream processing.
 `cp-demo` also comes with a playbook and video series, and is a great configuration reference for Confluent Platform.
@@ -63,6 +61,20 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [Kinesis to Cloud](kinesis-cloud/README.md)                 |   [Y](kinesis-cloud/README.md)   |   N   | Confluent Cloud | AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline <img src="kinesis-cloud/images/topology.jpg" width="450">
 
 
+# Build Your Own
+
+As a next step, you may want to build your own custom demo or test environment.
+We have several resources that launch just the services in Confluent Platform with no pre-configured connectors, data sources, topics, schemas, etc.
+Using these as a foundation, you can then add any connectors or applications.
+
+* [cp-all-in-one](cp-all-in-one/README.md): this Docker Compose file launches all services in Confluent Platform, and runs them in containers in your local host.
+* [cp-all-in-one-cloud](cp-all-in-one-cloud/README.md): use this with your pre-configured Confluent Cloud instance. This Docker Compose file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
+* [Confluent CLI](https://docs.confluent.io/current/cli/index.html): for local, non-Docker installs of Confluent Platform. This CLI launches all services in Confluent Platform, and runs them on your local host.
+* [Generate test data](https://www.confluent.io/blog/easy-ways-generate-test-data-kafka): Hello world for launching Confluent Platform, plus different ways to generate more interesting test data for your topics
+
+Additional documentation: [Getting Started](https://docs.confluent.io/current/getting-started.html)
+
+
 # Prerequisites
 
 For local installs:
@@ -72,23 +84,8 @@ For local installs:
 * Env var `PATH` includes `$CONFLUENT_HOME/bin`
 * Each demo has its own set of prerequisites as well, documented in each demo's README
 
-For Docker:
+For Docker: demos have been validated with
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
-
-
-# Next steps
-
-As a next step, you may want to launch just the services in Confluent Platform with no pre-configured connectors, data sources, topics, schemas, etc.
-Then you can manually configure any connectors or applications that you want to use.
-
-We have several resources for this purpose:
-
-* [cp-all-in-one](cp-all-in-one/README.md): this Docker Compose file launches all services in Confluent Platform, and runs them in containers in your local host.
-* [cp-all-in-one-cloud](cp-all-in-one-cloud/README.md): use this with your pre-configured Confluent Cloud instance. This Docker Compose file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
-* [Confluent CLI](https://docs.confluent.io/current/cli/index.html): for local, non-Docker installs of Confluent Platform. This CLI launches all services in Confluent Platform, and runs them on your local host.
-* [Generate test data](https://www.confluent.io/blog/easy-ways-generate-test-data-kafka): Hello world for launching Confluent Platform, plus different ways to generate more interesting test data for your topics
-
-Additional documentation: [Getting Started](https://docs.confluent.io/current/getting-started.html)
 
