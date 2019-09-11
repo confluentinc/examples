@@ -64,7 +64,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [CP Demo](wikipedia/README.md)           |   [Y](wikipedia/README.md)   |   [Y](https://github.com/confluentinc/cp-demo)    | [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html) with a playbook for Kafka streaming ETL deployments <img src="https://github.com/confluentinc/cp-demo/blob/5.3.0-post/docs/images/drawing.png" width="420">
 | [CP Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | Automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html) <img src="https://docs.confluent.io/current/_images/confluentPlatform.png" width="420">
 | [Multi datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Active-active multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters <img src="https://docs.confluent.io/current/_images/mdc-level-1.png" width="420">
-| [Security](security/README.md) |  Y  |  Y  | Confluent Platform security features including ACLs, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="350">
+| [Security](security/README.md) |  Y  |  Y  | Confluent Platform security features including ACLs, Role-based Access Control (RBAC), and Secret Protection <img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
 
 
 # Build Your Own
