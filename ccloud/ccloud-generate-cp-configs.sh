@@ -74,7 +74,8 @@ if [[ -z "$CONFIG_FILE" ]]; then
   CONFIG_FILE=~/.ccloud/config
 fi
 if [[ ! -f "$CONFIG_FILE" ]]; then
-  echo "File at $CONFIG_FILE is not found.  Please create this properties file to connect to your Confluent Cloud cluster and then try again"
+  echo "File $CONFIG_FILE is not found.  Please create this properties file to connect to your Confluent Cloud cluster and then try again"
+  echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
   exit 1
 fi
 echo "CONFIG_FILE: $CONFIG_FILE"
@@ -84,7 +85,8 @@ if [[ -z "$SR_CONFIG_FILE" ]]; then
   SR_CONFIG_FILE=$CONFIG_FILE
 fi
 if [[ ! -f "$SR_CONFIG_FILE" ]]; then
-  echo "File at $SR_CONFIG_FILE is not found.  Please create this properties file to connect to your Schema Registry and then try again"
+  echo "File $SR_CONFIG_FILE is not found.  Please create this properties file to connect to your Schema Registry and then try again"
+  echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
   exit 1
 fi
 echo "SR_CONFIG_FILE: $SR_CONFIG_FILE"
