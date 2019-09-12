@@ -8,3 +8,5 @@ python_notify/
 .Python
 .vscode
 node_modules/
+*.tar.gz
+kubernetes/common/cp/
