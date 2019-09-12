@@ -48,13 +48,13 @@ Generate a file of ENV variables used by Docker to set the bootstrap servers and
    a. If you want to use Confluent Schema Registry running in a local Docker container:
 
    ```bash
-   $ ../ccloud/ccloud-generate-cp-configs.sh schema_registry_docker.config
+   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config schema_registry_docker.config
    ```
 
    b. If you want to use Confluent Cloud Schema Registry:
 
    ```bash
-   $ ../ccloud/ccloud-generate-cp-configs.sh
+   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
    ```
 
 ## Step 4
