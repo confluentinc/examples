@@ -7,7 +7,7 @@ This section of the examples repository will contain a variety of demos showcasi
 # Demo List 
 | Demo     | Info |
 |----------|------|
-| [gke-base](https://docs.confluent.io/current/tutorials/kubernetes/gke-base/docs/index.html) | A base deployment of Confluent Platform on Google Kubernetes Engine (GKE) with sample data generation using Kafka Connect|
+| [gke-base](https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html) | A base deployment of Confluent Platform on Google Kubernetes Engine (GKE) with sample data generation using Kafka Connect|
 
 # Documentation
 See each individual use case above for detailed documentation on running the demos.
