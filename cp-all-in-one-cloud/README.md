@@ -44,6 +44,7 @@ By default, the demo uses Confluent Schema Registry running in a local Docker co
 ## Step 3
 
 Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
+(See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information on using this script.)
 
    a. If you want to use Confluent Schema Registry running in a local Docker container:
 
