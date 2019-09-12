@@ -38,7 +38,7 @@ confluent local start schema-registry
 #---------------------------------
 
 # Generate CCloud configurations
-../ccloud/ccloud-generate-cp-configs.sh $SCHEMA_REGISTRY_CONFIG_FILE
+../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 CONFLUENT_CURRENT=`confluent local current | tail -1`
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta

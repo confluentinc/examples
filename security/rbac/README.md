@@ -2,13 +2,17 @@
 
 # Overview
 
-These demos showcase the [Role Based Access Control (RBAC)](https://docs.confluent.io/current/security/rbac/index.html) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
+These demos showcase the Role Based Access Control (RBAC) functionality in Confluent Platform. It is mostly for reference to see a workflow using the new RBAC feature across the services in Confluent Platform.
 
 There are two demos.  Currently they have different configurations and can be used in different environments.
 
 * [Demo 1: Local install](#demo-1-local-install)
 * [Demo 2: Docker](#demo-2-docker)
 
+## Additional Reading
+
+* [RBAC for Kafka Connect whitepaper](https://www.confluent.io/resources/rbac-for-kafka-connect)
+* [RBAC documentation](https://docs.confluent.io/current/security/rbac/index.html)
 
 # Demo 1: Local install
 
@@ -193,7 +197,6 @@ confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOw
 confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 ```
 
-
 ### Control Center
 
 * [delta_configs/control-center-dev.properties.delta](delta_configs/control-center-dev.properties.delta)
@@ -211,7 +214,28 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterA
 confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 ```
 
+
+### General Rolebinding Syntax
+
+General rolebinding syntax
+```
+confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
+```
+available role types and permissions can be found [Here](https://docs.confluent.io/current/security/rbac/rbac-predefined-roles.html)
+
+resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic
+
+### Listing a Users roles
+General Listing syntax
+``` 
+confluent iam rolebinding list User:[username] [clusters and resources you want to view their roles on]
+```
+example, list the roles of `User:bender` on Kafka cluster `KAFKA_CLUSTER_ID`
+```
+confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
+```
+
+
 # Demo 2: Docker
 
 Follow directions in [rbac-docker/README.md](rbac-docker/README.md).
-

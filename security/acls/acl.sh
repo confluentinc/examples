@@ -48,6 +48,7 @@
 check_ccloud_v2 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
+check_expect || exit 1
 
 
 ##################################################

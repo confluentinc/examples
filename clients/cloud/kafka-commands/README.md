@@ -1,15 +1,12 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using [Confluent CLI](https://docs.confluent.io/current/cli/index.html).
-
-*Note: The Confluent CLI is meant for development purposes only and is not suitable for a production environment*
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the Apache bin commands.
 
 
 # Prerequisites
 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * [Confluent Platform 5.3](https://www.confluent.io/download/)
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell
@@ -34,13 +31,12 @@ The consumer reads the same topic from Confluent Cloud.
 $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
-2. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test1`, passing in additional arguments:
+2. Run the command `kafka-console-producer`, writing messages to topic `test1`, passing in additional arguments:
 
-* `--cloud`: write messages to the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
 * `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
 
 ```bash
-$ confluent local produce test1 -- --cloud --property parse.key=true --property key.separator=,
+$ kafka-console-producer --topic test1 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --property parse.key=true --property key.separator=, --producer.config $HOME/.ccloud/config
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -53,14 +49,13 @@ alice,{"count":2}
 
 When you are done, press `<ctrl>-d`.
 
-2. Run the [Confluent CLI consumer](https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume), reading messages from topic `test1`, passing in additional arguments:
+2. Run the command `kafka-console-consumer`, reading messages from topic `test1`, passing in additional arguments:
 
-* `--cloud`: read messages from the Confluent Cloud cluster specified in `$HOME/.ccloud/config`
 * `--property print.key=true`: print key and value (by default, it only prints value)
 * `--from-beginning`: print all messages from the beginning of the topic
 
 ```bash
-$ confluent local consume test1 -- --cloud --property print.key=true --from-beginning
+$ kafka-console-consumer --topic test1 --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --property print.key=true --from-beginning --consumer.config $HOME/.ccloud/config
 ```
 
 You should see the messages you typed in the previous step.
@@ -73,7 +68,7 @@ alice	{"count":2}
 
 When you are done, press `<ctrl>-c`.
 
-3. To demo the above commands, you may also run the provided script [confluent-cli-example.sh](confluent-cli-example.sh).
+3. To demo the above commands, you may also run the provided script [kafka-commands.sh](kafka-commands.sh).
 
 
 # Example 2: Avro And Confluent Cloud Schema Registry
@@ -111,16 +106,18 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
-5. Run the [Confluent CLI producer](https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce), writing messages to topic `test2`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
+5. Run the command `kafka-avro-console-producer`, writing messages to topic `test2`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
 
-* `--value-format avro`: use Avro data format for the value part of the message
 * `--property value.schema`: define the schema 
-* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint http://<SR ENDPOINT>
+* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint `https://<SR ENDPOINT>`
 * `--property basic.auth.credentials.source`: specify `USER_INFO`
-* `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
+* `--property schema.registry.basic.auth.user.info`: `<SR API KEY>:<SR API SECRET>`
 
 ```bash
-$ confluent local produce test2 -- --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --producer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+
+# Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
+$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --producer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2)
 ```
 
 At the `>` prompt, type a few messages:
@@ -133,15 +130,17 @@ At the `>` prompt, type a few messages:
 
 When you are done, press `<ctrl>-d`.
 
-6. Run the [Confluent CLI consumer](https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume), reading messages from topic `test`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
+6. Run the command `kafka-avro-console-consumer`, reading messages from topic `test`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
 
-* `--value-format avro`: use Avro data format for the value part of the message
-* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint http://<SR ENDPOINT>
+* `--property schema.registry.url`: connect to the Confluent Cloud Schema Registry endpoint `https://<SR ENDPOINT>`
 * `--property basic.auth.credentials.source`: specify `USER_INFO`
-* `--property schema.registry.basic.auth.user.info`: <SR API KEY>:<SR API SECRET> 
+* `--property schema.registry.basic.auth.user.info`: `<SR API KEY>:<SR API SECRET>`
 
 ```bash
-$ confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+
+# Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
+$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2)
 ```
 
 You should see the messages you typed in the previous step.
@@ -154,4 +153,4 @@ You should see the messages you typed in the previous step.
 
 When you are done, press `<ctrl>-c`.
 
-7. To demo the above commands, you may also run the provided script [confluent-cli-ccsr-example.sh](confluent-cli-ccsr-example.sh).
+7. To demo the above commands, you may also run the provided script [kafka-commands-ccsr.sh](kafka-commands-ccsr.sh).
