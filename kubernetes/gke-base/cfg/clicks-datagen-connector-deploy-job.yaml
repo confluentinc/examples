@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: clicks-datagen-connector-deploy
+spec:
+  ttlSecondsAfterFinished: 5
+  template:
+    spec:
+      volumes:
+      - name: clicks-datagen-connector
+        configMap:
+          name: clicks-datagen-connector
+      containers:
+      - name: clicks-datagen-connector-deploy
+        image: cnfldemos/alpine-curl:3.10.2_7.65.1
+        args: [ 
+          "-s",
+          "-X", "POST",
+          "-H", "Content-Type: application/json",
+          "--data", "@/etc/config/connector/clicks-datagen-connector.json",
+          "http://connectors:8083/connectors"
+        ]
+        volumeMounts:
+          - name: clicks-datagen-connector
+            mountPath: /etc/config/connector
+      restartPolicy: Never
+  backoffLimit: 1
