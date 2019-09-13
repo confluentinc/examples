@@ -26,7 +26,7 @@ In all environments no actions are taken on the destination brokers. Because of 
 
 ### Unsecured
 
-  This can be started with:
+Run:
   ```
   docker-compose -f docker-compose_unsecure.yml up -d
   ```
