@@ -18,7 +18,7 @@ In all containers, minimal non-replicator configuration is supplied.
 
 ## Test Data
 
-The data from testData/testData.txt is loaded into the source topic, this can be modified to suit testing requirements.
+The [test data](testData/testData.txt) is loaded into the source topic, and it can be modified to suit testing requirements.
 
 ## Creating and verifying the environments
 
