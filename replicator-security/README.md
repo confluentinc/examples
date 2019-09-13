@@ -6,7 +6,7 @@ This demo provides several docker-compose environments for Replicator configured
 
 ## Components
 
-All environments contain:
+In addition to Confluent Replicator, all environments contain:
 
 * A 3 node source cluster containing srcKafka1, srcKafka2 and srcKafka3
 * A 3 node destination cluster containing destKafka1, destKafka2, destKafka3
