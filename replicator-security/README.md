@@ -4,7 +4,7 @@
 
 This demo provides several docker-compose environments for Replicator configured with various security configurations.
 
-## Non replicator components
+## Components
 
 All environments contain:
 
