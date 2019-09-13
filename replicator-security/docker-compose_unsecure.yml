@@ -194,7 +194,7 @@ services:
                        kafka-topics --zookeeper srcZookeeper:2181 --topic testTopic --create --replication-factor 3 --partitions 12 && \
                        kafka-console-producer --broker-list srcKafka1:10091 --topic testTopic < /etc/kafka/testData/testData.txt && \
                        echo submitting replicator && \
-                       /etc/kafka/scripts/submit_replicator_plain.sh && \
+                       /etc/kafka/scripts/submit_replicator_unsecure.sh && \
                        echo submitted replicator'"
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
