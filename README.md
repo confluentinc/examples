@@ -67,7 +67,8 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart)    | Automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html) <br><img src="https://docs.confluent.io/current/_images/confluentPlatform.png" width="420">
 | [Role-Based Access Control](security/rbac/README.md) |  Y  |  Y  | Role-based Access Control (RBAC) provides granular privileges for users and service accounts <img src="https://docs.confluent.io/current/_images/rbac-overview.png" width="450">
 | [Secret Protection](security/secret-protection/README.adoc) |  Y  |  Y  | Secret Protection feature encrypts secrets in configuration files <br><img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
-
+| [Secret Protection](security/secret-protection/README.adoc) |  Y  |  Y  | Secret Protection feature encrypts secrets in configuration files <br><img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
+| [Replicator Security](replicator-security/README.md) | N | [Y](replicator-security/README.md) | Demos of various security configurations supported by Confluent Replica and examples of how to implement them <br>![image](images/replicator-security.png)
 
 # Build Your Own
 
