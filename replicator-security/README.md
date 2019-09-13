@@ -1,6 +1,6 @@
 # Replicator security configuration demos
 
-## Purpose 
+## Overview
 
 This demo provides several docker-compose environments for Replicator configured with various security configurations.
 
