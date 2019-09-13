@@ -24,7 +24,7 @@ The [test data](testData/testData.txt) is loaded into the source topic, and it c
 
 In all environments no actions are taken on the destination brokers. Because of this we can verify the environment by consuming from the test topic on the destination cluster.
 
-* Unsecured
+### Unsecured
 
   This can be started with:
   ```
