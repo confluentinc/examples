@@ -2,7 +2,7 @@
 
 ## Purpose 
 
-This repository provides docker-compose environments representing various Replicator security configurations. 
+This demo provides several docker-compose environments for Replicator configured with various security configurations.
 
 ## Non replicator components
 
