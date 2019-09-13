@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   srcZookeeper:
-    image: confluentinc/cp-zookeeper:5.3.0
+    image: confluentinc/cp-zookeeper:5.3.1
     restart: always
     hostname: srcZookeeper
     container_name: srcZookeeper
@@ -12,7 +12,7 @@ services:
     ports:
       - "2181:2181"
   destZookeeper:
-    image: confluentinc/cp-zookeeper:5.3.0
+    image: confluentinc/cp-zookeeper:5.3.1
     restart: always
     hostname: destZookeeper
     container_name: destZookeeper
@@ -23,7 +23,7 @@ services:
     ports:
       - "2281:2281"
   srcKafka1:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafka1
     container_name: srcKafka1
     cpus: 0.3
@@ -42,7 +42,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   srcKafka2:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafka2
     container_name: srcKafka2
     cpus: 0.3
@@ -61,7 +61,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   srcKafka3:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafka3
     container_name: srcKafka3
     cpus: 0.3
@@ -80,7 +80,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   destKafka1:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafka1
     container_name: destKafka1
     cpus: 0.3
@@ -98,7 +98,7 @@ services:
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
   destKafka2:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafka2
     container_name: destKafka2
     cpus: 0.3
@@ -116,7 +116,7 @@ services:
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
   destKafka3:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafka3
     container_name: destKafka3
     cpus: 0.3
@@ -134,7 +134,7 @@ services:
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
   connect:
-    image: confluentinc/cp-kafka-connect:5.3.0
+    image: confluentinc/cp-kafka-connect:5.3.1
     container_name: connect
     cpus: 0.2
     restart: always
@@ -163,14 +163,14 @@ services:
       CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
       CONNECT_PLUGIN_PATH: "/usr/share/replicator"
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.3.0
+    image: confluentinc/cp-enterprise-replicator:5.3.1
     hostname: replicator-for-jar-transfer
     container_name: replicator-for-jar-transfer
     volumes:
       - mi3:/usr/share/java/kafka-connect-replicator/
     command: "sleep infinity"
   kafka-client:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: kafka-client
     container_name: kafka-client
     cpus: 0.1

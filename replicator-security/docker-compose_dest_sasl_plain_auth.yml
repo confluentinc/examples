@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   srcZookeeper:
-    image: confluentinc/cp-zookeeper:5.3.0
+    image: confluentinc/cp-zookeeper:5.3.1
     restart: always
     hostname: srcZookeeper
     container_name: srcZookeeper
@@ -12,7 +12,7 @@ services:
     ports:
       - "2181:2181"
   destZookeeper:
-    image: confluentinc/cp-zookeeper:5.3.0
+    image: confluentinc/cp-zookeeper:5.3.1
     restart: always
     hostname: destZookeeper
     container_name: destZookeeper
@@ -28,7 +28,7 @@ services:
     volumes:
       - $PWD/scripts/security:/etc/kafka/secrets
   srcKafka1:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafka1
     container_name: srcKafka1
     cpus: 0.3
@@ -47,7 +47,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   srcKafka2:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafka2
     container_name: srcKafka2
     cpus: 0.3
@@ -66,7 +66,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   srcKafka3:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafka3
     container_name: srcKafka3
     cpus: 0.3
@@ -85,7 +85,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   destKafka1:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafka1
     container_name: destKafka1
     cpus: 0.3
@@ -108,7 +108,7 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/broker_jaas.conf
   destKafka2:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafka2
     container_name: destKafka2
     cpus: 0.3
@@ -131,7 +131,7 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/broker_jaas.conf
   destKafka3:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafka3
     container_name: destKafka3
     cpus: 0.3
@@ -154,7 +154,7 @@ services:
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
       KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/broker_jaas.conf
   connect:
-    image: confluentinc/cp-kafka-connect:5.3.0
+    image: confluentinc/cp-kafka-connect:5.3.1
     container_name: connect
     cpus: 0.2
     restart: always
@@ -198,14 +198,14 @@ services:
               username=\"connect\" \
               password=\"connect-secret\";"
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.3.0
+    image: confluentinc/cp-enterprise-replicator:5.3.1
     hostname: replicator-for-jar-transfer
     container_name: replicator-for-jar-transfer
     volumes:
       - mi3:/usr/share/java/kafka-connect-replicator/
     command: "sleep infinity"
   srcKafkaClient:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: srcKafkaClient
     container_name: srcKafkaClient
     cpus: 0.1
@@ -231,7 +231,7 @@ services:
       KAFKA_ADVERTISED_LISTENERS: ignored
 
   destKafkaClient:
-    image: confluentinc/cp-enterprise-kafka:5.3.0
+    image: confluentinc/cp-enterprise-kafka:5.3.1
     hostname: destKafkaClient
     container_name: destKafkaClient
     cpus: 0.1
