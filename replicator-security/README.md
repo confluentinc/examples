@@ -31,7 +31,7 @@ Run:
   docker-compose -f docker-compose_unsecure.yml up -d
   ```
   
-  And verified as follows:
+Verify:
   ```
   docker-compose -f docker-compose_unsecure.yml exec destKafka1 bash
   kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
