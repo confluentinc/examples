@@ -1,0 +1,260 @@
+version: "2.2"
+services:
+  srcZookeeper:
+    image: confluentinc/cp-zookeeper:5.3.0
+    restart: always
+    hostname: srcZookeeper
+    container_name: srcZookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME: "2000"
+    ports:
+      - "2181:2181"
+  destZookeeper:
+    image: confluentinc/cp-zookeeper:5.3.0
+    restart: always
+    hostname: destZookeeper
+    container_name: destZookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: "2281"
+      ZOOKEEPER_TICK_TIME: "2000"
+    ports:
+      - "2281:2281"
+  srcKafka1:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: srcKafka1
+    container_name: srcKafka1
+    cpus: 0.3
+    depends_on:
+      - srcZookeeper
+    ports:
+      - "10091:10091"
+    volumes:
+      - $PWD/scripts/security:/etc/kafka/secrets
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "srcZookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
+      KAFKA_ADVERTISED_LISTENERS: SSL://srcKafka1:10091
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka.srcKafka1.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: srcKafka1_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: srcKafka1_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka.srcKafka1.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: srcKafka1_truststore_creds
+      KAFKA_SSL_CLIENT_AUTH: "required"
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+  srcKafka2:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: srcKafka2
+    container_name: srcKafka2
+    cpus: 0.3
+    depends_on:
+      - srcZookeeper
+    ports:
+      - "10092:10092"
+    volumes:
+      - $PWD/scripts/security:/etc/kafka/secrets
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "srcZookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
+      KAFKA_ADVERTISED_LISTENERS: SSL://srcKafka2:10092
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka.srcKafka2.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: srcKafka2_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: srcKafka2_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka.srcKafka2.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: srcKafka2_truststore_creds
+      KAFKA_SSL_CLIENT_AUTH: "required"
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+  srcKafka3:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: srcKafka3
+    container_name: srcKafka3
+    cpus: 0.3
+    depends_on:
+      - srcZookeeper
+    ports:
+      - "10093:10093"
+    volumes:
+      - $PWD/scripts/security:/etc/kafka/secrets
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "srcZookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL
+      KAFKA_INTER_BROKER_LISTENER_NAME: SSL
+      KAFKA_ADVERTISED_LISTENERS: SSL://srcKafka3:10093
+      KAFKA_BROKER_ID: 3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_SSL_KEYSTORE_FILENAME: kafka.srcKafka3.keystore.jks
+      KAFKA_SSL_KEYSTORE_CREDENTIALS: srcKafka3_keystore_creds
+      KAFKA_SSL_KEY_CREDENTIALS: srcKafka3_sslkey_creds
+      KAFKA_SSL_TRUSTSTORE_FILENAME: kafka.srcKafka3.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_CREDENTIALS: srcKafka3_truststore_creds
+      KAFKA_SSL_CLIENT_AUTH: "required"
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+  destKafka1:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: destKafka1
+    container_name: destKafka1
+    cpus: 0.3
+    depends_on:
+      - destZookeeper
+    ports:
+      - "11091:11091"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "destZookeeper:2281"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://destKafka1:11091
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+  destKafka2:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: destKafka2
+    container_name: destKafka2
+    cpus: 0.3
+    depends_on:
+      - destZookeeper
+    ports:
+      - "11092:11092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "destZookeeper:2281"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://destKafka2:11092
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+  destKafka3:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: destKafka3
+    container_name: destKafka3
+    cpus: 0.3
+    depends_on:
+      - destZookeeper
+    ports:
+      - "11093:11093"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "destZookeeper:2281"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://destKafka3:11093
+      KAFKA_BROKER_ID: 3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+  connect:
+    image: confluentinc/cp-kafka-connect:5.3.0
+    container_name: connect
+    cpus: 0.2
+    restart: always
+    ports:
+      - "8083:8083"
+    depends_on:
+      - destZookeeper
+      - destKafka1
+      - destKafka2
+      - destKafka3
+    volumes:
+      - mi3:/usr/share/replicator/kafka-connect-replicator/
+      - $PWD/scripts/security:/etc/kafka/secrets
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "destKafka1:11091,destKafka2:11092,destKafka3:11093"
+      CONNECT_REST_PORT: 8083
+      CONNECT_LISTENERS: "http://0.0.0.0:8083"
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: connect-statuses
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_GROUP_ID: "connect"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
+      CONNECT_PLUGIN_PATH: "/usr/share/replicator"
+  replicator-for-jar-transfer:
+    image: confluentinc/cp-enterprise-replicator:5.3.0
+    hostname: replicator-for-jar-transfer
+    container_name: replicator-for-jar-transfer
+    volumes:
+      - mi3:/usr/share/java/kafka-connect-replicator/
+    command: "sleep infinity"
+  srcKafkaClient:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: srcKafkaClient
+    container_name: srcKafkaClient
+    cpus: 0.1
+    depends_on:
+      - srcKafka1
+      - srcKafka2
+      - srcKafka3
+    volumes:
+      - $PWD/scripts/security:/etc/kafka/secrets
+      - $PWD/testData:/etc/kafka/testData
+    command: "bash -c -a 'echo Waiting for Kafka to be ready... && \
+                       /etc/confluent/docker/configure && \
+                       cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
+                       cub kafka-ready -b srcKafka2:10092 1 60 --config /etc/kafka/kafka.properties && \
+                       cub kafka-ready -b srcKafka3:10093 1 60 --config /etc/kafka/kafka.properties && \
+                       kafka-topics --zookeeper srcZookeeper:2181 --topic testTopic --create --replication-factor 3 --partitions 12 && \
+                       kafka-console-producer --broker-list srcKafka1:10091 --topic testTopic --producer.config /etc/kafka/secrets/srcKafkaClient_ssl.properties < /etc/kafka/testData/testData.txt'"
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+      KAFKA_ADVERTISED_LISTENERS: ignored
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/kafka.srcKafkaClient.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: confluent
+      KAFKA_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/kafka.srcKafkaClient.keystore.jks
+      KAFKA_SSL_KEYSTORE_PASSWORD: confluent
+      KAFKA_SSL_KEY_PASSWORD: confluent
+      KAFKA_SECURITY_PROTOCOL: SSL
+  destKafkaClient:
+    image: confluentinc/cp-enterprise-kafka:5.3.0
+    hostname: destKafkaClient
+    container_name: destKafkaClient
+    cpus: 0.1
+    depends_on:
+      - destKafka1
+      - destKafka2
+      - destKafka3
+      - connect
+    volumes:
+      - $PWD/scripts:/etc/kafka/scripts
+      - $PWD/scripts/security:/etc/kafka/secrets
+    command: "bash -c -a 'echo Waiting for Kafka to be ready... && \
+                       /etc/confluent/docker/configure && \
+                       cub kafka-ready -b destKafka1:11091 1 60 --config /etc/kafka/kafka.properties && \
+                       cub kafka-ready -b destKafka2:11092 1 60 --config /etc/kafka/kafka.properties && \
+                       cub kafka-ready -b destKafka3:11093 1 60 --config /etc/kafka/kafka.properties && \
+                       sleep 30 && \
+                       echo submitting replicator && \
+                       /etc/kafka/scripts/submit_replicator_source_ssl_auth.sh && \
+                       echo submitted replicator'"
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+      KAFKA_ADVERTISED_LISTENERS: ignored
+volumes:
+    mi3: {}
