@@ -68,7 +68,7 @@ Verify:
   docker-compose -f docker-compose_unsecure.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
   ```
 
-  Note: both the kafka-client container must complete and exit 0 before verification
+  Note: the kafka-client container must complete and exit 0 before verification
 
 ### Source Cluster with SSL encryption
 
