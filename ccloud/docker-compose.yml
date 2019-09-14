@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.0.1
+    image: confluentinc/cp-zookeeper:5.0.1-cp2
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.0.1
+    image: confluentinc/cp-enterprise-kafka:5.0.1-cp2
     hostname: kafka
     container_name: kafka
     ports:
@@ -37,7 +37,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.0.1
+    image: confluentinc/cp-schema-registry:5.0.1-cp2
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -57,7 +57,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.0.1
+    image: confluentinc/cp-ksql-server:5.0.1-cp2
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -100,7 +100,7 @@ services:
       KSQL_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.0.1
+    image: confluentinc/cp-ksql-cli:5.0.1-cp2
     container_name: ksql-cli
     volumes:
       - $PWD/ksql.commands:/tmp/ksql.commands
@@ -111,7 +111,7 @@ services:
     tty: true
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.0.1
+    image: confluentinc/cp-enterprise-control-center:5.0.1-cp2
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -142,7 +142,7 @@ services:
 
   # Runs the Kafka KSQL data generator for topic called "pageviews"
   ksql-datagen-pageviews:
-    image: confluentinc/ksql-examples:5.0.1
+    image: confluentinc/ksql-examples:5.0.1-cp2
     hostname: ksql-datagen-pageviews
     container_name: ksql-datagen-pageviews
     depends_on:
@@ -169,7 +169,7 @@ services:
 
   # Runs the Kafka KSQL data generator for topic called "users"
   ksql-datagen-users:
-    image: confluentinc/ksql-examples:5.0.1
+    image: confluentinc/ksql-examples:5.0.1-cp2
     hostname: ksql-datagen-users
     container_name: ksql-datagen-users
     depends_on:
@@ -200,7 +200,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
-    image: confluentinc/cp-kafka:5.0.1
+    image: confluentinc/cp-kafka:5.0.1-cp2
     hostname: kafka-create-topics
     container_name: kafka-create-topics
     depends_on:
@@ -222,7 +222,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.0.1
+    image: confluentinc/cp-kafka-connect:5.0.1-cp2
     hostname: connect
     container_name: connect
     depends_on:
@@ -253,7 +253,7 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.1.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.0.1-cp2.jar
       CONNECT_REQUEST_TIMEOUT_MS: 20000
       CONNECT_RETRY_BACKOFF_MS: 500
       # Connect worker
@@ -279,7 +279,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
   replicator:
-    image: confluentinc/cp-enterprise-replicator:5.0.1
+    image: confluentinc/cp-enterprise-replicator:5.0.1-cp2
     hostname: replicator
     container_name: replicator
     volumes:
