@@ -44,17 +44,18 @@ By default, the demo uses Confluent Schema Registry running in a local Docker co
 ## Step 3
 
 Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
+(See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information on using this script.)
 
    a. If you want to use Confluent Schema Registry running in a local Docker container:
 
    ```bash
-   $ ../ccloud/ccloud-generate-cp-configs.sh schema_registry_docker.config
+   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config schema_registry_docker.config
    ```
 
    b. If you want to use Confluent Cloud Schema Registry:
 
    ```bash
-   $ ../ccloud/ccloud-generate-cp-configs.sh
+   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
    ```
 
 ## Step 4
