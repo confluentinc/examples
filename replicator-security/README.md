@@ -28,8 +28,8 @@ These demos are memory intensive and Docker must be tuned accordingly. In Docker
 
 In addition to Confluent Replicator, all environments contain:
 
-* A 3 node source cluster containing srcKafka1, srcKafka2 and srcKafka3
-* A 3 node destination cluster containing destKafka1, destKafka2, destKafka3
+* A single node source cluster containing srcKafka1, in production at least 3 nodes are recommended.
+* A single node destination cluster containing destKafka1, in production at least 3 nodes are recommended.
 * A single Connect worker that will run replicator
 * A source client container (srcKafkaClient) that creates a source topic and provides test data
 * A destination client container (destKafkaClient) that installs Replicator
