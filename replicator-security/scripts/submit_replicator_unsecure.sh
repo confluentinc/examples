@@ -9,9 +9,10 @@ DATA=$( cat << EOF
     "topic.whitelist": "testTopic",
     "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
-    "src.kafka.bootstrap.servers": "srcKafka1:10091,srcKafka2:10092,srcKafka3:10093",
-    "dest.kafka.bootstrap.servers": "destKafka1:11091,destKafka2:11092,destKafka3:11093",
-    "tasks.max": "1"
+    "src.kafka.bootstrap.servers": "srcKafka1:10091",
+    "dest.kafka.bootstrap.servers": "destKafka1:11091",
+    "tasks.max": "1",
+    "confluent.topic.replication.factor": "1"
   }
 }
 EOF
