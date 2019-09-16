@@ -49,7 +49,7 @@ cd scripts/security
 ./create_certs.sh
 ```
 
-In all demos no actions are taken on the destination brokers. Because of this we can verify the environment by consuming from the test topic on the destination cluster.
+We can verify the environment by consuming from the test topic on the destination cluster.
 
 ### Unsecured
 
