@@ -49,7 +49,7 @@ cd scripts/security
 ./create_certs.sh
 ```
 
-We can verify the environment by consuming from the test topic on the destination cluster.
+We can verify the environment by consuming from the topic `testTopic` that Confluent Replicator copied to the destination cluster.
 
 ### Unsecured
 
