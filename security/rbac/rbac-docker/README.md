@@ -26,7 +26,7 @@ This docker-compose based setup includes:
 - You can use production or pre-production images. This is configured via environment variables `PREFIX` and `TAG`.
   - `PREFIX` is appended before the actual image name, before `/`
   - `TAG` is a docker tag, appended after the `:`
-  - E.g. with `PREFIX=confluentinc` and `TAG=5.3.0`, kafka will use the following image: `confluentinc/cp-server:5.3.0`
+  - E.g. with `PREFIX=confluentinc` and `TAG=5.3.1`, kafka will use the following image: `confluentinc/cp-server:5.3.1`
   - If these variables are not set in the shell, they will be read from the `.env` file. Shell variables override whatever is set in the `.env` file
   - You can also edit `.env` file directly
   - This means all images would use the same tag and prefix. If you need to customize this behavior, edit the `docker-compose.yml` file
