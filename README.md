@@ -28,8 +28,8 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [ACLs in Cloud](security/acls) |  Y  |  N  | ACLs in Confluent Cloud <br><img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
 | [Clients to Cloud](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/) <br><img src="clients/cloud/images/clients-all.png" width="450">
 | [GCP pipeline](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | N | [Y](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | Work with [Confluent Cloud](https://www.confluent.io/confluent-cloud/) to build cool pipelines into Google Cloud Platform (GCP) <br><img src="https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/images/env-data-arch-01.png" width="450">
-| [Hybrid cloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | End-to-end demo of one on-prem Kafka cluster and one [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster sharing data with Confluent Replicator <br><img src="ccloud/docs/images/schema-registry-local.jpg" width="450">
 | [Kinesis to Cloud](kinesis-cloud/README.md)                 |   [Y](kinesis-cloud/README.md)   |   N   | AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline <br><img src="kinesis-cloud/images/topology.jpg" width="450">
+| [On-Prem Kafka to Cloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | On-prem Kafka cluster and [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster, and data copied between them with Confluent Replicator <br><img src="ccloud/docs/images/schema-registry-local.jpg" width="450">
 
 
 ### Stream Processing
