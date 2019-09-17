@@ -87,8 +87,8 @@ services:
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
       KSQL_BOOTSTRAP_SERVERS: "kafka:29092"
       KSQL_HOST_NAME: ksql-server
-      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schemaregistry:8081"
-      KSQL_APPLICATION_ID: "cp-demo"
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      KSQL_APPLICATION_ID: "postgres-demo"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
 
