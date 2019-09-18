@@ -21,7 +21,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </repositories>
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
-    <licenses.version>5.4.0-SNAPSHOT</licenses.version>
+    <licenses.version>5.4.0-beta190918193223</licenses.version>
     <avro.version>1.8.2</avro.version>
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
