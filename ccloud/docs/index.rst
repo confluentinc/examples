@@ -1,9 +1,9 @@
 .. _quickstart-demos-ccloud:
 
-Hybrid Kafka Clusters
-=====================
+On-Prem Kafka to Cloud
+======================
 
-This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.
 
 .. figure:: images/schema-registry-local.jpg
