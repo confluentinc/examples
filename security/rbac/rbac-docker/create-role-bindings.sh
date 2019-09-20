@@ -25,7 +25,29 @@ SR_PRINCIPAL="User:leela"
 KSQL_PRINCIPAL="User:zoidberg"
 C3_PRINCIPAL="User:hermes"
 
-XX_CONFLUENT_USERNAME=$SUPER_USER XX_CONFLUENT_PASSWORD=$SUPER_USER_PASSWORD confluent login --url $MDS_URL
+# Log into MDS
+if [[ $(type expect 2>&1) =~ "not found" ]]; then
+  echo "'expect' is not found. Install 'expect' and try again"
+  exit 1
+fi
+echo -e "\n# Login"
+OUTPUT=$(
+expect <<END
+  log_user 1
+  spawn confluent login --url $MDS_URL
+  expect "Username: "
+  send "${SUPER_USER}\r";
+  expect "Password: "
+  send "${SUPER_USER_PASSWORD}\r";
+  expect "Logged in as "
+  set result $expect_out(buffer)
+END
+)
+echo "$OUTPUT"
+if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
+  echo "Failed to log into your Metadata Server.  Please check all parameters and run again"
+  exit 1
+fi
 
 ################################### SETUP SUPERUSER ###################################
 echo "Creating Super User role bindings"
