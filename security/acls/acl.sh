@@ -6,7 +6,7 @@
 ################################################################################
 #
 # Demo the new Confluent Cloud CLI and Access Control List (ACL) functionality
-# in your Confluent Cloud cluster that has been enabled for ACLs
+# in your Confluent Cloud cluster
 #
 # Documentation accompanying this tutorial:
 #
