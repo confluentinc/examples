@@ -223,7 +223,7 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 ##################################################
 # Java client: before and after ACLs
 #
-# When ACLs are enabled on your Confluent Cloud Enterprise cluster,
+# When ACLs are enabled on your Confluent Cloud cluster,
 # by default no client applications are authorized.
 #
 # The following steps show the same Java producer failing at first due to
