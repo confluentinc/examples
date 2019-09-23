@@ -166,8 +166,8 @@ ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
 
 echo -e "\n# Create an API key and secret for the new service account"
-echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
-OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
+OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
