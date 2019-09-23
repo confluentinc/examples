@@ -6,10 +6,7 @@
 ################################################################################
 #
 # Demo the new Confluent Cloud CLI and Access Control List (ACL) functionality
-# in your Confluent Cloud Enterprise cluster that has been enabled for ACLs
-#
-# ACLs are only available in Confluent Cloud Enterprise
-# ACLs are not available in Confluent Cloud Professional
+# in your Confluent Cloud cluster that has been enabled for ACLs
 #
 # Documentation accompanying this tutorial:
 #
@@ -18,7 +15,8 @@
 #
 # DISCLAIMER:
 #
-#   This is mostly for reference to see a workflow using Confluent Cloud CLI
+#   This demo is for reference purposes only and should be used 
+#   	to see a workflow using Confluent Cloud CLI
 #
 #   If you choose to run it against your Confluent Cloud cluster, be aware that it:
 #      - creates and deletes topics, service accounts, API keys, and ACLs
@@ -35,7 +33,7 @@
 #
 # Requirements:
 #
-#   - Access to a Confluent Cloud Enterprise cluster
+#   - Access to a Confluent Cloud cluster
 #   - Local install of the new Confluent Cloud CLI (v0.84.0 or above)
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
@@ -123,11 +121,11 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-echo -e "\n# Verify cluster is a Confluent Cloud Enterprise cluster"
+echo -e "\n# Verify cluster supports ACLs"
 echo "ccloud kafka acl list"
 OUTPUT=$(ccloud kafka acl list 2>&1)
-if [[ "$OUTPUT" =~ "Confluent Cloud Professional does not support ACLs" ]]; then
-  echo "This demo does not work on a Confluent Cloud Professional cluster. Please run this demo in a Confluent Cloud Enterprise cluster." 
+if [[ "$OUTPUT" =~ "Confluent does not support ACLs" ]]; then
+  echo "The target Confluent Cloud cluster does not appear to support ACLs. Contact Confluent Cloud support"
   exit 1
 fi
 
@@ -168,8 +166,8 @@ ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
 
 echo -e "\n# Create an API key and secret for the new service account"
-echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
-OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
+OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
