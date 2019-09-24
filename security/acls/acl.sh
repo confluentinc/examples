@@ -6,10 +6,7 @@
 ################################################################################
 #
 # Demo the new Confluent Cloud CLI and Access Control List (ACL) functionality
-# in your Confluent Cloud Enterprise cluster that has been enabled for ACLs
-#
-# ACLs are only available in Confluent Cloud Enterprise
-# ACLs are not available in Confluent Cloud Professional
+# in your Confluent Cloud cluster
 #
 # Documentation accompanying this tutorial:
 #
@@ -18,7 +15,8 @@
 #
 # DISCLAIMER:
 #
-#   This is mostly for reference to see a workflow using Confluent Cloud CLI
+#   This demo is for reference purposes only and should be used 
+#   	to see a workflow using Confluent Cloud CLI
 #
 #   If you choose to run it against your Confluent Cloud cluster, be aware that it:
 #      - creates and deletes topics, service accounts, API keys, and ACLs
@@ -35,7 +33,7 @@
 #
 # Requirements:
 #
-#   - Access to a Confluent Cloud Enterprise cluster
+#   - Access to a Confluent Cloud cluster
 #   - Local install of the new Confluent Cloud CLI (v0.84.0 or above)
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
@@ -120,14 +118,6 @@ echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 if [[ $? != 0 ]]; then
   echo "Failed to set cluster. Please troubleshoot, confirm cluster id, and run again"
-  exit 1
-fi
-
-echo -e "\n# Verify cluster is a Confluent Cloud Enterprise cluster"
-echo "ccloud kafka acl list"
-OUTPUT=$(ccloud kafka acl list 2>&1)
-if [[ "$OUTPUT" =~ "Confluent Cloud Professional does not support ACLs" ]]; then
-  echo "This demo does not work on a Confluent Cloud Professional cluster. Please run this demo in a Confluent Cloud Enterprise cluster." 
   exit 1
 fi
 
@@ -225,7 +215,7 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 ##################################################
 # Java client: before and after ACLs
 #
-# When ACLs are enabled on your Confluent Cloud Enterprise cluster,
+# When ACLs are enabled on your Confluent Cloud cluster,
 # by default no client applications are authorized.
 #
 # The following steps show the same Java producer failing at first due to
