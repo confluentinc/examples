@@ -121,14 +121,6 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-echo -e "\n# Verify cluster supports ACLs"
-echo "ccloud kafka acl list"
-OUTPUT=$(ccloud kafka acl list 2>&1)
-if [[ "$OUTPUT" =~ "Confluent does not support ACLs" ]]; then
-  echo "The target Confluent Cloud cluster does not appear to support ACLs. Contact Confluent Cloud support"
-  exit 1
-fi
-
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
 OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
