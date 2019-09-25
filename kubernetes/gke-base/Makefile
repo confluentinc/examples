@@ -56,7 +56,7 @@ gke-base-deploy-operator: #_ Deploys the Confluent Operator into the configured 
 
 gke-base-wait-for-operator: #_ Waits until the Confluent Operator rollout status is complete
 	@$(call echo_stdout_header,wait for operator)	
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-operator
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/operator
 	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-manager
 	@$(call echo_stdout_footer_pass,operator ready)
 
