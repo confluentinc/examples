@@ -229,7 +229,7 @@ Highlights
 Service Configurations
 ``````````````````````
 
-The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this demo we specify the non-default configuration in the ``cfg/values.yaml`` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
+The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this demo we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
 
 The following is an example section of the demo's ``values.yaml`` file showing the |zk| configuration along with a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` for further details.
 
