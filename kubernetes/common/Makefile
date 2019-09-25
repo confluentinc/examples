@@ -32,7 +32,7 @@ help: ## shows help for each target
 extended-help: 
 	@$(foreach m,$(MAKEFILE_LIST),grep -E '^[a-zA-Z_-]+:.*?#_ .*$$' $(m) | sort | awk 'BEGIN {FS = ":.*?#_ "}; {printf "\033[36m%-$(HELP_TAB_WIDTH)s\033[0m %s\n", $$1, $$2}';)
 
-OPERATOR_VERSION := 20190726-v0.65.0
+OPERATOR_VERSION ?= 20190912-v0.65.1
 OPERATOR_DOWNLOAD_PATH := $(COMMON_MKFILE_DIR)cp/operator/confluent-operator-$(OPERATOR_VERSION).tar.gz
 OPERATOR_PATH := $(dir $(OPERATOR_DOWNLOAD_PATH))$(OPERATOR_VERSION)/
 
