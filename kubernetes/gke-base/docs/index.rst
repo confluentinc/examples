@@ -242,7 +242,7 @@ The following is an example section of the demo's ``values.yaml`` file showing t
       cpu: 200m
       memory: 512Mi
 
-Remaining configuration details are specificied in individual ``helm`` commands, for example the setting to actually enable the kafka deployment is specified with the ``--set`` argument on the ``helm upgrade`` command.  See the `Makefile Makefile`_ for the full commands.
+Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile` for the full commands.
 
 .. sourcecode:: bash
 
