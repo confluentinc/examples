@@ -19,6 +19,9 @@ global:
         username=test
         password=test123
 
+manager:
+  name: manager
+
 operator:
   name: operator
   image:
@@ -26,7 +29,6 @@ operator:
 
 zookeeper:
   <<: *cpImage
-  name: zookeeper
   resources:
     cpu: 200m
     memory: 512Mi
