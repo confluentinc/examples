@@ -130,7 +130,7 @@ Verify topic replica placement:
 This section tests the differences in replication policies on producers.  Run the producer perf test:
 
 ```
-./scripts/start-producers.sh
+./scripts/start-producer.sh
 ```
 
 Sample results
@@ -157,7 +157,7 @@ On the other hand, because of the poor network bandwidth between the `east` and 
 This section tests the differences in follower fetching in the consumers.  Run the consumer perf test where the consumer is in `east`:
 
 ```
-./scripts/start-consumers.sh
+./scripts/start-consumer.sh
 ```
 
 Sample results
