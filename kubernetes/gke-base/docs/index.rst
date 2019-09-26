@@ -224,6 +224,38 @@ Now open a web-browser to http://localhost:12345, and you should see |c3| with y
 Highlights 
 **********
 
+.. _examples-operator-gke-base-configuration:
+
+Service Configurations
+``````````````````````
+
+The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this demo we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
+
+The following is an example section of the demo's ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` for further details.
+
+::
+
+  kafka:
+    <<: *cpImage
+    resources:
+      cpu: 200m
+      memory: 1Gi
+    loadBalancer:
+      enabled: false
+    tls:
+      enabled: false
+    metricReporter:
+      enabled: true
+    configOverrides:
+      server:
+      - "auto.create.topics.enabled=true"
+
+Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile` for the full commands.
+
+.. sourcecode:: bash
+
+  helm upgrade --install --namespace operator --set zookeeper.enabled=true ... 
+
 .. _examples-operator-gke-base-client-configurations:
 
 Client Configurations
