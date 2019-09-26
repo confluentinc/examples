@@ -7,6 +7,6 @@ for host in broker-west-1 broker-west-2 zookeeper-west zookeeper-central zookeep
   if [[ "$OUTPUT" =~ "1 received" ]]; then
     echo "broker-west-1 can ping $host"
   else
-    echo "broker-west-1 cannot ping $host"
+    echo "ERROR: broker-west-1 cannot ping $host"
   fi
 done
