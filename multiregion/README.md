@@ -273,3 +273,13 @@ Stop the demo and all Docker containers.
 ```
 ./scripts/stop.sh
 ```
+
+## Troubleshooting
+
+1. If containers fail to ping each other (failures seen in running `./scripts/validate_connectivity.sh`), clean up the Docker environment before running the demo again.
+
+```
+./scripts/stop.sh
+docker container stop $(docker container ls -a -q) ; docker container rm $(docker container ls -a -q) ; docker volume prune -f
+./scripts/start.sh
+```
