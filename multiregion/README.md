@@ -273,3 +273,13 @@ Stop the demo and all Docker containers.
 ```
 ./scripts/stop.sh
 ```
+
+## Troubleshooting
+
+1. If all containers are running in steady-state, but a topic describe (i.e., `./scripts/describe-topics.sh`) shows no leaders (i.e., `Leader: none`), then clean up your Docker environment before running the demo again.
+
+```
+./scripts/stop.sh
+docker container stop $(docker container ls -a -q) ; docker container rm $(docker container ls -a -q) ; docker volume prune -f
+./scripts/start.sh
+```
