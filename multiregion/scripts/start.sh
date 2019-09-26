@@ -22,7 +22,7 @@ sleep 30
 
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then
-  echo "Please troubleshoot"
+  echo "Please see the Troubleshooting section of the README"
   exit 1
 fi
 
