@@ -1,0 +1,151 @@
+version: '3'
+
+services:
+  zookeeper-west:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper-west
+    container_name: zookeeper-west
+    networks:
+      - n1
+    ports:
+      - "2181:2181"
+    environment:
+        ZOOKEEPER_SERVER_ID: 1
+        ZOOKEEPER_CLIENT_PORT: 2181
+        ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+      
+  zookeeper-central:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper-central
+    container_name: zookeeper-central
+    networks:
+      - n1
+    ports:
+      - "2182:2182"
+    environment:
+        ZOOKEEPER_SERVER_ID: 2
+        ZOOKEEPER_CLIENT_PORT: 2182
+        ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+    depends_on:
+      - zookeeper-west
+
+  zookeeper-east:
+    image: confluentinc/cp-zookeeper:latest
+    hostname: zookeeper-east
+    container_name: zookeeper-east
+    networks:
+      - n1
+    ports:
+      - "2183:2183"
+    environment:
+        ZOOKEEPER_SERVER_ID: 3
+        ZOOKEEPER_CLIENT_PORT: 2183
+        ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+    depends_on:
+      - zookeeper-west
+      - zookeeper-central
+
+  broker-west-1:
+    image: confluentinc/cp-server:5.4.0-beta1-2
+    hostname: broker-west-1
+    container_name: broker-west-1
+    networks:
+      - n1
+    ports:
+      - "9091:9091"
+    volumes:
+      - ./config:/etc/kafka/demo
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_BROKER_RACK: 'west'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-west-1:19091,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9091
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+    depends_on:
+      - zookeeper-west
+      - zookeeper-central
+      - zookeeper-east
+
+  broker-west-2:
+    image: confluentinc/cp-server:5.4.0-beta1-2
+    hostname: broker-west-2
+    container_name: broker-west-2
+    networks:
+      - n1
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_BROKER_RACK: 'west'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-west-2:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+    depends_on:
+      - zookeeper-west
+      - zookeeper-central
+      - zookeeper-east
+      - broker-west-1
+
+  broker-east-3:
+    image: confluentinc/cp-server:5.4.0-beta1-2
+    hostname: broker-east-3
+    container_name: broker-east-3
+    networks:
+      - n1
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./config:/etc/kafka/demo
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_BROKER_RACK: 'east'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-east-3:19093,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+    depends_on:
+      - zookeeper-west
+      - zookeeper-central
+      - zookeeper-east
+      - broker-west-1
+      - broker-west-2
+
+  broker-east-4:
+    image: confluentinc/cp-server:5.4.0-beta1-2
+    hostname: broker-east-4
+    container_name: broker-east-4
+    networks:
+      - n1
+    ports:
+      - "9094:9094"
+    environment:
+      KAFKA_BROKER_ID: 4
+      KAFKA_BROKER_RACK: 'east'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-east-4:19094,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9094
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+    depends_on:
+      - zookeeper-west
+      - zookeeper-central
+      - zookeeper-east
+      - broker-west-1
+      - broker-west-2
+      - broker-east-3
+
+networks:
+  n1:
