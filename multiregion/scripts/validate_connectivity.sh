@@ -8,5 +8,6 @@ for host in broker-west-1 broker-west-2 zookeeper-west zookeeper-central zookeep
     echo "broker-west-1 can ping $host"
   else
     echo "ERROR: broker-west-1 cannot ping $host"
+    exit 1
   fi
 done

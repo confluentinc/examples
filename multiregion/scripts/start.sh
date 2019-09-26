@@ -9,12 +9,22 @@ docker-compose up -d
 echo "Sleeping 30 seconds"
 sleep 30
 
+${DIR}/validate_connectivity.sh
+if [[ $? != 0 ]]; then
+  echo "Please troubleshoot"
+  exit 1
+fi
+
 ${DIR}/latency_docker.sh
 
 echo "Sleeping 30 seconds"
 sleep 30
 
 ${DIR}/validate_connectivity.sh
+if [[ $? != 0 ]]; then
+  echo "Please troubleshoot"
+  exit 1
+fi
 
 ${DIR}/create-topics.sh
 
