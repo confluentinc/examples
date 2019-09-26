@@ -414,6 +414,8 @@ Confluent Cloud Configurations
 
 5. If you ran this demo as `start-docker.sh`, the configuration is available in the `docker-compose.yml` file.
 
+   ::
+
         # For Docker Compose
         $ cat docker-compose.yml
 
