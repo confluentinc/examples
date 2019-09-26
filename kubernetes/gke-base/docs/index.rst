@@ -1,4 +1,4 @@
-.. _quickstart-demos-operator-gke
+.. _quickstart-demos-operator-gke:
 
 |cp| on Google Kubernetes Engine
 ======================================
@@ -18,7 +18,7 @@ The major components of this demo are:
   * A single node |sr|
   * |c3|
   * A single node |kconnect-long|
-  * One instance of `kafka-connect-datagen` to produce mock data
+  * One instance of ``kafka-connect-datagen`` to produce mock data
 
 .. figure:: images/operator.png
     :alt: operator
