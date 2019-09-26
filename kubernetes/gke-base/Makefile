@@ -27,7 +27,7 @@ KUBECTL_NAMESPACE ?= operator
 
 gke-kubectl-current-context = $(shell kubectl config current-context 2>&1 /dev/null)
 
-HELM_COMMON_FLAGS := --set global.provider.registry.fqdn=docker.io --set global.provider.name=gcp --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} --set global.provider.storage.provisioner=kubernetes.io/gce-pd --set global.provider.storage.reclaimPolicy=Delete --set global.provider.storage.parameters.type=pd-ssd --set global.provider.sasl.plain.username=test --set global.provider.sasl.plain.password=test123
+HELM_COMMON_FLAGS := --wait --timeout=500 -f $(THIS_MKFILE_DIR)cfg/values.yaml --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)}
 
 gke-check-dependencies: check-dependencies
 	@$(call check-var-defined,GCP_PROJECT_ID)
@@ -36,7 +36,7 @@ gke-check-dependencies: check-dependencies
 
 gke-create-cluster: gke-check-dependencies ## Creates a GKE cluster based on the values of the GKE_* variables.  WARN: This will incur charges in your GCP account.
 	@$(call echo_stdout_header,Create GKE cluster expect 4 mins)	
-	gcloud --quiet container --project $(GCP_PROJECT_ID) clusters create $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE) --no-enable-basic-auth --cluster-version $(GKE_BASE_CLUSTER_VERSION) --machine-type $(GKE_BASE_MACHINE_TYPE) --image-type $(GKE_BASE_IMAGE_TYPE) --disk-type $(GKE_BASE_DISK_TYPE) --disk-size $(GKE_BASE_DISK_SIZE) --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes $(GKE_BASE_NUM_NODES) --enable-cloud-logging --enable-cloud-monitoring --enable-ip-alias --network "projects/$(GCP_PROJECT_ID)/global/networks/default" --subnetwork "projects/$(GCP_PROJECT_ID)/regions/$(GKE_BASE_REGION)/subnetworks/$(GKE_BASE_SUBNET)" --default-max-pods-per-node "110" --addons HorizontalPodAutoscaling,HttpLoadBalancing --enable-autoupgrade --enable-autorepair
+	gcloud --quiet container --project $(GCP_PROJECT_ID) clusters create $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE) --no-enable-basic-auth --cluster-version $(GKE_BASE_CLUSTER_VERSION) --machine-type $(GKE_BASE_MACHINE_TYPE) --image-type $(GKE_BASE_IMAGE_TYPE) --disk-type $(GKE_BASE_DISK_TYPE) --disk-size $(GKE_BASE_DISK_SIZE) --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes $(GKE_BASE_NUM_NODES) --no-enable-autoupgrade --no-issue-client-certificate --metadata disable-legacy-endpoints=true --enable-ip-alias --network "projects/$(GCP_PROJECT_ID)/global/networks/default" --subnetwork "projects/$(GCP_PROJECT_ID)/regions/$(GKE_BASE_REGION)/subnetworks/$(GKE_BASE_SUBNET)" --default-max-pods-per-node "110" --addons HorizontalPodAutoscaling,HttpLoadBalancing 
 	@$(call echo_stdout_footer_pass,GKE Cluster Created)
 
 gke-destroy-cluster: gke-check-dependencies ## Destroys the GKE cluster built from the gke-create-cluster command 
@@ -51,13 +51,13 @@ gke-base-validate: gke-check-dependencies init
 ###### OPERATOR MANAGEMENT ######
 gke-base-deploy-operator: #_ Deploys the Confluent Operator into the configured k8s cluster 
 	@$(call echo_stdout_header,deploy operator)	
-	helm upgrade --install --namespace operator --set operator.enabled=true $(HELM_COMMON_FLAGS) operator $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator $(HELM_COMMON_FLAGS) --set operator.enabled=true operator $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,operator deployed)
 
 gke-base-wait-for-operator: #_ Waits until the Confluent Operator rollout status is complete
 	@$(call echo_stdout_header,wait for operator)	
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-operator
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/cc-manager
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/operator
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status deployment/manager
 	@$(call echo_stdout_footer_pass,operator ready)
 
 gke-base-destroy-operator: #_ Destroy the operator deployment on the configured k8s cluster
@@ -75,7 +75,7 @@ gke-base-wait-for-operator-destruction: #j Will wait until the Confluent Operato
 ###### ZOOKEEPER MANAGEMENT ######
 gke-base-deploy-zookeeper: #_ Deploys Zookeeper into the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Zookeeper)
-	helm upgrade --install --namespace operator --set zookeeper.enabled=true --set zookeeper.resources.cpu=200m --set zookeeper.resources.memory=512Mi --set zookeeper.replicas=$(GKE_BASE_ZOOKEEPER_REPLICAS) $(HELM_COMMON_FLAGS) zookeeper $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator $(HELM_COMMON_FLAGS) --set zookeeper.replicas=$(GKE_BASE_ZOOKEEPER_REPLICAS) --set zookeeper.enabled=true zookeeper $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Zookeeper deployed)
 
 gke-base-wait-for-zookeeper: #_ Waits until the Zookeeper rollout is complete
@@ -101,7 +101,7 @@ gke-base-wait-for-zookeeper-destruction: #_ Waits until the Zookeper cluster is 
 ######### KAFKA MANAGEMENT ######
 gke-base-deploy-kafka: #_ Deploys Kafka into the configured k8s cluster
 	@$(call echo_stdout_header,deploy kafka) 
-	helm upgrade --install --namespace operator --set kafka.enabled=true --set kafka.resources.cpu=200m --set kafka.resources.memory=1Gi --set kafka.loadBalancer.enabled=false --set kafka.tls.enabled=false --set kafka.metricReporter.enabled=true --set kafka.configOverrides.server={"auto.create.topics.enable=true"} --set kafka.replicas=$(GKE_BASE_KAFKA_REPLICAS) $(HELM_COMMON_FLAGS) kafka $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator $(HELM_COMMON_FLAGS) --set kafka.replicas=$(GKE_BASE_KAFKA_REPLICAS) --set kafka.enabled=true kafka $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka deployed)
 
 gke-base-wait-for-kafka: #_ Waits until the Kafka rollout is complete
@@ -124,7 +124,7 @@ gke-base-wait-for-kafka-destruction: #_ Waits until the Kafka cluster is destroy
 ### SCHEMA REGISTRY MANAGEMENT ##
 gke-base-deploy-schemaregistry: #_ Deploys the Schmea Registry to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Schema Registry)
-	helm upgrade --install --namespace operator --set schemaregistry.enabled=true --set schemaregistry.dependencies.kafka.brokerCount=3 --set schemaregistry.dependencies.kafka.bootstrapEndpoint=kafka:9071 --set schemaregistry.replicas=$(GKE_BASE_SCHEMA_REGISTRY_REPLICAS) $(HELM_COMMON_FLAGS) schemaregistry $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator $(HELM_COMMON_FLAGS) --set schemaregistry.enabled=true --set schemaregistry.replicas=$(GKE_BASE_SCHEMA_REGISTRY_REPLICAS) schemaregistry $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Schema Registry deployed)
 
 gke-base-wait-for-schemaregistry: #_ Waits until the Schema Registry rollout is complete
@@ -147,7 +147,7 @@ gke-base-wait-for-schemaregistry-destruction: #_ Waits until the Schema Registry
 ##### CONNECT  MANAGEMENT #######
 gke-base-deploy-connect: #_ Deploys Kafka Connect to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Kafka Connect)
-	helm upgrade --install --namespace operator --set connect.enabled=true --set connect.image.repository=cnfldemos/cp-server-connect-operator-with-datagen --set connect.image.tag=5.3.0.0_0.1.3 --set connect.tls.enabled=false --set connect.loadBalancer.enabled=false --set connect.dependencies.kafka.brokerCount=1 --set connect.dependencies.kafka.bootstrapEndpoint=kafka:9071 --set connect.dependencies.schemaregistry.enabled=true --set connect.dependencies.schemaregistry.url=http://schemaregistry:8081 --set connect.replicas=$(GKE_BASE_CONNECT_REPLICAS) $(HELM_COMMON_FLAGS) connect $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator $(HELM_COMMON_FLAGS) --set connect.enabled=true --set connect.replicas=$(GKE_BASE_CONNECT_REPLICAS) connect $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka Connect deployed)
 
 gke-base-wait-for-connect: #_ Waits until the Kafka Connect rollout is complete
@@ -170,7 +170,7 @@ gke-base-wait-for-connect-destruction: #_ Waits until Kafka Connect is destroyed
 ### CONTROL CENTER MANAGEMENT ####
 gke-base-deploy-controlcenter: #_ Deploys Confluent Control Center to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Control Center)
-	helm upgrade --install --namespace operator --set controlcenter.enabled=true --set controlcenter.dependencies.c3KafkaCluster.zookeeper.endpoint=zookeeper:2181 --set controlcenter.dependencies.c3KafkaCluster.bootstrapEndpoint=kafka:9071 --set controlcenter.dependencies.c3KafkaCluster.brokerCount=1 --set controlcenter.dependencies.connectCluster.enabled=true --set controlcenter.dependencies.connectCluster.url=http://connectors:8083 --set controlcenter.dependencies.schemaRegistry.enabled=true --set controlcenter.dependencies.schemaRegistry.url=http://schemaregistry:8081 $(HELM_COMMON_FLAGS) controlcenter $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace operator $(HELM_COMMON_FLAGS) --set controlcenter.enabled=true controlcenter $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Control Center deployed)
 
 gke-base-wait-for-controlcenter: #_ Waits until the Control Center rollout is complete
