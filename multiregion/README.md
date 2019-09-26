@@ -49,6 +49,17 @@ Observers can never participate in the ISR list and cannot become the leader if 
 
 # Run the Demo
 
+## Install the demo
+
+Clone the [confluentinc/examples GitHub repo](https://github.com/confluentinc/examples) and checkout the `master` branch:
+
+```
+git clone https://github.com/confluentinc/examples
+cd examples
+git checkout master
+cd multiregion
+```
+
 ## Start Docker Compose
 
 Run the following command.
