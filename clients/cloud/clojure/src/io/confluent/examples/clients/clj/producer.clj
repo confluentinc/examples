@@ -1,4 +1,5 @@
 (ns io.confluent.examples.clients.clj.producer
+  (:gen-class)
   (:require
    [clojure.data.json :as json]
    [clojure.java.io :as jio])
@@ -56,3 +57,6 @@
               (catch Exception e
                 (println (str "Failed to produce: " e)))))))
       (println "Wrote ten records to " topic))))
+
+(defn -main [& args]
+  (apply producer! args))

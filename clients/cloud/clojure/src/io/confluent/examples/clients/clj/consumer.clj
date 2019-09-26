@@ -1,4 +1,5 @@
 (ns io.confluent.examples.clients.clj.consumer
+  (:gen-class)
   (:require
    [clojure.data.json :as json]
    [clojure.java.io :as jio])
@@ -17,15 +18,18 @@
 (defn consumer! [config-fname topic]
   (with-open [consumer (KafkaConsumer. (build-properties config-fname))]
     (.subscribe consumer [topic])
-    (loop [last-count 0
+    (loop [tc 0
            records []]
-      (doall (map-indexed
-              (fn [i record]
-                (printf "Consumed record with key %s and value %s, total count is %d\n"
-                        (.key record)
-                        (.value record)
-                        (+ i last-count)))
-              records))
-      (println "Polling")
-      (recur (+ (count records) last-count)
-             (seq (.poll consumer (Duration/ofSeconds 1)))))))
+      (let [new-tc (reduce
+                    (fn [tc record]
+                      (let [cnt (get (json/read-str (.value record)) "count")
+                            new-tc (+ tc cnt)]
+                        (printf "Consumed record with key %s and value %s, total count is %d\n" (.key record) (.value record) new-tc)
+                        new-tc))
+                        tc
+                        records)]
+        (println "Polling")
+        (recur new-tc (seq (.poll consumer (Duration/ofSeconds 1))))))))
+
+(defn -main [& args]
+  (apply consumer! args))
