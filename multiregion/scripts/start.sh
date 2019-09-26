@@ -14,6 +14,8 @@ ${DIR}/latency_docker.sh
 echo "Sleeping 30 seconds"
 sleep 30
 
+${DIR}/validate_connectivity.sh
+
 ${DIR}/create-topics.sh
 
 echo "Sleeping 10 seconds"

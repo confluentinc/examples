@@ -9,7 +9,7 @@ export SUBNET=$(docker inspect multiregion_n1 -f '{{(index .IPAM.Config 0).Subne
 echo -e "\n==> Running pumba containers for latency\n"
 
 # Create low latency link (50ms) to zookeeper-central
-docker run --rm -d \
+docker run -d \
 	--network=${DOCKER_NETWORK} \
 	--name pumba-zk-central \
 	-v /var/run/docker.sock:/var/run/docker.sock \
@@ -18,7 +18,7 @@ docker run --rm -d \
   		--target $SUBNET delay --time 50 zookeeper-central --jitter 10 &
 
 # Create high latency link (100ms) from west to east
-docker run --rm -d \
+docker run -d \
 	--network=${DOCKER_NETWORK} \
 	--name pumba-delay \
 	-v /var/run/docker.sock:/var/run/docker.sock \
@@ -32,7 +32,7 @@ docker run --rm -d \
         	delay --time 100 zookeeper-west broker-west-1 broker-west-2 --jitter 20 &
 
 # Limit bandwidth from west to 100bps
-docker run --rm -d \
+docker run -d \
 	--network=${DOCKER_NETWORK} \
 	--name pumba-rate-limit \
 	-v /var/run/docker.sock:/var/run/docker.sock \
