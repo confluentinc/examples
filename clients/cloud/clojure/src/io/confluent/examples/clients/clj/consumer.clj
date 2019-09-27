@@ -8,7 +8,7 @@
    (java.util Properties)
    (org.apache.kafka.clients.consumer ConsumerConfig KafkaConsumer)))
 
-(defn build-properties [config-fname]
+(defn- build-properties [config-fname]
   (with-open [config (jio/reader config-fname)]
     (doto (Properties.)
       (.putAll {ConsumerConfig/KEY_DESERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringDeserializer"
