@@ -33,7 +33,7 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.0-beta190928193212.jar
       CONNECT_REQUEST_TIMEOUT_MS: 20000
       CONNECT_RETRY_BACKOFF_MS: 500
       # Connect worker
