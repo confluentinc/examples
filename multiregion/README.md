@@ -4,7 +4,10 @@
 
 This demo showcases Confluent Platform's Multi-Region Replication capability built directly into Confluent Server.
 
-It uses Confluent Platform 5.4 features that are in preview and not intended for production. Some of the interfaces might change to improve the user experience. For more information, read the [blog post](https://www.confluent.io/blog/multi-region-data-replication).
+It uses Confluent Platform 5.4 features that are in preview and not intended for production. Some of the interfaces might change to improve the user experience. For more information:
+
+* [Blog post: Built-In Multi-Region Replication with Confluent Platform 5.4-preview](https://www.confluent.io/blog/multi-region-data-replication)
+* [Confluent Platform 5.4-preview documentation](https://docs.confluent.io/current/release-notes/5-4-preview.html)
 
 NOTE: There is a [different demo](../multi-datacenter/README.md) for a multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters.
 
