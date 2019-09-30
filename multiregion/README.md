@@ -112,10 +112,15 @@ docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}
 
 ## Create Topics
 
-Create topics with different replica placement policies which allow you to specify a set of matching constraints.
-Each placement also has a minimum count associated with it that allows users to guarantee a certain spread of replicas throughout the cluster.
+Create three Kafka topics by running the following script.
 
-These three variations will highlight performance differences depending on the relative location of clients and brokers.
+```
+./scripts/create-topics.sh
+```
+
+The script creates each topic with a different replica placement policy that specifies a set of matching constraints, i.e., `count` and `rack` for `replicas` and `observers`.
+The replica placement policy file is defined with the argument `--replica-placement <path-to-replica-placement-policy-json>` mentioned earlier (these files are in the [config](config/) directory).
+Each placement also has a minimum count associated with it that allows users to guarantee a certain spread of replicas throughout the cluster.
 
 | Topic name         | Leader  | Followers (sync replicas) | Observers (async replicas) | ISR list  |
 |--------------------|---------|---------------------------|----------------------------|-----------|
@@ -123,13 +128,7 @@ These three variations will highlight performance differences depending on the r
 | multi-region-async | 1x west | 1x west                   | 2x east                    | {1,2}     |
 | multi-region-sync  | 1x west | 1x west, 2x east          | n/a                        | {1,2,3,4} |
 
-Run the following script: 
-
-```
-./scripts/create-topics.sh
-```
-
-It creates topics and their replicas on the following brokers:
+These three variations will highlight performance differences depending on the relative location of clients and brokers.
 
 ![image](images/multi-region-topic-replicas.png)
 
