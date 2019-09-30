@@ -41,7 +41,7 @@ An `ISR` list (in-sync replicas) includes brokers that have a given topic-partit
 The data is copied from the leader to every member of the ISR before the producer gets an acknowledgement.
 The followers in an ISR can become the leader if the current leader fails.
 
-An `observer` is a broker/replica that also has a copy of data for a given topic-partition, and consumers are allowed to read from them even though it's not the leader (known as "Follower Fetching").
+An `observer` is a broker/replica that also has a copy of data for a given topic-partition, and consumers are allowed to read from them even though it is not the leader (known as "Follower Fetching").
 However, the data is copied asynchronously from the leader such that a producer does not wait on observers to get back an acknowledgement.
 Observers can never participate in the ISR list and cannot become the leader if the current leader fails.
 
@@ -139,6 +139,29 @@ Verify topic replica placement:
 ./scripts/describe-topics.sh
 ```
 
+Sample output:
+
+```
+==> Describe topic single-region
+
+Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+	Topic: single-region	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: 1	Replicas: 1,2,4,3	Isr: 1,2	Offline: 	LiveObservers: 4,3
+
+==> Describe topic multi-region-sync
+
+Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+	Topic: multi-region-sync	Partition: 0	Leader: 1	Replicas: 1,2,3,4	Isr: 1,2,3,4	Offline: 	LiveObservers:
+```
+
+Observations:
+
+* Topic `multi-region-async` has replicas across `west` and `east` regions, but only 1 and 2 are in the ISR, and 3 and 4 are observers.
+
 ## Producer Testing
 This section tests the differences in replication policies on producers.  Run the producer perf test:
 
@@ -146,7 +169,7 @@ This section tests the differences in replication policies on producers.  Run th
 ./scripts/start-producer.sh
 ```
 
-Sample results
+Sample output:
 
 ```
 ==> Produce: Single-region Replication (topic: single-region) 
@@ -160,10 +183,11 @@ Sample results
 
 ```
 
-The first two cases with `single-region` and `multi-region-async` have nearly the same throughput performance.
-The observers in the second case didn't affect the overall producer throughput because the `west` region is sending an `ack` back to the producer after it has been replicated twice in the `west` region, and it is not waiting for the async copy to the `east` region. 
+Observations:
 
-On the other hand, because of the poor network bandwidth between the `east` and `west` region's, the third case (topic: `multi-region-sync`) with an ISR made up of brokers in both regions took a big throughput hit because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
+* The first two cases for topics `single-region` and `multi-region-async` have nearly the same throughput performance.
+* The observers in the second case for topic `multi-region-async` didn't affect the overall producer throughput because the `west` region is sending an `ack` back to the producer after it has been replicated twice in the `west` region, and it is not waiting for the async copy to the `east` region. 
+* In the third case for topic `multi-region-sync`, due to the poor network bandwidth between the `east` and `west` regions and due to an ISR made up of brokers in both regions, it took a big throughput hit. This is because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
 
 ## Consumer Testing
 
@@ -173,7 +197,7 @@ This section tests the differences in follower fetching in the consumers.  Run t
 ./scripts/start-consumer.sh
 ```
 
-Sample results
+Sample output:
 
 ```
 ==> Consume from east: Multi-region Async Replication from Leader in west (topic: multi-region-async)
@@ -188,9 +212,10 @@ start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.s
 2019-09-25 17:10:56:844, 2019-09-25 17:11:02:902, 23.8419, 3.9356, 5000, 825.3549, 1569431461383, -1569431455325, -0.0000, -0.0000
 ```
 
-In the first case, the consumer running in `east` reads from the leader in `west`, and so it is negatively impacted by the low bandwidth between `east` and `west`.  It's throughput is lower.
+Observations:
 
-In the second case, the consumer running in `east` reads from the follower that is also in `east`, and so its throughput is higher.
+* In the first case, the consumer running in `east` reads from the leader in `west`, and so it is negatively impacted by the low bandwidth between `east` and `west`.  Its throughput is lower (e.g. `0.9025` MB.sec in the above example).
+* In the second case, the consumer running in `east` reads from the follower that is also in `east`. Its throughput is higher (e.g. `3.9356` MB.sec in the above example).
 
 ## Failover and Failback
 
@@ -206,13 +231,13 @@ Verify the new topic replica placement:
 ./scripts/describe-topics.sh
 ```
 
-Note that the third case (topic: `multi-region-sync`) automatically elects a new leader in `east` and clients failover, whereas `multi-region-async` and `single-region` have no leader. Sample output:
+Sample output:
 
 ```
 ==> Describe topic single-region
 
 Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
-	Topic: single-region	Partition: 0	Leader: none	Replicas: 2,1	Isr: 1	Offline: 2,1	LiveObservers: 
+	Topic: single-region	Partition: 0	Leader: none	Replicas: 2,1	Isr: 1	Offline: 2,1	LiveObservers:
 
 
 ==> Describe topic multi-region-async
@@ -224,25 +249,44 @@ Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.in
 ==> Describe topic multi-region-sync
 
 Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
-	Topic: multi-region-sync	Partition: 0	Leader: 4	Replicas: 2,1,4,3	Isr: 4,3	Offline: 2,1	LiveObservers: 
+	Topic: multi-region-sync	Partition: 0	Leader: 4	Replicas: 2,1,4,3	Isr: 4,3	Offline: 2,1	LiveObservers:
 ```
 
-To fail over the observers in the topic `multi-region-async`:
+Observations:
+
+* In the first case, the topic `single-region` has no leader, because it had only two replicas both in the `west` region, which are now down.
+* In the second case, the topic `multi-region-async` also has no leader, because the only two eligible replicas were both in the `west` region, which are now down.  The observers in the east region are not eligible to become replicas.
+* In the third case, the topic `multi-region-sync` automatically elected a new leader in `east` (e.g. replica 4 in the above output).  Clients can failover to those replicas in the east region.
+
+### Fail over observers
+
+To explicitly fail over the observers in the topic `multi-region-async` to the `east` region, trigger leader election:
 
 ```
-docker-compose exec broker-east-3 kafka-leader-election --bootstrap-server broker-east-3:9093 --election-type UNCLEAN --all-topic-partitions
+docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:9094 --election-type UNCLEAN --topic multi-region-async --partition 0
 ```
 
-Describe the topics again, and notice now that `multi-region-async` has a leader:
+Describe the topics again.
+
+```
+./scripts/describe-topics.sh
+```
+
+Sample output:
 
 ```
 ...
 ==> Describe topic multi-region-async
 
 Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-	Topic: multi-region-async	Partition: 0	Leader: 3	Replicas: 2,1,3,4	Isr: 3,4	Offline: 2,1	LiveObservers: 
+	Topic: multi-region-async	Partition: 0	Leader: 3	Replicas: 2,1,3,4	Isr: 3,4	Offline: 2,1	LiveObservers:
 ...
 ```
+
+Observations for topic `multi-region-async`:
+
+* It has a leader again
+* There are no longer an observers showing up as `LiveObservers`
 
 ### Failback region west
 
@@ -250,13 +294,73 @@ Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.in
 docker-compose start broker-west-1 broker-west-2 zookeeper-west
 ```
 
-Verify the new topic replica placement:
+Verify the new topic replica placement.
 
 ```
 ./scripts/describe-topics.sh
 ```
 
+Sample output:
+
+```
+==> Describe topic single-region
+
+Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+	Topic: single-region	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1,2	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: 4	Replicas: 1,2,4,3	Isr: 4,3,2,1	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-sync
+
+Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+	Topic: multi-region-sync	Partition: 0	Leader: 1	Replicas: 1,2,3,4	Isr: 3,4,2,1	Offline: 	LiveObservers:
+```
+
+Observations:
+
+* All topics have leaders again
+* The leader for the partitions in topic `multi-region-async` are still in the `east` region (e.g. leader 4 in the sample output above)
+
 Note: On failback from a failover to observers, any data that was not replicated to observers will be lost because logs are truncated before catching up and joining the ISR.  The engineering team plans to add a feature in the future that would make it easier for operators to get closer to at least once semantics when using observers and failing over.
+
+### Restore observers and preferred replicas
+
+```
+docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:9094 --election-type PREFERRED --all-topic-partitions
+```
+
+Verify the new topic replica placement.
+
+```
+./scripts/describe-topics.sh
+```
+
+Sample output:
+
+```
+==> Describe topic single-region
+
+Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+	Topic: single-region	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 1,2	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: 1	Replicas: 1,2,4,3	Isr: 2,1	Offline: 	LiveObservers: 4,3
+
+==> Describe topic multi-region-sync
+
+Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+	Topic: multi-region-sync	Partition: 0	Leader: 1	Replicas: 1,2,3,4	Isr: 3,4,2,1	Offline: 	LiveObservers:
+```
+
+Observations:
+
+* The leader for the partitions in topic `multi-region-async` are restored to the `west` region (e.g. leader 1 in the sample output above)
+
 
 ## Run end-to-end demo
 
