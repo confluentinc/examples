@@ -249,11 +249,8 @@ services:
       KSQL_LOG4J_ROOT_LOGLEVEL: TRACE
       KSQL_BOOTSTRAP_SERVERS: "broker:9092"
       KSQL_HOST_NAME: ksql-server
-      KSQL_APPLICATION_ID: "rbac-compose-demo"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
-      # KSQL cluster id
-      KSQL_KSQL_SERVICE_ID: ksql-cluster
 
       # enable rbac confluent security plugin
       KSQL_KSQL_SECURITY_EXTENSION_CLASS: io.confluent.ksql.security.KsqlConfluentSecurityExtension
