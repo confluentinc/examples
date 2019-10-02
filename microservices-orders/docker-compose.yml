@@ -124,7 +124,6 @@ services:
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
       KSQL_BOOTSTRAP_SERVERS: "broker:9092"
       KSQL_HOST_NAME: ksql-server
-      KSQL_APPLICATION_ID: "cp-all-in-one"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
