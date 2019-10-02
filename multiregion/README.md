@@ -120,7 +120,7 @@ Create three Kafka topics by running the following script.
 
 The script creates each topic with a different replica placement policy that specifies a set of matching constraints, i.e., `count` and `rack` for `replicas` and `observers`.
 The replica placement policy file is defined with the argument `--replica-placement <path-to-replica-placement-policy-json>` mentioned earlier (these files are in the [config](config/) directory).
-Each placement also has a minimum count associated with it that allows users to guarantee a certain spread of replicas throughout the cluster.
+Each placement also has a minimum `count` associated with it that allows users to guarantee a certain spread of replicas throughout the cluster.
 
 | Topic name         | Leader  | Followers (sync replicas) | Observers (async replicas) | ISR list  |
 |--------------------|---------|---------------------------|----------------------------|-----------|
@@ -128,7 +128,7 @@ Each placement also has a minimum count associated with it that allows users to 
 | multi-region-async | 1x west | 1x west                   | 2x east                    | {1,2}     |
 | multi-region-sync  | 1x west | 1x west, 2x east          | n/a                        | {1,2,3,4} |
 
-These three variations will highlight performance differences depending on the relative location of clients and brokers.
+The playbook below highlights client performance differences between these topics depending on the relative location of clients and brokers.
 
 ![image](images/multi-region-topic-replicas.png)
 
