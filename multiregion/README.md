@@ -260,7 +260,7 @@ Note: On failback from a failover to observers, any data that was not replicated
 
 ## Run end-to-end demo
 
-All the individual steps above can be run in on shot:
+All the individual steps above can be run with this automated script:
 
 ```
 ./scripts/start.sh
@@ -276,7 +276,7 @@ Stop the demo and all Docker containers.
 
 ## Troubleshooting
 
-1. If containers fail to ping each other (e.g., failures seen in running `./scripts/validate_connectivity.sh`), clean up the Docker environment and then run the demo again.
+1. If containers fail to ping each other (e.g., failures seen in running `./scripts/validate_connectivity.sh`), stop the demo, clean up the Docker environment, and then start the demo again:
 
 ```
 ./scripts/stop.sh
