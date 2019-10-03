@@ -382,10 +382,17 @@ Stop the demo and all Docker containers.
 
 ## Troubleshooting
 
-1. If containers fail to ping each other (e.g., failures seen in running `./scripts/validate_connectivity.sh`), stop the demo, clean up the Docker environment, and then start the demo again:
+1. If containers fail to ping each other (e.g., failures seen in running `./scripts/validate_connectivity.sh`), then stop the demo, clean up the Docker environment, and restart the demo.  If it still fails, restart Docker and run again.
 
 ```
+# Stop demo
 ./scripts/stop.sh
-docker container stop $(docker container ls -a -q) ; docker container rm $(docker container ls -a -q) ; docker volume prune -f
+
+# Clean up the Docker environment
+for c in $(docker container ls -q --filter "name=pumba"); do docker container stop "$c" && docker container rm "$c"; done
+docker-compose down -v --remove-orphans
+for v in $(docker volume ls -q --filter="dangling=true"); do docker volume rm "$v"; done
+
+# Restart demo
 ./scripts/start.sh
 ```
