@@ -278,7 +278,7 @@ Stop the demo and all Docker containers.
 
 ## Troubleshooting
 
-1. If containers fail to ping each other (e.g., failures seen in running `./scripts/validate_connectivity.sh`), then stop the demo, clean up the Docker environment, and restart the demo:
+1. If containers fail to ping each other (e.g., failures seen in running `./scripts/validate_connectivity.sh`), then stop the demo, clean up the Docker environment, and restart the demo.  If it still fails, restart Docker and run again.
 
 ```
 # Stop demo
