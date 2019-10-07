@@ -194,8 +194,8 @@ echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --rol
 confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:_confluent-ksql-${KSQL_SERVICE_ID} prefix"
-echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefixed --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefixed --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# KSQL CLI: create a new table as select from another table and select * from that table, after authorization (should pass)"
 echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
