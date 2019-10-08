@@ -363,6 +363,14 @@ Observations:
 
 * The leader for the partitions in topic `multi-region-async` are restored to the `west` region (e.g. leader 1 in the sample output above)
 
+## Monitoring Observers
+
+Monitor the JMX metric `CaughtUpReplicas` to determine if the observers are caught up with the leader or not.
+If they are caught up, the number of `CaughtUpReplicas` should equal all the replicas, including observers.
+
+```
+docker-compose exec broker-west-1 kafka-run-class kafka.tools.JmxTool --jmx-url service:jmx:rmi:///jndi/rmi://localhost:8091/jmxrmi --object-name kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=multi-region-async,partition=0 --one-time true
+```
 
 ## Run end-to-end demo
 

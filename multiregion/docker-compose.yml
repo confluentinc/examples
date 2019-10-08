@@ -53,6 +53,7 @@ services:
       - n1
     ports:
       - "9091:9091"
+      - "8091:8091"
     volumes:
       - ./config:/etc/kafka/demo
     environment:
@@ -65,6 +66,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_JMX_PORT: 8091
     depends_on:
       - zookeeper-west
       - zookeeper-central
