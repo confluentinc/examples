@@ -80,6 +80,7 @@ services:
       - n1
     ports:
       - "9092:9092"
+      - "8092:8092"
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_BROKER_RACK: 'west'
@@ -90,6 +91,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_JMX_PORT: 8092
     depends_on:
       - zookeeper-west
       - zookeeper-central
@@ -104,6 +106,7 @@ services:
       - n1
     ports:
       - "9093:9093"
+      - "8093:8093"
     volumes:
       - ./config:/etc/kafka/demo
     environment:
@@ -116,6 +119,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_JMX_PORT: 8093
     depends_on:
       - zookeeper-west
       - zookeeper-central
@@ -131,6 +135,7 @@ services:
       - n1
     ports:
       - "9094:9094"
+      - "8094:8094"
     environment:
       KAFKA_BROKER_ID: 4
       KAFKA_BROKER_RACK: 'east'
@@ -141,6 +146,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_JMX_PORT: 8094
     depends_on:
       - zookeeper-west
       - zookeeper-central

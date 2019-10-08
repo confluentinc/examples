@@ -219,6 +219,23 @@ Observations:
 * In the first case, the consumer running in `east` reads from the leader in `west`, and so it is negatively impacted by the low bandwidth between `east` and `west`.  Its throughput is lower (e.g. `0.9025` MB.sec in the above example).
 * In the second case, the consumer running in `east` reads from the follower that is also in `east`. Its throughput is higher (e.g. `3.9356` MB.sec in the above example).
 
+## Monitoring Observers
+
+Monitor the JMX metric `CaughtUpReplicas` (`kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=([-.w]+),partition=([-.w]+)`) across all brokers in the cluster to determine if the observers are caught up with the leader or not.
+If they are caught up, the number of `CaughtUpReplicas` should equal all the replicas, including observers.
+
+```
+./scripts/get_caughtupreplicas.sh
+```
+
+Sample output:
+
+```
+single-region: 2
+multi-region-sync: 4
+multi-region-async: 4
+```
+
 ## Failover and Failback
 
 ### Fail region west
@@ -362,15 +379,6 @@ Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.ins
 Observations:
 
 * The leader for the partitions in topic `multi-region-async` are restored to the `west` region (e.g. leader 1 in the sample output above)
-
-## Monitoring Observers
-
-Monitor the JMX metric `CaughtUpReplicas` to determine if the observers are caught up with the leader or not.
-If they are caught up, the number of `CaughtUpReplicas` should equal all the replicas, including observers.
-
-```
-docker-compose exec broker-west-1 kafka-run-class kafka.tools.JmxTool --jmx-url service:jmx:rmi:///jndi/rmi://localhost:8091/jmxrmi --object-name kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=multi-region-async,partition=0 --one-time true
-```
 
 ## Run end-to-end demo
 
