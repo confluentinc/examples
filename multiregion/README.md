@@ -221,8 +221,8 @@ Observations:
 
 ## Monitoring Observers
 
-Monitor the JMX metric `CaughtUpReplicas` (`kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=([-.w]+),partition=([-.w]+)`) across all brokers in the cluster to determine if the observers are caught up with the leader or not.
-If they are caught up, the number of `CaughtUpReplicas` should equal all the replicas, including observers.
+Monitor the JMX metric `CaughtUpReplicas` (`kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=([-.\w]+),partition=([0-9]+)`) across all brokers in the cluster to determine if the observers are caught up with the leader or not.
+When they are caught up, the number of `CaughtUpReplicas` equals all the replicas, including observers.
 
 ```
 ./scripts/get_caughtupreplicas.sh
