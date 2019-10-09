@@ -428,3 +428,5 @@ for v in $(docker volume ls -q --filter="dangling=true"); do docker volume rm "$
 # Restart demo
 ./scripts/start.sh
 ```
+
+2. Pumba may be overloading the Docker inter-container network. Consider tweaking the Pumba settings in [scripts/latency_docker.sh](scripts/latency_docker.sh) and re-test in your environment.
