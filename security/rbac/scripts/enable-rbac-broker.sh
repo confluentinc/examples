@@ -26,8 +26,8 @@ FILENAME=server.properties
 create_temp_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
 confluent local start kafka
 
-echo -e "Sleeping 5 seconds before login"
-sleep 5
+echo -e "Sleeping 10 seconds before login"
+sleep 10
 
 # Log in to Metadata Server (MDS)
 login_mds $MDS
