@@ -42,3 +42,9 @@ echo "Sleeping 30 seconds"
 sleep 30
 
 ${DIR}/start-consumer.sh
+
+echo "Sleeping 5 seconds"
+sleep 5
+
+${DIR}/jmx_metrics.sh
+

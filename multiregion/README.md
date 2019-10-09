@@ -223,17 +223,27 @@ Observations:
 
 Monitor the JMX metric `CaughtUpReplicas` (`kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=([-.\w]+),partition=([0-9]+)`) across all brokers in the cluster to determine if the all the replicas are caught up with the leader.
 The sum of `CaughtUpReplicas` across the brokers in the cluster equals the number of replicas, including observers, whose log end offset is at least at the high watermark.
+Notice that the `multi-region-async` topic has a `InSyncReplicasCount` that excludes observers. 
 
 ```
-./scripts/get_caughtupreplicas.sh
+./scripts/jmx_metrics.sh
 ```
 
 Sample output:
 
 ```
+==> Monitor CaughtUpReplicas 
+
 single-region: 2
 multi-region-sync: 4
 multi-region-async: 4
+
+
+==> Monitor InSyncReplicasCount 
+
+single-region: 2
+multi-region-sync: 4
+multi-region-async: 2
 ```
 
 ## Failover and Failback
