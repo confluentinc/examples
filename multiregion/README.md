@@ -219,6 +219,39 @@ Observations:
 * In the first case, the consumer running in `east` reads from the leader in `west`, and so it is negatively impacted by the low bandwidth between `east` and `west`.  Its throughput is lower (e.g. `0.9025` MB.sec in the above example).
 * In the second case, the consumer running in `east` reads from the follower that is also in `east`. Its throughput is higher (e.g. `3.9356` MB.sec in the above example).
 
+## Monitoring Observers
+
+Notice that the `multi-region-async` topic has a JMX metric `ReplicasCount` that includes observers, whereas `InSyncReplicasCount` excludes observers.
+The new JMX metric `CaughtUpReplicas` (`kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=([-.\w]+),partition=([0-9]+)`) across all brokers in the cluster reflects whether all the replicas, including observers, are caught up with the leader such that their log end offset is at least at the high watermark.
+
+```
+./scripts/jmx_metrics.sh
+```
+
+Sample output:
+
+```
+==> Monitor ReplicasCount
+
+single-region: 2
+multi-region-sync: 4
+multi-region-async: 4
+
+
+==> Monitor InSyncReplicasCount
+
+single-region: 2
+multi-region-sync: 4
+multi-region-async: 2
+
+
+==> Monitor CaughtUpReplicas
+
+single-region: 2
+multi-region-sync: 4
+multi-region-async: 4
+```
+
 ## Failover and Failback
 
 ### Fail region west
@@ -362,7 +395,6 @@ Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.ins
 Observations:
 
 * The leader for the partitions in topic `multi-region-async` are restored to the `west` region (e.g. leader 1 in the sample output above)
-
 
 ## Run end-to-end demo
 
