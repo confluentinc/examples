@@ -234,22 +234,22 @@ Sample output:
 ==> Monitor ReplicasCount
 
 single-region: 2
-multi-region-sync: 4
 multi-region-async: 4
+multi-region-sync: 4
 
 
 ==> Monitor InSyncReplicasCount
 
 single-region: 2
-multi-region-sync: 4
 multi-region-async: 2
+multi-region-sync: 4
 
 
 ==> Monitor CaughtUpReplicas
 
 single-region: 2
-multi-region-sync: 4
 multi-region-async: 4
+multi-region-sync: 4
 ```
 
 ## Failover and Failback
