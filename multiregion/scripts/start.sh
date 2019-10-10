@@ -28,20 +28,20 @@ fi
 
 ${DIR}/create-topics.sh
 
-echo "Sleeping 10 seconds"
-sleep 10
+echo "Sleeping 5 seconds"
+sleep 5
 
 ${DIR}/describe-topics.sh
 
-echo "Sleeping 10 seconds"
-sleep 10
+echo "Sleeping 5 seconds"
+sleep 5
 
-${DIR}/start-producer.sh
+${DIR}/run-producer.sh
 
 echo "Sleeping 30 seconds"
 sleep 30
 
-${DIR}/start-consumer.sh
+${DIR}/run-consumer.sh
 
 echo "Sleeping 5 seconds"
 sleep 5
