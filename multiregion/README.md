@@ -71,7 +71,7 @@ Run the following command.
 docker-compose up -d
 ```
 
-You should see the following running containers with `docker-compose ps`:
+You should see the following Docker containers with `docker-compose ps`:
 
 ```
       Name                   Command            State                          Ports                        
@@ -87,7 +87,7 @@ zookeeper-west      /etc/confluent/docker/run   Up      0.0.0.0:2181->2181/tcp, 
 
 ## Inject latency and packet loss
 
-This demo injects latency and packet loss to simulate the distances between the regions.
+This demo injects latency between the regions and packet loss to simulate the WAN link.
 It uses [Pumba](https://github.com/alexei-led/pumba).
 
 ![image](images/multi-region-latencies.png)
@@ -98,13 +98,14 @@ Run the Dockerized Pumba scripts:
 ./scripts/latency_docker.sh
 ```
 
-You should see the following three Docker containers when running `docker container ls --filter "name=pumba"`:
+You should see the following Docker containers with `docker container ls --filter "name=pumba"`:
 
 ```
-CONTAINER ID        IMAGE                 COMMAND                  CREATED                  STATUS              PORTS               NAMES
-e85c45b3546b        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   Less than a second ago   Up 3 seconds                            pumba-zk-central
-ff79b8609aba        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   Less than a second ago   Up 5 seconds                            pumba-rate-limit
-ccdaf7791844        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   Less than a second ago   Up 4 seconds                            pumba-delay
+CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS               NAMES
+652fcf244c4d        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-loss-east-west
+5590c230aef1        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-loss-west-east
+e60c3a0210e7        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-high-latency-west-east
+d3c1faf97ba5        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-medium-latency-central
 ```
 
 View IP addresses in the demo:
@@ -168,7 +169,7 @@ Observations:
 This section tests the differences in replication policies on producers.  Run the producer perf test:
 
 ```
-./scripts/start-producer.sh
+./scripts/run-producer.sh
 ```
 
 Sample output:
@@ -196,19 +197,19 @@ Observations:
 This section tests the differences in follower fetching in the consumers.  Run the consumer perf test where the consumer is in `east`:
 
 ```
-./scripts/start-consumer.sh
+./scripts/run-consumer.sh
 ```
 
 Sample output:
 
 ```
-==> Consume from east: Multi-region Async Replication from Leader in west (topic: multi-region-async)
+==> Consume from east: Multi-region Async Replication reading from Leader in west (topic: multi-region-async)
 
 start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
 2019-09-25 17:10:27:266, 2019-09-25 17:10:53:683, 23.8419, 0.9025, 5000, 189.2721, 1569431435702, -1569431409285, -0.0000, -0.0000
 
 
-==> Consume from east: Multi-region Async Replication from Follower in east (topic: multi-region-async)
+==> Consume from east: Multi-region Async Replication reading from Follower in east (topic: multi-region-async)
 
 start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
 2019-09-25 17:10:56:844, 2019-09-25 17:11:02:902, 23.8419, 3.9356, 5000, 825.3549, 1569431461383, -1569431455325, -0.0000, -0.0000
