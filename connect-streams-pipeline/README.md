@@ -3,7 +3,7 @@
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Description](#description)
-- [Run](#quickstart)
+- [Run](#run)
 
 
 # Overview
@@ -109,7 +109,7 @@ All examples in this repo demonstrate the Kafka Streams API methods `count` and 
 
 [KAFKA-2378](https://issues.apache.org/jira/browse/KAFKA-2378): adds APIs to be able to embed Kafka Connect into client applications
 
-# Quickstart
+# Run
 
 ## What Should I see?
 
