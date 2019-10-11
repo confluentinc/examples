@@ -55,7 +55,7 @@ Detailed walk-thru of this example is available in the whitepaper [Kafka Seriali
 * [Kafka Connect JDBC source connector](jdbcjson-connector.properties) produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
 
-![image](images/example_2.png
+![image](images/example_2.png)
 
 ### Notes
 
