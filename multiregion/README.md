@@ -26,7 +26,7 @@ The full broker configurations are in the [docker-compose.yml](docker-compose.ym
 ### Broker
 * `broker.rack`: identifies the location of the broker. For the demo, it represents a region, either `east` or `west`
 * `confluent.observer.feature=true`: enables the observer functionality built directly into `confluent-server`, which is a commercial feature
-* `replica.selector.class=org.apache.kafka.common.replica.rackawarereplicaselector`: allows clients to read from followers (in contrast, clients are typically only allowed to read from leaders)
+* `replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector`: allows clients to read from followers (in contrast, clients are typically only allowed to read from leaders)
 
 ### Client
 * `client.rack`: identifies the location of the client. For the demo, it represents a region, either `east` or `west`
