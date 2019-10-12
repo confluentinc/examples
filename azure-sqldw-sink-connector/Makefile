@@ -52,4 +52,3 @@ connect:
 
 test:
 	sed -i '' 's/_SERVER_/${SERVER}/g' azure.sqldw.json 
-	
