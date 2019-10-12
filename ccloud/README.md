@@ -26,7 +26,9 @@ This demo showcases:
 
 ## Per-component Delta Configurations to Connect to Confluent Cloud
 
-It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud.  See the [template examples](template_delta_configs) for examples of lines to add to each component or client.
+It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Confluent Cloud configuration in ``$HOME/.ccloud/config`` and writes delta configuration files into ``./delta_configs`` for Confluent Platform components and clients connecting to Confluent Cloud.
+The [template examples](template_delta_configs) have delta configuration lines to add to each component or client.
+See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information.
 
 * Confluent Platform Components:
   * Confluent Schema Registry
@@ -44,23 +46,14 @@ It also includes a [script](ccloud-generate-cp-configs.sh) that reads the Conflu
   * Node.js (https://github.com/Blizzard/node-rdkafka)
   * C++
 
-## ACL Demo
-
-This [demo script](../security/acl.sh) showcases the Access Control List (ACL) functionality in your Confluent Cloud Enterprise cluster. It is mostly for reference to see a workflow using the *new* Confluent Cloud CLI (check your version with `ccloud version`).
-
-```bash
-$ ccloud version
-ccloud - Confluent Cloud CLI
-
-Version:     v0.103.0
-Git Ref:     3cf4086f89a8e06bb926bbf3589077e0bcad6a8e
-Build Date:  2019-06-12T23:54:46Z
-Build Host:  semaphore@semaphore-vm
-Go Version:  go1.12.5 (darwin/amd64)
-Development: false
-```
 
 # Prerequisites
+
+## Confluent Cloud configuration file
+
+First create a Confluent Cloud configuration file with information on connecting to your Confluent Cloud cluster.
+By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
+See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information.
 
 ## Local
 
@@ -73,12 +66,6 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
 * `jq` installed on your machine
 
-To run the local setup:
-
-```bash
-$ ./start.sh
-```
-
 ## Docker
 
 * Docker version 17.06.1-ce
@@ -87,14 +74,8 @@ $ ./start.sh
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * `jq` installed on your machine
 
-To run the Docker setup:
-
-```bash
-$ ./start-docker.sh
-```
-
-NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.
-
-# Documentation
+# Running the demo
 
 You can find the documentation for running this demo, and its accompanying playbook, at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html)
+
+NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.

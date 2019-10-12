@@ -1,0 +1,128 @@
+version: "2.2"
+services:
+  srcZookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    restart: always
+    hostname: srcZookeeper
+    container_name: srcZookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      ZOOKEEPER_TICK_TIME: "2000"
+    ports:
+      - "2181:2181"
+  destZookeeper:
+    image: confluentinc/cp-zookeeper:5.3.1
+    restart: always
+    hostname: destZookeeper
+    container_name: destZookeeper
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: "2281"
+      ZOOKEEPER_TICK_TIME: "2000"
+    ports:
+      - "2281:2281"
+  srcKafka1:
+    image: confluentinc/cp-enterprise-kafka:5.3.1
+    hostname: srcKafka1
+    container_name: srcKafka1
+    cpus: 0.3
+    depends_on:
+      - srcZookeeper
+    ports:
+      - "10091:10091"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "srcZookeeper:2181"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://srcKafka1:10091
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
+  destKafka1:
+    image: confluentinc/cp-enterprise-kafka:5.3.1
+    hostname: destKafka1
+    container_name: destKafka1
+    cpus: 0.3
+    depends_on:
+      - destZookeeper
+    ports:
+      - "11091:11091"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "destZookeeper:2281"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://destKafka1:11091
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_DELETE_TOPIC_ENABLE: "true"
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+  connect:
+    image: confluentinc/cp-kafka-connect:5.3.1
+    container_name: connect
+    cpus: 0.2
+    restart: always
+    ports:
+      - "8083:8083"
+    depends_on:
+      - destZookeeper
+      - destKafka1
+    volumes:
+      - mi3:/usr/share/replicator/kafka-connect-replicator/
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "destKafka1:11091"
+      CONNECT_REST_PORT: 8083
+      CONNECT_LISTENERS: "http://0.0.0.0:8083"
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: connect-statuses
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_GROUP_ID: "connect"
+      CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
+      CONNECT_REST_ADVERTISED_HOST_NAME: "connect"
+      CONNECT_PLUGIN_PATH: "/usr/share/replicator"
+      CONNECT_REPLICATION_FACTOR: 1
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+  replicator-for-jar-transfer:
+    image: confluentinc/cp-enterprise-replicator:5.3.1
+    hostname: replicator-for-jar-transfer
+    container_name: replicator-for-jar-transfer
+    volumes:
+      - mi3:/usr/share/java/kafka-connect-replicator/
+    command: "sleep infinity"
+  kafka-client:
+    image: confluentinc/cp-enterprise-kafka:5.3.1
+    hostname: kafka-client
+    container_name: kafka-client
+    cpus: 0.1
+    depends_on:
+      - srcKafka1
+      - connect
+    volumes:
+      - $PWD/testData:/etc/kafka/testData
+      - $PWD/scripts:/etc/kafka/scripts
+    command: "bash -c -a 'echo Waiting for Kafka to be ready... && \
+                       /etc/confluent/docker/configure && \
+                       cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
+                       cub kafka-ready -b destKafka1:11091 1 60 --config /etc/kafka/kafka.properties && \
+                       sleep 30 && \
+                       kafka-topics --zookeeper srcZookeeper:2181 --topic testTopic --create --replication-factor 1 --partitions 6 && \
+                       kafka-console-producer --broker-list srcKafka1:10091 --topic testTopic < /etc/kafka/testData/testData.txt && \
+                       echo submitting replicator && \
+                       /etc/kafka/scripts/submit_replicator_unsecure.sh && \
+                       echo submitted replicator'"
+    environment:
+      # The following settings are listed here only to satisfy the image's requirements.
+      # We override the image's `command` anyways, hence this container will not start a broker.
+      KAFKA_BROKER_ID: ignored
+      KAFKA_ZOOKEEPER_CONNECT: ignored
+      KAFKA_ADVERTISED_LISTENERS: ignored
+volumes:
+    mi3: {}

@@ -11,6 +11,11 @@ function check_env() {
     exit 1
   fi
 
+  if [[ $(type kafka-server-start 2>&1) =~ "not found" ]]; then
+    echo "Cannot find 'kafka-server-start'. Please add \$CONFLUENT_HOME/bin to \$PATH (e.g. 'export PATH=\${CONFLUENT_HOME}/bin:\${PATH}') and try again."
+    exit 1
+  fi
+
   return 0
 }
 
@@ -76,6 +81,15 @@ function check_timeout() {
 function check_jq() {
   if [[ $(type jq 2>&1) =~ "not found" ]]; then
     echo "'jq' is not found. Install 'jq' and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_expect() {
+  if [[ $(type expect 2>&1) =~ "not found" ]]; then
+    echo "'expect' is not found. Install 'expect' and try again"
     exit 1
   fi
 
@@ -345,3 +359,46 @@ function get_cluster_id_connect () {
   return 0
 }
 
+function get_service_id_ksql () {
+  KSQL_SERVICE_ID=$(curl --silent -u ksql:ksql1 http://localhost:8088/info | jq -r '.KsqlServerInfo."ksqlServiceId"')
+  if [[ -z "$KSQL_SERVICE_ID" ]]; then
+    echo "Failed to get KSQL service ID. Please troubleshoot and run again"
+    exit 1
+  fi
+  return 0
+}
+
+function check_ccloud_config() {
+  expected_configfile=$1
+
+  if [[ ! -f "$expected_configfile" ]]; then
+    echo "Confluent Cloud configuration file does not exist at $expected_configfile. Please create the configuration file with properties set to your Confluent Cloud cluster and try again."
+    exit 1
+  elif ! [[ $(grep "^\s*bootstrap.server" $expected_configfile) ]]; then
+    echo "Missing 'bootstrap.server' in $expected_configfile. Please modify the configuration file with properties set to your Confluent Cloud cluster and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+# Converts properties file of key/value pairs into prefixed environment variables for Docker
+# Naming convention: convert properties file into env vars as uppercase and replace '.' with '_'
+# Inverse of env_to_props: https://github.com/confluentinc/confluent-docker-utils/blob/master/confluent/docker_utils/dub.py
+function props_to_env() {
+  properties_file=$1
+  prop_prefix=$2
+
+  env_file="${properties_file}.env"
+  rm -f $env_file
+  cat $properties_file | while IFS='=' read key value; do
+    if [[ $key != "" && ${key:0:1} != "#" ]] ; then
+      newkey=$(echo "${prop_prefix}_${key}" | tr '[:lower:]' '[:upper:]' | tr '.' '_')
+      if [[ "${newkey}" =~ "SASL_JAAS_CONFIG" ]]; then
+        value="\'${value}\'"
+      fi
+      echo "$newkey=$value" >> $env_file
+      echo "$newkey=$value"
+    fi
+  done
+}

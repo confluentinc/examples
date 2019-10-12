@@ -28,9 +28,9 @@
 
 /**
  * @brief Delivery report callback, triggered by from poll() or flush()
- *        once for message to propagate its final delivery status.
+ *        once for each produce():ed message to propagate its final delivery status.
  *
- *        A non-zero \c rkmessage->err indicates delivery failed.
+ *        A non-zero \c rkmessage->err indicates delivery failed permanently.
  */
 static void dr_cb (rd_kafka_t *rk,
                    const rd_kafka_message_t *rkmessage, void *opaque) {
@@ -109,7 +109,7 @@ static int run_producer (const char *topic, int msgcnt,
                         RD_KAFKA_V_VALUE(json, strlen(json)),
                         /* producev() will make a copy of the message
                          * value (the key is always copied), so we
-                         * cam reuse the same json buffer on the
+                         * can reuse the same json buffer on the
                          * next iteration. */
                         RD_KAFKA_V_MSGFLAGS(RD_KAFKA_MSG_F_COPY),
                         RD_KAFKA_V_OPAQUE(&delivery_counter),
@@ -121,7 +121,7 @@ static int run_producer (const char *topic, int msgcnt,
                 }
 
                 /* Poll for delivery report callbacks to know the final
-                 * delivery status of of previously produced messages. */
+                 * delivery status of previously produced messages. */
                 rd_kafka_poll(rk, 0);
         }
 

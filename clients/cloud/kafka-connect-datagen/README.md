@@ -8,11 +8,19 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 # Prerequisites
 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version `v0.119.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
-* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
-* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
 * Docker
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
+* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
+```shell
+$ cat $HOME/.ccloud/config
+bootstrap.servers=<BROKER ENDPOINT>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+```
 
 # Example 1: Hello World!
 
@@ -23,7 +31,7 @@ Use CLI to read that topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test1
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
@@ -38,36 +46,10 @@ $ ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
 $ source ./delta_configs/env.delta
 ```
 
-4. Start Docker and note the `--build` argument which automatically pulls the Kafka Connect Datagen connector from Confluent Hub.
+4. Start Docker.
 
 ```bash
-$ docker-compose up -d --build
-
-Creating network "kafkaconnectdatagen_default" with the default driver
-Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
- ---> 4fbfbb11e4bf
-Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
- ---> Using cache
- ---> 13754183215d
-Step 3/3 : RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
- ---> Running in 8181e89baf6c
-Running in a "--no-prompt" mode 
-Implicit acceptance of the license below:  
-Apache License 2.0 
-https://www.apache.org/licenses/LICENSE-2.0 
-Downloading component Kafka Connect Datagen 0.1.3, provided by Confluent, Inc. from Confluent Hub and installing into /usr/share/confluent-hub-components 
-Adding installation directory to plugin path in the following files: 
-  /etc/kafka/connect-distributed.properties 
-  /etc/kafka/connect-standalone.properties 
-  /etc/schema-registry/connect-avro-distributed.properties 
-  /etc/schema-registry/connect-avro-standalone.properties 
- 
-Completed 
-Removing intermediate container 8181e89baf6c
- ---> b3c5a9e4a2d7
-Successfully built b3c5a9e4a2d7
-Successfully tagged confluentinc/kafka-connect-datagen:latest
+$ docker-compose up -d
 Creating connect ... done
 ```
 
@@ -115,13 +97,16 @@ This example is similar to the previous example, except the value is formatted a
 Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html).
 Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
 
-1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart.html), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
 
 2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```shell
     # View the list of registered subjects
     $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+
+    # Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
+    $ curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2)/subjects
     ```
 
 3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
@@ -138,7 +123,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 4. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test2
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
 5. Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
@@ -153,36 +138,10 @@ $ ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
 $ source ./delta_configs/env.delta
 ```
 
-7. Start Docker and note the `--build` argument which automatically pulls the Kafka Connect Datagen connector from Confluent Hub.
+7. Start Docker.
 
 ```bash
-$ docker-compose up -d --build
-
-Creating network "kafkaconnectdatagen_default" with the default driver
-Building connect
-Step 1/3 : FROM confluentinc/cp-kafka-connect:5.2.2
- ---> 4fbfbb11e4bf
-Step 2/3 : ENV CONNECT_PLUGIN_PATH="/usr/share/java,/usr/share/confluent-hub-components"
- ---> Using cache
- ---> 13754183215d
-Step 3/3 : RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
- ---> Running in 8181e89baf6c
-Running in a "--no-prompt" mode 
-Implicit acceptance of the license below:  
-Apache License 2.0 
-https://www.apache.org/licenses/LICENSE-2.0 
-Downloading component Kafka Connect Datagen 0.1.3, provided by Confluent, Inc. from Confluent Hub and installing into /usr/share/confluent-hub-components 
-Adding installation directory to plugin path in the following files: 
-  /etc/kafka/connect-distributed.properties 
-  /etc/kafka/connect-standalone.properties 
-  /etc/schema-registry/connect-avro-distributed.properties 
-  /etc/schema-registry/connect-avro-standalone.properties 
- 
-Completed 
-Removing intermediate container 8181e89baf6c
- ---> b3c5a9e4a2d7
-Successfully built b3c5a9e4a2d7
-Successfully tagged confluentinc/kafka-connect-datagen:latest
+$ docker-compose up -d
 Creating connect ... done
 ```
 

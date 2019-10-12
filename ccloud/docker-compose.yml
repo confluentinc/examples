@@ -175,10 +175,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
   connect-local:
-    image: confluentinc/kafka-connect-datagen:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: cnfldemos/kafka-connect-datagen:0.1.3-5.3.0
     hostname: connect-local
     container_name: connect-local
     depends_on:
@@ -188,6 +185,7 @@ services:
       - "8083:8083"
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
+      - $PWD/delta_configs/ak-tools-ccloud.delta:/tmp/ak-tools-ccloud.delta
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'kafka:29092'
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
@@ -210,7 +208,8 @@ services:
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.0-SNAPSHOT.jar
+      # CLASSPATH required due to CC-2422
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0.jar
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
       # Connect producer
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
@@ -226,10 +225,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
   connect-cloud:
-    image: confluentinc/kafka-connect-datagen:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: cnfldemos/kafka-connect-datagen:0.1.3-5.3.0
     hostname: connect-cloud
     container_name: connect-cloud
     depends_on:
@@ -240,6 +236,7 @@ services:
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
       - mi3:/usr/share/java/kafka-connect-replicator/
+      - $PWD/delta_configs/ak-tools-ccloud.delta:/tmp/ak-tools-ccloud.delta
     environment:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-cloud
@@ -263,7 +260,8 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.0-SNAPSHOT.jar
+      # CLASSPATH required due to CC-2422
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.0.jar
       CONNECT_REQUEST_TIMEOUT_MS: 20000
       CONNECT_RETRY_BACKOFF_MS: 500
       # Connect worker
@@ -307,8 +305,6 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: "default.status"
       CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
       CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
     command: "tail -f /dev/null"

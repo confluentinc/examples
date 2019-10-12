@@ -7,8 +7,17 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 * [kafkacat](https://github.com/edenhill/kafkacat) installed on your machine.  You must [build](https://github.com/edenhill/kafkacat#build) `kafkacat` from the latest master branch to get the `-F` functionality that makes it easy to pass in the configuration to your Confluent Cloud configuration file.
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Confluent Cloud CLI](https://docs.confluent.io/5.2.0/cloud/cli/install.html) installed on your machine, version `0.2.0` (note: do not use the newer Confluent Cloud CLI because it is interactive)
-* [Initialize](https://docs.confluent.io/5.2.0/cloud/cli/multi-cli.html#connect-ccloud-cli-to-a-cluster) your local Confluent Cloud configuration file using the `ccloud init` command, which creates the file at `$HOME/.ccloud/config`.
+* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
+
+```shell
+$ cat $HOME/.ccloud/config
+bootstrap.servers=<BROKER ENDPOINT>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+```
 
 # Example 1: Hello World!
 
@@ -19,7 +28,7 @@ The consumer reads the same topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ ccloud topic create test1
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Run `kafkacat`, writing messages to topic `test1`, passing in additional arguments:

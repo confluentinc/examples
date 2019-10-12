@@ -68,7 +68,7 @@ services:
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 20 && \
-                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-5.2.2-standalone.jar \
+                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-5.3.0-standalone.jar \
                        io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver \
                        kafka:29092 http://schema-registry:8081'"
     environment:
@@ -127,7 +127,6 @@ services:
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
       KSQL_BOOTSTRAP_SERVERS: "kafka:29092"
       KSQL_HOST_NAME: ksql-server
-      KSQL_APPLICATION_ID: "music-demo"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
       KSQL_AUTO_OFFSET_RESET: "earliest"

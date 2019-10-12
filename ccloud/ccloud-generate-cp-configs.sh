@@ -17,30 +17,20 @@
 
 ###############################################################################
 # Overview:
-# This code reads the Confluent Cloud configuration in $HOME/.ccloud/config
+#
+# This code reads a local Confluent Cloud configuration file
 # and writes delta configuration files into ./delta_configs for
 # Confluent Platform components and clients connecting to Confluent Cloud.
 #
-# Add the delta configurations to the respective component configuration files
-# or application code. Reminder: these are _delta_ configurations, not complete
-# configurations. See https://docs.confluent.io/ for complete examples.
-#
-# Delta configurations include customized settings for:
-# - bootstrap servers -> Confluent Cloud brokers
-# - sasl.username -> key
-# - sasl.password -> secret
-# - interceptors for Streams Monitoring in Confluent Control Center
-# - optimized performance to Confluent Cloud (varies based on client defaults)
-#
-# Confluent Platform Components: 
+# Confluent Platform Components:
 # - Confluent Schema Registry
 # - KSQL Data Generator
-# - KSQL server 
+# - KSQL server
 # - Confluent Replicator (executable)
 # - Confluent Control Center
 # - Kafka Connect
 # - Kafka connector
-# - AK command line tools
+# - Kafka command line tools
 #
 # Kafka Clients:
 # - Java (Producer/Consumer)
@@ -51,38 +41,67 @@
 # - Node.js (https://github.com/Blizzard/node-rdkafka)
 # - C++
 #
-# OS:
-# - ENV file
-###############################################################################
-
-set -eu
-
+# Documentation for using this script:
+#
+#   https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html
+#
+# Arguments:
+#
+#   1 (optional) - CONFIG_FILE, defaults to ~/.ccloud/config, (required if specifying SR_CONFIG_FILE)
+#   2 (optional) - SR_CONFIG_FILE, defaults to CONFIG_FILE
+#
+# Example CONFIG_FILE at ~/.ccloud/config
+#
+#   $ cat $HOME/.ccloud/config
+#
+#   bootstrap.servers=<BROKER ENDPOINT>
+#   ssl.endpoint.identification.algorithm=https
+#   security.protocol=SASL_SSL
+#   sasl.mechanism=PLAIN
+#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#
+# If you are using Confluent Cloud Schema Registry, add the following configuration parameters
+# either to file above (arg 1 CONFIG_FILE) or to a separate file (arg 2 SR_CONFIG_FILE)
+#
+#   basic.auth.credentials.source=USER_INFO
+#   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+#   schema.registry.url=https://<SR ENDPOINT>
+#
 ################################################################################
-# Confluent Cloud configuration
-################################################################################
-CCLOUD_CONFIG=$HOME/.ccloud/config
-if [[ ! -f $CCLOUD_CONFIG ]]; then
-  echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
+
+CONFIG_FILE=$1
+if [[ -z "$CONFIG_FILE" ]]; then
+  CONFIG_FILE=~/.ccloud/config
+fi
+if [[ ! -f "$CONFIG_FILE" ]]; then
+  echo "File $CONFIG_FILE is not found.  Please create this properties file to connect to your Confluent Cloud cluster and then try again"
+  echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
   exit 1
 fi
+echo "CONFIG_FILE: $CONFIG_FILE"
 
+SR_CONFIG_FILE=$2
+if [[ -z "$SR_CONFIG_FILE" ]]; then
+  SR_CONFIG_FILE=$CONFIG_FILE
+fi
+if [[ ! -f "$SR_CONFIG_FILE" ]]; then
+  echo "File $SR_CONFIG_FILE is not found.  Please create this properties file to connect to your Schema Registry and then try again"
+  echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
+  exit 1
+fi
+echo "SR_CONFIG_FILE: $SR_CONFIG_FILE"
+
+# Set permissions
 PERM=600
 if ls --version 2>/dev/null | grep -q 'coreutils' ; then
   # GNU binutils
-  PERM=$(stat -c "%a" $HOME/.ccloud/config)
+  PERM=$(stat -c "%a" $CONFIG_FILE)
 else
   # BSD
-  PERM=$(stat -f "%OLp" $HOME/.ccloud/config)
+  PERM=$(stat -f "%OLp" $CONFIG_FILE)
 fi
 #echo "INFO: setting file permission to $PERM"
 
-################################################################################
-# Specify configuration file for Confluent Schema Registry
-################################################################################
-SR_CONFIG_FILE=$CCLOUD_CONFIG
-if [[ $# -ne 0 ]] && [[ ! -z "$1" ]]; then
-  SR_CONFIG_FILE=$1
-fi
 # Make destination
 DEST="delta_configs"
 mkdir -p $DEST
@@ -90,9 +109,9 @@ mkdir -p $DEST
 ################################################################################
 # Glean parameters from the Confluent Cloud configuration file
 ################################################################################
-BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CCLOUD_CONFIG | awk -F'=' '{print $2;}' )
+BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CONFIG_FILE | awk -F'=' '{print $2;}' )
 BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS/\\/}
-SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CCLOUD_CONFIG | cut -d'=' -f2- )
+SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CONFIG_FILE | cut -d'=' -f2- )
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
 CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
@@ -114,9 +133,9 @@ SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '
 # Build configuration file with CCloud connection parameters and
 # Confluent Monitoring Interceptors for Streams Monitoring in Confluent Control Center
 ################################################################################
-INTERCEPTORS_CCLOUD_CONFIG=$DEST/interceptors-ccloud.config
-rm -f $INTERCEPTORS_CCLOUD_CONFIG
-echo "# Configuration derived from $CCLOUD_CONFIG" > $INTERCEPTORS_CCLOUD_CONFIG
+INTERCEPTORS_CONFIG_FILE=$DEST/interceptors-ccloud.config
+rm -f $INTERCEPTORS_CONFIG_FILE
+echo "# Configuration derived from $CONFIG_FILE" > $INTERCEPTORS_CONFIG_FILE
 while read -r line
 do
   # Skip lines that are commented out
@@ -130,9 +149,9 @@ do
   if [[ ${line:0:9} == 'bootstrap' ]]; then
     line=${line/\\/}
   fi
-  echo $line >> $INTERCEPTORS_CCLOUD_CONFIG
-done < "$CCLOUD_CONFIG"
-echo -e "\n# Confluent Monitoring Interceptor specific configuration" >> $INTERCEPTORS_CCLOUD_CONFIG
+  echo $line >> $INTERCEPTORS_CONFIG_FILE
+done < "$CONFIG_FILE"
+echo -e "\n# Confluent Monitoring Interceptor specific configuration" >> $INTERCEPTORS_CONFIG_FILE
 while read -r line
 do
   # Skip lines that are commented out
@@ -150,10 +169,10 @@ do
         ${line:0:3} == 'ssl' ||
         ${line:0:8} == 'security' ||
         ${line:0:9} == 'bootstrap' ]]; then
-    echo "confluent.monitoring.interceptor.$line" >> $INTERCEPTORS_CCLOUD_CONFIG
+    echo "confluent.monitoring.interceptor.$line" >> $INTERCEPTORS_CONFIG_FILE
   fi
-done < "$CCLOUD_CONFIG"
-chmod $PERM $INTERCEPTORS_CCLOUD_CONFIG
+done < "$CONFIG_FILE"
+chmod $PERM $INTERCEPTORS_CONFIG_FILE
 
 echo -e "\nConfluent Platform Components:"
 
@@ -170,7 +189,7 @@ do
       echo "kafkastore.$line" >> $SR_CONFIG_DELTA
     fi
   fi
-done < "$CCLOUD_CONFIG"
+done < "$CONFIG_FILE"
 chmod $PERM $SR_CONFIG_DELTA
 
 ################################################################################
@@ -179,7 +198,7 @@ chmod $PERM $SR_CONFIG_DELTA
 REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
 echo "$REPLICATOR_PRODUCER_DELTA"
 rm -f $REPLICATOR_PRODUCER_DELTA
-cp $INTERCEPTORS_CCLOUD_CONFIG $REPLICATOR_PRODUCER_DELTA
+cp $INTERCEPTORS_CONFIG_FILE $REPLICATOR_PRODUCER_DELTA
 echo -e "\n# Confluent Replicator (executable) specific configuration" >> $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
 echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
@@ -194,7 +213,7 @@ chmod $PERM $REPLICATOR_PRODUCER_DELTA
 ################################################################################
 KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
 echo "$KSQL_SERVER_DELTA"
-cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_SERVER_DELTA
+cp $INTERCEPTORS_CONFIG_FILE $KSQL_SERVER_DELTA
 echo -e "\n# KSQL Server specific configuration" >> $KSQL_SERVER_DELTA
 echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_SERVER_DELTA
 echo "consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor" >> $KSQL_SERVER_DELTA
@@ -222,7 +241,7 @@ chmod $PERM $KSQL_SERVER_DELTA
 KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
 echo "$KSQL_DATAGEN_DELTA"
 rm -f $KSQL_DATAGEN_DELTA
-cp $INTERCEPTORS_CCLOUD_CONFIG $KSQL_DATAGEN_DELTA
+cp $INTERCEPTORS_CONFIG_FILE $KSQL_DATAGEN_DELTA
 echo -e "\n# KSQL DataGen specific configuration" >> $KSQL_DATAGEN_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
 echo -e "\n# Confluent Schema Registry configuration for KSQL DataGen" >> $KSQL_DATAGEN_DELTA
@@ -254,7 +273,7 @@ while read -r line
       echo "confluent.controlcenter.streams.$line" >> $C3_DELTA
     fi
   fi
-done < "$CCLOUD_CONFIG"
+done < "$CONFIG_FILE"
 echo -e "\n# Confluent Schema Registry configuration for Confluent Control Center" >> $C3_DELTA
 while read -r line
 do
@@ -289,7 +308,7 @@ while read -r line
       echo "$line" >> $CONNECT_DELTA
     fi
   fi
-done < "$CCLOUD_CONFIG"
+done < "$CONFIG_FILE"
 echo -e "\n# Connect producer and consumer specific configuration" >> $CONNECT_DELTA
 while read -r line
   do
@@ -304,7 +323,7 @@ while read -r line
       echo "consumer.confluent.monitoring.interceptor.$line" >> $CONNECT_DELTA
     fi
   fi
-done < "$CCLOUD_CONFIG"
+done < "$CONFIG_FILE"
 cat <<EOF >> $CONNECT_DELTA
 
 # Confluent Schema Registry for Kafka Connect
@@ -336,7 +355,7 @@ chmod $PERM $CONNECTOR_DELTA
 AK_TOOLS_DELTA=$DEST/ak-tools-ccloud.delta
 echo "$AK_TOOLS_DELTA"
 rm -f $AK_TOOLS_DELTA
-cp $CCLOUD_CONFIG $AK_TOOLS_DELTA
+cp $CONFIG_FILE $AK_TOOLS_DELTA
 chmod $PERM $AK_TOOLS_DELTA
 
 

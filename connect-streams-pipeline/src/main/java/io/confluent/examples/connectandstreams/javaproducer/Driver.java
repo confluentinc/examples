@@ -24,13 +24,12 @@ import org.apache.kafka.common.serialization.LongSerializer;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
 import io.confluent.examples.connectandstreams.avro.Location;
 import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 
 public class Driver {
@@ -69,17 +68,14 @@ public class Driver {
       }
     }
 
-    final SpecificAvroSerializer<Location> locationSerializer = new SpecificAvroSerializer<>();
-    final boolean isKeySerde = false;
-    locationSerializer.configure(
-        Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG,
-                                 schemaRegistryUrl), isKeySerde);
-
     final Properties props = new Properties();
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, LongSerializer.class);
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+    props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
     final KafkaProducer<Long, Location>
         locationProducer =
-        new KafkaProducer<Long, Location>(props, new LongSerializer(), locationSerializer);
+        new KafkaProducer<Long, Location>(props);
 
     locationsList.forEach(t -> {
       System.out.println("Writing location information for '" + t.getId()

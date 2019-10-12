@@ -4,6 +4,10 @@
 
 The Confluent Platform Quickstart demo is the automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html)
 
+## Additional Examples
+
+For additional examples that showcase streaming applications within an event streaming platform, please refer to [these demos](https://github.com/confluentinc/examples).
+
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)

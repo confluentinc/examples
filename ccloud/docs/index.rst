@@ -1,14 +1,13 @@
 .. _quickstart-demos-ccloud:
 
-Hybrid Kafka Clusters
-=====================
+On-Prem Kafka to Cloud
+======================
 
-This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.
 
 .. figure:: images/schema-registry-local.jpg
     :alt: image
-
 
 ========
 Overview
@@ -18,16 +17,17 @@ The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 * |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
-* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the `KSQL Tutorial <https://docs.confluent.io/current/ksql/docs/tutorials/basics-local.html#create-a-stream-and-table>`__ , but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
+* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the :ref:`KSQL Tutorial <ksql-create-a-stream-and-table>`, but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `users` in the |ccloud| cluster
   * Confluent Replicator: copies the topic `pageviews` from the local cluster to the |ccloud| cluster
 
-* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is writtin in Avro format.
+* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is written in Avro format.
 
-.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and do not use `confluent cli` in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
+.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
+          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
 
 
 ========
@@ -36,9 +36,10 @@ Run demo
 
 **Demo validated with:**
 
--  Confluent Platform 5.3
+-  Confluent Platform |version|
 -  |ccloud|
 -  |ccloud| CLI
+-  :ref:`Confluent CLI <cli-install>` installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download
 -  Java version 1.8.0_162
 -  MacOS 10.12
 
@@ -62,12 +63,12 @@ Run demo
 
    For Confluent Cloud |sr| (in `preview`):
 
-   a. `Enable <http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud>`__ Confluent Cloud |sr| prior to running the demo
+   a. :ref:`Enable <cloud-sr-config>` Confluent Cloud |sr| prior to running the demo
    b.  Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
 
    For Confluent Cloud KSQL (in `preview`):
 
-   a. `Enable <https://docs.confluent.io/current/quickstart/cloud-quickstart.html#create-a-ksql-application-in-ccloud>`__ Confluent Cloud KSQL prior to running the demo
+   a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
    b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
 
 4. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
@@ -91,30 +92,39 @@ Playbook
 |ccloud|
 -------------------
 
-1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster.
+1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
 
    .. sourcecode:: bash
 
      $ cat ~/.ccloud/config
+     bootstrap.servers=<BROKER ENDPOINT>
+     ssl.endpoint.identification.algorithm=https
+     security.protocol=SASL_SSL
+     sasl.mechanism=PLAIN
+     sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+     # If you are using Confluent Cloud Schema Registry
+     basic.auth.credentials.source=USER_INFO
+     schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+     schema.registry.url=https://<SR ENDPOINT>
 
-2. You must have locally installed |ccloud| CLI. To install the CLI, follow `these steps <https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli>`__. Validate you can list topics in your cluster.
+2. Validate you can list topics in your cluster.
 
    .. sourcecode:: bash
 
-     $ ccloud topic list
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list
 
-3. Get familar with the |ccloud| CLI.  For example, create a new topic called `test`, produce some messages to that topic, and then consume from that topic.
+3. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
-     $ ccloud topic create test
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test --create --replication-factor 3 --partitions 6
      Topic "test" created.
-     $ ccloud produce -t test  
+     $ confluent local produce test -- --cloud --config ~/.ccloud/config 
      a
      b
      c
      ^C
-     $ ccloud consume -b -t test
+     $ confluent local consume test -- --cloud --config ~/.ccloud/config --from-beginning
      a
      b
      c
@@ -124,17 +134,16 @@ Playbook
 |c3|
 ----
 
-1. **Monitoring –> Data Streams –> Message Delivery**: hover over
+#. **Monitoring –> Data Streams –> Message Delivery**: hover over
    any chart to see number of messages and average latency within a
    minute time interval.
 
    .. figure:: images/message_delivery_ccloud.png
       :alt: image
 
-
-2. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage `Kafka
-   connectors <https://docs.confluent.io/current/control-center/docs/connect.html>`__, and more
-   specifically for this demo, `Confluent Replicator <https://docs.confluent.io/current/multi-dc/index.html>`__.
+#. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage :ref:`Kafka
+   connectors <controlcenter_userguide_connect>`, and more
+   specifically for this demo, :ref:`Confluent Replicator <multi_dc>`.
 
    -  Kafka Connect **Sources** tab shows the connector
       ``replicator``. Click ``Edit`` to see the details of the connector configuration.
@@ -142,7 +151,7 @@ Playbook
       .. figure:: images/connect_source_ccloud.png
          :alt: image
 
-3. **Management –> Topics –> Topic Information**: For a given topic,
+#. **Management –> Topics –> Topic Information**: For a given topic,
    click on the three dots ``...`` next to the topic name to see more
    options per topic including in sync replicas, schema, topic
    messages, and configuration settings. Shown below is replica info.
@@ -271,8 +280,8 @@ KSQL
 
 For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
 
-   .. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
-      :alt: image
+.. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
+    :alt: image
 
 
 
@@ -291,7 +300,8 @@ a self-managed cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
         bootstrap.servers=localhost:9092
 
-        # Replicator's producer points to the |ccloud| cluster and configures Confluent Monitoring Interceptors for Control Center stream monitoring to work
+        # Replicator's producer points to the Confluent Cloud cluster and configures
+        # Confluent Monitoring Interceptors for Control Center stream monitoring to work
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
         ssl.endpoint.identification.algorithm=https
         confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
@@ -309,7 +319,7 @@ a self-managed cluster, and the destination cluster is |ccloud|.
         $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
         topic.whitelist=pageviews
 
-2. View topics `pageviews` in the local cluster
+2. View topics ``pageviews`` in the local cluster
 
    .. sourcecode:: bash
 
@@ -329,7 +339,7 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 	     Topic: pageviews	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
 
 
-3. View the replicated topics `pageviews` in the |ccloud| cluster. In |c3|, for a given topic listed
+3. View the replicated topics ``pageviews`` in the |ccloud| cluster. In |c3|, for a given topic listed
    in **Management –> Topics**, click on the three dots ``...`` next to the topic name to see more
    options per topic including in sync replicas, schema, topic
    messages, and configuration settings. Shown below is replica info.
@@ -340,14 +350,14 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 
 4. You can manage Confluent Replicator in the **Management –> Kafka Connect** page. The **Sources** tab shows the connector ``replicator``. Click ``Edit`` to see the details of the connector configuration.
 
-      .. figure:: images/connect_source_ccloud.png
-         :alt: image
+   .. figure:: images/connect_source_ccloud.png
+    :alt: image
 
 
 Confluent Schema Registry
 -------------------------
 
-The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the `Confluent Schema Registry <https://docs.confluent.io/current/schema-registry/docs/index.html>`__ .  
+The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the :ref:`Confluent Schema Registry <schemaregistry_intro>`.
 Depending on how you set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY` in the start script, you may be running |sr-long| locally or |ccloud| |sr|.
 Either way, you will get a consistent experience with |sr|.
 
@@ -371,9 +381,7 @@ Either way, you will get a consistent experience with |sr|.
    .. figure:: images/ksql_dataformat.png
       :alt: image
 
-4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this `step-by-step guide<https://docs.confluent.io/current/schema-registry/docs/migrate.html>`__. Refer to the file `submit_replicator_schema_migration_config.sh<https://github.com/confluentinc/examples/tree/5.1.2-post/ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>`__ for an example of a working Replicator configuration for schema migration.
-
-
+4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this :ref:`step-by-step guide <schemaregistry_migrate>`. Refer to the file :devx-examples:`submit_replicator_schema_migration_config.sh|ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>` for an example of a working Replicator configuration for schema migration.
 
 ===============================
 Confluent Cloud Configurations
@@ -405,6 +413,8 @@ Confluent Cloud Configurations
         $ ls `confluent current | tail -1`
 
 5. If you ran this demo as `start-docker.sh`, the configuration is available in the `docker-compose.yml` file.
+
+   ::
 
         # For Docker Compose
         $ cat docker-compose.yml

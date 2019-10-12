@@ -1,0 +1,279 @@
+---
+version: '2'
+services:
+  zookeeper-dc1:
+    image: confluentinc/cp-zookeeper:5.3.1-SNAPSHOT
+    hostname: zookeeper-dc1
+    container_name: zookeeper-dc1
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  zookeeper-dc2:
+    image: confluentinc/cp-zookeeper:5.3.1-SNAPSHOT
+    hostname: zookeeper-dc2
+    container_name: zookeeper-dc2
+    ports:
+      - "2182:2182"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2182
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker-dc1:
+    image: confluentinc/cp-enterprise-kafka:5.3.1-SNAPSHOT
+    hostname: broker-dc1
+    container_name: broker-dc1
+    depends_on:
+      - zookeeper-dc1
+    ports:
+      - "9091:9091"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_JMX_PORT: 9991
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-dc1:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-dc1:29091,PLAINTEXT_HOST://localhost:9091
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      # Confluent Metrics Reporter for Control Center Cluster Monitoring
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper-dc2:2182
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+
+  broker-dc2:
+    image: confluentinc/cp-enterprise-kafka:5.3.1-SNAPSHOT
+    hostname: broker-dc2
+    container_name: broker-dc2
+    depends_on:
+      - zookeeper-dc2
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_JMX_PORT: 9992
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-dc2:2182'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-dc2:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
+      # Confluent Metrics Reporter for Control Center Cluster Monitoring
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper-dc2:2182
+      CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      CONFLUENT_METRICS_ENABLE: 'true'
+
+  schema-registry-dc1:
+    image: confluentinc/cp-schema-registry:5.3.1-SNAPSHOT
+    hostname: schema-registry-dc1
+    container_name: schema-registry-dc1
+    restart: always
+    depends_on:
+      - zookeeper-dc1
+      - broker-dc1
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry-dc1
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
+
+  schema-registry-dc2:
+    image: confluentinc/cp-schema-registry:5.3.1-SNAPSHOT
+    hostname: schema-registry-dc2
+    container_name: schema-registry-dc2
+    restart: always
+    depends_on:
+      - zookeeper-dc1
+      - broker-dc1
+      - schema-registry-dc1
+    ports:
+      - "8082:8082"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry-dc2
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
+      SCHEMA_REGISTRY_MASTER_ELIGIBILITY: "false"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8082"
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
+
+  connect-dc2:
+    image: confluentinc/cp-enterprise-replicator:5.3.1-SNAPSHOT
+    hostname: connect-dc2
+    container_name: connect-dc2
+    depends_on:
+      - zookeeper-dc1
+      - broker-dc1
+      - schema-registry-dc1
+      - zookeeper-dc2
+      - broker-dc2
+      - schema-registry-dc2
+    ports:
+      - "8382:8382"
+      - "9892:9892"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc2
+      CONNECT_REST_PORT: 8382
+      CONNECT_GROUP_ID: "connect-dc2"
+      CONNECT_PRODUCER_CLIENT_ID: "connect-worker-producer-dc2"
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-dc2
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-dc2
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-dc2
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry-dc1:8081,http://schema-registry-dc2:8082'
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_PLUGIN_PATH: /usr/share/java
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      # Confluent Monitoring Interceptors for Control Center Streams Monitoring
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      KAFKA_JMX_PORT: 9892
+      KAFKA_JMX_HOSTNAME: localhost
+
+  connect-dc1:
+    image: confluentinc/cp-enterprise-replicator:5.3.1-SNAPSHOT
+    hostname: connect-dc1
+    container_name: connect-dc1
+    depends_on:
+      - zookeeper-dc1
+      - broker-dc1
+      - schema-registry-dc1
+      - zookeeper-dc2
+      - broker-dc2
+      - schema-registry-dc2
+    ports:
+      - "8381:8381"
+      - "9891:9891"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
+      CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc1
+      CONNECT_REST_PORT: 8381
+      CONNECT_GROUP_ID: "connect-dc1"
+      CONNECT_PRODUCER_CLIENT_ID: "connect-worker-producer-dc1"
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-dc1
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_OFFSET_FLUSH_INTERVAL_MS: 10000
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets-dc1
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status-dc1
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+      CONNECT_PLUGIN_PATH: /usr/share/java
+      CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
+      # Confluent Monitoring Interceptors for Control Center Streams Monitoring
+      CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+      CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
+      CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      KAFKA_JMX_PORT: 9891
+      KAFKA_JMX_HOSTNAME: localhost
+
+  datagen-dc1-topic1:
+    image: confluentinc/ksql-examples:5.3.1-SNAPSHOT
+    hostname: datagen-dc1-topic1
+    container_name: datagen-dc1-topic1
+    depends_on:
+      - broker-dc1
+      - schema-registry-dc1
+    volumes:
+      - $PWD/schema-dc1.avro:/tmp/schema-dc1.avro
+      - $PWD/datagen-properties/datagen-dc1-topic1.properties:/tmp/datagen.properties
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b broker-dc1:29091 1 90 && \
+                       echo Waiting for Confluent Schema Registry to be ready... && \
+                       cub sr-ready schema-registry-dc1 8081 90 && \
+                       sleep 10 && \
+                       /usr/bin/ksql-datagen schema=/tmp/schema-dc1.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      STREAMS_BOOTSTRAP_SERVERS: broker-dc1:29091
+      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry-dc1
+      STREAMS_SCHEMA_REGISTRY_PORT: 8081
+
+  datagen-dc1-topic2:
+    image: confluentinc/ksql-examples:5.3.1-SNAPSHOT
+    hostname: datagen-dc1-topic2
+    container_name: datagen-dc1-topic2
+    depends_on:
+      - broker-dc1
+      - schema-registry-dc1
+    volumes:
+      - $PWD/datagen-properties/datagen-dc1-topic2.properties:/tmp/datagen.properties
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b broker-dc1:29091 1 90 && \
+                       echo Waiting for Confluent Schema Registry to be ready... && \
+                       cub sr-ready schema-registry-dc1 8081 90 && \
+                       sleep 20 && \
+                       /usr/bin/ksql-datagen format=avro quickstart=users topic=topic2 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      STREAMS_BOOTSTRAP_SERVERS: broker-dc1:29091
+      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry-dc1
+      STREAMS_SCHEMA_REGISTRY_PORT: 8081
+
+  datagen-dc2-topic1:
+    image: confluentinc/ksql-examples:5.3.1-SNAPSHOT
+    hostname: datagen-dc2-topic1
+    container_name: datagen-dc2-topic1
+    depends_on:
+      - broker-dc2
+      - schema-registry-dc2
+    volumes:
+      - $PWD/schema-dc2.avro:/tmp/schema-dc2.avro
+      - $PWD/datagen-properties/datagen-dc2.properties:/tmp/datagen.properties
+    command: "bash -c 'echo Waiting for Kafka to be ready... && \
+                       cub kafka-ready -b broker-dc2:29092 1 90 && \
+                       echo Waiting for Confluent Schema Registry to be ready... && \
+                       cub sr-ready schema-registry-dc2 8082 90 && \
+                       sleep 10 && \
+                       /usr/bin/ksql-datagen schema=/tmp/schema-dc2.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc2:8082 bootstrap-server=broker-dc2:29092 propertiesFile=/tmp/datagen.properties'"
+    environment:
+      KSQL_CONFIG_DIR: "/etc/ksql"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      STREAMS_BOOTSTRAP_SERVERS: broker-dc2:29092
+      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry-dc2
+      STREAMS_SCHEMA_REGISTRY_PORT: 8082
+
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.3.1-SNAPSHOT
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - zookeeper-dc2
+      - broker-dc2
+      - schema-registry-dc2
+      - connect-dc2
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper-dc2:2182'
+      CONTROL_CENTER_CONNECT_DC1_CLUSTER: http://connect-dc1:8381
+      CONTROL_CENTER_CONNECT_DC2_CLUSTER: http://connect-dc2:8382
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry-dc2:8082"
+      CONTROL_CENTER_KAFKA_DC1_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
+      CONTROL_CENTER_KAFKA_DC2_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021

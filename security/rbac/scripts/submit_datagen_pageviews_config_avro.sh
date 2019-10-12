@@ -14,17 +14,17 @@ DATA=$( cat << EOF
     "value.converter": "io.confluent.connect.avro.AvroConverter",
     "value.converter.schema.registry.url": "http://localhost:8081",
     "value.converter.basic.auth.credentials.source": "USER_INFO",
-    "value.converter.basic.auth.user.info": "${USER_CLIENT_A}:${USER_CLIENT_A}1",
+    "value.converter.basic.auth.user.info": "${USER_CONNECTOR}:${USER_CONNECTOR}1",
     "max.interval": 100,
-    "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"${USER_CLIENT_A}\" password=\"${USER_CLIENT_A}1\" metadataServerUrls=\"http://localhost:8090\";",
+    "producer.override.sasl.jaas.config": "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username=\"${USER_CONNECTOR}\" password=\"${USER_CONNECTOR}1\" metadataServerUrls=\"http://localhost:8090\";",
     "tasks.max": "1"
   }
 }
 EOF
 )
 
-echo "curl -X POST -H \"${HEADER}\" -u ${USER_CLIENT_A}:${USER_CLIENT_A}1 --data \"${DATA}\" http://localhost:8083/connectors"
-curl -X POST -H "${HEADER}" -u ${USER_CLIENT_A}:${USER_CLIENT_A}1 --data "${DATA}" http://localhost:8083/connectors
+echo "curl -X POST -H \"${HEADER}\" -u ${USER_CONNECTOR_SUBMITTER}:${USER_CONNECTOR_SUBMITTER}1 --data \"${DATA}\" http://localhost:8083/connectors"
+curl -X POST -H "${HEADER}" -u ${USER_CONNECTOR_SUBMITTER}:${USER_CONNECTOR_SUBMITTER}1 --data "${DATA}" http://localhost:8083/connectors
 if [[ $? != 0 ]]; then
   echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
   exit $?
