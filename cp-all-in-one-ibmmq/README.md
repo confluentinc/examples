@@ -22,7 +22,7 @@ make connect
 
 ## Open the IBM MQ Dashboard
 
-[log in](https://localhost:9443/ibmmq/console/login.html)
+[log in](https://localhost:9443/ibmmq/console/login.html){:height="50%" width="50%"}
 
 ```conf
 UserName=admin
@@ -32,22 +32,22 @@ Password=passw0rd
 ## Show AVRO schema in C3 topics
 
 Goto the link below to view the AVRO schema the datagen connector registered to schema registry.
-![clickstream schema](images/clickstream-schema.png)
+![clickstream schema](images/clickstream-schema.png){:height="50%" width="50%"}
 
 You need to send a message to IBM MQ before the schema will appear in the topic in C3.
 
 - Select `DEV.QUEUE.1` under "Queues on MQ1"
 
-![ibmmq](images/ibmmq-queues.png)
+![ibmmq](images/ibmmq-queues.png){:height="50%" width="50%"}
 
 - Add a message
 
-![add image](images/addmessage.png)
-![add image](images/addmessage2.png)
+![add image](images/addmessage.png){:height="50%" width="50%"}
+![add image](images/addmessage2.png){:height="50%" width="50%"}
 
 - You can now see the schema assigned to the `ibmmq` topic
 
-![ibmmq topic](images/ibmmq-schema.png)
+![ibmmq topic](images/ibmmq-schema.png){:height="50%" width="50%"}
 
 ## AVRO message appear in consumer
 
@@ -63,7 +63,7 @@ make consumer
 
 Make sure to leave the timestamp blank to use the topic timestamp by default
 
-![clickstream stream](images/create-clickstream-stream.png)
+![clickstream stream](images/create-clickstream-stream.png){:height="50%" width="50%"}
 
 ## Add anothermessage to DEV.QUEUE.1
 
@@ -89,4 +89,4 @@ join  IBMMQ WITHIN 5 seconds
 on text = username;
 ```
 
-![join](images/join.png)
+![join](images/join.png){:height="50%" width="50%"}
