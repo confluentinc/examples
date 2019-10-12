@@ -36,15 +36,15 @@ The full broker configurations are in the [docker-compose.yml](docker-compose.ym
 
 ## Concepts
 
-`Replicas` are brokers assigned to a topic-partition, and they can be a leader, follower, or observer.
-A `leader` is the broker/replica accepting produce messages.
-A `follower` is a broker/replica that can join an ISR list and participate in the calculation of the high watermark (used by the leader when acknowledging messages back to the producer).
+_Replicas_ are brokers assigned to a topic-partition, and they can be a _Leader_, _Follower_, or _Observer_.
+A _Leader_ is the broker/replica accepting produce messages.
+A _Follower_ is a broker/replica that can join an ISR list and participate in the calculation of the high watermark (used by the leader when acknowledging messages back to the producer).
 
-An `ISR` list (in-sync replicas) includes brokers that have a given topic-partition.
+An _ISR_ list (in-sync replicas) includes brokers that have a given topic-partition.
 The data is copied from the leader to every member of the ISR before the producer gets an acknowledgement.
 The followers in an ISR can become the leader if the current leader fails.
 
-An `observer` is a broker/replica that also has a copy of data for a given topic-partition, and consumers are allowed to read from them even though it is not the leader (known as "Follower Fetching").
+An _Observer_ is a broker/replica that also has a copy of data for a given topic-partition, and consumers are allowed to read from them even though it is not the leader (known as "Follower Fetching").
 However, the data is copied asynchronously from the leader such that a producer does not wait on observers to get back an acknowledgement.
 Observers can never participate in the ISR list and cannot become the leader if the current leader fails.
 
