@@ -1,0 +1,14 @@
+{
+	"name": "azure-sqldw-sink",
+	"connector.class": "io.confluent.connect.azuresqldw.AzureSqlDwSinkConnector",
+	"topics":"clickstream",
+	"azure.sql.dw.url": "jdbc:sqlserver://hubert-sql-server.database.windows.net:1433;",
+	"azure.sql.dw.user": "hubert",
+	"azure.sql.dw.password": "confluent10!",
+	"azure.sql.dw.database.name": "quickstartDataWarehouse",
+	"table.name.format": "kafka_${topic}",
+	"auto.create": true,
+	"auto.evolve": true,
+	"confluent.topic.bootstrap.servers": "broker:29092",
+	"confluent.topic.replication.factor": "1"
+  }

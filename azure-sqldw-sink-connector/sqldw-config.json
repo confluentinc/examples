@@ -1,0 +1,15 @@
+{
+  "administratorLogin": "hubert",
+  "administratorLoginPassword": null,
+  "fullyQualifiedDomainName": "_SERVER_.database.windows.net",
+  "id": "/subscriptions/54ff81a0-e7f6-4919-9053-4cdd1c5f5ae1/resourceGroups/hubert/providers/Microsoft.Sql/servers/hubert-sql-server",
+  "identity": null,
+  "kind": "v12.0",
+  "location": "eastus",
+  "name": "_SERVER_",
+  "resourceGroup": "hubert",
+  "state": "Ready",
+  "tags": null,
+  "type": "Microsoft.Sql/servers",
+  "version": "12.0"
+}

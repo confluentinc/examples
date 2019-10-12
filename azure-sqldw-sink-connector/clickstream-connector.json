@@ -1,0 +1,6 @@
+{
+	"name": "clickstream",
+	"connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
+	"kafka.topic": "clickstream",
+	"schema.filename": "/project/clickstream_users_schema.avro"
+}
