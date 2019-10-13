@@ -250,7 +250,7 @@ The following is an example section of the demo's ``values.yaml`` file showing h
       server:
       - "auto.create.topics.enabled=true"
 
-Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile` for the full commands.
+Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile-impl` for the full commands.
 
 .. sourcecode:: bash
 
