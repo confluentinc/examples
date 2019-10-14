@@ -3,14 +3,14 @@ version: '2'
 services:
   zookeeper:
     container_name: zookeeper
-    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.4.0-beta191014193214
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
     container_name: kafka
-    image: confluentinc/cp-enterprise-kafka:5.4.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-kafka:5.4.0-beta191014193214
     depends_on:
       - zookeeper
     #ports:
@@ -36,7 +36,7 @@ services:
 
   schema-registry:
     container_name: schema-registry
-    image: confluentinc/cp-schema-registry:5.4.0-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.4.0-beta191014193214
     depends_on:
       - zookeeper
       - kafka
@@ -46,7 +46,7 @@ services:
 
   kafka-connect:
     container_name: kafka-connect
-    image: confluentinc/cp-kafka-connect:5.4.0-SNAPSHOT
+    image: confluentinc/cp-kafka-connect:5.4.0-beta191014193214
     ports:
       - 8083:8083
     depends_on:
@@ -82,7 +82,7 @@ services:
 
   ksql-server:
     container_name: ksql-server
-    image: confluentinc/cp-ksql-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.4.0-beta191014193214
     ports: 
       - 8088:8088
     depends_on:
@@ -96,7 +96,7 @@ services:
 
   ksql-cli:
     container_name: ksql-cli
-    image: confluentinc/cp-ksql-cli:5.4.0-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.4.0-beta191014193214
     depends_on:
       - ksql-server
     entrypoint: /bin/sh
@@ -140,7 +140,7 @@ services:
   datagen:
     container_name: datagen
     # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
-    image: confluentinc/ksql-examples:5.4.0-SNAPSHOT
+    image: confluentinc/ksql-examples:5.4.0-beta191014193214
     depends_on:
       - kafka
       - schema-registry
