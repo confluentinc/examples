@@ -7,12 +7,12 @@
 
 # Demos
 
-This is a curated list of demos that showcase Apache Kafka® stream processing on the Confluent Platform.
-Some demos run on local Confluent Platform installs (download [Confluent Platform](https://www.confluent.io/download/)) and others run on Docker (install [Docker](https://docs.docker.com/install/) and [Docker Compose](https://docs.docker.com/compose/install/)).
+This is a curated list of demos that showcase Apache Kafka® event stream processing on the Confluent Platform, an event stream processing platform that enables you to process, organize, and manage massive amounts of streaming data across cloud, on-prem, and serverless deployments.
 
-The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo), which spins up a Kafka event streaming application using KSQL for stream processing.
-`cp-demo` also comes with a playbook and video series, and is a great configuration reference for Confluent Platform.
+## Where to start
 
+The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo) which spins up a Kafka event streaming application using KSQL for stream processing, with many security features enabled, in an end-to-end streaming ETL pipeline with a source connector pulling from live IRC channels and a sink connector connecting to Elasticsearch and Kibana for visualizations.
+`cp-demo` also comes with a playbook and is a great configuration reference for Confluent Platform.
 
 ## Full demo list
 
@@ -88,13 +88,13 @@ Additional documentation: [Getting Started](https://docs.confluent.io/current/ge
 
 For local installs:
 
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* Download [Confluent Platform 5.3](https://www.confluent.io/download/)
 * Env var `CONFLUENT_HOME=/path/to/confluentplatform`
 * Env var `PATH` includes `$CONFLUENT_HOME/bin`
-* Each demo has its own set of prerequisites as well, documented in each demo's README
+* Each demo has its own set of prerequisites as well, documented individually in each demo
 
 For Docker: demos have been validated with
 
-* Docker version 17.06.1-ce
-* Docker Compose version 1.14.0 with Docker Compose file format 2.1
+* [Docker](https://docs.docker.com/install/) version 17.06.1-ce
+* [Docker Compose](https://docs.docker.com/compose/install/) version 1.14.0 with Docker Compose file format 2.1
 
