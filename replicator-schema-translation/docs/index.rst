@@ -1,0 +1,91 @@
+.. _quickstart-demos-replicator-schema-translation:
+
+Replicator Schema Translation Demo
+==================================
+
+This |crep| demo showcases the transfer of schemas stored in Confluent Schema Registry from one cluster to another.
+
+========
+Overview
+========
+
+Confluent Replicator features the ability to translate entries from a source Schema Registry to a destination Schema Registry.
+
+This demo provides a docker-compose environment with source and destination Schema Registries in which Schemas will be translated. In this demo we will create an entry in the source Schema Registry and translate it to the destination.
+
+The scripts directory provides examples of the operations that must be performed to prepare for the translation as well as JSON |crep| configurations required.
+
+=============
+Prerequisites
+=============
+
+**Demo validated with:**
+
+-  Confluent Platform |version|
+-  Docker 19.03.2
+-  Docker-compose 1.24.1
+-  Java version 1.8.0_162
+-  MacOS 10.12
+
+1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
+
+   .. sourcecode:: bash
+
+     $ git clone https://github.com/confluentinc/examples
+
+2. Change directory to the Schema Translation demo.
+
+   .. sourcecode:: bash
+
+     $ cd examples/replicator-schema-translation
+
+3. Start the entire demo by running a single command. This automatically creates source and destination clusters and adds a Schema to the source cluster Schema Registry. This will take less than 5 minutes to complete.
+
+   .. sourcecode:: bash
+
+      $ docker-compose up -d
+
+   Verify the demo has completely started by using Google Chrome to view the Schema Registries, the source cluster is at: http://localhost:8085/subjects (you should see: ``["testTopic-value"]``) and the destinartion cluster is at: http://localhost:8086/subjects (you should see: ``[]``).
+
+4. To prepare for Schema translation the source cluster Schema Registry must be put in "READONLY" mode and the destination in "IMPORT" mode.
+
+   .. sourcecode:: bash
+
+      $ docker-compose exec connect /etc/kafka/scripts/set_sr_modes_pre_translation.sh
+
+   This should produce:
+
+   .. sourcecode:: bash
+
+      {"mode":"READONLY"}{"mode":"IMPORT"}
+
+5. Now we submit Replicator to perform the translation.
+
+   .. sourcecode:: bash
+
+      $ docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
+
+   This should produce:
+
+   .. sourcecode:: bash
+
+      {"name":"testReplicator","config":{"connector.class":"io.confluent.connect.replicator.ReplicatorSourceConnector","topic.whitelist":"_schemas","topic.rename.format":"${topic}.replica","key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","src.kafka.bootstrap.servers":"srcKafka1:10091","dest.kafka.bootstrap.servers":"destKafka1:11091","tasks.max":"1","confluent.topic.replication.factor":"1","schema.subject.translator.class":"io.confluent.connect.replicator.schemas.DefaultSubjectTranslator","schema.registry.topic":"_schemas","schema.registry.url":"http://destSchemaregistry:8086","name":"testReplicator"},"tasks":[],"type":"source"}
+
+6. Now verify the translation by revisiting the Schema Registries at: http://localhost:8085/subjects and: http://localhost:8086/subjects. They should both now list schemas with the destination cluster showing ``["testTopic.replica-value"]``:
+
+7. To complete the demo return both Schema Registries to ``READWRITE`` mode:
+
+   .. sourcecode:: bash
+
+      $ docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
+
+========
+Teardown
+========
+
+1. Stop the demo, destroy all local components.
+
+   .. sourcecode:: bash
+
+      $ docker-compose down
+
