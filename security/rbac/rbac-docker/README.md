@@ -86,7 +86,7 @@ KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep 
 Grant `User:bender` ResourceOwner to prefix `Topic:foo` on Kafka cluster `KAFKA_CLUSTER_ID`
 
 ```
-confluent iam rolebinding create --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID --resource Topic:foo --prefix
+confluent iam rolebinding create --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID --role ResourceOwner --resource Topic:foo --prefix
 ```
 
 List the roles of `User:bender` on Kafka cluster `KAFKA_CLUSTER_ID`
