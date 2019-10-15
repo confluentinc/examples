@@ -74,7 +74,7 @@ controlcenter:
   <<: *cpImage
   loadBalancer:
     enabled: true
-    domain: devx-testing.dev.gcp.devel.cpdev.cloud
+#   domain: specific value for your environment, set with --set or in additional values file passed to helm
   dependencies:
     c3KafkaCluster:
       zookeeper:
