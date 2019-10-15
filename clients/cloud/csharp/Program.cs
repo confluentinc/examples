@@ -110,7 +110,7 @@ namespace CCloud
 
                     Console.WriteLine($"Producing record: {key} {val}");
 
-                    producer.BeginProduce(topic, new Message<string, string> { Key = key, Value = val },
+                    producer.Produce(topic, new Message<string, string> { Key = key, Value = val },
                         (deliveryReport) =>
                         {
                             if (deliveryReport.Error.Code != ErrorCode.NoError)
