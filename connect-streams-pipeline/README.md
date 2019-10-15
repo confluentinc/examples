@@ -3,7 +3,7 @@
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Description](#description)
-- [Quickstart](#quickstart)
+- [Run](#run)
 
 
 # Overview
@@ -11,7 +11,12 @@
 1. Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API `KStream`
 2. Show some basic usage of the stream processing API
 
-For more information, please read [this blogpost](https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/).
+![image](images/pipeline.jpg)
+
+## Additional Reading
+
+* [Whitepaper "Kafka Serialization and Deserialization (SerDes) Examples"](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+* [Blogpost "Building a Real-Time Streaming ETL Pipeline in 20 Minutes"](https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/)
 
 # Prerequisites
 
@@ -32,10 +37,12 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 ## Example 1: Kafka console producer -> Key:String and Value:String
 
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+
 * Command line `confluent local produce` produces `String` keys and `String` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for both key and value.
 
-![image](images/example_1.jpg)
+![image](images/example_1.png)
 
 ### Notes
 
@@ -43,10 +50,12 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 ## Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+
 * [Kafka Connect JDBC source connector](jdbcjson-connector.properties) produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
 
-![image](images/blog_connect_streams_diag.jpg)
+![image](images/example_2.png)
 
 ### Notes
 
@@ -54,10 +63,12 @@ This example uses a few SMTs including one to cast the key to an `int64`. The ke
 
 ## Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
 
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+
 * [Kafka Connect JDBC source connector](jdbcspecificavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java) reads from the Kafka topic using `SpecificAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
-![image](images/blog_connect_streams_diag.jpg)
+![image](images/example_3.png)
 
 ### Notes
 
@@ -65,10 +76,12 @@ This example uses a simple message transformation `SetSchemaMetadata` with code 
 
 ## Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+
 * [Kafka Connect JDBC source connector](jdbcgenericavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java) reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
 
-![image](images/blog_connect_streams_diag.jpg)
+![image](images/example_3.png)
 
 ### Notes
 
@@ -76,13 +89,19 @@ This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a
 
 ## Example 5: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+
 * [Java client](src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java) produces `Long` keys and `SpecificAvro` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.Long()` for key and `SpecificAvroSerde` for the value.
+
+![image](images/example_5.png)
 
 ## Example 6: JDBC source connector with Avro to KSQL -> Key:Long and Value:Avro
 
 * [Kafka Connect JDBC source connector](jdbcavroksql-connector.properties) produces Avro values, and null keys, to a Kafka topic.
 * [KSQL](jdbcavroksql.commands) reads from the Kafka topic and then uses `PARTITION BY` to create a new stream of messages with `BIGINT` keys.
+
+![image](images/example_6.png)
 
 ## Stream processing
 
@@ -96,9 +115,9 @@ All examples in this repo demonstrate the Kafka Streams API methods `count` and 
 
 [KAFKA-2378](https://issues.apache.org/jira/browse/KAFKA-2378): adds APIs to be able to embed Kafka Connect into client applications
 
-# Quickstart
+# Run
 
-# What Should I see?
+## What Should I see?
 
 After you run `./start.sh`:
 
