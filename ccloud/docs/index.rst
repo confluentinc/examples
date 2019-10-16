@@ -46,7 +46,7 @@ Prerequisites
 -  jq
 
 2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
-By default, the demo looks for this configuration file at ``~/.ccloud/config`` (you can change this file location in the demo's `config.sh`).
+By default, the demo looks for this configuration file at ``~/.ccloud/config``. You can change this file location in the demo's ``config.sh``.
 
 3. This demo has been validated with:
 
