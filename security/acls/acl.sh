@@ -43,11 +43,10 @@
 # Source library
 . ../../utils/helper.sh
 
-check_ccloud_v2 || exit 1
+check_ccloud_version || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
-
 
 ##################################################
 # Read URL, EMAIL, ENVIRONMENT, CLUSTER, PASSWORD from command line arguments
@@ -158,8 +157,8 @@ ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
 
 echo -e "\n# Create an API key and secret for the new service account"
-echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
-OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
+OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
