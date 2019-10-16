@@ -21,7 +21,7 @@ These demos are memory intensive and Docker must be tuned accordingly. In Docker
 In addition to Confluent Replicator, the environment contains:
 
 * A single node source cluster containing `srcKafka1`. In production, at least 3 nodes are recommended.
-* A single node destination cluster containing destKafka1, in production at least 3 nodes are recommended.
+* A single node destination cluster containing `destKafka1`. In production, at least 3 nodes are recommended.
 * A single node Schema Registry cluster containing srcSchemaregistry, in production a master/standby configuration is recommended.
 * A single node Schema Registry cluster containing destSchemaregistry, in production a master/standby configuration is recommended.
 * A single Connect worker that will run replicator
