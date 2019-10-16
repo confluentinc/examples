@@ -78,7 +78,7 @@ Run:
 
 Verify: 
 
-This should produce:
+Your output should resemble:
   ```
   {"mode":"READONLY"}{"mode":"IMPORT"}
   ```
