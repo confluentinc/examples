@@ -87,5 +87,5 @@ Teardown
 
    .. sourcecode:: bash
 
-      $ docker-compose down
+      docker-compose down
 
