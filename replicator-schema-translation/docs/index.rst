@@ -3,7 +3,7 @@
 Replicator Schema Translation Demo
 ==================================
 
-This |crep| demo showcases the transfer of schemas stored in Confluent Schema Registry from one cluster to another.
+This |crep| demo showcases the transfer of schemas stored in |sr-long| from one cluster to another.
 
 ========
 Overview
