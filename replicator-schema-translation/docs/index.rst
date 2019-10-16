@@ -65,7 +65,7 @@ Prerequisites
 
       docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
 
-   This should produce:
+   Your output should resemble:
 
    .. sourcecode:: bash
 
