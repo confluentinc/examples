@@ -116,7 +116,7 @@ Your output should resemble:
   ["testTopic.replica-value"]
   ```
 
-Note: Replicator may not immediately translate the Schema so this verification should be retired for up to 60 seconds.
+Note: Replicator may not translate the schema immediately, so this verification should be retried for up to 60 seconds.
 
 Then run:
   ```
