@@ -31,7 +31,7 @@ Prerequisites
 
    .. sourcecode:: bash
 
-     $ git clone https://github.com/confluentinc/examples
+     git clone https://github.com/confluentinc/examples
 
 2. Change directory to the Schema Translation demo.
 
