@@ -111,7 +111,7 @@ First verify the translation.
   ```
   curl http://localhost:8086/subjects
   ```
-You should see the following:
+Your output should resemble:
   ```
   ["testTopic.replica-value"]
   ```
