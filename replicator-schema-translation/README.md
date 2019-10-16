@@ -14,7 +14,7 @@ These demos require the following tools:
 
 * docker-compose
 
-These demos are memory intensive and Docker must be tuned accordingly. In Docker's advanced settings, increase the memory dedicated to Docker to at least 8GB (default is 2GB).
+These demos are memory intensive and Docker must be tuned accordingly. In Docker's advanced settings, increase the memory dedicated to Docker to at least 8GB (the default is 2GB).
 
 ## Components
 
