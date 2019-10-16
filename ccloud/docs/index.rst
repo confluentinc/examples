@@ -92,11 +92,11 @@ Playbook
 |ccloud|
 -------------------
 
-1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
+1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config.json` (you can change this file location in `config.sh`).
 
    .. sourcecode:: bash
 
-     $ cat ~/.ccloud/config
+     $ cat ~/.ccloud/config.json
      bootstrap.servers=<BROKER ENDPOINT>
      ssl.endpoint.identification.algorithm=https
      security.protocol=SASL_SSL
@@ -111,20 +111,20 @@ Playbook
 
    .. sourcecode:: bash
 
-     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config.json | tail -1` --command-config ~/.ccloud/config.json --list
 
 3. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
-     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test --create --replication-factor 3 --partitions 6
+     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config.json | tail -1` --command-config ~/.ccloud/config.json --topic test --create --replication-factor 3 --partitions 6
      Topic "test" created.
-     $ confluent local produce test -- --cloud --config ~/.ccloud/config 
+     $ confluent local produce test -- --cloud --config ~/.ccloud/config.json
      a
      b
      c
      ^C
-     $ confluent local consume test -- --cloud --config ~/.ccloud/config --from-beginning
+     $ confluent local consume test -- --cloud --config ~/.ccloud/config.json --from-beginning
      a
      b
      c
@@ -397,7 +397,7 @@ Confluent Cloud Configurations
 
    .. sourcecode:: bash
 
-        $ cat $HOME/.ccloud/config
+        $ cat $HOME/.ccloud/config.json
 
 3. Generate the per-component delta configuration parameters, automatically derived from your Confluent Cloud configuration file:
 
