@@ -13,7 +13,7 @@ Overview
 
 This demo provides a docker-compose environment with source and destination registries in which schemas are translated. In this demo, you create an entry in the source |sr| and translate it to the destination.
 
-The scripts directory provides examples of the operations that must be performed to prepare for the translation as well as JSON |crep| configurations required.
+The ``scripts`` directory provides examples of the operations that you must perform to prepare for the translation, as well as JSON |crep| configurations required.
 
 =============
 Prerequisites
