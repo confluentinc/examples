@@ -65,7 +65,7 @@ You should see the following:
   []
   ```
 
-Note: the kafkaClient container must complete and exit 0 before verification  
+Note: The `kafkaClient` container must complete and `exit 0` before verification.
 
 ### Step 2: 
 
