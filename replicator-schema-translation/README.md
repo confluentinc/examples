@@ -24,7 +24,7 @@ In addition to Confluent Replicator, the environment contains:
 * A single node destination cluster containing `destKafka1`. In production, at least 3 nodes are recommended.
 * A single node Schema Registry cluster containing `srcSchemaregistry`. In production, a master/standby configuration is recommended.
 * A single node Schema Registry cluster containing `destSchemaregistry`. In production, a master/standby configuration is recommended.
-* A single Connect worker that will run replicator
+* A single Connect worker that runs Replicator.
 * A source client container (kafkaClient) that creates a source topic and provides test data
 
 In all containers, minimal non-replicator configuration is supplied.
