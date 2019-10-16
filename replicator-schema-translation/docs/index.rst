@@ -77,7 +77,7 @@ Prerequisites
 
    .. sourcecode:: bash
 
-      $ docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
+      docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
 
 ========
 Teardown
