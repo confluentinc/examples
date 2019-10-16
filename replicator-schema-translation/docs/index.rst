@@ -21,7 +21,7 @@ Prerequisites
 
 **Demo validated with:**
 
--  Confluent Platform |version|
+-  |cp| |version|
 -  Docker 19.03.2
 -  Docker-compose 1.24.1
 -  Java version 1.8.0_162
