@@ -48,7 +48,7 @@ check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 
-REQUIRED_CCLOUD_VER="0.173.0"
+REQUIRED_CCLOUD_VER="0.185.0"
 CCLOUD_VER=$(get_ccloud_version)
 if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
 	echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
