@@ -89,7 +89,7 @@ Steps
    a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
    b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
 
-5. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
+5. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
