@@ -65,6 +65,16 @@ function get_ccloud_version() {
   ccloud version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
 }
 
+function check_ccloud_version() {
+	REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
+	CCLOUD_VER=$(get_ccloud_version)
+	if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
+		echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
+		echo 'To update run: ccloud update'
+		exit 1
+	fi
+}
+
 function check_cli_v2() {
 
   if [[ -z $(confluent version | grep "Go") ]]; then
