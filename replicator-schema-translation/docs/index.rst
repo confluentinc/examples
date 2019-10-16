@@ -45,7 +45,7 @@ Prerequisites
 
       docker-compose up -d
 
-   Verify the demo has completely started by using Google Chrome to view the Schema Registries, the source cluster is at: http://localhost:8085/subjects (you should see: ``["testTopic-value"]``) and the destinartion cluster is at: http://localhost:8086/subjects (you should see: ``[]``).
+   Verify the demo has completely started by using Google Chrome to view the Schema Registries. The source cluster is at: ``http://localhost:8085/subjects`` (you should see: ``["testTopic-value"]``) and the destination cluster is at: ``http://localhost:8086/subjects`` (you should see: ``[]``).
 
 4. To prepare for Schema translation the source cluster Schema Registry must be put in "READONLY" mode and the destination in "IMPORT" mode.
 
