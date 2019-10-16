@@ -51,7 +51,7 @@ Prerequisites
 
    .. sourcecode:: bash
 
-      $ docker-compose exec connect /etc/kafka/scripts/set_sr_modes_pre_translation.sh
+      docker-compose exec connect /etc/kafka/scripts/set_sr_modes_pre_translation.sh
 
    This should produce:
 
