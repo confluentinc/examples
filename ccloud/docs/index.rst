@@ -74,7 +74,7 @@ Steps
 
      $ cd examples/ccloud
 
-4. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in Confluent Cloud and if you prefer to use either of those Confluent Cloud services instead:
+4. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in |ccloud|, and if you prefer to use either of those |ccloud| services instead:
 
    .. figure:: images/services-in-cloud.jpg
        :alt: image
