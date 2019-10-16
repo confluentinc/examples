@@ -71,7 +71,7 @@ Prerequisites
 
       {"name":"testReplicator","config":{"connector.class":"io.confluent.connect.replicator.ReplicatorSourceConnector","topic.whitelist":"_schemas","topic.rename.format":"${topic}.replica","key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","src.kafka.bootstrap.servers":"srcKafka1:10091","dest.kafka.bootstrap.servers":"destKafka1:11091","tasks.max":"1","confluent.topic.replication.factor":"1","schema.subject.translator.class":"io.confluent.connect.replicator.schemas.DefaultSubjectTranslator","schema.registry.topic":"_schemas","schema.registry.url":"http://destSchemaregistry:8086","name":"testReplicator"},"tasks":[],"type":"source"}
 
-6. Now verify the translation by revisiting the Schema Registries at: http://localhost:8085/subjects and: http://localhost:8086/subjects. They should both now list schemas with the destination cluster showing ``["testTopic.replica-value"]``:
+6. Now verify the translation by revisiting the registries at: ``http://localhost:8085/subjects`` and ``http://localhost:8086/subjects``. They should both list schemas with the destination cluster showing ``["testTopic.replica-value"]``.
 
 7. To complete the demo return both clusters to ``READWRITE`` mode:
 
