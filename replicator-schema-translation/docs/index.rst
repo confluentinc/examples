@@ -59,7 +59,7 @@ Prerequisites
 
       {"mode":"READONLY"}{"mode":"IMPORT"}
 
-5. Now we submit Replicator to perform the translation.
+5. Submit |crep| to perform the translation.
 
    .. sourcecode:: bash
 
