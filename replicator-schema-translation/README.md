@@ -84,7 +84,7 @@ This should produce:
   ```
 ### Step 3: 
 
-Now we submit Replicator to perform the translation.
+Submit Replicator to perform the translation.
 
 Run:
   ```
