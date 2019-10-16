@@ -9,7 +9,7 @@ This |crep| demo showcases the transfer of schemas stored in |sr-long| from one 
 Overview
 ========
 
-Confluent Replicator features the ability to translate entries from a source Schema Registry to a destination Schema Registry.
+|crep| features the ability to translate entries from a source |sr| to a destination |sr|.
 
 This demo provides a docker-compose environment with source and destination Schema Registries in which Schemas will be translated. In this demo we will create an entry in the source Schema Registry and translate it to the destination.
 
