@@ -69,7 +69,7 @@ Note: The `kafkaClient` container must complete and `exit 0` before verification
 
 ### Step 2: 
 
-To prepare for Schema translation the source cluster must be put in "READONLY" mode and the destination in "IMPORT" mode.
+To prepare for schema translation, you must put the source cluster in "READONLY" mode and the destination cluster in "IMPORT" mode.
 
 Run:
   ```
