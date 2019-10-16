@@ -19,11 +19,16 @@ function check_env() {
   return 0
 }
 
-function check_ccloud() {
+function check_ccloud_binary() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
     echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli) and try again"
     exit 1
   fi
+}
+
+function check_ccloud() {
+
+	check_ccloud_binary || exit 1
 
   if [[ ! -e "$HOME/.ccloud/config" ]]; then
     echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
@@ -59,15 +64,21 @@ function check_ccloud_v2() {
   return 0
 }
 
-function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
+function version_gt() { 
+	test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
 
 function get_ccloud_version() {
   ccloud version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
 }
 
 function check_ccloud_version() {
+
+	check_ccloud_binary || exit 1
+
 	REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
 	CCLOUD_VER=$(get_ccloud_version)
+
 	if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
 		echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
 		echo 'To update run: ccloud update'
