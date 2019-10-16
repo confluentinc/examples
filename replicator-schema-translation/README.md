@@ -98,7 +98,7 @@ Your output should resemble:
   {"name":"testReplicator","config":{"connector.class":"io.confluent.connect.replicator.ReplicatorSourceConnector","topic.whitelist":"_schemas","topic.rename.format":"${topic}.replica","key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","src.kafka.bootstrap.servers":"srcKafka1:10091","dest.kafka.bootstrap.servers":"destKafka1:11091","tasks.max":"1","confluent.topic.replication.factor":"1","schema.subject.translator.class":"io.confluent.connect.replicator.schemas.DefaultSubjectTranslator","schema.registry.topic":"_schemas","schema.registry.url":"http://destSchemaregistry:8086","name":"testReplicator"},"tasks":[],"type":"source"}
   ```
 
-Note: If replicator is submitted before the Connect worker is ready then the message below will be printed. The script will automatically retry until successful
+Note: If replicator is submitted before the Connect worker is ready, the following message is printed. The script automatically retries until successful.
 
   ```
   curl: (22) The requested URL returned error: 404 Not Found
