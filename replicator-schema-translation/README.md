@@ -35,7 +35,7 @@ The demo performs the following steps:
 
 1. Create a subject in the source Schema Registry.
 2. Prepare for schema translation.
-3. Execution of Replicator to perform migration
+3. Execute Replicator to perform migration.
 4. Post translation Schema registry configuration. 
 
 ### Step 1: 
