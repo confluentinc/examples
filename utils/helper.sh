@@ -59,6 +59,12 @@ function check_ccloud_v2() {
   return 0
 }
 
+function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
+
+function get_ccloud_version() {
+  ccloud version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
+}
+
 function check_cli_v2() {
 
   if [[ -z $(confluent version | grep "Go") ]]; then

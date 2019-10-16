@@ -48,6 +48,13 @@ check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 
+REQUIRED_CCLOUD_VER="0.173.0"
+CCLOUD_VER=$(get_ccloud_version)
+if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
+	echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
+	echo 'To update run: ccloud update'
+	exit 1
+fi
 
 ##################################################
 # Read URL, EMAIL, ENVIRONMENT, CLUSTER, PASSWORD from command line arguments
@@ -158,8 +165,8 @@ ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
 SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
 
 echo -e "\n# Create an API key and secret for the new service account"
-echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER"
-OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --cluster $CLUSTER)
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
+OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
