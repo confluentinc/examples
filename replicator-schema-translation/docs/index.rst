@@ -73,7 +73,7 @@ Prerequisites
 
 6. Now verify the translation by revisiting the Schema Registries at: http://localhost:8085/subjects and: http://localhost:8086/subjects. They should both now list schemas with the destination cluster showing ``["testTopic.replica-value"]``:
 
-7. To complete the demo return both Schema Registries to ``READWRITE`` mode:
+7. To complete the demo return both clusters to ``READWRITE`` mode:
 
    .. sourcecode:: bash
 
