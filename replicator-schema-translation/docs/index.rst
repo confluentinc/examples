@@ -39,7 +39,7 @@ Prerequisites
 
      cd examples/replicator-schema-translation
 
-3. Start the entire demo by running a single command. This automatically creates source and destination clusters and adds a Schema to the source cluster Schema Registry. This will take less than 5 minutes to complete.
+3. Start the entire demo by running a single command that creates source and destination clusters automatically and adds a schema to the source cluster |sr|. This takes less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
