@@ -43,7 +43,7 @@ Prerequisites
 
    .. sourcecode:: bash
 
-      $ docker-compose up -d
+      docker-compose up -d
 
    Verify the demo has completely started by using Google Chrome to view the Schema Registries, the source cluster is at: http://localhost:8085/subjects (you should see: ``["testTopic-value"]``) and the destinartion cluster is at: http://localhost:8086/subjects (you should see: ``[]``).
 
