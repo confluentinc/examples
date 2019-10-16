@@ -124,7 +124,7 @@ Then run:
   ```
 Verify: 
 
-This should produce:
+Your output should resemble:
   ```
   {"mode":"READWRITE"}{"mode":"READWRITE"}
   ```
