@@ -39,14 +39,14 @@ Prerequisites
 
 1. The following are prerequisites for the demo:
 
--  An initialized |ccloud| cluster used for development only
+-  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only
 -  :ref:`Confluent Cloud CLI <ccloud-install-cli>` installed on your machine, version `v0.185.0` or higher
 -  :ref:`Confluent CLI <cli-install>` installed on your machine, version `v0.157.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download)
 -  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
 -  jq
 
 2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
-By default, the demo looks for this configuration file at `~/.ccloud/config` (you can change this file location in the demo's `config.sh`).
+By default, the demo looks for this configuration file at ``~/.ccloud/config`` (you can change this file location in the demo's `config.sh`).
 
 3. This demo has been validated with:
 
@@ -60,7 +60,7 @@ Steps
 -----
 
 
-1. Confirm the prerequisites above are satisfied, especially the |ccloud| configuration file at `~/.ccloud/config`. 
+1. Confirm the prerequisites above are satisfied, especially the |ccloud| configuration file at ``~/.ccloud/config``. 
 
 2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
 
