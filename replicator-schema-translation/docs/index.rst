@@ -55,7 +55,7 @@ Prerequisites
 
    Your output should resemble:
 
-   .. sourcecode:: bash
+   .. sourcecode:: json
 
       {"mode":"READONLY"}{"mode":"IMPORT"}
 
