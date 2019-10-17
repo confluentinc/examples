@@ -31,8 +31,6 @@ spec:
           command: ["replicator"]
           args: [ "--consumer.config", "/etc/replicator-configs/consumer.properties", "--producer.config", "/etc/replicator-configs/producer.properties", "--replication.config", "/etc/replicator-configs/replication.properties", "--cluster.id", "replicator" ]
           env:
-          - name: CONNECT_REPLICATION_FACTOR
-            value: "3"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
             - name: {{ include "replicator.name" . }}-config
@@ -41,14 +39,6 @@ spec:
             - name: http
               containerPort: 8083
               protocol: TCP
-          #livenessProbe:
-          #  httpGet:
-          #    path: /
-          #    port: http
-          #readinessProbe:
-          #  httpGet:
-          #    path: /
-          #    port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
@@ -63,3 +53,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+
