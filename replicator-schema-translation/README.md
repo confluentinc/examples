@@ -8,125 +8,24 @@ This demo provides a docker-compose environment with source and destination Sche
 
 The `scripts` directory provides examples of the operations that you must perform to prepare for the translation, as well as JSON Replicator configurations required.
 
-## Prerequisites
-
-These demos require the following tools:
-
-* docker-compose
-
-These demos are memory intensive and Docker must be tuned accordingly. In Docker's advanced settings, increase the memory dedicated to Docker to at least 8GB (the default is 2GB).
-
-## Components
-
-In addition to Confluent Replicator, the environment contains:
-
-* A single node source cluster containing `srcKafka1`. In production, at least 3 nodes are recommended.
-* A single node destination cluster containing `destKafka1`. In production, at least 3 nodes are recommended.
-* A single node Schema Registry cluster containing `srcSchemaregistry`. In production, a master/standby configuration is recommended.
-* A single node Schema Registry cluster containing `destSchemaregistry`. In production, a master/standby configuration is recommended.
-* A single Connect worker that runs Replicator.
-* A source client container (`kafkaClient`) that creates a source topic and provides test data.
-
-In all containers, minimal non-replicator configuration is supplied.
-
-## Setup and verifying the environments
-
-The demo performs the following steps:
+The demo performs the following migration steps:
 
 1. Create a subject in the source Schema Registry.
 2. Prepare for schema translation.
 3. Execute Replicator to perform migration.
 4. Post-translation Schema Registry configuration. 
 
-### Step 1: 
+## Prerequisites
 
-This step is completed automatically when the environment is started. 
+This demo has been validated with:
 
-Run:
-  ```
-  docker-compose up -d
-  ```
+-  Docker 19.03.2
+-  Docker-compose 1.24.1
+-  Java version 1.8.0_162
+-  MacOS 10.12
 
-Verify the source Schema Registry:
-  ```
-  curl http://localhost:8085/subjects
-  ```
-You should see the following:
-  ```
-  ["testTopic-value"]
-  ```
+These demos are memory intensive and Docker must be tuned accordingly. In Docker's advanced settings, increase the memory dedicated to Docker to at least 8GB (the default is 2GB).
 
-Verify the destination Schema Registry:
-  ```
-  curl http://localhost:8086/subjects
-  ```
-You should see the following:
-  ```
-  []
-  ```
+# Running the demo
 
-Note: The `kafkaClient` container must complete and `exit 0` before verification.
-
-### Step 2: 
-
-To prepare for schema translation, you must put the source cluster in "READONLY" mode and the destination cluster in "IMPORT" mode.
-
-Run:
-  ```
-  docker-compose exec connect /etc/kafka/scripts/set_sr_modes_pre_translation.sh
-  ```
-
-Verify: 
-
-Your output should resemble:
-  ```
-  {"mode":"READONLY"}{"mode":"IMPORT"}
-  ```
-### Step 3: 
-
-Submit Replicator to perform the translation.
-
-Run:
-  ```
-  docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
-  ```
-
-Verify: 
-
-Your output should resemble:
-  ```
-  {"name":"testReplicator","config":{"connector.class":"io.confluent.connect.replicator.ReplicatorSourceConnector","topic.whitelist":"_schemas","topic.rename.format":"${topic}.replica","key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","src.kafka.bootstrap.servers":"srcKafka1:10091","dest.kafka.bootstrap.servers":"destKafka1:11091","tasks.max":"1","confluent.topic.replication.factor":"1","schema.subject.translator.class":"io.confluent.connect.replicator.schemas.DefaultSubjectTranslator","schema.registry.topic":"_schemas","schema.registry.url":"http://destSchemaregistry:8086","name":"testReplicator"},"tasks":[],"type":"source"}
-  ```
-
-Note: If replicator is submitted before the Connect worker is ready, the following message is printed. The script automatically retries until successful.
-
-  ```
-  curl: (22) The requested URL returned error: 404 Not Found
-  Failed to submit replicator to Connect. This could be because the Connect worker is not yet started. Will retry in 10 seconds
-  ```
-
-### Step 4: 
-
-First verify the translation. 
-  ```
-  curl http://localhost:8086/subjects
-  ```
-Your output should resemble:
-  ```
-  ["testTopic.replica-value"]
-  ```
-
-Note: Replicator may not translate the schema immediately, so this verification should be retried for up to 60 seconds.
-
-Then run:
-  ```
-  docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
-  ```
-Verify: 
-
-Your output should resemble:
-  ```
-  {"mode":"READWRITE"}{"mode":"READWRITE"}
-  ```
-
-
+You can find the documentation for running this demo at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html)
