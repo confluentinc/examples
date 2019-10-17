@@ -34,29 +34,47 @@ The major components of the demo are:
 Run demo
 ========
 
-**Demo validated with:**
+Prerequisites
+-------------
 
--  Confluent Platform |version|
--  |ccloud|
--  |ccloud| CLI
--  :ref:`Confluent CLI <cli-install>` installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download
+1. The following are prerequisites for the demo:
+
+-  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only
+-  :ref:`Confluent Cloud CLI <ccloud-install-cli>` installed on your machine, version `v0.185.0` or higher
+-  :ref:`Confluent CLI <cli-install>` installed on your machine, version `v0.157.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download)
+-  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
+-  jq
+
+2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
+By default, the demo looks for this configuration file at ``~/.ccloud/config``. You can change this file location in the demo's ``config.sh``.
+
+3. This demo has been validated with:
+
+-  Docker version 17.06.1-ce
+-  Docker Compose version 1.14.0 with Docker Compose file format 2.1
 -  Java version 1.8.0_162
 -  MacOS 10.12
 
 
-1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
+Steps
+-----
+
+
+1. Confirm the prerequisites above are satisfied, especially the |ccloud| configuration file at ``~/.ccloud/config``. 
+
+2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
 
    .. sourcecode:: bash
 
      $ git clone https://github.com/confluentinc/examples
 
-2. Change directory to the |ccloud| demo.
+3. Change directory to the |ccloud| demo.
 
    .. sourcecode:: bash
 
      $ cd examples/ccloud
 
-3. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in Confluent Cloud and if you prefer to use either of those Confluent Cloud services instead:
+4. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in |ccloud|, and if you prefer to use either of those |ccloud| services instead:
 
    .. figure:: images/services-in-cloud.jpg
        :alt: image
@@ -71,7 +89,7 @@ Run demo
    a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
    b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
 
-4. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
+5. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -81,7 +99,7 @@ Run demo
       # For Docker Compose
       $ ./start-docker.sh
 
-5. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
+6. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
 
 
 

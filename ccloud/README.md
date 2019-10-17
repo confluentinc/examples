@@ -47,33 +47,6 @@ See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html f
   * C++
 
 
-# Prerequisites
-
-## Confluent Cloud configuration file
-
-First create a Confluent Cloud configuration file with information on connecting to your Confluent Cloud cluster.
-By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
-See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information.
-
-## Local
-
-As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
-
-* [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
-* [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
-* Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
-* `jq` installed on your machine
-
-## Docker
-
-* Docker version 17.06.1-ce
-* Docker Compose version 1.14.0 with Docker Compose file format 2.1
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
-* [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
-* `jq` installed on your machine
-
 # Running the demo
 
 You can find the documentation for running this demo, and its accompanying playbook, at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html)
