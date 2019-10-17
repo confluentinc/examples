@@ -24,7 +24,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-
         compression.type=none \
         batch.size=8196
 
-echo "Sleeping 30 seconds"
+echo -e "\nSleeping 30 seconds"
 sleep 30
 
 echo -e "\n\n==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async) \n"

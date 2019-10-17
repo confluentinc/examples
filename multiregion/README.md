@@ -188,8 +188,8 @@ Sample output:
 
 Observations:
 
-* Topics `single-region` and `multi-region-async` have nearly the same throughput performance, because only the replicas in the `west` region need to ack.
-* In the second case for topic `multi-region-sync`, due to the poor network bandwidth between the `east` and `west` regions and due to an ISR made up of brokers in both regions, it took a big throughput hit. This is because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
+* In the first and third cases, topics `single-region` and `multi-region-async` have nearly the same throughput performance (e.g., `1.15 MB/sec` and `1.09 MB/sec`, respectively, in the above example), because only the replicas in the `west` region need to ack.
+* In the second case for topic `multi-region-sync`, due to the poor network bandwidth between the `east` and `west` regions and due to an ISR made up of brokers in both regions, it took a big throughput hit (e.g., `0.01 MB/sec` in the above example). This is because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
 * The observers in the third case for topic `multi-region-async` didn't affect the overall producer throughput because the `west` region is sending an `ack` back to the producer after it has been replicated twice in the `west` region, and it is not waiting for the async copy to the `east` region. 
 
 ## Consumer Testing
