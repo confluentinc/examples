@@ -17,7 +17,7 @@ docker run --rm -d \
 	--name pumba-medium-latency-central \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-e SUBNET=${SUBNET} \
-	gaiaadm/pumba:0.6.4 netem --duration 30m \
+	gaiaadm/pumba:0.6.4 netem --duration 24000h \
   		--target $SUBNET \
                 delay --time 50 zookeeper-central --jitter 10 &
 
@@ -31,7 +31,7 @@ docker run --rm -d \
 	-e ZOOKEEPER_EAST_IP=${ZOOKEEPER_EAST_IP} \
 	-e KAFKA_EAST_3_IP=${KAFKA_EAST_3_IP} \
 	-e KAFKA_EAST_4_IP=${KAFKA_EAST_4_IP} \
-	gaiaadm/pumba:0.6.4 netem --duration 30m \
+	gaiaadm/pumba:0.6.4 netem --duration 24000h \
 		--target ${ZOOKEEPER_EAST_IP} \
 		--target ${KAFKA_EAST_3_IP} \
 		--target ${KAFKA_EAST_4_IP} \
@@ -46,7 +46,7 @@ docker run --rm -d \
 	-e ZOOKEEPER_EAST_IP=${ZOOKEEPER_EAST_IP} \
 	-e KAFKA_EAST_3_IP=${KAFKA_EAST_3_IP} \
 	-e KAFKA_EAST_4_IP=${KAFKA_EAST_4_IP} \
-	gaiaadm/pumba:0.6.4 netem --duration 30m \
+	gaiaadm/pumba:0.6.4 netem --duration 24000h \
 		--target ${ZOOKEEPER_EAST_IP} \
 		--target ${KAFKA_EAST_3_IP} \
 		--target ${KAFKA_EAST_4_IP} \
@@ -61,7 +61,7 @@ docker run --rm -d \
 	-e ZOOKEEPER_WEST_IP=${ZOOKEEPER_WEST_IP} \
 	-e KAFKA_WEST_1_IP=${KAFKA_WEST_1_IP} \
 	-e KAFKA_WEST_2_IP=${KAFKA_WEST_2_IP} \
-	gaiaadm/pumba:0.6.4 netem --duration 30m \
+	gaiaadm/pumba:0.6.4 netem --duration 24000h \
 		--target ${ZOOKEEPER_WEST_IP} \
 		--target ${KAFKA_WEST_1_IP} \
 		--target ${KAFKA_WEST_2_IP} \
