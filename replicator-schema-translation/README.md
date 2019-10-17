@@ -15,17 +15,6 @@ The demo performs the following migration steps:
 3. Execute Replicator to perform migration.
 4. Post-translation Schema Registry configuration. 
 
-## Prerequisites
-
-This demo has been validated with:
-
--  Docker 19.03.2
--  Docker-compose 1.24.1
--  Java version 1.8.0_162
--  MacOS 10.12
-
-These demos are memory intensive and Docker must be tuned accordingly. In Docker's advanced settings, increase the memory dedicated to Docker to at least 8GB (the default is 2GB).
-
 # Running the demo
 
-You can find the documentation for running this demo at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html)
+You can find the documentation for running this demo at [https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html](https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html)
