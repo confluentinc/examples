@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "replicator.name" . }}-config
+  namespace: operator
+  labels:
+{{ include "replicator.labels" . | indent 4 }}
+data:
+  consumer.properties: |
+    bootstrap.servers={{.Values.consumer.bootstrapEndpoint}}
+    replication.factor=3
+    sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{.Values.consumer.username}}" password="{{.Values.consumer.password}}";
+    sasl.mechanism=PLAIN
+    security.protocol=SASL_PLAINTEXT
+  producer.properties: |
+    bootstrap.servers={{.Values.producer.bootstrapEndpoint}}
+    replication.factor=3
+    sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{.Values.producer.username}}" password="{{.Values.producer.password}}";
+    sasl.mechanism=PLAIN
+    security.protocol=SASL_SSL
+    ssl.endpoint.identification.algorithm=https
+    basic.auth.credentials.source=USER_INFO
+    schema.registry.basic.auth.user.info=
+    schema.registry.url=
+  replication.properties: |
+    topic.auto.create=true
+    replication.factor=3
+    topic.preserve.partitions=false
+    topic.whitelist=clicks,stock-trades
