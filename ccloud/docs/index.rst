@@ -302,7 +302,7 @@ a self-managed cluster, and the destination cluster is |ccloud|.
       # For Docker Compose
       $ cat connectors/submit_replicator_docker_config.sh
       
-2. View topics ``pageviews`` in the local cluster
+2. View topic ``pageviews`` in the local cluster
 
    .. sourcecode:: bash
 
