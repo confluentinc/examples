@@ -9,7 +9,7 @@ export KAFKA_EAST_4_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{
 
 export SUBNET=$(docker inspect multiregion_n1 -f '{{(index .IPAM.Config 0).Subnet}}')
 
-echo -e "\n==> Running container pumba-medium-latency-central for medium latency link (50ms)\n"
+echo -e "\n==> Running container pumba-medium-latency-central for medium latency link (50ms)"
 
 # Create medium latency link (50ms) to zookeeper-central
 docker run --rm -d \
@@ -21,7 +21,7 @@ docker run --rm -d \
   		--target $SUBNET \
                 delay --time 50 zookeeper-central --jitter 10 &
 
-echo -e "\n==> Running container pumba-high-latency-west-east for high latency link (100ms)\n"
+echo -e "\n==> Running container pumba-high-latency-west-east for high latency link (100ms)"
 
 # Create high latency link (100ms) from west to east
 docker run --rm -d \
@@ -37,7 +37,7 @@ docker run --rm -d \
 		--target ${KAFKA_EAST_4_IP} \
         	delay --time 100 zookeeper-west broker-west-1 broker-west-2 --jitter 20 &
 
-echo -e "\n==> Running container pumba-loss-west-east with 1% packet loss from west to east\n"
+echo -e "\n==> Running container pumba-loss-west-east with 1% packet loss from west to east"
 
 docker run --rm -d \
 	--network=${DOCKER_NETWORK} \
@@ -52,7 +52,7 @@ docker run --rm -d \
 		--target ${KAFKA_EAST_4_IP} \
 		loss --percent 1 zookeeper-west broker-west-1 broker-west-2 &
 
-echo -e "\n==> Running container pumba-loss-east-west with 1% packet loss from east to west\n"
+echo -e "\n==> Running container pumba-loss-east-west with 1% packet loss from east to west"
 
 docker run --rm -d \
 	--network=${DOCKER_NETWORK} \

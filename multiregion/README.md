@@ -129,8 +129,8 @@ Each placement also has a minimum `count` associated with it that allows users t
 | Topic name         | Leader  | Followers (sync replicas) | Observers (async replicas) | ISR list  |
 |--------------------|---------|---------------------------|----------------------------|-----------|
 | single-region      | 1x west | 1x west                   | n/a                        | {1,2}     |
-| multi-region-async | 1x west | 1x west                   | 2x east                    | {1,2}     |
 | multi-region-sync  | 1x west | 1x west, 2x east          | n/a                        | {1,2,3,4} |
+| multi-region-async | 1x west | 1x west                   | 2x east                    | {1,2}     |
 
 The playbook below highlights client performance differences between these topics depending on the relative location of clients and brokers.
 
@@ -150,15 +150,15 @@ Sample output:
 Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
 	Topic: single-region	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 2,1	Offline: 	LiveObservers:
 
-==> Describe topic multi-region-async
-
-Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-	Topic: multi-region-async	Partition: 0	Leader: 1	Replicas: 1,2,4,3	Isr: 1,2	Offline: 	LiveObservers: 4,3
-
 ==> Describe topic multi-region-sync
 
 Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
 	Topic: multi-region-sync	Partition: 0	Leader: 1	Replicas: 1,2,3,4	Isr: 1,2,3,4	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: 1	Replicas: 1,2,4,3	Isr: 1,2	Offline: 	LiveObservers: 4,3
 ```
 
 Observations:
@@ -178,19 +178,19 @@ Sample output:
 ==> Produce: Single-region Replication (topic: single-region) 
 5000 records sent, 240.453977 records/sec (1.15 MB/sec), 10766.48 ms avg latency, 17045.00 ms max latency, 11668 ms 50th, 16596 ms 95th, 16941 ms 99th, 17036 ms 99.9th.
 
-==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async) 
-5000 records sent, 228.258388 records/sec (1.09 MB/sec), 11296.69 ms avg latency, 18325.00 ms max latency, 11866 ms 50th, 17937 ms 95th, 18238 ms 99th, 18316 ms 99.9th.
-
 ==> Produce: Multi-region Sync Replication (topic: multi-region-sync) 
 100 records sent, 2.145923 records/sec (0.01 MB/sec), 34018.18 ms avg latency, 45705.00 ms max latency, 34772 ms 50th, 44815 ms 95th, 45705 ms 99th, 45705 ms 99.9th.
+
+==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async) 
+5000 records sent, 228.258388 records/sec (1.09 MB/sec), 11296.69 ms avg latency, 18325.00 ms max latency, 11866 ms 50th, 17937 ms 95th, 18238 ms 99th, 18316 ms 99.9th.
 
 ```
 
 Observations:
 
-* The first two cases for topics `single-region` and `multi-region-async` have nearly the same throughput performance.
-* The observers in the second case for topic `multi-region-async` didn't affect the overall producer throughput because the `west` region is sending an `ack` back to the producer after it has been replicated twice in the `west` region, and it is not waiting for the async copy to the `east` region. 
-* In the third case for topic `multi-region-sync`, due to the poor network bandwidth between the `east` and `west` regions and due to an ISR made up of brokers in both regions, it took a big throughput hit. This is because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
+* In the first and third cases, topics `single-region` and `multi-region-async` have nearly the same throughput performance (e.g., `1.15 MB/sec` and `1.09 MB/sec`, respectively, in the above example), because only the replicas in the `west` region need to ack.
+* In the second case for topic `multi-region-sync`, due to the poor network bandwidth between the `east` and `west` regions and due to an ISR made up of brokers in both regions, it took a big throughput hit (e.g., `0.01 MB/sec` in the above example). This is because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
+* The observers in the third case for topic `multi-region-async` didn't affect the overall producer throughput because the `west` region is sending an `ack` back to the producer after it has been replicated twice in the `west` region, and it is not waiting for the async copy to the `east` region. 
 
 ## Consumer Testing
 
@@ -235,22 +235,22 @@ Sample output:
 ==> Monitor ReplicasCount
 
 single-region: 2
-multi-region-async: 4
 multi-region-sync: 4
+multi-region-async: 4
 
 
 ==> Monitor InSyncReplicasCount
 
 single-region: 2
-multi-region-async: 2
 multi-region-sync: 4
+multi-region-async: 2
 
 
 ==> Monitor CaughtUpReplicas
 
 single-region: 2
-multi-region-async: 4
 multi-region-sync: 4
+multi-region-async: 4
 ```
 
 ## Failover and Failback
@@ -276,23 +276,23 @@ Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.
 	Topic: single-region	Partition: 0	Leader: none	Replicas: 2,1	Isr: 1	Offline: 2,1	LiveObservers:
 
 
-==> Describe topic multi-region-async
-
-Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-	Topic: multi-region-async	Partition: 0	Leader: none	Replicas: 2,1,3,4	Isr: 1	Offline: 2,1	LiveObservers: 3,4
-
-
 ==> Describe topic multi-region-sync
 
 Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
 	Topic: multi-region-sync	Partition: 0	Leader: 4	Replicas: 2,1,4,3	Isr: 4,3	Offline: 2,1	LiveObservers:
+
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: none	Replicas: 2,1,3,4	Isr: 1	Offline: 2,1	LiveObservers: 3,4
 ```
 
 Observations:
 
 * In the first case, the topic `single-region` has no leader, because it had only two replicas both in the `west` region, which are now down.
-* In the second case, the topic `multi-region-async` also has no leader, because the only two eligible replicas were both in the `west` region, which are now down.  The observers in the east region are not eligible to become replicas.
-* In the third case, the topic `multi-region-sync` automatically elected a new leader in `east` (e.g. replica 4 in the above output).  Clients can failover to those replicas in the east region.
+* In the second case, the topic `multi-region-sync` automatically elected a new leader in `east` (e.g. replica 4 in the above output).  Clients can failover to those replicas in the east region.
+* In the third case, the topic `multi-region-async` also has no leader, because the only two eligible replicas were both in the `west` region, which are now down.  The observers in the east region are not eligible to become replicas.
 
 ### Fail over observers
 
@@ -344,15 +344,15 @@ Sample output:
 Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
 	Topic: single-region	Partition: 0	Leader: 1	Replicas: 2,1	Isr: 1,2	Offline: 	LiveObservers:
 
-==> Describe topic multi-region-async
-
-Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-	Topic: multi-region-async	Partition: 0	Leader: 4	Replicas: 1,2,4,3	Isr: 4,3,2,1	Offline: 	LiveObservers:
-
 ==> Describe topic multi-region-sync
 
 Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
 	Topic: multi-region-sync	Partition: 0	Leader: 1	Replicas: 1,2,3,4	Isr: 3,4,2,1	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: 4	Replicas: 1,2,4,3	Isr: 4,3,2,1	Offline: 	LiveObservers:
 ```
 
 Observations:
@@ -382,15 +382,15 @@ Sample output:
 Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
 	Topic: single-region	Partition: 0	Leader: 2	Replicas: 2,1	Isr: 1,2	Offline: 	LiveObservers:
 
-==> Describe topic multi-region-async
-
-Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-	Topic: multi-region-async	Partition: 0	Leader: 1	Replicas: 1,2,4,3	Isr: 2,1	Offline: 	LiveObservers: 4,3
-
 ==> Describe topic multi-region-sync
 
 Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
 	Topic: multi-region-sync	Partition: 0	Leader: 1	Replicas: 1,2,3,4	Isr: 3,4,2,1	Offline: 	LiveObservers:
+
+==> Describe topic multi-region-async
+
+Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+	Topic: multi-region-async	Partition: 0	Leader: 1	Replicas: 1,2,4,3	Isr: 2,1	Offline: 	LiveObservers: 4,3
 ```
 
 Observations:
