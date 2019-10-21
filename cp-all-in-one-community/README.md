@@ -2,7 +2,7 @@
 
 # Overview
 
-This [docker-compose.yml](docker-compose.yml) launches just the community services in Confluent Platform and runs them in containers in your local host, enabling you to build your own development environments (see [cp-all-in-one](../cp-all-in-one/docker-compose.yml) for launching all services in Confluent Platform).
+This [docker-compose.yml](docker-compose.yml) launches only the community services in Confluent Platform and runs them in containers in your local host, enabling you to build your own development environments (see [cp-all-in-one](../cp-all-in-one/docker-compose.yml) for launching all services in Confluent Platform).
 For an example of how to use this Docker setup, refer to the [Confluent Platform quickstart](https://docs.confluent.io/current/quickstart/index.html)
 
 # Additional Examples
