@@ -7,4 +7,4 @@ For an example of how to use this Docker setup, refer to the [Confluent Platform
 
 # Additional Examples
 
-For additional examples that showcase streaming applications within an event streaming platform, please refer to [these demos](https://github.com/confluentinc/examples).
+For additional examples that showcase streaming applications within an event streaming platform, see [these demos](https://github.com/confluentinc/examples).
