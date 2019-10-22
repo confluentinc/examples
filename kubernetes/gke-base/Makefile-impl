@@ -261,6 +261,7 @@ gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-wait-for-schemaregistry
 	@make --no-print-directory gke-base-deploy-connect
 	@make --no-print-directory gke-base-wait-for-connect
+# TODO: Add flag for clicks data
 	@make --no-print-directory gke-base-deploy-clicks-connector
 	@make --no-print-directory gke-base-deploy-controlcenter
 	@make --no-print-directory gke-base-wait-for-controlcenter
