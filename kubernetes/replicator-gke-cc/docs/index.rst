@@ -22,6 +22,9 @@ The major components of this demo are:
   * |c3|
   * One instance of ``kafka-connect-datagen`` to produce mock stock trading data
 
+.. figure:: images/operator-demo-phase-2.png
+    :alt: operator
+
 Demo Prerequisites
 -------------------
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
@@ -53,7 +56,7 @@ Clone the Confluent examples repository and change directories on your terminal 
     git clone git@github.com:confluentinc/examples.git
     cd examples/kubernetes/replicator-gke-cc
 
-In order to properly simulate a reqlistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.
 
 If you wish to override the behavior of the create cluster script, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set prior to the ``make`` command, such as ``GKE_BASE_ZONE=us-central1-b make ...``.
 
