@@ -1,12 +1,12 @@
 .. _quickstart-demos-operator-replicator-gke-cc:
 
-Bridge to |ccloud| with |crep-full|
-===================================
+Google Kubernetes Engine to |ccloud| with |crep-full|
+=====================================================
 
 Overview
 --------
 
-This demonstrations features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.
+This demonstrations features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
 The major components of this demo are:
 
@@ -29,16 +29,18 @@ Demo Prerequisites
 -------------------
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
-+------------------+----------------+---------------------------------------------------------+
-| Application      | Tested Version | Info                                                    |
-+==================+================+=========================================================+
-| ``kubectl``      | ``1.14.3``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
-+------------------+----------------+---------------------------------------------------------+
-| ``helm``         | ``2.14.3``     | https://helm.sh/docs/using_helm/#install-helm           |
-+------------------+----------------+---------------------------------------------------------+
-| ``gcloud``       | ``267.0.0``    |  https://cloud.google.com/sdk/install                   |
-| ``GCP sdk core`` | ``2019.10.15`` |                                                         |
-+------------------+----------------+---------------------------------------------------------+
++------------------+----------------+----------------------------------------------------------+
+| Application      | Tested Version | Info                                                     |
++==================+================+==========================================================+
+| ``kubectl``      | ``1.14.3``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
++------------------+----------------+----------------------------------------------------------+
+| ``helm``         | ``2.14.3``     | https://helm.sh/docs/using_helm/#install-helm            |
++------------------+----------------+----------------------------------------------------------+
+| ``gcloud``       | ``267.0.0``    |  https://cloud.google.com/sdk/install                    |
+| ``GCP sdk core`` | ``2019.10.15`` |                                                          |
++------------------+----------------+----------------------------------------------------------+
+| ``ccloud``       | ``v0.185.0``   | https://docs.confluent.io/current/cloud/cli/install.html |
++------------------+----------------+----------------------------------------------------------+
 
 Running the Demo
 ----------------
@@ -82,5 +84,15 @@ After the cluster is created you can verify it's status with the following:
 .. sourcecode:: bash
 
 		gcloud container clusters list
+
+And verify that your ``kubectl`` command is configured in the proper context to control your new cluster:
+
+.. sourcecode:: bash
+
+		kubectl config current-context
+
+This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See https://www.confluent.io/confluent-cloud/ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
+
+After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
 
 
