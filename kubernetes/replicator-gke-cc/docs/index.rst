@@ -93,6 +93,38 @@ And verify that your ``kubectl`` command is configured in the proper context to 
 
 This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See https://www.confluent.io/confluent-cloud/ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
 
-After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
+After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster, you will need the values in a momemnt to configure the demo.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
 
+To configure the demo to access your |ccloud| account, we are going to create a Helm Chart values file, which the demo looks for in a particulare location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
+Create a values file by executing:
+
+.. sourcecode:: bash
+
+		cat <<'EOF' > ./cfg/my-values.yaml
+		destinationCluster: &destinationCluster
+  		name: demo-cc-cluster-name 
+  		tls:
+  		  enabled: true
+  		  internal: true
+  		  authentication:
+  		    type: plain
+  		bootstrapEndpoint: < your |ccloud| bootstrap server connection > 
+  		username: < your |ccloud| API key |
+  		password: < your |ccloud| API secret | 
+
+		controlcenter:
+		  dependencies:
+		    monitoringKafkaClusters:
+		    - <<: *destinationCluster
+		  loadBalancer:
+				enabled: false
+		    domain: "" 
+		
+		replicator:
+		  replicas: 1
+		  dependencies:
+		    kafka:
+		      <<: *destinationCluster
+
+		
