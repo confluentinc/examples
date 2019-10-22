@@ -14,10 +14,6 @@ global:
       reclaimPolicy: Delete 
       parameters:
         type: pd-ssd 
-    sasl:
-      plain:
-        username=test
-        password=test123
 
 manager:
   name: manager

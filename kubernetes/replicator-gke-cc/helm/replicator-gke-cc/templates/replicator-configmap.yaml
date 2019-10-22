@@ -1,0 +1,49 @@
+{{- $_ := set $ "kafkaDependency" .Values.replicator.dependencies.kafka }}
+{{- $_ := set $ "username" .Values.global.sasl.plain.username }}
+{{- $_ := set $ "password" .Values.global.sasl.plain.password }}
+{{- $destProtocol := (include "kafka-external-advertise-protocol" .) | trim }}
+{{- $destJaasConfig := (include "kafka-jaas-config" .) | trim }}
+
+{{- $_ := set $ "kafkaDependency" .Values.replicator.src.kafka }}
+{{- $_ := set $ "username" .Values.replicator.src.kafka.username }}
+{{- $_ := set $ "password" .Values.replicator.src.kafka.password }}
+{{- $srcProtocol := (include "kafka-external-advertise-protocol" .) | trim }}
+{{- $srcJaasConfig := (include "kafka-jaas-config" .) | trim }}
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: replicator-connector
+data:
+  replicator-connector.json: '{
+    "name":"replicator",
+    "config": {
+      "connector.class": "io.confluent.connect.replicator.ReplicatorSourceConnector",
+      "topic.whitelist": "{{.Values.replicator.topic.whitelist}}",
+      "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
+      "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
+      "dest.kafka.bootstrap.servers": "{{.Values.replicator.dependencies.kafka.bootstrapEndpoint}}",
+      "dest.kafka.security.protocol": "{{$destProtocol}}",
+      "dest.kafka.sasl.mechanism": "PLAIN",
+      "dest.kafka.sasl.jaas.config": "{{$destJaasConfig}}",
+      "src.consumer.group.id": "replicator",
+      "src.kafka.bootstrap.servers": "kafka:9071",
+      "src.kafka.security.protocol": "{{$srcProtocol}}",
+      "src.kafka.sasl.mechanism": "PLAIN",
+      "src.kafka.sasl.jaas.config": "{{$srcJaasConfig}}",
+      "src.consumer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor",
+      "src.consumer.confluent.monitoring.interceptor.bootstrap.servers": "kafka:9071",
+      "src.consumer.confluent.monitoring.interceptor.security.protocol": "{{$srcProtocol}}",
+      "src.consumer.confluent.monitoring.interceptor.sasl.mechanism": "PLAIN",
+      "src.consumer.confluent.monitoring.interceptor.sasl.jaas.config": "{{$srcJaasConfig}}",
+      "src.kafka.timestamps.producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor",
+      "src.kafka.timestamps.producer.confluent.monitoring.interceptor.bootstrap.servers": "kafka:9071",
+      "src.kafka.timestamps.producer.confluent.monitoring.interceptor.security.protocol": "{{$srcProtocol}}",
+      "src.kafka.timestamps.producer.confluent.monitoring.interceptor.sasl.mechanism": "PLAIN",
+      "src.kafka.timestamps.producer.confluent.monitoring.interceptor.sasl.jaas.config": "{{$srcJaasConfig}}",
+      "tasks.max": "1"
+    }
+  }'
+
+{{- $_ := unset $ "kafkaDependency" }}
+
