@@ -95,9 +95,9 @@ This demonstration requires that you have a |ccloud| account and |ak| cluster re
 
 After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster, you will need the values in a momemnt to configure the demo.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
 
-To configure the demo to access your |ccloud| account, we are going to create a Helm Chart values file, which the demo looks for in a particulare location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
+To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart values file <https://helm.sh/docs/chart_template_guide/>`__, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
-Create a values file by executing:
+Create a values file by executing the following command, first replacing the ``bootstrapEndpoint``, ``username``, and ``password`` values in the command with your relevant values.  You can obtain these values from the |ccloud| web console in the CLI & client configuration section.
 
 .. sourcecode:: bash
 
@@ -109,9 +109,9 @@ Create a values file by executing:
   		  internal: true
   		  authentication:
   		    type: plain
-  		bootstrapEndpoint: < your |ccloud| bootstrap server connection > 
-  		username: < your |ccloud| API key |
-  		password: < your |ccloud| API secret | 
+  		bootstrapEndpoint: {{ your |ccloud| bootstrap server connection }}
+  		username: {{ your |ccloud| API key }}
+  		password: {{ your |ccloud| API secret }}
 
 		controlcenter:
 		  dependencies:
@@ -126,5 +126,5 @@ Create a values file by executing:
 		  dependencies:
 		    kafka:
 		      <<: *destinationCluster
+		EOF
 
-		
