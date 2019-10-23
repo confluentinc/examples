@@ -299,7 +299,7 @@ Observations:
 To explicitly fail over the observers in the topic `multi-region-async` to the `east` region, trigger leader election:
 
 ```
-docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:9094 --election-type UNCLEAN --topic multi-region-async --partition 0
+docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
 ```
 
 Describe the topics again.

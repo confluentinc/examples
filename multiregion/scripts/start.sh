@@ -58,17 +58,17 @@ ${DIR}/describe-topics.sh
 
 echo -e "\nFail over the observers in the topic multi-region-async to the east region, trigger leader election"
 
-docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:9094 --election-type UNCLEAN --topic multi-region-async --partition 0
+docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
 
 echo "Sleeping 30 seconds"
 sleep 30
 
 ${DIR}/describe-topics.sh
 
-echo "Restore west region"
+echo -e "\nRestore west region"
 docker-compose start broker-west-1 broker-west-2 zookeeper-west
 
-echo "Sleeping 300 seconds"
+echo "Sleeping 300 seconds until the leadership election restores the preferred replicas"
 sleep 300
 
 ${DIR}/describe-topics.sh
