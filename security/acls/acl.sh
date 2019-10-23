@@ -171,8 +171,6 @@ echo "Writing to $CLIENT_CONFIG"
 cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
-request.timeout.ms=20000
-retry.backoff.ms=500
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
