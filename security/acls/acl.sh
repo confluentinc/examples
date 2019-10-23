@@ -34,7 +34,8 @@
 # Requirements:
 #
 #   - Access to a Confluent Cloud cluster
-#   - Local install of the new Confluent Cloud CLI (v0.84.0 or above)
+#   - Local install of the new Confluent Cloud CLI (v0.185.0 or above)
+#   - Docker and Docker Compose
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
 #
@@ -410,6 +411,18 @@ echo -e "\n# Consume from topic pageviews"
 echo "ccloud kafka topic consume pageviews"
 timeout 10s ccloud kafka topic consume pageviews
 
+echo -e "\n# Stop Docker and Delete ACLs"
+echo "docker-compose down"
+docker-compose down
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
+
 
 ##################################################
 # Cleanup
@@ -417,9 +430,7 @@ timeout 10s ccloud kafka topic consume pageviews
 # Delete the API key, service account, Kafka topics, and some of the local files
 ##################################################
 
-echo -e "\n# Cleanup"
-echo "docker-compose down"
-docker-compose down
+echo -e "\n# Cleanup service-account, topics, and api-keys"
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
 for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageviews; do
@@ -430,15 +441,8 @@ echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
 echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
-echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
-echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
-echo "rm -fr delta/configs"
+
+# Delete files created locally
 rm -fr delta/configs
 rm -f "$LOG1"
 rm -f "$LOG2"
