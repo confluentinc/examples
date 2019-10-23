@@ -46,7 +46,6 @@ Running the Demo
 ----------------
 
 .. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
-
  
 Setup
 -----
@@ -61,9 +60,9 @@ Clone the Confluent examples repository and change directories on your terminal 
 GKE Setup
 +++++++++
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.
 
-If you wish to override the behavior of the create cluster script, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set prior to the ``make`` command, such as ``GKE_BASE_ZONE=us-central1-b make ...``.
+If you wish to override the behavior of the create cluster function, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set prior to the ``make`` command, such as ``GKE_BASE_ZONE=us-central1-b make gke-create-cluster``, or they can be exported to the current environment.
 
 .. sourcecode:: bash
 
@@ -82,8 +81,7 @@ To create the standard cluster you can run the following:
 
     make gke-create-cluster
 
-
-This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__, you can reference that demo for more information on setting up a base |co-long| deployment on GKE.  
+This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__, you can reference that demo for more information on setting up a base |co-long| deployment on GKE if necessary.
 
 Confluent Cloud Setup
 +++++++++++++++++++++
@@ -162,5 +160,8 @@ The last output message you should see is::
 
 	✔ Replicator GKE->CC Demo running
 
+Highlights
+----------
 
+Coming soon...
     
