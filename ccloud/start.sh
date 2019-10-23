@@ -79,8 +79,6 @@ rest.port=$CONNECT_REST_PORT
 rest.advertised.name=connect-cloud
 rest.hostname=connect-cloud
 group.id=connect-cloud
-request.timeout.ms=20000
-retry.backoff.ms=500
 EOF
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
 sleep 40

@@ -1,7 +1,5 @@
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
-request.timeout.ms=20000
-retry.backoff.ms=500
 security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
