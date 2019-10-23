@@ -49,7 +49,7 @@ Running the Demo
 
  
 Setup
-*****
+-----
 
 Clone the Confluent examples repository and change directories on your terminal into the ``replicator-gke-cc`` directory.
 
@@ -59,7 +59,8 @@ Clone the Confluent examples repository and change directories on your terminal 
     cd examples/kubernetes/replicator-gke-cc
 
 GKE Setup
----------
++++++++++
+
 In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.
 
 If you wish to override the behavior of the create cluster script, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set prior to the ``make`` command, such as ``GKE_BASE_ZONE=us-central1-b make ...``.
@@ -81,22 +82,11 @@ To create the standard cluster you can run the following:
 
     make gke-create-cluster
 
-After the cluster is created you can verify it's status with the following:
-
-.. sourcecode:: bash
-
-    gcloud container clusters list
-
-And verify that your ``kubectl`` command is configured in the proper context to control your new cluster:
-
-.. sourcecode:: bash
-
-    kubectl config current-context
 
 This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__, you can reference that demo for more information on setting up a base |co-long| deployment on GKE.  
 
 Confluent Cloud Setup
----------------------
++++++++++++++++++++++
 
 This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See https://www.confluent.io/confluent-cloud/ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
 
@@ -104,7 +94,7 @@ After you have established the |ccloud| cluster you are going to use for the dem
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart values file <https://helm.sh/docs/chart_template_guide/>`__, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
-Create a values file by executing the following command, first replacing the ``bootstrapEndpoint``, ``username``, and ``password`` values in the command with your relevant values.  You can obtain these values from the |ccloud| web console in the CLI & client configuration section.
+Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values.  You can obtain these values from the |ccloud| web console in the CLI & client configuration section.
 
 .. sourcecode:: bash
 
@@ -135,3 +125,42 @@ Create a values file by executing the following command, first replacing the ``b
           <<: *destinationCluster
     EOF
 
+Validate
+--------
+
+Prior to running the demo you may want to verify the setup.
+
+To verify your GKE cluster status:
+
+.. sourcecode:: bash
+
+    gcloud container clusters list
+
+To verify that your ``kubectl`` command is configured with the proper context to control your GKE cluster, run:
+
+.. sourcecode:: bash
+
+    kubectl config current-context
+
+The output of this command should be a name with the combination of your GKE project, the region, and the value of the ``Makefile`` variable ``GKE_BASE_CLUSTER_ID`` and your machine username, for example:
+
+.. sourcecode:: bash
+
+    ➜ kubectl config current-context
+    gke_gkeproject_us-central1-a_cp-examples-operator-jdoe
+
+Run
+---
+
+To run the automated demo run (estimated running time, 8 minutes):
+
+.. sourcecode:: bash
+
+    make demo
+
+The last output message you should see is::
+
+	✔ Replicator GKE->CC Demo running
+
+
+    

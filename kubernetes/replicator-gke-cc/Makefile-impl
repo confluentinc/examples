@@ -48,10 +48,11 @@ replicator-gke-cc-deploy-replicator-deploy-job: #_ Deploys A Replicator Configur
 #################################
 
 replicator-gke-cc-demo:
-	@make --no-print-directory gke-base-demo
+	@make --no-print-directory gke-base-demo GKE_BASE_SKIP_CLICKS=true
 	@make --no-print-directory gke-base-deploy-stock-trades-connector
 	@make --no-print-directory replicator-gke-cc-deploy-replicator
 	@make --no-print-directory replicator-gke-cc-wait-for-replicator
+	@make --no-print-directory replicator-gke-cc-deploy-replicator-deploy-job
 	@echo
 	@$(call echo_pass,Replicator GKE->CC Demo running)
 
