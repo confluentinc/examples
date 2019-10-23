@@ -349,7 +349,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG
 source delta_configs/env.delta
 
-echo -e "\n# Create ACLs"
+echo -e "\n# Create ACLs for Connect"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
 ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
