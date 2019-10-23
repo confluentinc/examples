@@ -201,8 +201,6 @@ rm -f $REPLICATOR_PRODUCER_DELTA
 cp $INTERCEPTORS_CONFIG_FILE $REPLICATOR_PRODUCER_DELTA
 echo -e "\n# Confluent Replicator (executable) specific configuration" >> $REPLICATOR_PRODUCER_DELTA
 echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
-echo "request.timeout.ms=200000" >> $REPLICATOR_PRODUCER_DELTA
-echo "retry.backoff.ms=500" >> $REPLICATOR_PRODUCER_DELTA
 REPLICATOR_SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG
 REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\\=/=}
 REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\"/\\\"}
