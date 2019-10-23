@@ -68,18 +68,27 @@ The demo contains a ``make`` function to assist you in creating a cluster in GKE
 
     gcloud config list --format 'value(core.project)'
 
-If you wish to override the behavior of the create cluster function, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
+To create the standard cluster you can run the following:
+
+.. sourcecode:: bash
+
+    make gke-create-cluster
+
+If you wish to override the behavior of the create cluster function there are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
 
 .. sourcecode:: bash
 
   GKE_BASE_ZONE=us-central1-b make gke-create-cluster
 
-Or they can be exported to the current environment:
+Or they can be exported to the current environment prior to running the make command:
 
 .. sourcecode:: bash
 
     export GKE_BASE_ZONE=us-central1-b
     make gke-create-cluster
+
+GKE Create Cluster variables
+****************************
 
 +--------------------------+---------------+
 | Variable                 | Default       |
@@ -100,12 +109,6 @@ Or they can be exported to the current environment:
 +--------------------------+---------------+
 | GKE_BASE_DISK_SIZE       | 100           |
 +--------------------------+---------------+
-
-To create the standard cluster you can run the following:
-
-.. sourcecode:: bash
-
-    make gke-create-cluster
 
 This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__, you can reference that demo for more information on setting up a base |co-long| deployment on GKE if necessary.
 
