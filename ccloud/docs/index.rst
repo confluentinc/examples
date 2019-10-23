@@ -310,34 +310,17 @@ Confluent Replicator copies data from a source Kafka cluster to a
 destination Kafka cluster. In this demo, the source cluster is a local install that represents
 a self-managed cluster, and the destination cluster is |ccloud|.
 
-1. View the Confluent Replicator configuration files.  Note that in this demo, Replicator is run as a standalone binary.
+1. View the Confluent Replicator configuration.
 
    .. sourcecode:: bash
 
-        # Replicator's consumer points to the local cluster
-        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-consumer.properties
-        bootstrap.servers=localhost:9092
+      # For Confluent Platform local install using Confluent CLI
+      $ cat connectors/submit_replicator_config.sh
 
-        # Replicator's producer points to the Confluent Cloud cluster and configures
-        # Confluent Monitoring Interceptors for Control Center stream monitoring to work
-        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud-producer.properties
-        ssl.endpoint.identification.algorithm=https
-        confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
-        sasl.mechanism=PLAIN
-        confluent.monitoring.interceptor.sasl.mechanism=PLAIN
-        security.protocol=SASL_SSL
-        confluent.monitoring.interceptor.security.protocol=SASL_SSL
-        retry.backoff.ms=500
-        bootstrap.servers=<broker1>,<broker2>,<broker3>
-        confluent.monitoring.interceptor.bootstrap.servers=<broker1>,<broker2>,<broker3>
-        sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
-        confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<username>" password="<password>";
-
-        # General Replicator properties define the replication policy
-        $ cat `confluent current | tail -1`/connect/replicator-to-ccloud.properties
-        topic.whitelist=pageviews
-
-2. View topics ``pageviews`` in the local cluster
+      # For Docker Compose
+      $ cat connectors/submit_replicator_docker_config.sh
+      
+2. View topic ``pageviews`` in the local cluster
 
    .. sourcecode:: bash
 
@@ -428,7 +411,7 @@ Confluent Cloud Configurations
    .. sourcecode:: bash
 
         # For Confluent Platform local install using Confluent CLI
-        $ ls `confluent current | tail -1`
+        $ ls `confluent local current | tail -1`
 
 5. If you ran this demo as `start-docker.sh`, the configuration is available in the `docker-compose.yml` file.
 
@@ -446,13 +429,17 @@ Troubleshooting the demo
 1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working |ccloud| cluster and you have locally installed |ccloud| CLI.
 
 
-2. To view log files, look in the current Confluent CLI temp director (requires demo to be actively running):
+2. To view log files, look in the current Confluent CLI temp directory (requires demo to be actively running):
 
    .. sourcecode:: bash
 
-        $ ls `confluent current | tail -1`
+        # View all files
+        $ ls `confluent local current | tail -1`
 
-3. Or if you ran with Docker, then run `docker-compose logs`.
+        # View log file per service, e.g. for the Kafka broker
+        $ confluent local log kafka
+
+3. If you ran with Docker, then run `docker-compose logs | grep ERROR`.
 
 
 ========
