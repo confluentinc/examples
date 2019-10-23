@@ -217,6 +217,19 @@ ls ../clients/
 ../ccloud-generate-cp-configs.sh $CLIENT_CONFIG
 source delta_configs/env.delta
 
+echo -e "\n# Create ACLs"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
+echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
+ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
+sleep 2
+
 echo "Run a Connect container with the kafka-connect-datagen plugin"
 docker-compose up -d
 echo -e "\n# Sleeping 60 seconds to wait for Connect to start"
@@ -244,8 +257,16 @@ echo "curl -X POST -H \"${HEADER}\" --data \"${DATA}\" http://localhost:8083/con
 curl -X POST -H "${HEADER}" --data "${DATA}" http://localhost:8083/connectors
 if [[ $? != 0 ]]; then
   echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
-  exit $?
+  #exit $?
 fi
+
+
+echo "sleeping 60"
+sleep 60
+
+echo -e "\n# Consume from topic pageviews"
+echo "ccloud kafka topic consume pageviews"
+timeout 10s ccloud kafka topic consume pageviews
 
 
 ########### CLOUD UI ############
@@ -279,18 +300,23 @@ fi
 echo -e "\n# Cleanup"
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
-echo "ccloud kafka topic delete $TOPIC1"
-ccloud kafka topic delete $TOPIC1
-echo "ccloud kafka topic delete $TOPIC2"
-ccloud kafka topic delete $TOPIC2
 echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
 echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
+for o in CREATE WRITE READ; do
+  echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation $o --topic '*'"
+  ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation $o --topic '*'
+done
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
+for t in $TOPIC1 pageviews connect-status connect-offsets connect-configs; do
+  echo "ccloud kafka topic delete $t"
+  ccloud kafka topic delete $t
+done
 echo "rm -f $CLIENT_CONFIG"
 rm -f $CLIENT_CONFIG
 echo "docker-compose down"
 docker-compose down
 echo "rm -fr delta/configs"
 rm -fr delta/configs
-

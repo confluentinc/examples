@@ -3,8 +3,8 @@ version: '2'
 services:
   connect-cloud:
     image: cnfldemos/kafka-connect-datagen:0.1.3-5.3.1
-    hostname: connect-local
-    container_name: connect-local
+    hostname: connect-cloud
+    container_name: connect-cloud
     ports:
       - "8083:8083"
     volumes:
@@ -12,7 +12,7 @@ services:
     environment:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: connect"
+      CONNECT_GROUP_ID: connect
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
       CONNECT_STATUS_STORAGE_TOPIC: connect-status
