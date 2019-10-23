@@ -418,12 +418,14 @@ timeout 10s ccloud kafka topic consume pageviews
 ##################################################
 
 echo -e "\n# Cleanup"
+echo "docker-compose down"
+docker-compose down
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
-echo "ccloud kafka topic delete $TOPIC1"
-ccloud kafka topic delete $TOPIC1
-echo "ccloud kafka topic delete $TOPIC2"
-ccloud kafka topic delete $TOPIC2
+for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageviews; do
+  echo "ccloud kafka topic delete $t"
+  ccloud kafka topic delete $t
+done
 echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
 echo "ccloud api-key delete $API_KEY"
@@ -436,8 +438,6 @@ echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID -
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
-echo "docker-compose down"
-docker-compose down
 echo "rm -fr delta/configs"
 rm -fr delta/configs
 rm -f "$LOG1"
