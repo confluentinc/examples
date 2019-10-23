@@ -208,7 +208,6 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 echo "Examples with other programming languages to Confluent Cloud"
 ls ../clients/
 
-
 ##################################################
 # Connect and Connectors
 #
@@ -218,9 +217,10 @@ ls ../clients/
 ../ccloud-generate-cp-configs.sh $CLIENT_CONFIG
 source delta_configs/env.delta
 
-echo "Build and the Connect container with the kafka-connect-datagen plugin"
-docker build -t datagen .
-docker run -d -i --rm --name datagen --env-file .env datagen:latest
+echo "Run a Connect container with the kafka-connect-datagen plugin"
+docker-compose up -d
+echo -e "\n# Sleeping 60 seconds to wait for Connect to start"
+sleep 60
 
 echo "Post the configuration for the kafka-connect-datagen connector"
 HEADER="Content-Type: application/json"
@@ -232,7 +232,7 @@ DATA=$( cat << EOF
     "kafka.topic": "pageviews",
     "quickstart": "pageviews",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "max.interval": 100,
     "iterations": 1000000000,
     "tasks.max": "1"
@@ -258,7 +258,7 @@ fi
 
 # Show diagram CCloud with fully-managed KSQL
 
-#CREATE STREAM pageviews (viewtime bigint, userid varchar, pageid varchar) WITH (kafka_topic='pageviews', value_format='DELIMITED');
+#CREATE STREAM pageviews (viewtime bigint, userid varchar, pageid varchar) WITH (kafka_topic='pageviews', value_format='CSV');
 #SELECT * FROM pageviews WHERE userid = 'User_8';
 
 
@@ -287,7 +287,10 @@ echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
 echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
-rm -f "$CLIENT_CONFIG"
+echo "rm -f $CLIENT_CONFIG"
+rm -f $CLIENT_CONFIG
+echo "docker-compose down"
+docker-compose down
+echo "rm -fr delta/configs"
+rm -fr delta/configs
 
-
-exit
