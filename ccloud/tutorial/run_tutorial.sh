@@ -235,6 +235,17 @@ docker-compose up -d
 echo -e "\n# Sleeping 60 seconds to wait for Connect to start"
 sleep 60
 
+echo -e "\n# Check if topic pageviews exists"
+echo "ccloud kafka topic create pageviews --dry-run 2>/dev/null"
+ccloud kafka topic create pageviews --dry-run 2>/dev/null
+if [[ $? == 0 ]]; then
+  echo -e "\n# Create topic pageviews"
+  echo "ccloud kafka topic create pageviews"
+  ccloud kafka topic create pageviews || true
+else
+  echo "Topic pageviews already exists"
+fi
+
 echo "Post the configuration for the kafka-connect-datagen connector"
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
@@ -260,9 +271,8 @@ if [[ $? != 0 ]]; then
   #exit $?
 fi
 
-
-echo "sleeping 60"
-sleep 60
+echo "sleeping 30"
+sleep 30
 
 echo -e "\n# Consume from topic pageviews"
 echo "ccloud kafka topic consume pageviews"
