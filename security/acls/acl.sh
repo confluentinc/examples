@@ -390,7 +390,7 @@ DATA=$( cat << EOF
     "quickstart": "pageviews",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "max.interval": 100,
+    "max.interval": 1000,
     "iterations": 1000000000,
     "tasks.max": "1"
   }
