@@ -68,18 +68,38 @@ The demo contains a ``make`` function to assist you in creating a cluster in GKE
 
     gcloud config list --format 'value(core.project)'
 
-If you wish to override the behavior of the create cluster function, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set prior to the ``make`` command, such as ``GKE_BASE_ZONE=us-central1-b make gke-create-cluster``, or they can be exported to the current environment.
+If you wish to override the behavior of the create cluster function, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
 
 .. sourcecode:: bash
 
-    GKE_BASE_REGION ?= us-central1
-    GKE_BASE_ZONE ?= us-central1-a
-    GKE_BASE_SUBNET ?= default
-    GKE_BASE_CLUSTER_VERSION ?= 1.13.7-gke.24
-    GKE_BASE_MACHINE_TYPE ?= n1-highmem-2
-    GKE_BASE_IMAGE_TYPE ?= COS
-    GKE_BASE_DISK_TYPE ?= pd-standard
-    GKE_BASE_DISK_SIZE ?= 100
+  GKE_BASE_ZONE=us-central1-b make gke-create-cluster
+
+Or they can be exported to the current environment:
+
+.. sourcecode:: bash
+
+    export GKE_BASE_ZONE=us-central1-b
+    make gke-create-cluster
+
++--------------------------+---------------+
+| Variable                 | Default       |
++==========================+===============+
+| GKE_BASE_REGION          | us-central1   |
++--------------------------+---------------+
+| GKE_BASE_ZONE            | us-central1-a |
++--------------------------+---------------+
+| GKE_BASE_SUBNET          | default       |
++--------------------------+---------------+
+| GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
++--------------------------+---------------+
+| GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
++--------------------------+---------------+
+| GKE_BASE_IMAGE_TYPE      | COS           |
++--------------------------+---------------+
+| GKE_BASE_DISK_TYPE       | pd-standard   |
++--------------------------+---------------+
+| GKE_BASE_DISK_SIZE       | 100           |
++--------------------------+---------------+
 
 To create the standard cluster you can run the following:
 
