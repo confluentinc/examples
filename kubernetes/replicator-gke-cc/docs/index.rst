@@ -58,20 +58,22 @@ Clone the Confluent examples repository and change directories on your terminal 
     git clone git@github.com:confluentinc/examples.git
     cd examples/kubernetes/replicator-gke-cc
 
+GKE Setup
+---------
 In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.
 
 If you wish to override the behavior of the create cluster script, you can modify the following variables and pass them into the `make` command.  The following section shows the variables and their defaults.  The variables can be set prior to the ``make`` command, such as ``GKE_BASE_ZONE=us-central1-b make ...``.
 
 .. sourcecode:: bash
 
-		GKE_BASE_REGION ?= us-central1
-		GKE_BASE_ZONE ?= us-central1-a
-		GKE_BASE_SUBNET ?= default
-		GKE_BASE_CLUSTER_VERSION ?= 1.13.7-gke.24
-		GKE_BASE_MACHINE_TYPE ?= n1-highmem-2
-		GKE_BASE_IMAGE_TYPE ?= COS
-		GKE_BASE_DISK_TYPE ?= pd-standard
-		GKE_BASE_DISK_SIZE ?= 100
+    GKE_BASE_REGION ?= us-central1
+    GKE_BASE_ZONE ?= us-central1-a
+    GKE_BASE_SUBNET ?= default
+    GKE_BASE_CLUSTER_VERSION ?= 1.13.7-gke.24
+    GKE_BASE_MACHINE_TYPE ?= n1-highmem-2
+    GKE_BASE_IMAGE_TYPE ?= COS
+    GKE_BASE_DISK_TYPE ?= pd-standard
+    GKE_BASE_DISK_SIZE ?= 100
 
 To create the standard cluster you can run the following:
 
@@ -83,13 +85,18 @@ After the cluster is created you can verify it's status with the following:
 
 .. sourcecode:: bash
 
-		gcloud container clusters list
+    gcloud container clusters list
 
 And verify that your ``kubectl`` command is configured in the proper context to control your new cluster:
 
 .. sourcecode:: bash
 
-		kubectl config current-context
+    kubectl config current-context
+
+This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__, you can reference that demo for more information on setting up a base |co-long| deployment on GKE.  
+
+Confluent Cloud Setup
+---------------------
 
 This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See https://www.confluent.io/confluent-cloud/ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
 
@@ -101,30 +108,30 @@ Create a values file by executing the following command, first replacing the ``b
 
 .. sourcecode:: bash
 
-		cat <<'EOF' > ./cfg/my-values.yaml
-		destinationCluster: &destinationCluster
-  		name: demo-cc-cluster-name 
-  		tls:
-  		  enabled: true
-  		  internal: true
-  		  authentication:
-  		    type: plain
-  		bootstrapEndpoint: {{ your |ccloud| bootstrap server connection }}
-  		username: {{ your |ccloud| API key }}
-  		password: {{ your |ccloud| API secret }}
+    cat <<'EOF' > ./cfg/my-values.yaml
+    destinationCluster: &destinationCluster
+      name: demo-cc-cluster-name 
+      tls:
+        enabled: true
+        internal: true
+        authentication:
+          type: plain
+      bootstrapEndpoint: {{ cloud bootstrap server connection }}
+      username: {{ cloud API key }}
+      password: {{ cloud API secret }}
 
-		controlcenter:
-		  dependencies:
-		    monitoringKafkaClusters:
-		    - <<: *destinationCluster
-		  loadBalancer:
-				enabled: false
-		    domain: "" 
-		
-		replicator:
-		  replicas: 1
-		  dependencies:
-		    kafka:
-		      <<: *destinationCluster
-		EOF
+    controlcenter:
+      dependencies:
+        monitoringKafkaClusters:
+        - <<: *destinationCluster
+      loadBalancer:
+        enabled: false
+        domain: "" 
+    
+    replicator:
+      replicas: 1
+      dependencies:
+        kafka:
+          <<: *destinationCluster
+    EOF
 
