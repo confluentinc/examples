@@ -403,7 +403,7 @@ if [[ $? != 0 ]]; then
   #exit $?
 fi
 
-echo "sleeping 30"
+echo -e "\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
 sleep 30
 
 echo -e "\n# Consume from topic pageviews"
