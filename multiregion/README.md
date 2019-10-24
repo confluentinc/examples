@@ -331,7 +331,7 @@ docker-compose start broker-west-1 broker-west-2 zookeeper-west
 ```
 
 Wait for 5 minutes, which is the default duration for ``leader.imbalance.check.interval.seconds``, until the leadership election restores the preferred replicas.
-(You can also trigger it with `docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:9094 --election-type PREFERRED --all-topic-partitions`).
+(You can also trigger it with `docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type PREFERRED --all-topic-partitions`).
 
 Verify the new topic replica placement is restored.
 
