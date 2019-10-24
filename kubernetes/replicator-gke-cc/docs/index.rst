@@ -64,9 +64,9 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
 GKE Setup
 +++++++++
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node |zk| and a 3 node |ak| clusters.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  If you wish to use an existing GKE cluster, and your ``kubectl`` tool is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  If you wish to use an existing GKE cluster, and your ``kubectl`` tool is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
 
-The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
+If you wish to create a new GKE cluster for this demo, the ``Makefile`` contains a ``make`` function to assist you in creating a cluster, assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
 
 To verify which GCP Project your ``gcloud`` SDK is currently configured to, run:
 
@@ -85,7 +85,7 @@ To create the standard cluster you can run the following:
 Confluent Cloud Setup
 +++++++++++++++++++++
 
-This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
+This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
 
 After you have established the |ccloud| cluster you are going to use for the demo, you will need the public Bootstrap Server as well as an API Key and it's Secret to configure client connectivity.
 
@@ -93,9 +93,9 @@ You can obtain the Bootstrap Server value from the |ccloud| web console in the `
 
 .. sourcecode:: bash
 
-    ccloud kafka cluster describe abc-12ab34
+    ccloud kafka cluster describe <cluster-id> 
     +-------------+-------------------------------------------------------------+
-    | Id          | abc-12ab34                                                  |
+    | Id          | <cluster-id>                                                |
     | Name        | replicator-gke-cc-demo                                      |
     | Ingress     |                                                        100  |
     | Egress      |                                                        100  |
@@ -103,7 +103,7 @@ You can obtain the Bootstrap Server value from the |ccloud| web console in the `
     | Provider    | gcp                                                         |
     | Region      | us-central1                                                 |
     | Status      | UP                                                          |
-    | Endpoint    | SASL_SSL://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud:9092 |
+    | Endpoint    | SASL_SSL://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud:9092 | <<---- This is the Bootstrap Server
     | ApiEndpoint | https://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud         |
     +-------------+-------------------------------------------------------------+
 
