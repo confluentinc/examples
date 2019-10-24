@@ -122,13 +122,13 @@ You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your clus
     This should produce a list of clusters you have access to:
 
     ::
-     
+
               Id      |          Name          | Provider |   Region    | Durability | Status
         +-------------+------------------------+----------+-------------+------------+--------+
             lkc-xmm5g | cluster-one            | gcp      | us-central1 | LOW        | UP
             lkc-kngnv | example-cluster-two    | gcp      | us-central1 | LOW        | UP
           * lkc-m85m7 | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP
- 
+
 #. Describe the cluster to obtain the Bootstrap Server
 
     ::
@@ -215,7 +215,7 @@ The output of the previous command should be a name with the combination of your
 
 .. sourcecode:: bash
 
-    ➜ kubectl config current-context
+    kubectl config current-context
     gke_gkeproject_us-central1-a_cp-examples-operator-jdoe
 
 Run
