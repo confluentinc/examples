@@ -128,7 +128,7 @@ You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your clus
             lkc-kngnv | example-cluster-two    | gcp      | us-central1 | LOW        | UP
           * lkc-m85m7 | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP
 
-#. Describe the cluster to obtain the Bootstrap Server
+#.  Describe the cluster to obtain the Bootstrap Server
 
     ::
 
@@ -153,7 +153,7 @@ You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your clus
 
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can also create topics using the
+.. tip:: You can also create the API Key using the
          :ref:`Confluent Cloud UI <cloud-quick-create-api-key>`.
 
 To create a new API Key:
