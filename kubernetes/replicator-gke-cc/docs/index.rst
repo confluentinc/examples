@@ -154,11 +154,16 @@ You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your clus
 
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can slo use the `web UI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ to create API Keys
+.. tip:: You can also create topics using the
+         :ref:`Confluent Cloud UI <cloud-quick-create-api-key>`.
+
+To create a new API Key:
 
     ::
 
         ccloud api-key create --resource lkc-m85m7
+
+The tool will display a new Key and secret as below.  You will need to save these values elsewhere as they cannot be retrieved later.
 
     ::
 
