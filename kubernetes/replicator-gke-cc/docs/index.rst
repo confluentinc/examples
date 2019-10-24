@@ -8,16 +8,16 @@ Overview
 
 This example features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
-This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  If you'd like a primer on running |co-long| in GKE with lower resource requirements, you can start with that demo. 
+This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  If you'd like a primer on running |co-long| in GKE with lower resource requirements, start with that demo. 
 
 The major components of this demo are:
 
-* A |ccloud| environment and |ak| cluster
+* A |ccloud| Environment and |ak| Cluster
 * A Kubernetes cluster running on GKE.
 * |co-long| which is used to manage the following |cp| components
 
   * A 3 node |zk| cluster
-  * A 3 node node |ak| cluster
+  * A 3 node |ak| cluster
   * A single node |crep|
   * A single node |sr|
   * A single node |kconnect-long|
@@ -44,7 +44,7 @@ The following applications or libraries are required to be installed and availab
 | ``ccloud``       | ``v0.185.0``   | https://docs.confluent.io/current/cloud/cli/install.html |
 +------------------+----------------+----------------------------------------------------------+
 
-.. warning:: In testing issues with ``helm`` versions > than 2.12.3 have been observed.  It's highly recommended that the demo be ran specifically with ``helm`` version ``2.12.3``.
+.. warning:: In testing, issues were experienced with ``helm`` versions > than 2.12.3.  It's highly recommended that the demo be ran specifically with ``helm`` version ``2.12.3``.
 
 Running the Demo
 ----------------
@@ -52,7 +52,7 @@ Running the Demo
 .. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
  
 Setup
------
+~~~~~
 
 Clone the `Confluent examples repository <https://github.com/confluentinc/examples>`__ and change directories on your terminal into the ``replicator-gke-cc`` directory.
 
@@ -143,7 +143,7 @@ The output of the previous command should be a name with the combination of your
     gke_gkeproject_us-central1-a_cp-examples-operator-jdoe
 
 Run
----
+~~~
 
 To run the automated demo run (estimated running time, 8 minutes):
 
@@ -156,9 +156,19 @@ The last output message you should see is::
 	✔ Replicator GKE->CC Demo running
 
 Validate
---------
+~~~~~~~~
 
 Coming soon...
+
+Delete Resources
+~~~~~~~~~~~~~~~~
+
+After you are done evaluating the results of the demo, you can destroy all the provisioned resources with:
+
+.. sourcecode:: bash
+
+    make destroy-demo
+
 
 Highlights
 ----------
@@ -184,7 +194,7 @@ Or they can be exported to the current environment prior to running the make com
     make gke-create-cluster
 
 GKE Create Cluster variables
-++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 +--------------------------+---------------+
 | Variable                 | Default       |
@@ -210,6 +220,5 @@ GKE Create Cluster variables
 Troubleshooting
 ---------------
 
-WIP
+- If you observe that the replicated offsets do not match in the source and destination cluster the destination cluster may have existed prior to starting the cluster in situations where you may have restarted the demonstration.  To see the full demonstration function properly use a new cluster or delete and recreate the destination topic prior to running the demo.
 
-Offsets may not match up if the destination cluster (|ccloud|) topic isn't recreated prior to running.
