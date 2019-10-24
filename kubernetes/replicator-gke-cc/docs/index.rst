@@ -91,7 +91,7 @@ After you have established the |ccloud| cluster you are going to use for the dem
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart values file <https://helm.sh/docs/chart_template_guide/>`__, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
-Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values.  You can obtain these values from the |ccloud| web console in the CLI & client configuration section, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for detailed instructions.
+Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values.  You can obtain these values from the |ccloud| web console or from the `ccloud CLI <https://docs.confluent.io/current/cloud/cli/index.html>`__.  For detailed instructions on obtaining the values via the web console, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__.  If you prefer to use the ``ccloud`` CLI, refer to the `Confluent Cloud CLI <https://docs.confluent.io/current/cloud/cli/index.html>`__ instructions for `API keys <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_api-key_create.html>`__.
 
 .. sourcecode:: bash
 
