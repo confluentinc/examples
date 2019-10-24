@@ -8,7 +8,7 @@ Overview
 
 This example features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
-This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  If you'd like a primer on running |co-long| in GKE with lower resource requirements, start with that demo. 
+This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  If you'd like a primer on running |co-long| in GKE with lower resource requirements you can start with that demo.
 
 The major components of this demo are:
 
@@ -22,7 +22,7 @@ The major components of this demo are:
   * A single node |sr|
   * A single node |kconnect-long|
   * |c3|
-  * One instance of ``kafka-connect-datagen`` to produce mock stock trading data
+  * One instance of `kafka-connect-datagen <https://github.com/confluentinc/kafka-connect-datagen>`__ to produce mock stock trading data
 
 .. figure:: images/operator-demo-phase-2.png
     :alt: operator
@@ -64,7 +64,7 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
 GKE Setup
 +++++++++
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  If you wish to use an existing GKE cluster, and your ``kubectl`` tool is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node |zk| and a 3 node |ak| clusters.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  If you wish to use an existing GKE cluster, and your ``kubectl`` tool is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
 
 The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
 
@@ -79,8 +79,6 @@ To create the standard cluster you can run the following:
 .. sourcecode:: bash
 
     make gke-create-cluster
-
-
 
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-setup:
 
