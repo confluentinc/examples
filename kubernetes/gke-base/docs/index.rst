@@ -62,9 +62,7 @@ The remaining steps in the **Setup** section of the instructions help you build 
 
 To verify the Google Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://support.google.com/googleapi/answer/7014113?hl=en>`__:
 
-.. sourcecode:: bash
-
-    gcloud config list --format 'value(core.project)'
+.. include:: ../../docs/includes/gcloud-config-list.rst
 
 .. note::
 

@@ -1,5 +1,9 @@
 .. _quickstart-demos-operator-replicator-gke-cc:
 
+.. |cluster-settings| image:: images/cluster-settings.png
+   :align: middle
+   :width: 80%
+
 Google Kubernetes Engine to |ccloud| with |crep-full|
 =====================================================
 
@@ -29,6 +33,7 @@ The major components of this demo are:
 
 Demo Prerequisites
 -------------------
+
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
 +------------------+----------------+----------------------------------------------------------+
@@ -36,23 +41,20 @@ The following applications or libraries are required to be installed and availab
 +==================+================+==========================================================+
 | ``kubectl``      | ``1.14.3``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
 +------------------+----------------+----------------------------------------------------------+
-| ``helm``         | ``2.12.3``     | https://helm.sh/docs/using_helm/#install-helm            |
+| ``helm``         | ``2.12.3``     | https://github.com/helm/helm/releases/tag/v2.12.3        |
 +------------------+----------------+----------------------------------------------------------+
-| ``gcloud``       | ``267.0.0``    |  https://cloud.google.com/sdk/install                    |
+| ``gcloud``       | ``267.0.0``    | https://cloud.google.com/sdk/install                     |
 | ``GCP sdk core`` | ``2019.10.15`` |                                                          |
 +------------------+----------------+----------------------------------------------------------+
 | ``ccloud``       | ``v0.185.0``   | https://docs.confluent.io/current/cloud/cli/install.html |
 +------------------+----------------+----------------------------------------------------------+
 
-.. warning:: In testing, issues were experienced with ``helm`` versions > than 2.12.3.  It's highly recommended that the demo be ran specifically with ``helm`` version ``2.12.3``.
+.. warning:: In testing, issues were experienced with ``helm`` versions > than 2.12.3.  It's highly recommended that the demo be ran specifically with helm version 2.12.3.
 
 Running the Demo
 ----------------
 
 .. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
-
-Setup
-~~~~~
 
 Clone the `Confluent examples repository <https://github.com/confluentinc/examples>`__ and change directories on your terminal into the ``replicator-gke-cc`` directory.
 
@@ -62,17 +64,17 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
     cd examples/kubernetes/replicator-gke-cc
 
 GKE Setup
-+++++++++
+~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  If you wish to use an existing GKE cluster, and your ``kubectl`` tool is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  
 
-If you wish to create a new GKE cluster for this demo, the ``Makefile`` contains a ``make`` function to assist you in creating a cluster, assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
+If you wish to use an existing GKE cluster, and your ``kubectl`` client is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
+
+If you wish to create a new GKE cluster for this demo, the ``Makefile`` contains a function to assist you in creating a cluster, assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
 
 To verify which GCP Project your ``gcloud`` SDK is currently configured to, run:
 
-.. sourcecode:: bash
-
-    gcloud config list --format 'value(core.project)'
+.. include:: ../../docs/includes/gcloud-config-list.rst
 
 To create the standard cluster you can run the following:
 
@@ -83,15 +85,33 @@ To create the standard cluster you can run the following:
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-setup:
 
 Confluent Cloud Setup
-+++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~
 
-This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
+Confluent Cloud Account Setup
++++++++++++++++++++++++++++++
 
-After you have established the |ccloud| cluster you are going to use for the demo, you will need the public Bootstrap Server as well as an API Key and it's Secret to configure client connectivity.
+This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
+
+Kafka Cluster Setup
++++++++++++++++++++
+
+If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and, by default, in the ``us-central1`` region.  It is recommended to name your new cluster ``replicator-gke-cc-demo`` to match names used later in this demo.  The following illustrates the recommended configuration:
+
+.. figure:: images/new-cluster.png
+    :alt: New Cluster Example
+
+.. tip:: See the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ for more information.
+
+Kafka Bootstrap Server Configuration
+++++++++++++++++++++++++++++++++++++
+
+After you have established the |ccloud| cluster you are going to use for the demo you will need the public Bootstrap Server.
 
 You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your cluster.
 
-.. tip:: You can also view the Bootstrap Server value on the Confluent Cloud UI under the **Cluster settings**.
+.. tip:: You can also view the Bootstrap Server value on the Confluent Cloud UI under the **Cluster settings**
+  
+  |cluster-settings| 
 
 #.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
 
@@ -108,7 +128,7 @@ You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your c
         Enter your Confluent credentials:
         Email: jdoe@myemail.io
         Password:
-
+        
         Logged in as jdoe@myemail.io
         Using environment t118 ("default")
 
@@ -122,24 +142,24 @@ You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your c
 
     ::
 
-              Id      |          Name          | Provider |   Region    | Durability | Status
+              Id      |          Name          | Provider |   Region    | Durability | Status  
         +-------------+------------------------+----------+-------------+------------+--------+
-            lkc-xmm5g | cluster-one            | gcp      | us-central1 | LOW        | UP
-            lkc-kngnv | example-cluster-two    | gcp      | us-central1 | LOW        | UP
-          * lkc-m85m7 | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP
+            lkc-xmm5g | acl-test               | gcp      | us-central1 | LOW        | UP      
+            lkc-kngnv | rjs-gcp-us-central1    | gcp      | us-central1 | LOW        | UP      
+            lkc-3r3vj | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP      
 
 #.  Describe the cluster to obtain the Bootstrap Server
 
     ::
 
-        ccloud kafka cluster describe lkc-m85m7
+        ccloud kafka cluster describe lkc-3r3vj
 
     This will produce a detailed view of the cluster.  The ``Endpoint`` field contains the Boostrap Server value
 
     ::
 
         +-------------+------------------------------------------------------------+
-        | Id          | lkc-m85m7                                                  |
+        | Id          | lkc-3r3vj                                                  |
         | Name        | replicator-gke-cc-demo                                     |
         | Ingress     |                                                        100 |
         | Egress      |                                                        100 |
@@ -151,56 +171,73 @@ You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your c
         | ApiEndpoint | https://pkac-lq8w6.us-central1.gcp.stag.cpdev.cloud        |
         +-------------+------------------------------------------------------------+
 
+API Key and Secret Configuration
+++++++++++++++++++++++++++++++++
+
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can also create the API Key using the
-         :ref:`Confluent Cloud UI <cloud-quick-create-api-key>`.
+.. tip:: You can also create the API Key using the :ref:`Confluent Cloud UI <cloud-quick-create-api-key>`.
 
 #.  To create a new API Key:
 
     ::
 
-    ccloud api-key create --resource lkc-m85m7
+        ccloud api-key create --resource lkc-3r3vj
 
     The tool will display a new Key and secret as below.  You will need to save these values elsewhere as they cannot be retrieved later.
 
     ::
 
-    Save the API key and secret. The secret is **not** retrievable later.
-    +---------+------------------------------------------------------------------+
-    | API Key | LD35EM2YJTCTRQRM                                                 |
-    | Secret  | 67JImN+9vk+Hj3eaj2/UcwUlbDNlGGC3KAIOy5JNRVSnweumPBUpW31JWZSBeawz |
-    +---------+------------------------------------------------------------------+
+        Save the API key and secret. The secret is **not** retrievable later.
+        +---------+------------------------------------------------------------------+
+        | API Key | LD35EM2YJTCTRQRM                                                 |
+        | Secret  | 67JImN+9vk+Hj3eaj2/UcwUlbDNlGGC3KAIOy5JNRVSnweumPBUpW31JWZSBeawz |
+        +---------+------------------------------------------------------------------+
+
+Configure Helm Values
++++++++++++++++++++++
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
-Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values obtained above. 
+#.  Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values obtained above. 
 
-.. sourcecode:: bash
+    ::
 
-    cat <<'EOF' > ./cfg/my-values.yaml
-    destinationCluster: &destinationCluster
-      name: replicator-gke-cc-demo
-      tls:
-        enabled: true
-        internal: true
-        authentication:
-          type: plain
-      bootstrapEndpoint: {{ cloud bootstrap server connection }}
-      username: {{ cloud API key }}
-      password: {{ cloud API secret }}
+        cat <<'EOF' > ./cfg/my-values.yaml
+        destinationCluster: &destinationCluster
+          name: replicator-gke-cc-demo
+          tls:
+            enabled: true
+            internal: true
+            authentication:
+              type: plain
+          bootstrapEndpoint: {{ cloud bootstrap server }}
+          username: {{ cloud API key }}
+          password: {{ cloud API secret }}
+        
+        controlcenter:
+          dependencies:
+            monitoringKafkaClusters:
+            - <<: *destinationCluster
+        
+        replicator:
+          replicas: 1
+          dependencies:
+            kafka:
+              <<: *destinationCluster
+        EOF
 
-    controlcenter:
-      dependencies:
-        monitoringKafkaClusters:
-        - <<: *destinationCluster
-    
-    replicator:
-      replicas: 1
-      dependencies:
-        kafka:
-          <<: *destinationCluster
-    EOF
+    You can now verify the values of the file prior to running the demo.  The demo `Makefile` will integrate these values into the Helm deployment.
+
+    ::
+
+        cat ./cfg/my-values.yaml
+
+Run
+~~~
+
+Preflight Checks
+++++++++++++++++
 
 Prior to running the demo you may want to verify the setup.
 
@@ -223,10 +260,10 @@ The output of the previous command should be a name with the combination of your
     kubectl config current-context
     gke_gkeproject_us-central1-a_cp-examples-operator-jdoe
 
-Run
-~~~
+Demo Execution
+++++++++++++++
 
-To run the automated demo run (estimated running time, 8 minutes):
+To run the automated demo (estimated running time, 8 minutes):
 
 .. sourcecode:: bash
 
@@ -284,25 +321,25 @@ Or they can be exported to the current environment prior to running the make com
 
 .. table:: Cluster Creation Variables
 
-  +--------------------------+---------------+
-  | Variable                 | Default       |
-  +==========================+===============+
-  | GKE_BASE_REGION          | us-central1   |
-  +--------------------------+---------------+
-  | GKE_BASE_ZONE            | us-central1-a |
-  +--------------------------+---------------+
-  | GKE_BASE_SUBNET          | default       |
-  +--------------------------+---------------+
-  | GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
-  +--------------------------+---------------+
-  | GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
-  +--------------------------+---------------+
-  | GKE_BASE_IMAGE_TYPE      | COS           |
-  +--------------------------+---------------+
-  | GKE_BASE_DISK_TYPE       | pd-standard   |
-  +--------------------------+---------------+
-  | GKE_BASE_DISK_SIZE       | 100           |
-  +--------------------------+---------------+
+    +--------------------------+---------------+
+    | Variable                 | Default       |
+    +==========================+===============+
+    | GKE_BASE_REGION          | us-central1   |
+    +--------------------------+---------------+
+    | GKE_BASE_ZONE            | us-central1-a |
+    +--------------------------+---------------+
+    | GKE_BASE_SUBNET          | default       |
+    +--------------------------+---------------+
+    | GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
+    +--------------------------+---------------+
+    | GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
+    +--------------------------+---------------+
+    | GKE_BASE_IMAGE_TYPE      | COS           |
+    +--------------------------+---------------+
+    | GKE_BASE_DISK_TYPE       | pd-standard   |
+    +--------------------------+---------------+
+    | GKE_BASE_DISK_SIZE       | 100           |
+    +--------------------------+---------------+
 
 Troubleshooting
 ---------------
