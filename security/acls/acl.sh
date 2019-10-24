@@ -443,7 +443,7 @@ echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
 
 # Delete files created locally
-rm -fr delta/configs
+rm -fr delta_configs
 rm -f "$LOG1"
 rm -f "$LOG2"
 rm -f "$LOG3"
