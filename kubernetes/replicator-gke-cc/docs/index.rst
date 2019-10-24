@@ -184,7 +184,8 @@ Or they can be exported to the current environment prior to running the make com
     make gke-create-cluster
 
 GKE Create Cluster variables
-****************************
+++++++++++++++++++++++++++++
+
 +--------------------------+---------------+
 | Variable                 | Default       |
 +==========================+===============+
