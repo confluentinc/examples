@@ -1,0 +1,10 @@
+connect:
+  dependencies:
+    kafka:
+      brokerCount: 3
+
+controlcenter:
+  dependencies:
+    c3KafkaCluster:
+      brokerCount: 3
+

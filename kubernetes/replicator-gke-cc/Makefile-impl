@@ -18,14 +18,15 @@ CCLOUD_API_SECRET = $(shell cat $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/my-values.yam
 ###############################################################################################
 
 ADDITIONAL_HELM_FLAGS ?=
-GKE_BASE_ADDITIONAL_HELM_FLAGS := -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/my-values.yaml $(ADDITIONAL_HELM_FLAGS)
+GKE_BASE_ADDITIONAL_HELM_FLAGS := -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/values.yaml -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/my-values.yaml $(ADDITIONAL_HELM_FLAGS)
 
 include $(THIS_MKFILE_DIR)../gke-base/Makefile-impl
 
 ###### REPLICATOR MANAGEMENT ######
 replicator-gke-cc-deploy-replicator: #_ Deploys Replicator into the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Replicator)
-	helm upgrade --install --namespace operator --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator $(OPERATOR_PATH)helm/confluent-operator
+	@echo "helm upgrade --install --namespace operator --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator $(OPERATOR_PATH)helm/confluent-operator"
+	@helm upgrade --install --namespace operator --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Replicator deployed)
 
 replicator-gke-cc-wait-for-replicator: #_ Waits until the Replicator rollout is complete

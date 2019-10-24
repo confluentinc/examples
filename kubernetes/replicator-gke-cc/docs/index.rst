@@ -6,11 +6,11 @@ Google Kubernetes Engine to |ccloud| with |crep-full|
 Overview
 --------
 
-This demonstrations features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
+This example features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
 The major components of this demo are:
 
-* A |ccloud| environment
+* A |ccloud| environment and |ak| cluster
 * A Kubernetes cluster running on GKE.
 * |co-long| which is used to manage the following |cp| components
 
@@ -50,7 +50,7 @@ Running the Demo
 Setup
 -----
 
-Clone the Confluent examples repository and change directories on your terminal into the ``replicator-gke-cc`` directory.
+Clone the `Confluent examples repository <https://github.com/confluentinc/examples>`__ and change directories on your terminal into the ``replicator-gke-cc`` directory.
 
 .. sourcecode:: bash
 
@@ -171,7 +171,7 @@ To verify that your ``kubectl`` command is configured with the proper context to
 
     kubectl config current-context
 
-The output of this command should be a name with the combination of your GKE project, the region, and the value of the ``Makefile`` variable ``GKE_BASE_CLUSTER_ID`` and your machine username, for example:
+The output of the previous command should be a name with the combination of your GKE project, the region, and the value of the ``Makefile`` variable ``GKE_BASE_CLUSTER_ID`` and your machine username, for example:
 
 .. sourcecode:: bash
 
@@ -195,4 +195,18 @@ Highlights
 ----------
 
 Coming soon...
-    
+
+
+Troubleshooting
+---------------
+
+A timing error can occur while deploying the |zk| service.  If you observe the following error::
+
+    Release "zookeeper" does not exist. Installing it now.
+    Error: timed out waiting for the condition
+    make[3]: *** [../gke-base/Makefile-impl:80: gke-base-deploy-zookeeper] Error 1
+    make[2]: *** [../gke-base/Makefile-impl:256: gke-base-demo] Error 2
+    make[1]: *** [Makefile-impl:56: replicator-gke-cc-demo] Error 2
+    make: *** [Makefile:6: demo] Error 2
+
+Run the following 

@@ -215,6 +215,12 @@ gke-base-deploy-stock-trades-connector-config: #_ Deploys configuration for a co
 	kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) apply -f $(GKE_BASE_MKFILE_DIR)cfg/stock-trades-datagen-connector-configmap.yaml
 	@$(call echo_stdout_footer_pass,stock trades datagen connector config deployed)
 
+gke-base-destroy-stock-trades-connector: #_ Destroys the deploy job and configuration for the sample stock trades data generator
+	@$(call echo_stdout_header,destory Deploy stock trades datagen connector)
+	-make --no-print-directory gke-base-destroy-stock-trades-connector-deploy-job
+	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) delete configmap/stock-trades-datagen-connector
+	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
+
 gke-base-destroy-stock-trades-connector-deploy-job: #_ Destroys the job that deployed the sample stock trades data generator connector
 	@$(call echo_stdout_header,destory Deploy stock trades datagen connector job)
 	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) delete jobs/stock-trades-datagen-connector-deploy ## name dependnecy in file, required unless/until TTL works across all k8s configurations
