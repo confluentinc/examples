@@ -91,8 +91,7 @@ After you have established the |ccloud| cluster you are going to use for the dem
 
 You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your cluster.
 
-.. tip:: You can also create topics using the
-         :ref:`Confluent Cloud UI <create-topics-cloud>`.
+.. tip:: You can also view the Bootstrap Server value on the Confluent Cloud UI under the **Cluster settings**.
 
 #.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
 
