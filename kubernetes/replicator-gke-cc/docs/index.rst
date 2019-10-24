@@ -8,7 +8,7 @@ Overview
 
 This example features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
-This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  If you'd like a primer on running |co-long| in GKE with lower resource requirements you can start with that demo.
+If you'd like a primer on running |co-long| in GKE with lower resource requirements see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
 
 The major components of this demo are:
 
@@ -85,13 +85,13 @@ To create the standard cluster you can run the following:
 Confluent Cloud Setup
 +++++++++++++++++++++
 
-This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See https://www.confluent.io/confluent-cloud/ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
+This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
 
-After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster, you will need the values in a momemnt to configure the demo.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
+After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster, you will need the values in a momemnt to configure the demo.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ in the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart values file <https://helm.sh/docs/chart_template_guide/>`__, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
-Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values.  You can obtain these values from the |ccloud| web console in the CLI & client configuration section.
+Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values.  You can obtain these values from the |ccloud| web console in the CLI & client configuration section, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for detailed instructions.
 
 .. sourcecode:: bash
 
@@ -161,12 +161,17 @@ Coming soon...
 Delete Resources
 ~~~~~~~~~~~~~~~~
 
-After you are done evaluating the results of the demo, you can destroy all the provisioned resources with:
+After you are done evaluating the results of the demo, you can destroy all the provisioned Kubernetes resources with:
 
 .. sourcecode:: bash
 
     make destroy-demo
 
+If you used the demo to create your cluster, you can destroy the GKE cluster with:
+
+.. sourcecode:: bash
+
+    make gke-destroy-cluster
 
 Highlights
 ----------
@@ -178,7 +183,10 @@ Coming soon...
 Advanced Usage
 --------------
 
-  There are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
+Customize GKE Cluster Creation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
 
 .. sourcecode:: bash
 
@@ -191,32 +199,30 @@ Or they can be exported to the current environment prior to running the make com
     export GKE_BASE_ZONE=us-central1-b
     make gke-create-cluster
 
-GKE Create Cluster variables
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. table:: Cluster Creation Variables
 
-+--------------------------+---------------+
-| Variable                 | Default       |
-+==========================+===============+
-| GKE_BASE_REGION          | us-central1   |
-+--------------------------+---------------+
-| GKE_BASE_ZONE            | us-central1-a |
-+--------------------------+---------------+
-| GKE_BASE_SUBNET          | default       |
-+--------------------------+---------------+
-| GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
-+--------------------------+---------------+
-| GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
-+--------------------------+---------------+
-| GKE_BASE_IMAGE_TYPE      | COS           |
-+--------------------------+---------------+
-| GKE_BASE_DISK_TYPE       | pd-standard   |
-+--------------------------+---------------+
-| GKE_BASE_DISK_SIZE       | 100           |
-+--------------------------+---------------+
-
+  +--------------------------+---------------+
+  | Variable                 | Default       |
+  +==========================+===============+
+  | GKE_BASE_REGION          | us-central1   |
+  +--------------------------+---------------+
+  | GKE_BASE_ZONE            | us-central1-a |
+  +--------------------------+---------------+
+  | GKE_BASE_SUBNET          | default       |
+  +--------------------------+---------------+
+  | GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
+  +--------------------------+---------------+
+  | GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
+  +--------------------------+---------------+
+  | GKE_BASE_IMAGE_TYPE      | COS           |
+  +--------------------------+---------------+
+  | GKE_BASE_DISK_TYPE       | pd-standard   |
+  +--------------------------+---------------+
+  | GKE_BASE_DISK_SIZE       | 100           |
+  +--------------------------+---------------+
 
 Troubleshooting
 ---------------
 
-- If you observe that the replicated offsets do not match in the source and destination cluster the destination cluster may have existed prior to starting the cluster in situations where you may have restarted the demonstration.  To see the full demonstration function properly use a new cluster or delete and recreate the destination topic prior to running the demo.
+- If you observe that the replicated offsets do not match in the source and destination cluster, the destination cluster may have existed prior to starting the cluster in situations where you may have restarted the demonstration.  To see the full demonstration function properly, use a new cluster or delete and recreate the destination topic prior to running the demo.
 
