@@ -6,9 +6,9 @@ Google Kubernetes Engine to |ccloud| with |crep-full|
 Overview
 --------
 
-This example features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
+This example features a deployment of `Confluent Platform <https://www.confluent.io/product/confluent-platform/>`__ on `Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`__ leveraging `Confluent Operator <https://docs.confluent.io/current/installation/operator/index.html>`__ and `Confluent Replicator <https://docs.confluent.io/current/connect/kafka-connect-replicator/index.html>`__, highlighting a data replication strategy to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
-If you'd like a primer on running |co-long| in GKE with lower resource requirements see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
+If you'd like a primer on running |co-long| in GKE with lower resource requirements, see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
 
 The major components of this demo are:
 
@@ -89,25 +89,83 @@ This demonstration requires that you have a |ccloud| account and a |ak| cluster 
 
 After you have established the |ccloud| cluster you are going to use for the demo, you will need the public Bootstrap Server as well as an API Key and it's Secret to configure client connectivity.
 
-You can obtain the Bootstrap Server value from the |ccloud| web console in the ``Cluster Settings`` section, or you can use the ``ccloud`` CLI to retrieve the endpoint.  Assuming you have `installed the ``ccloud`` CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, have `logged in <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_login.html>`__, and `know your cluster ID <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_kafka_cluster_list.html>`__, you can run the following:
+You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your cluster.
 
-.. sourcecode:: bash
+.. tip:: You can also create topics using the
+         :ref:`Confluent Cloud UI <create-topics-cloud>`.
 
-    ccloud kafka cluster describe <cluster-id> 
-    +-------------+-------------------------------------------------------------+
-    | Id          | <cluster-id>                                                |
-    | Name        | replicator-gke-cc-demo                                      |
-    | Ingress     |                                                        100  |
-    | Egress      |                                                        100  |
-    | Storage     |                                                       5000  |
-    | Provider    | gcp                                                         |
-    | Region      | us-central1                                                 |
-    | Status      | UP                                                          |
-    | Endpoint    | SASL_SSL://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud:9092 | <<---- This is the Bootstrap Server
-    | ApiEndpoint | https://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud         |
-    +-------------+-------------------------------------------------------------+
+#.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
 
-You can create API keys from either the |ccloud| web console or from the ``ccloud`` CLI.  For details on using the web console for the API Key, see `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ in the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__.  If you'd prefer to use the ``ccloud`` API, see the ` <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_api-key_create.html#ccloud-api-key-create>`__ in the `Confluent Cloud CLI documentation <https://docs.confluent.io/current/cloud/cli/index.html>`__.
+#.  Log in to your |ccloud| cluster.
+
+    ::
+
+        ccloud login --url https://confluent.cloud
+
+    Your output should resemble:
+
+    ::
+
+        Enter your Confluent credentials:
+        Email: jdoe@myemail.io
+        Password:
+
+        Logged in as jdoe@myemail.io
+        Using environment t118 ("default")
+
+#.  List your available |ak| clusters.
+
+    ::
+
+        ccloud kafka cluster list
+
+    This should produce a list of clusters you have access to:
+
+    ::
+     
+              Id      |          Name          | Provider |   Region    | Durability | Status
+        +-------------+------------------------+----------+-------------+------------+--------+
+            lkc-xmm5g | cluster-one            | gcp      | us-central1 | LOW        | UP
+            lkc-kngnv | example-cluster-two    | gcp      | us-central1 | LOW        | UP
+          * lkc-m85m7 | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP
+ 
+#. Describe the cluster to obtain the Bootstrap Server
+
+    ::
+
+        ccloud kafka cluster describe lkc-m85m7
+
+    This will produce a detailed view of the cluster.  The ``Endpoint`` field contains the Boostrap Server value
+
+    ::
+        +-------------+------------------------------------------------------------+
+        | Id          | lkc-m85m7                                                  |
+        | Name        | replicator-gke-cc-demo                                     |
+        | Ingress     |                                                        100 |
+        | Egress      |                                                        100 |
+        | Storage     |                                                       5000 |
+        | Provider    | gcp                                                        |
+        | Region      | us-central1                                                |
+        | Status      | UP                                                         |
+        | Endpoint    | SASL_SSL://pkc-4n7de.us-central1.gcp.stag.cpdev.cloud:9092 |
+        | ApiEndpoint | https://pkac-lq8w6.us-central1.gcp.stag.cpdev.cloud        |
+        +-------------+------------------------------------------------------------+
+
+The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
+
+.. tip:: You can slo use the `web UI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ to create API Keys
+
+    ::
+
+        ccloud api-key create --resource lkc-m85m7
+
+    ::
+
+        Save the API key and secret. The secret is not retrievable later.
+        +---------+------------------------------------------------------------------+
+        | API Key | LD35EM2YJTCTRQRM                                                 |
+        | Secret  | 67JImN+9vk+Hj3eaj2/UcwUlbDNlGGC3KAIOy5JNRVSnweumPBUpW31JWZSBeawz |
+        +---------+------------------------------------------------------------------+
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
