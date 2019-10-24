@@ -87,11 +87,31 @@ Confluent Cloud Setup
 
 This demonstration requires that you have a |ccloud| account and |ak| cluster ready for use.  See `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ to get setup with your own account if you do not yet have access.   Once you have your account, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ to get your first cluster up and running.  If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and by default in the ``us-central1`` region.
 
-After you have established the |ccloud| cluster you are going to use for the demo, take note of the API Key and Secret clients will use to access the |ccloud| cluster, you will need the values in a momemnt to configure the demo.  See `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ in the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ for more details.
+After you have established the |ccloud| cluster you are going to use for the demo, you will need the public Bootstrap Server as well as an API Key and it's Secret to configure client connectivity.
 
-To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart values file <https://helm.sh/docs/chart_template_guide/>`__, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
+You can obtain the Bootstrap Server value from the |ccloud| web console in the ``Cluster Settings`` section, or you can use the ``ccloud`` CLI to retrieve the endpoint.  Assuming you have `installed the ``ccloud`` CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, have `logged in <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_login.html>`__, and `know your cluster ID <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_kafka_cluster_list.html>`__, you can run the following:
 
-Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values.  You can obtain these values from the |ccloud| web console or from the `ccloud CLI <https://docs.confluent.io/current/cloud/cli/index.html>`__.  For detailed instructions on obtaining the values via the web console, see the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__.  If you prefer to use the ``ccloud`` CLI, refer to the `Confluent Cloud CLI <https://docs.confluent.io/current/cloud/cli/index.html>`__ instructions for `API keys <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_api-key_create.html>`__.
+.. sourcecode:: bash
+
+    ccloud kafka cluster describe abc-12ab34
+    +-------------+-------------------------------------------------------------+
+    | Id          | abc-12ab34                                                  |
+    | Name        | replicator-gke-cc-demo                                      |
+    | Ingress     |                                                        100  |
+    | Egress      |                                                        100  |
+    | Storage     |                                                       5000  |
+    | Provider    | gcp                                                         |
+    | Region      | us-central1                                                 |
+    | Status      | UP                                                          |
+    | Endpoint    | SASL_SSL://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud:9092 |
+    | ApiEndpoint | https://zzzz-zzzzz.us-central1.gcp.stag.cpdev.cloud         |
+    +-------------+-------------------------------------------------------------+
+
+You can create API keys from either the |ccloud| web console or from the ``ccloud`` CLI.  For details on using the web console for the API Key, see `Create an API Key <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__ in the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-4-create-an-api-key>`__.  If you'd prefer to use the ``ccloud`` API, see the ` <https://docs.confluent.io/current/cloud/cli/command-reference/ccloud_api-key_create.html#ccloud-api-key-create>`__ in the `Confluent Cloud CLI documentation <https://docs.confluent.io/current/cloud/cli/index.html>`__.
+
+To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
+
+Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values obtained above. 
 
 .. sourcecode:: bash
 
