@@ -211,6 +211,5 @@ Troubleshooting
 ---------------
 
 WIP
-+++
 
 Offsets may not match up if the destination cluster (|ccloud|) topic isn't recreated prior to running.
