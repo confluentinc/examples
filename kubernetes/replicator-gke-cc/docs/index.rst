@@ -8,6 +8,8 @@ Overview
 
 This example features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging |co-long| and |crep-full|, highlighting a data replication strategy to |ccloud|.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
+This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  If you'd like a primer on running |co-long| in GKE with lower resource requirements, you can start with that demo. 
+
 The major components of this demo are:
 
 * A |ccloud| environment and |ak| cluster
@@ -34,13 +36,15 @@ The following applications or libraries are required to be installed and availab
 +==================+================+==========================================================+
 | ``kubectl``      | ``1.14.3``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
 +------------------+----------------+----------------------------------------------------------+
-| ``helm``         | ``2.14.3``     | https://helm.sh/docs/using_helm/#install-helm            |
+| ``helm``         | ``2.12.3``     | https://helm.sh/docs/using_helm/#install-helm            |
 +------------------+----------------+----------------------------------------------------------+
 | ``gcloud``       | ``267.0.0``    |  https://cloud.google.com/sdk/install                    |
 | ``GCP sdk core`` | ``2019.10.15`` |                                                          |
 +------------------+----------------+----------------------------------------------------------+
 | ``ccloud``       | ``v0.185.0``   | https://docs.confluent.io/current/cloud/cli/install.html |
 +------------------+----------------+----------------------------------------------------------+
+
+.. warning:: In testing issues with ``helm`` versions > than 2.12.3 have been observed.  It's highly recommended that the demo be ran specifically with ``helm`` version ``2.12.3``.
 
 Running the Demo
 ----------------
@@ -62,7 +66,9 @@ GKE Setup
 
 In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support 3 node |zk| and 3 node |ak| clusters.  In testing this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  If you wish to use an existing GKE cluster, and your ``kubectl`` tool is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
 
-The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.  To verify which GCP Project your ``gcloud`` SDK is currently configured to, run:
+The demo contains a ``make`` function to assist you in creating a cluster in GKE assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
+
+To verify which GCP Project your ``gcloud`` SDK is currently configured to, run:
 
 .. sourcecode:: bash
 
@@ -74,43 +80,7 @@ To create the standard cluster you can run the following:
 
     make gke-create-cluster
 
-If you wish to override the behavior of the create cluster function there are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
 
-.. sourcecode:: bash
-
-  GKE_BASE_ZONE=us-central1-b make gke-create-cluster
-
-Or they can be exported to the current environment prior to running the make command:
-
-.. sourcecode:: bash
-
-    export GKE_BASE_ZONE=us-central1-b
-    make gke-create-cluster
-
-GKE Create Cluster variables
-****************************
-
-+--------------------------+---------------+
-| Variable                 | Default       |
-+==========================+===============+
-| GKE_BASE_REGION          | us-central1   |
-+--------------------------+---------------+
-| GKE_BASE_ZONE            | us-central1-a |
-+--------------------------+---------------+
-| GKE_BASE_SUBNET          | default       |
-+--------------------------+---------------+
-| GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
-+--------------------------+---------------+
-| GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
-+--------------------------+---------------+
-| GKE_BASE_IMAGE_TYPE      | COS           |
-+--------------------------+---------------+
-| GKE_BASE_DISK_TYPE       | pd-standard   |
-+--------------------------+---------------+
-| GKE_BASE_DISK_SIZE       | 100           |
-+--------------------------+---------------+
-
-This demonstration builds off of the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__, you can reference that demo for more information on setting up a base |co-long| deployment on GKE if necessary.
 
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-setup:
 
@@ -129,7 +99,7 @@ Create a values file by executing the following command, first replacing the ``{
 
     cat <<'EOF' > ./cfg/my-values.yaml
     destinationCluster: &destinationCluster
-      name: demo-cc-cluster-name 
+      name: replicator-gke-cc-demo
       tls:
         enabled: true
         internal: true
@@ -143,9 +113,6 @@ Create a values file by executing the following command, first replacing the ``{
       dependencies:
         monitoringKafkaClusters:
         - <<: *destinationCluster
-      loadBalancer:
-        enabled: false
-        domain: "" 
     
     replicator:
       replicas: 1
@@ -153,9 +120,6 @@ Create a values file by executing the following command, first replacing the ``{
         kafka:
           <<: *destinationCluster
     EOF
-
-Validate
---------
 
 Prior to running the demo you may want to verify the setup.
 
@@ -191,22 +155,61 @@ The last output message you should see is::
 
 	✔ Replicator GKE->CC Demo running
 
+Validate
+--------
+
+Coming soon...
+
 Highlights
 ----------
 
 Coming soon...
 
+.. _quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage:
+
+Advanced Usage
+--------------
+
+  There are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
+
+.. sourcecode:: bash
+
+  GKE_BASE_ZONE=us-central1-b make gke-create-cluster
+
+Or they can be exported to the current environment prior to running the make command:
+
+.. sourcecode:: bash
+
+    export GKE_BASE_ZONE=us-central1-b
+    make gke-create-cluster
+
+GKE Create Cluster variables
+****************************
++--------------------------+---------------+
+| Variable                 | Default       |
++==========================+===============+
+| GKE_BASE_REGION          | us-central1   |
++--------------------------+---------------+
+| GKE_BASE_ZONE            | us-central1-a |
++--------------------------+---------------+
+| GKE_BASE_SUBNET          | default       |
++--------------------------+---------------+
+| GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
++--------------------------+---------------+
+| GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
++--------------------------+---------------+
+| GKE_BASE_IMAGE_TYPE      | COS           |
++--------------------------+---------------+
+| GKE_BASE_DISK_TYPE       | pd-standard   |
++--------------------------+---------------+
+| GKE_BASE_DISK_SIZE       | 100           |
++--------------------------+---------------+
+
 
 Troubleshooting
 ---------------
 
-A timing error can occur while deploying the |zk| service.  If you observe the following error::
+WIP
+***
 
-    Release "zookeeper" does not exist. Installing it now.
-    Error: timed out waiting for the condition
-    make[3]: *** [../gke-base/Makefile-impl:80: gke-base-deploy-zookeeper] Error 1
-    make[2]: *** [../gke-base/Makefile-impl:256: gke-base-demo] Error 2
-    make[1]: *** [Makefile-impl:56: replicator-gke-cc-demo] Error 2
-    make: *** [Makefile:6: demo] Error 2
-
-Run the following 
+Offsets may not match up if the destination cluster (|ccloud|) topic isn't recreated prior to running.

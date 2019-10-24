@@ -7,4 +7,10 @@ controlcenter:
   dependencies:
     c3KafkaCluster:
       brokerCount: 3
+  loadBalancer:
+    enabled: false
+
+replicator:
+  topic:
+    whitelist: "stock-trades"
 

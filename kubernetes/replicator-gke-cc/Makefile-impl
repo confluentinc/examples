@@ -49,8 +49,15 @@ replicator-gke-cc-wait-for-replicator-destruction: #_ Waits until the Replicator
 ##### REPLICATOR DEPLOY JOB #####
 replicator-gke-cc-deploy-replicator-deploy-job: #_ Deploys A Replicator Configuration into the Replicator worker using a K8s Job
 	@$(call echo_stdout_header,Deploy Replicator Deploy Job)
-	helm upgrade --install --namespace operator $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(DESTINATION_USERNAME) --set global.sasl.plain.password=$(DESTINATION_PASSWORD) replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc
+	@echo "helm upgrade --install --namespace operator $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc"
+	@helm upgrade --install --namespace operator $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc
 	@$(call echo_stdout_footer_pass,Replicator Deploy Job deployed)
+
+replicator-gke-cc-destroy-replicator-deploy-job: #_ Destroys the deploy job and configuration for Replicator
+	@$(call echo_stdout_header,destory Deploy stock trades datagen connector)
+	-helm delete --purge replicator-gke-cc
+	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) delete configmap/stock-trades-datagen-connector
+	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
 #################################
 
 replicator-gke-cc-demo:
@@ -65,6 +72,7 @@ replicator-gke-cc-demo:
 replicator-gke-cc-destroy-demo:
 	@make --no-print-directory replicator-gke-cc-destroy-replicator
 	@make --no-print-directory replicator-gke-cc-wait-for-replicator-destruction
+	@make --no-print-directory replicator-gke-cc-destroy-replicator-deploy-job
 	@make --no-print-directory gke-base-destroy-stock-trades-connector
 	@make --no-print-directory gke-base-destroy-demo
 

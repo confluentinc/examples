@@ -2,7 +2,7 @@
 replicator:
   topic:
     regex: ""
-    whitelist: "clicks,stock-trades"
+    whitelist: ""
     blacklist: ""
   src:
     kafka:
