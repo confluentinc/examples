@@ -160,17 +160,17 @@ To create a new API Key:
 
     ::
 
-        ccloud api-key create --resource lkc-m85m7
+    ccloud api-key create --resource lkc-m85m7
 
 The tool will display a new Key and secret as below.  You will need to save these values elsewhere as they cannot be retrieved later.
 
     ::
 
-        Save the API key and secret. The secret is not retrievable later.
-        +---------+------------------------------------------------------------------+
-        | API Key | LD35EM2YJTCTRQRM                                                 |
-        | Secret  | 67JImN+9vk+Hj3eaj2/UcwUlbDNlGGC3KAIOy5JNRVSnweumPBUpW31JWZSBeawz |
-        +---------+------------------------------------------------------------------+
+    Save the API key and secret. The secret is not retrievable later.
+    +---------+------------------------------------------------------------------+
+    | API Key | LD35EM2YJTCTRQRM                                                 |
+    | Secret  | 67JImN+9vk+Hj3eaj2/UcwUlbDNlGGC3KAIOy5JNRVSnweumPBUpW31JWZSBeawz |
+    +---------+------------------------------------------------------------------+
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
