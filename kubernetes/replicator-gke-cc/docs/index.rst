@@ -89,7 +89,7 @@ This demonstration requires that you have a |ccloud| account and a |ak| cluster 
 
 After you have established the |ccloud| cluster you are going to use for the demo, you will need the public Bootstrap Server as well as an API Key and it's Secret to configure client connectivity.
 
-You can use the ``ccloud`` CLI retrieve the Bootstrap Server value for your cluster.
+You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your cluster.
 
 .. tip:: You can also view the Bootstrap Server value on the Confluent Cloud UI under the **Cluster settings**.
 
@@ -156,17 +156,17 @@ The ``ccloud`` CLI allows you to create API Keys to be used with client applicat
 .. tip:: You can also create the API Key using the
          :ref:`Confluent Cloud UI <cloud-quick-create-api-key>`.
 
-To create a new API Key:
+#.  To create a new API Key:
 
     ::
 
     ccloud api-key create --resource lkc-m85m7
 
-The tool will display a new Key and secret as below.  You will need to save these values elsewhere as they cannot be retrieved later.
+    The tool will display a new Key and secret as below.  You will need to save these values elsewhere as they cannot be retrieved later.
 
     ::
 
-    Save the API key and secret. The secret is not retrievable later.
+    Save the API key and secret. The secret is **not** retrievable later.
     +---------+------------------------------------------------------------------+
     | API Key | LD35EM2YJTCTRQRM                                                 |
     | Secret  | 67JImN+9vk+Hj3eaj2/UcwUlbDNlGGC3KAIOy5JNRVSnweumPBUpW31JWZSBeawz |
