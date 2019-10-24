@@ -17,6 +17,31 @@ sasl.username=<api-key-id>
 sasl.password=<secret-access-key>
 ```
 
+## Configure SSL trust store
+
+Depending on your operating system or Linux distro you may need to take extra steps to set up the SSL CA root certificates. If your systems does not have the SSL CA root certificates properly set up, here is an example of an error message you may see.
+
+```
+$ ./producer.py -f ~/.ccloud/config -t hello
+%3|1554125834.196|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
+%3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
+%3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
+```
+
+### CentOS
+
+```bash
+$ sudo yum reinstall ca-certificates
+```
+
+Add the following property to the config dict objects in `producer.py` and `consumer.py`:
+
+```
+ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
+```
+
+For more information see the librdkafka docs on which this python producer is built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
+
 # Example 1: Hello World!
 
 In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
