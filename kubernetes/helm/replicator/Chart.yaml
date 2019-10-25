@@ -1,6 +1,0 @@
-apiVersion: v1
-appVersion: "1.0"
-description: A Helm chart for a Kubernetes Job to deploy a Confluent Platform Replicator Connector
-name: replicatordeploy
-version: 0.1.0
-icon: https://www.confluent.io/wp-content/themes/confluent/assets/images/confluent-logo-300.png

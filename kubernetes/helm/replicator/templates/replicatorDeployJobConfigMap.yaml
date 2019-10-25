@@ -1,9 +1,0 @@
-{{- $_ := required "Destination Kafka Bootstrap Servers" (index $.Values.clusterConfig.config "dest.kafka.bootstrap.servers") }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{.Values.name}}
-data:
-  {{.Values.name}}-config.json: |-
-{{ toJson .Values.clusterConfig | indent 4 }}
-
