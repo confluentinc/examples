@@ -144,7 +144,7 @@ You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your c
 
               Id      |          Name          | Provider |   Region    | Durability | Status  
         +-------------+------------------------+----------+-------------+------------+--------+
-            lkc-xmm5g | acl-test               | gcp      | us-central1 | LOW        | UP      
+            lkc-xmm5g | abc-test               | gcp      | us-central1 | LOW        | UP      
             lkc-kngnv | rjs-gcp-us-central1    | gcp      | us-central1 | LOW        | UP      
             lkc-3r3vj | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP      
 
@@ -167,8 +167,8 @@ You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your c
         | Provider    | gcp                                                        |
         | Region      | us-central1                                                |
         | Status      | UP                                                         |
-        | Endpoint    | SASL_SSL://pkc-4n7de.us-central1.gcp.stag.cpdev.cloud:9092 |
-        | ApiEndpoint | https://pkac-lq8w6.us-central1.gcp.stag.cpdev.cloud        |
+        | Endpoint    | SASL_SSL://abc-12345.us-central1.gcp.stag.cpdev.cloud:9092 |
+        | ApiEndpoint | https://abc-12345.us-central1.gcp.stag.cpdev.cloud         |
         +-------------+------------------------------------------------------------+
 
 API Key and Secret Configuration
