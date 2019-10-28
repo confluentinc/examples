@@ -314,6 +314,11 @@ Next click on the ``controlcenter.cluster`` and then ``Consumers``, and then ``r
 .. figure:: images/replicator-consumer.png
     :alt: c3-replicator-consumer
 
+Verify replicated stock-trades topic with clients
++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
 Delete Resources
 ~~~~~~~~~~~~~~~~
 

@@ -28,6 +28,7 @@ GKE_BASE_KUBECTL_NAMESPACE ?= operator
 GKE_BASE_ADDITIONAL_HELM_FLAGS ?=
 
 GKE_BASE_SKIP_CLICKS ?=
+GKE_BASE_SKIP_CLIENT_CONSOLE ?=
  
 GKE_BASE_HELM_COMMON_FLAGS := --wait --timeout=500 -f $(GKE_BASE_MKFILE_DIR)cfg/values.yaml --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} $(GKE_BASE_ADDITIONAL_HELM_FLAGS)
 
@@ -264,7 +265,9 @@ gke-base-demo: gke-base-validate
 	@make --no-print-directory gke-base-deploy-kafka
 	@make --no-print-directory gke-base-wait-for-kafka
 	@make --no-print-directory gke-base-deploy-client-secrets
+ifeq ($(strip $(GKE_BASE_SKIP_CLIENT_CONSOLE)),)
 	@make --no-print-directory gke-base-deploy-client-console
+endif
 	@make --no-print-directory gke-base-deploy-schemaregistry
 	@make --no-print-directory gke-base-wait-for-schemaregistry
 	@make --no-print-directory gke-base-deploy-connect
