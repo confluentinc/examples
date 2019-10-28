@@ -300,7 +300,8 @@ Validate
 ~~~~~~~~
 
 Verify Control Center's View of Multiple Clusters
-`````````````````````````````````````````````````
++++++++++++++++++++++++++++++++++++++++++++++++++
+
 .. include:: ../../docs/includes/port-forward-c3.rst
 
 Now open a web-browser to http://localhost:12345, and you should see |c3| with 2 Healthy Clusters.
