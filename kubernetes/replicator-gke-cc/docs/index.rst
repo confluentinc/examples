@@ -306,7 +306,7 @@ Verify Control Center's View of Multiple Clusters
 
 Now open a web-browser to http://localhost:12345, and you should see |c3| with 2 Healthy Clusters.
 
-.. figure:: images/c3-dual-clsuters.png
+.. figure:: images/c3-dual-clusters.png
     :alt: c3
 
 Next click on the ``controlcenter.cluster`` and then ``Consumers``, and then ``replicator``.  This will give you a view of the |crep-full| consumer group as it replicates the ``stock-trades`` topics to |ccloud|.
