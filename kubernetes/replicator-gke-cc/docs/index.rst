@@ -317,7 +317,17 @@ Next click on the ``controlcenter.cluster`` and then ``Consumers``, and then ``r
 Verify replicated stock-trades topic with clients
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
+To view the ``stock-trades`` topic data streaming on both clusters, you can open two terminals and run the following commands simultaneously.
 
+To view the ``stock-trades`` events on the source (GKE) cluster, in the first terminal::
+
+    kubectl -n operator exec -it client-console bash
+    kafka-console-consumer --bootstrap-server kafka:9071 --consumer.config /etc/kafka-client-properties/kafka-client.properties --topic stock-trades
+
+To view the ``stock-trades`` events on the destination (Confluent Cloud) cluster, in a second terminal::
+
+    kubectl -n operator exec -it client-console bash
+    kafka-console-consumer --bootstrap-server {{ cloud bootstrap server }}  --consumer.config /etc/destination-cluster-client-properties/destination-cluster-client.properties --topic clicks
 
 Delete Resources
 ~~~~~~~~~~~~~~~~
