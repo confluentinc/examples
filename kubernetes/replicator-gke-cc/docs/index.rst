@@ -319,21 +319,21 @@ Verify replicated stock-trades topic with clients
 
 To view the ``stock-trades`` topic data streaming on both clusters, you can open two terminals and run the following commands simultaneously.
 
-To view the ``stock-trades`` events on the source (GKE) cluster, in the first terminal, first open a shell on the ``client-console`` pod::
+#.  To view the ``stock-trades`` events on the source (GKE) cluster, in the first terminal, first open a shell on the ``client-console`` pod::
 
     kubectl -n operator exec -it client-console bash
 
-Then use the ``kafka-console-consumer`` to stream the values from the ``stock-trades`` topic.  The required configuraiton is provided in the ``/etc/kafka-client-properties/kafka-client.properties`` file already mounted in a volume on the pod::
+#.  Then use the ``kafka-console-consumer`` to stream the values from the ``stock-trades`` topic.  The required configuraiton is provided in the ``/etc/kafka-client-properties/kafka-client.properties`` file already mounted in a volume on the pod::
 
     kafka-console-consumer --bootstrap-server kafka:9071 --consumer.config /etc/kafka-client-properties/kafka-client.properties --topic stock-trades
 
-To view the ``stock-trades`` events on the destination (Confluent Cloud) cluster, in a second terminal open another shell on the ``client-console`` pod::
+#.  To view the ``stock-trades`` events on the destination (Confluent Cloud) cluster, in a second terminal open another shell on the ``client-console`` pod::
 
     kubectl -n operator exec -it client-console bash
 
-Again, use the ``kafka-console-consumer`` to stream the values from the ``stock-trades`` topic, this time from the destination cluster.   The required configuration has been mounted in a volume on the pod in the ``/etc/destination-cluster-client-properties/destination-cluster-client.properties`` file.   Additionally, the bootstrap server value has been added in the ``/etc/destination-cluster-client-properties/destination-cluster-bootstrap`` file.  This command will use both of those files to create the connection to the destination cluster::
+#.  Again, use the ``kafka-console-consumer`` to stream the values from the ``stock-trades`` topic, this time from the destination cluster.   The required configuration has been mounted in a volume on the pod in the ``/etc/destination-cluster-client-properties/destination-cluster-client.properties`` file.   Additionally, the bootstrap server value has been added in the ``/etc/destination-cluster-client-properties/destination-cluster-bootstrap`` file.  This command will use both of those files to create the connection to the destination cluster::
 
-    kafka-console-consumer --bootstrap-server $(cat /etc/destination-cluster-client-properties/destination-cluster-bootstrap)  --consumer.config /etc/destination-cluster-client-properties/destination-cluster-client.properties --topic clicks
+    kafka-console-consumer --bootstrap-server $(cat /etc/destination-cluster-client-properties/destination-cluster-bootstrap)  --consumer.config /etc/destination-cluster-client-properties/destination-cluster-client.properties --topic stock-trades
 
 Delete Resources
 ~~~~~~~~~~~~~~~~
