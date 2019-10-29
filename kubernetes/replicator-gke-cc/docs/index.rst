@@ -343,8 +343,26 @@ To view the ``stock-trades`` topic data streaming on both clusters, you can open
 
         kafka-console-consumer --bootstrap-server $(cat /etc/destination-cluster-client-properties/destination-cluster-bootstrap)  --consumer.config /etc/destination-cluster-client-properties/destination-cluster-client.properties --topic stock-trades --property print.value=false --property print.key=true --property print.timestamp=true
 
-These commands will print out the timestamp and key of messages as they arrive in each cluster.  You an visually match up the events by these values and observe the replication process.
+These commands will print out the timestamp and key of messages as they arrive in each cluster.  You an visually match up the events by these values and observe the replication process, for example, in terminal 1 you might see:
 
+    ::
+
+        ...
+        CreateTime:1572380698171        ZJZZT
+        CreateTime:1572380698280        ZWZZT
+        CreateTime:1572380698351        ZWZZT
+        CreateTime:1572380698577        ZJZZT
+        CreateTime:1572380699340        ZVZZT
+
+And in terminal 2 shortly after identicial messages:
+
+    ::
+
+        ...
+        CreateTime:1572380698171        ZJZZT
+        CreateTime:1572380698280        ZWZZT
+        CreateTime:1572380698351        ZWZZT
+      
 Delete Resources
 ~~~~~~~~~~~~~~~~
 
