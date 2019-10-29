@@ -329,7 +329,7 @@ To view the ``stock-trades`` topic data streaming on both clusters, you can open
 
     ::
 
-        kafka-console-consumer --bootstrap-server kafka:9071 --consumer.config /etc/kafka-client-properties/kafka-client.properties --topic stock-trades
+        kafka-console-consumer --bootstrap-server kafka:9071 --consumer.config /etc/kafka-client-properties/kafka-client.properties --topic stock-trades --property print.value=false --property print.key=true --property print.timestamp=true
 
 #.  To view the ``stock-trades`` events on the destination (Confluent Cloud) cluster, in a second terminal open another shell on the ``client-console`` pod:
 
@@ -341,7 +341,7 @@ To view the ``stock-trades`` topic data streaming on both clusters, you can open
 
     ::
 
-        kafka-console-consumer --bootstrap-server $(cat /etc/destination-cluster-client-properties/destination-cluster-bootstrap)  --consumer.config /etc/destination-cluster-client-properties/destination-cluster-client.properties --topic stock-trades
+        kafka-console-consumer --bootstrap-server $(cat /etc/destination-cluster-client-properties/destination-cluster-bootstrap)  --consumer.config /etc/destination-cluster-client-properties/destination-cluster-client.properties --topic stock-trades --property print.value=false --property print.key=true --property print.timestamp=true
 
 Delete Resources
 ~~~~~~~~~~~~~~~~
