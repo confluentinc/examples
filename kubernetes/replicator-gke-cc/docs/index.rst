@@ -354,7 +354,7 @@ To view the ``stock-trades`` topic data streaming on both clusters, you can open
         CreateTime:1572380698577        ZJZZT
         CreateTime:1572380699340        ZVZZT
 
-And in terminal 2 shortly after identicial messages:
+    And in terminal 2 shortly after identicial messages:
 
     ::
 
