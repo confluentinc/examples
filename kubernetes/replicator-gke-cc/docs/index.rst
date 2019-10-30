@@ -49,7 +49,7 @@ The following applications or libraries are required to be installed and availab
 | ``ccloud``       | ``v0.185.0``   | https://docs.confluent.io/current/cloud/cli/install.html |
 +------------------+----------------+----------------------------------------------------------+
 
-.. warning:: In testing, issues were experienced with ``helm`` versions > than 2.12.3.  It's highly recommended that the demo be ran specifically with helm version 2.12.3.
+.. note:: In testing, issues were experienced with ``helm`` versions > than 2.12.3.  It's highly recommended that the demo be ran specifically with helm version 2.12.3.
 
 Running the Demo
 ----------------
