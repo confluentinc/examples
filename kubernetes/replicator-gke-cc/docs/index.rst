@@ -109,9 +109,9 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 
 After you have established the |ccloud| cluster you are going to use for the demo you will need the public bootstrap server.
 
-You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your cluster.
+You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your cluster.
 
-.. tip:: You can also view the Bootstrap Server value on the |ccloud| UI under the **Cluster settings**
+.. tip:: You can also view the bootstrap server value on the |ccloud| UI under the **Cluster settings**
   
   |cluster-settings| 
 
@@ -150,7 +150,7 @@ You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your c
             lkc-kngnv | rjs-gcp-us-central1    | gcp      | us-central1 | LOW        | UP      
             lkc-3r3vj | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP      
 
-#.  Describe the cluster to obtain the Bootstrap Server
+#.  Describe the cluster to obtain the bootstrap server
 
     ::
 
