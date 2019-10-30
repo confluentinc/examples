@@ -313,6 +313,8 @@ Next click on the ``controlcenter.cluster`` and then ``Consumers``, and then ``r
 .. figure:: images/replicator-consumer.png
     :alt: c3-replicator-consumer
 
+This |c3-short| screen highlights the consumer group lag for the ``replicator`` consumer group.  In the above screenshot, |c3-short| is telling us that the ``replicator`` consumer's total lag across all topics and partitions is 27 messages.  As |crep| processes messages, it's consumer group lag will fluctuate and the chart on this screen will indicate the current value as well as maximum amount of lag over time.
+
 Verify replicated stock-trades topic with clients
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
