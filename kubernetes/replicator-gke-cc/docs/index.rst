@@ -89,12 +89,12 @@ To create the standard cluster you can run the following:
 |ccloud| Setup
 ~~~~~~~~~~~~~~~~~~~~~
 
-Confluent Cloud Account Setup
+|ccloud| Account Setup
 +++++++++++++++++++++++++++++
 
 This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
 
-Kafka Cluster Setup
+|ak| Cluster Setup
 +++++++++++++++++++
 
 If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and, by default, in the ``us-central1`` region.  It is recommended to name your new cluster ``replicator-gke-cc-demo`` to match names used later in this demo.  The following illustrates the recommended configuration:
@@ -104,7 +104,7 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 
 .. tip:: See the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ for more information.
 
-Kafka Bootstrap Server Configuration
+|ak| Bootstrap Server Configuration
 ++++++++++++++++++++++++++++++++++++
 
 After you have established the |ccloud| cluster you are going to use for the demo you will need the public Bootstrap Server.
@@ -301,7 +301,7 @@ The last output message you should see is::
 Validate
 ~~~~~~~~
 
-Verify Control Center's View of Multiple Clusters
+Verify |c3-short|'s View of Multiple Clusters
 +++++++++++++++++++++++++++++++++++++++++++++++++
 
 .. include:: ../../docs/includes/port-forward-c3.rst
