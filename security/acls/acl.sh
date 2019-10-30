@@ -5,13 +5,17 @@
 # Overview
 ################################################################################
 #
-# Demo the new Confluent Cloud CLI and Access Control List (ACL) functionality
-# in your Confluent Cloud cluster
+# This is a beginner demo, fully scripted, that shows users how to interact
+# with Confluent Cloud using the CLI. It steps through the following workflow:
 #
-# Documentation accompanying this tutorial:
-#
-#   https://docs.confluent.io/current/cloud/access-management/user-service-example.html
-#   https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
+#   1. Log in, specify active cluster, and create a user key/secret
+#   2. Create a Service Account and API key and secret
+#   3. Produce and consume with Confluent Cloud CLI
+#   4. Run a Java client: before and after ACLs
+#   5. Showcase a Prefix ACL
+#   6. Showcase a Wildcard ACL
+#   7. Run Connect and kafka-connect-datagen connector with permissions
+#   8. Delete the API key, service account, Kafka topics, and some of the local files
 #
 # DISCLAIMER:
 #
@@ -31,10 +35,10 @@
 #   # Provide all arguments on command line, except password for which you will be prompted
 #   ./acl.sh <url to cloud> <cloud email> <environment> <cluster>
 #
-# Requirements:
+# Pre-requisites:
 #
 #   - Access to a Confluent Cloud cluster
-#   - Local install of the new Confluent Cloud CLI (v0.185.0 or above)
+#   - Local install of the new Confluent Cloud CLI (v0.185.0 or above) -- https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
 #   - Docker and Docker Compose
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
@@ -211,7 +215,7 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 
 
 ##################################################
-# Java client: before and after ACLs
+# Run a Java client: before and after ACLs
 #
 # When ACLs are enabled on your Confluent Cloud cluster,
 # by default no client applications are authorized.
@@ -270,7 +274,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 
 ##################################################
-# Prefix ACL
+# Showcase a Prefix ACL
 #
 # The following steps configure ACLs to match topics prefixed with a value
 ##################################################
@@ -308,7 +312,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 
 ##################################################
-# Wildcard ACL
+# Showcase a Wildcard ACL
 #
 # The following steps configure ACLs to match topics using a wildcard
 ##################################################
@@ -342,7 +346,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 
 ##################################################
-# Connect and Connectors
+# Run Connect and kafka-connect-datagen connector with permissions
 #
 #   Confluent Hub: https://www.confluent.io/hub/
 ##################################################
