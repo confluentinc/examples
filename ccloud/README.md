@@ -1,5 +1,12 @@
 ![image](../images/confluent-logo-300-2.png)
 
+* [Overview](#overview)
+* [Beginner Demo](#beginner-demo)
+* [Advanced Demo](#advanced-demo)
+* [Client Code Examples](#client-code-examples)
+* [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
+
+
 # Overview
 
 [Confluent Cloud](https://docs.confluent.io/current/cloud/index.html) is a resilient, scalable streaming data service based on Apache Kafka®, delivered as a fully managed service.
@@ -7,7 +14,7 @@ It has a web interface and local command line interface that you can use to mana
 
 This repo has a few resources to help you validate your solutions on Confluent Cloud.
 
-## Beginner Demo: Interacting with Confluent Cloud thru CLI
+# Beginner Demo
 
 [This script](../security/acls/acl.sh) is a beginner demo, fully scripted, that shows users how to interact with Confluent Cloud using the CLI.
 It steps through the following workflow.
@@ -22,10 +29,10 @@ It steps through the following workflow.
 8. Delete the API key, service account, Kafka topics, and some of the local files
 
 
-## Advanced Demo: Hybrid Kafka Deployment with Confluent Cloud and Replicator
+# Advanced Demo
 
 [This end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html) showcases a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-Data streams into topics both a local cluster and a cluster in Confluent Cloud, and Replicator copies the on-prem data to Cloud so that stream processing can happen in the Cloud.
+Data streams into topics both a local cluster and a cluster in Confluent Cloud, and Confluent Replicator copies the on-prem data to Confluent Cloud so that stream processing can happen in the Cloud.
 
 The documentation for running this demo, and its accompanying playbook, is at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html)
 
@@ -43,14 +50,14 @@ It includes:
 
 NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.
 
-## Client Code Examples
+# Client Code Examples
 
 If you are looking for code examples of producers writing to and consumers reading from Confluent Cloud, or producers and consumers using Avro with Confluent Schema Registry, checkout the [clients subdirectory of examples](../clients).
 It provides client examples written in various programming languages.
 
 ![image](../clients/cloud/images/clients-all.png)
 
-## Auto-generate Configurations to connect to Confluent Cloud
+# Auto-generate Configurations to connect to Confluent Cloud
 
 [This script](ccloud-generate-cp-configs.sh) reads a configuration file (by default assumed to be at ``$HOME/.ccloud/config``) and auto-generates delta configurations into ``./delta_configs``.
 Use these per-component configurations for Confluent Platform components and clients connecting to Confluent Cloud:
