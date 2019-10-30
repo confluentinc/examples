@@ -48,7 +48,7 @@ NOTE: Do not run this demo against your production Confluent Cloud cluster. Run 
 If you are looking for code examples of producers writing to and consumers reading from Confluent Cloud, or producers and consumers using Avro with Confluent Schema Registry, checkout the [clients subdirectory of examples](../clients).
 It provides client examples written in various programming languages.
 
-![image](clients/images/clients-all.png)
+![image](../clients/cloud/images/clients-all.png)
 
 ## Auto-generate Configurations to connect to Confluent Cloud
 
