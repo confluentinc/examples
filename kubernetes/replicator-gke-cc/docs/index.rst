@@ -111,7 +111,7 @@ After you have established the |ccloud| cluster you are going to use for the dem
 
 You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your cluster.
 
-.. tip:: You can also view the Bootstrap Server value on the Confluent Cloud UI under the **Cluster settings**
+.. tip:: You can also view the Bootstrap Server value on the |ccloud| UI under the **Cluster settings**
   
   |cluster-settings| 
 
@@ -178,7 +178,7 @@ API Key and Secret Configuration
 
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can also create the API Key using the :ref:`Confluent Cloud UI <cloud-quick-create-api-key>`.
+.. tip:: You can also create the API Key using the :ref:`|ccloud| UI <cloud-quick-create-api-key>`.
 
 #.  To create a new API Key:
 
