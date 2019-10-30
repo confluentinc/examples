@@ -390,7 +390,7 @@ Deploying Kafka Connectors with Helm
 
 The following highlights a simple Helm chart that can be used to deploy |kconnect-long| Connector configurations using the standard `Kafka Connect REST Interface <https://docs.confluent.io/current/connect/references/restapi.html>`__.  This is how this demonstration deploys the |crep-full| configuration, however, the same method could be used to deploy any |kconnect-long| configuration.  In future versions of |co-long|, |kconnect-long| connectors wil be managed by the Operator `Controller <https://kubernetes.io/docs/concepts/architecture/controller/>`__.
 
-The Helm chart is located in the ``helm\replicator-gke-cc`` folder of this demonstration.  The ``templates\replicator-configmap.yaml`` file contains a ``data`` section with a templated JSON value that conforms to the |kconnect-long| `connectors API <https://docs.confluent.io/current/connect/references/restapi.html#post--connectors>`__.  The Destination and Source cluster configuration values are filled in at runtime by the ``helm`` templating system, and are proivded by your ``my-values.yaml`` file created in the demo instructions above.
+The Helm chart is located in the ``helm/replicator-gke-cc`` folder of this demonstration.  The ``templates/replicator-configmap.yaml`` file contains a ``data`` section with a templated JSON value that conforms to the |kconnect-long| `connectors API <https://docs.confluent.io/current/connect/references/restapi.html#post--connectors>`__.  The Destination and Source cluster configuration values are filled in at runtime by the ``helm`` templating system, and are proivded by your ``my-values.yaml`` file created in the demo instructions above.
 
 :: 
 
