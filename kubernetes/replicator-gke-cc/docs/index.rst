@@ -107,7 +107,7 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 |ak| Bootstrap Server Configuration
 ++++++++++++++++++++++++++++++++++++
 
-After you have established the |ccloud| cluster you are going to use for the demo you will need the public Bootstrap Server.
+After you have established the |ccloud| cluster you are going to use for the demo you will need the public bootstrap server.
 
 You can use the ``ccloud`` CLI to retrieve the Bootstrap Server value for your cluster.
 
