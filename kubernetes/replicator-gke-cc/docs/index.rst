@@ -86,7 +86,7 @@ To create the standard cluster you can run the following:
 
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-setup:
 
-Confluent Cloud Setup
+|ccloud| Setup
 ~~~~~~~~~~~~~~~~~~~~~
 
 Confluent Cloud Account Setup
