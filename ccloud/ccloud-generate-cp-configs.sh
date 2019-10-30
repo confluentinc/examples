@@ -272,7 +272,7 @@ while read -r line
     fi
   fi
 done < "$CONFIG_FILE"
-#max.message.bytes is enforced to 8Mb in CCloud
+# max.message.bytes is enforced to 8MB in Confluent Cloud
 echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_DELTA
 echo -e "\n# Confluent Schema Registry configuration for Confluent Control Center" >> $C3_DELTA
 while read -r line
