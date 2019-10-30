@@ -54,7 +54,7 @@ The following applications or libraries are required to be installed and availab
 Running the Demo
 ----------------
 
-.. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
+.. warning:: This demo consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.  The |co| :ref:`Sizing Recommendations <co-env-sizing>` document contains information on required sizing for |co-long|, and the :ref:`examples-operator-gke-base-variable-reference` section can be used to control the size of the deployed resources in this demo.
 
 Clone the `Confluent examples repository <https://github.com/confluentinc/examples>`__ and change directories on your terminal into the ``replicator-gke-cc`` directory.
 
@@ -363,8 +363,10 @@ To view the ``stock-trades`` topic data streaming on both clusters, you can open
         CreateTime:1572380698280        ZWZZT
         CreateTime:1572380698351        ZWZZT
       
-Delete Resources
-~~~~~~~~~~~~~~~~
+.. _quickstart-demos-operator-replicator-gke-cc-destroy:
+
+Destroy Resources
+~~~~~~~~~~~~~~~~~
 
 After you are done evaluating the results of the demo, you can destroy all the provisioned Kubernetes resources with:
 
