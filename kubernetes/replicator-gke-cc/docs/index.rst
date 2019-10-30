@@ -235,9 +235,6 @@ To configure the demo to access your |ccloud| account, we are going to create a 
 
         cat ./cfg/my-values.yaml
 
-Run
-~~~
-
 Preflight Checks
 ++++++++++++++++
 
