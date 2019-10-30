@@ -94,6 +94,8 @@ To create the standard cluster you can run the following:
 
 This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
 
+.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identicial in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appeneded to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this demo, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: :ref:`ccloud kafka topic delete <ccloud_kafka_topic_delete>` for instructions on deleting |ccloud| topics.
+
 |ak| Cluster Setup
 +++++++++++++++++++
 
