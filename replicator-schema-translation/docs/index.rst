@@ -72,7 +72,7 @@ Run the Demo
       Setting srcSchemaregistry to READONLY mode:
       {"mode":"READONLY"}
       Setting destSchemaregistry to IMPORT mode:
-      {"mode":"IMPORT"}%   
+      {"mode":"IMPORT"}
 
 6. Submit |crep| to perform the translation.
 
