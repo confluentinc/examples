@@ -43,7 +43,7 @@ Run the Demo
 
      cd examples/replicator-schema-translation
 
-3. Start the entire demo by running a single command that creates source and destination clusters automatically and adds a schema to the source cluster |sr|. This takes less than 5 minutes to complete.
+3. Start the entire demo by running a single command that creates source and destination clusters automatically and adds a schema to the source |sr|. This takes less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -53,13 +53,13 @@ Run the Demo
 
    .. sourcecode:: bash
 
-      # Source Schema Registry cluster should show one subject, i.e., the output should be ["testTopic-value"]
+      # Source Schema Registry should show one subject, i.e., the output should be ["testTopic-value"]
       docker-compose exec connect curl http://srcSchemaregistry:8085/subjects
 
-      # Destination Schema Registry cluster should show no subjects, i.e., the output should be []
+      # Destination Schema Registry should show no subjects, i.e., the output should be []
       docker-compose exec connect curl http://destSchemaregistry:8086/subjects
 
-5. To prepare for schema translation, put the source cluster registry in "READONLY" mode and the destination registry in "IMPORT" mode. Note that this works only when the destination Schema Registry has no registered subjects (as is true in this demo), otherwise the import would fail with a message similar to "Cannot import since found existing subjects". 
+5. To prepare for schema translation, put the source |sr| in "READONLY" mode and the destination registry in "IMPORT" mode. Note that this works only when the destination |sr| has no registered subjects (as is true in this demo), otherwise the import would fail with a message similar to "Cannot import since found existing subjects". 
 
    .. sourcecode:: bash
 
@@ -80,7 +80,7 @@ Run the Demo
 
       docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
 
-   Your output should resemble:
+   Your output should show the posted Replicator configuration:
 
    .. sourcecode:: json
 
@@ -90,10 +90,10 @@ Run the Demo
 
    .. sourcecode:: bash
 
-      # Source Schema Registry cluster should show one subject, i.e., the output should be ["testTopic-value"]
+      # Source Schema Registry should show one subject, i.e., the output should be ["testTopic-value"]
       docker-compose exec connect curl http://srcSchemaregistry:8085/subjects
       
-      # Destination Schema Registry cluster should show one subject, i.e., the output should be ["testTopic.replica-value"]
+      # Destination Schema Registry should show one subject, i.e., the output should be ["testTopic.replica-value"]
       docker-compose exec connect curl http://destSchemaregistry:8086/subjects
 
 8. To complete the demo, reset both Schema Registries to ``READWRITE`` mode:
