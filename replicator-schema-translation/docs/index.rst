@@ -49,7 +49,7 @@ Run the Demo
 
       docker-compose up -d
 
-4. Verify the demo has completely started by checking the subjects in the source and destination Schema Registries.
+4. Wait at least 2 minutes and then verify the demo has completely started by checking the subjects in the source and destination |sr|.
 
    .. sourcecode:: bash
 
