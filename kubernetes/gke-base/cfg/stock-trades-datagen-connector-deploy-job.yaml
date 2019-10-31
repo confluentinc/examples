@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: stock-trades-datagen-connector-deploy
+spec:
+  ttlSecondsAfterFinished: 5
+  template:
+    spec:
+      volumes:
+      - name: stock-trades-datagen-connector
+        configMap:
+          name: stock-trades-datagen-connector
+      containers:
+      - name: stock-trades-datagen-connector-deploy
+        image: cnfldemos/alpine-curl:3.10.2_7.65.1
+        args: [ 
+          "-s",
+          "-X", "POST",
+          "-H", "Content-Type: application/json",
+          "--data", "@/etc/config/connector/stock-trades-datagen-connector.json",
+          "http://connectors:8083/connectors"
+        ]
+        volumeMounts:
+          - name: stock-trades-datagen-connector
+            mountPath: /etc/config/connector
+      restartPolicy: Never
+  backoffLimit: 1

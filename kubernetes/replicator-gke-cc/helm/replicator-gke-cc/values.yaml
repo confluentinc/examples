@@ -1,0 +1,17 @@
+
+replicator:
+  topic:
+    regex: ""
+    whitelist: ""
+    blacklist: ""
+  src:
+    kafka:
+      tls:
+        enabled: true
+        internal: false
+        authentication:
+          type: plain
+      bootstrapEndpoint: kafka:9071
+      username: test 
+      password: test123 
+
