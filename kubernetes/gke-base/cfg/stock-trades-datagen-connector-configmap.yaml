@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: stock-trades-datagen-connector
+data:
+  stock-trades-datagen-connector.json: '{
+    "name":"stock-trades",
+    "config": {
+      "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
+      "kafka.topic": "stock-trades",
+      "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+      "value.converter": "io.confluent.connect.avro.AvroConverter",
+      "value.converter.schema.registry.url": "http://schemaregistry:8081",
+      "value.converter.schemas.enable": "true",
+      "quickstart": "stock_trades",
+      "max.interval": 1000,
+      "iterations": -1,
+      "tasks.max": "1"
+    }
+  }'
