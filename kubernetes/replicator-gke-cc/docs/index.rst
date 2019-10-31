@@ -36,18 +36,19 @@ Demo Prerequisites
 
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
-+------------------+----------------+----------------------------------------------------------+
-| Application      | Tested Version | Info                                                     |
-+==================+================+==========================================================+
-| ``kubectl``      | ``1.14.3``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
-+------------------+----------------+----------------------------------------------------------+
-| ``helm``         | ``2.12.3``     | https://github.com/helm/helm/releases/tag/v2.12.3        |
-+------------------+----------------+----------------------------------------------------------+
-| ``gcloud``       | ``267.0.0``    | https://cloud.google.com/sdk/install                     |
-| ``GCP sdk core`` | ``2019.10.15`` |                                                          |
-+------------------+----------------+----------------------------------------------------------+
-| ``ccloud``       | ``v0.185.0``   | https://docs.confluent.io/current/cloud/cli/install.html |
-+------------------+----------------+----------------------------------------------------------+
++------------------+-------------------+----------------------------------------------------------+
+| Application      | Tested Version    | Info                                                     |
++==================+===================+==========================================================+
+| ``kubectl``      | ``1.14.3``        | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
++------------------+-------------------+----------------------------------------------------------+
+| ``helm``         | ``2.12.3``        | https://github.com/helm/helm/releases/tag/v2.12.3        |
++------------------+-------------------+----------------------------------------------------------+
+| ``gcloud``       | ``268.0.0``       | https://cloud.google.com/sdk/install                     |
+| ``GCP sdk core`` | ``2019.10.18``    |                                                          |
+| ``GKE cluster``  | ``1.14.7-gke.10`` |                                                          |
++------------------+-------------------+----------------------------------------------------------+
+| ``ccloud``       | ``v0.185.0``      | https://docs.confluent.io/current/cloud/cli/install.html |
++------------------+-------------------+----------------------------------------------------------+
 
 .. note:: In testing, issues were experienced with ``helm`` versions > than 2.12.3.  It's highly recommended that the demo be ran specifically with helm version 2.12.3.
 
