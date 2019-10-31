@@ -44,6 +44,8 @@ Running the Demo
 .. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
 
  
+.. _quickstart-demos-operator-gke-setup:
+
 Setup
 *****
 
@@ -60,9 +62,7 @@ The remaining steps in the **Setup** section of the instructions help you build 
 
 To verify the Google Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://support.google.com/googleapi/answer/7014113?hl=en>`__:
 
-.. sourcecode:: bash
-
-    gcloud config list --format 'value(core.project)'
+.. include:: ../../docs/includes/gcloud-config-list.rst
 
 .. note::
 
@@ -206,12 +206,7 @@ Example output might look like::
 
 Verify Confluent Platform Control Center
 ````````````````````````````````````````
-
-In order to view |c3|, network connectivity will need to be available between your local machine and the Kubernetes pod running the |c3| service.  If you used an existing cluster you may already have external cluster access configured.  If you used the demo ``gke-create-cluster`` function, you can use the following ``kubectl`` command to open a forwarded port connection between your local host and |c3|.
-
-.. sourcecode:: bash
-
-		kubectl -n operator port-forward controlcenter-0 12345:9021
+.. include:: ../../docs/includes/port-forward-c3.rst
 
 Now open a web-browser to http://localhost:12345, and you should see |c3| with your operational |ak| cluster, |sr|, and |kconnect-long| with the running ``clicks`` connector.
 
@@ -250,7 +245,7 @@ The following is an example section of the demo's ``values.yaml`` file showing h
       server:
       - "auto.create.topics.enabled=true"
 
-Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile` for the full commands.
+Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile-impl` for the full commands.
 
 .. sourcecode:: bash
 

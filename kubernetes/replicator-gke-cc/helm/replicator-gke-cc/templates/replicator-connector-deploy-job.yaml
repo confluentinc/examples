@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: replicator-connector-deploy
+spec:
+  ttlSecondsAfterFinished: 5
+  template:
+    spec:
+      volumes:
+      - name: replicator-connector
+        configMap:
+          name: replicator-connector
+      containers:
+      - name: replicator-connector-deploy
+        image: cnfldemos/alpine-curl:3.10.2_7.65.1
+        args: [ 
+          "-s",
+          "-X", "POST",
+          "-H", "Content-Type: application/json",
+          "--data", "@/etc/config/connector/replicator-connector.json",
+          "http://replicator:8083/connectors"
+        ]
+        volumeMounts:
+          - name: replicator-connector
+            mountPath: /etc/config/connector
+      restartPolicy: Never
+  backoffLimit: 1
