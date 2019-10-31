@@ -80,7 +80,7 @@ Run the Demo
 
       docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
 
-   Your output should show the posted Replicator configuration:
+   Your output should show the posted |crep| configuration. The key configuration that enables the schema translation is `schema.subject.translator.class=io.confluent.connect.replicator.schemas.DefaultSubjectTranslator`
 
    .. sourcecode:: json
 
