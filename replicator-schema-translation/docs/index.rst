@@ -27,6 +27,10 @@ Prerequisites
 -  Java version 1.8.0_162
 -  MacOS 10.12
 
+============
+Run the Demo
+============
+
 1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
 
    .. sourcecode:: bash
@@ -45,9 +49,17 @@ Prerequisites
 
       docker-compose up -d
 
-   Verify the demo has completely started by using Google Chrome to view the Schema Registries. The source cluster is at: ``http://localhost:8085/subjects`` (you should see: ``["testTopic-value"]``) and the destination cluster is at: ``http://localhost:8086/subjects`` (you should see: ``[]``).
+4. Verify the demo has completely started by checking the subjects in the source and destination Schema Registries.
 
-4. To prepare for schema translation, you must put the source cluster registry in "READONLY" mode and the destination registry in "IMPORT" mode.
+   .. sourcecode:: bash
+
+      # Source Schema Registry cluster should show one subject, i.e., the output should be ["testTopic-value"]
+      docker-compose exec connect curl http://srcSchemaregistry:8085/subjects
+
+      # Destination Schema Registry cluster should show no subjects, i.e., the output should be []
+      docker-compose exec connect curl http://destSchemaregistry:8086/subjects
+
+5. To prepare for schema translation, put the source cluster registry in "READONLY" mode and the destination registry in "IMPORT" mode. Note that this works only when the destination Schema Registry has no registered subjects (as is true in this demo), otherwise the import would fail with a message similar to "Cannot import since found existing subjects". 
 
    .. sourcecode:: bash
 
@@ -57,9 +69,12 @@ Prerequisites
 
    .. sourcecode:: json
 
-      {"mode":"READONLY"}{"mode":"IMPORT"}
+      Setting srcSchemaregistry to READONLY mode:
+      {"mode":"READONLY"}
+      Setting destSchemaregistry to IMPORT mode:
+      {"mode":"IMPORT"}%   
 
-5. Submit |crep| to perform the translation.
+6. Submit |crep| to perform the translation.
 
    .. sourcecode:: bash
 
@@ -71,9 +86,17 @@ Prerequisites
 
       {"name":"testReplicator","config":{"connector.class":"io.confluent.connect.replicator.ReplicatorSourceConnector","topic.whitelist":"_schemas","topic.rename.format":"${topic}.replica","key.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","value.converter":"io.confluent.connect.replicator.util.ByteArrayConverter","src.kafka.bootstrap.servers":"srcKafka1:10091","dest.kafka.bootstrap.servers":"destKafka1:11091","tasks.max":"1","confluent.topic.replication.factor":"1","schema.subject.translator.class":"io.confluent.connect.replicator.schemas.DefaultSubjectTranslator","schema.registry.topic":"_schemas","schema.registry.url":"http://destSchemaregistry:8086","name":"testReplicator"},"tasks":[],"type":"source"}
 
-6. Now verify the translation by revisiting the registries at: ``http://localhost:8085/subjects`` and ``http://localhost:8086/subjects``. They should both list schemas with the destination cluster showing ``["testTopic.replica-value"]``.
+7. Verify the schema translation by revisiting the subjects in the source and destination Schema Registries.
 
-7. To complete the demo return both clusters to ``READWRITE`` mode:
+   .. sourcecode:: bash
+
+      # Source Schema Registry cluster should show one subject, i.e., the output should be ["testTopic-value"]
+      docker-compose exec connect curl http://srcSchemaregistry:8085/subjects
+      
+      # Destination Schema Registry cluster should show one subject, i.e., the output should be ["testTopic.replica-value"]
+      docker-compose exec connect curl http://destSchemaregistry:8086/subjects
+
+8. To complete the demo, reset both Schema Registries to ``READWRITE`` mode:
 
    .. sourcecode:: bash
 
