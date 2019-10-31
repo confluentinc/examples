@@ -14,10 +14,6 @@ global:
       reclaimPolicy: Delete 
       parameters:
         type: pd-ssd 
-    sasl:
-      plain:
-        username=test
-        password=test123
 
 manager:
   name: manager
@@ -46,7 +42,7 @@ kafka:
     enabled: true
   configOverrides:
     server:
-    - "auto.create.topics.enabled=true"
+    - auto.create.topics.enable=true
 
 schemaregistry:
   <<: *cpImage
@@ -57,7 +53,7 @@ schemaregistry:
 connect:
   image:
     repository: cnfldemos/cp-server-connect-operator-with-datagen 
-    tag: 5.3.0.0_0.1.3
+    tag: 0.1.6-SNAPSHOT-5.3.1.0
   tls:
     enabled: false
   loadBalancer:
@@ -72,6 +68,9 @@ connect:
 
 controlcenter:
   <<: *cpImage
+  loadBalancer:
+    enabled: true
+#   domain: specific value for your environment, set with --set or in additional values file passed to helm
   dependencies:
     c3KafkaCluster:
       zookeeper:
