@@ -16,7 +16,7 @@ DATA=$( cat << EOF
     "src.kafka.timestamps.producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor",
     "src.kafka.timestamps.producer.confluent.monitoring.interceptor.bootstrap.servers": "broker-dc2:29092",
     "dest.kafka.bootstrap.servers": "broker-dc1:29091",
-    "dest.kafka.replication.factor": 1,
+    "confluent.topic.replication.factor": 1,
     "provenance.header.enable": "true",
     "header.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "tasks.max": "1"
