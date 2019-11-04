@@ -11,7 +11,7 @@ Demo security features in Confluent Platform.
 
 # Examples
 
-* [ACLs for Confluent Cloud Enterprise](acls/acl.sh)
+* [ACLs for Confluent Cloud Enterprise](../ccloud/beginner-cloud/README.md)
 * [Role-Based Access Control](rbac/README.md)
 * [Secret Protection](secret-protection/README.adoc)
 * [End-to-end security in Confluent Platform](https://github.com/confluentinc/cp-demo)

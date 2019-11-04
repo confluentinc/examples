@@ -30,10 +30,10 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./acl.sh <url to cloud> <cloud email> <environment> <cluster> <cloud password>
+#   ./start.sh <url to cloud> <cloud email> <environment> <cluster> <cloud password>
 #
 #   # Provide all arguments on command line, except password for which you will be prompted
-#   ./acl.sh <url to cloud> <cloud email> <environment> <cluster>
+#   ./start.sh <url to cloud> <cloud email> <environment> <cluster>
 #
 # Pre-requisites:
 #
