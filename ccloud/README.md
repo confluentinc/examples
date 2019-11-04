@@ -1,7 +1,7 @@
 ![image](../images/confluent-logo-300-2.png)
 
 * [Overview](#overview)
-* [Beginner Demo](#beginner-demo)
+* [Beginner Cloud](#beginner-cloud)
 * [Advanced Demo](#advanced-demo)
 * [Client Code Examples](#client-code-examples)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
@@ -14,7 +14,7 @@ It has a web interface and local command line interface that you can use to mana
 
 This repo has a few resources to help you validate your solutions on Confluent Cloud.
 
-# Beginner Demo
+# Beginner Cloud
 
 [This beginner demo](../security/acls/acl.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud using the CLI.
 It steps through the following workflow.
@@ -27,7 +27,6 @@ It steps through the following workflow.
 6. Showcase a Wildcard ACL
 7. Run Connect and kafka-connect-datagen connector with permissions
 8. Delete the API key, service account, Kafka topics, and some of the local files
-
 
 # Advanced Demo
 
