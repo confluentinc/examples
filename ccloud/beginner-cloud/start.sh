@@ -231,7 +231,7 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 # by default no client applications are authorized.
 #
 # The following steps show the same Java producer failing at first due to
-# `TopicAuthorizationException` and then passing once the appropriate
+# 'TopicAuthorizationException' and then passing once the appropriate
 # ACLs are configured
 ##################################################
 
@@ -257,7 +257,7 @@ if [[ ! -z $OUTPUT ]]; then
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
-cat $LOG1 | grep "grep org.apache.kafka.common.errors.TopicAuthorizationException"
+grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
