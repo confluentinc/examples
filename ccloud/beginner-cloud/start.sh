@@ -257,7 +257,7 @@ if [[ ! -z $OUTPUT ]]; then
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
-echo $LOG1
+cat $LOG1
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
@@ -279,7 +279,7 @@ if [[ ! -z $OUTPUT ]]; then
 else
   echo "FAIL: Something went wrong, check $LOG2"
 fi
-echo $LOG2
+cat $LOG2
 
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
