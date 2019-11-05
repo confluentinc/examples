@@ -25,7 +25,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
-| [Beginner Cloud](ccloud/beginner-cloud) |  Y  |  N  | Fully scripted demo that shows how to interact with your Confluent Cloud cluster and set ACLs using the CLI <br><img src="clients/cloud/images/confluent-cloud.jpeg" width="400">
+| [Beginner Cloud](ccloud/beginner-cloud/README.md) |  Y  |  N  | Fully scripted demo that shows how to interact with your Confluent Cloud cluster and set ACLs using the CLI <br><img src="clients/cloud/images/confluent-cloud.jpeg" width="400">
 | [Clients to Cloud](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Client applications in different programming languages connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/) <br><img src="clients/cloud/images/clients-all.png" width="450">
 | [GCP pipeline](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | N | [Y](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | Work with [Confluent Cloud](https://www.confluent.io/confluent-cloud/) to build cool pipelines into Google Cloud Platform (GCP) <br><img src="https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/images/env-data-arch-01.png" width="450">
 | [Kinesis to Cloud](kinesis-cloud/README.md)                 |   [Y](kinesis-cloud/README.md)   |   N   | AWS Kinesis -> Confluent Cloud -> Google Cloud Storage pipeline <br><img src="kinesis-cloud/images/topology.jpg" width="450">
