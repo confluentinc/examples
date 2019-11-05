@@ -117,17 +117,17 @@ ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $1;
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
 
-KAFKA_CLUSTER_NAME="demo-kafka-cluster"
+CLUSTER="demo-kafka-cluster"
 echo -e "\n# Create and specify active Kafka cluster"
-echo "ccloud kafka cluster create $KAFKA_CLUSTER_NAME --cloud gcp --region us-east1"
-OUTPUT=$(ccloud kafka cluster create $KAFKA_CLUSTER_NAME --cloud gcp --region us-east1)
+echo "ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1"
+OUTPUT=$(ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1)
 if [[ $? != 0 ]]; then
-  echo "Failed to create Kafka cluster $KAFKA_CLUSTER_NAME. Please troubleshoot and run again"
+  echo "Failed to create Kafka cluster $CLUSTER. Please troubleshoot and run again"
   exit 1
 fi
-KAFKA_CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $5;}')
-echo "ccloud kafka cluster use $KAFKA_CLUSTER"
-ccloud kafka cluster use $KAFKA_CLUSTER
+CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
+echo "ccloud kafka cluster use $CLUSTER"
+ccloud kafka cluster use $CLUSTER
 
 ##################################################
 # Create create a user key/secret
@@ -452,8 +452,8 @@ echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
 echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
-echo "ccloud kafka cluster delete $KAFKA_CLUSTER"
-ccloud kafka cluster delete $KAFKA_CLUSTER
+echo "ccloud kafka cluster delete $CLUSTER"
+ccloud kafka cluster delete $CLUSTER
 echo "ccloud environment delete $ENVIRONMENT"
 ccloud environment delete $ENVIRONMENT
 
