@@ -16,7 +16,7 @@ This repo has a few resources to help you validate your solutions on Confluent C
 
 # Beginner Cloud
 
-[This beginner demo](beginner-cloud/start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud using the CLI.
+[This beginner demo](beginner-cloud/README.md) is a fully scripted demo that shows users how to interact with Confluent Cloud using the CLI.
 It steps through the following workflow.
 
 * Log in to Confluent Cloud
