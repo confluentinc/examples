@@ -257,7 +257,7 @@ if [[ ! -z $OUTPUT ]]; then
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
-cat $LOG1
+cat $LOG1 | "grep org.apache.kafka.common.errors.TopicAuthorizationException"
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
@@ -475,13 +475,13 @@ for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageview
   ccloud kafka topic delete $t
 done
 echo "ccloud api-key delete $API_KEY_SA"
-ccloud api-key delete $API_KEY_SA
+ccloud api-key delete $API_KEY_SA 1>/dev/null
 echo "ccloud api-key delete $API_KEY"
-ccloud api-key delete $API_KEY
+ccloud api-key delete $API_KEY 1>/dev/null
 echo "ccloud kafka cluster delete $CLUSTER"
-ccloud kafka cluster delete $CLUSTER
+ccloud kafka cluster delete $CLUSTER 1>/dev/null
 echo "ccloud environment delete $ENVIRONMENT"
-ccloud environment delete $ENVIRONMENT
+ccloud environment delete $ENVIRONMENT 1>/dev/null
 
 # Delete files created locally
 rm -fr delta_configs
