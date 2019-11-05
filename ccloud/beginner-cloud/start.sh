@@ -248,8 +248,8 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 LOG1="/tmp/log.1"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG1 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
 echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException'"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
@@ -257,7 +257,7 @@ if [[ ! -z $OUTPUT ]]; then
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
-cat $LOG1 | "grep org.apache.kafka.common.errors.TopicAuthorizationException"
+cat $LOG1 | grep "grep org.apache.kafka.common.errors.TopicAuthorizationException"
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
@@ -270,8 +270,8 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG2 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
@@ -312,8 +312,8 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG3 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
@@ -349,8 +349,8 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
 LOG4="/tmp/log.4"
-echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG4 2>&1"
-timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
+echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
+timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
 echo "# Check logs for 'Consumed record with key alice and value'"
 OUTPUT=$(grep "Consumed record with key alice and value" $LOG4)
 if [[ ! -z $OUTPUT ]]; then

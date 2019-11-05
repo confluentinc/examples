@@ -31,16 +31,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Properties;
 
-import java.util.logging.Logger;
-import org.apache.log4j.Level;
-
 public class ConsumerExample {
 
   public static void main(final String[] args) throws Exception {
-
-    org.apache.log4j.Logger.getLogger("org").setLevel(Level.WARN);
-    org.apache.log4j.Logger.getLogger("akka").setLevel(Level.WARN);
-    org.apache.log4j.Logger.getLogger("kafka").setLevel(Level.WARN);
 
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
