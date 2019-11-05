@@ -8,14 +8,16 @@
 # This is a beginner demo, fully scripted, that shows users how to interact
 # with Confluent Cloud using the CLI. It steps through the following workflow:
 #
-#   1. Log in, specify active cluster, and create a user key/secret
-#   2. Create a Service Account and API key and secret
-#   3. Produce and consume with Confluent Cloud CLI
-#   4. Run a Java client: before and after ACLs
-#   5. Showcase a Prefix ACL
-#   6. Showcase a Wildcard ACL
-#   7. Run Connect and kafka-connect-datagen connector with permissions
-#   8. Delete the API key, service account, Kafka topics, and some of the local files
+#   * Log in to Confluent Cloud
+#   * Create a demo environment and cluster, and specify them as the default
+#   * Create create a user key/secret
+#   * Create a Service Account and API key and secret
+#   * Produce and consume with Confluent Cloud CLI
+#   * Run a Java client: before and after ACLs
+#   * Showcase a Prefix ACL
+#   * Showcase a Wildcard ACL
+#   * Run Connect and kafka-connect-datagen connector with permissions
+#   * Delete the API key, service account, Kafka topics, and some of the local files
 #
 # DISCLAIMER:
 #
@@ -30,15 +32,15 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./start.sh <url to cloud> <cloud email> <environment> <cluster> <cloud password>
+#   ./start.sh <url to cloud> <cloud email> <cloud password>
 #
 #   # Provide all arguments on command line, except password for which you will be prompted
-#   ./start.sh <url to cloud> <cloud email> <environment> <cluster>
+#   ./start.sh <url to cloud> <cloud email>
 #
 # Pre-requisites:
 #
 #   - Access to a Confluent Cloud cluster
-#   - Local install of the new Confluent Cloud CLI (v0.185.0 or above) -- https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
+#   - Local install of the new Confluent Cloud CLI (v0.192.0 or above) -- https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
 #   - Docker and Docker Compose
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
@@ -54,30 +56,20 @@ check_mvn || exit 1
 check_expect || exit 1
 
 ##################################################
-# Read URL, EMAIL, ENVIRONMENT, CLUSTER, PASSWORD from command line arguments
+# Read URL, EMAIL, PASSWORD from command line arguments
 #
 #  Rudimentary argument processing and must be in order:
-#    <url to cloud> <cloud email> <environment> <cluster> <cloud password>
+#    <url to cloud> <cloud email> <cloud password>
 ##################################################
 URL=$1
 EMAIL=$2
-ENVIRONMENT=$3
-CLUSTER=$4
-PASSWORD=$5
+PASSWORD=$3
 if [[ -z "$URL" ]]; then
   read -s -p "Cloud cluster: " URL
   echo ""
 fi
 if [[ -z "$EMAIL" ]]; then
   read -s -p "Cloud user email: " EMAIL
-  echo ""
-fi
-if [[ -z "$ENVIRONMENT" ]]; then
-  read -s -p "Environment id: " ENVIRONMENT
-  echo ""
-fi
-if [[ -z "$CLUSTER" ]]; then
-  read -s -p "Cluster id: " CLUSTER
   echo ""
 fi
 if [[ -z "$PASSWORD" ]]; then
@@ -87,7 +79,7 @@ fi
 
 
 ##################################################
-# Log in, specify active cluster, and create a user key/secret 
+# Log in to Confluent Cloud
 ##################################################
 
 echo -e "\n# Login"
@@ -109,21 +101,37 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
   exit 1
 fi
 
-echo -e "\n# Specify active environment to use"
+##################################################
+# Create a demo environment and cluster, and specify them as the default
+##################################################
+
+ENVIRONMENT_NAME="demo-script-env"
+echo -e "\n# Create and specify active environment"
+echo "ccloud environment create $ENVIRONMENT_NAME"
+ccloud environment create $ENVIRONMENT_NAME
+if [[ $? != 0 ]]; then
+  echo "Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"
+  exit 1
+fi
+ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $1;}')
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
-if [[ $? != 0 ]]; then
-  echo "Failed to set environment $ENVIRONMENT.  Please troubleshoot, confirm environment, and run again"
-  exit 1
-fi
 
-echo -e "\n# Specify active cluster to use"
-echo "ccloud kafka cluster use $CLUSTER"
-ccloud kafka cluster use $CLUSTER
+KAFKA_CLUSTER_NAME="demo-kafka-cluster"
+echo -e "\n# Create and specify active Kafka cluster"
+echo "ccloud kafka cluster create $KAFKA_CLUSTER_NAME --cloud gcp --region us-east1"
+OUTPUT=$(ccloud kafka cluster create $KAFKA_CLUSTER_NAME --cloud gcp --region us-east1)
 if [[ $? != 0 ]]; then
-  echo "Failed to set cluster. Please troubleshoot, confirm cluster id, and run again"
+  echo "Failed to create Kafka cluster $KAFKA_CLUSTER_NAME. Please troubleshoot and run again"
   exit 1
 fi
+KAFKA_CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $5;}')
+echo "ccloud kafka cluster use $KAFKA_CLUSTER"
+ccloud kafka cluster use $KAFKA_CLUSTER
+
+##################################################
+# Create create a user key/secret
+##################################################
 
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
@@ -150,8 +158,7 @@ BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{pri
 
 ##################################################
 # Create a Service Account and API key and secret
-#
-#   A service account represents an application access 
+# - A service account represents an application
 ##################################################
 
 echo -e "\n# Create a new service account"
@@ -445,6 +452,10 @@ echo "ccloud api-key delete $API_KEY_SA"
 ccloud api-key delete $API_KEY_SA
 echo "ccloud api-key delete $API_KEY"
 ccloud api-key delete $API_KEY
+echo "ccloud kafka cluster delete $KAFKA_CLUSTER"
+ccloud kafka cluster delete $KAFKA_CLUSTER
+echo "ccloud environment delete $ENVIRONMENT"
+ccloud environment delete $ENVIRONMENT
 
 # Delete files created locally
 rm -fr delta_configs
