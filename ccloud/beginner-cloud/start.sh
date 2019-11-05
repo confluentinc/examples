@@ -54,6 +54,8 @@ check_ccloud_version || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
+check_jq || exit 1
+
 
 ##################################################
 # Read URL, EMAIL, PASSWORD from command line arguments
@@ -418,6 +420,12 @@ fi
 
 echo -e "\n\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
 sleep 30
+# Verify connector is running
+STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r .connector.state)
+if [[ "$STATE" != "RUNNING" ]]; then
+  echo "ERROR: datagaen-pageviews is not running.  Please troubleshoot the Docker logs."
+  exit $?
+fi
 
 echo -e "\n# Consume from topic pageviews"
 echo "ccloud kafka topic consume pageviews"
