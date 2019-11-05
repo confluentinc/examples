@@ -248,9 +248,9 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 LOG1="/tmp/log.1"
-echo "mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG1 2>&1"
-mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
-echo "Check logs for org.apache.kafka.common.errors.TopicAuthorizationException"
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG1 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
+echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException'"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs to allow this client application)"
@@ -269,9 +269,10 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
-echo "mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG2 2>&1"
-mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG2 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
+echo "# Check logs for '10 messages were produced to topic'"
+OUTPUT=$(grep "10 messages were produced to topic" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer works"
 else
@@ -309,14 +310,16 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
-echo "mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG3 2>&1"
-mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG3 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
+echo "# Check logs for '10 messages were produced to topic'"
+OUTPUT=$(grep "10 messages were produced to topic" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer works"
 else
   echo "FAIL: Something went wrong, check $LOG3"
 fi
+cat $LOG3
 
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
@@ -344,14 +347,16 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
 LOG4="/tmp/log.4"
-echo "timeout 15s mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG4 2>&1"
-timeout 15s mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
-OUTPUT=$(grep "Successfully joined group with" $LOG4)
+echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG4 2>&1"
+timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
+echo "# Check logs for 'Consumed record with key alice and value'"
+OUTPUT=$(grep "Consumed record with key alice and value" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Consumer works"
 else
   echo "FAIL: Something went wrong, check $LOG4"
 fi
+cat $LOG4
 
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
@@ -426,7 +431,8 @@ fi
 
 echo -e "\n\n# Wait 30 seconds for kafka-connect-datagen to start producing messages"
 sleep 30
-echo -e "# Verify connector is running"
+
+echo -e "\n# Verify connector is running"
 echo "curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state'"
 STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state')
 echo $STATE

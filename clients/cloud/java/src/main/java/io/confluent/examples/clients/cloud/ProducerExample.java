@@ -39,6 +39,9 @@ import java.util.Properties;
 import java.util.Collections;
 import java.util.Map;
 
+import java.util.logging.Logger;
+import org.apache.log4j.Level;
+
 public class ProducerExample {
 
   // Create topic in Confluent Cloud
@@ -58,6 +61,9 @@ public class ProducerExample {
   }
 
   public static void main(final String[] args) throws IOException {
+
+    org.apache.log4j.Logger.getLogger("kafka").setLevel(Level.WARN);
+
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
       System.exit(1);
