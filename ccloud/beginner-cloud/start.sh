@@ -8,14 +8,16 @@
 # This is a beginner demo, fully scripted, that shows users how to interact
 # with Confluent Cloud using the CLI. It steps through the following workflow:
 #
-#   1. Log in, specify active cluster, and create a user key/secret
-#   2. Create a Service Account and API key and secret
-#   3. Produce and consume with Confluent Cloud CLI
-#   4. Run a Java client: before and after ACLs
-#   5. Showcase a Prefix ACL
-#   6. Showcase a Wildcard ACL
-#   7. Run Connect and kafka-connect-datagen connector with permissions
-#   8. Delete the API key, service account, Kafka topics, and some of the local files
+#   * Log in to Confluent Cloud
+#   * Create a demo environment and cluster, and specify them as the default
+#   * Create create a user key/secret
+#   * Create a Service Account and API key and secret
+#   * Produce and consume with Confluent Cloud CLI
+#   * Run a Java client: before and after ACLs
+#   * Showcase a Prefix ACL
+#   * Showcase a Wildcard ACL
+#   * Run Connect and kafka-connect-datagen connector with permissions
+#   * Delete the API key, service account, Kafka topics, and some of the local files
 #
 # DISCLAIMER:
 #
@@ -30,15 +32,15 @@
 # Usage:
 #
 #   # Provide all arguments on command line
-#   ./start.sh <url to cloud> <cloud email> <environment> <cluster> <cloud password>
+#   ./start.sh <url to cloud> <cloud email> <cloud password>
 #
 #   # Provide all arguments on command line, except password for which you will be prompted
-#   ./start.sh <url to cloud> <cloud email> <environment> <cluster>
+#   ./start.sh <url to cloud> <cloud email>
 #
 # Pre-requisites:
 #
 #   - Access to a Confluent Cloud cluster
-#   - Local install of the new Confluent Cloud CLI (v0.185.0 or above) -- https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
+#   - Local install of the new Confluent Cloud CLI (v0.192.0 or above) -- https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli
 #   - Docker and Docker Compose
 #   - `timeout` installed on your host
 #   - `mvn` installed on your host
@@ -52,32 +54,24 @@ check_ccloud_version || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
+check_jq || exit 1
+
 
 ##################################################
-# Read URL, EMAIL, ENVIRONMENT, CLUSTER, PASSWORD from command line arguments
+# Read URL, EMAIL, PASSWORD from command line arguments
 #
 #  Rudimentary argument processing and must be in order:
-#    <url to cloud> <cloud email> <environment> <cluster> <cloud password>
+#    <url to cloud> <cloud email> <cloud password>
 ##################################################
 URL=$1
 EMAIL=$2
-ENVIRONMENT=$3
-CLUSTER=$4
-PASSWORD=$5
+PASSWORD=$3
 if [[ -z "$URL" ]]; then
   read -s -p "Cloud cluster: " URL
   echo ""
 fi
 if [[ -z "$EMAIL" ]]; then
   read -s -p "Cloud user email: " EMAIL
-  echo ""
-fi
-if [[ -z "$ENVIRONMENT" ]]; then
-  read -s -p "Environment id: " ENVIRONMENT
-  echo ""
-fi
-if [[ -z "$CLUSTER" ]]; then
-  read -s -p "Cluster id: " CLUSTER
   echo ""
 fi
 if [[ -z "$PASSWORD" ]]; then
@@ -87,7 +81,7 @@ fi
 
 
 ##################################################
-# Log in, specify active cluster, and create a user key/secret 
+# Log in to Confluent Cloud
 ##################################################
 
 echo -e "\n# Login"
@@ -109,26 +103,48 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
   exit 1
 fi
 
-echo -e "\n# Specify active environment to use"
+##################################################
+# Create a demo environment and cluster, and specify them as the default
+##################################################
+
+ENVIRONMENT_NAME="demo-script-env"
+echo -e "\n# Create and specify active environment"
+echo "ccloud environment create $ENVIRONMENT_NAME"
+ccloud environment create $ENVIRONMENT_NAME
+if [[ $? != 0 ]]; then
+  echo "Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"
+  exit 1
+fi
+ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $1;}')
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
-if [[ $? != 0 ]]; then
-  echo "Failed to set environment $ENVIRONMENT.  Please troubleshoot, confirm environment, and run again"
+
+CLUSTER="demo-kafka-cluster"
+echo -e "\n# Create and specify active Kafka cluster"
+echo "ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1"
+OUTPUT=$(ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1)
+status=$?
+echo "$OUTPUT"
+if [[ $status != 0 ]]; then
+  echo "Failed to create Kafka cluster $CLUSTER. Please troubleshoot and run again"
   exit 1
 fi
-
-echo -e "\n# Specify active cluster to use"
+CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
-if [[ $? != 0 ]]; then
-  echo "Failed to set cluster. Please troubleshoot, confirm cluster id, and run again"
-  exit 1
-fi
+BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
+#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
+
+##################################################
+# Create create a user key/secret
+##################################################
 
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
 OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
-if [[ $? != 0 ]]; then
+status=$?
+echo "$OUTPUT"
+if [[ $status != 0 ]]; then
   echo "Failed to create an API key.  Please troubleshoot and run again"
   exit 1
 fi
@@ -139,23 +155,14 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY"
 ccloud api-key use $API_KEY
 
-OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
-if [[ $? != 0 ]]; then
-  echo "Failed to describe the cluster $CLUSTER (does it exist in this environment?).  Please troubleshoot and run again"
-  exit 1
-fi
-BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
-#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
-
 
 ##################################################
 # Create a Service Account and API key and secret
-#
-#   A service account represents an application access 
+# - A service account represents an application, and the service account name must be globally unique
 ##################################################
 
 echo -e "\n# Create a new service account"
-RANDOM_NUM=$((1 + RANDOM % 100))
+RANDOM_NUM=$((1 + RANDOM % 1000000))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
 echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
 ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
@@ -164,15 +171,16 @@ SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{pr
 echo -e "\n# Create an API key and secret for the new service account"
 echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
+echo "$OUTPUT"
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
-echo -e "\n# Sleeping 90 seconds to wait for the user and service account key and secret to propagate"
+echo -e "\n# Wait 90 seconds for the user and service account key and secret to propagate"
 sleep 90
 
 CLIENT_CONFIG="/tmp/client.config"
 echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
-echo "Writing to $CLIENT_CONFIG"
+echo "Write properties to $CLIENT_CONFIG:"
 cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
@@ -180,6 +188,8 @@ security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
 EOF
+cat $CLIENT_CONFIG
+
 
 
 ##################################################
@@ -238,13 +248,16 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 LOG1="/tmp/log.1"
-mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
+echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException'"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs to allow this client application)"
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
+cat $LOG1 | grep "grep org.apache.kafka.common.errors.TopicAuthorizationException"
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
@@ -257,13 +270,16 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
-mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1
+echo "# Check logs for '10 messages were produced to topic'"
+OUTPUT=$(grep "10 messages were produced to topic" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer works"
 else
   echo "FAIL: Something went wrong, check $LOG2"
 fi
+cat $LOG2
 
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
@@ -296,13 +312,16 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
-mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
-OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1
+echo "# Check logs for '10 messages were produced to topic'"
+OUTPUT=$(grep "10 messages were produced to topic" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer works"
 else
   echo "FAIL: Something went wrong, check $LOG3"
 fi
+cat $LOG3
 
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
@@ -330,13 +349,16 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
 LOG4="/tmp/log.4"
-timeout 15s mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
-OUTPUT=$(grep "Successfully joined group with" $LOG4)
+echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
+timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
+echo "# Check logs for 'Consumed record with key alice and value'"
+OUTPUT=$(grep "Consumed record with key alice and value" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Consumer works"
 else
   echo "FAIL: Something went wrong, check $LOG4"
 fi
+cat $LOG4
 
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
@@ -351,7 +373,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 #   Confluent Hub: https://www.confluent.io/hub/
 ##################################################
 
-../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG
+echo -e "\n# Generate configuration files with Confluent Cloud connection information"
+../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG 1>/dev/null
 source delta_configs/env.delta
 
 echo -e "\n# Create ACLs for Connect"
@@ -367,9 +390,9 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo "Run a Connect container with the kafka-connect-datagen plugin"
+echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
 docker-compose up -d
-echo -e "\n# Sleeping 60 seconds to wait for Connect to start"
+echo -e "\n# Wait 60 seconds for Connect to start"
 sleep 60
 
 echo -e "\n# Check if topic pageviews exists"
@@ -408,16 +431,27 @@ if [[ $? != 0 ]]; then
   #exit $?
 fi
 
-echo -e "\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
+echo -e "\n\n# Wait 30 seconds for kafka-connect-datagen to start producing messages"
 sleep 30
+
+echo -e "\n# Verify connector is running"
+echo "curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state'"
+STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state')
+echo $STATE
+if [[ "$STATE" != "RUNNING" ]]; then
+  echo "ERROR: datagaen-pageviews is not running.  Please troubleshoot the Docker logs."
+  exit $?
+fi
 
 echo -e "\n# Consume from topic pageviews"
 echo "ccloud kafka topic consume pageviews"
 timeout 10s ccloud kafka topic consume pageviews
 
-echo -e "\n# Stop Docker and Delete ACLs"
+echo -e "\n# Stop Docker"
 echo "docker-compose down"
 docker-compose down
+
+echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
@@ -430,11 +464,10 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Cleanup
-#
-# Delete the API key, service account, Kafka topics, and some of the local files
+# - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and some of the local files
 ##################################################
 
-echo -e "\n# Cleanup service-account, topics, and api-keys"
+echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
 for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageviews; do
@@ -442,9 +475,13 @@ for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageview
   ccloud kafka topic delete $t
 done
 echo "ccloud api-key delete $API_KEY_SA"
-ccloud api-key delete $API_KEY_SA
+ccloud api-key delete $API_KEY_SA 1>/dev/null
 echo "ccloud api-key delete $API_KEY"
-ccloud api-key delete $API_KEY
+ccloud api-key delete $API_KEY 1>/dev/null
+echo "ccloud kafka cluster delete $CLUSTER"
+ccloud kafka cluster delete $CLUSTER 1>/dev/null
+echo "ccloud environment delete $ENVIRONMENT"
+ccloud environment delete $ENVIRONMENT 1>/dev/null
 
 # Delete files created locally
 rm -fr delta_configs
