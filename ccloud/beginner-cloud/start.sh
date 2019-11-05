@@ -158,11 +158,11 @@ ccloud api-key use $API_KEY
 
 ##################################################
 # Create a Service Account and API key and secret
-# - A service account represents an application
+# - A service account represents an application, and the service account name must be globally unique
 ##################################################
 
 echo -e "\n# Create a new service account"
-RANDOM_NUM=$((1 + RANDOM % 100))
+RANDOM_NUM=$((1 + RANDOM % 1000000))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
 echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
 ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
@@ -175,12 +175,12 @@ echo "$OUTPUT"
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
-echo -e "\n# Sleeping 90 seconds to wait for the user and service account key and secret to propagate"
+echo -e "\n# Wait 90 seconds for the user and service account key and secret to propagate"
 sleep 90
 
 CLIENT_CONFIG="/tmp/client.config"
 echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
-echo "Writing to $CLIENT_CONFIG"
+echo "Write properties to $CLIENT_CONFIG:"
 cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
@@ -188,6 +188,8 @@ security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
 EOF
+cat $CLIENT_CONFIG
+
 
 
 ##################################################
@@ -246,8 +248,9 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 LOG1="/tmp/log.1"
+echo "mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG1 2>&1"
 mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
-echo "Checking logs for org.apache.kafka.common.errors.TopicAuthorizationException"
+echo "Check logs for org.apache.kafka.common.errors.TopicAuthorizationException"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs to allow this client application)"
@@ -266,6 +269,7 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
+echo "mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" > $LOG2 2>&1"
 mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG2 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
@@ -305,6 +309,7 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
+echo "mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG3 2>&1"
 mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG3 2>&1
 OUTPUT=$(grep "BUILD SUCCESS" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
@@ -339,6 +344,7 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
 LOG4="/tmp/log.4"
+echo "timeout 15s mvn -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" > $LOG4 2>&1"
 timeout 15s mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" > $LOG4 2>&1
 OUTPUT=$(grep "Successfully joined group with" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
@@ -360,8 +366,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 #   Confluent Hub: https://www.confluent.io/hub/
 ##################################################
 
-echo "Generating configuration files with Confluent Cloud connection information"
-../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG
+echo -e "\n# Generate configuration files with Confluent Cloud connection information"
+../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG 1>/dev/null
 source delta_configs/env.delta
 
 echo -e "\n# Create ACLs for Connect"
@@ -377,9 +383,9 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo "Run a Connect container with the kafka-connect-datagen plugin"
+echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
 docker-compose up -d
-echo -e "\n# Sleeping 60 seconds to wait for Connect to start"
+echo -e "\n# Wait 60 seconds for Connect to start"
 sleep 60
 
 echo -e "\n# Check if topic pageviews exists"
@@ -418,10 +424,12 @@ if [[ $? != 0 ]]; then
   #exit $?
 fi
 
-echo -e "\n\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
+echo -e "\n\n# Wait 30 seconds for kafka-connect-datagen to start producing messages"
 sleep 30
-# Verify connector is running
+echo -e "# Verify connector is running"
+echo "curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state'"
 STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state')
+echo $STATE
 if [[ "$STATE" != "RUNNING" ]]; then
   echo "ERROR: datagaen-pageviews is not running.  Please troubleshoot the Docker logs."
   exit $?
