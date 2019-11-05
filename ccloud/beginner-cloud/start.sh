@@ -421,7 +421,7 @@ fi
 echo -e "\n\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
 sleep 30
 # Verify connector is running
-STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r .connector.state)
+STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state')
 if [[ "$STATE" != "RUNNING" ]]; then
   echo "ERROR: datagaen-pageviews is not running.  Please troubleshoot the Docker logs."
   exit $?
