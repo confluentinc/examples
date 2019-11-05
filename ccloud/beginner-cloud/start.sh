@@ -257,7 +257,7 @@ if [[ ! -z $OUTPUT ]]; then
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
-grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1
+#grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
