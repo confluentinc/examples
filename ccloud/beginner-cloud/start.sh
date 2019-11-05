@@ -121,13 +121,17 @@ CLUSTER="demo-kafka-cluster"
 echo -e "\n# Create and specify active Kafka cluster"
 echo "ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1"
 OUTPUT=$(ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1)
-if [[ $? != 0 ]]; then
+status=$?
+echo "$OUTPUT"
+if [[ $status != 0 ]]; then
   echo "Failed to create Kafka cluster $CLUSTER. Please troubleshoot and run again"
   exit 1
 fi
 CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
+BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
+#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 ##################################################
 # Create create a user key/secret
@@ -136,7 +140,9 @@ ccloud kafka cluster use $CLUSTER
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
 OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
-if [[ $? != 0 ]]; then
+status=$?
+echo "$OUTPUT"
+if [[ $status != 0 ]]; then
   echo "Failed to create an API key.  Please troubleshoot and run again"
   exit 1
 fi
@@ -146,14 +152,6 @@ API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY"
 ccloud api-key use $API_KEY
-
-OUTPUT=$(ccloud kafka cluster describe $CLUSTER)
-if [[ $? != 0 ]]; then
-  echo "Failed to describe the cluster $CLUSTER (does it exist in this environment?).  Please troubleshoot and run again"
-  exit 1
-fi
-BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
-#echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 
 ##################################################
@@ -171,6 +169,7 @@ SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{pr
 echo -e "\n# Create an API key and secret for the new service account"
 echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
 OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
+echo "$OUTPUT"
 API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
@@ -246,6 +245,7 @@ if [[ $? != 0 ]]; then
 fi
 LOG1="/tmp/log.1"
 mvn -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" > $LOG1 2>&1
+echo "Checking logs for org.apache.kafka.common.errors.TopicAuthorizationException"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs to allow this client application)"
@@ -358,6 +358,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 #   Confluent Hub: https://www.confluent.io/hub/
 ##################################################
 
+echo "Generating configuration files with Confluent Cloud connection information"
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG
 source delta_configs/env.delta
 
@@ -415,16 +416,18 @@ if [[ $? != 0 ]]; then
   #exit $?
 fi
 
-echo -e "\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
+echo -e "\n\n# Sleeping 30 seconds to wait for kafka-connect-datagen to start producing messages"
 sleep 30
 
 echo -e "\n# Consume from topic pageviews"
 echo "ccloud kafka topic consume pageviews"
 timeout 10s ccloud kafka topic consume pageviews
 
-echo -e "\n# Stop Docker and Delete ACLs"
+echo -e "\n# Stop Docker"
 echo "docker-compose down"
 docker-compose down
+
+echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
@@ -437,11 +440,10 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Cleanup
-#
-# Delete the API key, service account, Kafka topics, and some of the local files
+# - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and some of the local files
 ##################################################
 
-echo -e "\n# Cleanup service-account, topics, and api-keys"
+echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
 for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageviews; do
