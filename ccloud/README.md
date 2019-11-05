@@ -19,14 +19,16 @@ This repo has a few resources to help you validate your solutions on Confluent C
 [This beginner demo](beginner-cloud/start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud using the CLI.
 It steps through the following workflow.
 
-1. Log in, specify active cluster, and create a user key/secret
-2. Create a Service Account and API key and secret
-3. Produce and consume with Confluent Cloud CLI
-4. Run a Java client: before and after ACLs
-5. Showcase a Prefix ACL
-6. Showcase a Wildcard ACL
-7. Run Connect and kafka-connect-datagen connector with permissions
-8. Delete the API key, service account, Kafka topics, and some of the local files
+* Log in to Confluent Cloud
+* Create a demo environment and cluster, and specify them as the default
+* Create create a user key/secret
+* Create a Service Account and API key and secret
+* Produce and consume with Confluent Cloud CLI
+* Run a Java client: before and after ACLs
+* Showcase a Prefix ACL
+* Showcase a Wildcard ACL
+* Run Connect and kafka-connect-datagen connector with permissions
+* Delete the API key, service account, Kafka topics, and some of the local files
 
 # Advanced Demo
 
