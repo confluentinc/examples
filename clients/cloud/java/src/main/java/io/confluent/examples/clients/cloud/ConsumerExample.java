@@ -34,7 +34,6 @@ import java.util.Properties;
 public class ConsumerExample {
 
   public static void main(final String[] args) throws Exception {
-
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
       System.exit(1);

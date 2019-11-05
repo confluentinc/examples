@@ -58,7 +58,6 @@ public class ProducerExample {
   }
 
   public static void main(final String[] args) throws IOException {
-
     if (args.length != 2) {
       System.out.println("Please provide command line arguments: configPath topic");
       System.exit(1);
