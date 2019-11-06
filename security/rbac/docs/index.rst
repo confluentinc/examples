@@ -74,56 +74,56 @@ Run the demo
 
 -  Option 1: run the demo end-to-end for all services
 
-.. code:: bash
+   .. code:: bash
 
-   $ ./run.sh
+      $ ./run.sh
 
 -  Option 2: step through it one service at a time
 
-.. code:: bash
+   .. code:: bash
 
-   $ ./init.sh
-   $ ./enable-rbac-broker.sh
-   $ ./enable-rbac-schema-registry.sh
-   $ ./enable-rbac-connect.sh
-   $ ./enable-rbac-rest-proxy.sh
-   $ ./enable-rbac-ksql-server.sh
-   $ ./enable-rbac-control-center.sh
+      $ ./init.sh
+      $ ./enable-rbac-broker.sh
+      $ ./enable-rbac-schema-registry.sh
+      $ ./enable-rbac-connect.sh
+      $ ./enable-rbac-rest-proxy.sh
+      $ ./enable-rbac-ksql-server.sh
+      $ ./enable-rbac-control-center.sh
 
 #. After you run the demo, view the configuration files:
 
-.. code:: bash
+   .. code:: bash
 
-   # The original configuration bundled with Confluent Platform
-   $ ls /tmp/original_configs/
-
-   # Configurations added to each service's properties file
-   $ ls ../delta_configs/
-
-   # The modified configuration = original + delta
-   $ ls /tmp/rbac_configs/
+      # The original configuration bundled with Confluent Platform
+      $ ls /tmp/original_configs/
+   
+      # Configurations added to each service's properties file
+      $ ls ../delta_configs/
+   
+      # The modified configuration = original + delta
+      $ ls /tmp/rbac_configs/
 
 #. After you run the demo, view the log files for each of the services.
    Since this demo uses Confluent CLI, all logs are saved in a temporary
    directory specified by ``confluent local current``.
 
-.. code:: bash
+   .. code:: bash
 
-   $ ls `confluent local current | tail -1`
-   connect
-   control-center
-   kafka
-   kafka-rest
-   ksql-server
-   schema-registry
-   zookeeper
-
+      $ ls `confluent local current | tail -1`
+      connect
+      control-center
+      kafka
+      kafka-rest
+      ksql-server
+      schema-registry
+      zookeeper
+   
 #. In this demo, the metadata service (MDS) logs are saved in the above
    temporary directory.
 
-.. code:: bash
+   .. code:: bash
 
-   $ cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
+      $ cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
 
 
 Stop the demo
@@ -149,14 +149,14 @@ Broker
 - :devx-examples:`Additional RBAC configurations required for server.properties|security/rbac/delta_configs/server.properties.delta`
 -  Role bindings:
 
-.. code:: bash
-
-   # Broker Admin
-   confluent iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-   # Producer/Consumer
-   confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+   .. code:: bash
+   
+      # Broker Admin
+      confluent iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+   
+      # Producer/Consumer
+      confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 Schema Registry
 ~~~~~~~~~~~~~~~
@@ -164,16 +164,16 @@ Schema Registry
 - :devx-examples:`Additional RBAC configurations required for schema-registry.properties|security/rbac/delta_configs/schema-registry.properties.delta`
 -  Role bindings:
 
-.. code:: bash
-
-   # Schema Registry Admin
-   confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-   # Client connecting to Schema Registry
-    confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-
+   .. code:: bash
+   
+      # Schema Registry Admin
+      confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
+   
+      # Client connecting to Schema Registry
+       confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+   
 Connect
 ~~~~~~~
 
@@ -182,23 +182,23 @@ Connect
 - :devx-examples:`Additional RBAC configurations required for a sink connector|security/rbac/delta_configs/connector-sink.properties.delta`
 -  Role bindings:
 
-.. code:: bash
+   .. code:: bash
 
-   # Connect Admin
-   confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-configs --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-offsets --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-statuses --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Group:connect-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User $USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:_secrets --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User $USER_ADMIN_CONNECT --role ResourceOwner --resource Group:secret-registry --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User $USER_ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
-
-   # Connector Submitter
-   confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
-
-   # Connector
-   confluent iam rolebinding create --principal User:$USER_CONNECTOR --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_CONNECTOR --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+      # Connect Admin
+      confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-configs --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-offsets --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:connect-statuses --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_CONNECT --role ResourceOwner --resource Group:connect-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User $USER_ADMIN_CONNECT --role ResourceOwner --resource Topic:_secrets --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User $USER_ADMIN_CONNECT --role ResourceOwner --resource Group:secret-registry --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User $USER_ADMIN_CONNECT --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+   
+      # Connector Submitter
+      confluent iam rolebinding create --principal User:$USER_CONNECTOR_SUBMITTER --role ResourceOwner --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+   
+      # Connector
+      confluent iam rolebinding create --principal User:$USER_CONNECTOR --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CONNECTOR --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 REST Proxy
 ~~~~~~~~~~
@@ -206,13 +206,13 @@ REST Proxy
 - :devx-examples:`Additional RBAC configurations required for kafka-rest.properties|security/rbac/delta_configs/kafka-rest.properties.delta`
 -  Role bindings:
 
-.. code:: bash
-
-   # REST Proxy Admin: no additional administrative rolebindings required because REST Proxy just does impersonation
-
-   # Producer/Consumer
-   confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role ResourceOwner --resource Topic:$TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
+   .. code:: bash
+   
+      # REST Proxy Admin: no additional administrative rolebindings required because REST Proxy just does impersonation
+   
+      # Producer/Consumer
+      confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role ResourceOwner --resource Topic:$TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 KSQL
 ~~~~
@@ -220,28 +220,28 @@ KSQL
 - :devx-examples:`Additional RBAC configurations required for ksql-server.properties|security/rbac/delta_configs/kafka-rest.properties.delta`
 -  Role bindings:
 
-.. code:: bash
+   .. code:: bash
 
-   # KSQL Server Admin
-   confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}_command_topic --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
-
-   # KSQL CLI queries
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperWrite --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+      # KSQL Server Admin
+      confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}_command_topic --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_KSQL --role ResourceOwner --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+   
+      # KSQL CLI queries
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperWrite --resource KsqlCluster:ksql-cluster --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role DeveloperRead --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Group:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID}transient --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CSAS_STREAM1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:${CTAS_TABLE1} --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource Topic:_confluent-ksql-${KSQL_SERVICE_ID} --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 Control Center
 ~~~~~~~~~~~~~~
@@ -249,18 +249,18 @@ Control Center
 - :devx-examples:`Additional RBAC configurations required for control-center-dev.properties|security/rbac/delta_configs/control-center-dev.properties.delta`
 -  Role bindings:
 
-.. code:: bash
+   .. code:: bash
 
-   # Control Center Admin
-   confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-   # Control Center user
-   confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-   confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
-
+      # Control Center Admin
+      confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+   
+      # Control Center user
+      confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+   
 General Rolebinding Syntax
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -355,24 +355,24 @@ Run the demo
 
 #. To start |cp|, run
 
-.. code:: bash
+   .. code:: bash
 
-   ./confluent-start.sh
+      ./confluent-start.sh
 
 You can optionally pass in where ``-p project-name`` to name the
 docker-compose project, otherwise it defaults to ``rbac``. You can use
 standard docker-compose commands like this listing all containers:
 
-.. code:: bash
+   .. code:: bash
 
-   docker-compose -p rbac ps
+      docker-compose -p rbac ps
 
-or tail Control Center logs:
+or tail |c3| logs:
 
-.. code:: bash
+   .. code:: bash
 
-   docker-compose -p rbac logs --t 200 -f control-center
-
+      docker-compose -p rbac logs --t 200 -f control-center
+   
 The Kafka broker is available at ``localhost:9094`` (not ``localhost::9092``).
 
 =============== ==================
@@ -392,39 +392,39 @@ Grant Rolebindings
 
 #. Login to CLI as ``professor:professor`` as a super user to grant initial role bindings
 
-.. code:: bash
+   .. code:: bash
 
-   confluent login --url http://localhost:8090
+      confluent login --url http://localhost:8090
 
 #. Set ``KAFKA_CLUSTER_ID``
 
-.. code:: bash
+   .. code:: bash
 
-   KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep version | jq -r .id)
+      KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep version | jq -r .id)
 
 #.  Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
 
-.. code:: bash
+   .. code:: bash
 
-   confluent iam rolebinding create --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID --resource Topic:foo --prefix
+      confluent iam rolebinding create --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID --resource Topic:foo --prefix
 
 #. List the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_ID``
 
-.. code:: bash
+   .. code:: bash
 
-   confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
+      confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
 
 #. The general listing syntax is:
 
-.. code:: bash
+   .. code:: bash
 
-   confluent iam rolebinding list User:[username] [clusters and resources you want to view their roles on]
+      confluent iam rolebinding list User:[username] [clusters and resources you want to view their roles on]
 
 #. The general rolebinding syntax is:
 
-.. code:: bash
+   .. code:: bash
 
-   confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
+      confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
 
 #. Available role types and permissions can be found `here <https://docs.confluent.io/current/security/rbac/rbac-predefined-roles.html>`__
 
