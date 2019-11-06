@@ -10,6 +10,7 @@ data:
       "kafka.topic": "clicks",
       "key.converter": "org.apache.kafka.connect.storage.StringConverter",
       "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+      "value.converter.schemas.enable": "false",
       "quickstart": "clickstream",
       "max.interval": 1000,
       "iterations": -1,
