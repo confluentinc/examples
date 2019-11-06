@@ -139,17 +139,14 @@ To stop the demo, stop |cp|, and delete files in ``/tmp/``
 Summary of Configurations and Role Bindings
 -------------------------------------------
 
-Here is a summary of the delta configurations and required role
-bindings, by service.
+Here is a summary of the delta configurations and required role bindings, by service.
 
-Reminder: for simplicity, this demo uses the Hash Login service instead
-of LDAP. If you are using LDAP in your environment, extra configurations
-are required.
+.. note:: For simplicity, this demo uses the Hash Login service instead of LDAP.  If you are using LDAP in your environment, extra configurations are required.
 
 Broker
 ~~~~~~
 
--  `delta_configs/server.properties.delta <delta_configs/server.properties.delta>`__
+- :devx-examples:`Additional RBAC configurations required for server.properties|security/rbac/delta_configs/server.properties.delta`
 -  Role bindings:
 
 .. code:: bash
@@ -164,7 +161,7 @@ Broker
 Schema Registry
 ~~~~~~~~~~~~~~~
 
--  `delta_configs/schema-registry.properties.delta <delta_configs/schema-registry.properties.delta>`__
+- :devx-examples:`Additional RBAC configurations required for schema-registry.properties|security/rbac/delta_configs/schema-registry.properties.delta`
 -  Role bindings:
 
 .. code:: bash
@@ -180,9 +177,9 @@ Schema Registry
 Connect
 ~~~~~~~
 
--  `delta_configs/connect-avro-distributed.properties.delta <delta_configs/connect-avro-distributed.properties.delta>`__
--  `delta_configs/connector-source.properties.delta <delta_configs/connector-source.properties.delta>`__
--  `delta_configs/connector-sink.properties.delta <delta_configs/connector-sink.properties.delta>`__
+- :devx-examples:`Additional RBAC configurations required for connect-avro-distributed.properties|security/rbac/delta_configs/connect-avro-distributed.properties.delta`
+- :devx-examples:`Additional RBAC configurations required for a source connector|security/rbac/delta_configs/connector-source.properties.delta`
+- :devx-examples:`Additional RBAC configurations required for a sink connector|security/rbac/delta_configs/connector-sink.properties.delta`
 -  Role bindings:
 
 .. code:: bash
@@ -206,7 +203,7 @@ Connect
 REST Proxy
 ~~~~~~~~~~
 
--  `delta_configs/kafka-rest.properties.delta <delta_configs/kafka-rest.properties.delta>`__
+- :devx-examples:`Additional RBAC configurations required for kafka-rest.properties|security/rbac/delta_configs/kafka-rest.properties.delta`
 -  Role bindings:
 
 .. code:: bash
@@ -220,7 +217,7 @@ REST Proxy
 KSQL
 ~~~~
 
--  `delta_configs/ksql-server.properties.delta <delta_configs/ksql-server.properties.delta>`__
+- :devx-examples:`Additional RBAC configurations required for ksql-server.properties|security/rbac/delta_configs/kafka-rest.properties.delta`
 -  Role bindings:
 
 .. code:: bash
@@ -249,7 +246,7 @@ KSQL
 Control Center
 ~~~~~~~~~~~~~~
 
--  `delta_configs/control-center-dev.properties.delta <delta_configs/control-center-dev.properties.delta>`__
+- :devx-examples:`Additional RBAC configurations required for control-center-dev.properties|security/rbac/delta_configs/control-center-dev.properties.delta`
 -  Role bindings:
 
 .. code:: bash
