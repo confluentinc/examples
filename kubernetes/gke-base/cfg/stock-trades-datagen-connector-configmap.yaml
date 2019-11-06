@@ -10,6 +10,7 @@ data:
       "kafka.topic": "stock-trades",
       "key.converter": "org.apache.kafka.connect.storage.StringConverter",
       "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+      "value.converter.schemas.enable": "false",
       "quickstart": "stock_trades",
       "max.interval": 1000,
       "iterations": -1,
