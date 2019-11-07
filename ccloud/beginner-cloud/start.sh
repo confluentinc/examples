@@ -66,7 +66,7 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 ##################################################
-# Create a demo environment and cluster, and specify them as the default
+# Create a new environment and specify it as the default
 ##################################################
 
 ENVIRONMENT_NAME="demo-script-env"
@@ -80,6 +80,10 @@ fi
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $1;}')
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
+
+##################################################
+# Create a new Kafka cluster and specify it as the default
+##################################################
 
 CLUSTER="demo-kafka-cluster"
 echo -e "\n# Create and specify active Kafka cluster"
@@ -430,7 +434,8 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Cleanup
-# - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and some of the local files
+#
+# - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
 echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"

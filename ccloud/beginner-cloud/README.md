@@ -6,7 +6,8 @@
 It steps through the following workflow.
 
 * Log in to Confluent Cloud
-* Create a demo environment and cluster, and specify them as the default
+* Create a new environment and specify it as the default
+* Create a new Kafka cluster and specify it as the default
 * Create create a user key/secret
 * Create a Service Account and API key and secret
 * Produce and consume with Confluent Cloud CLI
@@ -14,7 +15,7 @@ It steps through the following workflow.
 * Run a Java producer: showcase a Prefix ACL
 * Run Connect and kafka-connect-datagen connector with permissions
 * Run a Java consumer: showcase a Wildcard ACL
-* Delete the API key, service account, Kafka topics, and some of the local files
+* Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
 # Run the demo
 
