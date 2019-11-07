@@ -39,9 +39,9 @@ Prerequisites
 
 1. :ref:`Confluent CLI <cli-install>`:
    |confluent-cli| must be installed on your machine, version
-   ``v0.127.0`` or higher (note: as of CP 5.3, the |confluent-cli| is a separate
+   ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
    :ref:`download <cli-install>`
-2. `Confluent Platform 5.3 <https://www.confluent.io/download/>`__: use
+2. `Confluent Platform 5.3 or higher <https://www.confluent.io/download/>`__: use
    a clean install of |cp| without modified properties
    files, or else the demo is not guaranteed to work
 3. ``jq``
@@ -318,7 +318,7 @@ Prerequisites
 -  ``zookeeper-shell`` must be on your ``PATH``
 -  :ref:`Confluent CLI <cli-install>`:
    |confluent-cli| must be installed on your machine, version
-   ``v0.127.0`` or higher (note: as of CP 5.3, the |confluent-cli| is a separate
+   ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
    :ref:`download <cli-install>`
 
 
