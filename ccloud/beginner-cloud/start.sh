@@ -106,8 +106,8 @@ BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{pri
 ##################################################
 
 echo -e "\n# Create API key for $EMAIL"
-echo "ccloud api-key create --description \"Demo API key and secret for $EMAIL\""
-OUTPUT=$(ccloud api-key create --description "Demo API key and secret for $EMAIL")
+echo "ccloud api-key create --description \"Demo credentials for $EMAIL\""
+OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL")
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
@@ -121,41 +121,8 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY"
 ccloud api-key use $API_KEY
 
-
-##################################################
-* Create a service account key/secret pair
-# - A service account represents an application, and the service account name must be globally unique
-##################################################
-
-echo -e "\n# Create a new service account"
-RANDOM_NUM=$((1 + RANDOM % 1000000))
-SERVICE_NAME="demo-app-$RANDOM_NUM"
-echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
-ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
-SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
-
-echo -e "\n# Create an API key and secret for the new service account"
-echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
-OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
-echo "$OUTPUT"
-API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
-API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
-
-echo -e "\n# Wait 90 seconds for the user and service account key and secret to propagate"
+echo -e "\n# Wait 90 seconds for the user credentials to propagate"
 sleep 90
-
-CLIENT_CONFIG="/tmp/client.config"
-echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
-echo "Write properties to $CLIENT_CONFIG:"
-cat <<EOF > $CLIENT_CONFIG
-ssl.endpoint.identification.algorithm=https
-sasl.mechanism=PLAIN
-security.protocol=SASL_SSL
-bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
-EOF
-cat $CLIENT_CONFIG
-
 
 
 ##################################################
@@ -181,6 +148,41 @@ fi
 echo -e "\n# Consume from topic $TOPIC1"
 echo "ccloud kafka topic consume $TOPIC1 -b"
 timeout 10s ccloud kafka topic consume $TOPIC1 -b
+
+
+##################################################
+# Create a service account key/secret pair
+# - A service account represents an application, and the service account name must be globally unique
+##################################################
+
+echo -e "\n# Create a new service account"
+RANDOM_NUM=$((1 + RANDOM % 1000000))
+SERVICE_NAME="demo-app-$RANDOM_NUM"
+echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME"
+ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME || true
+SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep $SERVICE_NAME | awk '{print $1;}')
+
+echo -e "\n# Create an API key and secret for the new service account"
+echo "ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER"
+OUTPUT=$(ccloud api-key create --service-account-id $SERVICE_ACCOUNT_ID --resource $CLUSTER)
+echo "$OUTPUT"
+API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
+API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
+
+CLIENT_CONFIG="/tmp/client.config"
+echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
+echo "Write properties to $CLIENT_CONFIG:"
+cat <<EOF > $CLIENT_CONFIG
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+security.protocol=SASL_SSL
+bootstrap.servers=${BOOTSTRAP_SERVERS}
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
+EOF
+cat $CLIENT_CONFIG
+
+echo -e "\n# Wait 90 seconds for the service account credentials to propagate"
+sleep 90
 
 
 ##################################################
@@ -330,7 +332,7 @@ DATA=$( cat << EOF
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
-    "max.interval": 3000,
+    "max.interval": 5000,
     "iterations": 1000,
     "tasks.max": "1"
   }
