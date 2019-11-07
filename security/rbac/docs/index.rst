@@ -8,8 +8,8 @@ It is mostly for reference to see a workflow using the new |rbac| feature across
 
 There are two ways to run the demo.
 
--  :ref:`<rbac_demo_local>`
--  :ref:`<rbac_demo_docker>`
+-  :ref:`rbac_demo_local`
+-  :ref:`rbac_demo_docker`
 
 
 .. _rbac_demo_local:
