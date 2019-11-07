@@ -187,7 +187,7 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 
 
 ##################################################
-# Run a Java client: before and after ACLs
+# Run a Java producer: before and after ACLs
 #
 # When ACLs are enabled on your Confluent Cloud cluster,
 # by default no client applications are authorized.
@@ -252,7 +252,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 
 ##################################################
-# Showcase a Prefix ACL
+# Run a Java producer: showcase a Prefix ACL
 #
 # The following steps configure ACLs to match topics prefixed with a value
 ##################################################
@@ -344,6 +344,7 @@ DATA=$( cat << EOF
     "quickstart": "$TOPIC3",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
     "max.interval": 1000,
     "iterations": 1000000000,
     "tasks.max": "1"
@@ -371,7 +372,7 @@ if [[ "$STATE" != "RUNNING" ]]; then
 fi
 
 ##################################################
-# Showcase a Wildcard ACL
+# Run a Java consumer: showcase a Wildcard ACL
 #
 # The following steps configure ACLs to match topics using a wildcard
 ##################################################
@@ -411,6 +412,7 @@ echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID -
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
+# Stop the connector
 echo -e "\n# Stop Docker"
 echo "docker-compose down"
 docker-compose down

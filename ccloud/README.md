@@ -24,10 +24,10 @@ It steps through the following workflow.
 * Create create a user key/secret
 * Create a Service Account and API key and secret
 * Produce and consume with Confluent Cloud CLI
-* Run a Java client: before and after ACLs
-* Showcase a Prefix ACL
-* Showcase a Wildcard ACL
+* Run a Java producer: before and after ACLs
+* Run a Java producer: showcase a Prefix ACL
 * Run Connect and kafka-connect-datagen connector with permissions
+* Run a Java consumer: showcase a Wildcard ACL
 * Delete the API key, service account, Kafka topics, and some of the local files
 
 # Advanced Demo
