@@ -8,8 +8,8 @@ It steps through the following workflow.
 * Log in to Confluent Cloud
 * Create a new environment and specify it as the default
 * Create a new Kafka cluster and specify it as the default
-* Create create a user key/secret
-* Create a Service Account and API key and secret
+* Create a user key/secret pair
+* Create a service account key/secret pair
 * Produce and consume with Confluent Cloud CLI
 * Run a Java producer: before and after ACLs
 * Run a Java producer: showcase a Prefix ACL

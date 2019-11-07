@@ -123,7 +123,7 @@ ccloud api-key use $API_KEY
 
 
 ##################################################
-# Create a Service Account and API key and secret
+* Create a service account key/secret pair
 # - A service account represents an application, and the service account name must be globally unique
 ##################################################
 
@@ -164,16 +164,9 @@ cat $CLIENT_CONFIG
 
 TOPIC1="demo-topic-1"
 
-echo -e "\n# Check if topic $TOPIC1 exists"
-echo "ccloud kafka topic create $TOPIC1 --dry-run 2>/dev/null"
-ccloud kafka topic create $TOPIC1 --dry-run 2>/dev/null
-if [[ $? == 0 ]]; then
-  echo -e "\n# Create topic $TOPIC1"
-  echo "ccloud kafka topic create $TOPIC1"
-  ccloud kafka topic create $TOPIC1 || true
-else
-  echo "Topic $TOPIC1 already exists"
-fi
+echo -e "\n# Check if topic $TOPIC1 exists and create"
+echo "ccloud kafka topic describe $TOPIC1 &>/dev/null || ccloud kafka topic create $TOPIC1"
+ccloud kafka topic describe $TOPIC1 &>/dev/null || ccloud kafka topic create $TOPIC1
 
 echo -e "\n# Produce to topic $TOPIC1"
 echo '(for i in `seq 1 10`; do echo "${i}" ; done) | \'
@@ -192,13 +185,9 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 
 ##################################################
 # Run a Java producer: before and after ACLs
-#
-# When ACLs are enabled on your Confluent Cloud cluster,
-# by default no client applications are authorized.
-#
-# The following steps show the same Java producer failing at first due to
-# 'TopicAuthorizationException' and then passing once the appropriate
-# ACLs are configured
+# - When ACLs are enabled on your Confluent Cloud cluster, by default no client applications are authorized.
+# - The following steps show the same Java producer failing at first due to 'TopicAuthorizationException'
+#   and then passing once the appropriate ACLs are configured
 ##################################################
 
 POM=../../clients/cloud/java/pom.xml
@@ -257,14 +246,14 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Run a Java producer: showcase a Prefix ACL
-#
-# The following steps configure ACLs to match topics prefixed with a value
+# - The following steps configure ACLs to match topics prefixed with a value
 ##################################################
 
 TOPIC2="demo-topic-2"
-echo -e "\n# Create topic $TOPIC2"
-echo "ccloud kafka topic create $TOPIC2"
-ccloud kafka topic create $TOPIC2 || true
+
+echo -e "\n# Check if topic $TOPIC2 exists and create"
+echo "ccloud kafka topic describe $TOPIC2 &>/dev/null || ccloud kafka topic create $TOPIC2"
+ccloud kafka topic describe $TOPIC2 &>/dev/null || ccloud kafka topic create $TOPIC2
 
 echo -e "\n# Create ACLs for the producer using a prefix"
 PREFIX=${TOPIC2/%??/}
@@ -298,14 +287,13 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Run Connect and kafka-connect-datagen connector with permissions
-#
-#   Confluent Hub: https://www.confluent.io/hub/
+# - Confluent Hub: https://www.confluent.io/hub/
 ##################################################
 
 TOPIC3=pageviews
 
 echo -e "\n# Generate configuration files with Confluent Cloud connection information"
-../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG 1>/dev/null
+../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
 source delta_configs/env.delta
 
 echo -e "\n# Create ACLs for Connect"
@@ -326,16 +314,9 @@ docker-compose up -d
 echo -e "\n# Wait 60 seconds for Connect to start"
 sleep 60
 
-echo -e "\n# Check if topic $TOPIC3 exists"
-echo "ccloud kafka topic create $TOPIC3 --dry-run 2>/dev/null"
-ccloud kafka topic create $TOPIC3 --dry-run 2>/dev/null
-if [[ $? == 0 ]]; then
-  echo -e "\n# Create topic $TOPIC3"
-  echo "ccloud kafka topic create $TOPIC3"
-  ccloud kafka topic create $TOPIC3 || true
-else
-  echo "Topic $TOPIC3 already exists"
-fi
+echo -e "\n# Check if topic $TOPIC3 exists and create"
+echo "ccloud kafka topic describe $TOPIC3 &>/dev/null || ccloud kafka topic create $TOPIC3"
+ccloud kafka topic describe $TOPIC3 &>/dev/null || ccloud kafka topic create $TOPIC3
 
 echo "Post the configuration for the kafka-connect-datagen connector"
 HEADER="Content-Type: application/json"
@@ -377,8 +358,7 @@ fi
 
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
-#
-# The following steps configure ACLs to match topics using a wildcard
+# - The following steps configure ACLs to match topics using a wildcard
 ##################################################
 
 CONSUMER_GROUP="demo-beginner-cloud-1"
@@ -398,7 +378,6 @@ echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examp
 timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CLIENT_CONFIG $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
 echo "# Check logs for 'Consumed record with'"
 OUTPUT=$(grep "Consumed record with" $LOG4)
-echo $OUTPUT
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Consumer works"
 else
@@ -430,7 +409,6 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 ##################################################
 # Cleanup
-#
 # - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
