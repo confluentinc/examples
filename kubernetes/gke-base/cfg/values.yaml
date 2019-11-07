@@ -53,7 +53,7 @@ schemaregistry:
 connect:
   image:
     repository: cnfldemos/cp-server-connect-operator-with-datagen 
-    tag: 0.1.6-SNAPSHOT-5.3.1.0
+    tag: 0.1.6-5.3.1.0
   tls:
     enabled: false
   loadBalancer:
