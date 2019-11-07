@@ -349,7 +349,7 @@ DATA=$( cat << EOF
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
-    "max.interval": 1000,
+    "max.interval": 3000,
     "iterations": 1000,
     "tasks.max": "1"
   }
@@ -363,8 +363,8 @@ if [[ $? != 0 ]]; then
   #exit $?
 fi
 
-echo -e "\n\n# Wait 30 seconds for kafka-connect-datagen to start producing messages"
-sleep 30
+echo -e "\n\n# Wait 20 seconds for kafka-connect-datagen to start producing messages"
+sleep 20
 
 echo -e "\n# Verify connector is running"
 echo "curl --silent http://localhost:8083/connectors/datagen-$TOPIC3/status | jq -r '.connector.state'"
@@ -396,8 +396,8 @@ echo -e "\n# Run the Java consumer from $TOPIC3 (populated by kafka-connect-data
 LOG4="/tmp/log.4"
 echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExamplePageviews\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC3\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
 timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CLIENT_CONFIG $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
-echo "# Check logs for 'Consumed record with key alice and value'"
-OUTPUT=$(grep "Consumed record with key alice and value" $LOG4)
+echo "# Check logs for 'Consumed record with'"
+OUTPUT=$(grep "Consumed record with" $LOG4)
 echo $OUTPUT
 if [[ ! -z $OUTPUT ]]; then
   echo "PASS: Consumer works"
