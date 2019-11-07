@@ -1,28 +1,22 @@
 .. _rbac_demo:
 
-Overview
-========
+RBAC Demo
+=========
 
 This demo showcases the |rbac-long| functionality in |cp|.
 It is mostly for reference to see a workflow using the new |rbac| feature across the services in |cp|.
 
 There are two ways to run the demo.
 
--  :ref:`Local install <rbac_demo_local>`
--  :ref:`Docker <rbac_demo_docker>`
-
-
-Additional Reading
-------------------
-
--  `RBAC for Kafka Connect whitepaper <https://www.confluent.io/resources/rbac-for-kafka-connect>`__
--  `RBAC documentation <https://docs.confluent.io/current/security/rbac/index.html>`__
+-  :ref:`<rbac_demo_local>`
+-  :ref:`<rbac_demo_docker>`
 
 
 .. _rbac_demo_local:
 
-Local install
-=============
+===============================================
+Run demo on local install of Confluent Platform
+===============================================
 
 This method of running the demo is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.
 
@@ -75,32 +69,36 @@ Run the demo
 
    .. code:: bash
 
-      $ ./run.sh
+      ./run.sh
 
 -  Option 2: step through it one service at a time
 
    .. code:: bash
 
-      $ ./init.sh
-      $ ./enable-rbac-broker.sh
-      $ ./enable-rbac-schema-registry.sh
-      $ ./enable-rbac-connect.sh
-      $ ./enable-rbac-rest-proxy.sh
-      $ ./enable-rbac-ksql-server.sh
-      $ ./enable-rbac-control-center.sh
+      ./init.sh
+      ./enable-rbac-broker.sh
+      ./enable-rbac-schema-registry.sh
+      ./enable-rbac-connect.sh
+      ./enable-rbac-rest-proxy.sh
+      ./enable-rbac-ksql-server.sh
+      ./enable-rbac-control-center.sh
 
 #. After you run the demo, view the configuration files:
 
    .. code:: bash
 
       # The original configuration bundled with Confluent Platform
-      $ ls /tmp/original_configs/
+      ls /tmp/original_configs/
    
+   .. code:: bash
+
       # Configurations added to each service's properties file
-      $ ls ../delta_configs/
+      ls ../delta_configs/
    
+   .. code:: bash
+
       # The modified configuration = original + delta
-      $ ls /tmp/rbac_configs/
+      ls /tmp/rbac_configs/
 
 #. After you run the demo, view the log files for each of the services.
    Since this demo uses Confluent CLI, all logs are saved in a temporary
@@ -108,7 +106,12 @@ Run the demo
 
    .. code:: bash
 
-      $ ls `confluent local current | tail -1`
+      ls `confluent local current | tail -1`
+
+   Output should resemble:
+
+   .. code:: bash
+
       connect
       control-center
       kafka
@@ -122,18 +125,18 @@ Run the demo
 
    .. code:: bash
 
-      $ cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
+      cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
 
 
 Stop the demo
 -------------
 
-To stop the demo, stop |cp|, and delete files in ``/tmp/``
+To stop the demo, stop |cp|, and delete files in ``/tmp/``.
 
 .. code:: bash
 
-   $ cd scripts
-   $ ./cleanup.sh
+   cd scripts
+   ./cleanup.sh
 
 Summary of Configurations and Role Bindings
 -------------------------------------------
@@ -171,7 +174,7 @@ Schema Registry
       confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
    
       # Client connecting to Schema Registry
-       confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+      confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Subject:$SUBJECT --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
    
 Connect
 ~~~~~~~
@@ -292,8 +295,9 @@ For example, list the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_
 
 .. _rbac_demo_docker:
 
-Docker
-======
+==================
+Run demo in Docker
+==================
 
 This method of running the demo is for users who have Docker.
 This demo setup includes:
@@ -363,15 +367,15 @@ You can optionally pass in where ``-p project-name`` to name the
 docker-compose project, otherwise it defaults to ``rbac``. You can use
 standard docker-compose commands like this listing all containers:
 
-   .. code:: bash
+.. code:: bash
 
-      docker-compose -p rbac ps
+   docker-compose -p rbac ps
 
 or tail |c3| logs:
 
-   .. code:: bash
+.. code:: bash
 
-      docker-compose -p rbac logs --t 200 -f control-center
+   docker-compose -p rbac logs --t 200 -f control-center
    
 The Kafka broker is available at ``localhost:9094`` (not ``localhost::9092``).
 
@@ -402,7 +406,7 @@ Grant Rolebindings
 
       KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep version | jq -r .id)
 
-#.  Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
+#. Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
 
    .. code:: bash
 
@@ -458,3 +462,12 @@ Test User       User:bender    <none>
       ``/etc/client-configs/bender.properties``
    -  When running console commands from inside the broker container,
       use ``localhost:9092``
+
+
+==================
+Additional Reading
+==================
+
+-  `RBAC documentation <https://docs.confluent.io/current/security/rbac/index.html>`__
+-  `RBAC for Kafka Connect whitepaper <https://www.confluent.io/resources/rbac-for-kafka-connect>`__
+
