@@ -52,6 +52,28 @@ Option 2: Provide all arguments on command line, except password for which you w
 * `mvn` installed on your host
 * `jq` installed on your host
 
+# Clean up after the demo
+
+If a demo run ended prematurely, it may not have totally cleaned up after itself and a new run may error out with the following message:
+
+```bash
+# Create and specify active environment
+ccloud environment create demo-script-env
+Error: 1 error occurred:
+	* error creating account: Account name is already in use
+
+
+Failed to create environment demo-script-env. Please troubleshoot and run again
+```
+
+You may need to manually delete API keys and ACLs created in a previous demo run.
+But you could consider running the following script to delete the demo's topics, Kafka cluster, and environment.
+Use this script with extreme caution and only in non-production environments.
+
+```bash
+./cleanup.sh <url to cloud> <cloud email> <cloud password>
+```
+
 # Other Resources
 
 See other [Confluent Cloud demos](../README.md).
