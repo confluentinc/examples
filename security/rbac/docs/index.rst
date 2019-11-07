@@ -3,14 +3,13 @@
 Overview
 ========
 
-These demos showcase the |rbac-long| functionality in |cp|.
+This demo showcases the |rbac-long| functionality in |cp|.
 It is mostly for reference to see a workflow using the new |rbac| feature across the services in |cp|.
 
-There are two demos.
-Currently they have different configurations and can be used in different environments:
+There are two ways to run the demo.
 
--  :ref:`Demo 1: Local install <rbac_demo_local>`
--  :ref:`Demo 2: Docker <rbac_demo_docker>`
+-  :ref:`Local install <rbac_demo_local>`
+-  :ref:`Docker <rbac_demo_docker>`
 
 
 Additional Reading
@@ -22,10 +21,10 @@ Additional Reading
 
 .. _rbac_demo_local:
 
-Demo 1: Local install
-=====================
+Local install
+=============
 
-This demo is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.
+This method of running the demo is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.
 
 Caveats
 -------
@@ -293,10 +292,11 @@ For example, list the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_
 
 .. _rbac_demo_docker:
 
-Demo 2: Docker
-==============
+Docker
+======
 
-This Docker Compose setup includes:
+This method of running the demo is for users who have Docker.
+This demo setup includes:
 
 -  |zk|
 -  Kafka with MDS, connected to the OpenLDAP
