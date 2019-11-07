@@ -293,47 +293,12 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 
 ##################################################
-# Showcase a Wildcard ACL
-#
-# The following steps configure ACLs to match topics using a wildcard
-##################################################
-
-CONSUMER_GROUP="demo-consumer-1"
-
-echo -e "\n# Create ACLs for the consumer using a wildcard"
-echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
-echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
-ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
-echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
-ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
-sleep 2
-
-echo -e "\n# Run the Java consumer from $TOPIC2: wildcard ACLs"
-LOG4="/tmp/log.4"
-echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
-timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
-echo "# Check logs for 'Consumed record with key alice and value'"
-OUTPUT=$(grep "Consumed record with key alice and value" $LOG4)
-if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Consumer works"
-else
-  echo "FAIL: Something went wrong, check $LOG4"
-fi
-cat $LOG4
-
-echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
-echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
-ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
-
-
-##################################################
 # Run Connect and kafka-connect-datagen connector with permissions
 #
 #   Confluent Hub: https://www.confluent.io/hub/
 ##################################################
+
+TOPIC3=pageviews
 
 echo -e "\n# Generate configuration files with Confluent Cloud connection information"
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG 1>/dev/null
@@ -357,26 +322,26 @@ docker-compose up -d
 echo -e "\n# Wait 60 seconds for Connect to start"
 sleep 60
 
-echo -e "\n# Check if topic pageviews exists"
-echo "ccloud kafka topic create pageviews --dry-run 2>/dev/null"
-ccloud kafka topic create pageviews --dry-run 2>/dev/null
+echo -e "\n# Check if topic $TOPIC3 exists"
+echo "ccloud kafka topic create $TOPIC3 --dry-run 2>/dev/null"
+ccloud kafka topic create $TOPIC3 --dry-run 2>/dev/null
 if [[ $? == 0 ]]; then
-  echo -e "\n# Create topic pageviews"
-  echo "ccloud kafka topic create pageviews"
-  ccloud kafka topic create pageviews || true
+  echo -e "\n# Create topic $TOPIC3"
+  echo "ccloud kafka topic create $TOPIC3"
+  ccloud kafka topic create $TOPIC3 || true
 else
-  echo "Topic pageviews already exists"
+  echo "Topic $TOPIC3 already exists"
 fi
 
 echo "Post the configuration for the kafka-connect-datagen connector"
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
-  "name": "datagen-pageviews",
+  "name": "datagen-$TOPIC3",
   "config": {
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-    "kafka.topic": "pageviews",
-    "quickstart": "pageviews",
+    "kafka.topic": "$TOPIC3",
+    "quickstart": "$TOPIC3",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "max.interval": 1000,
@@ -397,17 +362,54 @@ echo -e "\n\n# Wait 30 seconds for kafka-connect-datagen to start producing mess
 sleep 30
 
 echo -e "\n# Verify connector is running"
-echo "curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state'"
-STATE=$(curl --silent http://localhost:8083/connectors/datagen-pageviews/status | jq -r '.connector.state')
+echo "curl --silent http://localhost:8083/connectors/datagen-$TOPIC3/status | jq -r '.connector.state'"
+STATE=$(curl --silent http://localhost:8083/connectors/datagen-$TOPIC3/status | jq -r '.connector.state')
 echo $STATE
 if [[ "$STATE" != "RUNNING" ]]; then
-  echo "ERROR: datagaen-pageviews is not running.  Please troubleshoot the Docker logs."
+  echo "ERROR: datagaen-$TOPIC3 is not running.  Please troubleshoot the Docker logs."
   exit $?
 fi
 
-echo -e "\n# Consume from topic pageviews"
-echo "ccloud kafka topic consume pageviews"
-timeout 10s ccloud kafka topic consume pageviews
+##################################################
+# Showcase a Wildcard ACL
+#
+# The following steps configure ACLs to match topics using a wildcard
+##################################################
+
+echo -e "\n# Consume from topic $TOPIC3"
+echo "ccloud kafka topic consume $TOPIC3"
+timeout 10s ccloud kafka topic consume $TOPIC3
+
+CONSUMER_GROUP="demo-beginner-cloud-1"
+
+echo -e "\n# Create ACLs for the consumer using a wildcard"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
+echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
+ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
+echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
+ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
+sleep 2
+
+echo -e "\n# Run the Java consumer from $TOPIC3 (populated by kafka-connect-datagen): wildcard ACLs"
+LOG4="/tmp/log.4"
+echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExamplePageviews\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC3\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
+timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CLIENT_CONFIG $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
+echo "# Check logs for 'Consumed record with key alice and value'"
+OUTPUT=$(grep "Consumed record with key alice and value" $LOG4)
+echo $OUTPUT
+if [[ ! -z $OUTPUT ]]; then
+  echo "PASS: Consumer works"
+else
+  echo "FAIL: Something went wrong, check $LOG4"
+fi
+cat $LOG4
+
+echo -e "\n# Delete ACLs"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
+echo "ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
+ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
 echo -e "\n# Stop Docker"
 echo "docker-compose down"
@@ -432,7 +434,7 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
-for t in $TOPIC1 $TOPIC2 connect-configs connect-offsets connect-status pageviews; do
+for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
   echo "ccloud kafka topic delete $t"
   ccloud kafka topic delete $t
 done
