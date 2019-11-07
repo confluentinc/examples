@@ -15,7 +15,7 @@ public class PageviewRecord {
         this.pageid = pageid;
     }
 
-    public Long getCount() {
+    public Long getViewtime() {
         return viewtime;
     }
 

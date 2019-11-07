@@ -350,7 +350,7 @@ DATA=$( cat << EOF
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
     "max.interval": 1000,
-    "iterations": 1000000000,
+    "iterations": 1000,
     "tasks.max": "1"
   }
 }
@@ -380,10 +380,6 @@ fi
 #
 # The following steps configure ACLs to match topics using a wildcard
 ##################################################
-
-echo -e "\n# Consume from topic $TOPIC3"
-echo "ccloud kafka topic consume $TOPIC3"
-timeout 10s ccloud kafka topic consume $TOPIC3
 
 CONSUMER_GROUP="demo-beginner-cloud-1"
 
