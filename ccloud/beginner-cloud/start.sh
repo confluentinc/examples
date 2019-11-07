@@ -17,6 +17,7 @@ check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
+check_docker || exit 1
 
 
 ##################################################
@@ -85,14 +86,14 @@ ccloud environment use $ENVIRONMENT
 # Create a new Kafka cluster and specify it as the default
 ##################################################
 
-CLUSTER="demo-kafka-cluster"
+CLUSTER_NAME="demo-kafka-cluster"
 echo -e "\n# Create and specify active Kafka cluster"
-echo "ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1"
-OUTPUT=$(ccloud kafka cluster create $CLUSTER --cloud gcp --region us-central1)
+echo "ccloud kafka cluster create $CLUSTER_NAME --cloud gcp --region us-central1"
+OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud gcp --region us-central1)
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
-  echo "Failed to create Kafka cluster $CLUSTER. Please troubleshoot and run again"
+  echo "Failed to create Kafka cluster $CLUSTER_NAME. Please troubleshoot and run again"
   exit 1
 fi
 CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
@@ -102,7 +103,7 @@ BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{pri
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 ##################################################
-# Create create a user key/secret
+# Create a user key/secret pair and specify it as the default
 ##################################################
 
 echo -e "\n# Create API key for $EMAIL"
