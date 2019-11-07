@@ -9,7 +9,9 @@
 
 This is a curated list of demos that showcase Apache Kafka® event stream processing on the Confluent Platform, an event stream processing platform that enables you to process, organize, and manage massive amounts of streaming data across cloud, on-prem, and serverless deployments.
 
+<p align="center">
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=muQBd6gry0U" target="_blank"><img src="http://img.youtube.com/vi/muQBd6gry0U/0.jpg" width="360" height="270" border="10" /></a>
+</p>
 
 ## Where to start
 
