@@ -1,11 +1,6 @@
 confluent.controlcenter.rest.authentication.method=BEARER
-confluent.controlcenter.auth.bearer.public.key.path=/tmp/tokenPublicKey.pem
+public.key.path=/tmp/tokenPublicKey.pem
 confluent.controlcenter.streams.security.protocol=SASL_PLAINTEXT
 
-confluent.controlcenter.metadata.username=c3
-confluent.controlcenter.metadata.password=c31
-confluent.controlcenter.metadata.urls=http://localhost:8090
-
-# Workaround for MMA-4870
-confluent.controlcenter.schema.registry.basic.auth.user.info=c3:c31
-confluent.controlcenter.schema.registry.basic.auth.credentials.source=USER_INFO
+confluent.metadata.basic.auth.user.info=c3:c3_password
+confluent.metadata.bootstrap.server.urls=http://localhost:8090

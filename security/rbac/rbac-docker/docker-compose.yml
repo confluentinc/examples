@@ -493,11 +493,10 @@ services:
 
       # ========================= RBAC =================================
       CONTROL_CENTER_REST_AUTHENTICATION_METHOD: BEARER
-      CONTROL_CENTER_AUTH_BEARER_PUBLIC_KEY_PATH: /tmp/conf/public.pem
+      PUBLIC_KEY_PATH: /tmp/conf/public.pem
       
-      CONTROL_CENTER_METADATA_USERNAME: hermes
-      CONTROL_CENTER_METADATA_PASSWORD: hermes
-      CONTROL_CENTER_METADATA_URLS: http://broker:8090
+      CONFLUENT_METADATA_BASIC_AUTH_USER_INFO: hermes:hermes
+      CONFLUENT_METADATA_BOOTSTRAP_SERVER_URLS: http://broker:8090
       
       CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SASL_PLAINTEXT
       # The following configs are not required by C3 itself, but are required by cub to be able to connect to kafka to check if its ready
