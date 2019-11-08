@@ -6,15 +6,16 @@
 It steps through the following workflow.
 
 * Log in to Confluent Cloud
-* Create a demo environment and cluster, and specify them as the default
-* Create create a user key/secret
-* Create a Service Account and API key and secret
+* Create a new environment and specify it as the default
+* Create a new Kafka cluster and specify it as the default
+* Create a user key/secret pair and specify it as the default
 * Produce and consume with Confluent Cloud CLI
-* Run a Java client: before and after ACLs
-* Showcase a Prefix ACL
-* Showcase a Wildcard ACL
+* Create a service account key/secret pair
+* Run a Java producer: before and after ACLs
+* Run a Java producer: showcase a Prefix ACL
 * Run Connect and kafka-connect-datagen connector with permissions
-* Delete the API key, service account, Kafka topics, and some of the local files
+* Run a Java consumer: showcase a Wildcard ACL
+* Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
 # Run the demo
 
@@ -50,6 +51,28 @@ Option 2: Provide all arguments on command line, except password for which you w
 * `timeout` installed on your host
 * `mvn` installed on your host
 * `jq` installed on your host
+
+# Clean up after the demo
+
+If a demo run ended prematurely, it may not have totally cleaned up after itself and a new run may error out with the following message:
+
+```bash
+# Create and specify active environment
+ccloud environment create demo-script-env
+Error: 1 error occurred:
+	* error creating account: Account name is already in use
+
+
+Failed to create environment demo-script-env. Please troubleshoot and run again
+```
+
+You may need to manually delete API keys and ACLs created in a previous demo run.
+But you could consider running the following script to delete the demo's topics, Kafka cluster, and environment.
+Use this script with extreme caution and only in non-production environments.
+
+```bash
+./cleanup.sh <url to cloud> <cloud email> <cloud password>
+```
 
 # Other Resources
 

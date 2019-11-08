@@ -9,6 +9,10 @@
 
 This is a curated list of demos that showcase Apache Kafka® event stream processing on the Confluent Platform, an event stream processing platform that enables you to process, organize, and manage massive amounts of streaming data across cloud, on-prem, and serverless deployments.
 
+<p align="center">
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=muQBd6gry0U" target="_blank"><img src="http://img.youtube.com/vi/muQBd6gry0U/0.jpg" width="360" height="270" border="10" /></a>
+</p>
+
 ## Where to start
 
 The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo) which spins up a Kafka event streaming application using KSQL for stream processing, with many security features enabled, in an end-to-end streaming ETL pipeline with a source connector pulling from live IRC channels and a sink connector connecting to Elasticsearch and Kibana for visualizations.
