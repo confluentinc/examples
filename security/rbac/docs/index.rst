@@ -36,14 +36,9 @@ Caveats
 Prerequisites
 -------------
 
-* :ref:`Confluent CLI <cli-install>`:
-   |confluent-cli| must be installed on your machine, version
-   ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
-   :ref:`download <cli-install>`
+* :ref:`Confluent CLI <cli-install>`: |confluent-cli| must be installed on your machine, version ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate :ref:`download <cli-install>`).
 
-* `Confluent Platform 5.3 or higher <https://www.confluent.io/download/>`__: use
-   a clean install of |cp| without modified properties
-   files, or else the demo is not guaranteed to work
+* `Confluent Platform 5.3 or higher <https://www.confluent.io/download/>`__: use a clean install of |cp| without modified properties files, or else the demo is not guaranteed to work.
 
 * jq tool must be installed on your machine.
 
@@ -109,7 +104,7 @@ Run the demo
 
       ls `confluent local current | tail -1`
 
-   Output should resemble:
+   In that directory, you can step through the configuration properties for each of the services:
 
    .. code:: bash
 
@@ -121,8 +116,7 @@ Run the demo
       schema-registry
       zookeeper
    
-#. In this demo, the metadata service (MDS) logs are saved in the above
-   temporary directory.
+#. In this demo, the metadata service (MDS) logs are saved in a temporary directory.
 
    .. code:: bash
 
@@ -378,7 +372,7 @@ or tail |c3| logs:
 
    docker-compose -p rbac logs --t 200 -f control-center
    
-The Kafka broker is available at ``localhost:9094`` (not ``localhost::9092``).
+The Kafka broker is available at ``localhost:9094``, not ``localhost::9092``.
 
 =============== ==================
 Service         Host:Port
@@ -395,7 +389,7 @@ Schema Registry ``localhost:8081``
 Grant Rolebindings
 ~~~~~~~~~~~~~~~~~~
 
-#. Login to CLI as ``professor:professor`` as a super user to grant initial role bindings
+#. Login to the MDS URL as ``professor:professor``, the configured super user, to grant initial role bindings
 
    .. code:: bash
 
@@ -405,6 +399,7 @@ Grant Rolebindings
 
    .. code:: bash
 
+      ZK_HOST=localhost:2181
       KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep version | jq -r .id)
 
 #. Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
@@ -450,19 +445,11 @@ C3              User:hermes    SystemAdmin
 Test User       User:bender    <none>
 =============== ============== ===========
 
--  User ``bender:bender`` doesn’t have any role bindings set up and can
-   be used as a user under test
+User ``bender:bender`` doesn’t have any role bindings set up and can be used as a user under test
 
-   -  You can use ``./client-configs/bender.properties`` file to
-      authenticate as ``bender`` from kafka console commands (like
-      ``kafka-console-producer``, ``kafka-console-consumer``,
-      ``kafka-topics`` and the like)
-   -  This file is also mounted into the broker docker container, so you
-      can ``docker-compose -p [project-name] exec broker /bin/bash`` to
-      open bash on broker and then use console commands with
-      ``/etc/client-configs/bender.properties``
-   -  When running console commands from inside the broker container,
-      use ``localhost:9092``
+-  You can use ``./client-configs/bender.properties`` file to authenticate as ``bender`` from kafka console commands (like ``kafka-console-producer``, ``kafka-console-consumer``, ``kafka-topics`` and the like).
+-  This file is also mounted into the broker docker container, so you can ``docker-compose -p [project-name] exec broker /bin/bash`` to open bash on broker and then use console commands with ``/etc/client-configs/bender.properties``.
+-  When running console commands from inside the broker container, use ``localhost:9092``.
 
 
 ==================
