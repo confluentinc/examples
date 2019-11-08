@@ -30,21 +30,22 @@ Caveats
 -  The |rbac| configurations and role bindings in this demo are not
    comprehensive, they are only for development to get minimum |rbac|
    functionality set up across all the services in |cp|.
-   Please refer to the `RBAC
-   documentation <https://docs.confluent.io/current/security/rbac/index.html>`__
+   Please refer to the :ref:`RBAC documentation <rbac-overview>`
    for comprehensive configuration and production guidance.
 
 Prerequisites
 -------------
 
-1. :ref:`Confluent CLI <cli-install>`:
+* :ref:`Confluent CLI <cli-install>`:
    |confluent-cli| must be installed on your machine, version
    ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
    :ref:`download <cli-install>`
-2. `Confluent Platform 5.3 or higher <https://www.confluent.io/download/>`__: use
+
+* `Confluent Platform 5.3 or higher <https://www.confluent.io/download/>`__: use
    a clean install of |cp| without modified properties
    files, or else the demo is not guaranteed to work
-3. ``jq``
+
+* jq tool must be installed on your machine.
 
 Run the demo
 ------------
@@ -266,15 +267,15 @@ Control Center
 General Rolebinding Syntax
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-General rolebinding syntax:
+#. The general rolebinding syntax is:
 
-.. code:: bash
+   .. code:: bash
 
-   confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
+      confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
 
-Available role types and permissions can be found :ref:`here <rbac-predefined-roles>`.
+#. Available role types and permissions can be found :ref:`here <rbac-predefined-roles>`.
 
-Resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic.
+#. Resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic.
 
 
 Listing a Users roles
@@ -314,7 +315,7 @@ This demo setup includes:
 Prerequisites
 -------------
 
--  Docker
+-  Docker (validated on Docker for Mac version 18.03.0-ce-mac60)
 -  ``zookeeper-shell`` must be on your ``PATH``
 -  :ref:`Confluent CLI <cli-install>`:
    |confluent-cli| must be installed on your machine, version
@@ -430,9 +431,9 @@ Grant Rolebindings
 
       confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
 
-#. Available role types and permissions can be found `here <https://docs.confluent.io/current/security/rbac/rbac-predefined-roles.html>`__
+#. Available role types and permissions can be found :ref:`here <rbac-predefined-roles>`.
 
-#. Resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic
+#. Resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic.
 
 
 Users
@@ -468,6 +469,6 @@ Test User       User:bender    <none>
 Additional Reading
 ==================
 
--  `RBAC documentation <https://docs.confluent.io/current/security/rbac/index.html>`__
--  `RBAC for Kafka Connect whitepaper <https://www.confluent.io/resources/rbac-for-kafka-connect>`__
+- :ref:`rbac-overview`
+- `RBAC for Kafka Connect whitepaper <https://www.confluent.io/resources/rbac-for-kafka-connect>`__
 
