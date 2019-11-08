@@ -105,6 +105,15 @@ function check_timeout() {
   return 0
 }
 
+function check_docker() {
+  if ! docker ps -q ; then
+    echo "This demo requires Docker but it doesn't appear to be running.  Please start Docker and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_jq() {
   if [[ $(type jq 2>&1) =~ "not found" ]]; then
     echo "'jq' is not found. Install 'jq' and try again"
