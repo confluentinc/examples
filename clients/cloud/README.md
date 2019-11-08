@@ -1,8 +1,10 @@
 # Overview
 
-## Confluent Cloud
+## Programming Languages
 
-This directory includes examples of Kafka client applications connecting to [Confluent Cloud](https://www.confluent.io/confluent-cloud/), written in different languages:
+This directory includes examples of Kafka client applications written in different languages.
+The README for each language walks through the configurations required to connect to [Confluent Cloud](https://www.confluent.io/confluent-cloud/).
+If you want to run the applications against another Kafka cluster, provide the appropriate connection information in the properties file that is passed into the client applications.
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
