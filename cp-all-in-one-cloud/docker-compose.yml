@@ -3,7 +3,7 @@ version: '2'
 services:
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.3.1
+    image: confluentinc/cp-schema-registry:5.3.1-cp6
     hostname: schema-registry
     container_name: schema-registry
     ports:
@@ -18,7 +18,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.3.1
+    image: confluentinc/cp-ksql-server:5.3.1-cp6
     hostname: ksql-server
     container_name: ksql-server
     ports:
@@ -59,13 +59,13 @@ services:
       KSQL_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.3.1
+    image: confluentinc/cp-ksql-cli:5.3.1-cp6
     container_name: ksql-cli
     entrypoint: /bin/sh
     tty: true
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.3.1
+    image: confluentinc/cp-enterprise-control-center:5.3.1-cp6
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -97,7 +97,7 @@ services:
       PORT: 9021
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.3.1
+    image: confluentinc/cp-kafka-connect:5.3.1-cp6
     hostname: connect
     container_name: connect
     depends_on:
@@ -130,7 +130,7 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.1.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.3.1-cp6.jar
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
@@ -154,7 +154,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
   rest-proxy:
-    image: confluentinc/cp-kafka-rest:5.3.1
+    image: confluentinc/cp-kafka-rest:5.3.1-cp6
     depends_on:
       - schema-registry
     ports:
