@@ -316,13 +316,11 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
-echo -e "\n# Generate configuration files with Confluent Cloud connection information for Connect to use"
+echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
 echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
-echo "cat delta_configs/env.delta"
-cat delta_configs/env.delta 
 
 echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
 echo "docker-compose up -d"
