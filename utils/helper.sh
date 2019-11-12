@@ -106,7 +106,7 @@ function check_timeout() {
 }
 
 function check_docker() {
-  if ! docker ps -q ; then
+  if ! docker ps -q &>/dev/null; then
     echo "This demo requires Docker but it doesn't appear to be running.  Please start Docker and try again."
     exit 1
   fi

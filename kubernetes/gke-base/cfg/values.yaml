@@ -69,8 +69,7 @@ connect:
 controlcenter:
   <<: *cpImage
   loadBalancer:
-    enabled: true
-#   domain: specific value for your environment, set with --set or in additional values file passed to helm
+    enabled: false
   dependencies:
     c3KafkaCluster:
       zookeeper:
