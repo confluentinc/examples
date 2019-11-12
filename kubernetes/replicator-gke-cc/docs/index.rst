@@ -472,7 +472,7 @@ Deploying Custom Kafka Connect JARs with Operator
 
 `Kafka Connect <https://docs.confluent.io/current/connect/index.html>`__ employs an extensible programming model to faciliate `Data Conversions <https://docs.confluent.io/current/connect/concepts.html#converters>`__, `Single Message Transformations (SMTs) <https://docs.confluent.io/current/connect/concepts.html#transforms>`__, or the development of custom connectors if a `supported connector <https://www.confluent.io/hub/>`__ is not available.  The Connect `packaging model <https://docs.confluent.io/current/connect/devguide.html#packaging>`__ will require that you deploy an archive containing your custom JAR to the `Kafka Connect's plugin path <https://docs.confluent.io/current/connect/userguide.html#connect-installing-plugins>`__.
 
-This demonstration utilizes a `custom Connector to generate mock stock trading data <https://github.com/confluentinc/kafka-connect-datagen>` which is **not** installed by default in the Confluent Kafka Connect Docker images.  In order to utilize this plugin, we build a custom Docker image which derives from the base Confluent Operator based Docker image.
+This demonstration utilizes a `custom Connector to generate mock stock trading data <https://github.com/confluentinc/kafka-connect-datagen>`__ which is **not** installed by default in the Confluent Kafka Connect Docker images.  In order to utilize this plugin, we build a custom Docker image which derives from the base Confluent Operator based Docker image and install our the custom connector using the ``confluent-hub`` client.
 
 Here is the ``Dockerfile`` snippet used to build these images (`source <https://github.com/confluentinc/kafka-connect-datagen/blob/0.1.x/Dockerfile-operator-local>`__):
 
