@@ -19,7 +19,6 @@ check_expect || exit 1
 check_jq || exit 1
 check_docker || exit 1
 
-
 ##################################################
 # Read URL, EMAIL, PASSWORD from command line arguments
 #
@@ -78,7 +77,11 @@ if [[ $? != 0 ]]; then
   echo "Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"
   exit 1
 fi
+echo "ccloud environment list | grep $ENVIRONMENT_NAME"
+ccloud environment list | grep $ENVIRONMENT_NAME
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $1;}')
+
+echo -e "\n# Specify active environment that was just created"
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
 
@@ -97,6 +100,8 @@ if [[ $status != 0 ]]; then
   exit 1
 fi
 CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
+
+echo -e "\n# Specify active Kafka cluster that was just created"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
@@ -132,9 +137,9 @@ sleep 90
 
 TOPIC1="demo-topic-1"
 
-echo -e "\n# Check if topic $TOPIC1 exists and create"
-echo "ccloud kafka topic describe $TOPIC1 &>/dev/null || ccloud kafka topic create $TOPIC1"
-ccloud kafka topic describe $TOPIC1 &>/dev/null || ccloud kafka topic create $TOPIC1
+echo -e "\n# Create new Kafka topic $TOPIC1"
+echo "ccloud kafka topic create $TOPIC1"
+ccloud kafka topic create $TOPIC1
 
 echo -e "\n# Produce to topic $TOPIC1"
 echo '(for i in `seq 1 10`; do echo "${i}" ; done) | \'
@@ -171,8 +176,7 @@ API_KEY_SA=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 API_SECRET_SA=$(echo "$OUTPUT" | grep '| Secret' | awk '{print $4;}')
 
 CLIENT_CONFIG="/tmp/client.config"
-echo -e "\n# Create a local configuration file $CLIENT_CONFIG for the client to connect to Confluent Cloud with the newly created API key and secret"
-echo "Write properties to $CLIENT_CONFIG:"
+echo -e "\n# Create a local configuration file $CLIENT_CONFIG with Confluent Cloud connection information with the newly created API key and secret"
 cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
@@ -208,14 +212,14 @@ fi
 LOG1="/tmp/log.1"
 echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
 mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
-echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException'"
+echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException' (expected because there are no ACLs to allow this client application)"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because there are no ACLs to allow this client application)"
+  echo "PASS: Producer failed"
 else
   echo "FAIL: Something went wrong, check $LOG1"
 fi
-#grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1
+echo $OUTPUT
 
 echo -e "\n# Create ACLs for the service account"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
@@ -233,7 +237,7 @@ mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.P
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer works"
+  echo "PASS"
 else
   echo "FAIL: Something went wrong, check $LOG2"
 fi
@@ -254,9 +258,9 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 TOPIC2="demo-topic-2"
 
-echo -e "\n# Check if topic $TOPIC2 exists and create"
-echo "ccloud kafka topic describe $TOPIC2 &>/dev/null || ccloud kafka topic create $TOPIC2"
-ccloud kafka topic describe $TOPIC2 &>/dev/null || ccloud kafka topic create $TOPIC2
+echo -e "\n# Create new Kafka topic $TOPIC2"
+echo "ccloud kafka topic create $TOPIC2"
+ccloud kafka topic create $TOPIC2
 
 echo -e "\n# Create ACLs for the producer using a prefix"
 PREFIX=${TOPIC2/%??/}
@@ -275,7 +279,7 @@ mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.P
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Producer works"
+  echo "PASS"
 else
   echo "FAIL: Something went wrong, check $LOG3"
 fi
@@ -295,9 +299,9 @@ ccloud kafka acl delete --allow --service-account-id $SERVICE_ACCOUNT_ID --opera
 
 TOPIC3=pageviews
 
-echo -e "\n# Generate configuration files with Confluent Cloud connection information"
-../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
-source delta_configs/env.delta
+echo -e "\n# Create new Kafka topic $TOPIC3"
+echo "ccloud kafka topic create $TOPIC3"
+ccloud kafka topic create $TOPIC3
 
 echo -e "\n# Create ACLs for Connect"
 echo "ccloud kafka acl create --allow --service-account-id $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
@@ -312,16 +316,19 @@ echo "ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account-id $SERVICE_ACCOUNT_ID
 sleep 2
 
+echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
+echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
+../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
+echo "source delta_configs/env.delta"
+source delta_configs/env.delta
+
 echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
+echo "docker-compose up -d"
 docker-compose up -d
 echo -e "\n# Wait 60 seconds for Connect to start"
 sleep 60
 
-echo -e "\n# Check if topic $TOPIC3 exists and create"
-echo "ccloud kafka topic describe $TOPIC3 &>/dev/null || ccloud kafka topic create $TOPIC3"
-ccloud kafka topic describe $TOPIC3 &>/dev/null || ccloud kafka topic create $TOPIC3
-
-echo "Post the configuration for the kafka-connect-datagen connector"
+echo -e "\n# Post the configuration for the kafka-connect-datagen connector"
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
@@ -340,8 +347,8 @@ DATA=$( cat << EOF
 }
 EOF
 )
-echo "curl -X POST -H \"${HEADER}\" --data \"${DATA}\" http://localhost:8083/connectors"
-curl -X POST -H "${HEADER}" --data "${DATA}" http://localhost:8083/connectors
+echo "curl --silent --output /dev/null -X POST -H \"${HEADER}\" --data \"${DATA}\" http://localhost:8083/connectors"
+curl --silent --output /dev/null -X POST -H "${HEADER}" --data "${DATA}" http://localhost:8083/connectors
 if [[ $? != 0 ]]; then
   echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
   #exit $?
@@ -382,7 +389,7 @@ timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.cli
 echo "# Check logs for 'Consumed record with'"
 OUTPUT=$(grep "Consumed record with" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
-  echo "PASS: Consumer works"
+  echo "PASS"
 else
   echo "FAIL: Something went wrong, check $LOG4"
 fi
