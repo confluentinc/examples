@@ -490,7 +490,7 @@ Here is the ``Dockerfile`` snippet used to build these images (`source <https://
 
 The `confluentinc/cp-server-connect-operator <https://hub.docker.com/r/confluentinc/cp-server-connect-operator>`__ image is used as the Base image upon which the ``confluent-hub`` client is used to install the custom connector.   See the documentation on `confluent-hub client <https://docs.confluent.io/current/connect/managing/confluent-hub/client.html>`__ for details for `installing from Confluent Hub <https://docs.confluent.io/current/connect/managing/confluent-hub/client.html#installing-components-with-c-hub-client>`__ or from a `local archive <https://docs.confluent.io/current/connect/managing/confluent-hub/command-reference/confluent-hub-install.html#confluent-hub-client-install>`__.
 
-Once the Docker image is built with your custom archive installed, your Kubernetes engine will need to be able to pull this image from a Registry to the Pods.   The demonstration accomplishes this by publishing the image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__.
+Once the Docker image is built with your custom archive installed, Kubernetes will need to be able to pull this image from a Docker Registry to create the Pods.  The demonstration accomplishes this by publishing the image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__.
 
 Finally your Operator Helm values will need to be updated to pull the custom images for your Pods.  This demo accomplishes this by overriding the ``connect`` image repository like so:
 
@@ -501,7 +501,7 @@ Finally your Operator Helm values will need to be updated to pull the custom ima
     repository: cnfldemos/cp-server-connect-operator-with-datagen 
     tag: 0.1.6-5.3.1.0
 
-See the demo's `value.yaml <https://github.com/confluentinc/examples/blob/5.3.1-post/kubernetes/gke-base/cfg/values.yaml#L53>`__ file for the full example.
+See the demo's `value.yaml <https://github.com/confluentinc/examples/blob/5.3.1-post/kubernetes/gke-base/cfg/values.yaml#L53>`__ file and the `kafka-connect-datagen <https://github.com/confluentinc/kafka-connect-datagen>`__ GitHub repository for the full example.
 
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage:
 
