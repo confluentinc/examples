@@ -61,23 +61,23 @@ Run the demo
 
 #. You have two options to run the demo.
 
--  Option 1: run the demo end-to-end for all services
+   -  Option 1: run the demo end-to-end for all services
 
-   .. code:: bash
+      .. code:: bash
 
-      ./run.sh
+         ./run.sh
 
--  Option 2: step through it one service at a time
+   -  Option 2: step through it one service at a time
+   
+      .. code:: bash
 
-   .. code:: bash
-
-      ./init.sh
-      ./enable-rbac-broker.sh
-      ./enable-rbac-schema-registry.sh
-      ./enable-rbac-connect.sh
-      ./enable-rbac-rest-proxy.sh
-      ./enable-rbac-ksql-server.sh
-      ./enable-rbac-control-center.sh
+         ./init.sh
+         ./enable-rbac-broker.sh
+         ./enable-rbac-schema-registry.sh
+         ./enable-rbac-connect.sh
+         ./enable-rbac-rest-proxy.sh
+         ./enable-rbac-ksql-server.sh
+         ./enable-rbac-control-center.sh
 
 #. After you run the demo, view the configuration files:
 
