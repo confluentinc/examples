@@ -1,7 +1,7 @@
 Deploying Connectors with Operator 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can deploy any connector in your Kubernetes environment.
+You can deploy any Kafka connector, `single message transformation (SMT) <https://docs.confluent.io/current/connect/concepts.html#transforms>`__, or `converter <https://docs.confluent.io/current/connect/concepts.html#converters>`__ in your Kubernetes environment.
 Check in |c-hub|, an online library of pre-packaged and ready-to-install connectors, transformations, and converters, to find the one that suits your needs.
 The |co-long| image for |kconnect-long|, `confluentinc/cp-server-connect-operator <https://hub.docker.com/r/confluentinc/cp-server-connect-operator>`__,  includes a small number of those connectors but may not have the specific connector you want to deploy.
 Therefore, to deploy a new connector type in your Kubernetes environment, you will need to create a custom Docker image that bundles the desired connector jars into the Connect image.
