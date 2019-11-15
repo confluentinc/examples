@@ -1,29 +1,20 @@
-Deploying Custom Kafka Connect JARs with Operator 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Deploying Connectors with Operator 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Kafka Connect <https://docs.confluent.io/current/connect/index.html>`__ employs an extensible programming model to faciliate `Data Conversions <https://docs.confluent.io/current/connect/concepts.html#converters>`__, `Single Message Transformations (SMTs) <https://docs.confluent.io/current/connect/concepts.html#transforms>`__, or the development of custom connectors if a `supported connector <https://www.confluent.io/hub/>`__ is not available.  The Connect `packaging model <https://docs.confluent.io/current/connect/devguide.html#packaging>`__ will require that you deploy an archive containing your custom JAR to the `Kafka Connect's plugin path <https://docs.confluent.io/current/connect/userguide.html#connect-installing-plugins>`__.
+You can deploy any Kafka connector, `single message transformation (SMT) <https://docs.confluent.io/current/connect/concepts.html#transforms>`__, or `converter <https://docs.confluent.io/current/connect/concepts.html#converters>`__ in your Kubernetes environment.
+Search in `Confluent Hub <https://confluent.io/hub>`__, an online library of pre-packaged and ready-to-install connectors, transformations, and converters, to find the one that suits your needs.
+The |co-long| image for |kconnect-long|, `confluentinc/cp-server-connect-operator <https://hub.docker.com/r/confluentinc/cp-server-connect-operator>`__,  includes a small number of those connectors but may not have the specific connector you want to deploy.
+Therefore, to deploy a new connector type in your Kubernetes environment, you will need to create a custom Docker image that bundles the desired connector jars into the Connect image.
+See the `documentation <https://docs.confluent.io/current/connect/managing/extending.html#create-a-docker-image-containing-c-hub-connectors>`__ to learn how to use the |c-hub| client to create a custom Docker image that extends one of Confluent’s Kafka Connect images with a specific set of ready-to-install connectors.
+Once you build the custom Docker image, Kubernetes will need to pull this image from a Docker Registry to create the Pods.
 
-This demonstration utilizes a `custom Connector to generate mock events <https://github.com/confluentinc/kafka-connect-datagen>`__ which is **not** installed by default in the Confluent Kafka Connect Docker images.  In order to utilize this plugin, we build a custom Docker image which is derived from the Confluent Operator based Docker image and install the custom connector using the ``confluent-hub`` client.
+For more advanced use cases where you want to use a custom connector instead of a pre-packaged one available at |c-hub|, you may create a Docker image with a custom connector from a `local archive <https://docs.confluent.io/current/connect/managing/confluent-hub/command-reference/confluent-hub-install.html#confluent-hub-client-install>`__.
+The demonstration uses this more advanced workflow.
+We use the `Kafka Connect Datagen connector <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ to generate mock events, and this `Dockerfile <https://github.com/confluentinc/kafka-connect-datagen/blob/0.1.x/Dockerfile-operator-local>`__ builds the Docker image with a local archive of the Kafka Connect Datagen connector compiled from source code (versus pulling directly from |c-hub|).
+We publish this image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__, but in your environment, publish to your own Docker Hub repo.
 
-Here is the ``Dockerfile`` snippet used to build these images (`source <https://github.com/confluentinc/kafka-connect-datagen/blob/0.1.x/Dockerfile-operator-local>`__):
-
-::
-
-  ARG CP_VERSION
-
-  FROM confluentinc/cp-server-connect-operator:${CP_VERSION}.0
-
-  ARG KAFKA_CONNECT_DATAGEN_VERSION
-
-  COPY target/components/packages/confluentinc-kafka-connect-datagen-${KAFKA_CONNECT_DATAGEN_VERSION}.zip /tmp/confluentinc-kafka-connect-datagen-${KAFKA_CONNECT_DATAGEN_VERSION}.zip
-
-  RUN confluent-hub install --no-prompt /tmp/confluentinc-kafka-connect-datagen-${KAFKA_CONNECT_DATAGEN_VERSION}.zip
-
-The `confluentinc/cp-server-connect-operator <https://hub.docker.com/r/confluentinc/cp-server-connect-operator>`__ image is used as the Base image upon which the ``confluent-hub`` client is used to install the custom connector.   See the documentation on `confluent-hub client <https://docs.confluent.io/current/connect/managing/confluent-hub/client.html>`__ for details for `installing from Confluent Hub <https://docs.confluent.io/current/connect/managing/confluent-hub/client.html#installing-components-with-c-hub-client>`__ or from a `local archive <https://docs.confluent.io/current/connect/managing/confluent-hub/command-reference/confluent-hub-install.html#confluent-hub-client-install>`__.
-
-Once the Docker image is built with your custom archive installed, Kubernetes will need to be able to pull this image from a Docker Registry to create the Pods.  The demonstration accomplishes this by publishing the image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__.
-
-Finally your Operator Helm values will need to be updated to pull the custom images for your Pods.  This demo accomplishes this by overriding the ``connect`` image to instead use the one published to Docker Hub as described in the previous paragraph:
+Your Operator Helm values will need to be updated to pull the custom Connect Docker image for your Pods.
+This demo accomplishes this by overriding the ``connect`` image to instead use the one published to Docker Hub, see `value.yaml <https://github.com/confluentinc/examples/blob/5.3.1-post/kubernetes/gke-base/cfg/values.yaml#L53>`__:
 
 ::
 
@@ -31,6 +22,3 @@ Finally your Operator Helm values will need to be updated to pull the custom ima
   image:
     repository: cnfldemos/cp-server-connect-operator-with-datagen 
     tag: 0.1.6-5.3.1.0
-
-See the demo's `value.yaml <https://github.com/confluentinc/examples/blob/5.3.1-post/kubernetes/gke-base/cfg/values.yaml#L53>`__ file and the `kafka-connect-datagen <https://github.com/confluentinc/kafka-connect-datagen>`__ GitHub repository for the full example.
-
