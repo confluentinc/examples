@@ -384,6 +384,8 @@ After the job is applied, the following command shows the deployed connector::
 	root@client-console:/opt# curl http://connectors:8083/connectors;echo;
 	["clicks"]
 
+.. include:: ../../docs/includes/deploy-jars-k8s.rst
+
 .. _examples-operator-gke-base-tear-down:
 
 Tear down

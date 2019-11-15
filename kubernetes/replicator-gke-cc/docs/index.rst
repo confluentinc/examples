@@ -467,6 +467,8 @@ In the same directory as the ConfigMap manifest file is a `Kubernetes Job <https
 
 Of note is the way in which the ConfigMap is associated to the Job Pod by name.  The value, ``replicator-connector`` in the ``volumes`` stanza of the Job manifest matches the ConfigMap name in the metadata section of the ConfigMap manifest.
 
+.. include:: ../../docs/includes/deploy-jars-k8s.rst
+
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage:
 
 Advanced Usage
