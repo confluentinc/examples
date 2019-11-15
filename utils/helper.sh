@@ -170,14 +170,14 @@ function check_running_cp() {
   return 0
 }
 
-function is_ce() {
-  type=$( confluent local version | tail -1 | awk -F: '{print $1;}' )
+function is_cp() {
+  type=$( confluent local version 2>/dev/null | tail -1 | awk -F: '{print $1;}')
   if [[ "$type" == "Confluent Platform" ]]; then
     return 0
-  elif [[ "$type" == "Confluent Community software" ]]; then
+  elif [[ "$type" == "Confluent Community Software" ]]; then
     return 1
   else
-    echo -e "\nCannot determine if Confluent Platform or Confluent Community software from `confluent local version`. Assuming Confluent Community\n"
+    echo -e "\nCannot determine if Confluent Platform or Confluent Community Software from `confluent local version`. Assuming Confluent Community Software\n"
     return 1
   fi
 }
