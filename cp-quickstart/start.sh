@@ -9,7 +9,7 @@ check_cli_v2 || exit
 
 ./stop.sh
 
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.6
 confluent local start
 sleep 10
 
