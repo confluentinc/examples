@@ -3,7 +3,7 @@ Deploying Connectors with Operator
 
 The base |co-long| image for |kconnect-long|, `confluentinc/cp-server-connect-operator <https://hub.docker.com/r/confluentinc/cp-server-connect-operator>`__,  does not include any connector jars.
 Therefore, to deploy any connector in your Kubernetes environment, you will need to create a custom Docker image that bundles the desired connector jars into the Connect image.
-See the `documentation <https://docs.confluent.io/current/connect/managing/extending.html#create-a-docker-image-containing-c-hub-connectors>`__ to learn how to use the |c-hub| client to create a Docker image that extends one of Confluent’s Kafka Connect images with a custom set of connectors.
+See the `documentation <https://docs.confluent.io/current/connect/managing/extending.html#create-a-docker-image-containing-c-hub-connectors>`__ to learn how to use the |c-hub| client to create a Docker image that extends one of Confluent’s Kafka Connect images with a specified set of connectors.
 Once you build the custom Docker image, Kubernetes will need to be able to pull this image from a Docker Registry to create the Pods.
 
 For more advanced use cases where you want to use a custom connector instead of a pre-built one available at |c-hub|, you may create a Docker image with this custom connector from a `local archive <https://docs.confluent.io/current/connect/managing/confluent-hub/command-reference/confluent-hub-install.html#confluent-hub-client-install>`__.
