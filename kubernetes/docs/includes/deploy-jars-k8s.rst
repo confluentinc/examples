@@ -23,7 +23,7 @@ The `confluentinc/cp-server-connect-operator <https://hub.docker.com/r/confluent
 
 Once the Docker image is built with your custom archive installed, Kubernetes will need to be able to pull this image from a Docker Registry to create the Pods.  The demonstration accomplishes this by publishing the image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__.
 
-Finally your Operator Helm values will need to be updated to pull the custom images for your Pods.  This demo accomplishes this by overriding the ``connect`` image repository like so:
+Finally your Operator Helm values will need to be updated to pull the custom images for your Pods.  This demo accomplishes this by overriding the ``connect`` image to instead use the one published to Docker Hub as described in the previous paragraph:
 
 ::
 
