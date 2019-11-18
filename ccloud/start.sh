@@ -11,7 +11,7 @@ check_running_cp 5.3 || exit 1
 check_ccloud_config $CONFIG_FILE || exit
 
 if ! check_cp ; then
-  echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community software. Exiting"
+  echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software. Exiting"
   exit 1
 fi
 
