@@ -10,7 +10,7 @@ check_running_cp 5.3 || exit 1
 . ./config.sh
 check_ccloud_config $CONFIG_FILE || exit
 
-if ! is_cp ; then
+if ! check_cp ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community software. Exiting"
   exit 1
 fi
@@ -128,7 +128,7 @@ EOF
 fi
 
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
-if is_cp; then
+if check_cp; then
   mkdir -p $CONFLUENT_CURRENT/control-center
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
   cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG

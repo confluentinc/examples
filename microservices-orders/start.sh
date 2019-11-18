@@ -61,10 +61,10 @@ COUNT_JUMPERS=20
 
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
 prep_sqltable_customers
-if is_cp; then confluent local config jdbc-customers -- -d ./connectors/connector_jdbc_customers.config; else confluent local config jdbc-customers -- -d ./connectors/connector_jdbc_customers_oss.config; fi
+if check_cp; then confluent local config jdbc-customers -- -d ./connectors/connector_jdbc_customers.config; else confluent local config jdbc-customers -- -d ./connectors/connector_jdbc_customers_oss.config; fi
 
 # Sink Connector -> Elasticsearch -> Kibana
-if is_cp; then confluent local config elasticsearch -- -d ./connectors/connector_elasticsearch.config; else confluent local config elasticsearch -- -d ./connectors/connector_elasticsearch_oss.config; fi
+if check_cp; then confluent local config elasticsearch -- -d ./connectors/connector_elasticsearch.config; else confluent local config elasticsearch -- -d ./connectors/connector_elasticsearch_oss.config; fi
 ./dashboard/set_elasticsearch_mapping.sh
 ./dashboard/configure_kibana_dashboard.sh
 
