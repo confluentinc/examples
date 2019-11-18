@@ -22,7 +22,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker-dc1:
-    image: confluentinc/cp-enterprise-kafka:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.4.0-SNAPSHOT
     hostname: broker-dc1
     container_name: broker-dc1
     depends_on:
@@ -36,6 +36,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-dc1:29091,PLAINTEXT_HOST://localhost:9091
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       # Confluent Metrics Reporter for Control Center Cluster Monitoring
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
@@ -45,7 +46,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
 
   broker-dc2:
-    image: confluentinc/cp-enterprise-kafka:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.4.0-SNAPSHOT
     hostname: broker-dc2
     container_name: broker-dc2
     depends_on:
@@ -59,6 +60,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-dc2:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
       # Confluent Metrics Reporter for Control Center Cluster Monitoring
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
