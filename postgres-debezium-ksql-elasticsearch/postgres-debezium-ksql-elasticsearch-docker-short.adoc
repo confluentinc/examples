@@ -186,7 +186,7 @@ DESCRIBE RATINGS;
 Filter data
 [source,sql]
 ----
-SELECT STARS, CHANNEL, MESSAGE FROM RATINGS WHERE STARS<3;
+SELECT STARS, CHANNEL, MESSAGE FROM RATINGS WHERE STARS<3 EMIT CHANGES;
 ----
 
 === Show Postgres table + contents
@@ -218,7 +218,7 @@ postgres=# select * from customers ;
 
 [source,sql]
 ----
-SELECT ID, FIRST_NAME, LAST_NAME, EMAIL FROM CUSTOMERS_SRC;
+SELECT ID, FIRST_NAME, LAST_NAME, EMAIL FROM CUSTOMERS_SRC EMIT CHANGES;
 ----
 
 === Show CDC in action
@@ -261,7 +261,8 @@ Show data:
 SELECT CLUB_STATUS, EMAIL, STARS, MESSAGE \
 FROM   ratings_with_customer_data \
 WHERE  STARS < 3 \
-  AND  CLUB_STATUS = 'platinum';
+  AND  CLUB_STATUS = 'platinum' \
+EMIT CHANGES;
 ----
 
 === Create stream of unhappy VIPs
@@ -359,7 +360,7 @@ Simple aggregation - count of ratings per person, per minute:
 
 [source,sql]
 ----
-ksql> SELECT FULL_NAME,COUNT(*) FROM ratings_with_customer_data WINDOW TUMBLING (SIZE 1 MINUTE) GROUP BY FULL_NAME;
+ksql> SELECT FULL_NAME,COUNT(*) FROM ratings_with_customer_data WINDOW TUMBLING (SIZE 1 MINUTE) GROUP BY FULL_NAME EMIT CHANGES;
 ----
 
 Persist this and show the timestamp:
@@ -367,7 +368,7 @@ Persist this and show the timestamp:
 [source,sql]
 ----
 CREATE TABLE RATINGS_PER_CUSTOMER_PER_MINUTE AS SELECT FULL_NAME,COUNT(*) AS RATINGS_COUNT FROM ratings_with_customer_data WINDOW TUMBLING (SIZE 1 MINUTE) GROUP BY FULL_NAME;
-SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') , FULL_NAME, RATINGS_COUNT FROM RATINGS_PER_CUSTOMER_PER_MINUTE;
+SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') , FULL_NAME, RATINGS_COUNT FROM RATINGS_PER_CUSTOMER_PER_MINUTE EMIT CHANGES;
 ----
 
 === Slack notifications
