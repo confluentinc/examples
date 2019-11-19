@@ -13,7 +13,7 @@ confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.6
 confluent local start
 sleep 10
 
-if is_ce; then
+if check_cp; then
   confluent local config datagen-pageviews -- -d connectors/datagen_pageviews.config
   confluent local config datagen-users -- -d connectors/datagen_users.config
 else
