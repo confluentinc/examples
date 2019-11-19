@@ -1,13 +1,13 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the Java Producer and Consumer, and Kafka Streams API.
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the Java Producer and Consumer, and Kafka Streams API.
 
 
 # Prerequisites
 
 * Java 1.8 or higher to run the demo application
 * Maven to compile the demo application
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell
@@ -140,10 +140,10 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 # Example 2: Avro And Confluent Cloud Schema Registry
 
 This example is similar to the previous example, except the value is formatted as Avro and integrates with the Confluent Cloud Schema Registry.
-Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html).
+Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud).
 Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
 
-1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
 
 2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 

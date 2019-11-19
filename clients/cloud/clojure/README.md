@@ -1,17 +1,17 @@
 # Overview
 
 Produce messages to and consume messages from [Confluent
-Cloud](https://www.confluent.io/confluent-cloud/) using Java interop
+Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using Java interop
 form Clojure.
 
-For more information, please see the [application development documentation](https://docs.confluent.io/current/api-javadoc.html)
+For more information, please see the [application development documentation](https://docs.confluent.io/current/api-javadoc.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
 
 # Prerequisites
 
 * Java 8 or higher (Clojure 1.10 recommends using Java 8 or Java 11)
 * The [Leiningen](https://leiningen.org/#install) tool to compile and run the demos
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
 
 
 ```bash

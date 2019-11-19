@@ -1,11 +1,11 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the [rust-rdkafka client for Apache Kafka](https://github.com/fede1024/rust-rdkafka).
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the [rust-rdkafka client for Apache Kafka](https://github.com/fede1024/rust-rdkafka).
 
 # Prerequisites
 * [Rust client for Apache Kafka](https://github.com/fede1024/rust-rdkafka#installation) installed on your machine
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
 
 ```bash
 $ cat ~/.ccloud/example.config

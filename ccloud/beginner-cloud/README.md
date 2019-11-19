@@ -46,7 +46,7 @@ Option 2: Provide all arguments on command line, except password for which you w
 ## Pre-requisites
 
 * Access to a Confluent Cloud cluster
-* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli) v0.192.0 or above
+* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.192.0 or above
 * Docker and Docker Compose
 * `timeout` installed on your host
 * `mvn` installed on your host

@@ -3,7 +3,7 @@
 ## Programming Languages
 
 This directory includes examples of Kafka client applications written in different languages.
-The README for each language walks through the configurations required to connect to [Confluent Cloud](https://www.confluent.io/confluent-cloud/).
+The README for each language walks through the configurations required to connect to [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud).
 If you want to run the applications against another Kafka cluster, provide the appropriate connection information in the properties file that is passed into the client applications.
 
 |                                   |                                                 |                                   |
@@ -27,8 +27,8 @@ The following subset includes examples with Confluent Cloud Schema Registry and 
 
 # Other Confluent Cloud Demos
 
-You may also run an [end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html) that showcases hybrid Kafka clusters: moving from self-managed to Confluent Cloud, with other streaming processing applications (e.g. KSQL) and components of the Confluent Platform (e.g. Confluent Replicator, Confluent Control Center, and Confluent Schema Registry).
+You may also run an [end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) that showcases hybrid Kafka clusters: moving from self-managed to Confluent Cloud, with other streaming processing applications (e.g. KSQL) and components of the Confluent Platform (e.g. Confluent Replicator, Confluent Control Center, and Confluent Schema Registry).
 
 # Confluent Cloud
 
-[![](images/confluent-cloud.jpeg)](https://www.confluent.io/confluent-cloud/)
+[![](images/confluent-cloud.jpeg)](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)

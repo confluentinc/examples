@@ -4,12 +4,12 @@
 
 This demo shows how KSQL can be used to process a stream of click data, aggregate and filter it, and join to information about the users. Visualisation of the results is provided by Grafana, on top of data streamed to Elasticsearch. 
 
-You can [run it using Docker](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html), or with a local install of Confluent Platform and following the instructions below. 
+You can [run it using Docker](https://docs.confluent.io/current/ksql/docs/tutorials/clickstream-docker.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clickstream), or with a local install of Confluent Platform and following the instructions below. 
 
 ## Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clickstream)
 * `jq` installed on your machine
 * [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
