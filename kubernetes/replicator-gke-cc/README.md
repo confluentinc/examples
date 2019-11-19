@@ -1,4 +1,4 @@
-![image](images/confluent-logo-300-2.png)
+![image](../../images/confluent-logo-300-2.png)
 
 # Google Kubernetes Engine to Confluent Cloud with Confluent Replicator
 
