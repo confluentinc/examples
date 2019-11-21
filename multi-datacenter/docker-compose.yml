@@ -115,6 +115,8 @@ services:
     ports:
       - "8382:8382"
       - "9892:9892"
+    volumes:
+      - mi3:/etc/kafka-connect/jars/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc2
@@ -140,6 +142,7 @@ services:
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONNECT_REST_EXTENSION_CLASSES: io.confluent.connect.replicator.monitoring.ReplicatorMonitoringExtension
       KAFKA_JMX_PORT: 9892
       KAFKA_JMX_HOSTNAME: localhost
 
@@ -157,6 +160,8 @@ services:
     ports:
       - "8381:8381"
       - "9891:9891"
+    volumes:
+      - mi3:/etc/kafka-connect/jars/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc1
@@ -181,6 +186,7 @@ services:
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONNECT_REST_EXTENSION_CLASSES: io.confluent.connect.replicator.monitoring.ReplicatorMonitoringExtension
       KAFKA_JMX_PORT: 9891
       KAFKA_JMX_HOSTNAME: localhost
 
@@ -277,3 +283,17 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
+
+  replicator-for-jar-transfer:
+    image: confluentinc/cp-enterprise-replicator:5.4.0-SNAPSHOT
+    hostname: replicator-for-jar-transfer
+    container_name: replicator-for-jar-transfer
+    volumes:
+      - mi3:/opt/kafka-connect-replicator/
+    command: "bash -c   'mkdir /opt/kafka-connect-replicator && \
+                        cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar \
+                        /opt/kafka-connect-replicator && \
+                        sleep infinity'"
+
+volumes:
+    mi3: {}
