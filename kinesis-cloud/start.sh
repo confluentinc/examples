@@ -6,7 +6,7 @@
 source config/demo.cfg
 
 check_env || exit 1
-check_running_cp 5.3 || exit
+check_running_cp 5.4 || exit
 
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
