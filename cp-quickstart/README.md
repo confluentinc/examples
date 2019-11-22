@@ -11,7 +11,7 @@ For additional examples that showcase streaming applications within an event str
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent Platform 5.4](https://www.confluent.io/download/)
 
 # What Should I see?
 
