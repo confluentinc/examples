@@ -6,7 +6,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 # Prerequisites
 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent Platform 5.4](https://www.confluent.io/download/)
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell

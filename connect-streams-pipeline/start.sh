@@ -5,7 +5,7 @@
 
 check_env || exit 1
 check_mvn || exit 1
-check_running_cp 5.3 || exit 
+check_running_cp 5.4 || exit 
 
 ./stop.sh
 

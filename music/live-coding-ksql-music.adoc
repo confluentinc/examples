@@ -16,7 +16,7 @@ image::images/ksql-music-demo-overview.jpg[Diagram]
 This tutorial accompanies:
 
 - https://www.youtube.com/watch?v=ExEWJVjj-RA[KSQL Streaming Application for Music Charts screencast]
-- https://github.com/confluentinc/examples/tree/5.3.0-post/music[automated KSQL demo]
+- https://github.com/confluentinc/examples/tree/5.4.0-post/music[automated KSQL demo]
 
 Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
@@ -24,7 +24,7 @@ Don't forget to check out the #ksql channel on our https://slackpass.io/confluen
 
 === Docker
 
-NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/examples/blob/5.3.0-post/music/start.sh[start script].
+NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/examples/blob/5.4.0-post/music/start.sh[start script].
 
 Clone this https://github.com/confluentinc/examples[examples repo].
 
@@ -233,7 +233,7 @@ image::images/counts_results.png[results]
 
 === Compare KSQL Queries and Kafka Streams Java
 
-Compare the music applications written with link:ksql.commands[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.3.0-post/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
+Compare the music applications written with link:ksql.commands[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.4.0-post/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
 
 === KSQL CLI
 

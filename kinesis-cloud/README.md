@@ -36,7 +36,7 @@ It is built on the Confluent Platform, including:
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent Platform 5.4](https://www.confluent.io/download/)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 * AWS: `aws cli`, properly initialized with your credentials
 * GCS: `gsutils`, properly initialized with your credentials
