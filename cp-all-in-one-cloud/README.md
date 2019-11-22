@@ -4,7 +4,7 @@
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli)
+* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one-cloud)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
 
 # Setup
@@ -33,7 +33,7 @@ schema.registry.url=https://<SR ENDPOINT>
 
 By default, the demo uses Confluent Schema Registry running in a local Docker container. If you prefer to use Confluent Cloud Schema Registry instead, you need to first set it up:
 
-   a. [Enable](http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud) Confluent Cloud Schema Registry prior to running the demo
+   a. [Enable](http://docs.confluent.io/current/quickstart/cloud-quickstart.html#step-3-configure-sr-ccloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one-cloud) Confluent Cloud Schema Registry prior to running the demo
 
    b. Validate your credentials to Confluent Cloud Schema Registry
 
@@ -44,7 +44,7 @@ By default, the demo uses Confluent Schema Registry running in a local Docker co
 ## Step 3
 
 Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
-(See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information on using this script.)
+(See [documentation](https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one-cloud) for more information on using this script.)
 
    a. If you want to use Confluent Schema Registry running in a local Docker container:
 

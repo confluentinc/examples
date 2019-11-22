@@ -17,4 +17,4 @@ The demo performs the following migration steps:
 
 # Running the demo
 
-You can find the documentation for running this demo at [https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html](https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html)
+You can find the documentation for running this demo at [https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html](https://docs.confluent.io/current/tutorials/examples/replicator-schema-translation/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.replicator-schema-translation)
