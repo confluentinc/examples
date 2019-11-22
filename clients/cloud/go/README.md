@@ -1,13 +1,13 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using [Confluent Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go).
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using [Confluent Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go).
 
 
 # Prerequisites
 
 * [Confluent's Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go#getting-started) installed on your machine
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients)). Format the file as follows:
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
 
 
 ```bash

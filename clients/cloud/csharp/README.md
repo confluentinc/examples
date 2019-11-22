@@ -1,12 +1,12 @@
 ﻿# Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/) using the .NET Producer and Consumer.
+Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the .NET Producer and Consumer.
 
 
 # Prerequisites
 
 * [.NET Core 2.1](https://dotnet.microsoft.com/download) or higher to run the demo application
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell

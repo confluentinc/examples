@@ -2,12 +2,12 @@
 
 # Overview
 
-The Wikipedia demo is the non-Docker version of the [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html).
+The Wikipedia demo is the non-Docker version of the [Confluent Platform Demo](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.wikipedia).
 
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent Platform 5.3](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.wikipedia)
 * [Elasticsearch 5.6.5](https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5) to export data from Kafka
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
 * [Kibana 5.5.2](https://www.elastic.co/downloads/past-releases/kibana-5-5-2) to visualize data
@@ -15,6 +15,6 @@ The Wikipedia demo is the non-Docker version of the [Confluent Platform Demo](ht
 
 # Documentation
 
-After you run `./start.sh`, follow the Confluent Platform Demo [playbook](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html)
+After you run `./start.sh`, follow the Confluent Platform Demo [playbook](https://docs.confluent.io/current/tutorials/cp-demo/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.wikipedia)
 
 ![image](images/wikipedia-dashboard.png)
