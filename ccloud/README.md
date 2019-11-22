@@ -9,7 +9,7 @@
 
 # Overview
 
-[Confluent Cloud](https://docs.confluent.io/current/cloud/index.html) is a resilient, scalable streaming data service based on Apache Kafka®, delivered as a fully managed service.
+[Confluent Cloud](https://docs.confluent.io/current/cloud/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) is a resilient, scalable streaming data service based on Apache Kafka®, delivered as a fully managed service.
 It has a web interface and local command line interface that you can use to manage cluster resources, Kafka topics, Schema Registry, and other services.
 
 This repo has a few resources to help you validate your solutions on Confluent Cloud.
@@ -33,10 +33,10 @@ It steps through the following workflow.
 
 # Advanced Demo
 
-[This end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html) showcases a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+[This end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) showcases a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 Data streams into topics both a local cluster and a cluster in Confluent Cloud, and Confluent Replicator copies the on-prem data to Confluent Cloud so that stream processing can happen in the Cloud.
 
-The documentation for running this demo, and its accompanying playbook, is at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html)
+The documentation for running this demo, and its accompanying playbook, is at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud)
 
 ![image](docs/images/schema-registry-local.jpg)
 
@@ -81,5 +81,5 @@ Use these per-component configurations for Confluent Platform components and cli
   * C++
 
 The [template examples](template_delta_configs) have delta configuration lines to add to each component or client.
-See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information.
+See [documentation](https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) for more information.
 

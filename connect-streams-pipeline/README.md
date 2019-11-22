@@ -15,13 +15,13 @@
 
 ## Additional Reading
 
-* [Whitepaper "Kafka Serialization and Deserialization (SerDes) Examples"](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
-* [Blogpost "Building a Real-Time Streaming ETL Pipeline in 20 Minutes"](https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/)
+* [Whitepaper "Kafka Serialization and Deserialization (SerDes) Examples"](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
+* [Blogpost "Building a Real-Time Streaming ETL Pipeline in 20 Minutes"](https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.4](https://www.confluent.io/download/)
+* [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 * Maven command `mvn` to compile Java code
 * By default the `timeout` command is available on most Linux distributions but not Mac OS. This `timeout` command is used by the bash scripts to terminate consumer processes after a period of time. To install it on a Mac:
 
@@ -37,7 +37,7 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 ## Example 1: Kafka console producer -> Key:String and Value:String
 
-Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
 * Command line `confluent local produce` produces `String` keys and `String` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for both key and value.
@@ -50,7 +50,7 @@ Detailed walk-thru of this example is available in the whitepaper [Kafka Seriali
 
 ## Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 
-Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
 * [Kafka Connect JDBC source connector](jdbcjson-connector.properties) produces JSON values, and inserts the key using single message transformations, also known as `SMTs`. This is helpful because by default JDBC source connector does not insert a key.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for key and a custom JSON Serde for the value.
@@ -63,7 +63,7 @@ This example uses a few SMTs including one to cast the key to an `int64`. The ke
 
 ## Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
 
-Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
 * [Kafka Connect JDBC source connector](jdbcspecificavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java) reads from the Kafka topic using `SpecificAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
@@ -76,7 +76,7 @@ This example uses a simple message transformation `SetSchemaMetadata` with code 
 
 ## Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 
-Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
 * [Kafka Connect JDBC source connector](jdbcgenericavro-connector.properties) produces Avro values, and null `String` keys, to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java) reads from the Kafka topic using `GenericAvroSerde` for the value and then the `map` function to convert the stream of messages to have `Long` keys and custom class values.
@@ -89,7 +89,7 @@ This example currently uses `GenericAvroSerde` and not `SpecificAvroSerde` for a
 
 ## Example 5: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 
-Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples)
+Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
 * [Java client](src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java) produces `Long` keys and `SpecificAvro` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.Long()` for key and `SpecificAvroSerde` for the value.
