@@ -14,8 +14,8 @@ confluent local start
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 (cd kafka-streams-examples && git checkout 5.4.0-post)
-[[ -f "kafka-streams-examples/target/kafka-streams-examples-5.4.0-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
-java -cp kafka-streams-examples/target/kafka-streams-examples-5.4.0-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
+[[ -f "kafka-streams-examples/target/kafka-streams-examples-5.4.0-SNAPSHOT-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
+java -cp kafka-streams-examples/target/kafka-streams-examples-5.4.0-SNAPSHOT-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
 
 sleep 5
 

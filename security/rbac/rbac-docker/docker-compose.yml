@@ -62,6 +62,7 @@ services:
       # GENERAL CONFIG
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       
       # CONFIGURE LISTENERS
       # RBAC needs separate internal and external listeners

@@ -23,7 +23,7 @@ services:
     ports:
       - "2281:2281"
   srcKafka1:
-    image: confluentinc/cp-enterprise-kafka:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.4.0-SNAPSHOT
     hostname: srcKafka1
     container_name: srcKafka1
     cpus: 0.3
@@ -38,11 +38,12 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://srcKafka1:10091
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   destKafka1:
-    image: confluentinc/cp-enterprise-kafka:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.4.0-SNAPSHOT
     hostname: destKafka1
     container_name: destKafka1
     cpus: 0.3
@@ -57,10 +58,11 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://destKafka1:11091
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
   connect:
-    image: confluentinc/cp-kafka-connect:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.4.0-SNAPSHOT
     container_name: connect
     cpus: 0.2
     restart: always
@@ -133,7 +135,7 @@ services:
       - mi3:/usr/share/java/kafka-connect-replicator/
     command: "sleep infinity"
   kafka-client:
-    image: confluentinc/cp-enterprise-kafka:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.4.0-SNAPSHOT
     hostname: kafka-client
     container_name: kafka-client
     cpus: 0.1

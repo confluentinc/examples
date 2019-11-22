@@ -125,7 +125,7 @@ Do some basic filtering on the newly created stream `ksql_playevents`, e.g. to q
 
 [source,bash]
 ----
-SELECT * FROM ksql_playevents WHERE DURATION > 30000;
+SELECT * FROM ksql_playevents WHERE DURATION > 30000 EMIT CHANGES;
 ----
 
 image::images/ksql_playevents_min_30_non_persistent.png[play-events]
@@ -156,7 +156,7 @@ CREATE STREAM ksql_songfeed WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO');
  
 [source,bash]
 ----
-SELECT * FROM ksql_songfeed limit 5;
+SELECT * FROM ksql_songfeed EMIT CHANGES limit 5;
 ----
  
 Then `DESCRIBE` the stream to see the fields associated with this topic and notice that the field `ID` is of type `BIGINT`.
@@ -186,7 +186,7 @@ Confirm that the entries in this KSQL table have a `ROWKEY` that matches the Str
 
 [source,bash]
 ----
-SELECT * FROM ksql_songtable limit 5;
+SELECT * FROM ksql_songtable EMIT CHANGES limit 5;
 ----
 
 === Join play events with the table of songs
@@ -224,7 +224,7 @@ Congratulations, you built a streaming application that processes data in real-t
 
 [source,bash]
 ----
-SELECT * FROM ksql_songplaycounts30;
+SELECT * FROM ksql_songplaycounts30 EMIT CHANGES;
 ----
 
 image::images/counts_results.png[results]
