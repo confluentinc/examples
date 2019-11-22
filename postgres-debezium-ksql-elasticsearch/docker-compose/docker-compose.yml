@@ -42,7 +42,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
 
   kafka-connect-cp:
-    image: confluentinc/cp-kafka-connect:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.4.0-SNAPSHOT
     ports:
       - "18083:18083"
     environment:
