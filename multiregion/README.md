@@ -223,7 +223,7 @@ Observations:
 ## Monitoring Observers
 
 Notice that the `multi-region-async` topic has a JMX metric `ReplicasCount` that includes observers, whereas `InSyncReplicasCount` excludes observers.
-The new JMX metric `CaughtUpReplicas` (`kafka.cluster:type=Partition,name=CaughtUpReplicas,topic=([-.\w]+),partition=([0-9]+)`) across all brokers in the cluster reflects whether all the replicas, including observers, are caught up with the leader such that their log end offset is at least at the high watermark.
+The new JMX metric `CaughtUpReplicasCount` (`kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=([-.\w]+),partition=([0-9]+)`) across all brokers in the cluster reflects whether all the replicas, including observers, are caught up with the leader such that their log end offset is at least at the high watermark.
 
 ```
 ./scripts/jmx_metrics.sh
@@ -246,7 +246,7 @@ multi-region-sync: 4
 multi-region-async: 2
 
 
-==> Monitor CaughtUpReplicas
+==> Monitor CaughtUpReplicasCount
 
 single-region: 2
 multi-region-sync: 4
