@@ -13,7 +13,7 @@ You may either step through this tutorial manually, or run the link:demo-secret-
 
 Before you start:
 
-. Download link:https://www.confluent.io/download/[Confluent Platform 5.3] or higher
+. Download link:https://www.confluent.io/download/[Confluent Platform 5.4] or higher
 . Get the new link:https://docs.confluent.io/current/cli/installing.html[Confluent CLI] (v0.128.0 or above)
 
 == Workflow

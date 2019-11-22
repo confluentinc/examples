@@ -9,8 +9,8 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
 * Docker
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
-* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version `v0.128.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
+* [Confluent Platform 5.4](https://www.confluent.io/download/)
+* [Confluent CLI](https://docs.confluent.io/current/cli/installing.html) installed on your machine, version `v0.128.0` or higher (note: as of CP 5.4, the Confluent CLI is a separate [download](https://docs.confluent.io/current/cli/installing.html)
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell

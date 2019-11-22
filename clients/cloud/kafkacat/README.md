@@ -7,7 +7,7 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
 
 * [kafkacat](https://github.com/edenhill/kafkacat) installed on your machine.  You must [build](https://github.com/edenhill/kafkacat#build) `kafkacat` from the latest master branch to get the `-F` functionality that makes it easy to pass in the configuration to your Confluent Cloud configuration file.
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster
-* [Confluent Platform 5.3](https://www.confluent.io/download/)
+* [Confluent Platform 5.4](https://www.confluent.io/download/)
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell

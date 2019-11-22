@@ -4,7 +4,7 @@
 . ../utils/helper.sh
 
 check_env || exit 1
-check_running_cp 5.3 || exit
+check_running_cp 5.4 || exit
 check_cli_v2 || exit
 
 ./stop.sh
