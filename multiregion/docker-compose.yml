@@ -2,7 +2,7 @@ version: '3'
 
 services:
   zookeeper-west:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
     hostname: zookeeper-west
     container_name: zookeeper-west
     networks:
@@ -15,7 +15,7 @@ services:
         ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
       
   zookeeper-central:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
     hostname: zookeeper-central
     container_name: zookeeper-central
     networks:
@@ -30,7 +30,7 @@ services:
       - zookeeper-west
 
   zookeeper-east:
-    image: confluentinc/cp-zookeeper:latest
+    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
     hostname: zookeeper-east
     container_name: zookeeper-east
     networks:
@@ -66,6 +66,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
       KAFKA_JMX_PORT: 8091
     depends_on:
       - zookeeper-west
@@ -91,6 +92,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
       KAFKA_JMX_PORT: 8092
     depends_on:
       - zookeeper-west
@@ -119,6 +121,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
       KAFKA_JMX_PORT: 8093
     depends_on:
       - zookeeper-west
@@ -146,6 +149,7 @@ services:
       KAFKA_CONFLUENT_OBSERVER_FEATURE: 'true'
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
       KAFKA_JMX_PORT: 8094
     depends_on:
       - zookeeper-west

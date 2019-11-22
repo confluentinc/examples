@@ -10,7 +10,7 @@ services:
 
   kafka:
     container_name: kafka
-    image: confluentinc/cp-enterprise-kafka:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-SNAPSHOT
     depends_on:
       - zookeeper
     #ports:
@@ -28,6 +28,7 @@ services:
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
       CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
@@ -46,7 +47,7 @@ services:
 
   kafka-connect:
     container_name: kafka-connect
-    image: confluentinc/cp-kafka-connect:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.5.0-SNAPSHOT
     ports:
       - 8083:8083
     depends_on:

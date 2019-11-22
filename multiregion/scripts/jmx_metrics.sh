@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for metric in ReplicasCount InSyncReplicasCount CaughtUpReplicas
+for metric in ReplicasCount InSyncReplicasCount CaughtUpReplicasCount
 do
 
   echo -e "\n\n==> Monitor $metric \n"

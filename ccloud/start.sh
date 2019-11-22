@@ -5,7 +5,7 @@
 
 check_env || exit 1
 check_jq || exit 1
-check_running_cp 5.3 || exit 1
+check_running_cp 5.4 || exit 1
 
 . ./config.sh
 check_ccloud_config $CONFIG_FILE || exit

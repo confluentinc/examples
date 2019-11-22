@@ -4,7 +4,7 @@
 . ../utils/helper.sh
 
 check_env || exit 1
-check_running_cp 5.3 || exit
+check_running_cp 5.4 || exit
 check_mysql 5.7.25 || exit
 check_running_elasticsearch 5.6.5 || exit 1
 check_running_kibana || exit 1

@@ -94,7 +94,7 @@ Additional documentation: [Getting Started](https://docs.confluent.io/current/ge
 
 For local installs:
 
-* Download [Confluent Platform 5.3](https://www.confluent.io/download/)
+* Download [Confluent Platform 5.4](https://www.confluent.io/download/)
 * Env var `CONFLUENT_HOME=/path/to/confluentplatform`
 * Env var `PATH` includes `$CONFLUENT_HOME/bin`
 * Each demo has its own set of prerequisites as well, documented individually in each demo

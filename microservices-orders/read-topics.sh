@@ -35,7 +35,7 @@ confluent local consume platinum -- --value-format avro --property print.key=tru
 
 # Read queries
 ksql http://localhost:8088 <<EOF
-SELECT * FROM orders_cust1_joined LIMIT 2;
-SELECT * FROM FRAUD_ORDER LIMIT 2;
+SELECT * FROM orders_cust1_joined EMIT CHANGES LIMIT 2;
+SELECT * FROM FRAUD_ORDER EMIT CHANGES LIMIT 2;
 exit ;
 EOF
