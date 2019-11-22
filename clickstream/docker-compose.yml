@@ -47,7 +47,7 @@ services:
 
   kafka-connect:
     container_name: kafka-connect
-    image: confluentinc/cp-kafka-connect:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.4.0-SNAPSHOT
     ports:
       - 8083:8083
     depends_on:
