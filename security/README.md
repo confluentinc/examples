@@ -7,7 +7,7 @@ Demo security features in Confluent Platform.
 # Prerequisites
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.4](https://www.confluent.io/download/)
+* [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.security)
 
 # Examples
 

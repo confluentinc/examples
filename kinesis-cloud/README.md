@@ -9,7 +9,7 @@ Benefits of Confluent Cloud:
 * Build business applications on a full event streaming platform
 * Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
 * Use Kafka to aggregate data in single source of truth
-* Harness the power of [KSQL](https://www.confluent.io/product/ksql/)
+* Harness the power of [KSQL](https://www.confluent.io/product/ksql/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
 
 ![image](images/topology.jpg)
 
@@ -36,8 +36,8 @@ It is built on the Confluent Platform, including:
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
-* [Confluent Platform 5.4](https://www.confluent.io/download/)
-* [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
+* [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
+* [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
 * AWS: `aws cli`, properly initialized with your credentials
 * GCS: `gsutils`, properly initialized with your credentials
 * `jq`

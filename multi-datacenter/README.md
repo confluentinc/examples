@@ -9,5 +9,5 @@ NOTE: There is a [different demo](../multiregion/README.md) for multi-region rep
 
 ## Documentation
 
-* You can find the documentation for running this demo at [http://docs.confluent.io/current/installation/docker/installation/replicator.html](http://docs.confluent.io/current/installation/docker/installation/replicator.html)
-* For a practical guide to designing and configuring multiple Apache Kafka clusters to be resilient in case of a disaster scenario, see the [Disaster Recovery white paper](https://www.confluent.io/white-paper/disaster-recovery-for-multi-datacenter-apache-kafka-deployments/). This white paper provides a plan for failover, failback, and ultimately successful recovery.
+* You can find the documentation for running this demo at [http://docs.confluent.io/current/installation/docker/installation/replicator.html](http://docs.confluent.io/current/installation/docker/installation/replicator.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multi-datacenter)
+* For a practical guide to designing and configuring multiple Apache Kafka clusters to be resilient in case of a disaster scenario, see the [Disaster Recovery white paper](https://www.confluent.io/white-paper/disaster-recovery-for-multi-datacenter-apache-kafka-deployments/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multi-datacenter). This white paper provides a plan for failover, failback, and ultimately successful recovery.
