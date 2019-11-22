@@ -325,8 +325,8 @@ Image Versions
 
    -  ``PREFIX`` is appended before the actual image name, before ``/``
    -  ``TAG`` is a docker tag, appended after the ``:``
-   -  E.g. with ``PREFIX=confluentinc`` and ``TAG=5.3.1``, kafka will
-      use the following image: ``confluentinc/cp-server:5.3.1``
+   -  E.g. with ``PREFIX=confluentinc`` and ``TAG=5.4.0``, kafka will
+      use the following image: ``confluentinc/cp-server:5.4.0``
    -  If these variables are not set in the shell, they will be read
       from the ``.env`` file. Shell variables override whatever is set
       in the ``.env`` file
