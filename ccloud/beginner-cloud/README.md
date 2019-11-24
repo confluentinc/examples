@@ -2,8 +2,9 @@
 
 # Beginner Cloud
 
-[start.sh](start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud using the CLI.
-It steps through the following workflow.
+You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) to interact with your [Confluent Cloud](https://confluent.cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) cluster.
+
+[start.sh](start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud, stepping through the following workflow using the CLI:
 
 * Log in to Confluent Cloud
 * Create a new environment and specify it as the default
