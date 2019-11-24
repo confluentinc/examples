@@ -4,7 +4,7 @@
 
 You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) to interact with your [Confluent Cloud](https://confluent.cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) cluster.
 
-[start.sh](start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud, stepping through the following workflow using the CLI:
+[start.sh](start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud, stepping through the following workflow using the CLI, and it takes about 8 minutes to complete:
 
 * Log in to Confluent Cloud
 * Create a new environment and specify it as the default
@@ -30,6 +30,16 @@ If you choose to run it against your Confluent Cloud cluster, be aware that it:
 - is for demo purposes only
 - should be used only on a non-production cluster
 
+## Pre-requisites
+
+* Access to a Confluent Cloud cluster
+* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.192.0 or above
+* Docker and Docker Compose (for the local Connect worker)
+* `timeout` installed on your host
+* `mvn` installed on your host
+* `jq` installed on your host
+* `expect` installed on your host
+
 ## Usage
 
 Option 1: Provide all arguments on command line
@@ -43,16 +53,6 @@ Option 2: Provide all arguments on command line, except password for which you w
 ```bash
 ./start.sh <url to cloud> <cloud email>
 ```
-
-## Pre-requisites
-
-* Access to a Confluent Cloud cluster
-* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.192.0 or above
-* Docker and Docker Compose
-* `timeout` installed on your host
-* `mvn` installed on your host
-* `jq` installed on your host
-* `expect` installed on your host
 
 # Clean up after the demo
 
