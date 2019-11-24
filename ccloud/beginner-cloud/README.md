@@ -52,6 +52,7 @@ Option 2: Provide all arguments on command line, except password for which you w
 * `timeout` installed on your host
 * `mvn` installed on your host
 * `jq` installed on your host
+* `expect` installed on your host
 
 # Clean up after the demo
 
