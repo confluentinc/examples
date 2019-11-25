@@ -33,7 +33,7 @@ If you choose to run it against your Confluent Cloud cluster, be aware that it:
 ## Pre-requisites
 
 * Access to a Confluent Cloud cluster
-* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.192.0 or above
+* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.192.0 or later
 * Docker and Docker Compose (for the local Connect worker)
 * `timeout` installed on your host
 * `mvn` installed on your host
