@@ -10,3 +10,12 @@ img_data
 *.tar.gz
 kubernetes/common/cp/
 log.*
+*.crt
+*.p12
+*.der
+*.key
+*.pem
+*.jks
+*.csr
+*.srl
+*_creds
