@@ -1,5 +1,5 @@
 ---
-version: '2'
+version: '2.2'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:5.3.1
@@ -29,6 +29,44 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.3.1
+    container_name: control-center
+    cpus: 0.7
+    restart: always
+    depends_on:
+      - zookeeper
+      - kafka
+      - kafka-connect-cp
+    ports:
+      - "9021:9021"
+      - "9022:9022"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: "kafka:29092"
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_REPLICATION: 1
+      CONTROL_CENTER_COMMAND_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_METRICS_TOPIC_REPLICATION: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_METRICS_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS: 1
+      # Amount of heap to use for internal caches. Increase for better thoughput
+      CONTROL_CENTER_STREAMS_CACHE_MAX_BYTES_BUFFERING: 100000000
+      CONTROL_CENTER_CONNECT_ES-CONNECT_CLUSTER: "http://kafka-connect-cp:18083"
+      CONTROL_CENTER_CONNECT_DEBEZIUM-CONNECT_CLUSTER: "http://connect-debezium:8083"
+      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "https://schema-registry:8081"
+      CONTROL_CENTER_DEPRECATED_VIEWS_ENABLE: "true"
+      CONTROL_CENTER_STREAMS_CONSUMER_REQUEST_TIMEOUT_MS: "960032"
+      # HTTP and HTTPS to Control Center UI 
+      CONTROL_CENTER_REST_LISTENERS: "http://0.0.0.0:9021,https://0.0.0.0:9022"
+
+
   schema-registry:
     image: confluentinc/cp-schema-registry:5.3.1
     depends_on:
@@ -42,6 +80,8 @@ services:
 
   kafka-connect-cp:
     image: confluentinc/cp-kafka-connect:5.3.1
+    hostname: kafka-connect-cp
+    container_name: kafka-connect-cp
     ports:
       - "18083:18083"
     environment:
