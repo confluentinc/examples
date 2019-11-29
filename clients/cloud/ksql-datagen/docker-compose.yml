@@ -2,7 +2,7 @@
 version: '2'
 services:
   ksql-datagen:
-    image: confluentinc/ksql-examples:5.5.0-SNAPSHOT
+    image: confluentinc/ksql-examples:5.5.0-beta191129173403
     hostname: ksql-datagen
     container_name: ksql-datagen
     volumes:
@@ -17,7 +17,7 @@ services:
       STREAMS_SASL_MECHANISM: "PLAIN"
       STREAMS_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
   ksql-datagen-avro:
-    image: confluentinc/ksql-examples:5.5.0-SNAPSHOT
+    image: confluentinc/ksql-examples:5.5.0-beta191129173403
     hostname: ksql-datagen-avro
     container_name: ksql-datagen-avro
     volumes:
@@ -66,7 +66,7 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.5.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.5.0-beta191129173403.jar
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
