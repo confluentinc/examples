@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta191201173344
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -14,7 +14,7 @@ services:
       - "moby:127.0.0.1"
 
   kafka:
-    image: confluentinc/cp-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta191201173344
     hostname: kafka
     container_name: kafka
     ports:
@@ -42,7 +42,7 @@ services:
       - "moby:127.0.0.1"
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.0-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.5.0-beta191201173344
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -58,7 +58,7 @@ services:
 
   # Continuously generates input data for the Kafka Music application.
   kafka-music-data-generator:
-    image: confluentinc/kafka-streams-examples:5.5.0-SNAPSHOT
+    image: confluentinc/kafka-streams-examples:5.5.0-beta191201173344
     hostname: kafka-music-data-generator
     container_name: kafka-music-data-generator
     depends_on:
@@ -69,7 +69,7 @@ services:
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 20 && \
-                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-5.5.0-SNAPSHOT-standalone.jar \
+                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-5.5.0-beta191201173344-standalone.jar \
                        io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver \
                        kafka:29092 http://schema-registry:8081'"
     environment:
@@ -83,7 +83,7 @@ services:
 
   # Runs the Kafka Music application.
   kafka-music-application:
-    image: confluentinc/kafka-streams-examples:5.5.0-SNAPSHOT
+    image: confluentinc/kafka-streams-examples:5.5.0-beta191201173344
     hostname: kafka-music-application
     container_name: kafka-music-applications-streams
     depends_on:
@@ -116,7 +116,7 @@ services:
       - "moby:127.0.0.1"
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.5.0-beta191201173344
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -136,7 +136,7 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.5.0-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.5.0-beta191201173344
     container_name: ksql-cli
     volumes:
       - $PWD/ksql.commands:/tmp/ksql.commands
@@ -147,7 +147,7 @@ services:
     tty: true
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.5.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-control-center:5.5.0-beta191201173344
     hostname: control-center
     container_name: control-center
     depends_on:
