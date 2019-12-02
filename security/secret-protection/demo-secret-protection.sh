@@ -7,9 +7,7 @@
 #
 # Demo Secret Protection functionality using the updated Confluent CLI
 #
-# Documentation accompanying this tutorial:
-#
-#   <INSERT URL>
+# Documentation accompanying this tutorial: README.adoc
 #
 # Usage:
 #
@@ -19,7 +17,7 @@
 # Requirements:
 #
 #   - Confluent Platform 5.4 or higher (https://www.confluent.io/download/)
-#   - Local install of the new Confluent CLI (v0.103.0 or above)
+#   - Local install of the new Confluent CLI (v0.200.0 or above)
 #
 ################################################################################
 
