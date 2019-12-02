@@ -47,7 +47,7 @@ The followers in an ISR can become the leader if the current leader fails.
 
 An _Observer_ is a broker/replica that also has a copy of data for a given topic-partition, and consumers are allowed to read from them even though it is not the leader (known as "Follower Fetching").
 However, the data is copied asynchronously from the leader such that a producer does not wait on observers to get back an acknowledgement.
-Observers can never participate in the ISR list and cannot become the leader if the current leader fails.
+By default, observers do not participate in the ISR list and cannot automatically become the leader if the current leader fails, but if a user manually changes leader assignment then they can participate in the ISR list.
 
 ![image](images/Follower_Fetching.png)
 
@@ -321,6 +321,7 @@ Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.in
 Observations for topic `multi-region-async`:
 
 * It has a leader again (e.g. replica 3 in the above output)
+* The observers are now in the ISR list (e.g. replicas 3,4 in the above output)
 
 ### Failback region west
 
