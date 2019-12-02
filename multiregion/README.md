@@ -22,7 +22,7 @@ The naming convention of the brokers are `broker-[region]-[broker_id]`.
 ## Configurations
 
 The full broker configurations are in the [docker-compose.yml](docker-compose.yml) file.
-Here are a subset of the configuration parameters that are used by Multi-Region Replication.
+Here are some relevant configuration parameters that are used by Multi-Region Replication.
 
 ### Broker
 * `broker.rack`: identifies the location of the broker. For the demo, it represents a region, either `east` or `west`
