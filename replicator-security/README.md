@@ -60,12 +60,12 @@ Destination Cluster: Unsecure
 Run:
   ```
   
-  docker-compose -f docker-compose_unsecure.yml up -d
+  docker-compose -f unsecure/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_unsecure.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
+  docker-compose -f unsecure/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
   ```
 
   Note: the kafka-client container must complete and exit 0 before verification
@@ -78,12 +78,12 @@ Destination Cluster: Unsecure
 
 Run:
   ```
-  docker-compose -f docker-compose_source_ssl_encryption.yml up -d
+  docker-compose -f source_ssl_encryption/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_source_ssl_encryption.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
+  docker-compose -f source_ssl_encryption/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
   ```
   
   Note: both the srcKafkaClient and destKafkaClient containers must complete and exit 0 before verification  
@@ -96,12 +96,12 @@ Destination Cluster: SSL Encryption
 
 Run:
   ```
-  docker-compose -f docker-compose_dest_ssl_encryption.yml up -d
+  docker-compose -f dest_ssl_encryption/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_dest_ssl_encryption.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --consumer.config /etc/kafka/secrets/destKafkaClient_ssl.properties --from-beginning
+  docker-compose -f dest_ssl_encryption/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --consumer.config /etc/kafka/secrets/destKafkaClient_ssl.properties --from-beginning
   ```
   
   Note: both the srcKafkaClient and destKafkaClient containers must complete and exit 0 before verification 
@@ -114,12 +114,12 @@ Destination Cluster: Unsecure
 
 Run:
   ```
-  docker-compose -f docker-compose_source_ssl_auth.yml up -d
+  docker-compose -f source_ssl_auth/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_source_ssl_auth.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
+  docker-compose -f source_ssl_auth/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
   ```
   
   Note: both the srcKafkaClient and destKafkaClient containers must complete and exit 0 before verification 
@@ -132,12 +132,12 @@ Destination Cluster: SSL Authentication
 
 Run:
   ```
-  docker-compose -f docker-compose_dest_ssl_auth.yml up -d
+  docker-compose -f dest_ssl_auth/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_dest_ssl_auth.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --consumer.config /etc/kafka/secrets/destKafkaClient_ssl.properties --from-beginning
+  docker-compose -f dest_ssl_auth/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --consumer.config /etc/kafka/secrets/destKafkaClient_ssl.properties --from-beginning
   ```
   
   Note: both the srcKafkaClient and destKafkaClient containers must complete and exit 0 before verification 
@@ -150,12 +150,12 @@ Destination Cluster: Unsecure
 
 Run:
   ```
-  docker-compose -f docker-compose_source_sasl_plain_auth.yml up -d
+  docker-compose -f source_sasl_plain_auth/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_source_sasl_plain_auth.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
+  docker-compose -f source_sasl_plain_auth/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --topic testTopic --from-beginning
   ```
   
   Note: both the srcKafkaClient and destKafkaClient containers must complete and exit 0 before verification 
@@ -168,12 +168,12 @@ Destination Cluster: SASL Authentication
 
 Run:
   ```
-  docker-compose -f docker-compose_dest_sasl_plain_auth.yml up -d
+  docker-compose -f dest_sasl_plain_auth/docker-compose.yml up -d
   ```
   
 Verify:
   ```
-  docker-compose -f docker-compose_dest_sasl_plain_auth.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --consumer.config /etc/kafka/secrets/destKafkaClient_sasl.properties --topic testTopic --from-beginning
+  docker-compose -f dest_sasl_plain_auth/docker-compose.yml exec destKafka1 kafka-console-consumer --bootstrap-server localhost:11091 --consumer.config /etc/kafka/secrets/destKafkaClient_sasl.properties --topic testTopic --from-beginning
   ```
   
   Note: both the srcKafkaClient and destKafkaClient containers must complete and exit 0 before verification 
