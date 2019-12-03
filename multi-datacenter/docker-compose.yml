@@ -290,8 +290,7 @@ services:
     container_name: replicator-for-jar-transfer
     volumes:
       - mi3:/opt/kafka-connect-replicator/
-    command: "bash -c   'mkdir /opt/kafka-connect-replicator && \
-                        cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar \
+    command: "bash -c   'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar \
                         /opt/kafka-connect-replicator && \
                         sleep infinity'"
 
