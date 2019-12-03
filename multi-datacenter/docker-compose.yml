@@ -115,8 +115,7 @@ services:
     ports:
       - "8382:8382"
       - "9892:9892"
-    volumes:
-      - mi3:/etc/kafka-connect/jars/
+    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc2
@@ -160,8 +159,7 @@ services:
     ports:
       - "8381:8381"
       - "9891:9891"
-    volumes:
-      - mi3:/etc/kafka-connect/jars/
+    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc1
@@ -283,16 +281,3 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
-
-  replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.4.0-SNAPSHOT
-    hostname: replicator-for-jar-transfer
-    container_name: replicator-for-jar-transfer
-    volumes:
-      - mi3:/opt/kafka-connect-replicator/
-    command: "bash -c   'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar \
-                        /opt/kafka-connect-replicator && \
-                        sleep infinity'"
-
-volumes:
-    mi3: {}
