@@ -2,12 +2,12 @@
 
 # Overview
 
-This demo showcases Confluent Platform's Multi-Region Replication capability built directly into Confluent Server.
+This demo showcases Confluent Platform's Multi-Region Replication capability built directly into Confluent Server starting with release 5.4.
 
-It uses Confluent Platform 5.4 features that are in preview and not intended for production. Some of the interfaces might change to improve the user experience. For more information:
+For more information:
 
 * [Blog post: Built-In Multi-Region Replication with Confluent Platform 5.4-preview](https://www.confluent.io/blog/multi-region-data-replication?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multiregion)
-* [Confluent Platform 5.4-preview documentation](https://docs.confluent.io/current/release-notes/5-4-preview.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multiregion)
+* [Confluent Platform documentation](https://docs.confluent.io/current/multi-dc-replicator/multi-region-rep.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multiregion)
 
 NOTE: There is a [different demo](../multi-datacenter/README.md) for a multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters.
 
@@ -26,7 +26,6 @@ Here are some relevant configuration parameters that are used by Multi-Region Re
 
 ### Broker
 * `broker.rack`: identifies the location of the broker. For the demo, it represents a region, either `east` or `west`
-* `confluent.observer.feature=true`: enables the observer functionality built directly into `confluent-server`, which is a commercial feature
 * `replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector`: allows clients to read from followers (in contrast, clients are typically only allowed to read from leaders)
 
 ### Client
@@ -289,13 +288,13 @@ Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.in
 
 Observations:
 
-* In the first case, the topic `single-region` has no leader, because it had only two replicas both in the `west` region, which are now down.
+* In the first case, the topic `single-region` has no leader, because it had only two replicas in the ISR, both of which were in the `west` region and are now down.
 * In the second case, the topic `multi-region-sync` automatically elected a new leader in `east` (e.g. replica 3 in the above output).  Clients can failover to those replicas in the east region.
-* In the third case, the topic `multi-region-async` also has no leader, because the only two eligible replicas were both in the `west` region, which are now down.  The observers in the east region are not eligible to become leaders.
+* In the third case, the topic `multi-region-async` also has no leader, because it had only two replicas in the ISR, both of which were both in the `west` region and are now down.  The observers in the `east` region are not eligible to become leaders automatically because they were not in the ISR.
 
 ### Fail over observers
 
-To explicitly fail over the observers in the topic `multi-region-async` to the `east` region, trigger leader election:
+To explicitly fail over the observers in the topic `multi-region-async` to the `east` region, trigger leader election (note that `unclean` leader election may result in data loss):
 
 ```
 docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
