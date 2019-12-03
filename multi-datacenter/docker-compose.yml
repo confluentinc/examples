@@ -115,7 +115,7 @@ services:
     ports:
       - "8382:8382"
       - "9892:9892"
-    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
+    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc2
@@ -159,7 +159,7 @@ services:
     ports:
       - "8381:8381"
       - "9891:9891"
-    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-5.4.0-SNAPSHOT.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
+    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc1
