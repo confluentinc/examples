@@ -1,3 +1,4 @@
+zookeeper.connect=localhost:2181
 bootstrap.servers=localhost:9092
 schema.registry.url=http://localhost:8081
 

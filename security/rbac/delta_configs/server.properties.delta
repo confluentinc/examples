@@ -14,7 +14,7 @@ confluent.metadata.server.public.key.path=/tmp/tokenPublicKey.pem
 
 # Configure the RBAC Metadata Service authorizer
 authorizer.class.name=io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
-confluent.authorizer.access.rule.providers=ACL,RBAC
+confluent.authorizer.access.rule.providers=ZK_ACL,CONFLUENT
 
 # Bind Metadata Service HTTP service to port 8090
 confluent.metadata.server.listeners=http://0.0.0.0:8090
@@ -22,8 +22,9 @@ confluent.metadata.server.listeners=http://0.0.0.0:8090
 confluent.metadata.server.advertised.listeners=http://127.0.0.1:8090
 
 # HashLoginService Initializer
-confluent.metadata.server.hash.login.path=/tmp/login.properties
-confluent.metadata.server.rest.servlet.initializor.classes=io.confluent.rbacapi.login.initializer.InstallHashLoginServiceSecurityHandler
+confluent.metadata.server.authentication.method=BEARER
+confluent.metadata.server.user.store=FILE
+confluent.metadata.server.user.store.file.path=/tmp/login.properties
 
 # Add named listener RBAC to existing listeners and advertised.listeners
 listeners=RBAC://:9092,PLAINTEXT://:9093
