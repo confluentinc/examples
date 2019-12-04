@@ -205,6 +205,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker-dc1:29091 1 90 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
+                       sleep 10 && \
                        cub sr-ready schema-registry-dc1 8081 90 && \
                        sleep 10 && \
                        /usr/bin/ksql-datagen schema=/tmp/schema-dc1.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
@@ -227,6 +228,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker-dc1:29091 1 90 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
+                       sleep 10 && \
                        cub sr-ready schema-registry-dc1 8081 90 && \
                        sleep 20 && \
                        /usr/bin/ksql-datagen format=avro quickstart=users topic=topic2 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
@@ -250,6 +252,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker-dc2:29092 1 90 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
+                       sleep 10 && \
                        cub sr-ready schema-registry-dc2 8082 90 && \
                        sleep 10 && \
                        /usr/bin/ksql-datagen schema=/tmp/schema-dc2.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc2:8082 bootstrap-server=broker-dc2:29092 propertiesFile=/tmp/datagen.properties'"
@@ -277,7 +280,8 @@ services:
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper-dc2:2182'
       CONTROL_CENTER_CONNECT_DC1_CLUSTER: http://connect-dc1:8381
       CONTROL_CENTER_CONNECT_DC2_CLUSTER: http://connect-dc2:8382
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry-dc2:8082"
+      CONTROL_CENTER_SCHEMA_REGISTRY_SRDC1_URL: "http://schema-registry-dc1:8081"
+      CONTROL_CENTER_SCHEMA_REGISTRY_SRDC2_URL: "http://schema-registry-dc2:8082"
       CONTROL_CENTER_KAFKA_DC1_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONTROL_CENTER_KAFKA_DC2_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONTROL_CENTER_REPLICATION_FACTOR: 1
