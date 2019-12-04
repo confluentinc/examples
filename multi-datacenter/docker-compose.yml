@@ -117,6 +117,7 @@ services:
     ports:
       - "8382:8382"
       - "9892:9892"
+    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc2
@@ -142,6 +143,7 @@ services:
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONNECT_REST_EXTENSION_CLASSES: io.confluent.connect.replicator.monitoring.ReplicatorMonitoringExtension
       KAFKA_JMX_PORT: 9892
       KAFKA_JMX_HOSTNAME: localhost
 
@@ -159,6 +161,7 @@ services:
     ports:
       - "8381:8381"
       - "9891:9891"
+    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc1
@@ -183,6 +186,7 @@ services:
       CONNECT_PRODUCER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_BOOTSTRAP_SERVERS: broker-dc2:29092
+      CONNECT_REST_EXTENSION_CLASSES: io.confluent.connect.replicator.monitoring.ReplicatorMonitoringExtension
       KAFKA_JMX_PORT: 9891
       KAFKA_JMX_HOSTNAME: localhost
 
