@@ -494,7 +494,7 @@ services:
 
       # ========================= RBAC =================================
       CONTROL_CENTER_REST_AUTHENTICATION_METHOD: BEARER
-      CONTROL_CENTER_PUBLIC_KEY_PATH: /tmp/conf/public.pem
+      CONFLUENT_METADATA_SERVER_PUBLIC_KEY_PATH: /tmp/conf/public.pem
       
       CONFLUENT_METADATA_BASIC_AUTH_USER_INFO: hermes:hermes
       CONFLUENT_METADATA_BOOTSTRAP_SERVER_URLS: http://broker:8090
