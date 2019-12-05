@@ -2,7 +2,7 @@
 version: '2'
 services:
   connect-cloud:
-    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.x-latest
+    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.0-SNAPSHOT
     hostname: connect-cloud
     container_name: connect-cloud
     ports:
