@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Source library
+. ../utils/helper.sh
+
+check_jq || exit 1
+
 docker-compose up -d
 
 # Verify Kafka Connect dc1 has started within MAX_WAIT seconds
@@ -41,6 +46,9 @@ echo -e "\n\nReplicator: dc2 topic1 -> dc1 topic1"
 
 echo -e "\nsleeping 60s"
 sleep 60
+
+# Register the same schema for the replicated topic topic2.replica as was created for the original topic topic2
+curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8081/subjects/topic2-value/versions/latest | jq '.schema')}" http://localhost:8081/subjects/topic2.replica-value/versions
 
 # Verify Confluent Control Center has started within MAX_WAIT seconds
 MAX_WAIT=300

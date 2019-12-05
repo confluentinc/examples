@@ -33,6 +33,7 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_JMX_PORT: 9991
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-dc1:2181'
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry-dc1:8081"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-dc1:29091,PLAINTEXT_HOST://localhost:9091
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -57,6 +58,7 @@ services:
       KAFKA_BROKER_ID: 2
       KAFKA_JMX_PORT: 9992
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-dc2:2182'
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: "http://schema-registry-dc2:8082"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker-dc2:29092,PLAINTEXT_HOST://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -132,8 +134,7 @@ services:
       CONNECT_STATUS_STORAGE_TOPIC: connect-status-dc2
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.storage.StringConverter"
-      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry-dc1:8081,http://schema-registry-dc2:8082'
+      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_PLUGIN_PATH: /usr/share/java
@@ -203,6 +204,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker-dc1:29091 1 90 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
+                       sleep 50 && \
                        cub sr-ready schema-registry-dc1 8081 90 && \
                        sleep 10 && \
                        /usr/bin/ksql-datagen schema=/tmp/schema-dc1.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
@@ -225,6 +227,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker-dc1:29091 1 90 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
+                       sleep 50 && \
                        cub sr-ready schema-registry-dc1 8081 90 && \
                        sleep 20 && \
                        /usr/bin/ksql-datagen format=avro quickstart=users topic=topic2 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
@@ -248,6 +251,7 @@ services:
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker-dc2:29092 1 90 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
+                       sleep 50 && \
                        cub sr-ready schema-registry-dc2 8082 90 && \
                        sleep 10 && \
                        /usr/bin/ksql-datagen schema=/tmp/schema-dc2.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc2:8082 bootstrap-server=broker-dc2:29092 propertiesFile=/tmp/datagen.properties'"
@@ -275,11 +279,12 @@ services:
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper-dc2:2182'
       CONTROL_CENTER_CONNECT_DC1_CLUSTER: http://connect-dc1:8381
       CONTROL_CENTER_CONNECT_DC2_CLUSTER: http://connect-dc2:8382
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry-dc2:8082"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: http://schema-registry-dc2:8082
       CONTROL_CENTER_KAFKA_DC1_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONTROL_CENTER_KAFKA_DC2_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_DEPRECATED_VIEWS_ENABLE: "true"
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
