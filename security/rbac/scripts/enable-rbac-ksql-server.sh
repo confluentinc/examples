@@ -134,7 +134,7 @@ echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
 SET 'auto.offset.reset'='earliest';
 CREATE STREAM $STREAM (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited');
-SELECT * FROM $STREAM LIMIT 3;
+SELECT * FROM $STREAM EMIT CHANGES LIMIT 3;
 exit ;
 EOF
 
@@ -143,7 +143,7 @@ echo "ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088"
 echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
 CREATE TABLE table1 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
-SELECT * FROM table1 LIMIT 1;
+SELECT * FROM table1 EMIT CHANGES LIMIT 1;
 exit ;
 EOF
 
@@ -161,7 +161,7 @@ echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
 SET 'auto.offset.reset'='earliest';
 CREATE TABLE table2 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
-SELECT * FROM table2 LIMIT 3;
+SELECT * FROM table2 EMIT CHANGES LIMIT 3;
 exit ;
 EOF
 
@@ -180,7 +180,7 @@ echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
 SET 'auto.offset.reset'='earliest';
 CREATE STREAM $CSAS_STREAM1 AS SELECT * FROM stream1;
-SELECT * FROM $CSAS_STREAM1 LIMIT 3;
+SELECT * FROM $CSAS_STREAM1 EMIT CHANGES LIMIT 3;
 exit ;
 EOF
 
@@ -203,7 +203,7 @@ echo
 ksql -u $USER_KSQL -p ${USER_KSQL}1 http://localhost:8088 <<EOF
 SET 'auto.offset.reset'='earliest';
 CREATE TABLE $CTAS_TABLE1 AS SELECT * FROM table1;
-SELECT * FROM $CTAS_TABLE1 LIMIT 3;
+SELECT * FROM $CTAS_TABLE1 EMIT CHANGES LIMIT 3;
 exit ;
 EOF
 
