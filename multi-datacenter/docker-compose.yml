@@ -208,7 +208,7 @@ services:
                        /usr/bin/ksql-datagen schema=/tmp/schema-dc1.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-silent.properties"
       STREAMS_BOOTSTRAP_SERVERS: broker-dc1:29091
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry-dc1
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
@@ -230,7 +230,7 @@ services:
                        /usr/bin/ksql-datagen format=avro quickstart=users topic=topic2 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-silent.properties"
       STREAMS_BOOTSTRAP_SERVERS: broker-dc1:29091
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry-dc1
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
@@ -253,7 +253,7 @@ services:
                        /usr/bin/ksql-datagen schema=/tmp/schema-dc2.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc2:8082 bootstrap-server=broker-dc2:29092 propertiesFile=/tmp/datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-silent.properties"
       STREAMS_BOOTSTRAP_SERVERS: broker-dc2:29092
       STREAMS_SCHEMA_REGISTRY_HOST: schema-registry-dc2
       STREAMS_SCHEMA_REGISTRY_PORT: 8082
