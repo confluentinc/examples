@@ -14,7 +14,7 @@ fi
 MDS_URL=http://localhost:8090
 CONNECT=connect-cluster
 SR=schema-registry
-KSQL=ksql-cluster
+KSQL=default_
 C3=c3-cluster
 
 SUPER_USER=professor
