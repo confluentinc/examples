@@ -310,7 +310,6 @@ Prerequisites
 -------------
 
 -  Docker (validated on Docker for Mac version 18.03.0-ce-mac60)
--  ``zookeeper-shell`` must be on your ``PATH``
 -  :ref:`Confluent CLI <cli-install>`:
    |confluent-cli| must be installed on your machine, version
    ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
@@ -399,8 +398,7 @@ Grant Rolebindings
 
    .. code:: bash
 
-      ZK_HOST=localhost:2181
-      KAFKA_CLUSTER_ID=$(zookeeper-shell $ZK_HOST get /cluster/id 2> /dev/null | grep version | jq -r .id)
+      KAFKA_CLUSTER_ID=$(docker-compose exec zookeeper zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep \"version\" | jq -r .id)
 
 #. Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
 
