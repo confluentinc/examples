@@ -55,6 +55,7 @@ sleep 10
 # For C3 topic inspection on topic with Avro data and Schema Registry integration
 # - Grant principal User:$USER_CLIENT_C the DeveloperRead role to Topic:$TOPIC2_AVRO
 # - Grant principal User:$USER_CLIENT_C the DeveloperRead role to Subject:${TOPIC2_AVRO}-value
+# - Grant principal User:$USER_ADMIN_C3 the ClusterAdmin role to the Schema Registry cluster (workaround for MMA-4870)
 #
 # For C3 connect cluster
 # - Grant principal User:$USER_CLIENT_C the DeveloperRead role to Connector:$CONNECTOR_NAME
@@ -72,6 +73,10 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_C --role Develope
 echo -e "\n# Grant principal User:$USER_CLIENT_C the DeveloperRead role to Subject:${TOPIC2_AVRO}-value"
 echo "confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+
+echo -e "\n# Grant principal User:$USER_ADMIN_C3 the ClusterAdmin role to the Schema Registry cluster (workaround for MMA-4870)"
+echo "confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role ClusterAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 get_cluster_id_connect
 echo -e "\n# Grant principal User:$USER_CLIENT_C the DeveloperRead role to Connector:$CONNECTOR_NAME"
