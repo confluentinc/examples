@@ -398,7 +398,7 @@ Grant Rolebindings
 
    .. code:: bash
 
-      KAFKA_CLUSTER_ID=$(docker-compose exec zookeeper zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep \"version\" | jq -r .id)
+      KAFKA_CLUSTER_ID=$(docker-compose -p rbac exec zookeeper zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep \"version\" | jq -r .id)
 
 #. Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
 
