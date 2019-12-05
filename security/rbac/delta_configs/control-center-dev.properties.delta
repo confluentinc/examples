@@ -1,5 +1,5 @@
 confluent.controlcenter.rest.authentication.method=BEARER
-publicKeyPath="/tmp/tokenPublicKey.pem";
+confluent.controlcenter.publicKeyPath=/tmp/tokenPublicKey.pem
 confluent.controlcenter.streams.security.protocol=SASL_PLAINTEXT
 
 confluent.metadata.basic.auth.user.info=c3:c31
