@@ -97,7 +97,7 @@ services:
       PORT: 9021
 
   connect:
-    image: confluentinc/cp-kafka-connect:5.5.0-SNAPSHOT
+    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.0-SNAPSHOT
     hostname: connect
     container_name: connect
     depends_on:
