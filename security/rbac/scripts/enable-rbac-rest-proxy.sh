@@ -63,7 +63,7 @@ kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC3 --rep
 
 echo -e "\n# Produce to topic $TOPIC3"
 for i in {1..3}; do
-  echo 'curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '"'"'{"records":[{"value":"message'"${i}"'"}]}'"'"' http://localhost:8082/topics/'"$TOPIC3"
+  echo 'curl -u '"${USER_CLIENT_RP}:${USER_CLIENT_RP}1"' -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '"'"'{"records":[{"value":"message'"${i}"'"}]}'"'"' http://localhost:8082/topics/'"$TOPIC3"
   curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 -X POST -H "Content-Type: application/vnd.kafka.json.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"records":[{"value":"message'"${i}"'"}]}' "http://localhost:8082/topics/$TOPIC3"
   echo
 done
@@ -76,12 +76,12 @@ echo
 CONSUMER_GROUP=rest_proxy_consumer_group
 
 echo -e "\n# Create a consumer group $CONSUMER_GROUP"
-echo 'curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '"'"'{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}'"'"' http://localhost:8082/consumers/'"$CONSUMER_GROUP"
+echo 'curl -u '"${USER_CLIENT_RP}:${USER_CLIENT_RP}1"' -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '"'"'{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}'"'"' http://localhost:8082/consumers/'"$CONSUMER_GROUP"
 curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 -X POST -H "Content-Type: application/vnd.kafka.v2+json" -H "Accept: application/vnd.kafka.v2+json" --data '{"name": "my_consumer_instance", "format": "json", "auto.offset.reset": "earliest"}' http://localhost:8082/consumers/$CONSUMER_GROUP
 echo
 
 echo -e "\n# Subscribe to the topic $TOPIC3"
-echo 'curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 --silent -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '"'"'{"topics":["'"$TOPIC3"'"]}'"'"' http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/subscription'
+echo 'curl -u '"${USER_CLIENT_RP}:${USER_CLIENT_RP}1"' --silent -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '"'"'{"topics":["'"$TOPIC3"'"]}'"'"' http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/subscription'
 curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 --silent -X POST -H "Content-Type: application/vnd.kafka.v2+json" --data '{"topics":["'"$TOPIC3"'"]}' http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/subscription
 
 echo -e "\n# Consume messages from the topic $TOPIC3, before authorization (should fail)"
@@ -98,7 +98,7 @@ echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role D
 confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume messages from the topic $TOPIC3, after authorization (should pass)"
-echo 'curl -u ${USER_CLIENT_RP}:${USER_CLIENT_RP}1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/records'
+echo 'curl -u '"${USER_CLIENT_RP}:${USER_CLIENT_RP}1"' --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/records'
 curl -u $USER_CLIENT_RP:${USER_CLIENT_RP}1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/records
 echo
 
