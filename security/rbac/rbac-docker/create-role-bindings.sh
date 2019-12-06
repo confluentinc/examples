@@ -112,7 +112,7 @@ declare -a ConnectResources=(
     "Topic:connect-status" 
     "Group:connect-cluster" 
     "Group:secret-registry" 
-    "Topic:_secrets"
+    "Topic:_confluent-secrets"
 )
 for resource in ${ConnectResources[@]}
 do
