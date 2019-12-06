@@ -17,7 +17,7 @@ This demo has the following architecture.
 There are three regions `west`, `central`, and `east`.
 The naming convention of the brokers are `broker-[region]-[broker_id]`.
 
-![image](images/multi-region-base.png)
+![image](images/multi-region-base-v2.png)
 
 ## Configurations
 
@@ -90,7 +90,7 @@ zookeeper-west      /etc/confluent/docker/run   Up      0.0.0.0:2181->2181/tcp, 
 This demo injects latency between the regions and packet loss to simulate the WAN link.
 It uses [Pumba](https://github.com/alexei-led/pumba).
 
-![image](images/multi-region-latencies.png)
+![image](images/multi-region-latencies-v2.png)
 
 Run the Dockerized Pumba scripts:
 
@@ -134,7 +134,7 @@ Each placement also has a minimum `count` associated with it that allows users t
 
 The playbook below highlights client performance differences between these topics depending on the relative location of clients and brokers.
 
-![image](images/multi-region-topic-replicas.png)
+![image](images/multi-region-topic-replicas-v2.png)
 
 Verify topic replica placement:
 
