@@ -52,7 +52,6 @@ config.providers=secret
 config.providers.secret.class=io.confluent.connect.secretregistry.rbac.config.provider.InternalSecretConfigProvider
 config.providers.secret.param.master.encryption.key=password1234
 
-config.providers.secret.param.kafkastore.topic=_secrets
 config.providers.secret.param.kafkastore.bootstrap.servers=localhost:9092
 config.providers.secret.param.kafkastore.security.protocol=SASL_PLAINTEXT
 config.providers.secret.param.kafkastore.sasl.mechanism=OAUTHBEARER

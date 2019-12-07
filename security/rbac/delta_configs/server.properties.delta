@@ -14,7 +14,7 @@ confluent.metadata.server.public.key.path=/tmp/tokenPublicKey.pem
 
 # Configure the RBAC Metadata Service authorizer
 authorizer.class.name=io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
-confluent.authorizer.access.rule.providers=ZK_ACL,CONFLUENT
+confluent.authorizer.access.rule.providers=CONFLUENT,ZK_ACL
 
 # Bind Metadata Service HTTP service to port 8090
 confluent.metadata.server.listeners=http://0.0.0.0:8090
