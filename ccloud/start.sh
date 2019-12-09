@@ -56,6 +56,11 @@ else
   fi
 fi
 
+# For the KSQL Server backed to Confluent Cloud, set the REST port, instead of the default 8088 which is already in use by the local KSQL server
+KSQL_LISTENER=8089
+# For the Connect cluster backed to Confluent Cloud, set the REST port, instead of the default 8083 which is already in use by the local connect cluster
+CONNECT_REST_PORT=8087
+
 # Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
 if check_cp; then
   mkdir -p $CONFLUENT_CURRENT/control-center
@@ -89,7 +94,6 @@ mkdir -p $CONFLUENT_CURRENT/connect
 CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
 cp $CONFLUENT_CURRENT/connect/connect.properties $CONNECT_CONFIG
 cat $DELTA_CONFIGS_DIR/connect-ccloud.delta >> $CONNECT_CONFIG
-CONNECT_REST_PORT=8087
 cat <<EOF >> $CONNECT_CONFIG
 rest.port=$CONNECT_REST_PORT
 rest.advertised.name=connect-cloud
@@ -124,8 +128,6 @@ if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == false ]]; then
   mkdir -p $CONFLUENT_CURRENT/ksql-server
   KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
   cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
-  # Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
-  KSQL_LISTENER=8089
   cat <<EOF >> $KSQL_SERVER_CONFIG
 listeners=http://localhost:$KSQL_LISTENER
 ksql.server.ui.enabled=true
