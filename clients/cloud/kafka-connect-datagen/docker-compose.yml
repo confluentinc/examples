@@ -2,7 +2,7 @@
 version: '2'
 services:
   connect:
-    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.0-SNAPSHOT
+    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.x-latest
     hostname: connect
     container_name: connect
     volumes:
