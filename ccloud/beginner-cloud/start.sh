@@ -112,8 +112,8 @@ BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{pri
 ##################################################
 
 echo -e "\n# Create API key for $EMAIL"
-echo "ccloud api-key create --description \"Demo credentials for $EMAIL\""
-OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL")
+echo "ccloud api-key create --description \"Demo credentials for $EMAIL\" --resource $CLUSTER"
+OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL --resource $CLUSTER")
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
@@ -124,8 +124,8 @@ API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
 #echo "API_KEY: $API_KEY"
 
 echo -e "\n# Specify active API key that was just created"
-echo "ccloud api-key use $API_KEY"
-ccloud api-key use $API_KEY
+echo "ccloud api-key use $API_KEY --resource $CLUSTER"
+ccloud api-key use $API_KEY --resource $CLUSTER
 
 echo -e "\n# Wait 90 seconds for the user credentials to propagate"
 sleep 90
