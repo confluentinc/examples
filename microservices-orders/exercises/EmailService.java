@@ -21,9 +21,9 @@ import java.util.concurrent.TimeUnit;
 import org.apache.kafka.streams.KafkaStreams.State;
 import org.apache.kafka.streams.kstream.GlobalKTable;
 import org.apache.kafka.streams.kstream.JoinWindows;
-import org.apache.kafka.streams.kstream.Joined;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.StreamJoined;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public class EmailService implements Service {
     streams.cleanUp(); //don't do this in prod as it clears your state stores
     final CountDownLatch startLatch = new CountDownLatch(1);
     streams.setStateListener((newState, oldState) -> {
-      if (newState == State.RUNNING && oldState == State.REBALANCING) {
+      if (newState == State.RUNNING && oldState != KafkaStreams.State.RUNNING) {
         startLatch.countDown();
       }
 
@@ -79,7 +79,7 @@ public class EmailService implements Service {
         Consumed.with(ORDERS.keySerde(), ORDERS.valueSerde()));
 
     final KStream<String, Payment> payments_original = builder.stream(PAYMENTS.name(),
-        Consumed.with(PAYMENTS.keySerde(), PAYMENTS.valueSerde()));
+            Consumed.with(PAYMENTS.keySerde(), PAYMENTS.valueSerde()));
 
     // TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
     // ...
@@ -87,7 +87,7 @@ public class EmailService implements Service {
     final GlobalKTable<Long, Customer> customers = builder.globalTable(CUSTOMERS.name(),
         Consumed.with(CUSTOMERS.keySerde(), CUSTOMERS.valueSerde()));
 
-    final Joined<String, Order, Payment> serdes = Joined
+    final StreamJoined<String, Order, Payment> serdes = StreamJoined
         .with(ORDERS.keySerde(), ORDERS.valueSerde(), PAYMENTS.valueSerde());
 
     //Join the two streams and the table then send an email for each
@@ -109,8 +109,8 @@ public class EmailService implements Service {
     //Send the order to a topic whose name is the value of customer level
     orders.join(customers, (orderId, order) -> order.getCustomerId(), (order, customer) -> new OrderEnriched (order.getId(), order.getCustomerId(), customer.getLevel()))
 
-        // TODO 3.3: route an enriched order record to a topic that is dynamically determined from the value of the customerLevel field of the corresponding customer
-        // ...
+      // TODO 3.3: route an enriched order record to a topic that is dynamically determined from the value of the customerLevel field of the corresponding customer
+      // ...
 
     return new KafkaStreams(builder.build(), baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID));
   }
@@ -141,7 +141,7 @@ public class EmailService implements Service {
     void sendEmail(EmailTuple details);
   }
 
-  public class EmailTuple {
+  public static class EmailTuple {
 
     public Order order;
     public Payment payment;
