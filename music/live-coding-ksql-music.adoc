@@ -114,7 +114,7 @@ Or from Control Center in the KSQL Streams view, select *Add a stream*.
 
 image::images/add_a_stream.png[add-stream] 
 
-Fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, KSQL automatically detects the fields `song_id` and `duration` and their respective data types.
+Select the topic `play-events`  and then fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, KSQL automatically detects the fields `song_id` and `duration` and their respective data types.
 
 image::images/ksql_playevents.png[play-events]
 
@@ -167,6 +167,8 @@ Then `DESCRIBE` the stream to see the fields associated with this topic and noti
 ----
 DESCRIBE ksql_songfeed;
 ----
+
+You can also `Describe` the stream via the C3 GUI to see the same output:
 
 image::images/describe_songfeed.png[describe-song-feed]
  
