@@ -57,7 +57,7 @@ public class FraudService implements Service {
     streams.cleanUp(); //don't do this in prod as it clears your state stores
     final CountDownLatch startLatch = new CountDownLatch(1);
     streams.setStateListener((newState, oldState) -> {
-      if (newState == State.RUNNING && oldState == State.REBALANCING) {
+      if (newState == State.RUNNING && oldState != KafkaStreams.State.RUNNING) {
         startLatch.countDown();
       }
 
