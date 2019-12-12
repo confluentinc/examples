@@ -48,7 +48,7 @@ Do not proceed until you see the below output in the logs of Confluent Control C
 [source,bash]
 ----
 $ docker-compose logs -f control-center | grep -i "Started NetworkTrafficServerConnector"
-control-center                | [2018-09-06 15:03:22,518] INFO Started NetworkTrafficServerConnector@4d48bd85{HTTP/1.1,[http/1.1]}{0.0.0.0:9021} (org.eclipse.jetty.server.AbstractConnector)
+control-center                | [2019-12-11 14:07:40,094] INFO Started NetworkTrafficServerConnector@5533dc72{HTTP/1.1,[http/1.1]}{0.0.0.0:9021} (org.eclipse.jetty.server.AbstractConnector)
 ----
 
 == Demo
@@ -114,7 +114,7 @@ Or from Control Center in the KSQL Streams view, select *Add a stream*.
 
 image::images/add_a_stream.png[add-stream] 
 
-Fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, KSQL automatically detects the fields `song_id` and `duration` and their respective data types.
+Select the topic `play-events`  and then fill out the fields as shown below.  Because of Control Center integration with Confluent Schema Registry, KSQL automatically detects the fields `song_id` and `duration` and their respective data types.
 
 image::images/ksql_playevents.png[play-events]
 
@@ -153,6 +153,8 @@ However the original Kafka topic has a key of type `Long` and the ID field is of
 ----
 CREATE STREAM ksql_songfeed WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO');
 ----
+
+* View the contents of this stream.  Before running this query, under `Add query properties`, set `auto.offset.reset=Earliest`.
  
 [source,bash]
 ----
@@ -165,6 +167,8 @@ Then `DESCRIBE` the stream to see the fields associated with this topic and noti
 ----
 DESCRIBE ksql_songfeed;
 ----
+
+You can also `Describe` the stream via the C3 GUI to see the same output:
 
 image::images/describe_songfeed.png[describe-song-feed]
  
