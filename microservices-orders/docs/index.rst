@@ -236,9 +236,9 @@ Running the fully working demo end-to-end provides context for each of the later
 
 #. Use |c3| to view Kafka data, write KSQL queries, manage Kafka connectors, and monitoring your applications:
 
-   * `KSQL tab <http://localhost:9021/development/ksql/KSQL/editor>`__ : view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;``
-   * `Kafka Connect tab <http://localhost:9021/management/connect/>`__ : view the JDCB source connector and Elasticsearch sink connector.
-   * `Streams monitoring tab <http://localhost:9021/monitoring/streams>`__ : view the throughput and latency performance of the microservices
+   * KSQL tab: view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the KSQL Editor
+   * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
+   * Data Streams tab: view the throughput and latency performance of the microservices
 
    .. figure:: images/streams-monitoring.png
        :alt: image
