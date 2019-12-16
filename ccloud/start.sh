@@ -46,7 +46,7 @@ else
   # Avoid clash between two local SR instances
   sed -i '' 's/kafkastore.connection.url=localhost:2181/#kafkastore.connection.url=localhost:2181/g' $SR_CONFIG
   cat $DELTA_CONFIGS_DIR/schema-registry-ccloud.delta >> $SR_CONFIG
-  echo "Starting Confluent Schema Registry to Confluent Cloud and sleeping 40 seconds"
+  echo -e "\nStarting Confluent Schema Registry to Confluent Cloud and sleeping 40 seconds"
   schema-registry-start $SR_CONFIG > $CONFLUENT_CURRENT/schema-registry/schema-registry-ccloud.stdout 2>&1 &
   sleep 40
   kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --describe --topic _schemas
@@ -54,6 +54,27 @@ else
     echo "ERROR: Schema Registry could not create topic '_schemas' in Confluent Cloud. Please troubleshoot"
     exit
   fi
+fi
+
+# For the KSQL Server backed to Confluent Cloud, set the REST port, instead of the default 8088 which is already in use by the local KSQL server
+KSQL_LISTENER=8089
+# For the Connect cluster backed to Confluent Cloud, set the REST port, instead of the default 8083 which is already in use by the local connect cluster
+CONNECT_REST_PORT=8087
+
+# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
+if check_cp; then
+  mkdir -p $CONFLUENT_CURRENT/control-center
+  C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
+  cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
+  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
+  jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
+  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
+  echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
+  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
+  # Workaround for MMA-3564
+  echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
+  control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
 
 # Produce to topic pageviews in local cluster
@@ -73,13 +94,13 @@ mkdir -p $CONFLUENT_CURRENT/connect
 CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
 cp $CONFLUENT_CURRENT/connect/connect.properties $CONNECT_CONFIG
 cat $DELTA_CONFIGS_DIR/connect-ccloud.delta >> $CONNECT_CONFIG
-CONNECT_REST_PORT=8087
 cat <<EOF >> $CONNECT_CONFIG
 rest.port=$CONNECT_REST_PORT
 rest.advertised.name=connect-cloud
 rest.hostname=connect-cloud
 group.id=connect-cloud
 EOF
+export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
 sleep 40
 
@@ -98,7 +119,7 @@ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic pageviews --create --replication-factor 3 --partitions 6
 . ./connectors/submit_replicator_config.sh
-echo "Starting Replicator and sleeping 60 seconds"
+echo -e "\nStarting Replicator and sleeping 60 seconds"
 sleep 60
 
 # KSQL Server runs locally and connects to Confluent Cloud
@@ -107,8 +128,6 @@ if [[ "${USE_CONFLUENT_CLOUD_KSQL}" == false ]]; then
   mkdir -p $CONFLUENT_CURRENT/ksql-server
   KSQL_SERVER_CONFIG=$CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.properties
   cp $DELTA_CONFIGS_DIR/ksql-server-ccloud.delta $KSQL_SERVER_CONFIG
-  # Set this new KSQL Server listener to port $KSQL_LISTENER instead of default 8088 which is already in use
-  KSQL_LISTENER=8089
   cat <<EOF >> $KSQL_SERVER_CONFIG
 listeners=http://localhost:$KSQL_LISTENER
 ksql.server.ui.enabled=true
@@ -118,7 +137,7 @@ cache.max.bytes.buffering=0
 auto.offset.reset=earliest
 state.dir=$CONFLUENT_CURRENT/ksql-server/data-ccloud/kafka-streams
 EOF
-  echo "Starting KSQL Server to Confluent Cloud and sleeping 25 seconds"
+  echo -e "\nStarting KSQL Server to Confluent Cloud and sleeping 25 seconds"
   ksql-server-start $KSQL_SERVER_CONFIG > $CONFLUENT_CURRENT/ksql-server/ksql-server-ccloud.stdout 2>&1 &
   sleep 25
   ksql http://localhost:$KSQL_LISTENER <<EOF
@@ -126,24 +145,6 @@ run script 'ksql.commands';
 exit ;
 EOF
 fi
-
-# Confluent Control Center runs locally, monitors Confluent Cloud, and uses Confluent Cloud cluster as the backstore
-if check_cp; then
-  mkdir -p $CONFLUENT_CURRENT/control-center
-  C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
-  cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
-  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
-  jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
-  cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
-  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
-  # Workaround for MMA-3564
-  echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
-  control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
-fi
-
-sleep 10
 
 echo -e "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
 
