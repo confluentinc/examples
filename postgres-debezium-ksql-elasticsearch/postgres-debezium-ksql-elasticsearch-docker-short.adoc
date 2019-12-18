@@ -152,11 +152,6 @@ curl http://localhost:9200
 }
 ----
 
-* Load Kibana dashboard: http://localhost:5601/app/kibana#/dashboard/02028f30-424c-11e8-af19-1188a9332246
-* Create iTerm windows, using the `screencapture` profile
-* Load this instructions doc into Chrome
-* Close all other apps
-
 === Prep KSQL
 
 [source,sql]
@@ -375,7 +370,7 @@ SELECT TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss') , FULL_NAME, RATINGS_CO
 
 _This bit will need some config of your own, as you'll need your own Slack workspace and API key (both free). With this though, you can demo the idea of an event-driven app subscribing to a KSQL-populated stream of filtered events._
 
-:image:images/slack_ratings.png[Slack push notifications driven from Kafka and KSQL]
+image:images/slack_ratings.png[Slack push notifications driven from Kafka and KSQL]
 
 To run, first export your API key as an environment variable:
 
@@ -400,5 +395,5 @@ Stop the environment:
 
 [source,bash]
 ----
-docker-compose down
+docker-compose down -v
 ----
