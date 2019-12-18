@@ -19,15 +19,17 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.JoinWindows;
-import org.apache.kafka.streams.kstream.Joined;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.SessionWindows;
+import org.apache.kafka.streams.kstream.StreamJoined;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -45,22 +47,40 @@ public class ValidationsAggregatorService implements Service {
       ORDERS.valueSerde());
   private final Grouped<String, OrderValidation> serdes3 = Grouped
       .with(ORDER_VALIDATIONS.keySerde(), ORDER_VALIDATIONS.valueSerde());
-  private final Joined<String, Long, Order> serdes4 = Joined
+  private final StreamJoined<String, Long, Order> serdes4 = StreamJoined
       .with(ORDERS.keySerde(), Serdes.Long(), ORDERS.valueSerde());
   private final Produced<String, Order> serdes5 = Produced
       .with(ORDERS.keySerde(), ORDERS.valueSerde());
   private final Grouped<String, Order> serdes6 = Grouped
       .with(ORDERS.keySerde(), ORDERS.valueSerde());
-  private final Joined<String, OrderValidation, Order> serdes7 = Joined
+  private final StreamJoined<String, OrderValidation, Order> serdes7 = StreamJoined
       .with(ORDERS.keySerde(), ORDER_VALIDATIONS.valueSerde(), ORDERS.valueSerde());
 
   private KafkaStreams streams;
 
   @Override
   public void start(final String bootstrapServers, final String stateDir) {
+    final CountDownLatch startLatch = new CountDownLatch(1);
     streams = aggregateOrderValidations(bootstrapServers, stateDir);
     streams.cleanUp(); //don't do this in prod as it clears your state stores
+
+    streams.setStateListener((newState, oldState) -> {
+      if (newState == KafkaStreams.State.RUNNING && oldState != KafkaStreams.State.RUNNING) {
+        startLatch.countDown();
+      }
+
+    });
+
     streams.start();
+
+    try {
+      if (!startLatch.await(60, TimeUnit.SECONDS)) {
+        throw new RuntimeException("Streams never finished rebalancing on startup");
+      }
+    } catch (final InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+
     log.info("Started Service " + getClass().getSimpleName());
   }
 

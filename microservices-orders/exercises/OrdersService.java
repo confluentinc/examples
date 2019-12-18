@@ -303,8 +303,8 @@ public class OrdersService implements Service {
   @Path("/orders")
   @Consumes(MediaType.APPLICATION_JSON)
   public void submitOrder(final OrderBean order,
-      @QueryParam("timeout") @DefaultValue(CALL_TIMEOUT) final Long timeout,
-      @Suspended final AsyncResponse response) {
+                          @QueryParam("timeout") @DefaultValue(CALL_TIMEOUT) final Long timeout,
+                          @Suspended final AsyncResponse response) {
     setTimeout(timeout, response);
 
     final Order bean = fromBean(order);
@@ -335,7 +335,7 @@ public class OrdersService implements Service {
     streams.cleanUp(); //don't do this in prod as it clears your state stores
     final CountDownLatch startLatch = new CountDownLatch(1);
     streams.setStateListener((newState, oldState) -> {
-      if (newState == State.RUNNING && oldState == State.REBALANCING) {
+      if (newState == State.RUNNING && oldState != KafkaStreams.State.RUNNING) {
         startLatch.countDown();
       }
 
