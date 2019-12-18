@@ -4,7 +4,7 @@ docker-compose exec connect-debezium bash -c '/scripts/create-pg-source.sh'
 docker-compose exec kafka-connect-cp bash -c '/scripts/create-pg-sink.sh'
 docker-compose exec elasticsearch bash -c '/scripts/create-dynamic-mapping.sh'
 docker-compose exec kafka-connect-cp bash -c '/scripts/create-es-sink.sh'
-curl -XPOST "http://localhost:9200/ratings-with-customer-data/type.name=kafkaconnect" -H 'Content-Type: application/json' -d'{
+curl -XPOST "http://localhost:9200/ratings-with-customer-data/_doc" -H 'Content-Type: application/json' -d'{
           "RATING_ID": 79,
           "CHANNEL": "iOS",
           "STARS": 4,
@@ -16,7 +16,7 @@ curl -XPOST "http://localhost:9200/ratings-with-customer-data/type.name=kafkacon
           "LAST_NAME": "Blaisdell",
           "EXTRACT_TS": 1528992287749
         }'
-curl -XPOST "http://localhost:9200/unhappy_platinum_customers/type.name=kafkaconnect" -H 'Content-Type: application/json' -d'{
+curl -XPOST "http://localhost:9200/unhappy_platinum_customers/_doc" -H 'Content-Type: application/json' -d'{
           "MESSAGE": "why is it so difficult to keep the bathrooms clean ?",
           "STARS": 1,
           "EXTRACT_TS": 1528992291449,
