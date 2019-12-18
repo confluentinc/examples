@@ -108,6 +108,7 @@ services:
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONTROL_CENTER_DEPRECATED_VIEWS_ENABLE: "true"
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
 
@@ -192,7 +193,7 @@ services:
       - $PWD/connectors:/tmp/connectors
       - $PWD/dashboard:/tmp/dashboard
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:9092 1 20 && \
+                       cub kafka-ready -b broker:9092 1 40 && \
                        kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic orders && \
                        kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic order-validations && \
                        kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory && \
