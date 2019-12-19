@@ -28,7 +28,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <log4j.version>1.7.25</log4j.version>
     <checkstyle.suppressions.location>checkstyle/suppressions.xml</checkstyle.suppressions.location>
   </properties>
 
@@ -69,6 +68,10 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <artifactId>gson</artifactId>
       <version>2.2.4</version>
     </dependency>
+    <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-log4j12</artifactId>
+     </dependency>
   </dependencies>
 
   <build>
