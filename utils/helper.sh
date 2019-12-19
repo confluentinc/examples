@@ -186,25 +186,21 @@ function check_cp() {
 }
 
 function check_running_elasticsearch() {
-  expected_version=$1
+  check_curl || exit 1
+  check_jq   || exit 1
 
-  if [[ ! $(jps | grep Elasticsearch) ]]; then
-    echo -e "\nTo showcase a sink connector, this script requires Elasticsearch version $expected_version to be running. Please start Elasticsearch and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
+  expected_version=$1
+  port=${2:-9200}
+
+  es_status=$(curl --silent http://localhost:$port/?pretty) || {
+    printf "\nTo showcase a sink connector, this script requires Elasticsearch to be listening on port $port. Please reconfigure and restart Elasticsearch and run again.\n"
     exit 1
-  else
-    curl --silent --output /dev/null 'http://localhost:9200/?pretty'
-    status=$?
-    if [[ ${status} -ne 0 ]]; then
-      echo -e "\nTo showcase a sink connector, this script requires Elasticsearch to be listening on port 9200. Please reconfigure and restart Elasticsearch and run again.\n"
-      exit 1
-    else
-      check_jq || exit 1
-      actual_version=$(curl --silent 'http://localhost:9200/?pretty' | jq .version.number -r)
-      if [[ $expected_version != $actual_version ]]; then
-        echo -e "\nTo showcase a sink connector, this script requires Elasticsearch version $expected_version but the running version is $actual_version. Please run the correct version of Elasticsearch to proceed.\n"
-        exit 1
-      fi
-    fi
+  }
+  
+  actual_version=$(echo $es_status | jq .version.number -r)
+  if [[ $expected_version != $actual_version ]]; then
+    printf "\nTo showcase a sink connector, this script requires Elasticsearch version $expected_version but the running version is $actual_version. Please run the correct version of Elasticsearch to proceed.\n"
+    exit 1
   fi
 
   return 0
@@ -235,17 +231,13 @@ function check_running_grafana() {
 }
 
 function check_running_kibana() {
-  if [[ $(ps -ef | grep kibana | grep -v grep ) == "" ]]; then
-    echo -e "\nTo showcase a sink connector, this script requires Kibana to be running. Please start Kibana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
+  check_curl || exit 1
+
+  port=${1:-5601}
+  kibana_status=$(curl --silent http://localhost:$port/api/status) || {
+    printf "\nTo showcase a sink connector, this script requires Kibana to be listening on port $port. Please reconfigure and restart Kibana and run again.\n"
     exit 1
-  else
-    curl --silent --output /dev/null 'http://localhost:5601/?pretty'
-    status=$?
-    if [[ ${status} -ne 0 ]]; then
-      echo -e "\nTo showcase a sink connector, this script requires Kibana to be listening on port 5601. Please reconfigure and restart Kibana and run again.\n"
-      exit 1
-    fi
-  fi
+  }
 
   return 0
 }
