@@ -161,9 +161,9 @@ function check_running_cp() {
   check_curl
   expected_version=$1
 
-  actual_version=$( confluent local version | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
+  actual_version=$( confluent local version 2>/dev/null | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
   if [[ $expected_version != $actual_version ]]; then
-    echo -e "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
+    printf "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
   fi
 
