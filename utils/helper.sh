@@ -157,8 +157,17 @@ function check_gcp_creds() {
   fi
 }
 
+function require_cp_or_exit() {
+  command -v confluent >/dev/null 2>&1 || {
+    printf "\nconfluent command not found.  Please check your Confluent Platform installation\n"
+    exit 1;
+  }
+}
+
 function check_running_cp() {
+  require_cp_or_exit
   check_curl
+
   expected_version=$1
 
   actual_version=$( confluent local version 2>/dev/null | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
@@ -171,6 +180,8 @@ function check_running_cp() {
 }
 
 function check_cp() {
+  require_cp_or_exit
+
   type=$( confluent local version 2>/dev/null | tail -1 | awk -F: '{print $1;}' | tr '[:lower:]' '[:upper:]')
   case $type in
     *PLATFORM*)
