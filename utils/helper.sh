@@ -207,24 +207,21 @@ function check_running_elasticsearch() {
 }
 
 function check_running_grafana() {
-  expected_version=$1
+  check_curl || exit 1
+  check_jq   || exit 1
 
-  if [[ $(ps -ef | grep grafana-server | grep -v grep ) == "" ]]; then
-    echo -e "\nTo showcase a sink connector, this script requires Grafana to be running. Please start Grafana and run again, or comment out '${FUNCNAME[0]}' in the 'start.sh' script.\n"
+  expected_version=$1
+  port=${2:-3000}
+
+  grafana_status=$(curl --silent http://localhost:$port/api/health) || {
+   printf "\nTo showcase a sink connector, this script requires Grafana to be listening on port $port. Please reconfigure and restart Grafana and run again.\n"
+   exit 1
+  }
+
+  actual_version=$(echo $grafana_status | jq .version -r)
+  if [[ $expected_version != $actual_version ]]; then
+    printf "\nTo showcase a sink connector, this script requires Grafana version $expected_version but the running version is $actual_version. Please run the correct version of Grafana to proceed.\n"
     exit 1
-  else
-    curl --silent --output /dev/null 'http://localhost:3000/?pretty'
-    status=$?
-    if [[ ${status} -ne 0 ]]; then
-      echo -e "\nTo showcase a sink connector, this script requires Grafana to be listening on port 3000. Please reconfigure and restart Grafana and run again.\n"
-      exit 1
-    else
-      actual_version=$(grafana-server -v | awk '{print $2;}')
-      if [[ $expected_version != $actual_version ]]; then
-        echo -e "\nTo showcase a sink connector, this script requires Grafana version $expected_version but the running version is $actual_version. Please run the correct version of Grafana to proceed.\n"
-      exit 1
-      fi
-    fi
   fi
 
   return 0
