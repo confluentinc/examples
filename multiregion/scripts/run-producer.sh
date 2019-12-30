@@ -15,7 +15,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic single-region
 echo -e "\n\n==> Produce: Multi-region Sync Replication (topic: multi-region-sync) \n"
 
 docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-sync \
-    --num-records 200 \
+    --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
     --producer-props \
