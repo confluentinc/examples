@@ -6,7 +6,7 @@ docker-compose exec broker-east-3 kafka-consumer-perf-test --topic multi-region-
     --messages 5000 \
     --threads 1 \
     --broker-list broker-west-1:19091,broker-east-3:19093 \
-    --timeout 20000
+    --timeout 20000 \
     --consumer.config /etc/kafka/demo/consumer-west.config
 
 
