@@ -1,5 +1,4 @@
 set 'commit.interval.ms'='2000';
-set 'cache.max.bytes.buffering'='10000000';
 set 'auto.offset.reset'='earliest';
 
 -- 1. SOURCE of ClickStream
@@ -65,3 +64,4 @@ CREATE TABLE USER_IP_ACTIVITY AS SELECT username, WindowStart() AS EVENT_TS, ip,
 ----------------------------------------------------------------------------------------------------------------------------
 
 CREATE TABLE CLICK_USER_SESSIONS AS SELECT username, WindowStart() AS EVENT_TS, count(*) AS events FROM USER_CLICKSTREAM window SESSION (300 second) GROUP BY username;
+
