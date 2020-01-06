@@ -181,7 +181,7 @@ public class OrdersService implements Service {
     }
   }
 
-  class FilteredResponse<K, V> {
+  static class FilteredResponse<K, V> {
     private final AsyncResponse asyncResponse;
     private final Predicate<K, V> predicate;
 
@@ -236,7 +236,7 @@ public class OrdersService implements Service {
       }
       try {
         //Sleep a bit until metadata becomes available
-        Thread.sleep(Math.min(Long.valueOf(CALL_TIMEOUT), 200));
+        Thread.sleep(Math.min(Long.parseLong(CALL_TIMEOUT), 200));
       } catch (final InterruptedException e) {
         e.printStackTrace();
       }
@@ -415,7 +415,7 @@ public class OrdersService implements Service {
     final String restPort = args.length > 3 ? args[3] : null;
 
     Schemas.configureSerdesWithSchemaRegistryUrl(schemaRegistryUrl);
-    final OrdersService service = new OrdersService(restHostname, restPort == null ? 0 : Integer.valueOf(restPort));
+    final OrdersService service = new OrdersService(restHostname, restPort == null ? 0 : Integer.parseInt(restPort));
     service.start(bootstrapServers, "/tmp/kafka-streams");
     addShutdownHookAndBlock(service);
   }
