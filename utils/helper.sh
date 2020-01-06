@@ -166,7 +166,6 @@ function require_cp_or_exit() {
 
 function check_running_cp() {
   require_cp_or_exit
-  check_curl
 
   expected_version=$1
 
