@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   srcZookeeper:
-    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta200107202127
     restart: always
     hostname: srcZookeeper
     container_name: srcZookeeper
@@ -12,7 +12,7 @@ services:
     ports:
       - "2181:2181"
   destZookeeper:
-    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta200107202127
     restart: always
     hostname: destZookeeper
     container_name: destZookeeper
@@ -23,7 +23,7 @@ services:
     ports:
       - "2281:2281"
   srcKafka1:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200107202127
     hostname: srcKafka1
     container_name: srcKafka1
     cpus: 0.3
@@ -52,7 +52,7 @@ services:
       KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   destKafka1:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200107202127
     hostname: destKafka1
     container_name: destKafka1
     cpus: 0.3
@@ -71,7 +71,7 @@ services:
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
   connect:
-    image: confluentinc/cp-server-connect:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.5.0-beta200107202127
     container_name: connect
     cpus: 0.2
     restart: always
@@ -103,14 +103,14 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.4.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-replicator:5.5.0-beta200107202127
     hostname: replicator-for-jar-transfer
     container_name: replicator-for-jar-transfer
     volumes:
       - mi3:/usr/share/java/kafka-connect-replicator/
     command: "sleep infinity"
   srcKafkaClient:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200107202127
     hostname: srcKafkaClient
     container_name: srcKafkaClient
     cpus: 0.1
@@ -137,7 +137,7 @@ services:
       KAFKA_SSL_KEY_PASSWORD: confluent
       KAFKA_SECURITY_PROTOCOL: SSL
   destKafkaClient:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200107202127
     hostname: destKafkaClient
     container_name: destKafkaClient
     cpus: 0.1
