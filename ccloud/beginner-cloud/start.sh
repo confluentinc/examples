@@ -113,7 +113,7 @@ BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{pri
 
 echo -e "\n# Create API key for $EMAIL"
 echo "ccloud api-key create --description \"Demo credentials for $EMAIL\" --resource $CLUSTER"
-OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL --resource $CLUSTER")
+OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL" --resource $CLUSTER)
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
