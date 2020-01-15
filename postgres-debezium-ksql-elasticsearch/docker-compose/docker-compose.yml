@@ -32,7 +32,7 @@ services:
 
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.3.1
+    image: confluentinc/cp-enterprise-control-center:5.4.1-SNAPSHOT
     container_name: control-center
     cpus: 0.7
     restart: always
