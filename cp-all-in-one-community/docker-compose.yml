@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta200115214019
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-kafka:5.5.0-SNAPSHOT
+    image: confluentinc/cp-kafka:5.5.0-beta200115214019
     hostname: broker
     container_name: broker
     depends_on:
@@ -29,7 +29,7 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.0-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.5.0-beta200115214019
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -73,7 +73,7 @@ services:
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.5.0-beta200115214019
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -93,7 +93,7 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.5.0-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.5.0-beta200115214019
     container_name: ksql-cli
     depends_on:
       - broker
@@ -104,7 +104,7 @@ services:
 
   ksql-datagen:
     # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
-    image: confluentinc/ksql-examples:5.5.0-SNAPSHOT
+    image: confluentinc/ksql-examples:5.5.0-beta200115214019
     hostname: ksql-datagen
     container_name: ksql-datagen
     depends_on:
@@ -127,7 +127,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   rest-proxy:
-    image: confluentinc/cp-kafka-rest:5.5.0-SNAPSHOT
+    image: confluentinc/cp-kafka-rest:5.5.0-beta200115214019
     depends_on:
       - zookeeper
       - broker
