@@ -17,7 +17,7 @@ fi
 
 ./stop.sh
 
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.1.7
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.2.0
 confluent local start connect
 CONFLUENT_CURRENT=`confluent local current | tail -1`
 

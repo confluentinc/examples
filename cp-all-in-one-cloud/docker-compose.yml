@@ -97,7 +97,7 @@ services:
       PORT: 9021
 
   connect:
-    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.0
+    image: cnfldemos/cp-server-connect-datagen:0.2.0-5.4.0
     hostname: connect
     container_name: connect
     depends_on:
