@@ -2,7 +2,7 @@
 version: '2'
 services:
   ksql-datagen:
-    image: confluentinc/ksql-examples:5.4.x-latest
+    image: confluentinc/ksql-examples:5.4.0
     hostname: ksql-datagen
     container_name: ksql-datagen
     volumes:
@@ -17,7 +17,7 @@ services:
       STREAMS_SASL_MECHANISM: "PLAIN"
       STREAMS_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
   ksql-datagen-avro:
-    image: confluentinc/ksql-examples:5.4.x-latest
+    image: confluentinc/ksql-examples:5.4.0
     hostname: ksql-datagen-avro
     container_name: ksql-datagen-avro
     volumes:
@@ -35,7 +35,7 @@ services:
       STREAMS__SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
       STREAMS__SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
   connect:
-    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.x-latest
+    image: cnfldemos/cp-server-connect-datagen:0.1.7-5.4.0
     hostname: connect
     container_name: connect
     volumes:
