@@ -77,6 +77,12 @@ echo -e "\n# List topics, it should show only topic $TOPIC1"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
+##################################################
+# The following consumer example is for demonstration purposes only.
+# In this example, the client uses the token services for authentication (e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER'), for simplicity for this dev environment
+# In production, the client should use Kerberos or mTLS for authentication
+##################################################
+
 NUM_MESSAGES=10
 MESSAGE=""
 for i in $(seq 1 $NUM_MESSAGES); do
@@ -90,12 +96,6 @@ echo -e "\n# Produce $NUM_MESSAGES messages to topic $TOPIC1"
 set -x
 echo -e "${MESSAGE}" | confluent local produce $TOPIC1 -- --broker-list $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
 set +x
-
-##################################################
-# The following consumer example is for demonstration purposes only.
-# In this example, the client uses the token services for simplicity for this dev environment (e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER')
-# In production, the client should use Kerberos or mTLS for authentication
-##################################################
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
 echo "confluent local consume $TOPIC1 -- --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
