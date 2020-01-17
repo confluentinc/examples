@@ -91,6 +91,12 @@ set -x
 echo -e "${MESSAGE}" | confluent local produce $TOPIC1 -- --broker-list $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
 set +x
 
+##################################################
+# The following consumer example is for demonstration purposes only.
+# In this example, the client uses the token services for simplicity in this dev environment (e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER')
+# In production, the client should use Kerberos, mTLS, or SASL/PLAIN for authentication
+##################################################
+
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
 echo "confluent local consume $TOPIC1 -- --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
 OUTPUT=$(confluent local consume $TOPIC1 -- --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES 2>&1)
