@@ -78,9 +78,9 @@ echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config 
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
 ##################################################
-# The following consumer example is for demonstration purposes only.
-# In this example, the client uses the token services for authentication (e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER'), for simplicity for this dev environment
-# In production, the client should use Kerberos or mTLS for authentication
+# For simplicity in this demo which is configured as a dev setup to help with learning RBAC,
+# the following producer and consumer clients use the token services for client authentication (e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER').
+# But in production, use Kerberos or mTLS for client authentication, do not use token services.
 ##################################################
 
 NUM_MESSAGES=10
