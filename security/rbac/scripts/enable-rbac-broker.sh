@@ -94,7 +94,7 @@ set +x
 ##################################################
 # The following consumer example is for demonstration purposes only.
 # In this example, the client uses the token services for simplicity for this dev environment (e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER')
-# In production, the client should use Kerberos, mTLS, or SASL/PLAIN for authentication
+# In production, the client should use Kerberos or mTLS for authentication
 ##################################################
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
