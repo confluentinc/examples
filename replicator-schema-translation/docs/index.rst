@@ -80,7 +80,7 @@ Run the Demo
 
       docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
 
-   Your output should show the posted |crep| configuration. The key configuration that enables the schema translation is `schema.subject.translator.class=io.confluent.connect.replicator.schemas.DefaultSubjectTranslator`
+   Your output should show the posted |crep| configuration. The key configuration that enables the schema translation is ``schema.subject.translator.class=io.confluent.connect.replicator.schemas.DefaultSubjectTranslator``
 
    .. sourcecode:: bash
 
@@ -103,11 +103,9 @@ Run the Demo
       docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
       
 .. tip:: This demo shows a `one-time migration` of schemas across self-managed clusters. To configure a
-         `continuous migration`, the last steps would be to keep the origin (source) |sr| in READONLY mode, and set the destination
-         to READWRITE. Note that this only works for a "one-way" migration; that is, an active-to-passive
-         |crep| setup. This is especially helpful if configure topic names to be different on the destination,
-         using the translation configuration, ``topic.rename.format`` (described in :ref:`Replicator configuration destination topics <rep-destination-topics>`),
-         to rename the subjects in the schemas accordingly as it migrates them.
+         `continuous migration`, the last steps would be to keep the origin (source) |sr| in READONLY mode,
+         and set the destination to READWRITE. Note that this would set up a "one-way" migration; that is,
+         an active-to-passive |crep| setup.
 
 ========
 Teardown
@@ -124,11 +122,13 @@ Suggested Reading
 =================
 
 * :ref:`schemaregistry_migrate`
-* :ref:`schemaregistry_config`
+* :ref:`sr-subjects-topics-primer`
 * :ref:`replicator_quickstart`
+* :ref:`replicator_failover`
 
 * These sections in :ref:`Replicator Configuration Options<connect_replicator_config_options>`: 
 
   - :ref:`rep-source-topics`
   - :ref:`rep-destination-topics`
   - :ref:`schema_translation`
+
