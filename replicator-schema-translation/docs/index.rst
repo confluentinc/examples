@@ -103,7 +103,7 @@ Run the Demo
       docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
       
 .. tip:: This demo shows a `one-time migration` of schemas across self-managed clusters. To configure a
-         `continuous migration`, the last steps would be to keep the origin (source) in READONLY mode, and set the destination
+         `continuous migration`, the last steps would be to keep the origin (source) |sr| in READONLY mode, and set the destination
          to READWRITE. Note that this only works for a "one-way" migration; that is, an active-to-passive
          |crep| setup. This is especially helpful if configure topic names to be different on the destination,
          using the translation configuration, ``topic.rename.format`` (described in :ref:`Replicator configuration destination topics <rep-destination-topics>`),
