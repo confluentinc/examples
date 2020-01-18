@@ -77,6 +77,14 @@ echo -e "\n# List topics, it should show only topic $TOPIC1"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
 kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --list --command-config $DELTA_CONFIGS_DIR/client.properties.delta
 
+##################################################
+# Client authentication:
+# - In production: use either Kerberos or mTLS for client authentication; do not use the token service
+#   which is meant only for internal communication between Confluent components.
+# - In this demo: for simplicity, the producer and consumer use the token service for client authentication,
+#   e.g. client.properties.delta uses 'sasl.mechanism=OAUTHBEARER', but do not do this in production.
+##################################################
+
 NUM_MESSAGES=10
 MESSAGE=""
 for i in $(seq 1 $NUM_MESSAGES); do

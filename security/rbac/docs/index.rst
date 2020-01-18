@@ -447,6 +447,10 @@ User ``bender:bender`` doesn’t have any role bindings set up and can be used a
 -  You can use ``./client-configs/bender.properties`` file to authenticate as ``bender`` from kafka console commands (like ``kafka-console-producer``, ``kafka-console-consumer``, ``kafka-topics`` and the like).
 -  This file is also mounted into the broker docker container, so you can ``docker-compose -p [project-name] exec broker /bin/bash`` to open bash on broker and then use console commands with ``/etc/client-configs/bender.properties``.
 -  When running console commands from inside the broker container, use ``localhost:9092``.
+-  Client authentication:
+
+   - In production: use either Kerberos or mTLS for client authentication; do not use the token service which is meant only for internal communication between Confluent components.
+   - In this demo: for simplicity, ``bender`` uses the token service for client authentication, e.g. bender.properties uses ``sasl.mechanism=OAUTHBEARER``, but do not do this in production.
 
 
 ==================
