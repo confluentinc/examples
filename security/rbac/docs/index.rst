@@ -450,7 +450,7 @@ User ``bender:bender`` doesn’t have any role bindings set up and can be used a
 -  Client authentication:
 
    - In production: use either Kerberos or mTLS for client authentication; do not use the token service which is meant only for internal communication between Confluent components.
-   - In this demo: for simplicity, ``bender`` uses the token service for client authentication, e.g. bender.properties uses ``sasl.mechanism=OAUTHBEARER``.
+   - In this demo: for simplicity, ``bender`` uses the token service for client authentication, e.g. bender.properties uses ``sasl.mechanism=OAUTHBEARER``, but do not do this in production.
 
 
 ==================
