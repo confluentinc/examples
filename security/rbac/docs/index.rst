@@ -313,7 +313,7 @@ Prerequisites
    |confluent-cli| must be installed on your machine, version
    ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
    :ref:`download <cli-install>`
--  See the ``.env`` file for more information on how to specify override the demo's Docker images
+-  See the ``.env`` file for more information on how to override the demo's Docker images
 
 Run the demo
 ------------
