@@ -2,7 +2,7 @@
 version: '2.3'
 services:
   zookeeper:
-    image: ${PREFIX}/cp-zookeeper:${TAG}
+    image: ${PREFIX}/cp-zookeeper:${CP_VERSION}
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -26,7 +26,7 @@ services:
     privileged: true
 
   broker:
-    image: ${PREFIX}/cp-server:${TAG}
+    image: ${PREFIX}/cp-server:${CP_VERSION}
     hostname: broker
     container_name: broker
     depends_on:
@@ -181,7 +181,7 @@ services:
       # CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: ${PREFIX}/cp-schema-registry:${TAG}
+    image: ${PREFIX}/cp-schema-registry:${CP_VERSION}
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -229,7 +229,7 @@ services:
       SCHEMA_REGISTRY_PUBLIC_KEY_PATH: /tmp/conf/public.pem
   
   ksql-server:
-    image: ${PREFIX}/cp-ksql-server:${TAG}
+    image: ${PREFIX}/cp-ksql-server:${CP_VERSION}
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -288,7 +288,7 @@ services:
       # KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   rest-proxy:
-    image: ${PREFIX}/cp-kafka-rest:${TAG}
+    image: ${PREFIX}/cp-kafka-rest:${CP_VERSION}
     hostname: rest-proxy
     container_name: rest-proxy
     depends_on:
@@ -338,7 +338,7 @@ services:
       KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
 
   connect:
-    image: ${PREFIX}/cp-server-connect:${TAG}
+    image: ${PREFIX}/cp-server-connect:${CP_VERSION}
     hostname: connect
     container_name: connect
     depends_on:
@@ -445,7 +445,7 @@ services:
                                                                           metadataServerUrls="http://broker:8090";
 
   control-center:
-    image: ${PREFIX}/cp-enterprise-control-center:${TAG}
+    image: ${PREFIX}/cp-enterprise-control-center:${CP_VERSION}
     hostname: control-center
     container_name: control-center
     depends_on:
