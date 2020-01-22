@@ -3,10 +3,11 @@
 # Source library
 . ../utils/helper.sh
 
+# Source demo-specific configurations
 source config/demo.cfg
 
 check_env || exit 1
-check_running_cp 5.4 || exit
+check_running_cp ${CP_VERSION_MAJOR} || exit
 
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
