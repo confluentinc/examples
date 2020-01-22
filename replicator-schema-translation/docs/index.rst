@@ -80,7 +80,7 @@ Run the Demo
 
       docker-compose exec connect /etc/kafka/scripts/submit_replicator.sh
 
-   Your output should show the posted |crep| configuration. The key configuration that enables the schema translation is `schema.subject.translator.class=io.confluent.connect.replicator.schemas.DefaultSubjectTranslator`
+   Your output should show the posted |crep| configuration. The key configuration that enables the schema translation is ``schema.subject.translator.class=io.confluent.connect.replicator.schemas.DefaultSubjectTranslator``
 
    .. sourcecode:: bash
 
@@ -101,6 +101,11 @@ Run the Demo
    .. sourcecode:: bash
 
       docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
+      
+.. tip:: This demo shows a `one-time migration` of schemas across self-managed clusters. To configure a
+         `continuous migration`, the last steps would be to keep the origin (source) |sr| in READONLY mode,
+         and set the destination to READWRITE. Note that this would set up a "one-way" migration; that is,
+         an active-to-passive |crep| setup.
 
 ========
 Teardown
@@ -111,4 +116,19 @@ Teardown
    .. sourcecode:: bash
 
       docker-compose down
+      
+=================
+Suggested Reading
+=================
+
+* :ref:`schemaregistry_migrate`
+* :ref:`sr-subjects-topics-primer`
+* :ref:`replicator_quickstart`
+* :ref:`replicator_failover`
+
+* These sections in :ref:`Replicator Configuration Options<connect_replicator_config_options>`: 
+
+  - :ref:`rep-source-topics`
+  - :ref:`rep-destination-topics`
+  - :ref:`schema_translation`
 
