@@ -1,5 +1,16 @@
 #!/bin/bash
 
+################################################################
+# Source Confluent Platform versions
+################################################################
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+. "$DIR/config.env"
+
+
+################################################################
+# Library of functions
+################################################################
+
 function check_env() {
   if [[ -z "$CONFLUENT_HOME" ]]; then
     echo "\$CONFLUENT_HOME is not defined. Run 'export CONFLUENT_HOME=/path/to/confluentplatform' and try again"

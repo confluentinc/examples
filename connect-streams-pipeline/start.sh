@@ -5,7 +5,7 @@
 
 check_env || exit 1
 check_mvn || exit 1
-check_running_cp 5.4 || exit 
+check_running_cp ${CP_VERSION_MAJOR} || exit 
 
 ./stop.sh
 
