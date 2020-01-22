@@ -3,9 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-# Source Confluent Platform versions
-. ../utils/config.sh
-
 check_env || exit 1
 check_running_cp ${CP_VERSION_MAJOR} || exit
 check_mysql 5.7.25 || exit

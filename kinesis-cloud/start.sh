@@ -3,9 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-# Source Confluent Platform versions
-. ../utils/config.sh
-
 # Source demo-specific configurations
 source config/demo.cfg
 

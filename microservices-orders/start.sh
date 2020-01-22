@@ -3,9 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-# Source Confluent Platform versions
-. ../utils/config.sh
-
 check_env || exit 1
 check_mvn || exit 1
 check_jot || exit 1

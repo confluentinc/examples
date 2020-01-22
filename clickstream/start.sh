@@ -3,9 +3,6 @@
 # Source library
 . ../utils/helper.sh
 
-# Source Confluent Platform versions
-. ../utils/config.sh
-
 check_env || exit 1
 check_jq || exit 1
 check_running_cp ${CP_VERSION_MAJOR} || exit 1
