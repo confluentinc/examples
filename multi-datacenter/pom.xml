@@ -69,7 +69,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     </dependency>
     <dependency>		
       <groupId>io.confluent</groupId>		
-      <artifactId>kafka-connect-replicator</artifactId>		
+      <artifactId>connect-replicator</artifactId>		
       <version>${confluent.version}</version>		
      </dependency>		
      <dependency>		
