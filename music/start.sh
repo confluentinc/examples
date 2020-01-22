@@ -13,7 +13,7 @@ echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.proper
 confluent local start
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-(cd kafka-streams-examples && git fetch && git pull && git checkout ${GH_BRANCH})
+(cd kafka-streams-examples && git fetch && git pull && git checkout ${GIT_BRANCH})
 [[ -f "kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
 java -cp kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
 
