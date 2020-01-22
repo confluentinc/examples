@@ -4,7 +4,7 @@
 # Source Confluent Platform versions
 ################################################################
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-. "$DIR/config.sh"
+. "$DIR/config.env"
 
 
 ################################################################
