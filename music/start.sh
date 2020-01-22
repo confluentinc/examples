@@ -17,8 +17,8 @@ confluent local start
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
 (cd kafka-streams-examples && git fetch && git pull && git checkout ${GH_BRANCH})
-[[ -f "kafka-streams-examples/target/kafka-streams-examples-${CP_VERSION_FULL}-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
-java -cp kafka-streams-examples/target/kafka-streams-examples-${CP_VERSION_FULL}-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
+[[ -f "kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
+java -cp kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
 
 sleep 5
 
