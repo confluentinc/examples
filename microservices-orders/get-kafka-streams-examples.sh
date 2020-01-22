@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source Confluent Platform versions
-. ../utils/config.sh
+. ../utils/config.env
 
 # Compile java client code
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
