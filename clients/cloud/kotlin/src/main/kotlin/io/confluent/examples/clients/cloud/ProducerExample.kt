@@ -23,7 +23,6 @@ import io.confluent.kafka.serializers.KafkaJsonSerializer
 import org.apache.kafka.clients.admin.AdminClient
 import org.apache.kafka.clients.admin.NewTopic
 import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerConfig.*
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
@@ -31,6 +30,7 @@ import org.apache.kafka.common.errors.TopicExistsException
 import org.apache.kafka.common.serialization.StringSerializer
 import java.util.*
 import java.util.concurrent.ExecutionException
+import kotlin.system.exitProcess
 
 // Create topic in Confluent Cloud
 fun createTopic(topic: String,
@@ -52,7 +52,7 @@ fun createTopic(topic: String,
 fun main(args: Array<String>) {
   if (args.size != 2) {
     println("Please provide command line arguments: configPath topic")
-    System.exit(1)
+    exitProcess(1)
   }
 
   // Load properties from file
