@@ -2,13 +2,13 @@
 version: '2.2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta200125175318
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200125175318
     ports:
       - '9092:9092'
     depends_on:
@@ -32,7 +32,7 @@ services:
 
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.3.1
+    image: confluentinc/cp-enterprise-control-center:5.5.0-beta200125175318
     container_name: control-center
     cpus: 0.7
     restart: always
@@ -69,7 +69,7 @@ services:
 
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.0-SNAPSHOT
+    image: confluentinc/cp-schema-registry:5.5.0-beta200125175318
     depends_on:
       - zookeeper
       - kafka
@@ -80,7 +80,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
 
   kafka-connect-cp:
-    image: confluentinc/cp-server-connect:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.5.0-beta200125175318
     hostname: kafka-connect-cp
     container_name: kafka-connect-cp
     ports:
@@ -115,7 +115,7 @@ services:
 
   # KSQL
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-ksql-server:5.5.0-beta200125175318
     depends_on:
       - kafka
       - schema-registry
@@ -164,7 +164,7 @@ services:
   # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
     # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
-    image: confluentinc/ksql-examples:5.5.0-SNAPSHOT
+    image: confluentinc/ksql-examples:5.5.0-beta200125175318
     depends_on:
       - kafka
       - schema-registry
@@ -187,7 +187,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.5.0-SNAPSHOT
+    image: confluentinc/cp-ksql-cli:5.5.0-beta200125175318
     depends_on:
       - kafka
       - schema-registry
