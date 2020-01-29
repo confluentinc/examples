@@ -1,7 +1,7 @@
 version: "2.2"
 services:
   srcZookeeper:
-    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta200129180432
     restart: always
     hostname: srcZookeeper
     container_name: srcZookeeper
@@ -12,7 +12,7 @@ services:
     ports:
       - "2181:2181"
   destZookeeper:
-    image: confluentinc/cp-zookeeper:5.4.0-SNAPSHOT
+    image: confluentinc/cp-zookeeper:5.5.0-beta200129180432
     restart: always
     hostname: destZookeeper
     container_name: destZookeeper
@@ -23,7 +23,7 @@ services:
     ports:
       - "2281:2281"
   srcKafka1:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200129180432
     hostname: srcKafka1
     container_name: srcKafka1
     cpus: 0.3
@@ -43,7 +43,7 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   destKafka1:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200129180432
     hostname: destKafka1
     container_name: destKafka1
     cpus: 0.3
@@ -62,7 +62,7 @@ services:
       KAFKA_DELETE_TOPIC_ENABLE: "true"
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
   connect:
-    image: confluentinc/cp-server-connect:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server-connect:5.5.0-beta200129180432
     container_name: connect
     cpus: 0.2
     restart: always
@@ -93,14 +93,14 @@ services:
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
       CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.4.0-SNAPSHOT
+    image: confluentinc/cp-enterprise-replicator:5.5.0-beta200129180432
     hostname: replicator-for-jar-transfer
     container_name: replicator-for-jar-transfer
     volumes:
       - mi3:/usr/share/java/kafka-connect-replicator/
     command: "sleep infinity"
   kafka-client:
-    image: confluentinc/cp-server:5.4.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.0-beta200129180432
     hostname: kafka-client
     container_name: kafka-client
     cpus: 0.1
