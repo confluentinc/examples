@@ -46,7 +46,7 @@ services:
       - zookeeper-central
 
   broker-west-1:
-    image: confluentinc/cp-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.x-latest
     hostname: broker-west-1
     container_name: broker-west-1
     networks:
@@ -73,7 +73,7 @@ services:
       - zookeeper-east
 
   broker-west-2:
-    image: confluentinc/cp-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.x-latest
     hostname: broker-west-2
     container_name: broker-west-2
     networks:
@@ -99,7 +99,7 @@ services:
       - broker-west-1
 
   broker-east-3:
-    image: confluentinc/cp-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.x-latest
     hostname: broker-east-3
     container_name: broker-east-3
     networks:
@@ -128,7 +128,7 @@ services:
       - broker-west-2
 
   broker-east-4:
-    image: confluentinc/cp-server:5.5.0-SNAPSHOT
+    image: confluentinc/cp-server:5.5.x-latest
     hostname: broker-east-4
     container_name: broker-east-4
     networks:
