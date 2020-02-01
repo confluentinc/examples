@@ -25,12 +25,13 @@ import org.apache.kafka.clients.consumer.ConsumerConfig.*
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
 import java.time.Duration.ofMillis
+import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
 
   if (args.size != 2) {
     println("Please provide command line arguments: configPath topic")
-    System.exit(1)
+    exitProcess(1)
   }
 
   val topic = args[1]
@@ -53,14 +54,13 @@ fun main(args: Array<String>) {
 
   consumer.use {
     while (true) {
-      val records = consumer.poll(ofMillis(100))
-      for (record in records) {
-        val key = record.key()
-        val value = record.value()
-        totalCount += value.count
-
-        println("Consumed record with key $key and value $value, and updated total count to $totalCount")
-      }
+      totalCount = consumer
+          .poll(ofMillis(100))
+          .fold(totalCount, { accumulator, record ->
+            val newCount = accumulator + 1
+            println("Consumed record with key ${record.key()} and value ${record.value()}, and updated total count to $newCount")
+            newCount
+          })
     }
   }
 }
