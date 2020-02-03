@@ -391,7 +391,7 @@ function get_cluster_id_kafka () {
 }
 
 function get_cluster_id_schema_registry () {
-  SCHEMA_REGISTRY_CLUSTER_ID=$(curl --silent -u sr:sr1 http://localhost:8081/permissions | jq -r '.scope.clusters."schema-registry-cluster"')
+  SCHEMA_REGISTRY_CLUSTER_ID=$(confluent cluster describe --url http://localhost:8081 | grep schema-registry-cluster | awk '{print $3;}')
   if [[ -z "$SCHEMA_REGISTRY_CLUSTER_ID" ]]; then
     echo "Failed to get Schema Registry cluster ID. Please troubleshoot and run again"
     exit 1
@@ -400,7 +400,7 @@ function get_cluster_id_schema_registry () {
 }
 
 function get_cluster_id_connect () {
-  CONNECT_CLUSTER_ID=$(curl --silent -u connect:connect1 http://localhost:8083/permissions | jq -r '.scope.clusters."connect-cluster"')
+  CONNECT_CLUSTER_ID=$(confluent cluster describe --url http://localhost:8083 | grep connect-cluster | awk '{print $3;}')
   if [[ -z "$CONNECT_CLUSTER_ID" ]]; then
     echo "Failed to get Connect cluster ID. Please troubleshoot and run again"
     exit 1
@@ -409,7 +409,7 @@ function get_cluster_id_connect () {
 }
 
 function get_service_id_ksql () {
-  KSQL_SERVICE_ID=$(curl --silent -u ksql:ksql1 http://localhost:8088/info | jq -r '.KsqlServerInfo."ksqlServiceId"')
+  KSQL_SERVICE_ID=$(confluent cluster describe --url http://localhost:8088 | grep ksql-cluster | awk '{print $3;}')
   if [[ -z "$KSQL_SERVICE_ID" ]]; then
     echo "Failed to get KSQL service ID. Please troubleshoot and run again"
     exit 1
