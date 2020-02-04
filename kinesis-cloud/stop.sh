@@ -49,8 +49,4 @@ do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
 
-jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
-jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
-confluent local destroy
-
 #../ccloud/ccloud-delete-all-topics.sh

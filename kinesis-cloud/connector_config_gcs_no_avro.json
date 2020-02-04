@@ -1,0 +1,15 @@
+{
+    "name": "gcs-sink-no-avro",
+    "connector.class": "GcsSink",
+    "gcs.bucket.name": "$STORAGE_BUCKET_NAME",
+    "gcs.part.size": "5242880",
+    "flush.size": "3",
+    "storage.class": "io.confluent.connect.gcs.storage.GcsStorage",
+    "format.class": "io.confluent.connect.gcs.format.avro.AvroFormat",
+    "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
+    "schema.compatibility": "NONE",
+    "topics": "COUNT_PER_CITY",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+}
