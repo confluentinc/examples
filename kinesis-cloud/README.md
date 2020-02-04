@@ -18,8 +18,8 @@ Benefits of Confluent Cloud:
 This demo showcases an entire end-to-end streaming ETL deployment, built for 100% cloud services.
 It is built on the Confluent Platform, including:
 
-* Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic
-* KSQL: streaming SQL engine that enables real-time data processing against Kafka
+* Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in Confluent Cloud
+* ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
 * GCS or S3 sink connector: pushes data from Kafka topics to cloud storage
 
 | Component                  | Consumes From             | Produces To             |

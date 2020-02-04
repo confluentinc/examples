@@ -1,6 +1,7 @@
 {
     "name": "gcs-sink-avro",
     "connector.class": "GcsSink",
+    "tasks.max": "1",
     "gcs.bucket.name": "$STORAGE_BUCKET_NAME",
     "gcs.part.size": "5242880",
     "flush.size": "3",

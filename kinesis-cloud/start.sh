@@ -60,10 +60,17 @@ else
 fi
 
 # Submit connectors
+source ~/.aws/credentials-demo
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_OUT --create --replication-factor 3 --partitions 6
-ccloud connector create -vvv --config connector_config_kinesis.json
+ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<connector_config_kinesis.json)
+EOF
+")
 sleep 20
+
+echo "Exiting until KSQL available"
+exit
 
 # Submit ksqlDB queries
 curl -X "POST" "https://<ccloud-ksql-endpoint>/ksql" \
@@ -79,12 +86,24 @@ sleep 20
 
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   # Submit connectors to S3
-  ccloud connector create -vvv --config connector_config_s3_no_avro.json
-  ccloud connector create -vvv --config connector_config_s3_avro.json
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<connector_config_s3_no_avro.json.json)
+EOF
+")
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<connector_config_s3_avro.json.json)
+EOF
+")
 else
   # Submit connectors to GCS
-  ccloud connector create -vvv --config connector_config_gcs_no_avro.json
-  ccloud connector create -vvv --config connector_config_gcs_avro.json
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<connector_config_gcs_no_avro.json.json)
+EOF
+")
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<connector_config_gcs_avro.json.json)
+EOF
+")
 fi
 
 sleep 10

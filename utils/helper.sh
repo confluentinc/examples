@@ -431,6 +431,36 @@ function check_ccloud_config() {
   return 0
 }
 
+function ccloud_login(){
+
+  URL=$1
+  EMAIL=$2
+  PASSWORD=$3
+
+  check_expect
+
+  echo -e "\n# Login"
+  OUTPUT=$(
+  expect <<END
+    log_user 1
+    spawn ccloud login --url $URL
+    expect "Email: "
+    send "$EMAIL\r";
+    expect "Password: "
+    send "$PASSWORD\r";
+    expect "Logged in as "
+    set result $expect_out(buffer)
+  END
+  )
+  echo "$OUTPUT"
+  if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
+    echo "Failed to log into your cluster.  Please check all parameters and run again"
+  fi
+
+  return 0
+}
+
+
 # Converts properties file of key/value pairs into prefixed environment variables for Docker
 # Naming convention: convert properties file into env vars as uppercase and replace '.' with '_'
 # Inverse of env_to_props: https://github.com/confluentinc/confluent-docker-utils/blob/master/confluent/docker_utils/dub.py

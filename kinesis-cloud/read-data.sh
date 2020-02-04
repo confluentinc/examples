@@ -8,13 +8,18 @@ DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
 check_env || exit 1
-check_aws || exit
+check_aws || exit 1
+check_timeout || exit 1
 
 echo -e "\n\nKinesis data:"
-while read -r line ; do echo "$line" | base64 -D; echo; done <<< "$(aws kinesis get-records --region $KINESIS_REGION --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator' --region $KINESIS_REGION) | jq '.Records[].Data')"
+while read -r line ; do echo "$line" | base64 -id; echo; done <<< "$(aws kinesis get-records --region $KINESIS_REGION --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator' --region $KINESIS_REGION) | jq -r '.Records[].Data')"
 
 echo -e "\nKafka topic data:"
 echo -e "confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true"
+
+echo "Exiting early"
+exit 0
+
 export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true
 echo -e "\nconfluent local consume COUNT_PER_CITY -- --cloud --from-beginning --property print.key=true"
 export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume COUNT_PER_CITY -- --cloud --from-beginning --property print.key=true
