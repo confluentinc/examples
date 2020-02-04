@@ -23,7 +23,6 @@ fi
 
 # Generate CCloud configurations
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
-CONFLUENT_CURRENT="."
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
