@@ -1,0 +1,12 @@
+{
+    "name": "kinesis-source",
+    "connector.class": "KinesisSource",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
+    "kafka.topic": "$KAFKA_TOPIC_NAME_IN",
+    "kinesis.region": "$KINESIS_REGION_UC",
+    "kinesis.stream": "$KINESIS_STREAM_NAME",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
+    "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+}

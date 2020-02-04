@@ -21,14 +21,6 @@ fi
 
 ./stop.sh
 
-# Install Connectors and start Confluent Platform
-confluent-hub install confluentinc/kafka-connect-kinesis:latest --no-prompt
-if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  confluent-hub install confluentinc/kafka-connect-s3:latest --no-prompt
-else
-  confluent-hub install confluentinc/kafka-connect-gcs:latest --no-prompt
-fi
-
 #---------------------------------
 # Option 1: Confluent Cloud SR
 #SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
@@ -43,23 +35,6 @@ confluent local start schema-registry
 CONFLUENT_CURRENT=`confluent local current | tail -1`
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
-
-# Start Connect that connects to CCloud cluster
-mkdir -p $CONFLUENT_CURRENT/connect
-CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
-cp $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties $CONNECT_CONFIG
-cat $DELTA_CONFIGS_DIR/connect-ccloud.delta >> $CONNECT_CONFIG
-CONNECT_REST_PORT=8087
-cat <<EOF >> $CONNECT_CONFIG
-rest.port=$CONNECT_REST_PORT
-rest.advertised.name=connect-cloud
-rest.hostname=connect-cloud
-group.id=connect-cloud
-plugin.path=$CONFLUENT_HOME/share/java,$CONFLUENT_HOME/share/confluent-hub-components
-EOF
-connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
-#echo "Sleeping 40 seconds waiting for Connect to start"
-#sleep 40
 
 # Create and populate Kinesis streams
 echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION"
@@ -94,12 +69,9 @@ else
 fi
 
 # Submit connectors
-# Verify connector plugins are found
-curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep Kinesis
-curl -sS localhost:$CONNECT_REST_PORT/connector-plugins | jq '.[].class' | grep S3
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_OUT --create --replication-factor 3 --partitions 6
-. ./submit_kinesis_config.sh
+ccloud connector create -vvv --config connector_config_kinesis.json
 sleep 20
 
 # KSQL Server runs locally and connects to Confluent Cloud
@@ -131,12 +103,12 @@ sleep 20
 
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   # Submit connectors to S3
-  . ./submit_s3_config_no_avro.sh
-  . ./submit_s3_config_avro.sh
+  ccloud connector create -vvv --config connector_config_s3_no_avro.json
+  ccloud connector create -vvv --config connector_config_s3_avro.json
 else
   # Submit connectors to GCS
-  . ./submit_gcs_config_no_avro.sh
-  . ./submit_gcs_config_avro.sh
+  ccloud connector create -vvv --config connector_config_gcs_no_avro.json
+  ccloud connector create -vvv --config connector_config_gcs_avro.json
 fi
 
 sleep 10
