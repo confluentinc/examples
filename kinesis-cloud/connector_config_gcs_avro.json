@@ -6,7 +6,7 @@
     "kafka.api.secret": "$CLOUD_SECRET",
     "gcs.bucket.name": "$STORAGE_BUCKET_NAME",
     "gcs.part.size": "5242880",
-    "flush.size": "3",
+    "flush.size": "1000",
     "storage.class": "io.confluent.connect.gcs.storage.GcsStorage",
     "data.format": "AVRO",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",

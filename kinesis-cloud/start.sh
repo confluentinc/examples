@@ -41,14 +41,14 @@ if [[ $? != 0 ]]; then
   echo "ERROR: Received a non-zero exit code when trying to create the AWS Kinesis stream. Please troubleshoot"
   exit $?
 fi
-echo "Sleeping 60 seconds waiting for Kinesis stream to be created"
+echo -e "\nSleeping 60 seconds waiting for Kinesis stream to be created\n"
 sleep 60
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
 while read -r line ; do
   key=$(echo "$line" | awk -F',' '{print $1;}')
   aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key $key --data $line --region $KINESIS_REGION
 done < ../utils/table.locations.csv
-echo "Sleeping 10 seconds"
+echo -e "\nSleeping 10 seconds\n"
 sleep 10
 
 # Create topics and create source connector
@@ -59,7 +59,7 @@ $(<connector_config_kinesis.json)
 EOF
 ")
 if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
-echo "Sleeping 60 seconds waiting for connector to be in RUNNING state"
+echo -e "\nSleeping 60 seconds waiting for connector to be in RUNNING state\n"
 sleep 60
 
 #################################################################
@@ -89,7 +89,7 @@ while read ksqlCmd; do
 EOF
 )
 done <ksql.commands
-echo "Sleeping 20 seconds after submitting KSQL queries"
+echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
 sleep 20
 
 
