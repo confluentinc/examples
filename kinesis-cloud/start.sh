@@ -84,7 +84,7 @@ while read ksqlCmd; do
        -d @<(cat <<EOF
 {
   "ksql": "$ksqlCmd",
-  "streamsProperties": {}
+  "streamsProperties": {"ksql.streams.auto.offset.reset":"earliest"}
 }
 EOF
 )
