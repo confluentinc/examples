@@ -82,3 +82,8 @@ $ ./read-data.sh
 ```bash
 $ ./stop.sh
 ```
+
+4. Use the Confluent Cloud UI to view the Flow:
+
+![image](images/flow.png)
+
