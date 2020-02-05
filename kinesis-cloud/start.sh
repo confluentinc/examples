@@ -72,13 +72,19 @@ if [[ "$STATUS" == "" ]]; then
   exit 1
 fi
 ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN
-curl -X POST $KSQL_ENDPOINT/ksql \
-     -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
-     -u $CLOUD_KEY:$CLOUD_SECRET \
-     -d $'{
-  "ksql": "$(<ksql.commands)",
+while read ksqlCmd; do
+  echo "$ksqlCmd"
+  curl -X POST $KSQL_ENDPOINT/ksql \
+       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+       -u $KSQL_BASIC_AUTH_USER_INFO \
+       -d @<(cat <<EOF
+{
+  "ksql": "$ksqlCmd",
   "streamsProperties": {}
-}'
+}
+EOF
+)
+done <ksql.commands
 echo "Sleeping 20 seconds after submitting KSQL queries"
 sleep 20
 
