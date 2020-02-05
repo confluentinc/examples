@@ -15,6 +15,14 @@ source delta_configs/env.delta
 check_env || exit 1
 check_aws || exit
 
+# Delete connectors
+for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-S3Sink-avro demo-S3Sink-no-avro; do
+  connectorId=$(ccloud connector list | grep $connector | awk '{print $1}')
+  if [[ "$connectorId" != "" ]]; then
+    ccloud connector delete $connectorId
+  fi
+done
+
 # Clean up AWS Kinesis and cloud storage
 echo "Clean up AWS Kinesis and cloud storage"
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION > /dev/null 2>&1
@@ -48,5 +56,6 @@ for subject in $schema_registry_subjects_to_delete
 do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
+
 
 #../ccloud/ccloud-delete-all-topics.sh

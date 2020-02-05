@@ -68,13 +68,10 @@ EOF
 ")
 sleep 20
 
-echo "Exiting until KSQL available"
-exit
-
 # Submit ksqlDB queries
 curl -X "POST" "https://<ccloud-ksql-endpoint>/ksql" \
      -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
-     -H "Authorization: BASIC base64($KSQL_API_KEY:$KSQL_API_SECRET)" \
+     -H "Authorization: BASIC base64($CLOUD_KEY:$CLOUD_SECRET)" \
      -d $'{
   "ksql": "$(<ksql.commands)",
   "streamsProperties": {}

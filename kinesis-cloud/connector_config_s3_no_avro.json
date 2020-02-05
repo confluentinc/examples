@@ -1,6 +1,6 @@
 {
-    "name": "aws-s3-sink-no-avro",
-    "connector.class": "S3SinkConnector",
+    "name": "demo-S3Sink-no-avro",
+    "connector.class": "S3Sink",
     "tasks.max": "1",
     "s3.region": "$STORAGE_REGION",
     "s3.bucket.name": "$STORAGE_BUCKET_NAME",

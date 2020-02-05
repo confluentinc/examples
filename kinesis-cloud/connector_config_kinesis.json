@@ -1,5 +1,5 @@
 {
-    "name": "kinesis-source",
+    "name": "demo-KinesisSource",
     "connector.class": "KinesisSource",
     "tasks.max": "1",
     "aws.access.key.id": "$AWS_ACCESS_KEY_ID",
