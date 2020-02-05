@@ -24,6 +24,7 @@ for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-
 done
 
 # Clean up AWS Kinesis and cloud storage
+source $AWS_CREDENTIALS_FILE
 echo "Clean up AWS Kinesis and cloud storage"
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
