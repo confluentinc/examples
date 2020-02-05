@@ -11,7 +11,7 @@ import lombok.extern.log4j.Log4j2;
 @Component
 public class ConsumerExample {
 
-  @KafkaListener(topics = "topic")
+  @KafkaListener(topics = "#{'${io.confluent.developer.config.topic.name}'}")
   public void consume(ConsumerRecord<Long, DataRecordAvro> consumerRecord) {
     log.info("received {} {}", consumerRecord.key(), consumerRecord.value());
 
