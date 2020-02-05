@@ -63,12 +63,19 @@ echo "Sleeping 60 seconds waiting for connector to be in RUNNING state"
 sleep 60
 
 #################################################################
-# Submit KSQL queries
+# Confluent Cloud KSQL application
 #################################################################
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
+
+# Create required topics and ACLs
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
+ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
 ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
+ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
+ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
+
+# Submit KSQL queries
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
