@@ -45,10 +45,6 @@ rm -f data.avro
 echo "Clean up KSQL"
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 while read ksqlCmd; do
-
-  # Temporary continue due to problem with termination
-  continue
-
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
        -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
@@ -64,7 +60,7 @@ done <ksql.cleanup.commands
 
 # Delete topics in Confluent Cloud
 topics=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --list)
-topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2 connect-configs connect-statuses connect-offsets"
+topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null

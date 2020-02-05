@@ -434,6 +434,10 @@ function check_ccloud_config() {
 function validate_ccloud_ksql() {
   ksql_endpoint=$1
 
+  if [[ "$ksql_endpoint" == "" ]]; then
+    echo "Please add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file and try again."
+    exit 1
+  fi
   ksqlAppId=$(ccloud ksql app list | grep "$ksql_endpoint" | awk '{print $1}')
   if [[ "$ksqlAppId" == "" ]]; then
     echo "Confluent Cloud KSQL endpoint $ksql_endpoint is not found. Please update ksql.endpoint in your Confluent Cloud configuration file with a valid KSQL endpoint and try again."

@@ -53,7 +53,7 @@ sleep 10
 
 # Create topics and create source connector
 ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
+ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
 ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connector_config_kinesis.json)
 EOF
@@ -66,6 +66,8 @@ sleep 60
 # Submit KSQL queries
 #################################################################
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
+ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
+ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
 ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
