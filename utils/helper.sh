@@ -445,7 +445,7 @@ function validate_ccloud_ksql() {
     exit 1
   fi
 
-  exit 0
+  return 0
 }
 
 function ccloud_login(){

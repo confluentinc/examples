@@ -42,8 +42,8 @@ fi
 rm -f data.avro
 
 # Clean up KSQL
-validate_ccloud_ksql || exit 1
 echo "Clean up KSQL"
+validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \

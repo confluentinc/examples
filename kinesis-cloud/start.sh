@@ -61,7 +61,7 @@ sleep 60
 #################################################################
 # Submit KSQL queries
 #################################################################
-validate_ccloud_ksql || exit 1
+validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
