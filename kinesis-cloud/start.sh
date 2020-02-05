@@ -48,13 +48,17 @@ while read -r line ; do
   key=$(echo "$line" | awk -F',' '{print $1;}')
   aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key $key --data $line --region $KINESIS_REGION
 done < ../utils/table.locations.csv
+echo "Sleeping 10 seconds"
+sleep 10
 
 # Create topics and create source connector
+ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
 ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connector_config_kinesis.json)
 EOF
 ")
+if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
 echo "Sleeping 60 seconds waiting for connector to be in RUNNING state"
 sleep 60
 
@@ -95,10 +99,12 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 $(<connector_config_s3_no_avro.json)
 EOF
 ")
+  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connector_config_s3_avro.json)
 EOF
 ")
+  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
 else
   # Setup GCS
   bucket_list=$(gsutil ls | grep $STORAGE_BUCKET_NAME)
@@ -111,10 +117,12 @@ else
 $(<connector_config_gcs_no_avro.json)
 EOF
 ")
+  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connector_config_gcs_avro.json)
 EOF
 ")
+  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
 fi
 sleep 10
 
