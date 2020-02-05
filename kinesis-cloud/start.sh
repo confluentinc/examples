@@ -61,19 +61,10 @@ sleep 60
 #################################################################
 # Submit KSQL queries
 #################################################################
-ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
-if [[ "$ksqlAppId" == "" ]]; then
-  echo "Confluent Cloud KSQL endpoint $KSQL_ENDPOINT is not found. Please update ksql.endpoint in $CONFIG_FILE with a valid KSQL endpoint and try again."
-  exit 1
-fi
-STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
-if [[ "$STATUS" == "" ]]; then
-  echo "Confluent Cloud KSQL endpoint $KSQL_ENDPOINT with id $ksqlAppId is not in UP state. Please troubleshoot and try again."
-  exit 1
-fi
+validate_ccloud_ksql || exit 1
 ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN
 while read ksqlCmd; do
-  echo "$ksqlCmd"
+  echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
        -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
        -u $KSQL_BASIC_AUTH_USER_INFO \

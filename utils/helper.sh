@@ -431,6 +431,23 @@ function check_ccloud_config() {
   return 0
 }
 
+function validate_ccloud_ksql() {
+  ksql_endpoint=$1
+
+  ksqlAppId=$(ccloud ksql app list | grep "$ksql_endpoint" | awk '{print $1}')
+  if [[ "$ksqlAppId" == "" ]]; then
+    echo "Confluent Cloud KSQL endpoint $ksql_endpoint is not found. Please update ksql.endpoint in your Confluent Cloud configuration file with a valid KSQL endpoint and try again."
+    exit 1
+  fi
+  STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
+  if [[ "$STATUS" == "" ]]; then
+    echo "Confluent Cloud KSQL endpoint $ksql_endpoint with id $ksqlAppId is not in UP state. Please troubleshoot and try again."
+    exit 1
+  fi
+
+  exit 0
+}
+
 function ccloud_login(){
 
   URL=$1
