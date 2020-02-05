@@ -59,12 +59,13 @@ echo "Sleeping 60 seconds waiting for connector to be in RUNNING state"
 sleep 60
 
 #################################################################
-# Submit ksqlDB queries
+# Submit KSQL queries
 #################################################################
 ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
 if [[ "$ksqlAppId" == "" ]]; then
-  echo "Confluent Cloud KSQL endpoint $KSQL_ENDPOINT is not found. Please update ksql.endpoint in $CONFIG_FILE with a valid endpoit and try again."
+  echo "Confluent Cloud KSQL endpoint $KSQL_ENDPOINT is not found. Please update ksql.endpoint in $CONFIG_FILE with a valid KSQL endpoint and try again."
   exit 1
+fi
 STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
 if [[ "$STATUS" == "" ]]; then
   echo "Confluent Cloud KSQL endpoint $KSQL_ENDPOINT with id $ksqlAppId is not in UP state. Please troubleshoot and try again."
@@ -78,7 +79,7 @@ curl -X POST $KSQL_ENDPOINT/ksql \
   "ksql": "$(<ksql.commands)",
   "streamsProperties": {}
 }'
-echo "Sleeping 20 seconds after submitting ksqlDB queries"
+echo "Sleeping 20 seconds after submitting KSQL queries"
 sleep 20
 
 
