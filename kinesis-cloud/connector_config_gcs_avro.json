@@ -2,6 +2,8 @@
     "name": "demo-GcsSink-avro",
     "connector.class": "GcsSink",
     "tasks.max": "1",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
     "gcs.bucket.name": "$STORAGE_BUCKET_NAME",
     "gcs.part.size": "5242880",
     "flush.size": "3",
@@ -9,11 +11,10 @@
     "format.class": "io.confluent.connect.gcs.format.avro.AvroFormat",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
     "schema.compatibility": "NONE",
-    "topics": "$KAFKA_TOPIC_NAME_OUT",
+    "topics": "$KAFKA_TOPIC_NAME_OUT1",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "io.confluent.connect.avro.AvroConverter",
     "value.converter.basic.auth.credentials.source": "$BASIC_AUTH_CREDENTIALS_SOURCE",
     "value.converter.schema.registry.basic.auth.user.info": "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO",
-    "value.converter.schema.registry.url": "$SCHEMA_REGISTRY_URL",
-    "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+    "value.converter.schema.registry.url": "$SCHEMA_REGISTRY_URL"
 }

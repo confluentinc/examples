@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#################################################################
+# Initialization
+#################################################################
 # Source library
 . ../utils/helper.sh
 
@@ -48,12 +51,12 @@ done < ../utils/table.locations.csv
 
 # Create topics and create source connector
 kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_IN --create --replication-factor 3 --partitions 6
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $KAFKA_TOPIC_NAME_OUT --create --replication-factor 3 --partitions 6
 ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connector_config_kinesis.json)
 EOF
 ")
-sleep 20
+echo "Sleeping 30 seconds waiting for connector to be in RUNNING state"
+sleep 30
 
 #################################################################
 # Submit ksqlDB queries
@@ -81,11 +84,11 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   fi
   # Create connectors to S3
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_s3_no_avro.json.json)
+$(<connector_config_s3_no_avro.json)
 EOF
 ")
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_s3_avro.json.json)
+$(<connector_config_s3_avro.json)
 EOF
 ")
 else
@@ -97,11 +100,11 @@ else
   fi
   # Create connectors to GCS
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_gcs_no_avro.json.json)
+$(<connector_config_gcs_no_avro.json)
 EOF
 ")
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_gcs_avro.json.json)
+$(<connector_config_gcs_avro.json)
 EOF
 ")
 fi

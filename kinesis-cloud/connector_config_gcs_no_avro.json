@@ -2,6 +2,8 @@
     "name": "demo-GcsSink-no-avro",
     "connector.class": "GcsSink",
     "tasks.max": "1",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
     "gcs.bucket.name": "$STORAGE_BUCKET_NAME",
     "gcs.part.size": "5242880",
     "flush.size": "3",
@@ -9,8 +11,7 @@
     "format.class": "io.confluent.connect.gcs.format.avro.AvroFormat",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
     "schema.compatibility": "NONE",
-    "topics": "COUNT_PER_CITY",
+    "topics": "$KAFKA_TOPIC_NAME_OUT2",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter"
 }

@@ -19,6 +19,7 @@ check_aws || exit
 for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-S3Sink-avro demo-S3Sink-no-avro; do
   connectorId=$(ccloud connector list | grep $connector | awk '{print $1}')
   if [[ "$connectorId" != "" ]]; then
+    echo "Deleting connector $connector with id $connectorId"
     ccloud connector delete $connectorId
   fi
 done
@@ -31,8 +32,8 @@ if [[ $? -eq 0 ]]; then
   aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
 fi
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT} --region $STORAGE_REGION
-  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/COUNT_PER_CITY --region $STORAGE_REGION
+  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION
+  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION
 else
   check_gsutil || exit
   # Clean up GCS
@@ -42,7 +43,7 @@ rm -f data.avro
 
 # Delete topics in Confluent Cloud
 topics=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --list)
-topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT COUNT_PER_CITY connect-configs connect-statuses connect-offsets"
+topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2 connect-configs connect-statuses connect-offsets"
 for topic in $topics_to_delete
 do
   echo $topics | grep $topic &>/dev/null
@@ -52,7 +53,7 @@ do
 done
 
 # Delete subjects from Confluent Schema Registry
-schema_registry_subjects_to_delete="${KAFKA_TOPIC_NAME_OUT}-value"
+schema_registry_subjects_to_delete="${KAFKA_TOPIC_NAME_OUT1}-value"
 for subject in $schema_registry_subjects_to_delete
 do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
