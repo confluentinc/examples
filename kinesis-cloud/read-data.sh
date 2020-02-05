@@ -17,9 +17,6 @@ while read -r line ; do echo "$line" | base64 -id; echo; done <<< "$(aws kinesis
 echo -e "\nKafka topic data:"
 echo -e "confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true"
 
-echo "Exiting early"
-exit 0
-
 export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true
 echo -e "\nconfluent local consume $KAFKA_TOPIC_NAME_OUT2 -- --cloud --from-beginning --property print.key=true"
 export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume $KAFKA_TOPIC_NAME_OUT2 -- --cloud --from-beginning --property print.key=true

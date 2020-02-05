@@ -45,6 +45,10 @@ rm -f data.avro
 echo "Clean up KSQL"
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 while read ksqlCmd; do
+
+  # Temporary continue due to problem with termination
+  continue
+
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
        -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \

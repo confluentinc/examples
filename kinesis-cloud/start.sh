@@ -62,7 +62,7 @@ sleep 60
 # Submit KSQL queries
 #################################################################
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
-ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN
+ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
