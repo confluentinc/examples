@@ -44,6 +44,34 @@ rm -f data.avro
 # Clean up KSQL
 echo "Clean up KSQL"
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
+# Terminate queries first
+ksqlCmd="show queries;"
+echo -e "\n$ksqlCmd\n"
+queries=$(curl --silent -X POST $KSQL_ENDPOINT/ksql \
+       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+       -u $KSQL_BASIC_AUTH_USER_INFO \
+       -d @<(cat <<EOF
+{
+  "ksql": "$ksqlCmd",
+  "streamsProperties": {}
+}
+EOF
+) | jq -r '.[0].queries[].id')
+for q in $queries; do
+  ksqlCmd="TERMINATE $q;"
+  echo -e "\n$ksqlCmd\n"
+  curl -X POST $KSQL_ENDPOINT/ksql \
+       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+       -u $KSQL_BASIC_AUTH_USER_INFO \
+       -d @<(cat <<EOF
+{
+  "ksql": "$ksqlCmd",
+  "streamsProperties": {}
+}
+EOF
+)
+done
+# Terminate streams and tables
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
@@ -63,10 +91,7 @@ topics=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config del
 topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2"
 for topic in $topics_to_delete
 do
-  echo $topics | grep $topic &>/dev/null
-  if [[ $? == 0 ]]; then
-    kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --delete --topic $topic
-  fi
+  ccloud kafka topic delete $topic 2>/dev/null
 done
 
 # Delete subjects from Confluent Schema Registry
