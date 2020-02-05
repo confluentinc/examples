@@ -31,6 +31,8 @@ It is built on the Confluent Platform, including:
 
 # Prerequisites
 
+## Environment
+
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
 * [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
@@ -41,6 +43,23 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * GCS: `gsutils`, properly initialized with your credentials
 * `jq`
 * `curl`
+
+## Configuration file
+
+Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
+
+```shell
+$ cat $HOME/.ccloud/config
+bootstrap.servers=<BROKER ENDPOINT>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+basic.auth.credentials.source=USER_INFO
+schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+schema.registry.url=https://<SR ENDPOINT>
+ksql.endpoint=https://<KSQL ENDPOINT>
+```
 
 # Run the demo
 
