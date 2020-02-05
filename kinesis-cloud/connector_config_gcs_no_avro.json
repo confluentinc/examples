@@ -8,7 +8,7 @@
     "gcs.part.size": "5242880",
     "flush.size": "3",
     "storage.class": "io.confluent.connect.gcs.storage.GcsStorage",
-    "format.class": "io.confluent.connect.gcs.format.avro.AvroFormat",
+    "data.format": "io.confluent.connect.gcs.format.avro.AvroFormat",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
     "schema.compatibility": "NONE",
     "topics": "$KAFKA_TOPIC_NAME_OUT2",

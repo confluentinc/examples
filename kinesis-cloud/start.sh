@@ -55,8 +55,8 @@ ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connector_config_kinesis.json)
 EOF
 ")
-echo "Sleeping 30 seconds waiting for connector to be in RUNNING state"
-sleep 30
+echo "Sleeping 60 seconds waiting for connector to be in RUNNING state"
+sleep 60
 
 #################################################################
 # Submit ksqlDB queries
