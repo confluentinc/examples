@@ -44,9 +44,10 @@ fi
 echo -e "\nSleeping 60 seconds waiting for Kinesis stream to be created\n"
 sleep 60
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
-aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json
-aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json
-aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json
+# File has ~500 records, so run at least 3 times to get above the 1000 flush size of the sink connectors
+aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json >/dev/null
+aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json >/dev/null
+aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json >/dev/null
 echo -e "\nSleeping 10 seconds\n"
 sleep 10
 
