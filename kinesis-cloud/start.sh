@@ -34,6 +34,7 @@ source $DELTA_CONFIGS_DIR/env.delta
 #################################################################
 # Source: create and populate Kinesis streams and create connectors
 #################################################################
+echo -e "\nSource: create and populate Kinesis streams and create connectors\n"
 source $AWS_CREDENTIALS_FILE
 echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION"
 aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION
@@ -45,7 +46,8 @@ echo -e "\nSleeping 60 seconds waiting for Kinesis stream to be created\n"
 sleep 60
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
 # File has ~500 records, so run several times to fulfill the flush size requirement of 1000 records / partition for the sink connectors
-for i in {1..20}; do
+echo -e "\nWriting ~11k records to Kinesis\n"
+for i in {1..22}; do
   aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json >/dev/null
 done
 echo -e "\nSleeping 10 seconds\n"
@@ -65,9 +67,11 @@ sleep 60
 #################################################################
 # Confluent Cloud KSQL application
 #################################################################
+echo -e "\nConfluent Cloud KSQL application\n"
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 
 # Create required topics and ACLs
+echo -e "\nCreate requied topics and ACLs\n"
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
 ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
@@ -76,6 +80,7 @@ ccloud kafka acl create --allow --service-account-id $(ccloud service-account li
 ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
 
 # Submit KSQL queries
+echo -e "\nSubmit KSQL queries\n"
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
@@ -84,7 +89,7 @@ while read ksqlCmd; do
        -d @<(cat <<EOF
 {
   "ksql": "$ksqlCmd",
-  "streamsProperties": {"ksql.streams.auto.offset.reset":"earliest"}
+  "streamsProperties": {"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"}
 }
 EOF
 )
@@ -96,6 +101,7 @@ sleep 20
 #################################################################
 # Sink: setup cloud storage and create connectors
 #################################################################
+echo -e "\nSink: setup cloud storage and create connectors\n"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   # Setup S3 bucket
   bucket_list=$(aws s3api list-buckets --query "Buckets[].Name" --region $STORAGE_REGION | grep $STORAGE_BUCKET_NAME)

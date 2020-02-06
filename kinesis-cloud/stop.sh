@@ -87,7 +87,6 @@ EOF
 done <ksql.cleanup.commands
 
 # Delete topics in Confluent Cloud
-topics=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVERS --command-config delta_configs/ak-tools-ccloud.delta --list)
 topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2"
 for topic in $topics_to_delete
 do
@@ -100,6 +99,3 @@ for subject in $schema_registry_subjects_to_delete
 do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
-
-
-#../ccloud/ccloud-delete-all-topics.sh
