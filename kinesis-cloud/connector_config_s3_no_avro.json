@@ -12,7 +12,7 @@
     "time.interval" : "HOURLY",
     "flush.size": "1000",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
-    "data.format": "AVRO",
+    "data.format": "BYTES",
     "schema.generator.class": "io.confluent.connect.storage.hive.schema.DefaultSchemaGenerator",
     "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
     "schema.compatibility": "NONE",
