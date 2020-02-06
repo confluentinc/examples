@@ -28,7 +28,7 @@ echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_OUT1:"
 echo -e "confluent local consume $KAFKA_TOPIC_NAME_OUT1 -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10"
 export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume $KAFKA_TOPIC_NAME_OUT1 -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10 2>/dev/null
 
-echo -e "\nObjects in Cloud storage DESTINATION_STORAGE:\n"
+echo -e "\nObjects in Cloud storage $DESTINATION_STORAGE:\n"
 AVRO_VERSION=1.9.1
 #if [[ ! -f avro-tools-${AVRO_VERSION}.jar ]]; then
 #  curl -L http://mirror.metrocast.net/apache/avro/avro-${AVRO_VERSION}/java/avro-tools-${AVRO_VERSION}.jar --output avro-tools-${AVRO_VERSION}.jar
@@ -40,11 +40,15 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
     #echo "java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro"
     #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
   done
-else
+elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
   for path in $(gsutil ls -r "gs://$STORAGE_BUCKET_NAME/topics/*/*/*.avro"); do
     echo "GCS path: $path"
     #gsutil cp $path data.avro
     #echo "java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro"
     #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
   done
+else
+  source $STORAGE_CREDENTIALS_FILE
+  az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
+  az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --prefix "topics/$KAFKA_TOPIC_NAME_OUT2" | jq -r '.[].name'
 fi

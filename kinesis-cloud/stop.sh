@@ -14,10 +14,13 @@ SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 source delta_configs/env.delta
 
 check_env || exit 1
-check_aws || exit
+
+validate_cloud_storage $DESTINATION_STORAGE || exit
 
 # Delete connectors
-for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-S3Sink-avro demo-S3Sink-no-avro; do
+#for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-S3Sink-avro demo-S3Sink-no-avro; do
+for f in connectors/*.json; do
+  connector=$(cat $f | jq -r .name)
   connectorId=$(ccloud connector list | grep $connector | awk '{print $1}')
   if [[ "$connectorId" != "" ]]; then
     echo "Deleting connector $connector with id $connectorId"
@@ -27,18 +30,22 @@ done
 
 # Clean up AWS Kinesis and cloud storage
 source $AWS_CREDENTIALS_FILE
-echo "Clean up AWS Kinesis and cloud storage"
+echo "Clean up AWS Kinesis"
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
   aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
 fi
+echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION
   aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION
-else
+elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
   check_gsutil || exit
   # Clean up GCS
   gsutil rm -r gs://$STORAGE_BUCKET_NAME/**
+else
+  source $STORAGE_CREDENTIALS_FILE
+  az storage container delete --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
 fi
 rm -f data.avro
 

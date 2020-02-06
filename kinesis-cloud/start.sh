@@ -16,12 +16,7 @@ CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
 check_ccloud_logged_in || exit
 
-if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  check_aws || exit
-else
-  check_gcp_creds || exit
-  check_gsutil || exit
-fi
+validate_cloud_storage $DESTINATION_STORAGE || exit
 
 ./stop.sh
 
@@ -62,7 +57,7 @@ sleep 10
 ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
 ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
 ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_kinesis.json)
+$(<connectors/kinesis.json)
 EOF
 ")
 if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
@@ -113,8 +108,10 @@ sleep 20
 #################################################################
 # Sink: setup cloud storage and create connectors
 #################################################################
-echo -e "\nSink: setup cloud storage and create connectors\n"
+echo -e "\nSink: setup $DESTINATION_STORAGE cloud storage and create connectors\n"
+
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
+
   # Setup S3 bucket
   bucket_list=$(aws s3api list-buckets --query "Buckets[].Name" --region $STORAGE_REGION | grep $STORAGE_BUCKET_NAME)
   if [[ ! "$bucket_list" =~ "$STORAGE_BUCKET_NAME" ]]; then
@@ -123,16 +120,18 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   fi
   # Create connectors to S3
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_s3_no_avro.json)
+$(<connectors/s3_no_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_s3_avro.json)
+$(<connectors/s3_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
-else
+
+elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
+
   # Setup GCS
   bucket_list=$(gsutil ls | grep $STORAGE_BUCKET_NAME)
   if [[ ! "$bucket_list" =~ "$STORAGE_BUCKET_NAME" ]]; then
@@ -141,16 +140,39 @@ else
   fi
   # Create connectors to GCS
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_gcs_no_avro.json)
+$(<connectors/gcs_no_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connector_config_gcs_avro.json)
+$(<connectors/gcs_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+
+else
+
+  # Setup Azure container
+  source $STORAGE_CREDENTIALS_FILE
+  az storage container show --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
+  if [[ $? != 0 ]]; then
+    echo "az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME"
+    az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
+  fi
+  # Create connectors to Azure
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<connectors/az_no_avro.json)
+EOF
+")
+  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+#  ccloud connector create -vvv --config <(eval "cat <<EOF
+#$(<connectors/az_avro.json)
+#EOF
+#")
+#  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+
 fi
+
 echo -e "\nSleeping 60 seconds waiting for connector to be in RUNNING state\n"
 sleep 60
 

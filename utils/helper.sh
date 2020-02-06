@@ -179,6 +179,15 @@ function check_gcp_creds() {
   fi
 }
 
+function check_az() {
+  if [[ $(type az 2>&1) =~ "not found" ]]; then
+    echo "Azure CLI is not found. Install Azure CLI and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function require_cp_or_exit() {
   command -v confluent >/dev/null 2>&1 || {
     printf "\nconfluent command not found.  Please check your Confluent Platform installation\n"
@@ -379,6 +388,23 @@ function error_not_compatible_confluent_cli() {
   return 0
 }
 
+function validate_cloud_storage() {
+  storage=$1
+
+  if [[ "$storage" == "s3" ]]; then
+    check_aws || exit
+  elif [[ "$storage" == "gcs" ]]; then
+    check_gcp_creds || exit
+    check_gsutil || exit
+  elif [[ "$storage" == "az" ]]; then
+    check_az || exit
+  else
+    echo "Storage destination $storage is not valid.  Must be one of [s3|gcs|az]."
+    exit 1
+  fi
+
+  return 0
+}
 
 function validate_confluent_cloud_schema_registry() {
   auth=$1
