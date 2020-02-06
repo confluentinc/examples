@@ -5,6 +5,7 @@
 
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
+check_ccloud_logged_in || exit
 
 source config/demo.cfg
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config

@@ -39,7 +39,7 @@ function check_ccloud_binary() {
 
 function check_ccloud() {
 
-	check_ccloud_binary || exit 1
+  check_ccloud_binary || exit 1
 
   if [[ ! -e "$HOME/.ccloud/config" ]]; then
     echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
@@ -69,6 +69,17 @@ function check_ccloud_v2() {
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_ccloud_logged_in() {
+  check_ccloud_v2 || exit 1
+
+  if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must login to run that command." ]]; then
+    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login' before running the demo."
     exit 1
   fi
 

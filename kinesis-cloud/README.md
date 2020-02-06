@@ -44,9 +44,9 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * `jq`
 * `curl`
 
-## Configuration file
+# Run the demo
 
-Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
+1. Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell
 $ cat $HOME/.ccloud/config
@@ -61,29 +61,33 @@ schema.registry.url=https://<SR ENDPOINT>
 ksql.endpoint=https://<KSQL ENDPOINT>
 ```
 
-# Run the demo
+2. Configure the cloud storage provider and other demo parameters in the `config/demo.cfg` file. In particular, be sure to configure the `DESTINATION_STORAGE` parameter appropriately for Google GCS or AWS S3, and set the appropriate region.
 
-1. Configure the cloud storage provider and other demo parameters in the `config/demo.cfg` file. In particular, be sure to configure the `DESTINATION_STORAGE` parameter appropriately for Google GCS or AWS S3, and set the appropriate region.
+3. Log into Confluent Cloud with the command 'ccloud login' before running the demo.
 
-2. Run the demo:
+```
+ccloud login --url https://confluent.cloud
+```
+
+4. Run the demo:
 
 ```bash
 $ ./start.sh
 ```
 
-3. View all the Kinesis, Kafka, and cloud storage data after running the demo:
+5. View all the Kinesis, Kafka, and cloud storage data after running the demo:
 
 ```bash
 $ ./read-data.sh
 ```
 
-4. Stop the demo and clean up:
+6. Stop the demo and clean up:
 
 ```bash
 $ ./stop.sh
 ```
 
-4. Use the Confluent Cloud UI to view the Flow:
+7. Use the Confluent Cloud UI to view the Flow:
 
 ![image](images/flow.png)
 

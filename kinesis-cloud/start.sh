@@ -14,6 +14,7 @@ check_running_cp ${CP_VERSION_MAJOR} || exit
 
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
+check_ccloud_logged_in || exit
 
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   check_aws || exit
@@ -71,7 +72,7 @@ echo -e "\nConfluent Cloud KSQL application\n"
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 
 # Create required topics and ACLs
-echo -e "\nCreate requied topics and ACLs\n"
+echo -e "Create output topics $KAFKA_TOPIC_NAME_OUT1 and $KAFKA_TOPIC_NAME_OUT2, and ACLs to allow the KSQL application to run\n"
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
 ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
@@ -81,6 +82,7 @@ ccloud kafka acl create --allow --service-account-id $(ccloud service-account li
 
 # Submit KSQL queries
 echo -e "\nSubmit KSQL queries\n"
+properties='"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"'
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
   curl -X POST $KSQL_ENDPOINT/ksql \
@@ -89,7 +91,7 @@ while read ksqlCmd; do
        -d @<(cat <<EOF
 {
   "ksql": "$ksqlCmd",
-  "streamsProperties": {"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"}
+  "streamsProperties": {$properties}
 }
 EOF
 )
@@ -139,7 +141,8 @@ EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
 fi
-sleep 10
+echo -e "\nSleeping 60 seconds waiting for connector to be in RUNNING state\n"
+sleep 60
 
 #################################################################
 # Validation: Read Data
