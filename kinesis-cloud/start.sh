@@ -157,6 +157,8 @@ sleep 60
 #################################################################
 # Validation: Read Data
 #################################################################
+echo -e "\nSleeping 20 seconds waiting for data to be sent to $DESTINATION_STORAGE\n"
+sleep 20
 ./read-data.sh
 
 echo -e "\nDONE!\n"
