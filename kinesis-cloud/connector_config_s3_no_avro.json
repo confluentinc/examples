@@ -6,17 +6,8 @@
     "kafka.api.secret": "$CLOUD_SECRET",
     "aws.access.key.id": "$AWS_ACCESS_KEY_ID",
     "aws.secret.access.key": "$AWS_SECRET_ACCESS_KEY",
-    "s3.region": "$STORAGE_REGION",
     "s3.bucket.name": "$STORAGE_BUCKET_NAME",
-    "s3.part.size": "5242880",
     "time.interval" : "HOURLY",
-    "flush.size": "1000",
-    "storage.class": "io.confluent.connect.s3.storage.S3Storage",
     "data.format": "BYTES",
-    "schema.generator.class": "io.confluent.connect.storage.hive.schema.DefaultSchemaGenerator",
-    "partitioner.class": "io.confluent.connect.storage.partitioner.DefaultPartitioner",
-    "schema.compatibility": "NONE",
-    "topics": "$KAFKA_TOPIC_NAME_OUT2",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.storage.StringConverter"
+    "topics": "$KAFKA_TOPIC_NAME_OUT2"
 }
