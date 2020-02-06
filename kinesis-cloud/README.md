@@ -39,8 +39,9 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
 * KSQL enabled on your Confluent Cloud cluster
 * Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.234.0 or later
-* AWS: `aws cli`, properly initialized with your credentials
-* GCS: `gsutils`, properly initialized with your credentials
+* AWS S3: `aws cli`, properly initialized with your credentials
+* GCP GCS: `gsutils`, properly initialized with your credentials
+* Azure Blob: `az`, properly initialized with your credentials
 * `jq`
 * `curl`
 
@@ -61,7 +62,7 @@ schema.registry.url=https://<SR ENDPOINT>
 ksql.endpoint=https://<KSQL ENDPOINT>
 ```
 
-2. Configure the cloud storage provider and other demo parameters in the `config/demo.cfg` file. In particular, be sure to configure the `DESTINATION_STORAGE` parameter appropriately for Google GCS or AWS S3, and set the appropriate region.
+2. Configure the cloud storage provider and other demo parameters in the `config/demo.cfg` file.
 
 3. Log into Confluent Cloud with the command 'ccloud login' before running the demo.
 
