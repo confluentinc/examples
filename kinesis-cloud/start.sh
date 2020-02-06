@@ -44,10 +44,9 @@ fi
 echo -e "\nSleeping 60 seconds waiting for Kinesis stream to be created\n"
 sleep 60
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
-while read -r line ; do
-  key=$(echo "$line" | awk -F',' '{print $1;}')
-  aws kinesis put-record --stream-name $KINESIS_STREAM_NAME --partition-key $key --data $line --region $KINESIS_REGION
-done < ../utils/table.locations.csv
+aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json
+aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json
+aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json
 echo -e "\nSleeping 10 seconds\n"
 sleep 10
 
