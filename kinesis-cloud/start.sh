@@ -34,11 +34,12 @@ ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print
 # Source: create and populate Kinesis streams and create connectors
 #################################################################
 echo -e "\nSource: create and populate Kinesis streams and create connectors\n"
-source $AWS_CREDENTIALS_FILE
 ./create_kinesis_streams.sh
 
 # Create input topic and create source connector
 ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
+export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $AWS_PROFILE)
+export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $AWS_PROFILE)
 create_connector_cloud connectors/kinesis.json || exit 1
 
 echo -e "\nSleeping 60 seconds waiting for connector to be in RUNNING state\n"
@@ -57,12 +58,14 @@ echo -e "\nSink: setup $DESTINATION_STORAGE cloud storage and create connectors\
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
   # Setup S3 bucket
-  aws s3api head-bucket --bucket "$STORAGE_BUCKET_NAME" --region $STORAGE_REGION 2>/dev/null
+  aws s3api head-bucket --bucket "$STORAGE_BUCKET_NAME" --region $STORAGE_REGION --profile $AWS_PROFILE 2>/dev/null
   if [[ $? != 0 ]]; then
-    echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION"
-    aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION
+    echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $AWS_PROFILE"
+    aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $AWS_PROFILE
   fi
 
+  export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $STORAGE_PROFILE)
+  export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $STORAGE_PROFILE)
   create_connector_cloud connectors/s3_no_avro.json || exit 1
   create_connector_cloud connectors/s3_avro.json || exit 1
 
@@ -81,11 +84,12 @@ elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
 else
 
   # Setup Azure container
-  source $STORAGE_CREDENTIALS_FILE
-  az storage container show --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
+  export AZBLOB_ACCOUNT_NAME=$STORAGE_PROFILE
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
+  az storage container show --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY
   if [[ $? != 0 ]]; then
-    echo "az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME"
-    az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
+    echo "az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY"
+    az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY
   fi
 
   create_connector_cloud connectors/az_no_avro.json || exit 1

@@ -50,7 +50,8 @@ elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
     #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
   done
 else
-  source $STORAGE_CREDENTIALS_FILE
-  az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
-  az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --prefix "topics/$KAFKA_TOPIC_NAME_OUT2" | jq -r '.[].name'
+  export AZBLOB_ACCOUNT_NAME=$STORAGE_PROFILE
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
+  #az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
+  az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT2" | jq -r '.[].name'
 fi

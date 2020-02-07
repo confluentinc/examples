@@ -29,23 +29,23 @@ for f in connectors/*.json; do
 done
 
 # Clean up AWS Kinesis and cloud storage
-source $AWS_CREDENTIALS_FILE
 echo "Clean up AWS Kinesis"
-aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION > /dev/null 2>&1
+aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --profile $AWS_PROFILE > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
-  aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
+  aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --profile $AWS_PROFILE
 fi
 echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION
-  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION
+  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION --profile $STORAGE_PROFILE
+  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION --profile $STORAGE_PROFILE
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
   check_gsutil || exit
   # Clean up GCS
   gsutil rm -r gs://$STORAGE_BUCKET_NAME/**
 else
-  source $STORAGE_CREDENTIALS_FILE
-  az storage container delete --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
+  export AZBLOB_ACCOUNT_NAME=$STORAGE_PROFILE
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
+  az storage container delete --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY
 fi
 #rm -f data.avro
 
