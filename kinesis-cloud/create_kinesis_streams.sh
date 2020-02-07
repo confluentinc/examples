@@ -28,4 +28,4 @@ done
 echo -e "\nSleeping 10 seconds\n"
 sleep 10
 
-return 0
+exit 0

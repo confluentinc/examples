@@ -55,4 +55,4 @@ done <ksql.commands
 echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
 sleep 20
 
-return 0
+exit 0
