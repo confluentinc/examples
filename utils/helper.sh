@@ -30,6 +30,15 @@ function check_env() {
   return 0
 }
 
+function check_confluent_binary() {
+  if [[ $(type confluent 2>&1) =~ "not found" ]]; then
+    echo "'confluent' is not found. Must install Confluent Platform to get Confluent CLI."
+    return 1
+  fi
+
+  return 0
+}
+
 function check_ccloud_binary() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
     echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli) and try again"
