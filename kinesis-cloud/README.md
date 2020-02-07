@@ -28,6 +28,10 @@ It is built on the Confluent Platform, including:
 | KSQL                       | `locations`               | KSQL streams and tables ([ksql.commands](ksql.commands)) |
 | GCS (or S3) sink connector | KSQL tables `COUNT_PER_CITY`, `SUM_PER_CITY` | GCS (or S3)         |
 
+# Warning
+
+This demo uses real cloud resources, including that of Confluent Cloud, Amazon Kinesis, and one of the cloud storage providers.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 # Prerequisites
 
