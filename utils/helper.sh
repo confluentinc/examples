@@ -489,6 +489,18 @@ function validate_ccloud_ksql() {
   return 0
 }
 
+function create_connector_cloud() {
+  file=$1
+
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<$1)
+EOF
+")
+if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+
+  return 0
+}
+
 function ccloud_login(){
 
   URL=$1

@@ -27,83 +27,27 @@ validate_cloud_storage $DESTINATION_STORAGE || exit
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
+# Set Kafka cluster
+ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
+
 #################################################################
 # Source: create and populate Kinesis streams and create connectors
 #################################################################
 echo -e "\nSource: create and populate Kinesis streams and create connectors\n"
 source $AWS_CREDENTIALS_FILE
-echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION"
-aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION
-if [[ $? != 0 ]]; then
-  echo "ERROR: Received a non-zero exit code when trying to create the AWS Kinesis stream. Please troubleshoot"
-  exit $?
-fi
-echo -e "\nSleeping 60 seconds waiting for Kinesis stream to be created\n"
-sleep 60
-#aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION
-# File has ~500 records, so run several times to fulfill the flush size requirement of 1000 records / partition for the sink connectors
-echo -e "Writing ~11k records to Kinesis\n"
-for i in {1..22}; do
-  aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json >/dev/null
-  if [[ $? != 0 ]]; then
-    echo "ERROR: Received a non-zero exit code when trying to put-records into the AWS Kinesis stream. Please troubleshoot"
-    exit $?
-  fi
-done
-echo -e "\nSleeping 10 seconds\n"
-sleep 10
+./create_kinesis_streams.sh
 
-# Create topics and create source connector
-ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
+# Create input topic and create source connector
 ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
-ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connectors/kinesis.json)
-EOF
-")
-if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+create_connector_cloud connectors/kinesis.json || exit 1
+
 echo -e "\nSleeping 60 seconds waiting for connector to be in RUNNING state\n"
 sleep 60
 
 #################################################################
 # Confluent Cloud KSQL application
 #################################################################
-echo -e "\nConfluent Cloud KSQL application\n"
-validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
-
-# Create required topics and ACLs
-echo -e "Create output topics $KAFKA_TOPIC_NAME_OUT1 and $KAFKA_TOPIC_NAME_OUT2, and ACLs to allow the KSQL application to run\n"
-ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
-ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
-ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
-ccloud ksql app configure-acls $ksqlAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
-ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
-ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
-
-# Submit KSQL queries
-echo -e "\nSubmit KSQL queries\n"
-properties='"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"'
-while read ksqlCmd; do
-  echo -e "\n$ksqlCmd\n"
-  response=$(curl -X POST $KSQL_ENDPOINT/ksql \
-       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
-       -u $KSQL_BASIC_AUTH_USER_INFO \
-       --silent \
-       -d @<(cat <<EOF
-{
-  "ksql": "$ksqlCmd",
-  "streamsProperties": {$properties}
-}
-EOF
-))
-  echo $response
-  if [[ ! "$response" =~ "SUCCESS" ]]; then
-    echo -e "\nWARNING: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response.  Please troubleshoot."
-    sleep 2
-  fi
-done <ksql.commands
-echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
-sleep 20
-
+./create_ksql_app.sh
 
 #################################################################
 # Sink: setup cloud storage and create connectors
@@ -113,25 +57,14 @@ echo -e "\nSink: setup $DESTINATION_STORAGE cloud storage and create connectors\
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
   # Setup S3 bucket
-  aws s3api head-bucket --bucket "STORAGE_BUCKET_NAME" --region $STORAGE_REGION
+  aws s3api head-bucket --bucket "STORAGE_BUCKET_NAME" --region $STORAGE_REGION 2>/dev/null
   if [[ $? != 0 ]]; then
     echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION"
     aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION
   fi
 
-  # Create non-Avro connector
-  ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connectors/s3_no_avro.json)
-EOF
-")
-  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
-
-  # Create Avro connector
-  ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connectors/s3_avro.json)
-EOF
-")
-  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+  create_connector_cloud connectors/s3_no_avro.json || exit 1
+  create_connector_cloud connectors/s3_avro.json || exit 1
 
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
 
@@ -142,19 +75,8 @@ elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
     gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME
   fi
 
-  # Create non-Avro connector
-  ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connectors/gcs_no_avro.json)
-EOF
-")
-  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
-
-  # Create Avro connector
-  ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connectors/gcs_avro.json)
-EOF
-")
-  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+  create_connector_cloud connectors/gcs_no_avro.json || exit 1
+  create_connector_cloud connectors/gcs_avro.json || exit 1
 
 else
 
@@ -166,21 +88,11 @@ else
     az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
   fi
 
-  # Create non-Avro connector
-  ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<connectors/az_no_avro.json)
-EOF
-")
-  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+  create_connector_cloud connectors/az_no_avro.json || exit 1
 
-  # Create Avro connector
   # While Azure Blob Sink is in Preview, limit is only one connector of this type
   # So these lines are to remain commented out until then
-#  ccloud connector create -vvv --config <(eval "cat <<EOF
-#$(<connectors/az_avro.json)
-#EOF
-#")
-#  if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+  #create_connector_cloud connectors/az_avro.json || exit 1
 
 fi
 
