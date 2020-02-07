@@ -47,7 +47,7 @@ else
   source $STORAGE_CREDENTIALS_FILE
   az storage container delete --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
 fi
-rm -f data.avro
+#rm -f data.avro
 
 # Clean up KSQL
 echo "Clean up KSQL"

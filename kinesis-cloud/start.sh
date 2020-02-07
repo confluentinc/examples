@@ -57,7 +57,7 @@ echo -e "\nSink: setup $DESTINATION_STORAGE cloud storage and create connectors\
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
   # Setup S3 bucket
-  aws s3api head-bucket --bucket "STORAGE_BUCKET_NAME" --region $STORAGE_REGION 2>/dev/null
+  aws s3api head-bucket --bucket "$STORAGE_BUCKET_NAME" --region $STORAGE_REGION 2>/dev/null
   if [[ $? != 0 ]]; then
     echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION"
     aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION
