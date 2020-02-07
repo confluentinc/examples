@@ -11,7 +11,7 @@ echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count
 aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION --profile $AWS_PROFILE
 if [[ $? != 0 ]]; then
   echo "ERROR: Received a non-zero exit code when trying to create the AWS Kinesis stream. Please troubleshoot"
-  exit $?
+  exit 1
 fi
 echo -e "\nSleeping 60 seconds waiting for Kinesis stream to be created\n"
 sleep 60
@@ -22,8 +22,10 @@ for i in {1..22}; do
   aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://../utils/table.locations.cloud.json --profile $AWS_PROFILE >/dev/null
   if [[ $? != 0 ]]; then
     echo "ERROR: Received a non-zero exit code when trying to put-records into the AWS Kinesis stream. Please troubleshoot"
-    exit $?
+    exit 1
   fi
 done
 echo -e "\nSleeping 10 seconds\n"
 sleep 10
+
+return 0

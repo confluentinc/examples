@@ -34,7 +34,7 @@ ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print
 # Source: create and populate Kinesis streams and create connectors
 #################################################################
 echo -e "\nSource: create and populate Kinesis streams and create connectors\n"
-./create_kinesis_streams.sh
+./create_kinesis_streams.sh || exit 1
 
 # Create input topic and create source connector
 ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
@@ -48,7 +48,7 @@ sleep 60
 #################################################################
 # Confluent Cloud KSQL application
 #################################################################
-./create_ksql_app.sh
+./create_ksql_app.sh || exit 1
 
 #################################################################
 # Sink: setup cloud storage and create connectors
