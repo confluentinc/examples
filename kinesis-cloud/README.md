@@ -45,9 +45,11 @@ As with the other demos in this repo, you may run the entire demo end-to-end wit
 * `jq`
 * `curl`
 
-# Run the demo
+# Run the Demo
 
-1. Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
+## Setup
+
+1. Initialize a properties file at `$HOME/.ccloud/config` with the following configuration parameters for your Confluent Cloud cluster:
 
 ```shell
 $ cat $HOME/.ccloud/config
@@ -62,13 +64,15 @@ schema.registry.url=https://<SR ENDPOINT>
 ksql.endpoint=https://<KSQL ENDPOINT>
 ```
 
-2. Configure the cloud storage provider and other demo parameters in the `config/demo.cfg` file.
+2. Modify the demo configuration file at `config/demo.cfg` for your particular cloud storage provider and other demo parameters.
 
-3. Log into Confluent Cloud with the command 'ccloud login' before running the demo.
+3. Log into Confluent Cloud with the command 'ccloud login'.
 
 ```
 ccloud login --url https://confluent.cloud
 ```
+
+## Run
 
 4. Run the demo:
 
@@ -82,13 +86,13 @@ $ ./start.sh
 $ ./read-data.sh
 ```
 
-6. Stop the demo and clean up:
+6. Use the Confluent Cloud UI to view the Flow:
+
+![image](images/flow.png)
+
+7. Stop the demo and clean up:
 
 ```bash
 $ ./stop.sh
 ```
-
-7. Use the Confluent Cloud UI to view the Flow:
-
-![image](images/flow.png)
 

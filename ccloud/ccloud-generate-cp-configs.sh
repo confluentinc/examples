@@ -91,6 +91,8 @@ if [[ ! -f "$SR_CONFIG_FILE" ]]; then
 fi
 echo "SR_CONFIG_FILE: $SR_CONFIG_FILE"
 
+echo -e "\nGenerating component configurations based on the files $CONFIG_FILE ($SR_CONFIG_FILE)\n" 
+
 # Set permissions
 PERM=600
 if ls --version 2>/dev/null | grep -q 'coreutils' ; then

@@ -113,17 +113,20 @@ echo -e "\nSink: setup $DESTINATION_STORAGE cloud storage and create connectors\
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
   # Setup S3 bucket
-  bucket_list=$(aws s3api list-buckets --query "Buckets[].Name" --region $STORAGE_REGION | grep $STORAGE_BUCKET_NAME)
-  if [[ ! "$bucket_list" =~ "$STORAGE_BUCKET_NAME" ]]; then
+  aws s3api head-bucket --bucket "STORAGE_BUCKET_NAME" --region $STORAGE_REGION
+  if [[ $? != 0 ]]; then
     echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION"
     aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION
   fi
-  # Create connectors to S3
+
+  # Create non-Avro connector
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connectors/s3_no_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+
+  # Create Avro connector
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connectors/s3_avro.json)
 EOF
@@ -138,12 +141,15 @@ elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
     echo "gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME"
     gsutil mb -l $STORAGE_REGION gs://$STORAGE_BUCKET_NAME
   fi
-  # Create connectors to GCS
+
+  # Create non-Avro connector
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connectors/gcs_no_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+
+  # Create Avro connector
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connectors/gcs_avro.json)
 EOF
@@ -159,12 +165,17 @@ else
     echo "az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME"
     az storage container create --name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME
   fi
-  # Create connectors to Azure
+
+  # Create non-Avro connector
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<connectors/az_no_avro.json)
 EOF
 ")
   if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+
+  # Create Avro connector
+  # While Azure Blob Sink is in Preview, limit is only one connector of this type
+  # So these lines are to remain commented out until then
 #  ccloud connector create -vvv --config <(eval "cat <<EOF
 #$(<connectors/az_avro.json)
 #EOF
