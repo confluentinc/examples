@@ -15,8 +15,7 @@ Benefits of Confluent Cloud:
 
 # End-to-end Streaming ETL
 
-This demo showcases an entire end-to-end streaming ETL deployment, built for 100% cloud services.
-It is built on the Confluent Platform, including:
+This demo showcases an entire end-to-end streaming ETL deployment, built for 100% cloud services:
 
 * Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in Confluent Cloud
 * ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
@@ -26,7 +25,7 @@ It is built on the Confluent Platform, including:
 |----------------------------|---------------------------|-------------------------|
 | Kinesis source connector   | Kinesis stream `s1`       | `locations`             |
 | KSQL                       | `locations`               | KSQL streams and tables ([ksql.commands](ksql.commands)) |
-| GCS (or S3) sink connector | KSQL tables `COUNT_PER_CITY`, `SUM_PER_CITY` | GCS (or S3)         |
+| GCS/S3/Blob sink connector | KSQL tables `COUNT_PER_CITY`, `SUM_PER_CITY` | GCS/S3/Blob         |
 
 # Warning
 
@@ -39,7 +38,6 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 
 As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
-* [Common demo prerequisites](https://github.com/confluentinc/examples#prerequisites)
 * [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
 * KSQL enabled on your Confluent Cloud cluster
 * Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.234.0 or later
@@ -70,7 +68,7 @@ ksql.endpoint=https://<KSQL ENDPOINT>
 
 2. Modify the demo configuration file at `config/demo.cfg` for your particular cloud storage provider and other demo parameters.
 
-3. Log into Confluent Cloud with the command 'ccloud login'.
+3. Log into Confluent Cloud with the command 'ccloud login', and use your Confluent Cloud username and password.
 
 ```
 ccloud login --url https://confluent.cloud
@@ -78,7 +76,7 @@ ccloud login --url https://confluent.cloud
 
 ## Run
 
-4. Run the demo:
+4. Run the demo. It takes about 7 minutes to run.
 
 ```bash
 $ ./start.sh
@@ -94,7 +92,7 @@ $ ./read-data.sh
 
 ![image](images/flow.png)
 
-7. Stop the demo and clean up:
+7. Stop the demo and clean up all the resources, delete Kafka topics, delete the fully-managed connectors, delete the data in the cloud storage:
 
 ```bash
 $ ./stop.sh
