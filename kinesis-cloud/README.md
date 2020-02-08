@@ -36,11 +36,15 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 
 ## Environment
 
-As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
+Cloud services:
 
-* [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
-* KSQL enabled on your Confluent Cloud cluster
-* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.234.0 or later
+* [Confluent Cloud cluster](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis): for development only. Do not use a production cluster.
+* [Confluent Cloud KSQL](https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis) provisioned in your Confluent Cloud
+* AWS or GCP or Azure access
+
+Local install:
+
+* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.234.0 or later
 * AWS S3: `aws cli`, properly initialized with your credentials
 * GCP GCS: `gsutils`, properly initialized with your credentials
 * Azure Blob: `az`, properly initialized with your credentials
@@ -76,7 +80,7 @@ ccloud login --url https://confluent.cloud
 
 ## Run
 
-4. Run the demo. It takes about 7 minutes to run.
+4. Run the demo. It takes under 10 minutes to run.
 
 ```bash
 $ ./start.sh
@@ -88,7 +92,7 @@ $ ./start.sh
 $ ./read-data.sh
 ```
 
-6. Use the Confluent Cloud UI to view the Flow:
+6. From the Confluent Cloud UI, view the Flow:
 
 ![image](images/flow.png)
 

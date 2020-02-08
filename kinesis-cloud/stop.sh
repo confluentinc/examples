@@ -54,7 +54,7 @@ echo "Clean up KSQL"
 validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
 # Terminate queries first
 ksqlCmd="show queries;"
-echo -e "\n$ksqlCmd\n"
+echo -e "\n\n$ksqlCmd"
 queries=$(curl --silent -X POST $KSQL_ENDPOINT/ksql \
        -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
        -u $KSQL_BASIC_AUTH_USER_INFO \
@@ -67,7 +67,7 @@ EOF
 ) | jq -r '.[0].queries[].id')
 for q in $queries; do
   ksqlCmd="TERMINATE $q;"
-  echo -e "\n$ksqlCmd\n"
+  echo -e "\n$ksqlCmd"
   curl -X POST $KSQL_ENDPOINT/ksql \
        -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
        -u $KSQL_BASIC_AUTH_USER_INFO \
@@ -81,7 +81,7 @@ EOF
 done
 # Terminate streams and tables
 while read ksqlCmd; do
-  echo -e "\n$ksqlCmd\n"
+  echo -e "\n$ksqlCmd"
   curl -X POST $KSQL_ENDPOINT/ksql \
        -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
        -u $KSQL_BASIC_AUTH_USER_INFO \
