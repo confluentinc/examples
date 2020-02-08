@@ -34,15 +34,13 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 
 # Prerequisites
 
-## Environment
-
-Cloud services:
+## Cloud services
 
 * [Confluent Cloud cluster](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis): for development only. Do not use a production cluster.
 * [Confluent Cloud KSQL](https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis) provisioned in your Confluent Cloud
 * AWS or GCP or Azure access
 
-Local install:
+## Local install
 
 * [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.234.0 or later
 * AWS S3: `aws cli`, properly initialized with your credentials
