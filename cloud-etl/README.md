@@ -9,7 +9,7 @@ Benefits of Confluent Cloud:
 * Build business applications on a full event streaming platform
 * Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
 * Use Kafka to aggregate data in single source of truth
-* Harness the power of [KSQL](https://www.confluent.io/product/ksql/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis)
+* Harness the power of [KSQL](https://www.confluent.io/product/ksql/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
 
 ![image](images/topology.jpg)
 
@@ -36,8 +36,8 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 
 ## Cloud services
 
-* [Confluent Cloud cluster](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis): for development only. Do not use a production cluster.
-* [Confluent Cloud KSQL](https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kinesis) provisioned in your Confluent Cloud
+* [Confluent Cloud cluster](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl): for development only. Do not use a production cluster.
+* [Confluent Cloud KSQL](https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl) provisioned in your Confluent Cloud
 * AWS or GCP or Azure access
 
 ## Local install
