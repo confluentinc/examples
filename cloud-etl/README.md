@@ -63,10 +63,28 @@ ssl.endpoint.identification.algorithm=https
 security.protocol=SASL_SSL
 sasl.mechanism=PLAIN
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-basic.auth.credentials.source=USER_INFO
-schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
 schema.registry.url=https://<SR ENDPOINT>
+schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+basic.auth.credentials.source=USER_INFO
 ksql.endpoint=https://<KSQL ENDPOINT>
+ksql.basic.auth.user.info=<KSQL API KEY>:<SR KSQL SECRET>
+```
+
+To get the right values for the endpoints in the file above, find them either via the Confluent Cloud UI or Confluent Cloud CLI commands:
+
+```
+# Login
+ccloud login --url https://confluent.cloud
+
+# BROKER ENDPOINT
+ccloud kafka cluster list
+ccloud kafka cluster describe
+
+# SR ENDPOINT
+ccloud schema-registry cluster describe
+
+# KSQL ENDPOINT
+ccloud ksql app list
 ```
 
 2. Modify the demo configuration file at `config/demo.cfg` for your particular cloud storage provider and other demo parameters.
