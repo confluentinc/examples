@@ -331,7 +331,7 @@ Run the demo
        cd examples
        git checkout |release_post_branch|
 
-#. Navigate to ``security/rbac/scripts`` directory.
+#. Navigate to ``security/rbac/rbac-docker`` directory.
 
    .. codewithvars:: bash
 
@@ -390,7 +390,7 @@ Grant Rolebindings
 
    .. code:: bash
 
-      confluent iam rolebinding create --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID --resource Topic:foo --prefix
+      confluent iam rolebinding create --principal User:bender --role ResourceOwner --resource Topic:foo --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 #. List the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_ID``
 
