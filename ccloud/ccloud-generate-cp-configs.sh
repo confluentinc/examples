@@ -28,6 +28,7 @@
 # - KSQL server
 # - Confluent Replicator (executable)
 # - Confluent Control Center
+# - Confluent REST Proxy
 # - Kafka Connect
 # - Kafka connector
 # - Kafka command line tools
@@ -284,6 +285,32 @@ do
   fi
 done < $SR_CONFIG_FILE
 chmod $PERM $C3_DELTA
+
+################################################################################
+# Confluent REST Proxy to Confluent Cloud
+################################################################################
+REST_PROXY_DELTA=$DEST/rest-proxy.delta
+echo "$REST_PROXY_DELTA"
+rm -f $REST_PROXY_DELTA
+while read -r line
+  do
+  if [[ ! -z $line && ${line:0:1} != '#' ]]; then
+    if [[ ${line:0:9} == 'bootstrap' || ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
+      echo "$line" >> $REST_PROXY_DELTA
+      echo "client.$line" >> $REST_PROXY_DELTA
+    fi
+  fi
+done < "$CONFIG_FILE"
+echo -e "\n# Confluent Schema Registry configuration for REST Proxy" >> $REST_PROXY_DELTA
+while read -r line
+do
+  if [[ ${line:0:29} == 'basic.auth.credentials.source' || ${line:0:36} == 'schema.registry.basic.auth.user.info' ]]; then
+    echo "client.$line" >> $REST_PROXY_DELTA
+  elif [[ ${line:0:19} == 'schema.registry.url' ]]; then
+    echo "$line" >> $REST_PROXY_DELTA
+  fi
+done < $SR_CONFIG_FILE
+chmod $PERM $REST_PROXY_DELTA
 
 ################################################################################
 # Kafka Connect runs locally and connects to Confluent Cloud
