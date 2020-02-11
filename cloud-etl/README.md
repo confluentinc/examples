@@ -2,30 +2,31 @@
 
 # Overview
 
-This demo showcases a `AWS Kinesis -> Confluent Cloud -> cloud storage` pipeline.
-You have freedom of choice in selecting the cloud storage provider that is right for your business needs.
-Benefits of Confluent Cloud:
+This demo showcases a cloud ETL leveraging all fully-managed services on [Confluent Cloud](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
+A source connector reads data from an AWS Kinesis stream into Confluent Cloud, a Confluent KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice.
+
+![image](images/topology.jpg)
+
+This enables you to:
 
 * Build business applications on a full event streaming platform
 * Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
 * Use Kafka to aggregate data in single source of truth
 * Harness the power of [KSQL](https://www.confluent.io/product/ksql/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
 
-![image](images/topology.jpg)
-
 # End-to-end Streaming ETL
 
-This demo showcases an entire end-to-end streaming ETL deployment, built for 100% cloud services:
+This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
 * Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in Confluent Cloud
 * ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
 * GCS or S3 sink connector: pushes data from Kafka topics to cloud storage
 
-| Component                  | Consumes From             | Produces To             |
-|----------------------------|---------------------------|-------------------------|
-| Kinesis source connector   | Kinesis stream `s1`       | `locations`             |
-| KSQL                       | `locations`               | KSQL streams and tables ([ksql.commands](ksql.commands)) |
-| GCS/S3/Blob sink connector | KSQL tables `COUNT_PER_CITY`, `SUM_PER_CITY` | GCS/S3/Blob         |
+| Component                  | Consumes From              | Produces To             |
+|----------------------------|----------------------------|-------------------------|
+| Kinesis source connector   | Kinesis stream `demo-logs` | Kafka topic `eventLogs` |
+| KSQL                       | `eventLogs`                | KSQL streams and tables ([ksql.commands](ksql.commands)) |
+| GCS/S3/Blob sink connector | KSQL tables `COUNT_PER_SOURCE`, `SUM_PER_SOURCE` | GCS/S3/Blob         |
 
 # Warning
 
@@ -78,7 +79,7 @@ ccloud login --url https://confluent.cloud
 
 ## Run
 
-4. Run the demo. It takes under 10 minutes to run.
+4. Run the demo. It takes approximately 7 minutes to run.
 
 ```bash
 $ ./start.sh
