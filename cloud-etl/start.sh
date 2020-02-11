@@ -25,6 +25,10 @@ DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
 # Set Kafka cluster
+if [[ "$CLOUD_KEY" == "" ]]; then
+  echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
+  exit 1
+fi
 ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
 
 #################################################################
