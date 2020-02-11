@@ -17,6 +17,9 @@ echo -e "\nData from Kinesis stream $KINESIS_STREAM_NAME --limit 10:"
 while read -r line ; do echo "$line" | base64 -id; echo; done <<< "$(aws kinesis get-records --region $KINESIS_REGION --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator' --region $KINESIS_REGION) --limit 10 | jq -r '.Records[].Data')"
 
 if check_confluent_binary; then
+
+  check_running_cp ${CP_VERSION_MAJOR} || exit
+
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_IN:"
   echo -e "confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true --max-messages 10"
   export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true --max-messages 10 2>/dev/null

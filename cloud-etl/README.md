@@ -106,7 +106,11 @@ $ ./start.sh
 
 ## Validate
 
-5. View all the data from Kinesis, Kafka, and cloud storage after running the demo:
+5. From the Confluent Cloud UI, view the Flow:
+
+![image](images/flow.png)
+
+6. View all the data from Kinesis, Kafka, and cloud storage after running the demo:
 
 ```bash
 $ ./read-data.sh
@@ -179,10 +183,6 @@ topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+000
 topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000003000.bin
 topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000004000.bin
 ```
-
-6. From the Confluent Cloud UI, view the Flow:
-
-![image](images/flow.png)
 
 ## Stop
 

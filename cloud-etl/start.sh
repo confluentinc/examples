@@ -9,9 +9,6 @@
 # Source demo-specific configurations
 source config/demo.cfg
 
-check_env || exit 1
-check_running_cp ${CP_VERSION_MAJOR} || exit
-
 CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit
 check_ccloud_version 0.234.0 || exit 1

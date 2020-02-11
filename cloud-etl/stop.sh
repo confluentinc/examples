@@ -13,8 +13,6 @@ SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 source delta_configs/env.delta
 
-check_env || exit 1
-
 validate_cloud_storage $DESTINATION_STORAGE || exit
 
 # Delete connectors
