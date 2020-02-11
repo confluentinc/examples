@@ -501,14 +501,23 @@ function validate_ccloud_ksql() {
     exit 1
   fi
 
-  # Validate health of KSQL cluster
-  response=$(curl $KSQL_ENDPOINT/info \
+  check_credentials_ksql "$ksql_endpoint" "$ccloud_config_file" "$credentials" || exit 1
+
+  return 0
+}
+
+function check_credentials_ksql() {
+  ksql_endpoint=$1
+  ccloud_config_file=$2
+  credentials=$3
+
+  response=$(curl ${ksql_endpoint}/info \
              -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
              --silent \
-             -u $KSQL_BASIC_AUTH_USER_INFO)
+             -u $credentials)
   echo $response
   if [[ "$response" =~ "Unauthorized" ]]; then
-    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $CONFIG_FILE and try again."
+    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $credentials and try again."
     exit 1
   fi
 
