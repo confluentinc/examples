@@ -19,7 +19,7 @@ This enables you to:
 This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
 * Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in Confluent Cloud
-* ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
+* KSQL: streaming SQL engine that enables real-time data processing against Kafka
 * GCS or S3 sink connector: pushes data from Kafka topics to cloud storage
 
 | Component                  | Consumes From              | Produces To             |
@@ -71,7 +71,8 @@ ksql.endpoint=https://<KSQL ENDPOINT>
 ksql.basic.auth.user.info=<KSQL API KEY>:<SR KSQL SECRET>
 ```
 
-To get the right values for the endpoints in the file above, find them either via the Confluent Cloud UI or Confluent Cloud CLI commands:
+To get the right values for the endpoints in the file above, find them either via the Confluent Cloud UI or Confluent Cloud CLI commands.
+If you have multiple Confluent Cloud clusters, make sure to use the one with the associated KSQL cluster.
 
 ```
 # Login
@@ -79,6 +80,7 @@ ccloud login --url https://confluent.cloud
 
 # BROKER ENDPOINT
 ccloud kafka cluster list
+ccloud kafka cluster use
 ccloud kafka cluster describe
 
 # SR ENDPOINT
