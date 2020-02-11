@@ -39,6 +39,7 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 
 * [Confluent Cloud cluster](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl): for development only. Do not use a production cluster.
 * [Confluent Cloud KSQL](https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl) provisioned in your Confluent Cloud
+* [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl): for more advanced Confluent CLI functionality (optional)
 * AWS or GCP or Azure access
 
 ## Local install
@@ -103,19 +104,90 @@ ccloud login --url https://confluent.cloud
 $ ./start.sh
 ```
 
-5. View all the Kinesis, Kafka, and cloud storage data after running the demo:
+## Validate
+
+5. View all the data from Kinesis, Kafka, and cloud storage after running the demo:
 
 ```bash
 $ ./read-data.sh
+```
+
+Sample output:
+
+```
+Data from Kinesis stream demo-logs --limit 10:
+{"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
+{"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
+{"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
+{"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
+{"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
+{"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
+{"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
+{"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
+{"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
+{"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
+
+Data from Kafka topic eventLogs:
+confluent local consume eventLogs -- --cloud --from-beginning --property print.key=true --max-messages 10
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
+5	{"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+
+Data from Kafka topic COUNT_PER_SOURCE:
+confluent local consume COUNT_PER_SOURCE -- --cloud --from-beginning --property print.key=true --max-messages 10
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":1}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":2}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":3}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":4}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":5}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":6}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":7}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":8}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":9}
+192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":10}
+
+Data from Kafka topic SUM_PER_SOURCE:
+confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=WZVZVUOIOYEITVDY:680fJRxdHGIkK3dVisMEM5nl6b+d74xvPgRhlUx4i/OQpT3B+Zlz2qtVEE01wKto --property schema.registry.url=https://psrc-lz3xz.us-central1.gcp.confluent.cloud --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":1}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":4}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":5}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":8}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":11}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":12}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":15}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":16}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":19}}
+192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":22}}
+
+Objects in Cloud storage az:
+
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000000000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000001000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000002000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000003000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000004000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000000000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000001000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000002000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000003000.bin
+topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000004000.bin
 ```
 
 6. From the Confluent Cloud UI, view the Flow:
 
 ![image](images/flow.png)
 
+## Stop
+
 7. Stop the demo and clean up all the resources, delete Kafka topics, delete the fully-managed connectors, delete the data in the cloud storage:
 
 ```bash
 $ ./stop.sh
 ```
-
