@@ -405,6 +405,8 @@ function validate_cloud_storage() {
   elif [[ "$storage" == "gcs" ]]; then
     check_gcp_creds || exit
     check_gsutil || exit
+    echo "Demo does not support GCS yet. For now use one of [s3|az]"
+    exit 1
   elif [[ "$storage" == "az" ]]; then
     check_az || exit
   else
