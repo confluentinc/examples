@@ -9,12 +9,11 @@
 # Source demo-specific configurations
 source config/demo.cfg
 
-CONFIG_FILE=~/.ccloud/config
-check_ccloud_config $CONFIG_FILE || exit
+check_ccloud_config $CONFIG_FILE || exit 1
 check_ccloud_version 0.234.0 || exit 1
-check_ccloud_logged_in || exit
+check_ccloud_logged_in || exit 1
 
-validate_cloud_storage $DESTINATION_STORAGE || exit
+validate_cloud_storage $DESTINATION_STORAGE || exit 1
 
 ./stop.sh
 

@@ -18,7 +18,7 @@ function check_env() {
   fi
 
   if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Since CP 5.3, the Confluent CLI is a separate download. Install the new Confluent CLI (https://docs.confluent.io/current/cli/installing.html) and try again"
+    echo "'confluent' is not found. Download Confluent Platform (https://www.confluent.io/download) to get the new Confluent CLI and try again"
     exit 1
   fi
 
@@ -41,7 +41,7 @@ function check_confluent_binary() {
 
 function check_ccloud_binary() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
-    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli) and try again"
+    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
     exit 1
   fi
 }
@@ -401,14 +401,14 @@ function validate_cloud_storage() {
   storage=$1
 
   if [[ "$storage" == "s3" ]]; then
-    check_aws || exit
+    check_aws || exit 1
   elif [[ "$storage" == "gcs" ]]; then
-    check_gcp_creds || exit
-    check_gsutil || exit
+    check_gcp_creds || exit 1
+    check_gsutil || exit 1
     echo "Demo does not support GCS yet. For now use one of [s3|az]"
     exit 1
   elif [[ "$storage" == "az" ]]; then
-    check_az || exit
+    check_az || exit 1
   else
     echo "Storage destination $storage is not valid.  Must be one of [s3|gcs|az]."
     exit 1
@@ -481,19 +481,22 @@ function check_ccloud_config() {
 
 function validate_ccloud_ksql() {
   ksql_endpoint=$1
+  ccloud_config_file=$2
+
+  check_ccloud_logged_in || exit 1
 
   if [[ "$ksql_endpoint" == "" ]]; then
-    echo "Please add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file and try again."
+    echo "ERROR: Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
   ksqlAppId=$(ccloud ksql app list | grep "$ksql_endpoint" | awk '{print $1}')
   if [[ "$ksqlAppId" == "" ]]; then
-    echo "Confluent Cloud KSQL endpoint $ksql_endpoint is not found. Please update ksql.endpoint in your Confluent Cloud configuration file with a valid KSQL endpoint and try again."
+    echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint is not found. Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
   STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
   if [[ "$STATUS" == "" ]]; then
-    echo "Confluent Cloud KSQL endpoint $ksql_endpoint with id $ksqlAppId is not in UP state. Please troubleshoot and try again."
+    echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint with id $ksqlAppId is not in UP state. Troubleshoot and try again."
     exit 1
   fi
 

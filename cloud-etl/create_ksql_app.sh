@@ -19,7 +19,7 @@ source $DELTA_CONFIGS_DIR/env.delta
 # Confluent Cloud KSQL application
 #################################################################
 echo -e "\nConfluent Cloud KSQL application\n"
-validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
+validate_ccloud_ksql $KSQL_ENDPOINT $CONFIG_FILE || exit 1
 
 # Create required topics and ACLs
 echo -e "Create output topics $KAFKA_TOPIC_NAME_OUT1 and $KAFKA_TOPIC_NAME_OUT2, and ACLs to allow the KSQL application to run\n"

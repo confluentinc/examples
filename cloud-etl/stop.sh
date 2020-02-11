@@ -3,17 +3,16 @@
 # Source library 
 . ../utils/helper.sh
 
-CONFIG_FILE=~/.ccloud/config
-check_ccloud_config $CONFIG_FILE || exit
-check_ccloud_logged_in || exit
-
+# Source demo-specific configurations
 source config/demo.cfg
-SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
-#SCHEMA_REGISTRY_CONFIG_FILE=schema_registry.config
-../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
+
+check_ccloud_config $CONFIG_FILE || exit 1
+check_ccloud_logged_in || exit 1
+
+../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
-validate_cloud_storage $DESTINATION_STORAGE || exit
+validate_cloud_storage $DESTINATION_STORAGE || exit 1
 
 # Delete connectors
 #for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-S3Sink-avro demo-S3Sink-no-avro; do
@@ -37,7 +36,7 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION --profile $STORAGE_PROFILE
   aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION --profile $STORAGE_PROFILE
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
-  check_gsutil || exit
+  check_gsutil || exit 1
   # Clean up GCS
   gsutil rm -r gs://$STORAGE_BUCKET_NAME/**
 else
@@ -50,7 +49,7 @@ fi
 
 # Clean up KSQL
 echo "Clean up KSQL"
-validate_ccloud_ksql $KSQL_ENDPOINT || exit 1
+validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" || exit 1
 # Terminate queries first
 ksqlCmd="show queries;"
 echo -e "\n\n$ksqlCmd"
