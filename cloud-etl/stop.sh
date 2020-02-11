@@ -49,7 +49,7 @@ fi
 
 # Clean up KSQL
 echo "Clean up KSQL"
-validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" || exit 1
+validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
 # Terminate queries first
 ksqlCmd="show queries;"
 echo -e "\n\n$ksqlCmd"

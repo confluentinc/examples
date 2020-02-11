@@ -482,6 +482,7 @@ function check_ccloud_config() {
 function validate_ccloud_ksql() {
   ksql_endpoint=$1
   ccloud_config_file=$2
+  credentials=$3
 
   check_ccloud_logged_in || exit 1
 
@@ -497,6 +498,18 @@ function validate_ccloud_ksql() {
   STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
   if [[ "$STATUS" == "" ]]; then
     echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint with id $ksqlAppId is not in UP state. Troubleshoot and try again."
+    exit 1
+  fi
+
+  # Validate health of KSQL cluster
+  response=$(curl $KSQL_ENDPOINT/healthcheck \
+             -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+             --silent \
+             -u $KSQL_BASIC_AUTH_USER_INFO)
+  echo $response
+  is_healthy=$(echo $response | jq -r .isHealthy)
+  if [[ "$is_healthy" != "true" ]]; then
+    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $CONFIG_FILE and try again."
     exit 1
   fi
 

@@ -19,7 +19,7 @@ source $DELTA_CONFIGS_DIR/env.delta
 # Confluent Cloud KSQL application
 #################################################################
 echo -e "\nConfluent Cloud KSQL application\n"
-validate_ccloud_ksql $KSQL_ENDPOINT $CONFIG_FILE || exit 1
+validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
 
 # Create required topics and ACLs
 echo -e "Create output topics $KAFKA_TOPIC_NAME_OUT1 and $KAFKA_TOPIC_NAME_OUT2, and ACLs to allow the KSQL application to run\n"
@@ -48,8 +48,8 @@ EOF
 ))
   echo $response
   if [[ ! "$response" =~ "SUCCESS" ]]; then
-    echo -e "\nWARNING: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response.  Please troubleshoot."
-    sleep 2
+    echo -e "\nERROR: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response.  Please troubleshoot."
+    exit 1
   fi
 done <ksql.commands
 echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
