@@ -91,8 +91,7 @@ Run the Demo
 Setup
 -----
 
-#. Initialize a properties file at ``$HOME/.ccloud/config`` with the
-   following configuration parameters for your |ccloud| cluster:
+#. By default, the demo reads the configuration parameters for your |ccloud| cluster from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster:
 
    .. code:: shell
 
