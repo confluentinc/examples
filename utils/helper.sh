@@ -509,6 +509,11 @@ function validate_ccloud_ksql() {
 function check_account_azure() {
   AZBLOB_ACCOUNT_NAME=$1
 
+  if [[ "$AZBLOB_ACCOUNT_NAME" == "default" ]]; then
+    echo "ERROR: Azure Blob storage account name cannot be 'default'. Verify the value of the storage account name (did you create one?) in config/demo.cfg, as specified by the parameter STORAGE_PROFILE, and try again."
+    exit 1
+  fi
+
   exists=$(az storage account check-name --name $AZBLOB_ACCOUNT_NAME | jq -r .reason)
   if [[ "$exists" != "AlreadyExists" ]]; then
     echo "ERROR: Azure Blob storage account name $AZBLOB_ACCOUNT_NAME does not exist. Check the value of STORAGE_PROFILE in config/demo.cfg and try again."
