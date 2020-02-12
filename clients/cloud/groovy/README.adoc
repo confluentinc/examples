@@ -9,7 +9,7 @@ Produce messages to and consume messages from a Kafka cluster using the Groovy v
 To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, link:https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud], or any other cluster.
 If this is a Confluent Cloud cluster, you must have:
 
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+* Access to a link:https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud] cluster
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell
