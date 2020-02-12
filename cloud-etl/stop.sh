@@ -40,6 +40,7 @@ elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
   # Clean up GCS
   gsutil rm -r gs://$STORAGE_BUCKET_NAME/**
 else
+  check_account_azure $STORAGE_PROFILE || exit 1
   export AZBLOB_ACCOUNT_NAME=$STORAGE_PROFILE
   export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
   az storage blob delete-batch --source $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT1}/*"

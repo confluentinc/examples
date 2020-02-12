@@ -506,6 +506,23 @@ function validate_ccloud_ksql() {
   return 0
 }
 
+function check_account_azure() {
+  AZBLOB_ACCOUNT_NAME=$1
+
+  exists=$(az storage account check-name --name $AZBLOB_ACCOUNT_NAME | jq -r .reason)
+  if [[ "$exists" != "AlreadyExists" ]]; then
+    echo "ERROR: Azure Blob storage account name $AZBLOB_ACCOUNT_NAME does not exists. Check the value of STORAGE_PROFILE in config/demo.cfg and try again."
+    exit 1
+  fi
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
+  if [[ "$AZBLOB_ACCOUNT_KEY" == "" ]]; then
+    echo "ERROR: Cannot get the key for Azure Blob storage account name $AZBLOB_ACCOUNT_NAME. Check the value of STORAGE_PROFILE in config/demo.cfg, and your key, and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_credentials_ksql() {
   ksql_endpoint=$1
   ccloud_config_file=$2
