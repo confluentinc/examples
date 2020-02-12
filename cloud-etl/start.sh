@@ -29,7 +29,12 @@ if [[ "$CLOUD_KEY" == "" ]]; then
   echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
   exit 1
 fi
-ccloud kafka cluster use $(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
+kafkaCluster=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $7;}')
+if [[ "$kafkaCluster" == "" ]]; then
+  echo "ERROR: Could not associate key $CLOUD_KEY to a Confluent Cloud Kafka cluster. Verify your credentials and try again."
+  exit 1
+fi
+ccloud kafka cluster use $kafkaCluster
 
 #################################################################
 # Source: create and populate Kinesis streams and create connectors
