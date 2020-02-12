@@ -28,15 +28,23 @@ This enables you to:
 End-to-end Streaming ETL
 ========================
 
-This demo showcases an entire end-to-end cloud ETL deployment, built for
-100% cloud services:
+This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
--  Kinesis source connector: reads from a Kinesis stream and writes the
-   data to a Kafka topic in |ccloud|
--  KSQL: streaming SQL engine that enables real-time data processing
-   against Kafka
--  GCS or S3 sink connector: pushes data from Kafka topics to cloud
-   storage
+-  Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in |ccloud|
+
+   - :ref:cc_kinesis-source
+
+-  KSQL: streaming SQL engine that enables real-time data processing against Kafka
+
+   - `Confluent Cloud KSQL <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
+
+-  Cloud storage sink connector: pushes data from Kafka topics to cloud storage, one of:
+
+   - :ref:cc_azure_blob_sink
+   - :ref:cc_gcs_connect_sink
+   - :ref:cc_s3_connect_sink
+
+Here is the data flow:
 
 +-----------------------+-----------------------+---------------------+
 | Component             | Consumes From         | Produces To         |
