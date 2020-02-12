@@ -106,3 +106,5 @@ for subject in $schema_registry_subjects_to_delete
 do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
+
+return 0

@@ -15,7 +15,7 @@ check_ccloud_logged_in || exit 1
 
 validate_cloud_storage $DESTINATION_STORAGE || exit 1
 
-./stop.sh
+./stop.sh || exit 1
 
 #################################################################
 # Generate CCloud configurations
