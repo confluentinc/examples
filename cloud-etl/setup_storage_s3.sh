@@ -6,10 +6,14 @@
 # Source demo-specific configurations
 source config/demo.cfg
 
-aws s3api head-bucket --bucket "$STORAGE_BUCKET_NAME" --region $STORAGE_REGION --profile $AWS_PROFILE 2>/dev/null
+aws s3api head-bucket --bucket "$STORAGE_BUCKET_NAME" --region $STORAGE_REGION --profile $STORAGE_PROFILE 2>/dev/null
 if [[ $? != 0 ]]; then
-  echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $AWS_PROFILE"
-  aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $AWS_PROFILE
+  echo "aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $STORAGE_PROFILE"
+  aws s3api create-bucket --bucket $STORAGE_BUCKET_NAME --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $STORAGE_PROFILE
+  if [[ $? != 0 ]]; then
+    echo "ERROR: Could not create S3 bucket $STORAGE_BUCKET_NAME in region $STORAGE_REGION using the profile $STORAGE_PROFILE. Troubleshoot and try again."
+    exit 1
+  fi
 fi
 
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $STORAGE_PROFILE)
