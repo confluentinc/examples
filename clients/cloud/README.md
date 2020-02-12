@@ -3,8 +3,8 @@
 ## Programming Languages
 
 This directory includes examples of Kafka client applications written in different languages.
-The README for each language walks through the configurations required to connect to [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud).
-If you want to run the applications against another Kafka cluster, provide the appropriate connection information in the properties file that is passed into the client applications.
+The README for each language walks through the necessary steps to run each example.
+Each client example takes as an argument a properties file with the configuration parameters that specify connection information for any Kafka cluster: this can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
@@ -17,7 +17,7 @@ If you want to run the applications against another Kafka cluster, provide the a
 
 ## Confluent Cloud and Confluent Cloud Schema Registry
 
-The following subset includes examples with Confluent Cloud Schema Registry and Avro data:
+The following subset includes examples with Confluent Schema Registry and Avro data:
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
