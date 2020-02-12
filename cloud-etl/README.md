@@ -45,9 +45,9 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 ## Local install
 
 * [Confluent Cloud CLI](https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.234.0 or later
-* AWS S3: `aws` CLI, properly initialized with your credentials
-* GCP GCS: `gsutils` CLI, properly initialized with your credentials
-* Azure Blob: `az` CLI, properly initialized with your credentials
+* `aws` CLI, properly initialized with your credentials: AWS Kinesis and (optional) if destination is AWS S3
+* `gsutils` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
+* `az` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob
 * `jq`
 * `curl`
 
