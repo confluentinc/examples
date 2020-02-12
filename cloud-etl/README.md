@@ -7,4 +7,4 @@ A source connector reads data from an AWS Kinesis stream into Confluent Cloud, a
 
 # Documentation
 
-You can find the documentation for running this demo and its accompanying tutorial at [https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html](https://docs.confluent.io/current/tutorials/examples/microservices-orders/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
+You can find the documentation for running this demo and its accompanying tutorial at [https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html](https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
