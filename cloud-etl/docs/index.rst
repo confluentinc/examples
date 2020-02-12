@@ -81,7 +81,7 @@ Local install
    v0.234.0 or later
 -  ``aws`` CLI, properly initialized with your credentials: AWS Kinesis and (optional) if destination is AWS S3
 -  ``gsutils`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
--  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob
+-  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
 
