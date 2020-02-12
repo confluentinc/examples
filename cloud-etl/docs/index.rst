@@ -6,7 +6,7 @@
 Cloud ETL Demo
 ==============
 
-This demo showcases a cloud ETL leveraging all fully-managed services on
+This demo showcases a cloud ETL solution leveraging all fully-managed services on
 `Confluent Cloud <https://confluent.cloud>`__.
 A source connector reads data from an AWS Kinesis stream into Confluent
 Cloud, a Confluent KSQL application processes that data, and then a sink
@@ -74,13 +74,13 @@ Cloud services
 -  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 -  AWS or GCP or Azure access
 
-Local install
--------------
+Local Tools
+-----------
 
 -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
    v0.234.0 or later
 -  ``aws`` CLI, properly initialized with your credentials: AWS Kinesis and (optional) if destination is AWS S3
--  ``gsutils`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
+-  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
@@ -91,7 +91,7 @@ Run the Demo
 Setup
 -----
 
-#. By default, the demo reads the configuration parameters for your |ccloud| cluster from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster:
+#. By default, the demo reads the configuration parameters for your |ccloud| environment from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster, replacing the values in ``<...>`` below particular for your |ccloud| environment:
 
    .. code:: shell
 
@@ -107,7 +107,7 @@ Setup
       ksql.endpoint=https://<KSQL ENDPOINT>
       ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 
-   To get the right values for the endpoints in the file above, find them either via the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.
+   To get the right values for the endpoints and credentials in the file above, find them either via the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.
 
    ::
 
@@ -124,6 +124,9 @@ Setup
 
    # KSQL ENDPOINT
    ccloud ksql app list
+
+   # Credentials (create for each resource above)
+   ccloud api-key create
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 

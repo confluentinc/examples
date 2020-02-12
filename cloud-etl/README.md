@@ -1,6 +1,6 @@
 # Overview
 
-This demo showcases a cloud ETL leveraging all fully-managed services on [Confluent Cloud](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
+This demo showcases a cloud ETL solution leveraging all fully-managed services on [Confluent Cloud](https://confluent.cloud?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cloud-etl)
 A source connector reads data from an AWS Kinesis stream into Confluent Cloud, a Confluent KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice.
 
 ![image](docs/images/topology.jpg)
