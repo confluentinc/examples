@@ -188,7 +188,7 @@ function check_gcp_creds() {
   fi
 }
 
-function check_az() {
+function check_az_tool() {
   if [[ $(type az 2>&1) =~ "not found" ]]; then
     echo "Azure CLI is not found. Install Azure CLI and try again"
     exit 1
@@ -398,22 +398,77 @@ function error_not_compatible_confluent_cli() {
 }
 
 function validate_cloud_storage() {
-  storage=$1
+  config=$1
+
+  source $config
+  storage=$DESTINATION_STORAGE
 
   if [[ "$storage" == "s3" ]]; then
     check_aws || exit 1
+    check_s3_creds $S3_PROFILE $S3_BUCKET || exit 1
   elif [[ "$storage" == "gcs" ]]; then
     check_gcp_creds || exit 1
     check_gsutil || exit 1
     echo "Demo does not support GCS yet. For now use one of [s3|az]"
     exit 1
   elif [[ "$storage" == "az" ]]; then
-    check_az || exit 1
+    check_az_tool || exit 1
+    check_az_creds $AZBLOB_STORAGE_ACCOUNT $AZBLOB_CONTAINER || exit 1
   else
     echo "Storage destination $storage is not valid.  Must be one of [s3|gcs|az]."
     exit 1
   fi
 
+  return 0
+}
+
+function check_az_creds() {
+  AZBLOB_STORAGE_ACCOUNT=$1
+  AZBLOB_CONTAINER=$2
+
+  if [[ -z "$AZBLOB_STORAGE_ACCOUNT" || -z "$AZBLOB_CONTAINER" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=az, but AZBLOB_STORAGE_ACCOUNT or AZBLOB_CONTAINER is not set.  Please set these parameters in config/demo.cfg and try again."
+    exit 1
+  fi
+
+  if [[ "$AZBLOB_STORAGE_ACCOUNT" == "default" ]]; then
+    echo "ERROR: Azure Blob storage account name cannot be 'default'. Verify the value of the storage account name (did you create one?) in config/demo.cfg, as specified by the parameter AZBLOB_STORAGE_ACCOUNT, and try again."
+    exit 1
+  fi
+
+  exists=$(az storage account check-name --name $AZBLOB_STORAGE_ACCOUNT | jq -r .reason)
+  if [[ "$exists" != "AlreadyExists" ]]; then
+    echo "ERROR: Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT does not exist. Check the value of AZBLOB_STORAGE_ACCOUNT in config/demo.cfg and try again."
+    exit 1
+  fi
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
+  if [[ "$AZBLOB_ACCOUNT_KEY" == "" ]]; then
+    echo "ERROR: Cannot get the key for Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT. Check the value of AZBLOB_STORAGE_ACCOUNT in config/demo.cfg, and your key, and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_s3_creds() {
+  S3_PROFILE=$1
+  S3_BUCKET=$2
+
+  if [[ -z "$S3_PROFILE" || -z "$S3_BUCKET" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=s3, but S3_PROFILE or S3_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
+    exit 1
+  fi
+
+  aws configure get aws_access_key_id --profile $S3_PROFILE 1>/dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Cannot determine aws_access_key_id from S3_PROFILE=$S3_PROFILE.  Verify your credentials and try again."
+    exit 1
+  fi
+  aws configure get aws_secret_access_key --profile $S3_PROFILE 1>/dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Cannot determine aws_secret_access_key from S3_PROFILE=$S3_PROFILE.  Verify your credentials and try again."
+    exit 1
+  fi
   return 0
 }
 
@@ -507,21 +562,21 @@ function validate_ccloud_ksql() {
 }
 
 function check_account_azure() {
-  AZBLOB_ACCOUNT_NAME=$1
+  AZBLOB_STORAGE_ACCOUNT=$1
 
-  if [[ "$AZBLOB_ACCOUNT_NAME" == "default" ]]; then
-    echo "ERROR: Azure Blob storage account name cannot be 'default'. Verify the value of the storage account name (did you create one?) in config/demo.cfg, as specified by the parameter STORAGE_PROFILE, and try again."
+  if [[ "$AZBLOB_STORAGE_ACCOUNT" == "default" ]]; then
+    echo "ERROR: Azure Blob storage account name cannot be 'default'. Verify the value of the storage account name (did you create one?) in config/demo.cfg, as specified by the parameter AZBLOB_STORAGE_ACCOUNT, and try again."
     exit 1
   fi
 
-  exists=$(az storage account check-name --name $AZBLOB_ACCOUNT_NAME | jq -r .reason)
+  exists=$(az storage account check-name --name $AZBLOB_STORAGE_ACCOUNT | jq -r .reason)
   if [[ "$exists" != "AlreadyExists" ]]; then
-    echo "ERROR: Azure Blob storage account name $AZBLOB_ACCOUNT_NAME does not exist. Check the value of STORAGE_PROFILE in config/demo.cfg and try again."
+    echo "ERROR: Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT does not exist. Check the value of STORAGE_PROFILE in config/demo.cfg and try again."
     exit 1
   fi
-  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
   if [[ "$AZBLOB_ACCOUNT_KEY" == "" ]]; then
-    echo "ERROR: Cannot get the key for Azure Blob storage account name $AZBLOB_ACCOUNT_NAME. Check the value of STORAGE_PROFILE in config/demo.cfg, and your key, and try again."
+    echo "ERROR: Cannot get the key for Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT. Check the value of STORAGE_PROFILE in config/demo.cfg, and your key, and try again."
     exit 1
   fi
 

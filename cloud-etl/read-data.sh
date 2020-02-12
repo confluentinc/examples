@@ -39,9 +39,9 @@ AVRO_VERSION=1.9.1
 #  curl -L http://mirror.metrocast.net/apache/avro/avro-${AVRO_VERSION}/java/avro-tools-${AVRO_VERSION}.jar --output avro-tools-${AVRO_VERSION}.jar
 #fi
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  for key in $(aws s3api list-objects --bucket $STORAGE_BUCKET_NAME | jq -r '.Contents[].Key'); do
+  for key in $(aws s3api list-objects --bucket $S3_BUCKET | jq -r '.Contents[].Key'); do
     echo "S3 key: $key"
-    #aws s3 cp s3://$STORAGE_BUCKET_NAME/$key data.avro
+    #aws s3 cp s3://$S3_BUCKET/$key data.avro
     #echo "java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro"
     #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
   done
@@ -53,8 +53,7 @@ elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
     #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
   done
 else
-  export AZBLOB_ACCOUNT_NAME=$STORAGE_PROFILE
-  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
-  #az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
-  az storage blob list --container-name $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT2" | jq -r '.[].name'
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
+  #az storage blob list --container-name $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
+  az storage blob list --container-name $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT2" | jq -r '.[].name'
 fi

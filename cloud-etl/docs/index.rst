@@ -241,18 +241,28 @@ Validate
    192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":19}}
    192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":22}}
 
-   Objects in Cloud storage az:
+   Objects in Cloud storage s3:
 
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000000000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000001000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000002000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000003000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+1+0000004000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000000000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000001000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000002000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000003000.bin
-   topics/COUNT_PER_SOURCE/year=2020/month=02/day=11/hour=18/COUNT_PER_SOURCE+3+0000004000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000000000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000001000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000002000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000003000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000004000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000000000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000001000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000002000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000003000.bin
+   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000004000.bin
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000000000.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000001000.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000002000.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000003000.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000004000.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000000068.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000001068.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000002068.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000003068.avro
+   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000004068.avro
 
 
 Stop

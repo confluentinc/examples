@@ -12,7 +12,7 @@ check_ccloud_logged_in || exit 1
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
-validate_cloud_storage $DESTINATION_STORAGE || exit 1
+validate_cloud_storage config/demo.cfg || exit 1
 
 # Delete connectors
 #for connector in demo-KinesisSource demo-GcsSink-avro demo-GcsSink-no-avro demo-S3Sink-avro demo-S3Sink-no-avro; do
@@ -33,18 +33,16 @@ if [[ $? -eq 0 ]]; then
 fi
 echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
-  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION --profile $STORAGE_PROFILE
-  aws s3 rm --recursive s3://$STORAGE_BUCKET_NAME/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION --profile $STORAGE_PROFILE
+  aws s3 rm --recursive s3://$S3_BUCKET/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION --profile $S3_PROFILE
+  aws s3 rm --recursive s3://$S3_BUCKET/topics/${KAFKA_TOPIC_NAME_OUT2} --region $STORAGE_REGION --profile $S3_PROFILE
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
   check_gsutil || exit 1
   # Clean up GCS
   gsutil rm -r gs://$STORAGE_BUCKET_NAME/**
 else
-  check_account_azure $STORAGE_PROFILE || exit 1
-  export AZBLOB_ACCOUNT_NAME=$STORAGE_PROFILE
-  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_ACCOUNT_NAME | jq -r '.[0].value')
-  az storage blob delete-batch --source $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT1}/*"
-  az storage blob delete-batch --source $STORAGE_BUCKET_NAME --account-name $AZBLOB_ACCOUNT_NAME --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT2}/*"
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
+  az storage blob delete-batch --source $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT1}/*"
+  az storage blob delete-batch --source $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT2}/*"
 fi
 #rm -f data.avro
 
@@ -107,4 +105,4 @@ do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
 done
 
-return 0
+exit 0
