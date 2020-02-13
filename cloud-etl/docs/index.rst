@@ -173,7 +173,7 @@ Run
 Validate
 --------
 
-#. From the |ccloud| UI, view the Flow:
+#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the KSQL tab to view the flow through your KSQL application:
 
    .. figure:: images/flow.png
       :alt: image
