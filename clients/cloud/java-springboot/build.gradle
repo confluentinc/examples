@@ -28,6 +28,10 @@ group = 'io.confluent.examples.clients.cloud'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '8'
 
+bootJar {
+  mainClassName = "io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication"
+}
+
 repositories {
   jcenter()
 }

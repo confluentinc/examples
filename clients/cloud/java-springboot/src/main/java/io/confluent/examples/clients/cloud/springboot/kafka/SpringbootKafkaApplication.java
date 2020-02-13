@@ -1,4 +1,4 @@
-package io.confluent.examples.clients.cloud.springboot;
+package io.confluent.examples.clients.cloud.springboot.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.beans.factory.annotation.Value;
@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class SpringbootApplication {
+public class SpringbootKafkaApplication {
 
   // injected from config
   @Value("${io.confluent.developer.config.topic.name}")
@@ -25,7 +25,7 @@ public class SpringbootApplication {
   }
 
   public static void main(String[] args) {
-    SpringApplication.run(SpringbootApplication.class, args);
+    SpringApplication.run(SpringbootKafkaApplication.class, args);
   }
 
 }

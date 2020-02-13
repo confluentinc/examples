@@ -1,0 +1,172 @@
+= Spring Boot with Java Example Confluent Cloud Client
+
+NOTE: Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the Spring Boot using Java API.
+
+== Prerequisites
+
+* Java 1.8 or higher to run the demo application
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+* Initialize a properties file at `src/main/resources/application-ccloud.properties` with configuration to your Confluent Cloud cluster:
+
+[source,shell]
+.application-ccloud.properties
+----
+❯ cat src/main/resources/application-ccloud.properties
+
+# topic config
+io.confluent.developer.config.topic.name=test
+io.confluent.developer.config.topic.replicas=3
+io.confluent.developer.config.topic.partitions=6
+
+# common configs
+spring.kafka.properties.ssl.endpoint.identification.algorithm=https
+spring.kafka.properties.sasl.mechanism=PLAIN
+spring.kafka.properties.request.timeout.ms=20000
+spring.kafka.properties.bootstrap.servers=bootstrap-server.confluent.cloud:9092
+spring.kafka.properties.retry.backoff.ms=500
+spring.kafka.properties.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<API_KEY>" password="<API_SECRET>";
+spring.kafka.properties.security.protocol=SASL_SSL
+
+# Cloud SR Config
+spring.kafka.properties.basic.auth.credentials.source=USER_INFO
+spring.kafka.properties.schema.registry.basic.auth.user.info=SR_KEY:SR_SECRET
+spring.kafka.properties.schema.registry.url=https://sr.confluent.cloud
+
+# producer configuration
+spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
+spring.kafka.producer.value-serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
+
+# consumer configuration
+spring.kafka.consumer.group-id=java-springboot
+spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
+spring.kafka.consumer.value-deserializer=io.confluent.kafka.serializers.KafkaAvroDeserializer
+----
+
+
+== Hello World!
+
+This Spring Boot application has two components - Producer (`ProducerExample.java`) and Consumer (`ConsumerExample.java`).
+Both components will be initialized during the Spring Boot application startup.
+The producer writes Kafka data to a topic in Confluent Cloud.
+Each record has a String key representing a username (e.g. `alice`) and a value of a count, formatted as Avro object
++
+[source,json]
+----
+{"namespace": "io.confluent.examples.clients.cloud",
+ "type": "record",
+ "name": "DataRecordAvro",
+ "fields": [
+     {"name": "count", "type": "long"}
+ ]
+}
+----
+
+The consumer reads the same topic from Confluent Cloud and prints data to the console.
+
+The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
+
+. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+
++
+[source, shell]
+----
+ # Build the application
+ $ ./gradlew clean build
+   
+ # Run the app
+ $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher <1>
+
+ $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dspring.profiles.active=ccloud -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher <2> 
+
+$ SPRING_PROFILES_ACTIVE=ccloud java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher <3>
+----
+<1> Run to use default config (local Confluent Platform installation) (`application.properties`)
+<2> Run to use Confluent Cloud config (`application-ccloud.properties`)
+<3> Alternative approach to activate Spring configuration profile
+
++
+You should see:
+
++
+[source,shell]
+----
+ ...
+ 2020-02-13 14:41:57.924  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 20
+2020-02-13 14:41:57.927  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 21
+2020-02-13 14:41:57.927  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 22
+2020-02-13 14:41:57.927  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 23
+2020-02-13 14:41:57.928  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 24
+2020-02-13 14:41:57.928  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 25
+2020-02-13 14:41:57.928  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 26
+2020-02-13 14:41:57.929  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 27
+2020-02-13 14:41:57.929  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 28
+2020-02-13 14:41:57.930  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 29
+ 10 messages were produced to topic test
+ ...
+----
+
+Verify that the consumer received all the messages:
+
++
+You should see:
++
+----
+ ...
+ 2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 0}
+2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 1}
+2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 2}
+2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 3}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 4}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 5}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 6}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 7}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 8}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 9}
+----
+When you are done, press `<ctrl>-c`.
+
+. Run the Kafka Streams application.
++
+
+[source,shell]
+----
+ $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher #<1>
+
+ $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dspring.profiles.active=ccloud -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher #<2> 
+
+ $ SPRING_PROFILES_ACTIVE=ccloud java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher <3>
+----
+<1> Run using default (local) profile
+<2> Run using `ccloud` profile
+<3> Alternative way to activate `ccloud` profile  
+
++
+You should see:
++
+----
+ ...
+ [Consumed record]: alice, 0
+ [Consumed record]: alice, 1
+ [Consumed record]: alice, 2
+ [Consumed record]: alice, 3
+ [Consumed record]: alice, 4
+ [Consumed record]: alice, 5
+ [Consumed record]: alice, 6
+ [Consumed record]: alice, 7
+ [Consumed record]: alice, 8
+ [Consumed record]: alice, 9
+ ...
+ [Running count]: alice, 0
+ [Running count]: alice, 1
+ [Running count]: alice, 3
+ [Running count]: alice, 6
+ [Running count]: alice, 10
+ [Running count]: alice, 15
+ [Running count]: alice, 21
+ [Running count]: alice, 28
+ [Running count]: alice, 36
+ [Running count]: alice, 45
+ ...
+----
+
+  When you are done, press `<ctrl>-c.`

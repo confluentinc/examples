@@ -1,4 +1,4 @@
-package io.confluent.examples.clients.cloud.springboot;
+package io.confluent.examples.clients.cloud.springboot.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -11,7 +11,7 @@ import io.confluent.examples.clients.cloud.DataRecordAvro;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
-import static java.lang.System.out;
+import static java.util.stream.IntStream.range;
 
 @Log4j2
 @Component
@@ -24,11 +24,9 @@ public class ProducerExample {
   @EventListener(ApplicationStartedEvent.class)
   public void produce() {
     // Produce sample data
-    final long numMessages = 10L;
-    for (long i = 0L; i < numMessages; i++) {
+    range(0, 10).forEach(i -> {
       String key = "alice";
-      DataRecordAvro record = new DataRecordAvro(i);
-
+      DataRecordAvro record = new DataRecordAvro((long) i);
       log.info("Producing record: {}\t{}", key, record);
       producer.send(topic.name(), key, record).addCallback(
           result -> {
@@ -42,11 +40,11 @@ public class ProducerExample {
             }
           },
           exception -> log.error("Failed to produce to kafka", exception));
-    }
+    });
 
     producer.flush();
 
-    out.printf("10 messages were produced to topic %s%n", topic);
+    log.info("10 messages were produced to topic {}", topic.name());
 
   }
 

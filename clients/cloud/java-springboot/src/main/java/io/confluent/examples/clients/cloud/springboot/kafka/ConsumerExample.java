@@ -1,4 +1,4 @@
-package io.confluent.examples.clients.cloud.springboot;
+package io.confluent.examples.clients.cloud.springboot.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
