@@ -22,7 +22,7 @@ This enables you to:
 *  Build business applications on a full event streaming platform
 *  Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
 *  Use Kafka to aggregate data in single source of truth
-*  Harness the power of `KSQL <https://www.confluent.io/product/ksql/`__
+*  Harness the power of `KSQL <https://www.confluent.io/product/ksql/>`__
 
 
 End-to-end Streaming ETL
