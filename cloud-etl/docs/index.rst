@@ -134,7 +134,7 @@ Setup
    # KSQL ENDPOINT
    ccloud ksql app list
 
-   # Credentials (create for each resource above)
+   # Credentials: API key and secret, one for each resource above
    ccloud api-key create
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
@@ -152,7 +152,10 @@ Setup
      cd cloud-etl
 
 
-#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg` for your particular cloud storage provider and other demo parameters.
+#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis.  Also set the parameters for the destination cloud storage provider:
+
+   - AWS S3: set ``DESTINATION_STORAGE='s3'``, ``S3_PROFILE``, and ``S3_BUCKET``.
+   - Azure Blob: set ``DESTINATION_STORAGE='az'``, ``AZBLOB_STORAGE_ACCOUNT``, and ``AZBLOB_CONTAINER``.
 
 #. Log into |ccloud| with the command ``ccloud login``, and use
    your |ccloud| username and password.
