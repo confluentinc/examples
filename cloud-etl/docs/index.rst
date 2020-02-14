@@ -32,7 +32,7 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
 -  Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in |ccloud|
 
-   - :ref:cc_kinesis-source
+   - :ref:`cc_kinesis-source`
 
 -  KSQL: streaming SQL engine that enables real-time data processing against Kafka
 
@@ -40,9 +40,9 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
 -  Cloud storage sink connector: pushes data from Kafka topics to cloud storage, one of:
 
-   - :ref:cc_azure_blob_sink
-   - :ref:cc_gcs_connect_sink
-   - :ref:cc_s3_connect_sink
+   - :ref:`cc_azure_blob_sink`
+   - :ref:`cc_gcs_connect_sink`
+   - :ref:`cc_s3_connect_sink`
 
 Here is the data flow:
 
