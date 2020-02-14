@@ -92,6 +92,7 @@ Local Tools
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
+-  ``timeout``
 
 Run the Demo
 ============

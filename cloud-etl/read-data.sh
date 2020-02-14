@@ -7,7 +7,6 @@ source config/demo.cfg
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
-check_env || exit 1
 check_aws || exit 1
 check_timeout || exit 1
 
@@ -31,6 +30,11 @@ if check_confluent_binary; then
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_OUT1:"
   echo -e "confluent local consume $KAFKA_TOPIC_NAME_OUT1 -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10"
   export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local consume $KAFKA_TOPIC_NAME_OUT1 -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10 2>/dev/null
+
+else
+
+  echo "Skipping reading the Kafka topics."
+
 fi
 
 echo -e "\nObjects in Cloud storage $DESTINATION_STORAGE:\n"

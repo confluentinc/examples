@@ -32,7 +32,7 @@ function check_env() {
 
 function check_confluent_binary() {
   if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Must install Confluent Platform to get Confluent CLI."
+    echo "'confluent' is not found. Install Confluent Platform if you want to use Confluent CLI."
     return 1
   fi
 
