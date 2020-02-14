@@ -13,7 +13,7 @@ check_timeout || exit 1
 echo -e "\nRead data to validate end-to-end processing\n"
 
 echo -e "\nData from Kinesis stream $KINESIS_STREAM_NAME --limit 10:"
-while read -r line ; do echo "$line" | base64 -id; echo; done <<< "$(aws kinesis get-records --region $KINESIS_REGION --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator' --region $KINESIS_REGION) --limit 10 | jq -r '.Records[].Data')"
+while read -r line ; do echo "$line" | base64 --decode; echo; done <<< "$(aws kinesis get-records --region $KINESIS_REGION --shard-iterator $(aws kinesis get-shard-iterator --shard-id shardId-000000000000 --shard-iterator-type TRIM_HORIZON --stream-name $KINESIS_STREAM_NAME --query 'ShardIterator' --region $KINESIS_REGION) --limit 10 | jq -r '.Records[].Data')"
 
 if check_confluent_binary; then
 
