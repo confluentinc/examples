@@ -118,24 +118,24 @@ Setup
 
    To get the right values for the endpoints and credentials in the file above, find them either via the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.
 
-   ::
+   .. code:: shell
 
-   # Login
-   ccloud login --url https://confluent.cloud
-
-   # BROKER ENDPOINT
-   ccloud kafka cluster list
-   ccloud kafka cluster use
-   ccloud kafka cluster describe
-
-   # SR ENDPOINT
-   ccloud schema-registry cluster describe
-
-   # KSQL ENDPOINT
-   ccloud ksql app list
-
-   # Credentials: API key and secret, one for each resource above
-   ccloud api-key create
+      # Login
+      ccloud login --url https://confluent.cloud
+   
+      # BROKER ENDPOINT
+      ccloud kafka cluster list
+      ccloud kafka cluster use
+      ccloud kafka cluster describe
+   
+      # SR ENDPOINT
+      ccloud schema-registry cluster describe
+   
+      # KSQL ENDPOINT
+      ccloud ksql app list
+   
+      # Credentials: API key and secret, one for each resource above
+      ccloud api-key create
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -160,9 +160,9 @@ Setup
 #. Log into |ccloud| with the command ``ccloud login``, and use
    your |ccloud| username and password.
 
-   ::
+   .. code:: shell
 
-   ccloud login --url https://confluent.cloud
+      ccloud login --url https://confluent.cloud
 
 
 Run
@@ -192,81 +192,81 @@ Validate
 
    Sample output:
 
-   ::
+   .. code:: shell
 
-   Data from Kinesis stream demo-logs --limit 10:
-   {"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
-   {"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
-   {"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
-   {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
-   {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
-   {"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
-   {"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
-   {"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
-   {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
-   {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
-
-   Data from Kafka topic eventLogs:
-   confluent local consume eventLogs -- --cloud --from-beginning --property print.key=true --max-messages 10
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
-   5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
-
-   Data from Kafka topic COUNT_PER_SOURCE:
-   confluent local consume COUNT_PER_SOURCE -- --cloud --from-beginning --property print.key=true --max-messages 10
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":1}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":2}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":3}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":4}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":5}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":6}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":7}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":8}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":9}
-   192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":10}
-
-   Data from Kafka topic SUM_PER_SOURCE:
-   confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=WZVZVUOIOYEITVDY:680fJRxdHGIkK3dVisMEM5nl6b+d74xvPgRhlUx4i/OQpT3B+Zlz2qtVEE01wKto --property schema.registry.url=https://psrc-lz3xz.us-central1.gcp.confluent.cloud --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":1}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":4}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":5}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":8}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":11}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":12}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":15}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":16}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":19}}
-   192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":22}}
-
-   Objects in Cloud storage s3:
-
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000000000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000001000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000002000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000003000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000004000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000000000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000001000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000002000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000003000.bin
-   S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000004000.bin
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000000000.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000001000.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000002000.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000003000.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000004000.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000000068.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000001068.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000002068.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000003068.avro
-   S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000004068.avro
+      Data from Kinesis stream demo-logs --limit 10:
+      {"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
+      {"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
+      {"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
+      {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
+      {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
+      {"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
+      {"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
+      {"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
+      {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
+      {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
+   
+      Data from Kafka topic eventLogs:
+      confluent local consume eventLogs -- --cloud --from-beginning --property print.key=true --max-messages 10
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
+      5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
+   
+      Data from Kafka topic COUNT_PER_SOURCE:
+      confluent local consume COUNT_PER_SOURCE -- --cloud --from-beginning --property print.key=true --max-messages 10
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":1}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":2}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":3}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":4}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":5}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":6}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":7}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":8}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":9}
+      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":10}
+   
+      Data from Kafka topic SUM_PER_SOURCE:
+      confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=WZVZVUOIOYEITVDY:680fJRxdHGIkK3dVisMEM5nl6b+d74xvPgRhlUx4i/OQpT3B+Zlz2qtVEE01wKto --property schema.registry.url=https://psrc-lz3xz.us-central1.gcp.confluent.cloud --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":1}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":4}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":5}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":8}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":11}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":12}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":15}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":16}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":19}}
+      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":22}}
+   
+      Objects in Cloud storage s3:
+   
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000000000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000001000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000002000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000003000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000004000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000000000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000001000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000002000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000003000.bin
+      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000004000.bin
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000000000.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000001000.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000002000.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000003000.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000004000.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000000068.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000001068.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000002068.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000003068.avro
+      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000004068.avro
 
 
 Stop
