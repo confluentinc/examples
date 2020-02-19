@@ -1,0 +1,13 @@
+{
+    "name": "demo-S3Sink-avro",
+    "connector.class": "S3_SINK",
+    "tasks.max": "1",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
+    "aws.access.key.id": "$AWS_ACCESS_KEY_ID",
+    "aws.secret.access.key": "$AWS_SECRET_ACCESS_KEY",
+    "s3.bucket.name": "$S3_BUCKET",
+    "data.format": "AVRO",
+    "time.interval" : "HOURLY",
+    "topics": "$KAFKA_TOPIC_NAME_OUT1"
+}

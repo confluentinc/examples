@@ -18,7 +18,7 @@ function check_env() {
   fi
 
   if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Since CP 5.3, the Confluent CLI is a separate download. Install the new Confluent CLI (https://docs.confluent.io/current/cli/installing.html) and try again"
+    echo "'confluent' is not found. Download Confluent Platform (https://www.confluent.io/download) to get the new Confluent CLI and try again"
     exit 1
   fi
 
@@ -30,16 +30,34 @@ function check_env() {
   return 0
 }
 
+function check_python() {
+  if [[ $(type python 2>&1) =~ "not found" ]]; then
+    echo "'python' is not found. Install python and try again."
+    return 1
+  fi
+
+  return 0
+}
+
+function check_confluent_binary() {
+  if [[ $(type confluent 2>&1) =~ "not found" ]]; then
+    echo "'confluent' is not found. Install Confluent Platform if you want to use Confluent CLI."
+    return 1
+  fi
+
+  return 0
+}
+
 function check_ccloud_binary() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
-    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli) and try again"
+    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
     exit 1
   fi
 }
 
 function check_ccloud() {
 
-	check_ccloud_binary || exit 1
+  check_ccloud_binary || exit 1
 
   if [[ ! -e "$HOME/.ccloud/config" ]]; then
     echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
@@ -69,6 +87,17 @@ function check_ccloud_v2() {
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_ccloud_logged_in() {
+  check_ccloud_v2 || exit 1
+
+  if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must login to run that command." ]]; then
+    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login' before running the demo."
     exit 1
   fi
 
@@ -161,11 +190,13 @@ function check_gsutil() {
   return 0
 }
 
-function check_gcp_creds() {
-  if [[ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]] && [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
-    echo "To run this demo to GCS, either set the env parameter 'GOOGLE_APPLICATION_CREDENTIALS' or run 'gcloud auth application-default login', and then try again."
+function check_az_tool() {
+  if [[ $(type az 2>&1) =~ "not found" ]]; then
+    echo "Azure CLI is not found. Install Azure CLI and try again"
     exit 1
   fi
+
+  return 0
 }
 
 function require_cp_or_exit() {
@@ -368,6 +399,101 @@ function error_not_compatible_confluent_cli() {
   return 0
 }
 
+function validate_cloud_storage() {
+  config=$1
+
+  source $config
+  storage=$DESTINATION_STORAGE
+
+  if [[ "$storage" == "s3" ]]; then
+    check_aws || exit 1
+    check_s3_creds $S3_PROFILE $S3_BUCKET || exit 1
+  elif [[ "$storage" == "gcs" ]]; then
+    check_gsutil || exit 1
+    check_gcp_creds $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
+  elif [[ "$storage" == "az" ]]; then
+    check_az_tool || exit 1
+    check_az_creds $AZBLOB_STORAGE_ACCOUNT $AZBLOB_CONTAINER || exit 1
+  else
+    echo "Storage destination $storage is not valid.  Must be one of [s3|gcs|az]."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_gcp_creds() {
+  GCS_CREDENTIALS_FILE=$1
+  GCS_BUCKET=$2
+
+  if [[ -z "$GCS_CREDENTIALS_FILE" || -z "$GCS_BUCKET" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=gcs, but GCS_CREDENTIALS_FILE or GCS_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
+    exit 1
+  fi
+
+  gcloud auth activate-service-account --key-file $GCS_CREDENTIALS_FILE
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Cannot activate service account with key file $GCS_CREDENTIALS_FILE. Verify your credentials and try again."
+    exit 1
+  fi
+
+  # Create JSON-formatted string of the GCS credentials
+  export GCS_CREDENTIALS=$(python ./stringify-gcp-credentials.py $GCS_CREDENTIALS_FILE)
+  # Remove leading and trailing double quotes, otherwise connector creation from CLI fails
+  GCS_CREDENTIALS=$(echo "${GCS_CREDENTIALS:1:${#GCS_CREDENTIALS}-2}")
+
+  return 0
+}
+
+function check_az_creds() {
+  AZBLOB_STORAGE_ACCOUNT=$1
+  AZBLOB_CONTAINER=$2
+
+  if [[ -z "$AZBLOB_STORAGE_ACCOUNT" || -z "$AZBLOB_CONTAINER" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=az, but AZBLOB_STORAGE_ACCOUNT or AZBLOB_CONTAINER is not set.  Please set these parameters in config/demo.cfg and try again."
+    exit 1
+  fi
+
+  if [[ "$AZBLOB_STORAGE_ACCOUNT" == "default" ]]; then
+    echo "ERROR: Azure Blob storage account name cannot be 'default'. Verify the value of the storage account name (did you create one?) in config/demo.cfg, as specified by the parameter AZBLOB_STORAGE_ACCOUNT, and try again."
+    exit 1
+  fi
+
+  exists=$(az storage account check-name --name $AZBLOB_STORAGE_ACCOUNT | jq -r .reason)
+  if [[ "$exists" != "AlreadyExists" ]]; then
+    echo "ERROR: Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT does not exist. Check the value of AZBLOB_STORAGE_ACCOUNT in config/demo.cfg and try again."
+    exit 1
+  fi
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
+  if [[ "$AZBLOB_ACCOUNT_KEY" == "" ]]; then
+    echo "ERROR: Cannot get the key for Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT. Check the value of AZBLOB_STORAGE_ACCOUNT in config/demo.cfg, and your key, and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_s3_creds() {
+  S3_PROFILE=$1
+  S3_BUCKET=$2
+
+  if [[ -z "$S3_PROFILE" || -z "$S3_BUCKET" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=s3, but S3_PROFILE or S3_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
+    exit 1
+  fi
+
+  aws configure get aws_access_key_id --profile $S3_PROFILE 1>/dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Cannot determine aws_access_key_id from S3_PROFILE=$S3_PROFILE.  Verify your credentials and try again."
+    exit 1
+  fi
+  aws configure get aws_secret_access_key --profile $S3_PROFILE 1>/dev/null
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Cannot determine aws_secret_access_key from S3_PROFILE=$S3_PROFILE.  Verify your credentials and try again."
+    exit 1
+  fi
+  return 0
+}
 
 function validate_confluent_cloud_schema_registry() {
   auth=$1
@@ -430,6 +556,161 @@ function check_ccloud_config() {
 
   return 0
 }
+
+function validate_ccloud_ksql() {
+  ksql_endpoint=$1
+  ccloud_config_file=$2
+  credentials=$3
+
+  check_ccloud_logged_in || exit 1
+
+  if [[ "$ksql_endpoint" == "" ]]; then
+    echo "ERROR: Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
+    exit 1
+  fi
+  ksqlAppId=$(ccloud ksql app list | grep "$ksql_endpoint" | awk '{print $1}')
+  if [[ "$ksqlAppId" == "" ]]; then
+    echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint is not found. Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
+    exit 1
+  fi
+  STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
+  if [[ "$STATUS" == "" ]]; then
+    echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint with id $ksqlAppId is not in UP state. Troubleshoot and try again."
+    exit 1
+  fi
+
+  check_credentials_ksql "$ksql_endpoint" "$ccloud_config_file" "$credentials" || exit 1
+
+  return 0
+}
+
+function check_account_azure() {
+  AZBLOB_STORAGE_ACCOUNT=$1
+
+  if [[ "$AZBLOB_STORAGE_ACCOUNT" == "default" ]]; then
+    echo "ERROR: Azure Blob storage account name cannot be 'default'. Verify the value of the storage account name (did you create one?) in config/demo.cfg, as specified by the parameter AZBLOB_STORAGE_ACCOUNT, and try again."
+    exit 1
+  fi
+
+  exists=$(az storage account check-name --name $AZBLOB_STORAGE_ACCOUNT | jq -r .reason)
+  if [[ "$exists" != "AlreadyExists" ]]; then
+    echo "ERROR: Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT does not exist. Check the value of STORAGE_PROFILE in config/demo.cfg and try again."
+    exit 1
+  fi
+  export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
+  if [[ "$AZBLOB_ACCOUNT_KEY" == "" ]]; then
+    echo "ERROR: Cannot get the key for Azure Blob storage account name $AZBLOB_STORAGE_ACCOUNT. Check the value of STORAGE_PROFILE in config/demo.cfg, and your key, and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_credentials_ksql() {
+  ksql_endpoint=$1
+  ccloud_config_file=$2
+  credentials=$3
+
+  response=$(curl ${ksql_endpoint}/info \
+             -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+             --silent \
+             -u $credentials)
+  echo $response
+  if [[ "$response" =~ "Unauthorized" ]]; then
+    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $credentials and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function create_connector_cloud() {
+  file=$1
+
+  echo -e "\nTrying to create connector from $file\n"
+
+  ccloud connector create -vvv --config <(eval "cat <<EOF
+$(<$file)
+EOF
+")
+  if [[ $? != 0 ]]; then
+    echo "ERROR: Exit status was not 0 while creating connector from $file.  Please troubleshoot and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function wait_for_connector_up() {
+  filename=$1
+  maxWait=$2
+
+  connectorName=$(cat $filename | jq -r .name)
+  echo "Waiting up to $maxWait seconds for connector $filename ($connectorName) to be RUNNING"
+  currWait=0
+  while [[ ! $(ccloud connector list | grep $connectorName | awk '{print $5;}') == "RUNNING" ]]; do
+    sleep 10
+    currWait=$(( currWait+10 ))
+    if [[ "$currWait" -gt "$maxWait" ]]; then
+      echo -e "\nERROR: Connector $filename ($connectorName) not RUNNING after $maxWait seconds.  Please troubleshoot.\n"
+      exit 1
+    fi
+  done
+  echo "Connector $filename ($connectorName) is RUNNING after $currWait seconds"
+
+  return 0
+
+}
+
+function ccloud_login(){
+
+  URL=$1
+  EMAIL=$2
+  PASSWORD=$3
+
+  check_expect
+
+  echo -e "\n# Login"
+  OUTPUT=$(
+  expect <<END
+    log_user 1
+    spawn ccloud login --url $URL
+    expect "Email: "
+    send "$EMAIL\r";
+    expect "Password: "
+    send "$PASSWORD\r";
+    expect "Logged in as "
+    set result $expect_out(buffer)
+  END
+  )
+  echo "$OUTPUT"
+  if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
+    echo "Failed to log into your cluster.  Please check all parameters and run again"
+  fi
+
+  return 0
+}
+
+function ccloud_cli_set_kafka_cluster_use() {
+  CLOUD_KEY=$1
+  CONFIG_FILE=$2
+
+  if [[ "$CLOUD_KEY" == "" ]]; then
+    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
+    exit 1
+  fi
+  kafkaCluster=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $8;}')
+  if [[ "$kafkaCluster" == "" ]]; then
+    echo "ERROR: Could not associate key $CLOUD_KEY to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
+    exit 1
+  fi
+  ccloud kafka cluster use $kafkaCluster
+  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:\n"
+  ccloud kafka cluster describe $kafkaCluster
+  
+  return 0
+}
+
 
 # Converts properties file of key/value pairs into prefixed environment variables for Docker
 # Naming convention: convert properties file into env vars as uppercase and replace '.' with '_'
