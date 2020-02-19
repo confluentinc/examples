@@ -19,6 +19,8 @@ fi
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $S3_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $S3_PROFILE)
 create_connector_cloud connectors/s3_no_avro.json || exit 1
+wait_for_connector_up connectors/s3_no_avro.json 240 || exit 1
 create_connector_cloud connectors/s3_avro.json || exit 1
+wait_for_connector_up connectors/s3_avro.json 240 || exit 1
 
 exit 0

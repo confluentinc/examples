@@ -14,6 +14,9 @@ source delta_configs/env.delta
 
 validate_cloud_storage config/demo.cfg || exit 1
 
+# Set Kafka cluster
+ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+
 # Delete connectors
 for f in connectors/*.json; do
   connector=$(cat $f | jq -r .name)
@@ -37,7 +40,7 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
   check_gsutil || exit 1
   # Clean up GCS
-  gsutil rm -r gs://$GCS_BUCKET/**
+  gsutil -m rm -r gs://$GCS_BUCKET/**
 else
   export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
   az storage blob delete-batch --source $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT1}/*"

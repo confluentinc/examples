@@ -417,8 +417,8 @@ function check_gcp_creds() {
   GCS_CREDENTIALS_FILE=$1
   GCS_BUCKET=$2
 
-  if [[ -z "$GCS_CREDENTIALS_FILE" || -z "$GCS_BUCKET" ]]; then
-    echo "ERROR: DESTINATION_STORAGE=gcs, but GCS_CREDENTIALS_FILE or GCS_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
+  if [[ -z "$GCS_CREDENTIALS_FILE" || -z "$GCS_CREDENTIALS_FILE_ESCAPED" || -z "$GCS_BUCKET" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=gcs, but GCS_CREDENTIALS_FILE or GCS_CREDENTIALS_FILE_ESCAPED or GCS_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
     exit 1
   fi
 
@@ -427,6 +427,9 @@ function check_gcp_creds() {
     echo "ERROR: Cannot activate service account with key file $GCS_CREDENTIALS_FILE. Verify your credentials and try again."
     exit 1
   fi
+
+  # Create JSON-formatted string of the GCS credentials
+  export GCS_CREDENTIALS=$(cat $GCS_CREDENTIALS_FILE_ESCAPED)
 
   return 0
 }
@@ -613,13 +616,39 @@ function check_credentials_ksql() {
 function create_connector_cloud() {
   file=$1
 
+  echo -e "\nTrying to create connector from $file\n"
+
   ccloud connector create -vvv --config <(eval "cat <<EOF
-$(<$1)
+$(<$file)
 EOF
 ")
-if [[ $? != 0 ]]; then echo "Exit status was not 0.  Please troubleshoot and try again"; exit 1 ; fi
+  if [[ $? != 0 ]]; then
+    echo "ERROR: Exit status was not 0 while creating connector from $file.  Please troubleshoot and try again"
+    exit 1
+  fi
 
   return 0
+}
+
+function wait_for_connector_up() {
+  filename=$1
+  maxWait=$2
+
+  connectorName=$(cat $filename | jq -r .name)
+  echo "Waiting up to $maxWait seconds for connector $filename ($connectorName) to be RUNNING"
+  currWait=0
+  while [[ ! $(ccloud connector list | grep $connectorName | awk '{print $5;}') == "RUNNING" ]]; do
+    sleep 10
+    currWait=$(( currWait+10 ))
+    if [[ "$currWait" -gt "$maxWait" ]]; then
+      echo -e "\nERROR: Connector $filename ($connectorName) not RUNNING after $maxWait seconds.  Please troubleshoot.\n"
+      exit 1
+    fi
+  done
+  echo "Connector $filename ($connectorName) is RUNNING after $currWait seconds"
+
+  return 0
+
 }
 
 function ccloud_login(){
@@ -648,6 +677,26 @@ function ccloud_login(){
     echo "Failed to log into your cluster.  Please check all parameters and run again"
   fi
 
+  return 0
+}
+
+function ccloud_cli_set_kafka_cluster_use() {
+  CLOUD_KEY=$1
+  CONFIG_FILE=$2
+
+  if [[ "$CLOUD_KEY" == "" ]]; then
+    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
+    exit 1
+  fi
+  kafkaCluster=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $8;}')
+  if [[ "$kafkaCluster" == "" ]]; then
+    echo "ERROR: Could not associate key $CLOUD_KEY to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
+    exit 1
+  fi
+  ccloud kafka cluster use $kafkaCluster
+  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:\n"
+  ccloud kafka cluster describe $kafkaCluster
+  
   return 0
 }
 

@@ -6,7 +6,6 @@ source config/demo.cfg
 #################################################################
 # Source: create and populate Kinesis streams and create connectors
 #################################################################
-echo -e "\nSource: create and populate Kinesis streams and create connectors\n"
 echo "aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION --profile $AWS_PROFILE"
 aws kinesis create-stream --stream-name $KINESIS_STREAM_NAME --shard-count 1 --region $KINESIS_REGION --profile $AWS_PROFILE
 if [[ $? != 0 ]]; then
@@ -25,7 +24,7 @@ for i in {1..22}; do
     exit 1
   fi
 done
-echo -e "\nSleeping 10 seconds\n"
-sleep 10
+echo -e "\nSleeping 5 seconds\n"
+sleep 5
 
 exit 0

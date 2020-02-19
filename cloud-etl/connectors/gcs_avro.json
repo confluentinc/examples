@@ -7,11 +7,6 @@
     "gcs.bucket.name": "$GCS_BUCKET",
     "gcs.credentials.config": "$GCS_CREDENTIALS",
     "data.format": "AVRO",
-    "topics": "$KAFKA_TOPIC_NAME_OUT1",
     "time.interval" : "HOURLY",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "io.confluent.connect.avro.AvroConverter",
-    "value.converter.basic.auth.credentials.source": "$BASIC_AUTH_CREDENTIALS_SOURCE",
-    "value.converter.schema.registry.basic.auth.user.info": "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO",
-    "value.converter.schema.registry.url": "$SCHEMA_REGISTRY_URL"
+    "topics": "$KAFKA_TOPIC_NAME_OUT1"
 }

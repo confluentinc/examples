@@ -86,7 +86,7 @@ Local Tools
 -----------
 
 -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
-   v0.234.0 or later
+   v0.239.0 or later
 -  ``aws`` CLI, properly initialized with your credentials: AWS Kinesis and (optional) if destination is AWS S3
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage

@@ -50,12 +50,7 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
     #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
   done
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
-  for path in $(gsutil ls -r "gs://$STORAGE_BUCKET_NAME/topics/*/*/*.avro"); do
-    echo "GCS path: $path"
-    #gsutil cp $path data.avro
-    #echo "java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro"
-    #java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro
-  done
+  gsutil ls -r gs://$GCS_BUCKET
 else
   export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
   #az storage blob list --container-name $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
