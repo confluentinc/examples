@@ -183,6 +183,59 @@ Validate
    .. figure:: images/flow.png
       :alt: image
 
+#. Using the `Confluent Cloud CLI`, list all the fully-managed connectors and describe any one of them for more detail.
+
+   .. code:: bash
+
+      $ ccloud connector list      
+
+           ID     |         Name         | Status  |  Type   
+      +-----------+----------------------+---------+--------+
+        lcc-knjgv | demo-KinesisSource   | RUNNING | source  
+        lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink    
+        lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink    
+      
+      
+
+      $ ccloud connector describe lcc-knjgv
+
+      Connector Details
+      +--------+--------------------+
+      | ID     | lcc-knjgv          |
+      | Name   | demo-KinesisSource |
+      | Status | RUNNING            |
+      | Type   | source             |
+      +--------+--------------------+
+      
+      
+      Task Level Details
+        Task_ID |  State   
+      +---------+---------+
+              0 | RUNNING  
+      
+      
+      Configuration Details
+           Configuration    |                          Value                           
+      +---------------------+---------------------------------------------------------+
+        schema.registry.url | https://psrc-lz3xz.us-central1.gcp.confluent.cloud       
+        value.converter     | io.confluent.connect.replicator.util.ByteArrayConverter  
+        aws.access.key.id   | ****************                                         
+        kafka.region        | us-west2                                                 
+        tasks.max           |                                                       1  
+        aws.secret.key.id   | ****************                                         
+        kafka.topic         | eventLogs                                                
+        kafka.api.key       | ****************                                         
+        kinesis.position    | TRIM_HORIZON                                             
+        kinesis.region      | us-west-2                                                
+        kinesis.stream      | demo-logs                                                
+        cloud.environment   | prod                                                     
+        connector.class     | KinesisSource                                            
+        key.converter       | org.apache.kafka.connect.storage.StringConverter         
+        name                | demo-KinesisSource                                       
+        kafka.api.secret    | ****************                                         
+        kafka.endpoint      | SASL_SSL://pkc-4r087.us-west2.gcp.confluent.cloud:9092   
+
+
 
 #. View all the data from Kinesis, Kafka, and cloud storage after
    running the demo:
