@@ -1,0 +1,13 @@
+{
+    "name": "demo-AZSink-avro",
+    "connector.class": "AzureBlobSink",
+    "tasks.max": "1",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
+    "azblob.account.name" : "$AZBLOB_STORAGE_ACCOUNT",
+    "azblob.account.key" : "$AZBLOB_ACCOUNT_KEY",
+    "azblob.container.name" : "$AZBLOB_CONTAINER",
+    "data.format": "AVRO",
+    "time.interval" : "HOURLY",
+    "topics": "$KAFKA_TOPIC_NAME_OUT1"
+}
