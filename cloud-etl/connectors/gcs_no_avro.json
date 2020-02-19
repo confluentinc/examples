@@ -1,0 +1,14 @@
+{
+    "name": "demo-GcsSink-no-avro",
+    "connector.class": "GcsSink",
+    "tasks.max": "1",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
+    "gcs.bucket.name": "$GCS_BUCKET",
+    "gcs.credentials.config": "$GCS_CREDENTIALS",
+    "data.format": "BYTES",
+    "topics": "$KAFKA_TOPIC_NAME_OUT2",
+    "time.interval" : "HOURLY",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter"
+}
