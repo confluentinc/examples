@@ -85,10 +85,9 @@ Cloud services
 Local Tools
 -----------
 
--  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
-   v0.239.0 or later
--  ``aws`` CLI, properly initialized with your credentials: AWS Kinesis and (optional) if destination is AWS S3
+-  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
+-  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
@@ -155,6 +154,7 @@ Setup
 
 #. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis.  Also set the parameters for the destination cloud storage provider:
 
+   - GCP GCS: set ``DESTINATION_STORAGE='gcs'``, ``GCS_CREDENTIALS_FILE``, and ``GCS_BUCKET``.
    - AWS S3: set ``DESTINATION_STORAGE='s3'``, ``S3_PROFILE``, and ``S3_BUCKET``.
    - Azure Blob: set ``DESTINATION_STORAGE='az'``, ``AZBLOB_STORAGE_ACCOUNT``, and ``AZBLOB_CONTAINER``.
 
@@ -183,7 +183,7 @@ Validate
    .. figure:: images/flow.png
       :alt: image
 
-#. Using the `Confluent Cloud CLI`, list all the fully-managed connectors and describe any one of them for more detail.
+#. Using the `Confluent Cloud CLI`, list all the fully-managed connectors created in this cluster.  These connectors were created automatically by the demo using the CLI command ``ccloud connector create``.  Then describe one of them in more detail (sample output shown below).
 
    .. code:: bash
 
@@ -237,8 +237,7 @@ Validate
 
 
 
-#. View all the data from Kinesis, Kafka, and cloud storage after
-   running the demo:
+#. View all the data from Kinesis, Kafka, and cloud storage after running the demo.  Sample output shown below:
 
    .. code:: bash
 
