@@ -6,18 +6,14 @@
 Cloud ETL Demo
 ==============
 
-This demo showcases a cloud ETL solution leveraging all fully-managed services on
-`Confluent Cloud <https://confluent.cloud>`__.
-A source connector reads data from an AWS Kinesis stream into Confluent
-Cloud, a Confluent KSQL application processes that data, and then a sink
-connector writes the output data into cloud storage in the provider of
-your choice (one of GCP GCS, AWS S3, or Azure Blob).
+This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
+It creates a source connector reads data from an AWS Kinesis stream into Confluent Cloud, a Confluent KSQL application that processes that data, and then a sink connector that writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+It is all chieved using Confluent Cloud CLI.
 
 .. figure:: images/topology.jpg
    :alt: image
 
-
-The end result is a ``100%`` pipeline running in the cloud, using serverless Kafka resources in Confluent Cloud, that can span multiple cloud providers.
+The end result is a ``100%`` pipeline running in the cloud that can span multiple cloud providers.
 This enables you to:
 
 *  Build business applications on a full event streaming platform
@@ -184,7 +180,7 @@ Validate
    .. figure:: images/flow.png
       :alt: image
 
-#. Using the `Confluent Cloud CLI`, list all the fully-managed connectors created in this cluster.  These connectors were created automatically by the demo using the CLI command ``ccloud connector create``.  Then describe one of them in more detail (sample output shown below).
+#. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.  These connectors were created automatically by the demo using the CLI command ``ccloud connector create``.  Then describe one of them in more detail (sample output shown below).
 
    .. code:: bash
 
