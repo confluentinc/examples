@@ -11,12 +11,13 @@ This demo showcases a cloud ETL solution leveraging all fully-managed services o
 A source connector reads data from an AWS Kinesis stream into Confluent
 Cloud, a Confluent KSQL application processes that data, and then a sink
 connector writes the output data into cloud storage in the provider of
-your choice.
+your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: images/topology.jpg
    :alt: image
 
 
+The end result is a ``100%`` pipeline running in the cloud, using serverless Kafka resources in Confluent Cloud, that can span multiple cloud providers.
 This enables you to:
 
 *  Build business applications on a full event streaming platform
