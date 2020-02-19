@@ -35,6 +35,8 @@ if [[ "$kafkaCluster" == "" ]]; then
   exit 1
 fi
 ccloud kafka cluster use $kafkaCluster
+echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:\n"
+ccloud kafka cluster describe $kafkaCluster
 
 #################################################################
 # Source: create and populate Kinesis streams and create connectors

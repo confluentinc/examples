@@ -181,13 +181,6 @@ function check_gsutil() {
   return 0
 }
 
-function check_gcp_creds() {
-  if [[ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]] && [[ ! -f $HOME/.config/gcloud/application_default_credentials.json ]]; then
-    echo "To run this demo to GCS, either set the env parameter 'GOOGLE_APPLICATION_CREDENTIALS' or run 'gcloud auth application-default login', and then try again."
-    exit 1
-  fi
-}
-
 function check_az_tool() {
   if [[ $(type az 2>&1) =~ "not found" ]]; then
     echo "Azure CLI is not found. Install Azure CLI and try again"
@@ -407,15 +400,31 @@ function validate_cloud_storage() {
     check_aws || exit 1
     check_s3_creds $S3_PROFILE $S3_BUCKET || exit 1
   elif [[ "$storage" == "gcs" ]]; then
-    check_gcp_creds || exit 1
     check_gsutil || exit 1
-    echo "Demo does not support GCS yet. For now use one of [s3|az]"
-    exit 1
+    check_gcp_creds $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
   elif [[ "$storage" == "az" ]]; then
     check_az_tool || exit 1
     check_az_creds $AZBLOB_STORAGE_ACCOUNT $AZBLOB_CONTAINER || exit 1
   else
     echo "Storage destination $storage is not valid.  Must be one of [s3|gcs|az]."
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_gcp_creds() {
+  GCS_CREDENTIALS_FILE=$1
+  GCS_BUCKET=$2
+
+  if [[ -z "$GCS_CREDENTIALS_FILE" || -z "$GCS_BUCKET" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=gcs, but GCS_CREDENTIALS_FILE or GCS_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
+    exit 1
+  fi
+
+  gcloud auth activate-service-account --key-file $GCS_CREDENTIALS_FILE
+  if [[ "$?" -ne 0 ]]; then
+    echo "ERROR: Cannot activate service account with key file $GCS_CREDENTIALS_FILE. Verify your credentials and try again."
     exit 1
   fi
 
