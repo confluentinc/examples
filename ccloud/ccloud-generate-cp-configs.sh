@@ -91,6 +91,8 @@ if [[ ! -f "$SR_CONFIG_FILE" ]]; then
 fi
 echo "SR_CONFIG_FILE: $SR_CONFIG_FILE"
 
+echo -e "\nGenerating component configurations based on the files $CONFIG_FILE ($SR_CONFIG_FILE)\n" 
+
 # Set permissions
 PERM=600
 if ls --version 2>/dev/null | grep -q 'coreutils' ; then
@@ -109,6 +111,8 @@ mkdir -p $DEST
 ################################################################################
 # Glean parameters from the Confluent Cloud configuration file
 ################################################################################
+
+# Kafka cluster
 BOOTSTRAP_SERVERS=$( grep "^bootstrap.server" $CONFIG_FILE | awk -F'=' '{print $2;}' )
 BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS/\\/}
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CONFIG_FILE | cut -d'=' -f2- )
@@ -121,6 +125,7 @@ CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
 #echo "key: $CLOUD_KEY"
 #echo "secret: $CLOUD_SECRET"
 
+# Schema Registry
 BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
@@ -128,6 +133,9 @@ SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '
 #echo "schema.registry.basic.auth.user.info: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO"
 #echo "schema.registry.url: $SCHEMA_REGISTRY_URL"
 
+# KSQL
+KSQL_ENDPOINT=$( grep "^ksql.endpoint" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+KSQL_BASIC_AUTH_USER_INFO=$( grep "^ksql.basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
 
 ################################################################################
 # Build configuration file with CCloud connection parameters and
@@ -674,5 +682,9 @@ export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
 export BASIC_AUTH_CREDENTIALS_SOURCE=$BASIC_AUTH_CREDENTIALS_SOURCE
 export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
 export SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
+export CLOUD_KEY=$CLOUD_KEY
+export CLOUD_SECRET=$CLOUD_SECRET
+export KSQL_ENDPOINT=$KSQL_ENDPOINT
+export KSQL_BASIC_AUTH_USER_INFO=$KSQL_BASIC_AUTH_USER_INFO
 EOF
 chmod $PERM $ENV_CONFIG
