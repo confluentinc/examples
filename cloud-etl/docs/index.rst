@@ -93,6 +93,7 @@ Local Tools
 -  ``jq``
 -  ``curl``
 -  ``timeout``
+-  ``python``
 
 Run the Demo
 ============

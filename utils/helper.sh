@@ -30,6 +30,15 @@ function check_env() {
   return 0
 }
 
+function check_python() {
+  if [[ $(type python 2>&1) =~ "not found" ]]; then
+    echo "'python' is not found. Install python and try again."
+    return 1
+  fi
+
+  return 0
+}
+
 function check_confluent_binary() {
   if [[ $(type confluent 2>&1) =~ "not found" ]]; then
     echo "'confluent' is not found. Install Confluent Platform if you want to use Confluent CLI."
@@ -417,8 +426,8 @@ function check_gcp_creds() {
   GCS_CREDENTIALS_FILE=$1
   GCS_BUCKET=$2
 
-  if [[ -z "$GCS_CREDENTIALS_FILE" || -z "$GCS_CREDENTIALS_FILE_ESCAPED" || -z "$GCS_BUCKET" ]]; then
-    echo "ERROR: DESTINATION_STORAGE=gcs, but GCS_CREDENTIALS_FILE or GCS_CREDENTIALS_FILE_ESCAPED or GCS_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
+  if [[ -z "$GCS_CREDENTIALS_FILE" || -z "$GCS_BUCKET" ]]; then
+    echo "ERROR: DESTINATION_STORAGE=gcs, but GCS_CREDENTIALS_FILE or GCS_BUCKET is not set.  Please set these parameters in config/demo.cfg and try again."
     exit 1
   fi
 
@@ -429,7 +438,9 @@ function check_gcp_creds() {
   fi
 
   # Create JSON-formatted string of the GCS credentials
-  export GCS_CREDENTIALS=$(cat $GCS_CREDENTIALS_FILE_ESCAPED)
+  export GCS_CREDENTIALS=$(python ./stringify-gcp-credentials.py $GCS_CREDENTIALS_FILE)
+  # Remove leading and trailing double quotes, otherwise connector creation from CLI fails
+  GCS_CREDENTIALS=$(echo "${GCS_CREDENTIALS:1:${#GCS_CREDENTIALS}-2}")
 
   return 0
 }
