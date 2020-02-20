@@ -7,19 +7,18 @@ Cloud ETL Demo
 ==============
 
 This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
-It creates a source connector that reads data from an AWS Kinesis stream into Confluent Cloud, then a Confluent Cloud KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
-It is all achieved using Confluent Cloud CLI.
+Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: images/topology.jpg
    :alt: image
 
-The end result is a ``100%`` pipeline running in the cloud that can span multiple cloud providers.
+The end result is an event streaming ETL, running 100% in the cloud, spanning multiple cloud providers.
 This enables you to:
 
 *  Build business applications on a full event streaming platform
 *  Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
 *  Use Kafka to aggregate data in single source of truth
-*  Harness the power of `KSQL <https://www.confluent.io/product/ksql/>`__
+*  Harness the power of `KSQL <https://www.confluent.io/product/ksql/>`__ for stream processing
 
 
 End-to-end Streaming ETL
@@ -35,13 +34,19 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
    - `Confluent Cloud KSQL <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
 
--  Cloud storage sink connector: pushes data from Kafka topics to cloud storage, one of:
+-  Cloud storage sink connector: writes data from Kafka topics to cloud storage, one of:
 
    - :ref:`cc_azure_blob_sink`
    - :ref:`cc_gcs_connect_sink`
    - :ref:`cc_s3_connect_sink`
 
-Here is the data flow:
+-  |sr-ccloud|: for centralized management of schemas and checks compatibility as schemas evolve 
+
+
+Data Flow
+---------
+
+The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventLogs.json|cloud-etl/eventLogs.json`.
 
 +-----------------------+-----------------------+---------------------+
 | Component             | Consumes From         | Produces To         |
@@ -51,8 +56,6 @@ Here is the data flow:
 +-----------------------+-----------------------+---------------------+
 | KSQL                  | ``eventLogs``         | KSQL streams and    |
 |                       |                       | tables              |
-|                       |                       | (`ksql.commands     |
-|                       |                       | <ksql.commands>`__) |
 +-----------------------+-----------------------+---------------------+
 | GCS/S3/Blob sink      | KSQL tables           | GCS/S3/Blob         |
 | connector             | ``COUNT_PER_SOURCE``, |                     |
@@ -62,11 +65,8 @@ Here is the data flow:
 Warning
 =======
 
-This demo uses real cloud resources, including that of |ccloud|,
-Amazon Kinesis, and one of the cloud storage providers. To avoid
-unexpected charges, carefully evaluate the cost of resources before
-launching the demo and ensure all resources are destroyed after you are
-done running it.
+This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis, and one of the cloud storage providers.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 Prerequisites
 =============
@@ -97,6 +97,8 @@ Run the Demo
 Setup
 -----
 
+Because this demo interacts with real resources in Kinesis, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
+
 #. By default, the demo reads the configuration parameters for your |ccloud| environment from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster, replacing the values in ``<...>`` below particular for your |ccloud| environment:
 
    .. code:: shell
@@ -113,7 +115,7 @@ Setup
       ksql.endpoint=https://<KSQL ENDPOINT>
       ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 
-   To get the right values for the endpoints and credentials in the file above, find them either via the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.
+   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
 
    .. code:: shell
 
@@ -149,52 +151,69 @@ Setup
      cd cloud-etl
 
 
-#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis.  Also set the parameters for the destination cloud storage provider:
+#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis.  Also set the required parameters for the respective destination cloud storage provider:
 
-   - GCP GCS: set ``DESTINATION_STORAGE='gcs'``, ``GCS_CREDENTIALS_FILE``, and ``GCS_BUCKET``.
-   - AWS S3: set ``DESTINATION_STORAGE='s3'``, ``S3_PROFILE``, and ``S3_BUCKET``.
-   - Azure Blob: set ``DESTINATION_STORAGE='az'``, ``AZBLOB_STORAGE_ACCOUNT``, and ``AZBLOB_CONTAINER``.
+   - GCP GCS
 
-#. Log into |ccloud| with the command ``ccloud login``, and use
-   your |ccloud| username and password.
+     - ``DESTINATION_STORAGE='gcs'``
+     - ``GCS_CREDENTIALS_FILE``
+     - ``GCS_BUCKET``
+
+   - AWS S3
+
+     - ``DESTINATION_STORAGE='s3'``
+     - ``S3_PROFILE``
+     - ``S3_BUCKET``
+
+   - Azure Blob
+
+     - ``DESTINATION_STORAGE='az'``
+     - ``AZBLOB_STORAGE_ACCOUNT``
+     - ``AZBLOB_CONTAINER``
+
+Run
+---
+
+#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password.
 
    .. code:: shell
 
       ccloud login --url https://confluent.cloud
 
-
-Run
----
-
 #. Run the demo. It takes approximately 7 minutes to run.
 
    .. code:: bash
 
-      $ ./start.sh
+      ./start.sh
 
 Validate
 --------
 
-#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the KSQL tab to view the flow through your KSQL application:
-
-   .. figure:: images/flow.png
-      :alt: image
-
-#. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.  These connectors were created automatically by the demo using the CLI command ``ccloud connector create``.  Then describe one of them in more detail (sample output shown below).
+#. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.
 
    .. code:: bash
 
-      $ ccloud connector list      
+      ccloud connector list      
+
+   Sample output:
+
+   .. code:: bash
 
            ID     |         Name         | Status  |  Type   
       +-----------+----------------------+---------+--------+
         lcc-knjgv | demo-KinesisSource   | RUNNING | source  
         lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink    
         lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink    
-      
-      
 
-      $ ccloud connector describe lcc-knjgv
+#. The demo automatically creates these connectors using the |ccloud| CLI command ``ccloud connector create`` that passes in the appropriate configuration file from the :devx-examples:`connectors directory|cloud-etl/connectors/`.  Describe one of the connectors in more detail.
+
+   .. code:: bash
+
+      ccloud connector describe lcc-knjgv
+
+   Sample output:
+
+   .. code:: bash
 
       Connector Details
       +--------+--------------------+
@@ -233,12 +252,51 @@ Validate
         kafka.endpoint      | SASL_SSL://pkc-4r087.us-west2.gcp.confluent.cloud:9092   
 
 
+#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the KSQL tab to view the flow through your KSQL application:
 
-#. View all the data from Kinesis, Kafka, and cloud storage after running the demo.  Sample output shown below:
+   .. figure:: images/flow.png
+      :alt: image
+
+#. The demo's :devx-examples:`KSQL commands|cloud-etl/ksql.commands` generated a KSQL TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a KSQL TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. View its schema in |sr-ccloud|.
 
    .. code:: bash
 
-      $ ./read-data.sh
+      curl --silent -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/SUM_PER_SOURCE-value/versions/latest | jq -r '.schema' | jq .
+
+   Sample output:
+
+   .. code:: json
+
+      {
+        "type": "record",
+        "name": "KsqlDataSourceSchema",
+        "namespace": "io.confluent.ksql.avro_schemas",
+        "fields": [
+          {
+            "name": "EVENTSOURCEIP",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "KSQL_COL_1",
+            "type": [
+              "null",
+              "long"
+            ],
+            "default": null
+          }
+        ]
+      }
+
+
+#. View the data from Kinesis, |ak|, and cloud storage after running the demo.  Sample output shown below:
+
+   .. code:: bash
+
+      ./read-data.sh
 
    Sample output:
 
@@ -318,7 +376,6 @@ Validate
       S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000003068.avro
       S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000004068.avro
 
-
 Stop
 ----
 
@@ -326,4 +383,4 @@ Stop
 
    .. code:: bash
 
-      $ ./stop.sh
+      ./stop.sh
