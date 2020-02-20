@@ -65,7 +65,7 @@ The data set is a stream of log messages, which in this demo is mock data captur
 Warning
 =======
 
-This demo uses real cloud resources, including that of |ccloud|, Amazon Kinesis, and one of the cloud storage providers.
+This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis, and one of the cloud storage providers.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 Prerequisites
