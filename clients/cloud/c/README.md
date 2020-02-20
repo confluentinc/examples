@@ -1,13 +1,17 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the C client [librdkafka](https://github.com/edenhill/librdkafka).
+Produce messages to and consume messages from a Kafka cluster using the C client [librdkafka](https://github.com/edenhill/librdkafka).
 
 
 # Prerequisites
 
 * [librdkafka](https://github.com/edenhill/librdkafka) installed on your machine, see [installation instructions](https://github.com/edenhill/librdkafka/blob/master/README.md#instructions).
+
+To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
+If this is a Confluent Cloud cluster, you must have:
+
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
+* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
 
 
 # Build the example applications
