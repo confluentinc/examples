@@ -56,8 +56,6 @@ The data set is a stream of log messages, which in this demo is mock data captur
 +-----------------------+-----------------------+---------------------+
 | KSQL                  | ``eventLogs``         | KSQL streams and    |
 |                       |                       | tables              |
-|                       |                       | (`ksql.commands     |
-|                       |                       | <ksql.commands>`__) |
 +-----------------------+-----------------------+---------------------+
 | GCS/S3/Blob sink      | KSQL tables           | GCS/S3/Blob         |
 | connector             | ``COUNT_PER_SOURCE``, |                     |
@@ -259,7 +257,7 @@ Validate
    .. figure:: images/flow.png
       :alt: image
 
-#. The demo's `KSQL commands <ksql.commands>`__ generated a KSQL TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a KSQL TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. View its schema in |sr-ccloud|.
+#. The demo's :devx-examples:`KSQL commands|cloud-etl/ksql.commands` generated a KSQL TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a KSQL TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. View its schema in |sr-ccloud|.
 
    .. code:: bash
 
