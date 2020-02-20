@@ -1,11 +1,21 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the [ ZenDesk Ruby Client for Apache Kafka](https://github.com/zendesk/ruby-kafka).
+Produce messages to and consume messages from a Kafka cluster using the [ ZenDesk Ruby Client for Apache Kafka](https://github.com/zendesk/ruby-kafka).
 
 
 # Prerequisites
 
 * [Bundler](https://bundler.io/) installed on your machine. Install via `gem install bundler`
+* Install gems
+
+    ```bash
+    $ cd clients/ruby
+    $ bundle install
+    ```
+
+To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
+If this is a Confluent Cloud cluster, you must have:
+
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 * Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
     ```bash
@@ -13,11 +23,6 @@ Produce messages to and consume messages from [Confluent Cloud](https://www.conf
     bootstrap.servers=<broker-1,broker-2,broker-3>
     sasl.username=<api-key-id>
     sasl.password=<secret-access-key>
-    ```
-* Install gems
-    ```bash
-    $ cd clients/ruby
-    $ bundle install
     ```
 
 # Example 1: Hello World!

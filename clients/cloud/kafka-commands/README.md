@@ -1,12 +1,16 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the Apache bin commands.
+Produce messages to and consume messages from a Kafka cluster using the Apache bin commands.
 
 
 # Prerequisites
 
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 * [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
+
+To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
+If this is a Confluent Cloud cluster, you must have:
+
+* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 * Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
 ```shell
