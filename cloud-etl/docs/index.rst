@@ -97,7 +97,7 @@ Run the Demo
 Setup
 -----
 
-Because this demo interacts with real resources in Kinesis, a destination storage service, and |ccloud|, you must setup some initial parameters to communicate with these services.
+Because this demo interacts with real resources in Kinesis, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
 #. By default, the demo reads the configuration parameters for your |ccloud| environment from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster, replacing the values in ``<...>`` below particular for your |ccloud| environment:
 
@@ -115,7 +115,7 @@ Because this demo interacts with real resources in Kinesis, a destination storag
       ksql.endpoint=https://<KSQL ENDPOINT>
       ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 
-   To retrieve the values for the endpoints and credentials in the file above, find them either via the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
+   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
 
    .. code:: shell
 
@@ -174,7 +174,7 @@ Because this demo interacts with real resources in Kinesis, a destination storag
 Run
 ---
 
-#. Log into |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password.
+#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password.
 
    .. code:: shell
 
@@ -205,7 +205,7 @@ Validate
         lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink    
         lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink    
 
-#. These connectors are created automatically by the demo using the |ccloud| CLI command ``ccloud connector create`` and passing in the appropriate configuration file from the :devx-examples:`connectors directory|cloud-etl/connectors/`.  Describe one of the connectors in more detail.
+#. The demo automatically creates these connectors using the |ccloud| CLI command ``ccloud connector create`` that passes in the appropriate configuration file from the :devx-examples:`connectors directory|cloud-etl/connectors/`.  Describe one of the connectors in more detail.
 
    .. code:: bash
 
@@ -292,7 +292,7 @@ Validate
       }
 
 
-#. View the data from Kinesis, Kafka, and cloud storage after running the demo.  Sample output shown below:
+#. View the data from Kinesis, |ak|, and cloud storage after running the demo.  Sample output shown below:
 
    .. code:: bash
 
