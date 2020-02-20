@@ -1,6 +1,6 @@
 # Overview
 
-Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the [ node-rdkafka client for Apache Kafka](https://github.com/Blizzard/node-rdkafka).
+Produce messages to and consume messages from a Kafka cluster using the [node-rdkafka client for Apache Kafka](https://github.com/Blizzard/node-rdkafka).
 
 # Prerequisites
 
@@ -12,6 +12,9 @@ $ cd clients/nodejs
 $ npm install
 ```
 _Note: Users of macOS 10.13 (High Sierra) and above should heed [node-rdkafka's additional configuration instructions related to OpenSSL](https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave) before running `npm install`._
+
+To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
+If this is a Confluent Cloud cluster, you must have:
 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster.
 * Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:

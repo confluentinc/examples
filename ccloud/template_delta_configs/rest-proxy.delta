@@ -1,0 +1,15 @@
+ssl.endpoint.identification.algorithm=https
+client.ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+client.sasl.mechanism=PLAIN
+security.protocol=SASL_SSL
+client.security.protocol=SASL_SSL
+bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
+client.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+client.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+
+# Confluent Schema Registry configuration for REST Proxy
+client.basic.auth.credentials.source=USER_INFO
+client.schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
+schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>
