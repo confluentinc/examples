@@ -7,11 +7,11 @@ plugins {
 repositories {
   mavenLocal()
   maven {
-    url = 'http://packages.confluent.io/maven/'
+    url = 'https://packages.confluent.io/maven/'
   }
 
   maven {
-    url = 'http://repo.maven.apache.org/maven2'
+    url = 'https://repo.maven.apache.org/maven2'
   }
 }
 

@@ -64,10 +64,10 @@ public class StreamsAvroExample {
         //   ssl.endpoint.identification.algorithm=https
         //   sasl.mechanism=PLAIN
         //   bootstrap.servers=<CLUSTER_BOOTSTRAP_SERVER>
-        //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CLUSTER_API_KEY>" password="<CLUSTER_API_SECRET>";
+        //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ CLUSTER_API_KEY }}" password="{{ CLUSTER_API_SECRET }}";
         //   security.protocol=SASL_SSL
         //   basic.auth.credentials.source=USER_INFO
-        //   schema.registry.basic.auth.user.info=<SR_API_KEY>:<SR_API_SECRET>
+        //   schema.registry.basic.auth.user.info={{ SR_API_KEY }}:{{ SR_API_SECRET }}
         //   schema.registry.url=https://<SR ENDPOINT>
         final Properties props = loadConfig(args[0]);
 

@@ -8,19 +8,20 @@ Produce messages to and consume messages from a Kafka cluster using the Java Pro
 * Java 1.8 or higher to run the demo application
 * Maven to compile the demo application
 
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
+To run this example, download the `java.config` file from [confluentinc/configuration-templates](https://github.com/confluentinc/configuration-templates/tree/master/clients/cloud) and save it to a `$HOME/.ccloud` folder. 
+Update the configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster. If this is a Confluent Cloud cluster, you must have:
 
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
+* Update the `java.config` file from  with the broker endpoint and api key to connect to your Confluent Cloud cluster ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
+
 
 ```shell
-$ cat $HOME/.ccloud/config
-bootstrap.servers=<BROKER ENDPOINT>
+$ cat $HOME/.ccloud/java.config
 ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
 sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+bootstrap.servers={{ BROKER_ENDPOINT }}
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ CLUSTER_API_KEY }}" password="{{ CLUSTER_API_SECRET }}";
+security.protocol=SASL_SSL
 ```
 
 # Example 1: Hello World!
@@ -39,7 +40,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 	# Run the producer
         # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
 	$ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
-	  -Dexec.args="$HOME/.ccloud/config test1"
+	  -Dexec.args="$HOME/.ccloud/java.config test1"
 	```
 
 	You should see:
@@ -78,7 +79,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
     
     # Run the consumer
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" \
-      -Dexec.args="$HOME/.ccloud/config test1"
+      -Dexec.args="$HOME/.ccloud/java.config test1"
     ```
     
     You should see:
@@ -107,7 +108,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 
     # Run the Kafka streams application
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
-      -Dexec.args="$HOME/.ccloud/config test1"
+      -Dexec.args="$HOME/.ccloud/java.config test1"
     ```
 
     You should see:
@@ -149,24 +150,25 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 
 1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
 
-2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+2. Verify your Confluent Cloud Schema Registry credentials work from your host. In the output below, substitute your values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET }}`, and `{{ SR_ENDPOINT }}`.
 
     ```shell
     # View the list of registered subjects
-    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+    $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
 
-    # Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
-    $ curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2)/subjects
+    # Same as above, as a single bash command to parse the values out of java-sr.config
+    $ curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/java-sr.config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.ccloud/java-sr.config| cut -d'=' -f2)/subjects
     ```
 
-3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/java.config``) or download the `java-sr.config` from [configuration-templates](https://github.com/confluentinc/configuration-templates/tree/master/clients/cloud). 
+In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET }}`, and `{{ SR_ENDPOINT }}`.
 
     ```shell
-    $ cat $HOME/.ccloud/config
+    $ cat $HOME/.ccloud/java-sr.config
     ...
     basic.auth.credentials.source=USER_INFO
-    schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-    schema.registry.url=https://<SR ENDPOINT>
+    schema.registry.basic.auth.user.info={{ SR_API_KEY }}:{{ SR_API_SECRET }}
+    schema.registry.url=https://{{ SR_ENDPOINT }}
     ...
     ```
 
@@ -179,7 +181,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     # Run the Avro producer
     # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
-      -Dexec.args="$HOME/.ccloud/config test2"
+      -Dexec.args="$HOME/.ccloud/java-sr.config test2"
     ```
 
 5. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
@@ -190,7 +192,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     
     # Run the Avro consumer
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
-      -Dexec.args="$HOME/.ccloud/config test2"
+      -Dexec.args="$HOME/.ccloud/java-sr.config test2"
     ```
 
 6. Run the Avro Kafka Streams application, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the application received all the messages:
@@ -201,18 +203,18 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 
     # Run the Avro Kafka streams application
     $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsAvroExample" \
-      -Dexec.args="$HOME/.ccloud/config test2"
+      -Dexec.args="$HOME/.ccloud/java-sr.config test2"
     ```
 
-7. View the schema information registered in Confluent Cloud Schema Registry. In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+7. View the schema information registered in Confluent Cloud Schema Registry. In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET }}`, and `{{ SR_ENDPOINT }}`.
 
     ```
     # View the list of registered subjects
-    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+    $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
     ["test2-value"]
     
     # View the schema information for subject `test2-value`
-    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+    $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
     {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
     ```
 

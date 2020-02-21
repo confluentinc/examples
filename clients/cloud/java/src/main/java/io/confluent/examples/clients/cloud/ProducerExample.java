@@ -68,7 +68,7 @@ public class ProducerExample {
     //   ssl.endpoint.identification.algorithm=https
     //   sasl.mechanism=PLAIN
     //   bootstrap.servers=<CLUSTER_BOOTSTRAP_SERVER>
-    //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CLUSTER_API_KEY>" password="<CLUSTER_API_SECRET>";
+    //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ CLUSTER_API_KEY }}" password="{{ CLUSTER_API_SECRET }}";
     //   security.protocol=SASL_SSL
     final Properties props = loadConfig(args[0]);
 
