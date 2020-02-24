@@ -76,7 +76,6 @@ Cloud services
 
 -  `Confluent Cloud cluster <https://confluent.cloud>`__: for development only. Do not use a production cluster.
 -  `Confluent Cloud KSQL <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ provisioned in your |ccloud|
--  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 -  AWS or GCP or Azure access
 
 Local Tools
@@ -90,6 +89,7 @@ Local Tools
 -  ``curl``
 -  ``timeout``
 -  ``python``
+-  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 
 Run the Demo
 ============
