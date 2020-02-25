@@ -205,7 +205,7 @@ Validate
         lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink    
         lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink    
 
-#. The demo automatically creates these connectors using the |ccloud| CLI command ``ccloud connector create`` that passes in the appropriate configuration file from the :devx-examples:`connectors directory|cloud-etl/connectors/`.  Describe one of the connectors in more detail.
+#. The demo automatically created these connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`.  Describe any connector in more detail.
 
    .. code:: bash
 
@@ -252,12 +252,56 @@ Validate
         kafka.endpoint      | SASL_SSL://pkc-4r087.us-west2.gcp.confluent.cloud:9092   
 
 
-#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the KSQL tab to view the flow through your KSQL application:
+#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the KSQL tab to view the `flow <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html#data-flow>`__ through your KSQL application:
 
    .. figure:: images/flow.png
       :alt: image
 
-#. The demo's :devx-examples:`KSQL commands|cloud-etl/ksql.commands` generated a KSQL TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a KSQL TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. View its schema in |sr-ccloud|.
+#. The demo's :devx-examples:`KSQL commands|cloud-etl/ksql.commands` used KSQL's REST API to generate a KSQL TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a KSQL TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. Use the Confluent Cloud KSQL UI or its REST API to interact with the KSQL application:
+
+   .. code:: bash
+
+      curl -X POST $KSQL_ENDPOINT/ksql \
+             -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+             -u $KSQL_BASIC_AUTH_USER_INFO \
+             -d @<(cat <<EOF
+      {
+        "ksql": "SHOW QUERIES;",
+        "streamsProperties": {}
+      }
+      EOF
+      )
+
+   Sample output:
+
+   .. code:: bash
+
+      [
+        {
+          "@type": "queries",
+          "statementText": "SHOW QUERIES;",
+          "queries": [
+            {
+              "sinks": [
+                "COUNT_PER_SOURCE"
+              ],
+              "id": "CTAS_COUNT_PER_SOURCE_170",
+              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+            },
+            {
+              "sinks": [
+                "SUM_PER_SOURCE"
+              ],
+              "id": "CTAS_SUM_PER_SOURCE_171",
+              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+            }
+          ],
+          "warnings": []
+        }
+      ]
+
+
+#. View the Avro schema for the topic ``SUM_PER_SOURCE`` in |sr-ccloud|.
 
    .. code:: bash
 

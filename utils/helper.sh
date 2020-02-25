@@ -629,6 +629,11 @@ function create_connector_cloud() {
 
   echo -e "\nTrying to create connector from $file\n"
 
+  # About the Confluent Cloud CLI command 'ccloud connector create':
+  # - Typical usage of this CLI would be 'ccloud connector create --config <filename>'
+  # - However, in this demo, the connector's configuration file contains parameters that need to be first substituted
+  #   so the CLI command includes eval and heredoc.
+  # - The '-vvv' is added for verbose output
   ccloud connector create -vvv --config <(eval "cat <<EOF
 $(<$file)
 EOF
