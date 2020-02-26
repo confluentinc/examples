@@ -9,7 +9,5 @@
     "kafka.topic": "$KAFKA_TOPIC_NAME_IN",
     "kinesis.region": "$KINESIS_REGION",
     "kinesis.stream": "$KINESIS_STREAM_NAME",
-    "kinesis.position": "TRIM_HORIZON",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter"
+    "kinesis.position": "TRIM_HORIZON"
 }
