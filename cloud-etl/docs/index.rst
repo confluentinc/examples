@@ -283,17 +283,17 @@ Validate
           "queries": [
             {
               "sinks": [
-                "COUNT_PER_SOURCE"
+                "SUM_PER_SOURCE"
               ],
-              "id": "CTAS_COUNT_PER_SOURCE_170",
-              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "id": "CTAS_SUM_PER_SOURCE_195",
+              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
             },
             {
               "sinks": [
-                "SUM_PER_SOURCE"
+                "COUNT_PER_SOURCE"
               ],
-              "id": "CTAS_SUM_PER_SOURCE_171",
-              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "id": "CTAS_COUNT_PER_SOURCE_194",
+              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
             }
           ],
           "warnings": []
@@ -385,7 +385,7 @@ Validate
       192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":10}
    
       Data from Kafka topic SUM_PER_SOURCE:
-      confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=WZVZVUOIOYEITVDY:680fJRxdHGIkK3dVisMEM5nl6b+d74xvPgRhlUx4i/OQpT3B+Zlz2qtVEE01wKto --property schema.registry.url=https://psrc-lz3xz.us-central1.gcp.confluent.cloud --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
+      confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
       192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":1}}
       192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":4}}
       192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":5}}
@@ -397,29 +397,28 @@ Validate
       192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":19}}
       192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":22}}
    
-      Objects in Cloud storage s3:
+      Objects in Cloud storage gcs:
    
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000000000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000001000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000002000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000003000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+1+0000004000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000000000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000001000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000002000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000003000.bin
-      S3 key: topics/COUNT_PER_SOURCE/year=2020/month=02/day=12/hour=23/COUNT_PER_SOURCE+3+0000004000.bin
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000000000.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000001000.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000002000.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000003000.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+1+0000004000.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000000068.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000001068.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000002068.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000003068.avro
-      S3 key: topics/SUM_PER_SOURCE/year=2020/month=02/day=12/hour=23/SUM_PER_SOURCE+3+0000004068.avro
-
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000000000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000001000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000002000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000003000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000004000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000000000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000001000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000002000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000003000.bin
+      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000004000.bin
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000000000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000001000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000002000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000003000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000000000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000001000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000002000.avro
+      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000003000.avro
+      
+      
 Stop
 ----
 
