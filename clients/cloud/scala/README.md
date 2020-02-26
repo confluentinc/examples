@@ -7,20 +7,8 @@ For more information, please see the [application development documentation](htt
 
 # Prerequisites
 
-To run this example, download the `java.config` file from [confluentinc/configuration-templates](https://github.com/confluentinc/configuration-templates/tree/master/clients/cloud) and save it to a `$HOME/.ccloud` folder. 
-Update the configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster. If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Update the `java.config` file from  with the broker endpoint and api key to connect to your Confluent Cloud cluster ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
-
-```shell
-$ cat $HOME/.ccloud/java.config
-bootstrap.servers={{ BROKER_ENDPOINT }}
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="{{ CLUSTER_API_KEY }}" password="{{ CLUSTER_API_SECRET }}"; 
-```
+* Create a local file (e.g. at `$HOME/.confluent/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Quickstart
 
@@ -33,7 +21,7 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
 		$ sbt clean compile
 		
 		# Run the consumer 
-		$ sbt "runMain io.confluent.examples.clients.scala.Consumer $HOME/.ccloud/java.config testtopic"
+		$ sbt "runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config testtopic"
 		```
 		You should see
 		
@@ -51,13 +39,13 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
     		$ sbt clean compile
     		
     		# Run the consumer
-    		$ sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.ccloud/java.config  testtopic"
+    		$ sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.confluent/java.config  testtopic"
         ```
 
 	3. Then, in a new window run the Kafka producer application to write records to the Kafka cluster, you should see these appear in the consumer window.
 
 		```shell
-		$ sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.ccloud/java.config testtopic"
+		$ sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config testtopic"
 		```
         		
         You should see

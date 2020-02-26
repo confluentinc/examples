@@ -5,7 +5,7 @@
 
 check_jq || exit
 
-CONFIG_FILE=~/.ccloud/config
+CONFIG_FILE=$HOME/.confluent/java.config
 check_ccloud_config $CONFIG_FILE || exit
 
 ./stop-docker.sh

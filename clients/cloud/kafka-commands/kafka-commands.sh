@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE=~/.ccloud/config
+CONFIG_FILE=$HOME/.confluent/java.config
 
 source ../../../utils/helper.sh 
 
@@ -21,7 +21,7 @@ echo -e "\n# Produce messages to $topic_name"
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "alice,{\"count\":${i}}" ; done) | \
    kafka-console-producer --topic $topic_name \
-                          --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` \
+                          --broker-list `grep "^\s*bootstrap.server" $HOME/.confluent/config | tail -1` \
                           --producer.config $CONFIG_FILE \
                           --property parse.key=true \
                           --property key.separator=, 2>/dev/null
@@ -30,7 +30,7 @@ num_messages=10
 # Consume messages
 echo -e "\n# Consume messages from $topic_name"
 kafka-console-consumer --topic $topic_name \
-                       --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` \
+                       --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/config | tail -1` \
                        --consumer.config $CONFIG_FILE \
                        --property print.key=true \
                        --from-beginning \

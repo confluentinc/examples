@@ -6,29 +6,14 @@ Produce messages to and consume messages from a Kafka cluster using [Confluent P
 # Prerequisites
 
 * [Confluent's Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed on your machine. Check that you are using version 1.0.0 or higher (e.g., `pip show confluent-kafka`).
-
-To run this example, download the `librdkafka.config` file from [confluentinc/configuration-templates](https://github.com/confluentinc/configuration-templates/tree/master/clients/cloud) and save it to a `$HOME/.ccloud` folder. 
-Update the configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster. If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Update the `librdkafka.config` file from  with the broker endpoint and api key to connect to your Confluent Cloud cluster ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
-
-
-```bash
-$ cat $HOME/.ccloud/librdkafka.config
-bootstrap.servers={{ BROKER_ENDPOINT }}
-sasl.mechanisms=PLAIN
-security.protocol=SASL_SSL
-sasl.username={{ CLUSTER_API_KEY }}
-sasl.password={{ CLUSTER_API_SECRET }}
-```
-
+* Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 ## Configure SSL trust store
 
 Depending on your operating system or Linux distro you may need to take extra steps to set up the SSL CA root certificates. If your systems does not have the SSL CA root certificates properly set up, here is an example of an error message you may see.
 
 ```
-$ ./producer.py -f $HOME/.ccloud/librdkafka.config -t hello
+$ ./producer.py -f $HOME/.confluent/librdkafka.config -t hello
 %3|1554125834.196|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
 %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
 %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
@@ -57,7 +42,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```bash
-$ ./producer.py -f $HOME/.ccloud/librdkafka.config -t test1
+$ ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
 Producing record: alice 	 {"count": 0}
 Producing record: alice 	 {"count": 1}
 Producing record: alice 	 {"count": 2}
@@ -84,7 +69,7 @@ Produced record to topic test1 partition [0] @ offset 9
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
-$ ./consumer.py -f $HOME/.ccloud/librdkafka.config -t test1
+$ ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
 ...
 Waiting for message or event/error in poll()
 Consumed record with key alice and value {"count": 0}, and updated total count to 0
@@ -116,15 +101,15 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     # View the list of registered subjects
     $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
 
-    # Same as above, as a single bash command to parse the values out of  $HOME/.ccloud/librdkafka-sr.config
-    $ curl -u $(grep "^schema.registry.basic.auth.user.info"  $HOME/.ccloud/librdkafka-sr.config | cut -d'=' -f2) $(grep "^schema.registry.url"  $HOME/.ccloud/librdkafka-sr.config | cut -d'=' -f2)/subjects
+    # Same as above, as a single bash command to parse the values out of  $HOME/.confluent/librdkafka.config
+    $ curl -u $(grep "^schema.registry.basic.auth.user.info"  $HOME/.confluent/librdkafka.config | cut -d'=' -f2) $(grep "^schema.registry.url"  $HOME/.confluent/librdkafka.config | cut -d'=' -f2)/subjects
     ```
 
-3. Add the following parameters to your local Confluent Cloud configuration file, or use the `librdkafka-sr.config` file from [confluentinc/configuration-templates](https://github.com/confluentinc/configuration-templates/tree/master/clients/cloud).
+3. Add the following parameters to your local Confluent Cloud configuration file.
   In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET }}`, and `{{ SR_ENDPOINT }}`.
  
     ```shell
-    $ cat $HOME/.ccloud/librdkafka-sr.config
+    $ cat $HOME/.confluent/librdkafka.config
     ...
     basic.auth.credentials.source=USER_INFO
     schema.registry.basic.auth.user.info={{ SR_API_KEY }}:{{ SR_API_SECRET }}
@@ -135,13 +120,13 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 4. Create the topic in Confluent Cloud
 
 ```bash
-$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.ccloud/librdkafka-sr.config | tail -1` --command-config  $HOME/.ccloud/librdkafka-sr.config --topic test2 --create --replication-factor 3 --partitions 6
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
 5. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```bash
-$ ./producer_ccsr.py -f  $HOME/.ccloud/librdkafka-sr.config-t test2
+$ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config-t test2
 Producing Avro record: alice	0
 Producing Avro record: alice	1
 Producing Avro record: alice	2
@@ -168,7 +153,7 @@ Produced record to topic test2 partition [0] @ offset 9
 6. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
-$ ./consumer_ccsr.py -f $HOME/.ccloud/librdkafka-sr.config -t test2
+$ ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
 ...
 Waiting for message or event/error in poll()
 Consumed record with key alice and value 0,                       and updated total count to 0

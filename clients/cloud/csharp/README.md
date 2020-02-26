@@ -6,22 +6,8 @@ Produce messages to and consume messages from a Kafka cluster using the .NET Pro
 # Prerequisites
 
 * [.NET Core 2.1](https://dotnet.microsoft.com/download) or higher to run the demo application
-
-To run this example, download the `librdkafka.config` file from [confluentinc/configuration-templates](https://github.com/confluentinc/configuration-templates/tree/master/clients/cloud) and save it to a `$HOME/.ccloud` folder. 
-Update the configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster. If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Update the `librdkafka.config` file from  with the broker endpoint and api key to connect to your Confluent Cloud cluster ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
-
-
-```shell
-$ cat $HOME/.ccloud/librdkafka.config
-bootstrap.servers={{ BROKER_ENDPOINT }}
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.username={{ CLUSTER_API_KEY }}
-sasl.password={{ CLUSTER_API_SECRET }}
-```
+* Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example
 
@@ -41,10 +27,10 @@ Run the example application, passing in arguments for (a) whether to produce or 
 $ dotnet build
 
 # Run the producer (Windows)
-$ dotnet run produce test1 $HOME/.ccloud/librdkafka.config /path/to/curl/cacert.pem
+$ dotnet run produce test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
 
 # Run the producer (other)
-$ dotnet run produce test1 $HOME/.ccloud/librdkafka.config
+$ dotnet run produce test1 $HOME/.confluent/librdkafka.config
 ```
 
 You should see:
@@ -79,10 +65,10 @@ Run the consumer, passing in arguments for (a) whether to produce or consume (co
 
 ```shell
 # Run the consumer (Windows)
-$ dotnet run consume test1 $HOME/.ccloud/librdkafka.config /path/to/curl/cacert.pem
+$ dotnet run consume test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
 
 # Run the consumer (other)
-$ dotnet run consume test1 $HOME/.ccloud/librdkafka.config
+$ dotnet run consume test1 $HOME/.confluent/librdkafka.config
 ```
 
 You should see:

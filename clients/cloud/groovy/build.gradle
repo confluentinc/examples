@@ -25,7 +25,7 @@ dependencies {
   compile 'org.slf4j:slf4j-log4j12:1.7.6'
 }
 
-group = 'io.confluent.ccloud'
+group = 'io.confluent.confluent'
 version = '5.0.1'
 sourceCompatibility = '1.8'
 
@@ -37,7 +37,7 @@ task runApp(type: JavaExec) {
   classpath = sourceSets.main.runtimeClasspath
   main = project.hasProperty('mainClass') ? project.getProperty('mainClass') : 'package.MyDefaultMain'
   def configPath = project.hasProperty('configPath') ? project.getProperty('configPath') :
-               "${System.getProperty('user.home')}/.ccloud/config"
+               "${System.getProperty('user.home')}/.confluent/config"
   def topic = project.hasProperty('topic') ? project.getProperty('topic') : 'topic1'
   args = [configPath, topic]
 }
