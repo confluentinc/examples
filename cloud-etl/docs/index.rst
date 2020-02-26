@@ -283,17 +283,17 @@ Validate
           "queries": [
             {
               "sinks": [
-                "SUM_PER_SOURCE"
+                "COUNT_PER_SOURCE"
               ],
-              "id": "CTAS_SUM_PER_SOURCE_195",
-              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "id": "CTAS_COUNT_PER_SOURCE_210",
+              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"COUNT\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
             },
             {
               "sinks": [
-                "COUNT_PER_SOURCE"
+                "SUM_PER_SOURCE"
               ],
-              "id": "CTAS_COUNT_PER_SOURCE_194",
-              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"KSQL_COL_1\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "id": "CTAS_SUM_PER_SOURCE_211",
+              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"SUM\"\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
             }
           ],
           "warnings": []
@@ -325,7 +325,7 @@ Validate
             "default": null
           },
           {
-            "name": "KSQL_COL_1",
+            "name": "SUM",
             "type": [
               "null",
               "long"
@@ -373,29 +373,29 @@ Validate
    
       Data from Kafka topic COUNT_PER_SOURCE:
       confluent local consume COUNT_PER_SOURCE -- --cloud --from-beginning --property print.key=true --max-messages 10
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":1}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":2}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":3}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":4}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":5}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":6}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":7}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":8}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":9}
-      192.168.1.5 {"EVENTSOURCEIP":"192.168.1.5","KSQL_COL_1":10}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":1}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":2}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":3}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":4}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":5}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":6}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":7}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":8}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":9}
+      192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":10}
    
       Data from Kafka topic SUM_PER_SOURCE:
       confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":1}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":4}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":5}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":8}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":11}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":12}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":15}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":16}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":19}}
-      192.168.1.2 {"EVENTSOURCEIP":{"string":"192.168.1.2"},"KSQL_COL_1":{"long":22}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":1}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":4}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":5}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":8}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":11}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":12}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":15}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":16}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":19}}
+      192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":22}}
    
       Objects in Cloud storage gcs:
    
