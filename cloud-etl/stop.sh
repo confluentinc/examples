@@ -95,6 +95,7 @@ done <ksql.cleanup.commands
 
 # Delete topics in Confluent Cloud
 topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2"
+echo -e "\n\nClean up Kafka topics: $topics_to_delete"
 for topic in $topics_to_delete
 do
   ccloud kafka topic delete $topic 2>/dev/null
@@ -102,6 +103,7 @@ done
 
 # Delete subjects from Confluent Schema Registry
 schema_registry_subjects_to_delete="${KAFKA_TOPIC_NAME_OUT1}-value"
+echo -e "\nClean up Confluent Schema Registry subject: $schema_registry_subjects_to_delete"
 for subject in $schema_registry_subjects_to_delete
 do
   curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
