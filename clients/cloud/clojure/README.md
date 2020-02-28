@@ -8,22 +8,8 @@ For more information, please see the [application development documentation](htt
 
 * Java 8 or higher (Clojure 1.10 recommends using Java 8 or Java 11)
 * The [Leiningen](https://leiningen.org/#install) tool to compile and run the demos
-
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
-
-```bash
-$ cat ~/.ccloud/example.config
-bootstrap.servers=<broker-1,broker-2,broker-3>
-sasl.username=<api-key-id>
-sasl.password=<secret-access-key>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-```
+* Create a local file (e.g. at `$HOME/.confluent/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example 1: Hello World!
 
@@ -34,7 +20,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```shell
-$ lein producer ~/.ccloud/example.config test1
+$ lein producer $HOME/.confluent/java.config test1
 …
 Producing record: alice 	{"count":0}
 Producing record: alice 	{"count":1}
@@ -62,7 +48,7 @@ Produced record to topic test1 partiton [0] @ offest 9
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```shell
-$ lein consumer ~/.ccloud/example.config test1
+$ lein consumer $HOME/.confluent/java.config test1
 …
 Waiting for message in KafkaConsumer.poll
 Consumed record with key alice and value {"count":0}, and updated total count to 0

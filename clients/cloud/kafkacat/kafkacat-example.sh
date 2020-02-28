@@ -3,7 +3,7 @@
 set -eu
 
 source ../../../utils/helper.sh
-CONFIG_FILE=~/.ccloud/config
+CONFIG_FILE=$HOME/.confluent/java.config
 check_ccloud_config $CONFIG_FILE || exit
 
 # Set topic name
@@ -20,11 +20,11 @@ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail
 # Produce messages
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "alice,{\"count\":${i}}" ; done) | \
-   kafkacat -F $HOME/.ccloud/config \
+   kafkacat -F $HOME/.confluent/config \
             -K , \
             -P -t $topic_name
 
 # Consume messages
-kafkacat -F $HOME/.ccloud/config \
+kafkacat -F $HOME/.confluent/config \
          -K , \
          -C -t $topic_name -e

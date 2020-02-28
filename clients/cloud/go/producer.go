@@ -89,8 +89,8 @@ func main() {
 	// Create Producer instance
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
 		"bootstrap.servers": conf["bootstrap.servers"],
-		"sasl.mechanisms":   "PLAIN",
-		"security.protocol": "SASL_SSL",
+		"sasl.mechanisms": conf["sasl.mechanisms"],
+		"security.protocol": conf["security.protocol"],
 		"sasl.username":     conf["sasl.username"],
 		"sasl.password":     conf["sasl.password"]})
 	if err != nil {

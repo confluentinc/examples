@@ -2,17 +2,11 @@
 
 Produce messages to and consume messages from a Kafka cluster using the C client [librdkafka](https://github.com/edenhill/librdkafka).
 
-
 # Prerequisites
 
 * [librdkafka](https://github.com/edenhill/librdkafka) installed on your machine, see [installation instructions](https://github.com/edenhill/librdkafka/blob/master/README.md#instructions).
-
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
-
+* Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Build the example applications
 
@@ -24,20 +18,6 @@ cc   consumer.c common.c json.c -o consumer -lrdkafka -lm
 cc   producer.c common.c json.c -o producer -lrdkafka -lm
 ```
 
-# Create a configuration file
-
-The configuration file must contain the bootstrap servers and
-the SASL username and password, as shown in your Confluent Cloud settings.
-
-Additional configuration properties are supported, see [CONFIGURATION.md](https://github.com/edenhill/librdkafka/blob/master/CONFIGURATION.md) for the full list.
-
-```bash
-$ cat $HOME/.ccloud/example.config
-bootstrap.servers=<broker-1,broker-2,broker-3>
-sasl.username=<api-key-id>
-sasl.password=<secret-access-key>
-```
-
 # Example 1: Hello World!
 
 In this example, the producer writes JSON data to a topic in Confluent Cloud.
@@ -47,7 +27,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 1. Run the producer, passing in arguments for (a) the topic name, and (b) the local file with configuration parameters to connect to your Confluent Cloud instance:
 
 ```bash
-$ ./producer test1 $HOME/.ccloud/example.config
+$ ./producer test1 $HOME/.confluent/librdkafka.config
 Creating topic test1
 Topic test1 successfully created
 Producing message #0 to test1: alice={ "count": 1 }
@@ -78,7 +58,7 @@ Message delivered to test1 [0] at offset 9 in 22.81ms: { "count": 10 }
 2. Run the consumer, passing in arguments for (a) the same topic name as used above, (b) the local file with configuration parameters to connect to your Confluent Cloud instance. Verify that the consumer received all the messages, then press Ctrl-C to exit.
 
 ```bash
-$ ./consumer test1 $HOME/.ccloud/example.config
+$ ./consumer test1 $HOME/.confluent/librdkafka.config
 Subscribing to test1, waiting for assignment and messages...
 Press Ctrl-C to exit.
 Received message on test1 [0] at offset 0: { "count": 1 }

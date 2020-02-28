@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE=~/.ccloud/config
+CONFIG_FILE=$HOME/.confluent/java.config
 
 source ../../../utils/helper.sh
 
@@ -24,7 +24,7 @@ echo -e "\n# Produce messages to $topic_name"
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "{\"count\":${i}}" ; done) | \
    kafka-avro-console-producer --topic $topic_name \
-                               --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` \
+                               --broker-list `grep "^\s*bootstrap.server" $HOME/.confluent/config | tail -1` \
                                --producer.config $CONFIG_FILE \
                                --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' \
                                --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} \
@@ -34,7 +34,7 @@ num_messages=10
 # Consume messages
 echo -e "\n# Consume messages from $topic_name"
 kafka-avro-console-consumer --topic $topic_name \
-                            --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` \
+                            --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/config | tail -1` \
                             --consumer.config $CONFIG_FILE \
                             --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} \
                             --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} \
