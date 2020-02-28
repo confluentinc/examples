@@ -107,6 +107,7 @@ ccloud kafka cluster use $CLUSTER
 BOOTSTRAP_SERVERS=$(echo "$OUTPUT" | grep "Endpoint" | grep SASL_SSL | awk '{print $4;}' | cut -c 12-)
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
+
 ##################################################
 # Create a user key/secret pair and specify it as the default
 ##################################################
@@ -127,8 +128,8 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
-echo -e "\n# Wait 90 seconds for the user credentials to propagate"
-sleep 90
+echo -e "\n# Wait 600 seconds for the user credentials to propagate"
+sleep 600
 
 
 ##################################################
