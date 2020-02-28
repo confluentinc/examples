@@ -46,12 +46,13 @@ func main() {
 	// Create Consumer instance
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": conf["bootstrap.servers"],
-		"sasl.mechanisms":   "PLAIN",
-		"security.protocol": "SASL_SSL",
+		"sasl.mechanisms": conf["sasl.mechanisms"],
+		"security.protocol": conf["security.protocol"],
 		"sasl.username":     conf["sasl.username"],
 		"sasl.password":     conf["sasl.password"],
 		"group.id":          "go_example_group_1",
-		"auto.offset.reset": "earliest"})
+		"auto.offset.reset": "earliest",
+	})
 	if err != nil {
 		fmt.Printf("Failed to create consumer: %s", err)
 		os.Exit(1)

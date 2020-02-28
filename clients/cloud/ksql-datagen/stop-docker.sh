@@ -3,7 +3,7 @@
 # Source library
 . ../../../utils/helper.sh
 
-CONFIG_FILE=~/.ccloud/config
+CONFIG_FILE=$HOME/.confluent/java.config
 check_ccloud_config $CONFIG_FILE || exit
 
 ../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE

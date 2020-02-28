@@ -40,12 +40,12 @@ if __name__ == '__main__':
     #   topic if no committed offsets exist
     c = Consumer({
         'bootstrap.servers': conf['bootstrap.servers'],
-        'sasl.mechanisms': 'PLAIN',
-        'security.protocol': 'SASL_SSL',
+        'sasl.mechanisms': conf['sasl.mechanisms'],
+        'security.protocol': conf['security.protocol'],
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
         'group.id': 'python_example_group_1',
-        'auto.offset.reset': 'earliest'
+        'auto.offset.reset': 'earliest',
     })
 
     # Subscribe to topic

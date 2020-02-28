@@ -6,21 +6,8 @@ Produce messages to and consume messages from a Kafka cluster using the .NET Pro
 # Prerequisites
 
 * [.NET Core 2.1](https://dotnet.microsoft.com/download) or higher to run the demo application
-
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
-
-```shell
-$ cat $HOME/.ccloud/config
-bootstrap.servers=<BROKER ENDPOINT>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-```
+* Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example
 
@@ -40,10 +27,10 @@ Run the example application, passing in arguments for (a) whether to produce or 
 $ dotnet build
 
 # Run the producer (Windows)
-$ dotnet run produce test1 %HOMEPATH%/.ccloud/config /path/to/curl/cacert.pem
+$ dotnet run produce test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
 
 # Run the producer (other)
-$ dotnet run produce test1 $HOME/.ccloud/config
+$ dotnet run produce test1 $HOME/.confluent/librdkafka.config
 ```
 
 You should see:
@@ -78,10 +65,10 @@ Run the consumer, passing in arguments for (a) whether to produce or consume (co
 
 ```shell
 # Run the consumer (Windows)
-$ dotnet run consume test1 %HOMEPATH%/.ccloud/config /path/to/curl/cacert.pem
+$ dotnet run consume test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
 
 # Run the consumer (other)
-$ dotnet run consume test1 $HOME/.ccloud/config
+$ dotnet run consume test1 $HOME/.confluent/librdkafka.config
 ```
 
 You should see:

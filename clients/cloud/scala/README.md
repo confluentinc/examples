@@ -1,24 +1,14 @@
 # Scala Producer and Consumer for Confluent Cloud
 
 Produce messages to and consume messages from a Kafka cluster using the Scala Producer and Consumer, and Kafka Streams API.
+
 For more information, please see the [application development documentation](https://docs.confluent.io/current/api-javadoc.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
+
 
 # Prerequisites
 
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
-
-```shell
-$ cat $HOME/.ccloud/config
-bootstrap.servers=<BROKER ENDPOINT>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-```
+* Create a local file (e.g. at `$HOME/.confluent/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Quickstart
 
@@ -31,7 +21,7 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
 		$ sbt clean compile
 		
 		# Run the consumer 
-		$ sbt "runMain io.confluent.examples.clients.scala.Consumer $HOME/.ccloud/config testtopic"
+		$ sbt "runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config testtopic"
 		```
 		You should see
 		
@@ -49,13 +39,13 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
     		$ sbt clean compile
     		
     		# Run the consumer
-    		$ sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.ccloud/config testtopic"
+    		$ sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.confluent/java.config  testtopic"
         ```
 
 	3. Then, in a new window run the Kafka producer application to write records to the Kafka cluster, you should see these appear in the consumer window.
 
 		```shell
-		$ sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.ccloud/config testtopic"
+		$ sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config testtopic"
 		```
         		
         You should see
