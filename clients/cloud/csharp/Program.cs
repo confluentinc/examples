@@ -28,18 +28,6 @@ namespace CCloud
 {
     class Program
     {
-        /// <summary>
-        ///     Extract the value associated with key <paramref name="key"/> from the
-        ///     sasl.jaas.config (<paramref name="jaasConfig"/>) configuration value.
-        /// </summary>
-        static string ExtractJaasValue(string jaasConfig, string key)
-        {
-            var beginToken = key + "\\=\"";
-            var startIdx = jaasConfig.IndexOf(beginToken);
-            var endIdx = jaasConfig.IndexOf("\"", startIdx + beginToken.Length);
-            return jaasConfig.Substring(startIdx + beginToken.Length, endIdx - startIdx - beginToken.Length);
-        }
-
         static async Task<ClientConfig> LoadConfig(string configPath, string certDir)
         {
             try
@@ -49,14 +37,15 @@ namespace CCloud
                     .ToDictionary(
                         line => line.Substring(0, line.IndexOf('=')),
                         line => line.Substring(line.IndexOf('=') + 1));
-
+                Enum.TryParse(cloudConfig["sasl.mechanisms"], out SaslMechanism saslMechanism);
+                Enum.TryParse(cloudConfig["security.protocol"], out SecurityProtocol securityProtocol);
                 var clientConfig = new ClientConfig
                 {
                     BootstrapServers = cloudConfig["bootstrap.servers"].Replace("\\", ""),
-                    SaslMechanism = SaslMechanism.Plain,
-                    SecurityProtocol = SecurityProtocol.SaslSsl,
-                    SaslUsername = ExtractJaasValue(cloudConfig["sasl.jaas.config"], "username"),
-                    SaslPassword = ExtractJaasValue(cloudConfig["sasl.jaas.config"], "password")
+                    SaslMechanism = saslMechanism,
+                    SecurityProtocol = securityProtocol,
+                    SaslUsername = cloudConfig["sasl.username"],
+                    SaslPassword = cloudConfig["sasl.password"],
                 };
 
                 if (certDir != null)

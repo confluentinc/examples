@@ -59,16 +59,10 @@ public class StreamsAvroExample {
     
         final String topic = args[1];
     
-        // Load properties from a configuration file
-        // The configuration properties defined in the configuration file are assumed to include:
-        //   ssl.endpoint.identification.algorithm=https
-        //   sasl.mechanism=PLAIN
-        //   bootstrap.servers=<CLUSTER_BOOTSTRAP_SERVER>
-        //   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CLUSTER_API_KEY>" password="<CLUSTER_API_SECRET>";
-        //   security.protocol=SASL_SSL
-        //   basic.auth.credentials.source=USER_INFO
-        //   schema.registry.basic.auth.user.info=<SR_API_KEY>:<SR_API_SECRET>
-        //   schema.registry.url=https://<SR ENDPOINT>
+        // Load properties from a local configuration file
+        // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
+        // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
+        // Follow these detailed instructions to properly create this file: https://github.com/confluentinc/configuration-templates/tree/master/README.md
         final Properties props = loadConfig(args[0]);
 
         // Add additional properties.

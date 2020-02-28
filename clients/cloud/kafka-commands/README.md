@@ -7,20 +7,8 @@ Produce messages to and consume messages from a Kafka cluster using the Apache b
 
 * [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
 
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
-
-```shell
-$ cat $HOME/.ccloud/config
-bootstrap.servers=<BROKER ENDPOINT>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-```
+* Create a local file (e.g. at `$HOME/.confluent/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 
 # Example 1: Hello World!
@@ -32,7 +20,7 @@ The consumer reads the same topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Run the command `kafka-console-producer`, writing messages to topic `test1`, passing in additional arguments:
@@ -40,7 +28,7 @@ $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/con
 * `--property parse.key=true --property key.separator=,`: pass key and value, separated by a comma
 
 ```bash
-$ kafka-console-producer --topic test1 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --property parse.key=true --property key.separator=, --producer.config $HOME/.ccloud/config
+$ kafka-console-producer --topic test1 --broker-list `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --property parse.key=true --property key.separator=, --producer.config $HOME/.confluent/java.config
 ```
 
 At the `>` prompt, type a few messages, using a `,` as the separator between the message key and value:
@@ -59,7 +47,7 @@ When you are done, press `<ctrl>-d`.
 * `--from-beginning`: print all messages from the beginning of the topic
 
 ```bash
-$ kafka-console-consumer --topic test1 --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --property print.key=true --from-beginning --consumer.config $HOME/.ccloud/config
+$ kafka-console-consumer --topic test1 --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --property print.key=true --from-beginning --consumer.config $HOME/.confluent/java.config
 ```
 
 You should see the messages you typed in the previous step.
@@ -89,14 +77,14 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
     # View the list of registered subjects
     $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
 
-    # Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
-    $ curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2)/subjects
+    # Same as above, as a single bash command to parse the values out of $HOME/.confluent/java.config
+    $ curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.confluent/java.config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.confluent/java.config | cut -d'=' -f2)/subjects
     ```
 
-3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.ccloud/config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
+3. Add the following parameters to your local Confluent Cloud configuration file (``$HOME/.confluent/java.config``). In the output below, substitute values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
 
     ```shell
-    $ cat $HOME/.ccloud/config
+    $ cat $HOME/.confluent/java.config
     ...
     basic.auth.credentials.source=USER_INFO
     schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
@@ -107,7 +95,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 4. Create the topic in Confluent Cloud
 
 ```bash
-$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test2 --create --replication-factor 3 --partitions 6
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
 5. Run the command `kafka-avro-console-producer`, writing messages to topic `test2`, passing in additional arguments. The additional Schema Registry parameters are required to be passed in as properties instead of a properties file due to https://github.com/confluentinc/schema-registry/issues/1052.
@@ -118,10 +106,10 @@ $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/con
 * `--property schema.registry.basic.auth.user.info`: `<SR API KEY>:<SR API SECRET>`
 
 ```bash
-$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --producer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --producer.config $HOME/.confluent/java.config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 
-# Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
-$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --producer.config $HOME/.ccloud/config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2)
+# Same as above, as a single bash command to parse the values out of $HOME/.confluent/java.config
+$ kafka-avro-console-producer --topic test2 --broker-list `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --producer.config $HOME/.confluent/java.config --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.confluent/java.config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.confluent/java.config | cut -d'=' -f2)
 ```
 
 At the `>` prompt, type a few messages:
@@ -141,10 +129,10 @@ When you are done, press `<ctrl>-d`.
 * `--property schema.registry.basic.auth.user.info`: `<SR API KEY>:<SR API SECRET>`
 
 ```bash
-$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --consumer.config $HOME/.confluent/java.config --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 
-# Same as above, as a single bash command to parse the values out of $HOME/.ccloud/config
-$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --consumer.config $HOME/.ccloud/config --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.ccloud/config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.ccloud/config | cut -d'=' -f2)
+# Same as above, as a single bash command to parse the values out of $HOME/.confluent/java.config
+$ kafka-avro-console-consumer --topic test2 --from-beginning --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --consumer.config $HOME/.confluent/java.config --property schema.registry.url=$(grep "^schema.registry.url" $HOME/.confluent/java.config | cut -d'=' -f2) --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$(grep "^schema.registry.basic.auth.user.info" $HOME/.confluent/java.config | cut -d'=' -f2)
 ```
 
 You should see the messages you typed in the previous step.

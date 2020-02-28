@@ -11,7 +11,8 @@
 (defn- build-properties [config-fname]
   (with-open [config (jio/reader config-fname)]
     (doto (Properties.)
-      (.putAll {ConsumerConfig/KEY_DESERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringDeserializer"
+      (.putAll {ConsumerConfig/GROUP_ID_CONFIG, "clojure_example_group"
+                ConsumerConfig/KEY_DESERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringDeserializer"
                 ConsumerConfig/VALUE_DESERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringDeserializer"})
       (.load config))))
 
