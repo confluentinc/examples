@@ -53,19 +53,6 @@ rd_kafka_conf_t *read_config (const char *config_file) {
         }
 
         conf = rd_kafka_conf_new();
-
-        /* Set up basic Confluent Cloud connectivity parameters,
-         * we expect the bootstrap.servers, sasl.username, and sasl.password
-         * to be specified in the configuration file. */
-        if (rd_kafka_conf_set(conf, "security.protocol", "SASL_SSL",
-                              errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK ||
-            rd_kafka_conf_set(conf, "sasl.mechanisms", "PLAIN",
-                              errstr, sizeof(errstr)) != RD_KAFKA_CONF_OK) {
-                fprintf(stderr, "Configuration failed: %s\n", errstr);
-                rd_kafka_conf_destroy(conf);
-                return NULL;
-        }
-
         /* Read configuration file, line by line. */
         while (fgets(buf, sizeof(buf), fp)) {
                 char *s = buf;

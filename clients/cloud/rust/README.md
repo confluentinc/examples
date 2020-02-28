@@ -3,23 +3,9 @@
 Produce messages to and consume messages from a Kafka cluster using the [rust-rdkafka client for Apache Kafka](https://github.com/fede1024/rust-rdkafka).
 
 # Prerequisites
-
 * [Rust client for Apache Kafka](https://github.com/fede1024/rust-rdkafka#installation) installed on your machine
-
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
-
-```bash
-$ cat ~/.ccloud/example.config
-sasl.mechanism=PLAIN
-sasl.username=<api_key>
-sasl.password=<api_secret>
-bootstrap.servers=<broker_1,broker_2,broker_3>
-security.protocol=SASL_SSL
-```
+* Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example 1: Hello World!
 In this example, the producer writes data to a Kafka topic in Confluent Cloud. 
@@ -37,7 +23,7 @@ $ cargo build
 2. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```bash
-$ ./target/debug/producer --config ~/.ccloud/example.conf --topic test1
+$ ./target/debug/producer --config $HOME/.confluent/librdkafka.config --topic test1
 Preparing to produce record: alice 0
 Preparing to produce record: alice 1
 Preparing to produce record: alice 2
@@ -61,7 +47,7 @@ Successfully produced record to topic test1 partition [5] @ offset 125
 3. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
-$ ./target/debug/consumer --config ~/.ccloud/example.conf --topic test1
+$ ./target/debug/consumer --config $HOME/.confluent/librdkafka.config --topic test1
 Consumed record from topic test1 partition [5] @ offset 117 with key alice and value 0
 Consumed record from topic test1 partition [5] @ offset 118 with key alice and value 1
 Consumed record from topic test1 partition [5] @ offset 119 with key alice and value 2

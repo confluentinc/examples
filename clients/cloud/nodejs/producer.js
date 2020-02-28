@@ -30,8 +30,8 @@ function ensureTopicExists(config) {
     'bootstrap.servers': config['bootstrap.servers'],
     'sasl.username': config['sasl.username'],
     'sasl.password': config['sasl.password'],
-    'security.protocol': 'SASL_SSL',
-    'sasl.mechanisms': 'PLAIN'
+    'security.protocol': config['security.protocol'],
+    'sasl.mechanisms': config['sasl.mechanisms']
   });
 
   return new Promise((resolve, reject) => {
@@ -59,8 +59,8 @@ function createProducer(config, onDeliveryReport) {
     'bootstrap.servers': config['bootstrap.servers'],
     'sasl.username': config['sasl.username'],
     'sasl.password': config['sasl.password'],
-    'security.protocol': 'SASL_SSL',
-    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': config['security.protocol'],
+    'sasl.mechanisms': config['sasl.mechanisms'],
     'dr_msg_cb': true
   });
 

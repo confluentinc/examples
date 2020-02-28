@@ -36,17 +36,16 @@ if __name__ == '__main__':
     config_file = args.config_file
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
-
     # Create AvroProducer instance
     p = AvroProducer({
-           'bootstrap.servers': conf['bootstrap.servers'],
-           'sasl.mechanisms': 'PLAIN',
-           'security.protocol': 'SASL_SSL',
-           'sasl.username': conf['sasl.username'],
-           'sasl.password': conf['sasl.password'],
-           'schema.registry.url': conf['schema.registry.url'],
-           'schema.registry.basic.auth.credentials.source': conf['basic.auth.credentials.source'],
-           'schema.registry.basic.auth.user.info': conf['schema.registry.basic.auth.user.info']
+        'bootstrap.servers': conf['bootstrap.servers'],
+        'sasl.mechanisms': conf['sasl.mechanisms'],
+        'security.protocol': conf['security.protocol'],
+        'sasl.username': conf['sasl.username'],
+        'sasl.password': conf['sasl.password'],
+        'schema.registry.url': conf['schema.registry.url'],
+        'schema.registry.basic.auth.credentials.source': conf['basic.auth.credentials.source'],
+        'schema.registry.basic.auth.user.info': conf['schema.registry.basic.auth.user.info'] 
     }, default_key_schema=ccloud_lib.schema_key, default_value_schema=ccloud_lib.schema_value)
 
     # Create topic if needed

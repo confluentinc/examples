@@ -6,21 +6,8 @@ Produce messages to and consume messages from a Kafka cluster using [kafkacat](h
 # Prerequisites
 
 * [kafkacat](https://github.com/edenhill/kafkacat) installed on your machine.  You must [build](https://github.com/edenhill/kafkacat#build) `kafkacat` from the latest master branch to get the `-F` functionality that makes it easy to pass in the configuration to your Confluent Cloud configuration file.
-
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Initialize a properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
-
-```shell
-$ cat $HOME/.ccloud/config
-bootstrap.servers=<BROKER ENDPOINT>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-```
+* Create a local file (e.g. at `$HOME/.confluent/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example 1: Hello World!
 
@@ -31,16 +18,16 @@ The consumer reads the same topic from Confluent Cloud.
 1. Create the topic in Confluent Cloud
 
 ```bash
-$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.ccloud/config | tail -1` --command-config $HOME/.ccloud/config --topic test1 --create --replication-factor 3 --partitions 6
+$ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test1 --create --replication-factor 3 --partitions 6
 ```
 
 2. Run `kafkacat`, writing messages to topic `test1`, passing in additional arguments:
 
-* `-F $HOME/.ccloud/config`: configuration file for connecting to the Confluent Cloud cluster
+* `-F $HOME/.confluent/java.config`: configuration file for connecting to the Confluent Cloud cluster
 * `-K ,`: pass key and value, separated by a comma
 
 ```bash
-$ kafkacat -F $HOME/.ccloud/config -K , -P -t test1
+$ kafkacat -F $HOME/.confluent/java.config -K , -P -t test1
 ```
 
 Type a few messages, using a `,` as the separator between the message key and value:
@@ -55,18 +42,18 @@ When you are done, press `<ctrl>-d`.
 
 2. Run `kafkacat` again, reading messages from topic `test`, passing in additional arguments:
 
-* `-F $HOME/.ccloud/config`: configuration file for connecting to the Confluent Cloud cluster
+* `-F $HOME/.confluent/java.config`: configuration file for connecting to the Confluent Cloud cluster
 * `-K ,`: pass key and value, separated by a comma
 * `-e`: exit successfully when last message received
 
 ```bash
-$ kafkacat -F $HOME/.ccloud/config -K , -C -t test1 -e
+$ kafkacat -F $HOME/.confluent/java.config -K , -C -t test1 -e
 ```
 
 You should see the messages you typed in the previous step.
 
 ```bash
-% Reading configuration from file $HOME/.ccloud/config
+% Reading configuration from file $HOME/.confluent/java.config
 % Reached end of topic test1 [3] at offset 0
 alice,{"count":0}
 alice,{"count":1}

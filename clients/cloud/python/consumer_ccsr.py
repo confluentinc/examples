@@ -43,8 +43,8 @@ if __name__ == '__main__':
     #   topic if no committed offsets exist
     c = AvroConsumer({
         'bootstrap.servers': conf['bootstrap.servers'],
-        'sasl.mechanisms': 'PLAIN',
-        'security.protocol': 'SASL_SSL',
+        'sasl.mechanisms': conf['sasl.mechanisms'],
+        'security.protocol': conf['security.protocol'],
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
         'schema.registry.url': conf['schema.registry.url'],

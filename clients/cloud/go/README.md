@@ -2,24 +2,11 @@
 
 Produce messages to and consume messages from a Kafka cluster using [Confluent Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go).
 
-
 # Prerequisites
 
 * [Confluent's Golang Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-go#getting-started) installed on your machine
-
-To run this example, create a local file with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
-If this is a Confluent Cloud cluster, you must have:
-
-* Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Local file with configuration parameters to connect to your Confluent Cloud instance ([how do I find those?](https://docs.confluent.io/current/cloud/using/config-client.html#librdkafka-based-c-clients?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)). Format the file as follows:
-
-
-```bash
-$ cat ~/.ccloud/example.config
-bootstrap.servers=<broker-1,broker-2,broker-3>
-sasl.username=<api-key-id>
-sasl.password=<secret-access-key>
-```
+* Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
+* If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example 1: Hello World!
 
@@ -31,7 +18,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
 
 ```bash
 $ go build producer.go
-$ ./producer -f ~/.ccloud/example.config -t test1
+$ ./producer -f $HOME/.confluent/librdkafka.config -t test1
 Preparing to produce record: alice 	 {"Count": 0}
 Preparing to produce record: alice 	 {"Count": 1}
 Preparing to produce record: alice 	 {"Count": 2}
@@ -59,7 +46,7 @@ Successfully produced record to topic test1 partition [0] @ offset 9
 
 ```bash
 $ go build consumer.go
-$ ./consumer -f ~/.ccloud/example.config -t test1
+$ ./consumer -f $HOME/.confluent/librdkafka.config -t test1
 ...
 Consumed record with key alice and value {"Count":0}, and updated total count to 0
 Consumed record with key alice and value {"Count":1}, and updated total count to 1

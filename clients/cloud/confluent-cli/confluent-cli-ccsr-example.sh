@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONFIG_FILE=~/.ccloud/config
+CONFIG_FILE=$HOME/.confluent/java.config
 
 source ../../../utils/helper.sh
 

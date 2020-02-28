@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-group = "io.confluent.ccloud"
+group = "io.confluent.confluent"
 
 plugins {
   java

@@ -28,8 +28,8 @@ function createConsumer(config, onData) {
     'bootstrap.servers': config['bootstrap.servers'],
     'sasl.username': config['sasl.username'],
     'sasl.password': config['sasl.password'],
-    'security.protocol': 'SASL_SSL',
-    'sasl.mechanisms': 'PLAIN',
+    'security.protocol': config['security.protocol'],
+    'sasl.mechanisms': config['sasl.mechanisms'],
     'group.id': 'node-example-group-1'
   }, {
     'auto.offset.reset': 'earliest'
