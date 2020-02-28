@@ -1,0 +1,147 @@
+
++---------+------------------------------------------------------------------+
+| API Key | FZSZG3DF3KGW3MTN                                                 |
+| Secret  | p9vLG+56OCS5dc3GurpVlv9QmFy1Jjt5J9xywWUqAyMGuhg/q7VtZZZxrMP2crAA |
++---------+------------------------------------------------------------------+
+
+Hi, I'm Tim Berglund with Confluent, and I'd like to show you a few things you can do with the Confluent Cloud Command Line Interface.
+
+Confluent Cloud is a fully managed Kafka service. I'm going to run through everything the CLI can do, and show it to you happening on the screen. Let's get started with a login.
+
+And quite sensibly, that's the first thing you have to do with the CLI. You log in with the same email and password you'd use to log into the web UI.
+
+start.sh:echo -e "\n# Login"
+
+Then you need what's called an "environment." Examples of real-life environments might be things like dev, test, staging, and production. Each environment contains its own set of clusters, all of which share a common schema management service local to the environment.
+
+start.sh:echo -e "\n# Create and specify active environment"
+
+Now that we've created the environment, we have to set it as the default. That way subsequent commands will look only for clusters inside this environment, and we won't have to keep specifying it.
+
+start.sh:echo -e "\n# Specify active environment that was just created"
+
+And now let's create a new cluster. A Confluent Cloud cluster is a namespace for topics. You don't need to think about any of the usual things you'd have to if you were operating this yourself, like how many nodes to provision or how to handle Zookeeper or any of that. You just give the cluster a name, and that's it.
+
+start.sh:echo -e "\n# Create and specify active Kafka cluster"
+
+Now we'll specify this cluster as the default, just like we did with the environment. That way subsequent commands will apply to this cluster.
+
+start.sh:echo -e "\n# Specify active Kafka cluster that was just created"
+
+Before we try to produce or consume messages, we'll need an API key. So far we've been authenticating to Confluent Cloud using our login credentials, but actual Kafka operations require a key and secret. Let's create one associated with the email address of our cloud account.
+
+start.sh:echo -e "\n# Create API key for $EMAIL"
+
+And we'll need to tell the CLI that that new key we just created is the default we want to use going forward. This keeps us from having to specify it in every subsequent command, which nobody wants to do.
+
+start.sh:echo -e "\n# Specify active API key that was just created"
+
+Those credentials will take maybe 90 seconds to propagate through Confluent Cloud. Using some movie magic, we'll just skip to when this is all done. There is is. 
+
+start.sh:echo -e "\n# Wait 90 seconds for the user credentials to propagate"
+
+Now that things are pretty well set up, we can create a topic. I'm going to create a topic called demo-topic-1. (I did make that up myself.)
+
+start.sh:echo -e "\n# Create new Kafka topic $TOPIC1"
+
+Now I'm going to produce some messages to that topic. Continuing my creative streak, I'm going to produce the first ten positive integers as messages.
+
+start.sh:echo -e "\n# Produce to topic $TOPIC1"
+
+Of course I need to put my money where my mouth is, which means I should consume those messages too. And here they are.
+
+start.sh:echo -e "\n# Consume from topic $TOPIC1"
+
+
+Next let's check out some Confluent Cloud security feature. I've got a Java application I'd like to have produce and consume messages to our topic, but to make things a bit more realistic, I want to associate it with what's called a service account. We can associate various security privileges with the service account, then let applications authenticate with the credentials of the service account. This is handy if you've got many applications that share the same set of privileges, which you probably do.
+
+start.sh:echo -e "\n# Create a new service account"
+
+Now that the service account exists, it will need a key and secret, just like we prepared earlier for CLI access itself.
+
+start.sh:echo -e "\n# Create an API key and secret for the new service account"
+
+We're going to need a Confluent Cloud config file with all the relevant connection information (that's the bootstrap servers, the security configuration, and the key and secret).
+
+start.sh:echo -e "\n# Create a local configuration file $CLIENT_CONFIG with Confluent Cloud connection information with the newly created API key and secret"
+
+This also takes maybe 90 seconds for everything in the cluster to be updated, but this is the movies, so we can make it seem a lot faster.
+
+start.sh:echo -e "\n# Wait 90 seconds for the service account credentials to propagate"
+
+Be default, this service account can't do anything. There are no ACLs configured at all, as you can see here.
+
+start.sh:echo -e "\n# By default, no ACLs are configured"
+
+So if we try to run that Java application I was talking about, we'll see that it fails.
+
+start.sh:echo -e "\n# Run the Java producer to $TOPIC1: before ACLs"
+
+Now I'll use the CLI to add ACL entries to the service account that will let it create topics and produce to them.
+
+start.sh:echo -e "\n# Create ACLs for the service account"
+
+And now we can run the Producer Example Java application, and it works this time.
+
+start.sh:echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
+
+Now let me delete those ACL entries, so the service account can no longer create or write to topics. We're going to replace them with a cool new kind of ACL that acts on a topic prefix.
+
+start.sh:echo -e "\n# Delete ACLs"
+
+Now let's create a new topic, this time call demo-topic-2. Yes, our team in the writers' room here really is one of the best.
+
+start.sh:echo -e "\n# Create new Kafka topic $TOPIC2"
+
+And now we'll create ACLs to allow CREATE and WRITE operations on any topic that starts with "demo-topic," regardless of the number.
+
+start.sh:echo -e "\n# Create ACLs for the producer using a prefix"
+
+Now when we run our Java application again, it works. Remember, it's using the same service account as before, so these new ACLs apply even though we haven't done anything at all to the application's security config
+
+start.sh:echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
+
+Next we'll blow away those ACLs so we can start something new. I always want to make sure you know I don't have anything up my sleeve, so we'll start clean.
+
+start.sh:echo -e "\n# Delete ACLs"
+
+I want to show you how the CLI works with Kafka Connect, so I'm going to create a new topic for this purpose. We'll call it pageviews.
+
+start.sh:echo -e "\n# Create new Kafka topic $TOPIC3"
+
+Oh, and where are those pageview events going to come from? Well, we've got a data generator that creates simulated page views that's actually a Kafka Connect connector. So let's create some ACL entries for Connect.
+
+start.sh:echo -e "\n# Create ACLs for Connect"
+
+And Connect is going to be producing its events to a topic in Confluent Cloud, so let's set up the environment varialbes it needs to know where the cluster is and how to establish a secure connection to it.
+
+start.sh:echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
+
+And now we'll start up a Dockerized Connect cluster the the kafka connect datagen connector installed in it. This will take a few seconds to start, but we'll use movie magic to make that go a little faster.
+
+start.sh:echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
+start.sh:echo -e "\n# Wait 60 seconds for Connect to start"
+
+That container starts up with the datagen connector JAR already in it, but we still need to post some config to the Connect REST endpoint to create the connector. This tells it what topic to produce to, how much data to generate, and configures it to use JSON serialization. We'll wait just a bit for the connector to start and to get some messages in our topic.
+
+start.sh:echo -e "\n# Post the configuration for the kafka-connect-datagen connector"
+start.sh:echo -e "\n\n# Wait 20 seconds for kafka-connect-datagen to start producing messages"
+
+We'll just use the REST endpoint to verify that the connector is running, and it looks like it is.
+
+start.sh:echo -e "\n# Verify connector is running"
+
+So, great. We've got a local, Dockerized data generator producing simulated clickstream data to our Confluent Cloud cluster. The next step is to run a consumer to process that data, but before we start it, we'll have to set up some ACLs for it so it can access the topic. We're using a wilecard here. This is actually a highly privileged consumer, able to read any topic at all.
+
+start.sh:echo -e "\n# Create ACLs for the consumer using a wildcard"
+
+Now we'll run our Java consumer again, configured to read the data in the pageviews topic.
+
+start.sh:echo -e "\n# Run the Java consumer from $TOPIC3 (populated by kafka-connect-datagen): wildcard ACLs"
+
+And that completes our demo of the Confluent Cloud CLI. We logged in, created an environment, API keys, and topics We set security for several different clients including a Java application and Kafka Connect. And now I'll tear all that down, delete the ACLs, the service account, the topics, the keys, the cluster, and the enrivonment. Take only pictures, leave only footprints--except in this case I'm not even sure we left footprints.
+
+start.sh:echo -e "\n# Delete ACLs"
+start.sh:echo -e "\n# Stop Docker"
+start.sh:echo -e "\n# Delete ACLs"
+start.sh:echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
