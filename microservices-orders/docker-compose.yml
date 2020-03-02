@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.0.x-latest
+    image: confluentinc/cp-zookeeper:6.0.0-beta200302231704
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-server:6.0.x-latest
+    image: confluentinc/cp-server:6.0.0-beta200302231704
     hostname: broker
     container_name: broker
     depends_on:
@@ -36,7 +36,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:6.0.x-latest
+    image: confluentinc/cp-schema-registry:6.0.0-beta200302231704
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -49,7 +49,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
 
   connect:
-    image: confluentinc/cp-server-connect:6.0.x-latest
+    image: confluentinc/cp-server-connect:6.0.0-beta200302231704
     hostname: connect
     container_name: connect
     depends_on:
@@ -78,7 +78,7 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
       CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0-beta200302231704.jar
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
       CONNECT_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       CONNECT_PLUGIN_PATH: /usr/share/java
@@ -87,7 +87,7 @@ services:
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:6.0.x-latest
+    image: confluentinc/cp-enterprise-control-center:6.0.0-beta200302231704
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -113,7 +113,7 @@ services:
       PORT: 9021
 
   ksql-server:
-    image: confluentinc/cp-ksql-server:6.0.x-latest
+    image: confluentinc/cp-ksql-server:6.0.0-beta200302231704
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -134,7 +134,7 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:6.0.x-latest
+    image: confluentinc/cp-ksql-cli:6.0.0-beta200302231704
     container_name: ksql-cli
     depends_on:
       - broker
@@ -144,7 +144,7 @@ services:
     tty: true
 
   ksql-query-setup:
-    image: confluentinc/cp-ksql-cli:6.0.x-latest
+    image: confluentinc/cp-ksql-cli:6.0.0-beta200302231704
     container_name: ksql-query-setup
     depends_on:
       - broker
@@ -158,7 +158,7 @@ services:
     command: "/tmp/run-ksql.sh"
 
   microservices-app:
-    image: confluentinc/kafka-streams-examples:6.0.x-latest
+    image: confluentinc/kafka-streams-examples:6.0.0-beta200302231704
     hostname: microservices-app
     container_name: microservices-app
     depends_on:
@@ -183,7 +183,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-setup:
-    image: confluentinc/cp-kafka:6.0.x-latest
+    image: confluentinc/cp-kafka:6.0.0-beta200302231704
     hostname: kafka-setup
     container_name: kafka-setup
     depends_on:
