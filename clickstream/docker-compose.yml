@@ -94,6 +94,7 @@ services:
       KSQL_BOOTSTRAP_SERVERS: kafka:29092
       KSQL_LISTENERS: http://0.0.0.0:8088
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KSQL_KSQL_CONNECT_URL: "http://kafka-connect:8083"
 
   ksql-cli:
     container_name: ksql-cli
