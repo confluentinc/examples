@@ -131,6 +131,7 @@ services:
       KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
+      KSQL_KSQL_CONNECT_URL: "http://kafka-connect-cp:18083"
 
   postgres:
     image: debezium/postgres:10.0
