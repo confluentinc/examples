@@ -9,7 +9,7 @@ Cloud ETL Demo
 This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
 Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
-.. figure:: images/topology.jpg
+.. figure:: images/topology.png
    :alt: image
 
 The end result is an event streaming ETL, running 100% in the cloud, spanning multiple cloud providers.

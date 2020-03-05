@@ -253,6 +253,7 @@ services:
       KSQL_HOST_NAME: ksql-server
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
+      KSQL_KSQL_CONNECT_URL: "http://connect:8083"
 
       # enable rbac confluent security plugin
       KSQL_KSQL_SECURITY_EXTENSION_CLASS: io.confluent.ksql.security.KsqlConfluentSecurityExtension
