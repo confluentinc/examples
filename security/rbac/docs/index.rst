@@ -3,13 +3,12 @@
 RBAC Demo
 =========
 
-This demo showcases the |rbac-long| functionality in |cp|.
-It is mostly for reference to see a workflow using the new |rbac| feature across the services in |cp|.
+This demo shows how to enable |rbac-long| functionality across |cp|.
+It is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.
 
-There are two ways to run the demo.
+.. seealso::
 
--  :ref:`rbac_demo_local`
--  :ref:`rbac_demo_docker`
+   For a demo that is more representative of a real deployment of an |ak| event streaming application, see :ref:`cp-demo`, a Docker-based demo with |rbac| and other |cp| security features and LDAP integration.
 
 
 .. _rbac_demo_local:
@@ -17,8 +16,6 @@ There are two ways to run the demo.
 ===============================================
 Run demo on local install of Confluent Platform
 ===============================================
-
-This method of running the demo is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.
 
 Caveats
 -------
@@ -285,159 +282,6 @@ For example, list the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_
 .. code:: bash
 
    confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
-
-
-.. _rbac_demo_docker:
-
-==================
-Run demo in Docker
-==================
-
-This method of running the demo is for users who have Docker.
-This demo setup includes:
-
--  |zk|
--  Kafka with MDS, connected to the OpenLDAP
--  |sr|
--  KSQL
--  |kconnect-long|
--  |crest|
--  |c3|
--  OpenLDAP
-
-Prerequisites
--------------
-
--  Docker (validated on Docker for Mac version 18.03.0-ce-mac60)
--  :ref:`Confluent CLI <cli-install>`:
-   |confluent-cli| must be installed on your machine, version
-   ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate
-   :ref:`download <cli-install>`
-
-
-Image Versions
---------------
-
--  See the ``.env`` file in the ``utils/`` folder in the GitHub repository for more information on how to override the demo's Docker images
-
-Run the demo
-------------
-
-#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ repository from GitHub and check out the :litwithvars:`|release|-post` branch.
-
-   .. codewithvars:: bash
-
-       git clone git@github.com:confluentinc/examples.git
-       cd examples
-       git checkout |release_post_branch|
-
-#. Navigate to ``security/rbac/rbac-docker`` directory.
-
-   .. codewithvars:: bash
-
-       cd security/rbac/rbac-docker
-
-#. To start |cp|, run
-
-   .. code:: bash
-
-      ./confluent-start.sh
-
-You can optionally pass in where ``-p project-name`` to name the
-docker-compose project, otherwise it defaults to ``rbac``. You can use
-standard docker-compose commands like this listing all containers:
-
-.. code:: bash
-
-   docker-compose -p rbac ps
-
-or tail |c3| logs:
-
-.. code:: bash
-
-   docker-compose -p rbac logs --t 200 -f control-center
-   
-The Kafka broker is available at ``localhost:9094``, not ``localhost::9092``.
-
-=============== ==================
-Service         Host:Port
-=============== ==================
-Kafka           ``localhost:9094``
-MDS             ``localhost:8090``
-C3              ``localhost:9021``
-Connect         ``localhost:8083``
-KSQL            ``localhost:8088``
-OpenLDAP        ``localhost:389``
-Schema Registry ``localhost:8081``
-=============== ==================
-
-Grant Rolebindings
-~~~~~~~~~~~~~~~~~~
-
-#. Login to the MDS URL as ``professor:professor``, the configured super user, to grant initial role bindings
-
-   .. code:: bash
-
-      confluent login --url http://localhost:8090
-
-#. Set ``KAFKA_CLUSTER_ID``
-
-   .. code:: bash
-
-      KAFKA_CLUSTER_ID=$(docker-compose -p rbac exec zookeeper zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep \"version\" | jq -r .id)
-
-#. Grant ``User:bender`` ResourceOwner to prefix ``Topic:foo`` on Kafka cluster ``KAFKA_CLUSTER_ID``
-
-   .. code:: bash
-
-      confluent iam rolebinding create --principal User:bender --role ResourceOwner --resource Topic:foo --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
-
-#. List the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_ID``
-
-   .. code:: bash
-
-      confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
-
-#. The general listing syntax is:
-
-   .. code:: bash
-
-      confluent iam rolebinding list User:[username] [clusters and resources you want to view their roles on]
-
-#. The general rolebinding syntax is:
-
-   .. code:: bash
-
-      confluent iam rolebinding create --role [role name] --principal User:[username] --resource [resource type]:[resource name] --[cluster type]-cluster-id [insert cluster id] 
-
-#. Available role types and permissions can be found :ref:`here <rbac-predefined-roles>`.
-
-#. Resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic.
-
-
-Users
------
-
-=============== ============== ===========
-Description     Name           Role
-=============== ============== ===========
-Super User      User:professor SystemAdmin
-Connect         User:fry       SystemAdmin
-Schema Registry User:leela     SystemAdmin
-KSQL            User:zoidberg  SystemAdmin
-C3              User:hermes    SystemAdmin
-Test User       User:bender    <none>
-=============== ============== ===========
-
-User ``bender:bender`` doesn’t have any role bindings set up and can be used as a user under test
-
--  You can use ``./client-configs/bender.properties`` file to authenticate as ``bender`` from kafka console commands (like ``kafka-console-producer``, ``kafka-console-consumer``, ``kafka-topics`` and the like).
--  This file is also mounted into the broker docker container, so you can ``docker-compose -p [project-name] exec broker /bin/bash`` to open bash on broker and then use console commands with ``/etc/client-configs/bender.properties``.
--  When running console commands from inside the broker container, use ``localhost:9092``.
--  Client authentication:
-
-   - In production: use either Kerberos or mTLS for client authentication; do not use the token service which is meant only for internal communication between Confluent components.
-   - In this demo: for simplicity, ``bender`` uses the token service for client authentication, e.g. bender.properties uses ``sasl.mechanism=OAUTHBEARER``, but do not do this in production.
 
 
 ==================
