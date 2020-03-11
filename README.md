@@ -20,11 +20,6 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 <div style="center"><img src="https://github.com/confluentinc/cp-demo/blob/5.4.1-post/docs/images/cp-demo-overview.jpg" width="600"></div>
 
-<div align=“center”>
-![image](https://github.com/confluentinc/cp-demo/blob/5.4.1-post/docs/images/cp-demo-overview.jpg) {.center}
-</div>
-
-
 ## Full demo list
 
 * [Confluent Cloud](#confluent-cloud)
