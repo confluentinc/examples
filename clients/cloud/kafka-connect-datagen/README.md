@@ -25,7 +25,7 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
 # Example 1: Hello World!
 
 In this example, the Kafka Connect Datagen connector writes Kafka data to a topic in Confluent Cloud. 
-Each record is mock data generated using the [orders schema](https://github.com/confluentinc/kafka-connect-datagen/blob/master/src/main/resources/orders_schema.avro).
+Each record is mock data generated using the [orders schema](https://github.com/confluentinc/kafka-connect-datagen/blob/5.3.x/src/main/resources/orders_schema.avro).
 Use CLI to read that topic from Confluent Cloud.
 
 1. Create the topic in Confluent Cloud
