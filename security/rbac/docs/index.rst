@@ -8,7 +8,7 @@ It is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp
 
 .. seealso::
 
-   For a demo that is more representative of a real deployment of an |ak| event streaming application, see :ref:`cp-demo`, a Docker-based demo with |rbac| and other |cp| security features and LDAP integration.
+   For an |rbac| demo that is more representative of a real deployment of a |ak| event streaming application, see :ref:`cp-demo`, a Docker-based demo with |rbac| and other |cp| security features and LDAP integration.
 
 
 .. _rbac_demo_local:
@@ -282,6 +282,17 @@ For example, list the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_
 .. code:: bash
 
    confluent iam rolebinding list --principal User:bender --kafka-cluster-id $KAFKA_CLUSTER_ID 
+
+
+
+.. _rbac_demo_docker:
+
+==================
+Run demo in Docker
+==================
+
+A Docker-based |rbac| demo is :ref:`cp-demo`.
+It is representative of a real deployment of a |ak| event streaming application, with |rbac| and other |cp| security features and LDAP integration.
 
 
 ==================
