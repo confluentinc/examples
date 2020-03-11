@@ -21,7 +21,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 <div style="center"><img src="https://github.com/confluentinc/cp-demo/blob/5.4.1-post/docs/images/cp-demo-overview.jpg" width="600"></div>
 
 <div align=“center”>
-![](https://github.com/confluentinc/cp-demo/blob/5.4.1-post/docs/images/cp-demo-overview.jpg) {.center}
+![image](https://github.com/confluentinc/cp-demo/blob/5.4.1-post/docs/images/cp-demo-overview.jpg) {.center}
 </div>
 
 
