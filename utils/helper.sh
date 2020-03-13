@@ -686,7 +686,7 @@ function ccloud_login(){
     send "$PASSWORD\r";
     expect "Logged in as "
     set result $expect_out(buffer)
-  END
+END
   )
   echo "$OUTPUT"
   if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
