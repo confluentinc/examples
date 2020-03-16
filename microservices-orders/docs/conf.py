@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'CP Demo'
-copyright = u'2018, Confluent, Inc.'
+copyright = u'2020, Confluent, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
