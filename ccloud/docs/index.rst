@@ -17,17 +17,23 @@ The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 * |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
-* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the :ref:`KSQL Tutorial <ksql-create-a-stream-and-table>`, but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
+* KSQL: Confluent Cloud KSQL running queries on input topics `users` and `pageviews` in |ccloud|.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `users` in the |ccloud| cluster
   * Confluent Replicator: copies the topic `pageviews` from the local cluster to the |ccloud| cluster
 
-* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is written in Avro format.
+* |sr-long|: the demo runs with Confluent Cloud Schema Registry, and the Kafka data is written in Avro format.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
-          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
+          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
+
+Warning
+=======
+
+This demo uses real |ccloud| resources.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 
 ========
@@ -46,7 +52,7 @@ Prerequisites
 -  jq
 
 2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
-By default, the demo looks for this configuration file at ``~/.ccloud/config``. You can change this file location in the demo's ``config.sh``.
+By default, the demo looks for this configuration file at ``~/.ccloud/config``.
 
 3. This demo has been validated with:
 
@@ -74,20 +80,7 @@ Steps
 
      $ cd examples/ccloud
 
-4. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in |ccloud|, and if you prefer to use either of those |ccloud| services instead:
-
-   .. figure:: images/services-in-cloud.jpg
-       :alt: image
-
-   For Confluent Cloud |sr| (in `preview`):
-
-   a. :ref:`Enable <cloud-sr-config>` Confluent Cloud |sr| prior to running the demo
-   b.  Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
-
-   For Confluent Cloud KSQL (in `preview`):
-
-   a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
-   b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
+4. The demo runs with Confluent Cloud |sr| and Confluent Cloud KSQL.
 
 5. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
 
@@ -110,7 +103,7 @@ Playbook
 |ccloud|
 -------------------
 
-1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
+1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config`.
 
    .. sourcecode:: bash
 
@@ -197,7 +190,7 @@ KSQL
 
           $ ksql http://localhost:8089
 
-   (b) Run the preview KSQL web interface. Navigate your browser to ``http://localhost:8089/index.html``
+   (b) Run the KSQL web interface. Navigate your browser to ``http://localhost:8089/index.html``
 
 3. At the KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
 

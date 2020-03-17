@@ -5,7 +5,22 @@
 
 check_env || exit 1
 
-. ./config.sh
+# File with Confluent Cloud configuration parameters: example template
+#   $ cat ~/.ccloud/config
+#   bootstrap.servers=<BROKER ENDPOINT>
+#   ssl.endpoint.identification.algorithm=https
+#   security.protocol=SASL_SSL
+#   sasl.mechanism=PLAIN
+#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#   # Confluent Cloud Schema Registry
+#   basic.auth.credentials.source=USER_INFO
+#   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+#   schema.registry.url=https://<SR ENDPOINT>
+#   # Confluent Cloud KSQL
+#   ksql.endpoint=https://<KSQL ENDPOINT>
+#   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+export CONFIG_FILE=~/.ccloud/config
+
 check_ccloud_config $CONFIG_FILE || exit
 
 DELTA_CONFIGS_DIR="delta_configs"
@@ -21,24 +36,63 @@ jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 
+# Clean up KSQL
+echo "Clean up KSQL"
+validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+# Terminate queries first
+ksqlCmd="show queries;"
+echo -e "\n\n$ksqlCmd"
+queries=$(curl --silent -X POST $KSQL_ENDPOINT/ksql \
+       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+       -u $KSQL_BASIC_AUTH_USER_INFO \
+       -d @<(cat <<EOF
+{
+  "ksql": "$ksqlCmd",
+  "streamsProperties": {}
+}
+EOF
+) | jq -r '.[0].queries[].id')
+for q in $queries; do
+  ksqlCmd="TERMINATE $q;"
+  echo -e "\n$ksqlCmd"
+  curl -X POST $KSQL_ENDPOINT/ksql \
+       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+       -u $KSQL_BASIC_AUTH_USER_INFO \
+       -d @<(cat <<EOF
+{
+  "ksql": "$ksqlCmd",
+  "streamsProperties": {}
+}
+EOF
+)
+done
+# Terminate streams and tables
+while read ksqlCmd; do
+  echo -e "\n$ksqlCmd"
+  curl -X POST $KSQL_ENDPOINT/ksql \
+       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
+       -u $KSQL_BASIC_AUTH_USER_INFO \
+       -d @<(cat <<EOF
+{
+  "ksql": "$ksqlCmd",
+  "streamsProperties": {}
+}
+EOF
+)
+done <ksql.cleanup.commands
+
 # Delete subjects from Confluent Cloud Schema Registry
-if [[ "${USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY}" == true ]]; then
-  schema_registry_subjects_to_delete="users-value pageviews-value"
-  for subject in $schema_registry_subjects_to_delete
-  do
-    curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
-  done
-fi
+schema_registry_subjects_to_delete="users-value pageviews-value"
+for subject in $schema_registry_subjects_to_delete
+do
+  curl -X DELETE --silent -u $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL/subjects/$subject
+done
 
 # Delete topics in Confluent Cloud
-topics=$(kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --list)
-topics_to_delete="pageviews pageviews.replica users pageviews_enriched_r8_r9 PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS PAGEVIEWS_FEMALE_LIKE_89"
+topics_to_delete="pageviews users PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS PAGEVIEWS_FEMALE_LIKE_89 USERS_ORIGINAL"
 for topic in $topics_to_delete
 do
-  echo $topics | grep $topic &>/dev/null
-  if [[ $? == 0 ]]; then
-    kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --delete --topic $topic
-  fi
+  ccloud kafka topic delete $topic
 done
 
 #./ccloud-delete-all-topics.sh
