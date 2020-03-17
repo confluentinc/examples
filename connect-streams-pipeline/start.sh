@@ -11,7 +11,7 @@ check_running_cp ${CP_VERSION_MAJOR} || exit
 
 mvn clean compile
 
-echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
 confluent local start
 
 # Create the SQL table
