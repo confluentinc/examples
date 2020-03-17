@@ -6,7 +6,7 @@ On-Prem Kafka to Cloud
 This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.
 
-.. figure:: images/schema-registry-local.jpg
+.. figure:: images/services-in-cloud.jpg
     :alt: image
 
 ========
@@ -66,23 +66,19 @@ Steps
 -----
 
 
-1. Confirm the prerequisites above are satisfied, especially the |ccloud| configuration file at ``~/.ccloud/config``. 
-
-2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
+#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
 
    .. sourcecode:: bash
 
      $ git clone https://github.com/confluentinc/examples
 
-3. Change directory to the |ccloud| demo.
+#. Change directory to the |ccloud| demo.
 
    .. sourcecode:: bash
 
      $ cd examples/ccloud
 
-4. The demo runs with Confluent Cloud |sr| and Confluent Cloud KSQL.
-
-5. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
+#. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -92,7 +88,7 @@ Steps
       # For Docker Compose
       $ ./start-docker.sh
 
-6. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
+#. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . 
 
 
 
@@ -180,25 +176,13 @@ Playbook
 KSQL
 ----
 
-1. If you are running Confluent Cloud KSQL, you will need to use the Cloud UI to copy/paste the KSQL queries from the `ksql.commands` file.  Otherwise, for locally running KSQL server, the KSQL are automatically created.
-
-2. If you are running KSQL server locally, it is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL.
-
-   (a) Run KSQL CLI to get to the KSQL CLI prompt.
-
-       .. sourcecode:: bash
-
-          $ ksql http://localhost:8089
-
-   (b) Run the KSQL web interface. Navigate your browser to ``http://localhost:8089/index.html``
-
-3. At the KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
+#. At the Confluent Cloud KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
 
    .. sourcecode:: bash
 
       ksql> SHOW PROPERTIES;
 
-4. View the existing KSQL streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
+#. View the existing KSQL streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -226,7 +210,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-5. View the existing KSQL tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
+#. View the existing KSQL tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
 
    .. sourcecode:: bash
 
@@ -252,7 +236,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-6. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
+#. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -280,14 +264,14 @@ KSQL
       (Statistics of the local KSQL server interaction with the Kafka topic pageviews_enriched_r8_r9)
       
 
-7. At the KSQL prompt, view three messages from different KSQL streams and tables.
+#. At the KSQL prompt, view three messages from different KSQL streams and tables.
 
    .. sourcecode:: bash
 
       ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 LIMIT 3;
       ksql> SELECT * FROM USERS_ORIGINAL LIMIT 3;
 
-8. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names shown above, and |c3| is showing the records that are incoming to each query.
+#. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names shown above, and |c3| is showing the records that are incoming to each query.
 
 For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
 
@@ -351,16 +335,11 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 Confluent Schema Registry
 -------------------------
 
-The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the :ref:`Confluent Schema Registry <schemaregistry_intro>`.
-Depending on how you set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY` in the start script, you may be running |sr-long| locally or |ccloud| |sr|.
-Either way, you will get a consistent experience with |sr|.
+The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the |ccloud| |sr|.
 
 1. View all the |sr| subjects.
 
    .. sourcecode:: bash
-
-        # Locally running Schema Registry
-        $ curl http://localhost:8085/subjects/ | jq .
 
         # Confluent Cloud Schema Registry
         $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
