@@ -70,9 +70,6 @@ fi
 
 # Produce to topic pageviews in local cluster
 kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 6 --replication-factor 1
-# Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
-#echo "ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES"
-#ksql-datagen quickstart=pageviews format=avro topic=pageviews maxInterval=100 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$SR_PROPERTIES &>/dev/null &
 sleep 20
 . ./connectors/submit_datagen_pageviews_config.sh
 #sleep 5
@@ -94,10 +91,6 @@ sleep 40
 
 # Produce to topic users in CCloud cluster
 ccloud kafka topic create users
-# Use kafka-connect-datagen instead of ksql-datagen due to KSQL-2278
-#KSQL_DATAGEN_PROPERTIES=$CONFLUENT_CURRENT/ksql-server/ksql-datagen.properties
-#cp $DELTA_CONFIGS_DIR/ksql-datagen.delta $KSQL_DATAGEN_PROPERTIES
-#ksql-datagen quickstart=users format=avro topic=users maxInterval=1000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL propertiesFile=$KSQL_DATAGEN_PROPERTIES &>/dev/null &
 . ./connectors/submit_datagen_users_config.sh
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
