@@ -9,7 +9,7 @@ check_running_cp ${CP_VERSION_MAJOR} || exit
 
 ./stop.sh
 
-echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
 confluent local start
 
 [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
