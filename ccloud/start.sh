@@ -23,7 +23,9 @@ check_running_cp ${CP_VERSION_MAJOR} || exit 1
 #   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 export CONFIG_FILE=~/.ccloud/config
 
-check_ccloud_config $CONFIG_FILE || exit
+check_ccloud_config $CONFIG_FILE || exit 1
+check_ccloud_version 0.239.0 || exit 1
+check_ccloud_logged_in || exit 1
 
 if ! check_cp ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software. Exiting"
@@ -74,9 +76,6 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 sleep 20
 . ./connectors/submit_datagen_pageviews_config.sh
 #sleep 5
-
-# Register the same schema for the replicated topic pageviews.replica as was created for the original topic pageviews
-#curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 # Start Connect that connects to CCloud cluster
 mkdir -p $CONFLUENT_CURRENT/connect

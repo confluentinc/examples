@@ -23,7 +23,7 @@ echo -e "Configure ACLs for Confluent Cloud KSQL"
 ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
 ccloud ksql app configure-acls $ksqlAppId pageviews users USERS_ORIGINAL PAGEVIEWS_FEMALE PAGEVIEWS_FEMALE_LIKE_89 PAGEVIEWS_REGIONS
 for topic in USERS_ORIGINAL PAGEVIEWS_FEMALE PAGEVIEWS_FEMALE_LIKE_89 PAGEVIEWS_REGIONS; do
-  echo "Creating topic $topic and ACLs for KSQL to write to it"
+  echo "Creating topic $topic and ACL permitting KSQL to write to it"
   ccloud kafka topic create $topic
   ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $topic
 done
@@ -50,7 +50,5 @@ EOF
     exit 1
   fi
 done <ksql.commands
-echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
-sleep 20
 
 exit 0

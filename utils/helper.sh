@@ -96,7 +96,7 @@ function check_ccloud_v2() {
 function check_ccloud_logged_in() {
   check_ccloud_v2 || exit 1
 
-  if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must login to run that command." ]]; then
+  if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must log in to run that command." ]]; then
     echo "ERROR: Log into Confluent Cloud with the command 'ccloud login' before running the demo."
     exit 1
   fi

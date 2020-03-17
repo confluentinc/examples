@@ -21,7 +21,9 @@ check_jq || exit
 #   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 export CONFIG_FILE=~/.ccloud/config
 
-check_ccloud_config $CONFIG_FILE || exit
+check_ccloud_config $CONFIG_FILE || exit 1
+check_ccloud_version 0.239.0 || exit 1
+check_ccloud_logged_in || exit 1
 
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
@@ -39,9 +41,6 @@ sleep 120
 
 ccloud kafka topic create users
 ccloud kafka topic create pageviews
-
-# Reregister a schema for a topic with a different name
-#curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8085/subjects/pageviews-value/versions/latest | jq '.schema')}" http://localhost:8085/subjects/pageviews.replica-value/versions 
 
 # kafka-connect-datagen
 . ./connectors/submit_datagen_users_config.sh
