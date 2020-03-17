@@ -18,7 +18,7 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksql/ksql-server.properties
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
 confluent local start
 sleep 5
 
