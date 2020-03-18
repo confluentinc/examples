@@ -31,9 +31,9 @@ login_mds $MDS
 ##################################################
 # Administrative Functions
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas
+# - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo
 # - Start Schema Registry
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster
-# - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:$SCHEMA_REGISTRY_CLUSTER_ID
 # - List the role bindings for User:$USER_ADMIN_SCHEMA_REGISTRY
 ##################################################
 
@@ -43,6 +43,10 @@ get_cluster_id_kafka
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas"
 echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo"
+echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Schema Registry"
 confluent local start schema-registry
@@ -55,10 +59,6 @@ get_cluster_id_schema_registry
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster to make requests to the MDS to learn whether the user hitting its REST API is authorized to perform certain actions"
 echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
-
-echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:$SCHEMA_REGISTRY_CLUSTER_ID"
-echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for User:$USER_ADMIN_SCHEMA_REGISTRY to the Kafka cluster"
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_SCHEMA_REGISTRY --kafka-cluster-id $KAFKA_CLUSTER_ID"
