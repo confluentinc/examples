@@ -61,7 +61,7 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
 
 .. sourcecode:: bash
 
-    git clone git@github.com:confluentinc/examples.git
+    git clone https://github.com/confluentinc/examples.git
     cd examples/kubernetes/replicator-gke-cc
 
 GKE Setup
