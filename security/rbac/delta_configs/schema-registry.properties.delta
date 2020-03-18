@@ -4,6 +4,9 @@ kafkastore.sasl.mechanism=OAUTHBEARER
 kafkastore.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
 kafkastore.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="sr" password="sr1" metadataServerUrls="http://localhost:8090";
 
+# Schema Registry group id, which is the cluster id
+schema.registry.group.id=schema-registry-demo
+
 # These properties install the Schema Registry security plugin, and configure it to use RBAC for authorization and OAuth for authentication
 schema.registry.resource.extension.class=io.confluent.kafka.schemaregistry.security.SchemaRegistrySecurityResourceExtension
 confluent.schema.registry.authorizer.class=io.confluent.kafka.schemaregistry.security.authorizer.rbac.RbacAuthorizer
