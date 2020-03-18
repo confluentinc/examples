@@ -194,16 +194,3 @@ services:
       GRAFANA_HOST: grafana
     volumes:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
-
-# Kibana's useful for exploring the data, and/or dev tools for
-# Elasticsearch. It's not core to the demo though, so not enabled
-# by default. 
-  # kibana:
-  #   image: docker.elastic.co/kibana/kibana:6.3.0
-  #   depends_on:
-  #     - elasticsearch
-  #   ports:
-  #     - 5601:5601
-  #   environment:
-  #     xpack.security.enabled: "false"
-  #     discovery.type: "single-node"
