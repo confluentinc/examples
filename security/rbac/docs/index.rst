@@ -46,7 +46,7 @@ Run the demo
 
    .. codewithvars:: bash
 
-       git clone git@github.com:confluentinc/examples.git
+       git clone https://github.com/confluentinc/examples.git
        cd examples
        git checkout |release_post_branch|
 
