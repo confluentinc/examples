@@ -55,7 +55,7 @@ Clone the Confluent examples repository and change directories on your terminal 
 
 .. sourcecode:: bash
 
-    git clone git@github.com:confluentinc/examples.git
+    git clone https://github.com/confluentinc/examples.git
     cd examples/kubernetes/gke-base
 
 This demo requires a Kubernetes Cluster and ``kubectl`` context configured properly to manage it.
