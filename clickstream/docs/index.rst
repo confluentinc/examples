@@ -172,7 +172,7 @@ Verify the data
 ---------------
 
 .. note::
-    The following steps are optional and can be used to verify that the data was loaded properly. Otherwise, you can skip to :ref:`Load and View the Clickstream Data in Grafana <view-grafana-docker>`.
+    The following steps are optional and can be used to verify that the data was loaded properly. Otherwise, you can skip to :ref:`Load and View the Clickstream Data in Grafana <clickstream-view-grafana>`.
 
 #.  Verify that the tables are created.
 
@@ -270,7 +270,7 @@ Verify the data
         Limit Reached
         Query terminated
 
-.. _view-grafana-docker:
+.. _clickstream-view-grafana:
 
 ---------------------------------------------
 Load and View the Clickstream Data in Grafana
