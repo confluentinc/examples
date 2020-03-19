@@ -5,7 +5,7 @@ Clickstream Data Analysis Pipeline Using KSQL
 
 These steps will guide you through how to setup your environment and run the clickstream analysis tutorial from a Docker container.
 
-.. include:: ../../../quickstart/includes/docker-prereqs.rst
+.. include:: ../../quickstart/includes/docker-prereqs.rst
 
 - If you are using Linux as your host, for the Elasticsearch container to start successfully you must first run: 
 
@@ -147,12 +147,6 @@ Load the Streaming Data to KSQL
     .. code:: bash
 
         docker-compose exec ksql-cli ksql http://ksql-server:8088
-
-    You should now be in the KSQL CLI.
-
-    .. include:: ../includes/ksql-includes.rst
-        :start-after: CLI_welcome_start
-        :end-before: CLI_welcome_end
 
 #.  Load the `clickstream-schema.sql <https://github.com/confluentinc/examples/blob/master/clickstream/ksql/ksql-clickstream-demo/demo/clickstream-schema.sql>`__
     file that runs the tutorial app.
