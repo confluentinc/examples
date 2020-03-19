@@ -10,7 +10,7 @@
 source config/demo.cfg
 
 check_ccloud_config $CONFIG_FILE || exit 1
-check_ccloud_version 0.239.0 || exit 1
+check_ccloud_version 0.255.0 || exit 1
 check_ccloud_logged_in || exit 1
 check_python || exit 1
 
