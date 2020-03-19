@@ -1,4 +1,4 @@
-.. _ksql_clickstream-docker:
+.. _clickstream-demo:
 
 Clickstream Data Analysis Pipeline Using KSQL
 =============================================
