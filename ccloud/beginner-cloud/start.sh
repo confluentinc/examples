@@ -61,7 +61,7 @@ END
 )
 echo "$OUTPUT"
 if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
-  echo "Failed to log into your cluster.  Please check all parameters and run again"
+  echo "ERROR: Failed to log into your cluster.  Please check all parameters and run again"
   exit 1
 fi
 
@@ -74,7 +74,7 @@ echo -e "\n# Create and specify active environment"
 echo "ccloud environment create $ENVIRONMENT_NAME"
 ccloud environment create $ENVIRONMENT_NAME
 if [[ $? != 0 ]]; then
-  echo "Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"
+  echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"
   exit 1
 fi
 echo "ccloud environment list | grep $ENVIRONMENT_NAME"
@@ -96,7 +96,7 @@ OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud gcp --region us-centr
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
-  echo "Failed to create Kafka cluster $CLUSTER_NAME. Please troubleshoot and run again"
+  echo "ERROR: Failed to create Kafka cluster $CLUSTER_NAME. Please troubleshoot and run again"
   exit 1
 fi
 CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
@@ -117,7 +117,7 @@ OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL" --res
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
-  echo "Failed to create an API key.  Please troubleshoot and run again"
+  echo "ERROR: Failed to create an API key.  Please troubleshoot and run again"
   exit 1
 fi
 API_KEY=$(echo "$OUTPUT" | grep '| API Key' | awk '{print $5;}')
@@ -127,8 +127,9 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
-echo -e "\n# Wait 90 seconds for the user credentials to propagate"
-sleep 90
+# Increasing wait time from 90s to 660s due to MCM-965
+echo -e "\n# Wait 660 seconds for the user credentials to propagate"
+sleep 660
 
 
 ##################################################
@@ -140,6 +141,11 @@ TOPIC1="demo-topic-1"
 echo -e "\n# Create new Kafka topic $TOPIC1"
 echo "ccloud kafka topic create $TOPIC1"
 ccloud kafka topic create $TOPIC1
+status=$?
+if [[ $status != 0 ]]; then
+  echo "ERROR: Failed to create topic $TOPIC1. Please troubleshoot and run again"
+  exit 1
+fi
 
 echo -e "\n# Produce to topic $TOPIC1"
 echo '(for i in `seq 1 10`; do echo "${i}" ; done) | \'
