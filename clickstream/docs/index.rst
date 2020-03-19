@@ -340,7 +340,7 @@ Send the KSQL tables to Elasticsearch and Grafana.
     **Important:** If you already have Grafana UI open, you may need to
     enter the specific clickstream URL output by the previous step
 
-    .. image:: ../img/grafana-success.png
+    .. image:: images/grafana-success.png
        :alt: Grafana UI success
 
 This dashboard demonstrates a series of streaming functionality where the title of each panel describes the type of stream
