@@ -672,3 +672,4 @@ Additional Resources
 * `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__
 * `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__
 * `No More Silos: How to Integrate Your Databases with Apache Kafka and CDC <https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc>`__
+* `Getting Your Feet Wet with Stream Processing – Part 1: Tutorial for Developing Streaming Applications <https://www.confluent.io/blog/stream-processing-part-1-tutorial-developing-streaming-applications/>`__
