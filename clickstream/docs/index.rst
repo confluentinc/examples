@@ -102,15 +102,15 @@ populated. They hold information about the HTTP status codes, and users.
 
     .. codewithvars:: bash
 
-       docker-compose exec tools confluent local consume clickstream_codes -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092
+       docker-compose exec tools confluent local consume clickstream_codes -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092 --from-beginning --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
 
     Your output should resemble:
 
     ::
 
-        Key  : 405      Value: {"code":405,"definition":"Method not allowed"}
-        Key  : 407      Value: {"code":407,"definition":"Proxy authentication required"}
-        Key  : 302      Value: {"code":302,"definition":"Redirect"}⏎
+       406	{"code":406,"definition":"Not acceptable"}
+       302	{"code":302,"definition":"Redirect"}
+       302	{"code":302,"definition":"Redirect"}
 
         ...
 
@@ -118,16 +118,17 @@ populated. They hold information about the HTTP status codes, and users.
 
     .. codewithvars:: bash
 
-       docker-compose exec tools confluent local consume clickstream_users -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092
+       docker-compose exec tools confluent local consume clickstream_users -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092 --from-beginning
 
 
     Your output should resemble:
 
     ::
 
-        Key  : 1        Value: {"user_id":1,"username":"DimitriSchenz88","registered_at":1432700187062,"first_name":"Arlyne","last_name":"Garrity","city":"Frankfurt","level":"Gold"}
-        Key  : 2        Value: {"user_id":2,"username":"AbdelKable_86","registered_at":1454795231290,"first_name":"Reeva","last_name":"Pask","city":"San Francisco","level":"Silver"}
-        Key  : 3        Value: {"user_id":3,"username":"Antonio_0966","registered_at":1464740725409,"first_name":"Woodrow","last_name":"Vanyard","city":"Frankfurt","level":"Platinum"}
+        {"user_id":1,"username":"DimitriSchenz88","registered_at":1417364223387,"first_name":"Arlyne","last_name":"Romagosa","city":"San Francisco","level":"Gold"}
+        {"user_id":2,"username":"Reeva43","registered_at":1417576333214,"first_name":"Elwyn","last_name":"Vears","city":"San Francisco","level":"Gold"}
+        {"user_id":3,"username":"Roberto_123","registered_at":1423872843423,"first_name":"Arlyne","last_name":"Romagosa","city":"Palo Alto","level":"Silver"}
+
 
         ...
 
