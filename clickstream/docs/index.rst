@@ -84,16 +84,10 @@ This will stop after ten messages, and your output should resemble:
 
 ::
 
-    Key  : 111.90.225.227
-    Value: {"ip":"111.90.225.227","userid":36,"remote_user":"-","time":"11/Sep/2018:09:53:04 +0000","_time":1536659584702,"request":"GET /images/track.png HTTP/1.1","status":"302","bytes":"2048","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /images/logo-small.png HTTP/1.1","status":"200","bytes":"14096","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /index.html HTTP/1.1","status":"407","bytes":"4196","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /site/login.html HTTP/1.1","status":"406","bytes":"4006","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
 
-    Key  : 233.173.215.103
-    Value: {"ip":"233.173.215.103","userid":15,"remote_user":"-","time":"11/Sep/2018:09:53:05 +0000","_time":1536659585434,"request":"GET /index.html HTTP/1.1","status":"406","bytes":"278","referrer":"-","agent":"Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"}
-    [...]
-
-If you remove the ``-c 10`` argument from the previous command you can run it and see a complete 
-stream of all messages on the topic. If you do run this, press Ctrl-C to cancel it and 
-return to the command prompt.
 
 There are two other sets of data in Kafka topics that have been automatically
 populated. They hold information about the HTTP status codes, and users. 
@@ -130,8 +124,6 @@ populated. They hold information about the HTTP status codes, and users.
         {"user_id":3,"username":"Roberto_123","registered_at":1423872843423,"first_name":"Arlyne","last_name":"Romagosa","city":"Palo Alto","level":"Silver"}
 
 
-        ...
-
 -------------------------------
 Load the Streaming Data to KSQL
 -------------------------------
@@ -162,6 +154,7 @@ Load the Streaming Data to KSQL
          Executing statement
         ---------
 
+
 Verify the data
 ---------------
 
@@ -174,7 +167,7 @@ Verify the data
 #.  Verify that data is being streamed through various tables and streams. Query one of the streams ``CLICKSTREAM``:
 
     .. image:: images/stream_clickstream.png
-       :alt: ksqlDB Flow
+       :alt: Clickstream data
 
 
 
