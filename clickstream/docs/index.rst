@@ -53,32 +53,30 @@ are quite large and depending on your network connection may take
 
    ::
 
-            Name                    Command               State                Ports
-        -------------------------------------------------------------------------------------------
-        datagen           bash -c echo Waiting for K ...   Up
-        elasticsearch     /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 9300/tcp
-        grafana           /run.sh                          Up      0.0.0.0:3000->3000/tcp
-        kafka             /etc/confluent/docker/run        Up      9092/tcp
-        kafka-connect     /etc/confluent/docker/run        Up      0.0.0.0:8083->8083/tcp, 9092/tcp
-        kafkacat          /bin/sh                          Up
-        ksql-cli          /bin/sh                          Up
-        ksql-server       /etc/confluent/docker/run        Up      0.0.0.0:8088->8088/tcp
-        schema-registry   /etc/confluent/docker/run        Up      8081/tcp
-        zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp
+           Name                    Command                  State                    Ports              
+      --------------------------------------------------------------------------------------------------
+      kafka-connect     /etc/confluent/docker/run        Up             0.0.0.0:8083->8083/tcp, 9092/tcp
+      control-center    /etc/confluent/docker/run        Up             0.0.0.0:9021->9021/tcp          
+      datagen           bash -c echo Waiting for K ...   Up                                             
+      elasticsearch     /usr/local/bin/docker-entr ...   Up             0.0.0.0:9200->9200/tcp, 9300/tcp
+      grafana           /run.sh                          Up             0.0.0.0:3000->3000/tcp          
+      kafka             /etc/confluent/docker/run        Up             9092/tcp                        
+      ksql-cli          /bin/sh                          Up                                             
+      ksql-server       /etc/confluent/docker/run        Up (healthy)   0.0.0.0:8088->8088/tcp          
+      schema-registry   /etc/confluent/docker/run        Up             8081/tcp                        
+      tools             /bin/bash                        Up                                             
+      zookeeper         /etc/confluent/docker/run        Up             2181/tcp, 2888/tcp, 3888/tcp  
 
 ---------------------------
 Create the Clickstream Data
 ---------------------------
 
 A data generator is already running, simulating the stream of clicks. You can sample this stream by 
-using a console consumer such as ``kafkacat``: 
+using a console consumer:
 
 .. code:: bash
 
-    docker-compose exec kafkacat \
-            kafkacat -b kafka:29092 -C -c 10 -K: \
-            -f '\nKey  : %k\t\nValue: %s\n' \
-            -t clickstream
+    docker-compose exec tools confluent local consume clickstream -- --max-messages 5 --property print.key=true --bootstrap-server kafka:29092
 
 *If you get the message `Broker: Leader not available`, try again after a moment, as the demo is still starting up.*
 
@@ -104,10 +102,7 @@ populated. They hold information about the HTTP status codes, and users.
 
     .. codewithvars:: bash
 
-        docker-compose exec kafkacat \
-            kafkacat -b kafka:29092 -C -c 3 -K: \
-            -f '\nKey  : %k\tValue: %s' \
-            -t clickstream_codes
+       docker-compose exec tools confluent local consume clickstream_codes -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092
 
     Your output should resemble:
 
@@ -123,10 +118,8 @@ populated. They hold information about the HTTP status codes, and users.
 
     .. codewithvars:: bash
 
-        docker-compose exec kafkacat \
-          kafkacat -b kafka:29092 -C -c 3 -K: \
-              -f '\nKey  : %k\tValue: %s' \
-              -t clickstream_users
+       docker-compose exec tools confluent local consume clickstream_users -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092
+
 
     Your output should resemble:
 
@@ -171,10 +164,13 @@ Load the Streaming Data to KSQL
 Verify the data
 ---------------
 
-.. note::
-    The following steps are optional and can be used to verify that the data was loaded properly. Otherwise, you can skip to :ref:`Load and View the Clickstream Data in Grafana <clickstream-view-grafana>`.
+#.  Go to |c3| UI at http://localhost:9021, and view the ksqlDB view ``Flow``.
 
-#.  Verify that the tables are created.
+    .. image:: images/flow.png
+       :alt: ksqlDB Flow
+
+
+#.  From the KSQL editor, verify that the tables are created.
 
     .. code:: sql
 

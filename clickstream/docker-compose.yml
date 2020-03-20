@@ -108,37 +108,12 @@ services:
     volumes:
       - $PWD/ksql/ksql-clickstream-demo/demo:/usr/share/doc/clickstream
 
-  kafkacat:
-    container_name: kafkacat
-    image: confluentinc/cp-kafkacat:latest
-    depends_on:
-      - kafka
-    entrypoint: /bin/sh
+  tools:
+    image: cnfltraining/training-tools:5.4
+    hostname: tools
+    container_name: tools
+    entrypoint: /bin/bash
     tty: true
-
-    
-# Not used in current demo
-  # control-center:
-  #   image: confluentinc/cp-enterprise-control-center:5.0.0
-  #   depends_on:
-  #     - zookeeper
-  #     - kafka
-  #     - schema-registry
-  #     - kafka-connect
-  #     - ksql-server
-  #   ports:
-  #     - "9021:9021"
-  #   environment:
-  #     CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
-  #     CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-  #     CONTROL_CENTER_CONNECT_CLUSTER: 'kafka-connect:8083'
-  #     CONTROL_CENTER_KSQL_ENDPOINT: "http://ksql-server:8088"
-  #     CONTROL_CENTER_REPLICATION_FACTOR: 1
-  #     CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
-  #     CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-  #     CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-  #     CONTROL_CENTER_CUB_KAFKA_TIMEOUT: 300
-  #     PORT: 9021
 
   # Runs the Kafka KSQL data generator
   datagen:
@@ -196,3 +171,27 @@ services:
       GRAFANA_HOST: grafana
     volumes:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.5.x-latest
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - zookeeper
+      - kafka
+      - schema-registry
+      - ksql-server
+    ports:
+      - 9021:9021
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      CONTROL_CENTER_CONNECT_CLUSTER: 'kafka-connect:8083'
+      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
