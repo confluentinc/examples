@@ -155,8 +155,9 @@ Load the Streaming Data to KSQL
         ---------
 
 
+---------------------------------------------
 Verify the data
----------------
+---------------------------------------------
 
 #.  Go to |c3| UI at http://localhost:9021, and view the ksqlDB view ``Flow``.
 
@@ -174,7 +175,7 @@ Verify the data
 .. _clickstream-view-grafana:
 
 ---------------------------------------------
-Load and View the Clickstream Data in Grafana
+Load the Clickstream Data in Grafana
 ---------------------------------------------
 Send the KSQL tables to Elasticsearch and Grafana.
 
