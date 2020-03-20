@@ -76,7 +76,7 @@ using a console consumer:
 
 .. code:: bash
 
-    docker-compose exec tools confluent local consume clickstream -- --max-messages 5 --property print.key=true --bootstrap-server kafka:29092
+    docker-compose exec tools confluent local consume clickstream -- --bootstrap-server kafka:29092 --property print.key=true --max-messages 5
 
 *If you get the message `Broker: Leader not available`, try again after a moment, as the demo is still starting up.*
 
@@ -96,7 +96,7 @@ populated. They hold information about the HTTP status codes, and users.
 
     .. codewithvars:: bash
 
-       docker-compose exec tools confluent local consume clickstream_codes -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092 --from-beginning --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
+       docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
     Your output should resemble:
 
@@ -112,16 +112,17 @@ populated. They hold information about the HTTP status codes, and users.
 
     .. codewithvars:: bash
 
-       docker-compose exec tools confluent local consume clickstream_users -- --max-messages 3 --property print.key=true --bootstrap-server kafka:29092 --from-beginning
+       docker-compose exec tools confluent local consume clickstream_users -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
 
     Your output should resemble:
 
     ::
 
-        {"user_id":1,"username":"DimitriSchenz88","registered_at":1417364223387,"first_name":"Arlyne","last_name":"Romagosa","city":"San Francisco","level":"Gold"}
-        {"user_id":2,"username":"Reeva43","registered_at":1417576333214,"first_name":"Elwyn","last_name":"Vears","city":"San Francisco","level":"Gold"}
-        {"user_id":3,"username":"Roberto_123","registered_at":1423872843423,"first_name":"Arlyne","last_name":"Romagosa","city":"Palo Alto","level":"Silver"}
+       1	{"user_id":1,"username":"Ferd88","registered_at":1490759617459,"first_name":"Curran","last_name":"Vanyard","city":"Palo Alto","level":"Gold"}
+       2	{"user_id":2,"username":"bobk_43","registered_at":1457530469406,"first_name":"Antonio","last_name":"De Banke","city":"London","level":"Platinum"}
+       3	{"user_id":3,"username":"Ferd88","registered_at":1481373367271,"first_name":"Dimitri","last_name":"Jushcke","city":"Raleigh","level":"Silver"}
+
 
 
 -------------------------------
