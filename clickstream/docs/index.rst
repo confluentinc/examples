@@ -171,101 +171,12 @@ Verify the data
        :alt: ksqlDB Flow
 
 
-#.  From the KSQL editor, verify that the tables are created.
+#.  Verify that data is being streamed through various tables and streams. Query one of the streams ``CLICKSTREAM``:
 
-    .. code:: sql
+    .. image:: images/stream_clickstream.png
+       :alt: ksqlDB Flow
 
-        LIST TABLES;
 
-    Your output should resemble:
-
-    ::
-
-         Table Name                 | Kafka Topic                | Format | Windowed
-        -----------------------------------------------------------------------------
-         WEB_USERS                  | clickstream_users          | JSON   | false
-         ERRORS_PER_MIN_ALERT       | ERRORS_PER_MIN_ALERT       | JSON   | true
-         USER_IP_ACTIVITY           | USER_IP_ACTIVITY           | JSON   | true
-         CLICKSTREAM_CODES          | clickstream_codes          | JSON   | false
-         PAGES_PER_MIN              | PAGES_PER_MIN              | JSON   | true
-         CLICK_USER_SESSIONS        | CLICK_USER_SESSIONS        | JSON   | true
-         ENRICHED_ERROR_CODES_COUNT | ENRICHED_ERROR_CODES_COUNT | JSON   | true
-         ERRORS_PER_MIN             | ERRORS_PER_MIN             | JSON   | true
-         EVENTS_PER_MIN             | EVENTS_PER_MIN             | JSON   | true
-
-#.  Verify that the streams are created.
-
-    .. code:: text
-
-        LIST STREAMS;
-
-    Your output should resemble:
-
-    ::
-
-         Stream Name               | Kafka Topic               | Format
-        ----------------------------------------------------------------
-         USER_CLICKSTREAM          | USER_CLICKSTREAM          | JSON
-         ENRICHED_ERROR_CODES      | ENRICHED_ERROR_CODES      | JSON
-         CLICKSTREAM               | clickstream               | JSON
-
-#.  Verify that data is being streamed through
-    various tables and streams.
-
-    **View clickstream data**
-
-    .. code:: sql
-
-        SELECT * FROM CLICKSTREAM EMIT CHANGES LIMIT 5;
-
-    Your output should resemble:
-
-    ::
-
-        1536662784214 | 111.168.57.122 | 1536662783614 | 11/Sep/2018:10:46:23 +0000 | 111.168.57.122 | GET /images/logo-small.png HTTP/1.1 | 200 | 35 | 1289 | Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
-        1536662784261 | 222.245.174.248 | 1536662784260 | 11/Sep/2018:10:46:24 +0000 | 222.245.174.248 | GET /index.html HTTP/1.1 | 404 | 7 | 14096 | Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
-        1536662784335 | 111.90.225.227 | 1536662784335 | 11/Sep/2018:10:46:24 +0000 | 111.90.225.227 | GET /site/login.html HTTP/1.1 | 302 | 36 | 4096 | Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
-        1536662784351 | 233.245.174.248 | 1536662784351 | 11/Sep/2018:10:46:24 +0000 | 233.245.174.248 | GET /site/user_status.html HTTP/1.1 | 405 | 15 | 2048 | Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
-        1536662784421 | 222.168.57.122 | 1536662784421 | 11/Sep/2018:10:46:24 +0000 | 222.168.57.122 | GET /images/logo-small.png HTTP/1.1 | 302 | 28 | 14096 | Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
-        Limit Reached
-        Query terminated
-        ksql>
-
-    **View the events per minute**
-
-    .. code:: sql
-
-        SELECT * FROM EVENTS_PER_MIN EMIT CHANGES LIMIT 5;
-
-    Your output should resemble:
-
-    ::
-
-        1536662819576 | 24 : Window{start=1536662760000 end=-} | 24 | 12
-        1536662819685 | 4 : Window{start=1536662760000 end=-} | 4 | 19
-        1536662847582 | 4 : Window{start=1536662820000 end=-} | 4 | 75
-        1536662847586 | 24 : Window{start=1536662820000 end=-} | 24 | 101
-        1536662879959 | 29 : Window{start=1536662820000 end=-} | 29 | 2
-        Limit Reached
-        Query terminated
-
-    **View pages per minute**
-
-    .. code:: sql
-
-        SELECT * FROM PAGES_PER_MIN EMIT CHANGES LIMIT 5;
-
-    Your output should resemble:
-
-    ::
-
-        1536662784977 | 21 : Window{start=1536662725000 end=-} | 21 | 2
-        1536662789353 | 21 : Window{start=1536662730000 end=-} | 21 | 7
-        1536662793715 | 21 : Window{start=1536662735000 end=-} | 21 | 20
-        1536662799627 | 21 : Window{start=1536662740000 end=-} | 21 | 35
-        1536662804534 | 21 : Window{start=1536662745000 end=-} | 21 | 40
-        Limit Reached
-        Query terminated
 
 .. _clickstream-view-grafana:
 
@@ -274,20 +185,13 @@ Load and View the Clickstream Data in Grafana
 ---------------------------------------------
 Send the KSQL tables to Elasticsearch and Grafana.
 
-1. Exit the KSQL CLI with ``CTRL+D``.
-
-   .. code:: text
-
-        ksql>
-        Exiting KSQL.
-
-2. Set up the required Elasticsearch document mapping template
+#. Set up the required Elasticsearch document mapping template
 
    .. code:: bash
 
        docker-compose exec elasticsearch bash -c '/scripts/elastic-dynamic-template.sh'
 
-3. Run this command to send the KSQL tables to Elasticsearch and
+#. Run this command to send the KSQL tables to Elasticsearch and
    Grafana:
 
    .. code:: bash
@@ -313,7 +217,7 @@ Send the KSQL tables to Elasticsearch and Grafana.
 
         [...]
 
-4. Load the dashboard into Grafana.
+#. Load the dashboard into Grafana.
 
    .. code:: bash
 
@@ -346,11 +250,6 @@ using a Session window - where a sessions expire after 300 seconds of inactivity
 is named after the streams and tables captured in the ``clickstream-schema.sql`` file.
 
 
-Things to try
-    * Understand how the ``clickstream-schema.sql`` file is structured. We use a **DataGen.KafkaTopic.clickstream -> Stream -> Table** (for window &
-      analytics with group-by) -> ElasticSearch/Connect topic
-    * Run the KSQL CLI ``LIST TOPICS;`` command to see where data is persisted
-    * Run the KSQL CLI ``history`` command
 
 Troubleshooting
 ---------------
