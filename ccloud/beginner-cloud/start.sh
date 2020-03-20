@@ -334,6 +334,8 @@ docker-compose up -d
 echo -e "\n# Wait 60 seconds for Connect to start"
 sleep 60
 
+exit
+
 echo -e "\n# Post the configuration for the kafka-connect-datagen connector"
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF

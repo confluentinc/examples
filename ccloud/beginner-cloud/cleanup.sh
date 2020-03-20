@@ -66,9 +66,9 @@ if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
 fi
 
 ENVIRONMENT_NAME="demo-script-env"
-ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $1;}')
+ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | awk '{print $2;}')
 CLUSTER_NAME="demo-kafka-cluster"
-CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | awk '{print $1;}')
+CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | awk '{print $2;}')
 CLIENT_CONFIG="/tmp/client.config"
 
 ##################################################
