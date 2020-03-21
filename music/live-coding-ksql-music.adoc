@@ -65,13 +65,9 @@ The Docker compose file includes a container that auto-generates source data to 
 
 image::images/ksql-music-demo-source-data.jpg[source-data]
 
-After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Select the `controlcenter.cluster` Cluster, then select `Topics`.  Find the topic and select `Inspect`.
+After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center].  From `Topics`, select any topic and then view its messages.
 
 image::images/inspect_topic.png[inspect-topic]
-
-Inspect the topic `play-events` :
-
-image::images/topic_inspect_play_events.png[play-events]
 
 Or use the KSQL query editor in Control Center to inspect the topic:
 
@@ -90,8 +86,6 @@ At this time, you cannot inspect data in the topic `song-feed` using the topic i
 ----
 PRINT "song-feed" FROM BEGINNING;
 ----
-
-image::images/topic_ksql_song_feed.png[song-feed-ksql]
 
 So the source data looks as follows
 
@@ -131,16 +125,12 @@ Do some basic filtering on the newly created stream `ksql_playevents`, e.g. to q
 SELECT * FROM ksql_playevents WHERE DURATION > 30000 EMIT CHANGES;
 ----
 
-image::images/ksql_playevents_min_30_non_persistent.png[play-events]
-
 The above query is not persistent -- it will stop if this screen is closed. To make the query persistent and stay running until explicitly terminated, prepend the previous query with `CREATE STREAM <new stream name> AS`.  From the KSQL query editor:
 
 [source,bash]
 ----
 CREATE STREAM ksql_playevents_min_duration AS SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 ----
-
-image::images/ksql_playevents_min_30_persistent.png[play-events]
 
 Now this persistent query will show in the queries list.
 
