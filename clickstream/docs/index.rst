@@ -68,56 +68,50 @@ are quite large and depending on your network connection may take
       zookeeper         /etc/confluent/docker/run        Up             2181/tcp, 2888/tcp, 3888/tcp  
 
 ---------------------------
-Create the Clickstream Data
+Browse the Clickstream Data
 ---------------------------
 
-A data generator is already running, simulating the stream of clicks. You can sample this stream by 
-using a console consumer:
+#. A data generator is already running, simulating the stream of clicks. Sample these messages in ``clickstream``:
 
-.. code:: bash
+   .. code:: bash
 
-    docker-compose exec tools confluent local consume clickstream -- --bootstrap-server kafka:29092 --property print.key=true --max-messages 5
+       docker-compose exec tools confluent local consume clickstream -- --bootstrap-server kafka:29092 --property print.key=true --max-messages 5
 
-*If you get the message `Broker: Leader not available`, try again after a moment, as the demo is still starting up.*
+   Your output should resemble: 
 
-This will stop after ten messages, and your output should resemble: 
-
-::
+   .. code:: bash
 
       122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /images/logo-small.png HTTP/1.1","status":"200","bytes":"14096","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
       122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /index.html HTTP/1.1","status":"407","bytes":"4196","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
       122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /site/login.html HTTP/1.1","status":"406","bytes":"4006","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      ...
 
 
-There are two other sets of data in Kafka topics that have been automatically
-populated. They hold information about the HTTP status codes, and users. 
+#. A second data generator is already running, this one for the HTTP status codes. Samples these messages in ``clickstream_codes``:
 
-#.  View the status codes data
-
-    .. codewithvars:: bash
+   .. code:: bash
 
        docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
     Your output should resemble:
 
-    ::
+   .. code:: bash
 
        406	{"code":406,"definition":"Not acceptable"}
        302	{"code":302,"definition":"Redirect"}
        302	{"code":302,"definition":"Redirect"}
 
-        ...
+#. A third data generator is already running, this one for the user information. Samples these messages in ``clickstream_users``:
 
-#.  View the user data
 
-    .. codewithvars:: bash
+   .. code:: bash
 
        docker-compose exec tools confluent local consume clickstream_users -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
 
     Your output should resemble:
 
-    ::
+   .. code:: bash
 
        1	{"user_id":1,"username":"Ferd88","registered_at":1490759617459,"first_name":"Curran","last_name":"Vanyard","city":"Palo Alto","level":"Gold"}
        2	{"user_id":2,"username":"bobk_43","registered_at":1457530469406,"first_name":"Antonio","last_name":"De Banke","city":"London","level":"Platinum"}
