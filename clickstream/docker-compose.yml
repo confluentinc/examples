@@ -62,6 +62,8 @@ services:
       KSQL_BOOTSTRAP_SERVERS: kafka:29092
       KSQL_LISTENERS: http://0.0.0.0:8088
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KSQL_AUTO_OFFSET_RESET: "earliest"
+      KSQL_COMMIT_INTERVAL_MS: 2000
       KSQL_KSQL_HIDDEN_TOPICS: '^_.*'
       # Setting KSQL_KSQL_CONNECT_WORKER_CONFIG enables embedded Kafka Connect
       KSQL_KSQL_CONNECT_WORKER_CONFIG: "/connect/connect.properties"

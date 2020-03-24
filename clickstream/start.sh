@@ -15,7 +15,8 @@ run script '/scripts/create-connectors.sql';
 exit ;
 EOF"
 
-sleep 5
+echo -e "\nSleeping 10 seconds\n"
+sleep 10
 
 # Run the KSQL queries
 docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
@@ -23,7 +24,8 @@ run script '/scripts/clickstream-schema.sql';
 exit ;
 EOF"
 
-sleep 5
+echo -e "\nSleeping 10 seconds\n"
+sleep 10
 
 # Run the sink connector (with ksqlDB REST API) and setup Elasticsearch and Grafana
 docker-compose exec ksqldb-server bash -c '/scripts/ksql-tables-to-grafana.sh'
