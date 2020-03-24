@@ -47,8 +47,10 @@ curl -s -X "POST" "http://$CONNECT_HOST:8083/connectors/" \
     "type.name": "type.name=kafkaconnect",
     "topic.index.map": "'$TABLE_NAME':'$table_name'",
     "connection.url": "http://'$ELASTIC_HOST':9200",
-    "transforms": "FilterNulls",
-    "transforms.FilterNulls.type": "io.confluent.transforms.NullFilter"
+    "transforms": "FilterNulls,ExtractTimestamp",
+    "transforms.FilterNulls.type": "io.confluent.transforms.NullFilter",
+    "transforms.ExtractTimestamp.type": "org.apache.kafka.connect.transforms.InsertField$Value",
+    "transforms.ExtractTimestamp.timestamp.field" : "EVENT_TS"
   }
 }' >>/tmp/log.txt 2>&1
 
