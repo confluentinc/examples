@@ -18,4 +18,6 @@ docker-compose exec elasticsearch bash -c '/scripts/elastic-dynamic-template.sh'
 docker-compose exec kafka-connect bash -c '/scripts/ksql-tables-to-grafana.sh'
 docker-compose exec grafana bash -c '/scripts/clickstream-analysis-dashboard.sh'
 
-echo -e "\n-> Navigate to the Grafana dashboard at http://localhost:3000/dashboard/db/click-stream-analysis.\n\nLogin with user ID admin and password admin.\n\n"
+echo -e "\n\nNavigate to:"
+echo -e "- Grafana dashboard: http://localhost:3000"
+echo -e "- Confluent Control Center: http://localhost:9021"
