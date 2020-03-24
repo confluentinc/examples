@@ -6,7 +6,7 @@ On-Prem Kafka to Cloud
 This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.
 
-.. figure:: images/schema-registry-local.jpg
+.. figure:: images/services-in-cloud.jpg
     :alt: image
 
 ========
@@ -17,36 +17,37 @@ The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 * |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
-* KSQL: stream processing on topics `users` and `pageviews` in |ccloud|.  The KSQL queries resemble those in the :ref:`KSQL Tutorial <ksql-create-a-stream-and-table>`, but instead of KSQL streams backed to a local cluster, they are backed to your |ccloud| cluster. The KSQL server itself is running locally.
+* KSQL: Confluent Cloud KSQL running queries on input topics `users` and `pageviews` in |ccloud|.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `users` in the |ccloud| cluster
   * Confluent Replicator: copies the topic `pageviews` from the local cluster to the |ccloud| cluster
 
-* |sr-long|: by default, the demo runs with a locally-running |sr| and the Kafka data is written in Avro format.
+* |sr-long|: the demo runs with Confluent Cloud Schema Registry, and the Kafka data is written in Avro format.
 
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
-          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud| with KSQL.
+          do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
+Warning
+=======
 
-========
-Run demo
-========
+This demo uses real |ccloud| resources.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
+
 
 Prerequisites
--------------
+=============
 
 1. The following are prerequisites for the demo:
 
--  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only
--  :ref:`Confluent Cloud CLI <ccloud-install-cli>` installed on your machine, version `v0.185.0` or higher
--  :ref:`Confluent CLI <cli-install>` installed on your machine, version `v0.157.0` or higher (note: as of CP 5.3, the Confluent CLI is a separate download)
+-  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only. Do not use a production cluster.
+-  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
 -  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
 -  jq
 
 2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
-By default, the demo looks for this configuration file at ``~/.ccloud/config``. You can change this file location in the demo's ``config.sh``.
+By default, the demo looks for this configuration file at ``~/.ccloud/config``.
 
 3. This demo has been validated with:
 
@@ -56,40 +57,75 @@ By default, the demo looks for this configuration file at ``~/.ccloud/config``. 
 -  MacOS 10.12
 
 
-Steps
+========
+Run demo
+========
+
+Setup
 -----
 
+#. By default, the demo reads the configuration parameters for your |ccloud| environment from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster, replacing the values in ``<...>`` below particular for your |ccloud| environment:
 
-1. Confirm the prerequisites above are satisfied, especially the |ccloud| configuration file at ``~/.ccloud/config``. 
+   .. code:: shell
 
-2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
+      $ cat $HOME/.ccloud/config
+      bootstrap.servers=<BROKER ENDPOINT>
+      ssl.endpoint.identification.algorithm=https
+      security.protocol=SASL_SSL
+      sasl.mechanism=PLAIN
+      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+      schema.registry.url=https://<SR ENDPOINT>
+      schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+      basic.auth.credentials.source=USER_INFO
+      ksql.endpoint=https://<KSQL ENDPOINT>
+      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+
+   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
+
+   .. code:: shell
+
+      # Login
+      ccloud login --url https://confluent.cloud
+
+      # BROKER ENDPOINT
+      ccloud kafka cluster list
+      ccloud kafka cluster use
+      ccloud kafka cluster describe
+
+      # SR ENDPOINT
+      ccloud schema-registry cluster describe
+
+      # KSQL ENDPOINT
+      ccloud ksql app list
+
+      # Credentials: API key and secret, one for each resource above
+      ccloud api-key create
+
+#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
+
+   .. codewithvars:: bash
+
+     git clone https://github.com/confluentinc/examples
+     cd examples
+     git checkout |release|-post
+
+#. Change directory to the |ccloud| demo.
 
    .. sourcecode:: bash
 
-     $ git clone https://github.com/confluentinc/examples
+     $ cd ccloud
 
-3. Change directory to the |ccloud| demo.
+Run
+---
 
-   .. sourcecode:: bash
+#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password.
 
-     $ cd examples/ccloud
+   .. code:: shell
 
-4. By default, the demo runs with a locally running |sr| and locally running KSQL server. However, both of these services are available in |ccloud|, and if you prefer to use either of those |ccloud| services instead:
+      ccloud login --url https://confluent.cloud
 
-   .. figure:: images/services-in-cloud.jpg
-       :alt: image
 
-   For Confluent Cloud |sr| (in `preview`):
-
-   a. :ref:`Enable <cloud-sr-config>` Confluent Cloud |sr| prior to running the demo
-   b.  Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
-
-   For Confluent Cloud KSQL (in `preview`):
-
-   a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
-   b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
-
-5. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
+#. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
@@ -99,7 +135,7 @@ Steps
       # For Docker Compose
       $ ./start-docker.sh
 
-6. Use Google Chrome to view the |c3| GUI at http://localhost:9021 . Click on the top-right button that shows the current date, and change ``Last 4 hours`` to ``Last 30 minutes``.
+#. Log into the Confluent Cloud UI at http://confluent.cloud . Use Google Chrome to view the |c3| GUI at http://localhost:9021 . 
 
 
 
@@ -110,43 +146,19 @@ Playbook
 |ccloud|
 -------------------
 
-1. You must have access to an initialized, working |ccloud| cluster. To sign up for the service, go to `Confluent Cloud page <https://www.confluent.io/confluent-cloud/>`__. Validate you have a configuration file for your |ccloud| cluster. By default, the demo looks for the configuration file at `~/.ccloud/config` (you can change this file location in `config.sh`).
+#. Validate you can list topics in your cluster.
 
    .. sourcecode:: bash
 
-     $ cat ~/.ccloud/config
-     bootstrap.servers=<BROKER ENDPOINT>
-     ssl.endpoint.identification.algorithm=https
-     security.protocol=SASL_SSL
-     sasl.mechanism=PLAIN
-     sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-     # If you are using Confluent Cloud Schema Registry
-     basic.auth.credentials.source=USER_INFO
-     schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-     schema.registry.url=https://<SR ENDPOINT>
+     ccloud kafka topic list
 
-2. Validate you can list topics in your cluster.
+#. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
 
    .. sourcecode:: bash
 
-     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --list
-
-3. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
-
-   .. sourcecode:: bash
-
-     $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" ~/.ccloud/config | tail -1` --command-config ~/.ccloud/config --topic test --create --replication-factor 3 --partitions 6
-     Topic "test" created.
-     $ confluent local produce test -- --cloud --config ~/.ccloud/config 
-     a
-     b
-     c
-     ^C
-     $ confluent local consume test -- --cloud --config ~/.ccloud/config --from-beginning
-     a
-     b
-     c
-     ^CProcessed a total of 3 messages.
+     ccloud kafka topic create test
+     ccloud kafka topic produce test
+     ccloud kafka topic consume test -b
 
 
 |c3|
@@ -187,25 +199,13 @@ Playbook
 KSQL
 ----
 
-1. If you are running Confluent Cloud KSQL, you will need to use the Cloud UI to copy/paste the KSQL queries from the `ksql.commands` file.  Otherwise, for locally running KSQL server, the KSQL are automatically created.
-
-2. If you are running KSQL server locally, it is listening on port 8089 for KSQL CLI connections. You have two options for interfacing with KSQL.
-
-   (a) Run KSQL CLI to get to the KSQL CLI prompt.
-
-       .. sourcecode:: bash
-
-          $ ksql http://localhost:8089
-
-   (b) Run the preview KSQL web interface. Navigate your browser to ``http://localhost:8089/index.html``
-
-3. At the KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
+#. At the Confluent Cloud KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
 
    .. sourcecode:: bash
 
       ksql> SHOW PROPERTIES;
 
-4. View the existing KSQL streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
+#. View the existing KSQL streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -233,7 +233,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-5. View the existing KSQL tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
+#. View the existing KSQL tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
 
    .. sourcecode:: bash
 
@@ -259,7 +259,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-6. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
+#. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -287,14 +287,14 @@ KSQL
       (Statistics of the local KSQL server interaction with the Kafka topic pageviews_enriched_r8_r9)
       
 
-7. At the KSQL prompt, view three messages from different KSQL streams and tables.
+#. At the KSQL prompt, view three messages from different KSQL streams and tables.
 
    .. sourcecode:: bash
 
       ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 LIMIT 3;
       ksql> SELECT * FROM USERS_ORIGINAL LIMIT 3;
 
-8. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names shown above, and |c3| is showing the records that are incoming to each query.
+#. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names shown above, and |c3| is showing the records that are incoming to each query.
 
 For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
 
@@ -324,20 +324,47 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 
    .. sourcecode:: bash
 
-     $ kafka-topics --zookeeper localhost:2181  --describe --topic pageviews
-     Topic:pageviews	PartitionCount:12	ReplicationFactor:1	Configs:
-	     Topic: pageviews	Partition: 0	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 1	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 2	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 3	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 4	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 5	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 6	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 7	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 8	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 9	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 10	Leader: 0	Replicas: 0	Isr: 0
-	     Topic: pageviews	Partition: 11	Leader: 0	Replicas: 0	Isr: 0
+     $ ccloud kafka topic describe test
+     Topic: test PartitionCount: 6 ReplicationFactor: 3
+       Topic | Partition | Leader | Replicas |   ISR    
+     +-------+-----------+--------+----------+---------+
+       test  |         0 |      3 | [3 4 0]  | [3 4 0]  
+       test  |         1 |      6 | [6 3 7]  | [6 3 7]  
+       test  |         2 |      7 | [7 8 6]  | [7 8 6]  
+       test  |         3 |      1 | [1 2 3]  | [1 2 3]  
+       test  |         4 |      8 | [8 5 1]  | [8 5 1]  
+       test  |         5 |      0 | [0 1 4]  | [0 1 4]  
+     
+     Configuration
+      
+                        Name                   |        Value         
+     +-----------------------------------------+---------------------+
+       compression.type                        | producer             
+       leader.replication.throttled.replicas   |                      
+       message.downconversion.enable           | true                 
+       min.insync.replicas                     |                   2  
+       segment.jitter.ms                       |                   0  
+       cleanup.policy                          | delete               
+       flush.ms                                | 9223372036854775807  
+       follower.replication.throttled.replicas |                      
+       segment.bytes                           |          1073741824  
+       retention.ms                            |           604800000  
+       flush.messages                          | 9223372036854775807  
+       message.format.version                  | 2.3-IV1              
+       file.delete.delay.ms                    |               60000  
+       max.compaction.lag.ms                   | 9223372036854775807  
+       max.message.bytes                       |             2097164  
+       min.compaction.lag.ms                   |                   0  
+       message.timestamp.type                  | CreateTime           
+       preallocate                             | false                
+       index.interval.bytes                    |                4096  
+       min.cleanable.dirty.ratio               |                 0.5  
+       unclean.leader.election.enable          | false                
+       delete.retention.ms                     |            86400000  
+       retention.bytes                         |                  -1  
+       segment.ms                              |           604800000  
+       message.timestamp.difference.max.ms     | 9223372036854775807  
+       segment.index.bytes                     |            10485760  
 
 
 3. View the replicated topics ``pageviews`` in the |ccloud| cluster. In |c3|, for a given topic listed
@@ -358,16 +385,11 @@ a self-managed cluster, and the destination cluster is |ccloud|.
 Confluent Schema Registry
 -------------------------
 
-The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the :ref:`Confluent Schema Registry <schemaregistry_intro>`.
-Depending on how you set `USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY` in the start script, you may be running |sr-long| locally or |ccloud| |sr|.
-Either way, you will get a consistent experience with |sr|.
+The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the |ccloud| |sr|.
 
 1. View all the |sr| subjects.
 
    .. sourcecode:: bash
-
-        # Locally running Schema Registry
-        $ curl http://localhost:8085/subjects/ | jq .
 
         # Confluent Cloud Schema Registry
         $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects

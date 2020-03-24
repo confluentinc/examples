@@ -14,9 +14,9 @@ Follow along with the video [Demo: Build a Streaming Application with KSQL](http
 
 ## Local
 
-As with the other demos in this repo, you may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
+You may run the entire demo end-to-end with `./start.sh`, and it runs on your local Confluent Platform install.  This requires the following:
 
-* [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.music)
+* [Confluent Platform 5.5](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.music)
 * Java 1.8 to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
 * Maven to compile the data generator, i.e. the `KafkaMusicExampleDriver` class
 
@@ -29,6 +29,8 @@ Follow the [step-by-step guide](live-coding-ksql-music.adoc). This requires the 
 
 # What Should I see?
 
-* If you are running Confluent Platform, use Confluent Control Center to view and create KSQL queries.  Open http://localhost:9021/clusters, click on  `controlcenter.cluster` -> `KSQL` -> `KSQL` to open the editor.
-![image](images/ksql-editor.png)
+* If you are running Confluent Platform, use Confluent Control Center to view and manage KSQL queries.  Using Google Chrome, navigate to http://localhost:9021/
+
+![image](images/ksql-flow.png)
+
 * Instead of using the music demos's REST endpoints, use KSQL to inspect the data.

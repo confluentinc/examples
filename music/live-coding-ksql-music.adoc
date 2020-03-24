@@ -7,9 +7,12 @@ v1.00, 4 Sept 2018
 
 == Introduction
 
-In this tutorial, we show you how to build a demo streaming application with KSQL.  This application continuously computes, in real-time, top music charts based on a stream of song play events.
-
-Does this demo sound familiar?  It should.  Last year Confluent produced a https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html[similar demo application] using the Kafka Streams API.  Since then, Confluent has released production-ready https://www.confluent.io/product/ksql/[KSQL], the streaming SQL engine for Apache Kafka.  Users can choose between Kafka Streams or KSQL depending on the use case.  Both enable developers to build real-time, scalable, fault-tolerant applications with exactly once capabilities, for Confluent Cloud and on-premises Kafka deployments. Here we take the same music application concept and rewrite it using KSQL so you can compare and contrast the experience.
+In this tutorial, we show you how to build a demo streaming application with KSQL.
+This application continuously computes, in real-time, top music charts based on a stream of song play events.
+It is the near equivalent demo to a https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html[similar demo application] using the Kafka Streams API.
+Users can choose between Kafka Streams or KSQL depending on the use case.
+Both enable developers to build real-time, scalable, fault-tolerant applications with exactly once capabilities, for Confluent Cloud and on-premises Kafka deployments.
+Here we take the same music application concept and rewrite it using KSQL so you can compare and contrast the experience.
 
 image::images/ksql-music-demo-overview.jpg[Diagram]
 
@@ -18,13 +21,13 @@ This tutorial accompanies:
 - https://www.youtube.com/watch?v=ExEWJVjj-RA[KSQL Streaming Application for Music Charts screencast]
 - https://github.com/confluentinc/examples/tree/5.4.0-post/music[automated KSQL demo]
 
-Don't forget to check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
+For help, check out the #ksql channel on our https://slackpass.io/confluentcommunity[Community Slack group]
 
 == Setup
 
 === Docker
 
-NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/examples/blob/5.4.0-post/music/start.sh[start script].
+NOTE: This tutorial assumes you are running the KSQL music demo application in Docker. You may alternatively run this demo on a Confluent Platform local install just by running the https://github.com/confluentinc/examples/blob/5.5.0-post/music/start.sh[start script].
 
 Clone this https://github.com/confluentinc/examples[examples repo].
 
@@ -62,13 +65,9 @@ The Docker compose file includes a container that auto-generates source data to 
 
 image::images/ksql-music-demo-source-data.jpg[source-data]
 
-After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center]. Select the `controlcenter.cluster` Cluster, then select `Topics`.  Find the topic and select `Inspect`.
+After you bring up the demo, use Google Chrome to navigate to http://localhost:9021[Confluent Control Center].  From `Topics`, select any topic and then view its messages.
 
 image::images/inspect_topic.png[inspect-topic]
-
-Inspect the topic `play-events` :
-
-image::images/topic_inspect_play_events.png[play-events]
 
 Or use the KSQL query editor in Control Center to inspect the topic:
 
@@ -87,8 +86,6 @@ At this time, you cannot inspect data in the topic `song-feed` using the topic i
 ----
 PRINT "song-feed" FROM BEGINNING;
 ----
-
-image::images/topic_ksql_song_feed.png[song-feed-ksql]
 
 So the source data looks as follows
 
@@ -128,16 +125,12 @@ Do some basic filtering on the newly created stream `ksql_playevents`, e.g. to q
 SELECT * FROM ksql_playevents WHERE DURATION > 30000 EMIT CHANGES;
 ----
 
-image::images/ksql_playevents_min_30_non_persistent.png[play-events]
-
 The above query is not persistent -- it will stop if this screen is closed. To make the query persistent and stay running until explicitly terminated, prepend the previous query with `CREATE STREAM <new stream name> AS`.  From the KSQL query editor:
 
 [source,bash]
 ----
 CREATE STREAM ksql_playevents_min_duration AS SELECT * FROM ksql_playevents WHERE DURATION > 30000;
 ----
-
-image::images/ksql_playevents_min_30_persistent.png[play-events]
 
 Now this persistent query will show in the queries list.
 
