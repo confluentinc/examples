@@ -240,6 +240,7 @@ is named after the streams and tables captured in the ``clickstream-schema.sql``
 
 
 
+---------------
 Troubleshooting
 ---------------
 
