@@ -47,47 +47,13 @@ services:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
 
-  kafka-connect:
-    container_name: kafka-connect
-    image: confluentinc/cp-server-connect:5.5.x-latest
-    ports:
-      - 8083:8083
-    depends_on:
-      - zookeeper
-      - kafka
-      - schema-registry
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: "kafka:29092"
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: compose-connect-group
-      CONNECT_CONFIG_STORAGE_TOPIC: docker-connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: docker-connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: docker-connect-statuses
-      CONNECT_KEY_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect"
-      CONNECT_LOG4J_ROOT_LOGLEVEL: "INFO"
-      CONNECT_LOG4J_LOGGERS: "org.apache.kafka.connect.runtime.rest=WARN,org.reflections=ERROR"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_PLUGIN_PATH: '/usr/share/java'
-      ELASTIC_HOST: elasticsearch
-      CONNECT_HOST: kafka-connect
-      GRAFANA_HOST: grafana
-    volumes:
-     - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
-     - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
-
-  ksql-server:
-    container_name: ksql-server
-    image: confluentinc/cp-ksql-server:5.5.x-latest
+  ksqldb-server:
+    container_name: ksqldb-server
+    image: confluentinc/ksqldb-server:0.7.0
+    #image: confluentinc/cp-ksql-server:5.5.x-latest
     ports: 
       - 8088:8088
+      - 8083:8083
     depends_on:
       - kafka
       - schema-registry
@@ -96,17 +62,67 @@ services:
       KSQL_BOOTSTRAP_SERVERS: kafka:29092
       KSQL_LISTENERS: http://0.0.0.0:8088
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://schema-registry:8081
-      KSQL_KSQL_CONNECT_URL: "http://kafka-connect:8083"
+      KSQL_KSQL_HIDDEN_TOPICS: '^_.*'
+      # Setting KSQL_KSQL_CONNECT_WORKER_CONFIG enables embedded Kafka Connect
+      KSQL_KSQL_CONNECT_WORKER_CONFIG: "/connect/connect.properties"
+      # Kafka Connect config below
+      KSQL_CONNECT_BOOTSTRAP_SERVERS: "kafka:29092"
+      KSQL_CONNECT_REST_ADVERTISED_HOST_NAME: 'ksqldb'
+      KSQL_CONNECT_REST_PORT: 8083
+      KSQL_CONNECT_GROUP_ID: ksqldb-kafka-connect-group-01
+      KSQL_CONNECT_CONFIG_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-configs
+      KSQL_CONNECT_OFFSET_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-offsets
+      KSQL_CONNECT_STATUS_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-status
+      KSQL_CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KSQL_CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: 'false'
+      KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: '1'
+      KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: '1'
+      KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: '1'
+      KSQL_CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+      KSQL_CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components/,/data/connect-jars'
+      CONNECT_HOST: ksqldb-server
+      ELASTIC_HOST: elasticsearch
+      GRAFANA_HOST: grafana
+    # If you want to use the Confluent Hub installer to d/l component, but make them available
+    # when running this offline, spin up the stack once and then run : 
+    #   docker cp ksqldb:/usr/share/confluent-hub-components ./data/connect-jars
+    volumes:
+      - $PWD/data:/data
+      - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
+      - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
+    command: 
+      # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
+      - bash 
+      - -c 
+      - |
+        # Manually install the Confluent Hub client
+        # This is ugly af but works
+        cd ~
+        rm confluent-hub-client-latest.tar.gz
+        wget http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz
+        tar xf confluent-hub-client-latest.tar.gz
+        export PATH=$PATH:~/bin/
+        #
+        echo "Installing connector plugins"
+        mkdir -p /usr/share/confluent-hub-components/
+        confluent-hub install --no-prompt --component-dir /usr/share/confluent-hub-components/ confluentinc/kafka-connect-datagen:0.3.0
+        confluent-hub install --no-prompt --component-dir /usr/share/confluent-hub-components/ confluentinc/kafka-connect-elasticsearch:5.4.1
+        #
+        echo "Launching ksqlDB"
+        /usr/bin/docker/run & 
+        #
+        sleep infinity
 
   ksql-cli:
     container_name: ksql-cli
     image: confluentinc/cp-ksql-cli:5.5.x-latest
     depends_on:
-      - ksql-server
+      - ksqldb-server
     entrypoint: /bin/sh
     tty: true
     volumes:
-      - $PWD/ksql/ksql-clickstream-demo/demo:/usr/share/doc/clickstream
+      - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
 
   tools:
     image: cnfltraining/training-tools:5.4
@@ -114,41 +130,6 @@ services:
     container_name: tools
     entrypoint: /bin/bash
     tty: true
-
-  # Runs the Kafka KSQL data generator
-  datagen:
-    container_name: datagen
-    # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
-    image: confluentinc/ksql-examples:5.5.x-latest
-    depends_on:
-      - kafka
-      - schema-registry
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 300 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8081 300 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 20 && \
-                       ksql-datagen \
-                          bootstrap-server=kafka:29092 \
-                          quickstart=clickstream_codes \
-                          format=json \
-                          topic=clickstream_codes \
-                          maxInterval=20 \
-                          iterations=100 && \
-                       ksql-datagen \
-                          bootstrap-server=kafka:29092 \
-                          quickstart=clickstream_users \
-                          format=json \
-                          topic=clickstream_users \
-                          maxInterval=10 \
-                          iterations=1000 && \
-                       ksql-datagen \
-                          quickstart=clickstream \
-                          format=json \
-                          topic=clickstream \
-                          maxInterval=100 \
-                          bootstrap-server=kafka:29092'"
 
   elasticsearch:
     container_name: elasticsearch
@@ -180,14 +161,14 @@ services:
       - zookeeper
       - kafka
       - schema-registry
-      - ksql-server
+      - ksqldb-server
     ports:
       - 9021:9021
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
-      CONTROL_CENTER_CONNECT_CLUSTER: 'kafka-connect:8083'
-      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_CONNECT_CLUSTER: 'ksqldb-server:8083'
+      CONTROL_CENTER_KSQL_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONTROL_CENTER_REPLICATION_FACTOR: 1
