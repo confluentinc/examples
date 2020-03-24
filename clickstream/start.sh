@@ -15,8 +15,8 @@ run script '/scripts/create-connectors.sql';
 exit ;
 EOF"
 
-echo -e "\nSleeping 10 seconds\n"
-sleep 10
+echo -e "\nSleeping 30 seconds\n"
+sleep 30
 
 # Run the KSQL queries
 docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
