@@ -26,4 +26,4 @@ else
     url="/dashboard/db/click-stream-analysis"
 fi
 
-echo -e "Navigate to:\n\thttp://localhost:3000${url}\n(Default user: admin / password: admin)"
+#echo -e "Navigate to:\n\thttp://localhost:3000${url}\n(Default user: admin / password: admin)"

@@ -36,7 +36,7 @@ do
     curl -s -X "DELETE" "http://$GRAFANA_HOST:3000/api/datasources/name/""$table_name"   --user admin:admin  >>/tmp/log.txt 2>&1
 
     # Wire in the new connection path
-    echo -e "\t-> Connecting ksqlDB -> Elastic -> Grafana" "$table_name"  2>&1
+    echo -e "\t-> Connecting ksqlDB->Elastic->Grafana" "$table_name"  2>&1
     ./ksql-connect-es-grafana.sh "$table_name"  2>&1
 done
 

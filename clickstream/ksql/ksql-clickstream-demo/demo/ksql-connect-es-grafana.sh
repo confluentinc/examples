@@ -32,8 +32,6 @@ echo -e "\t-> Connecting:" $table_name
 # Note the addition of the FilterNulls transform, which converts null values to null records, which Connect ignores.
 echo -e "\t\t-> Adding Kafka Connect Elastic Source es_sink_$TABLE_NAME"
 
-echo "CONNECT_HOST: $CONNECT_HOST"
-echo "TABLE_NAME: $TABLE_NAME"
 curl -s -X "POST" "http://$CONNECT_HOST:8083/connectors/" \
      -H "Content-Type: application/json" \
      -d $'{
@@ -42,10 +40,10 @@ curl -s -X "POST" "http://$CONNECT_HOST:8083/connectors/" \
     "schema.ignore": "true",
     "topics": "'$TABLE_NAME'",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": false,
     "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
     "key.ignore": "true",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "type.name": "type.name=kafkaconnect",
     "topic.index.map": "'$TABLE_NAME':'$table_name'",
     "connection.url": "http://'$ELASTIC_HOST':9200",
