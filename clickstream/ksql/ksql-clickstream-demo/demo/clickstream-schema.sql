@@ -16,7 +16,7 @@ CREATE table events_per_min AS SELECT userid, count(*) AS events FROM clickstrea
 
 -- 3. BUILD STATUS_CODES
 -- static table
-CREATE TABLE clickstream_codes (code int, definition varchar) with (key='code', kafka_topic = 'clickstream_codes', value_format = 'json');
+CREATE TABLE clickstream_codes (rowkey INTEGER KEY, code int, definition varchar) with (key='code', kafka_topic = 'clickstream_codes', value_format = 'json');
 
 -- 4. BUILD PAGE_VIEWS
 CREATE TABLE pages_per_min AS SELECT userid, count(*) AS pages FROM clickstream WINDOW HOPPING (size 60 second, advance by 5 second) WHERE request like '%html%' GROUP BY userid ;
@@ -44,7 +44,7 @@ CREATE TABLE ENRICHED_ERROR_CODES_COUNT AS SELECT code, definition, COUNT(*) AS 
 ----------------------------------------------------------------------------------------------------------------------------
 
 -- users lookup table
-CREATE TABLE WEB_USERS (user_id int, registered_At BIGINT, username varchar, first_name varchar, last_name varchar, city varchar, level varchar) with (key='user_id', kafka_topic = 'clickstream_users', value_format = 'json');
+CREATE TABLE WEB_USERS (rowkey INTEGER KEY, user_id int, registered_At BIGINT, username varchar, first_name varchar, last_name varchar, city varchar, level varchar) with (key='user_id', kafka_topic = 'clickstream_users', value_format = 'json');
 
 ----------------------------------------------------------------------------------------------------------------------------
 -- User experience monitoring
