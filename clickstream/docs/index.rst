@@ -224,12 +224,8 @@ Send the KSQL tables to Elasticsearch and Grafana.
         {"id":1,"slug":"click-stream-analysis","status":"success","uid":"lUHTGDTmz","url":"/d/lUHTGDTmz/click-stream-analysis","version":4}
 
 
-        Navigate to:
-                http://localhost:3000/d/lUHTGDTmz/click-stream-analysis
-        (Default user: admin / password: admin)
-
 #.  Open your your browser using the URL output from the previous step's command.
-    You can login with user ID ``admin`` and password ``admin``.
+    You can login with user ID ``user`` and password ``user``.
 
     **Important:** If you already have Grafana UI open, you may need to
     enter the specific clickstream URL output by the previous step

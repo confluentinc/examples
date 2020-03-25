@@ -115,6 +115,8 @@ services:
       - 3000:3000
     environment:
       GRAFANA_HOST: grafana
+      GF_SECURITY_ADMIN_USER: user
+      GF_SECURITY_ADMIN_PASSWORD: user
     volumes:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 

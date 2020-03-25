@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #curl -X "GET" "http://localhost:3000/api/dashboards/db/click-stream-analysis" \
 #        -H "Content-Type: application/json" \
-#	     --user admin:admin
+#	     --user user:user
 
 if [[ -z "${GRAFANA_HOST}" ]]; then
   echo -e "GRAFANA_HOST not set, defaulting to localhost"
@@ -12,7 +12,7 @@ echo "Loading Grafana ClickStream Dashboard"
 
 RESP="$(curl -s -X "POST" "http://$GRAFANA_HOST:3000/api/dashboards/db" \
 	    -H "Content-Type: application/json" \
-	     --user admin:admin \
+	     --user user:user \
 	     --data-binary @/scripts/clickstream-analysis-dashboard.json)"
 
 #echo $RESP
@@ -26,4 +26,4 @@ else
     url="/dashboard/db/click-stream-analysis"
 fi
 
-#echo -e "Navigate to:\n\thttp://localhost:3000${url}\n(Default user: admin / password: admin)"
+#echo -e "Navigate to:\n\thttp://localhost:3000${url}\n(Default user: user / password: user)"

@@ -38,7 +38,7 @@ docker-compose exec grafana bash -c '/scripts/clickstream-analysis-dashboard.sh'
 
 cat <<EOF
 Navigate to:
-- Grafana dashboard (username/password is admin/admin):
+- Grafana dashboard (username/password is user/user):
       http://localhost:3000
 - Confluent Control Center:
       http://localhost:9021
