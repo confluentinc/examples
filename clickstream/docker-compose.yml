@@ -49,8 +49,8 @@ services:
 
   ksqldb-server:
     container_name: ksqldb-server
-    image: confluentinc/ksqldb-server:0.7.0
-    #image: confluentinc/cp-ksql-server:5.5.x-latest
+    #image: confluentinc/ksqldb-server:0.7.0
+    image: confluentinc/cp-ksql-server:5.5.x-latest
     ports: 
       - 8088:8088
       - 8083:8083
@@ -93,28 +93,7 @@ services:
       - $PWD/data:/data
       - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
       - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
-    command: 
-      # In the command section, $ are replaced with $$ to avoid the error 'Invalid interpolation format for "command" option'
-      - bash 
-      - -c 
-      - |
-        # Manually install the Confluent Hub client
-        # This is ugly af but works
-        cd ~
-        rm confluent-hub-client-latest.tar.gz
-        wget http://client.hub.confluent.io/confluent-hub-client-latest.tar.gz
-        tar xf confluent-hub-client-latest.tar.gz
-        export PATH=$PATH:~/bin/
-        #
-        echo "Installing connector plugins"
-        mkdir -p /usr/share/confluent-hub-components/
-        confluent-hub install --no-prompt --component-dir /usr/share/confluent-hub-components/ confluentinc/kafka-connect-datagen:0.3.0
-        confluent-hub install --no-prompt --component-dir /usr/share/confluent-hub-components/ confluentinc/kafka-connect-elasticsearch:5.4.1
-        #
-        echo "Launching ksqlDB"
-        /usr/bin/docker/run & 
-        #
-        sleep infinity
+      - $PWD/confluent-hub-components/:/usr/share/confluent-hub-components
 
   ksql-cli:
     container_name: ksql-cli

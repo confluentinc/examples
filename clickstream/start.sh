@@ -5,6 +5,10 @@
 
 ./stop.sh
 
+# Get jars for source and sink connectors
+docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.3.0
+docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:5.4.1
+
 docker-compose up -d
 echo -e "\nSleeping 60 seconds while demo starts\n"
 sleep 60
