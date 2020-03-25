@@ -32,8 +32,8 @@ echo -e "\nSleeping 10 seconds\n"
 sleep 10
 
 # Run the sink connector (with ksqlDB REST API) and setup Elasticsearch and Grafana
-docker-compose exec ksqldb-server bash -c '/scripts/ksql-tables-to-grafana.sh'
 docker-compose exec elasticsearch bash -c '/scripts/elastic-dynamic-template.sh'
+docker-compose exec ksqldb-server bash -c '/scripts/ksql-tables-to-grafana.sh'
 docker-compose exec grafana bash -c '/scripts/clickstream-analysis-dashboard.sh'
 
 cat <<EOF
