@@ -7,7 +7,7 @@ Cloud ETL Demo
 ==============
 
 This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: images/topology.png
    :alt: image
@@ -18,7 +18,7 @@ This enables you to:
 *  Build business applications on a full event streaming platform
 *  Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
 *  Use Kafka to aggregate data in single source of truth
-*  Harness the power of `KSQL <https://www.confluent.io/product/ksql/>`__ for stream processing
+*  Harness the power of `ksqlDB <https://www.confluent.io/product/ksql/>`__ for stream processing
 
 
 End-to-end Streaming ETL
@@ -30,9 +30,9 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
    - :ref:`cc_kinesis-source`
 
--  KSQL: streaming SQL engine that enables real-time data processing against Kafka
+-  ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
 
-   - `Confluent Cloud KSQL <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
+   - `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
 
 -  Cloud storage sink connector: writes data from Kafka topics to cloud storage, one of:
 
@@ -48,19 +48,19 @@ Data Flow
 
 The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventLogs.json|cloud-etl/eventLogs.json`.
 
-+-----------------------+-----------------------+---------------------+
-| Component             | Consumes From         | Produces To         |
-+=======================+=======================+=====================+
-| Kinesis source        | Kinesis stream        | Kafka topic         |
-| connector             | ``demo-logs``         | ``eventLogs``       |
-+-----------------------+-----------------------+---------------------+
-| KSQL                  | ``eventLogs``         | KSQL streams and    |
-|                       |                       | tables              |
-+-----------------------+-----------------------+---------------------+
-| GCS/S3/Blob sink      | KSQL tables           | GCS/S3/Blob         |
-| connector             | ``COUNT_PER_SOURCE``, |                     |
-|                       | ``SUM_PER_SOURCE``    |                     |
-+-----------------------+-----------------------+---------------------+
++-----------------------+-----------------------+-----------------------+
+| Component             | Consumes From         | Produces To           |
++=======================+=======================+=======================+
+| Kinesis source        | Kinesis stream        | Kafka topic           |
+| connector             | ``demo-logs``         | ``eventLogs``         |
++-----------------------+-----------------------+-----------------------+
+| ksqlDB                | ``eventLogs``         | ksqlDB streams and    |
+|                       |                       | tables                |
++-----------------------+-----------------------+-----------------------+
+| GCS/S3/Blob sink      | ksqlDB tables         | GCS/S3/Blob           |
+| connector             | ``COUNT_PER_SOURCE``, |                       |
+|                       | ``SUM_PER_SOURCE``    |                       |
++-----------------------+-----------------------+-----------------------+
 
 Warning
 =======
@@ -75,7 +75,7 @@ Cloud services
 --------------
 
 -  `Confluent Cloud cluster <https://confluent.cloud>`__: for development only. Do not use a production cluster.
--  `Confluent Cloud KSQL <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ provisioned in your |ccloud|
+-  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ provisioned in your |ccloud|
 -  AWS or GCP or Azure access
 
 Local Tools
@@ -112,10 +112,10 @@ Because this demo interacts with real resources in Kinesis, a destination storag
       schema.registry.url=https://<SR ENDPOINT>
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       basic.auth.credentials.source=USER_INFO
-      ksql.endpoint=https://<KSQL ENDPOINT>
-      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+      ksql.endpoint=https://<ksqlDB ENDPOINT>
+      ksql.basic.auth.user.info=<ksqlDB API KEY>:<ksqlDB API SECRET>
 
-   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
+   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated ksqlDB cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
 
    .. code:: shell
 
@@ -130,7 +130,7 @@ Because this demo interacts with real resources in Kinesis, a destination storag
       # SR ENDPOINT
       ccloud schema-registry cluster describe
    
-      # KSQL ENDPOINT
+      # ksqlDB ENDPOINT
       ccloud ksql app list
    
       # Credentials: API key and secret, one for each resource above
@@ -252,12 +252,12 @@ Validate
         kafka.endpoint      | SASL_SSL://pkc-4r087.us-west2.gcp.confluent.cloud:9092   
 
 
-#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the KSQL tab to view the `flow <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html#data-flow>`__ through your KSQL application:
+#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html#data-flow>`__ through your ksqlDB application:
 
    .. figure:: images/flow.png
       :alt: image
 
-#. The demo's :devx-examples:`KSQL commands|cloud-etl/ksql.commands` used KSQL's REST API to generate a KSQL TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a KSQL TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. Use the Confluent Cloud KSQL UI or its REST API to interact with the KSQL application:
+#. The demo's :devx-examples:`ksqlDB commands|cloud-etl/ksql.commands` used ksqlDB's REST API to generate a ksqlDB TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a ksqlDB TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
 
    .. code:: bash
 

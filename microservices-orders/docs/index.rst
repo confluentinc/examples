@@ -14,7 +14,7 @@ Overview
 
 The tutorial is based on a small microservices ecosystem, showcasing an order management workflow, such as one might find in retail and online shopping.
 It is built using Kafka Streams, whereby  business events that describe the order management workflow propagate through this ecosystem.  
-The blog post `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ outlines the approach used.
+The blog post `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ outlines the approach used.
 
 .. figure:: images/microservices-demo.png
     :alt: image
@@ -39,7 +39,7 @@ The Orders Service also includes a blocking HTTP GET so that clients can read th
 
 There is a simple service that sends emails, and another that collates orders and makes them available in a search index using Elasticsearch. 
 
-Finally, KSQL is running with persistent queries to enrich streams and to also check for fraudulent behavior.
+Finally, ksqlDB is running with persistent queries to enrich streams and to also check for fraudulent behavior.
 
 Here is a diagram of the microservices and the related Kafka topics.
 
@@ -76,17 +76,17 @@ It is build on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
-* KSQL: another variant of a fraud detection microservice
+* ksqlDB: another variant of a fraud detection microservice
 
-+-------------------------------------+-----------------------+-------------------------+
-| Other Clients                       | Consumes From         | Produces To             |
-+=====================================+=======================+=========================+
-| JDBC source connector               | DB                    | `customers`             |
-+-------------------------------------+-----------------------+-------------------------+
-| Elasticsearch sink connector        | `orders`              | ES                      |
-+-------------------------------------+-----------------------+-------------------------+
-| KSQL                                | `orders`, `customers` | KSQL streams and tables |
-+-------------------------------------+-----------------------+-------------------------+
++-------------------------------------+-----------------------+---------------------------+
+| Other Clients                       | Consumes From         | Produces To               |
++=====================================+=======================+===========================+
+| JDBC source connector               | DB                    | `customers`               |
++-------------------------------------+-----------------------+---------------------------+
+| Elasticsearch sink connector        | `orders`              | ES                        |
++-------------------------------------+-----------------------+---------------------------+
+| ksqlDB                              | `orders`, `customers` | ksqlDB streams and tables |
++-------------------------------------+-----------------------+---------------------------+
 
 For the end-to-end demo, the code that creates the order events via REST calls to the Orders Service and generates the initial inventory is provided by the following applications:
 
@@ -111,7 +111,7 @@ You will get a lot more out of this tutorial if you have first learned the conce
 To learn how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems, we recommend:
 
 * If you have lots of time: `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__, a book by Ben Stopford.
-* If you do not have lots of time: `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ or `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__.
+* If you do not have lots of time: `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ or `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__.
 
 For more learning on Kafka Streams API that you can use as a reference while working through this tutorial, we recommend:
 
@@ -125,7 +125,7 @@ Environment Setup
 
 Local:
 
-* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, KSQL and |sr-long| integration, and streams monitoring capabilities
+* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, ksqlDB and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
@@ -177,7 +177,7 @@ After you have successfully run the full solution, go through the execises in th
 * Exercise 4: Filtering and branching
 * Exercise 5: Stateful operations
 * Exercise 6: State stores
-* Exercise 7: Enrichment with KSQL
+* Exercise 7: Enrichment with ksqlDB
 
 For each exercise:
 
@@ -234,9 +234,9 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-#. Use |c3| to view Kafka data, write KSQL queries, manage Kafka connectors, and monitoring your applications:
+#. Use |c3| to view Kafka data, write ksqlDB queries, manage Kafka connectors, and monitoring your applications:
 
-   * KSQL tab: view KSQL streams and tables, and to create KSQL queries. Otherwise, run the KSQL CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the KSQL Editor
+   * ksqlDB tab: view ksqlDB streams and tables, and to create ksqlDB queries. Otherwise, run the ksqlDB CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the ksqlDB Editor
    * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
    * Data Streams tab: view the throughput and latency performance of the microservices
 
@@ -617,35 +617,35 @@ To test your code, save off the project's working solution, copy your version of
       mvn compile -Dtest=io.confluent.examples.streams.microservices.InventoryServiceTest test -f kafka-streams-examples/pom.xml
 
 
-Exercise 7: Enrichment with KSQL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exercise 7: Enrichment with ksqlDB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Confluent KSQL <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against Apache Kafka.
+`Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against Apache Kafka.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
-KSQL is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
+ksqlDB is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
 .. figure:: images/microservices-exercise-7.png
     :alt: image
     :width: 600px
 
-You can use KSQL to merge streams of data in real time by using a SQL-like `join` syntax.
-A `KSQL join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
-The result of a KSQL join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
-KSQL also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
+You can use ksqlDB to merge streams of data in real time by using a SQL-like `join` syntax.
+A `ksqlDB join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
+The result of a ksqlDB join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
+ksqlDB also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
 You can use these to build stateful aggregates on streaming data. 
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
-If you are running on local install, then type `ksql` to get to the KSQL CLI prompt.
-If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksql-server:8088` to get to the KSQL CLI prompt.
+If you are running on local install, then type `ksql` to get to the ksqlDB CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksql-server:8088` to get to the ksqlDB CLI prompt.
 
-Assume you already have a KSQL stream of orders called `orders` and a KSQL table of customers called `customers_table`.
-From the KSQL CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
+Assume you already have a ksqlDB stream of orders called `orders` and a ksqlDB table of customers called `customers_table`.
+From the ksqlDB CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
 Then create the following persistent queries:
 
-#. TODO 7.1: create a new KSQL stream that does a stream-table join between `orders` and `customers_table` based on customer id.
-#. TODO 7.2: create a new KSQL table that counts if a customer submits more than 2 orders in a 30 second time window.
+#. TODO 7.1: create a new ksqlDB stream that does a stream-table join between `orders` and `customers_table` based on customer id.
+#. TODO 7.2: create a new ksqlDB table that counts if a customer submits more than 2 orders in a 30 second time window.
 
 .. tip::
 
@@ -657,7 +657,7 @@ Then create the following persistent queries:
 
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/ksql.commands`.
 
-The CLI parser will give immediate feedback whether your KSQL queries worked or not.
+The CLI parser will give immediate feedback whether your ksqlDB queries worked or not.
 Use ``SELECT * FROM <stream or table name>;`` to see the rows in each query.
 
 
@@ -669,7 +669,7 @@ Additional Resources
 * `Kafka Streams videos <https://www.youtube.com/watch?v=Z3JKCLG3VP4&list=PLa7VYi0yPIH1vDclVOB49xUruBAWkOCZD>`__
 * `Kafka Streams documentation <https://docs.confluent.io/current/streams/index.html>`__
 * `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__
-* `Building a Microservices Ecosystem with Kafka Streams and KSQL <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__
+* `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__
 * `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__
 * `No More Silos: How to Integrate Your Databases with Apache Kafka and CDC <https://www.confluent.io/blog/no-more-silos-how-to-integrate-your-databases-with-apache-kafka-and-cdc>`__
 * `Getting Your Feet Wet with Stream Processing – Part 1: Tutorial for Developing Streaming Applications <https://www.confluent.io/blog/stream-processing-part-1-tutorial-developing-streaming-applications/>`__

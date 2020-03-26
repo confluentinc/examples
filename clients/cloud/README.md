@@ -27,7 +27,7 @@ The following subset includes examples with Confluent Schema Registry and Avro d
 
 # Other Confluent Cloud Demos
 
-You may also run an [end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) that showcases hybrid Kafka clusters: moving from self-managed to Confluent Cloud, with other streaming processing applications (e.g. KSQL) and components of the Confluent Platform (e.g. Confluent Replicator, Confluent Control Center, and Confluent Schema Registry).
+You may also run an [end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) that showcases hybrid Kafka clusters: moving from self-managed to Confluent Cloud, with other streaming processing applications (e.g. ksqlDB) and components of the Confluent Platform (e.g. Confluent Replicator, Confluent Control Center, and Confluent Schema Registry).
 
 # Confluent Cloud
 
