@@ -49,7 +49,7 @@ services:
 
   ksqldb-server:
     container_name: ksqldb-server
-    image: confluentinc/cp-ksql-server:5.5.x-latest
+    image: confluentinc/cp-ksqldb-server:5.5.x-latest
     ports: 
       - 8088:8088
       - 8083:8083
