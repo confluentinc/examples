@@ -60,6 +60,6 @@ echo -e "\t\t-> Adding Grafana Source"
 ## Add the Elastic DataSource into Grafana
 curl -s -X "POST" "http://$GRAFANA_HOST:3000/api/datasources" \
 	    -H "Content-Type: application/json" \
-	     --user admin:admin \
+	     --user user:user \
 	     -d $'{"id":1,"orgId":1,"name":"'$table_name'","type":"elasticsearch","typeLogoUrl":"public/app/plugins/datasource/elasticsearch/img/elasticsearch.svg","access":"proxy","url":"http://'$ELASTIC_HOST':9200","password":"","user":"","database":"'$table_name'","basicAuth":false,"isDefault":false,"jsonData":{"timeField":"EVENT_TS"}}' \
        >>/tmp/log.txt 2>&1

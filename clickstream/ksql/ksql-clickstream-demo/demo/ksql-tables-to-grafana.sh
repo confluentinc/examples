@@ -33,10 +33,10 @@ do
     curl -s -X "DELETE" "http://$CONNECT_HOST:8083/connectors/es_sink_""$TABLE_NAME"  >>/tmp/log.txt 2>&1
 
     echo -e "\t-> Remove any existing Grafana config"  
-    curl -s -X "DELETE" "http://$GRAFANA_HOST:3000/api/datasources/name/""$table_name"   --user admin:admin  >>/tmp/log.txt 2>&1
+    curl -s -X "DELETE" "http://$GRAFANA_HOST:3000/api/datasources/name/""$table_name"   --user user:user  >>/tmp/log.txt 2>&1
 
     # Wire in the new connection path
-    echo -e "\t-> Connecting KSQL->Elastic->Grafana " "$table_name"  2>&1
+    echo -e "\t-> Connecting ksqlDB->Elastic->Grafana" "$table_name"  2>&1
     ./ksql-connect-es-grafana.sh "$table_name"  2>&1
 done
 
@@ -47,7 +47,7 @@ echo -e "\n\nDone!"
 # ========================
 #
 # Extract datasources from grafana
-# curl -s "http://$GRAFANA_HOST:3000/api/datasources"  -u admin:admin|jq -c -M '.[]'
+# curl -s "http://$GRAFANA_HOST:3000/api/datasources"  -u user:user|jq -c -M '.[]'
 #
 # Delete a Grafana DataSource
 # curl -X "DELETE" "http://$GRAFANA_HOST:3000/api/datasources/name/

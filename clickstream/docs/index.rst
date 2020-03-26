@@ -53,19 +53,17 @@ are quite large and depending on your network connection may take
 
    ::
 
-           Name                    Command                  State                    Ports              
-      --------------------------------------------------------------------------------------------------
-      kafka-connect     /etc/confluent/docker/run        Up             0.0.0.0:8083->8083/tcp, 9092/tcp
-      control-center    /etc/confluent/docker/run        Up             0.0.0.0:9021->9021/tcp          
-      datagen           bash -c echo Waiting for K ...   Up                                             
-      elasticsearch     /usr/local/bin/docker-entr ...   Up             0.0.0.0:9200->9200/tcp, 9300/tcp
-      grafana           /run.sh                          Up             0.0.0.0:3000->3000/tcp          
-      kafka             /etc/confluent/docker/run        Up             9092/tcp                        
-      ksql-cli          /bin/sh                          Up                                             
-      ksql-server       /etc/confluent/docker/run        Up (healthy)   0.0.0.0:8088->8088/tcp          
-      schema-registry   /etc/confluent/docker/run        Up             8081/tcp                        
-      tools             /bin/bash                        Up                                             
-      zookeeper         /etc/confluent/docker/run        Up             2181/tcp, 2888/tcp, 3888/tcp  
+             Name                    Command               State                       Ports                     
+        ---------------------------------------------------------------------------------------------------------
+        control-center    /etc/confluent/docker/run        Up      0.0.0.0:9021->9021/tcp                        
+        elasticsearch     /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 9300/tcp              
+        grafana           /run.sh                          Up      0.0.0.0:3000->3000/tcp                        
+        kafka             /etc/confluent/docker/run        Up      9092/tcp                                      
+        ksql-cli          /bin/sh                          Up                                                    
+        ksqldb-server     bash -c # Manually install ...   Up      0.0.0.0:8083->8083/tcp, 0.0.0.0:8088->8088/tcp
+        schema-registry   /etc/confluent/docker/run        Up      8081/tcp                                      
+        tools             /bin/bash                        Up                                                    
+        zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp    
 
 ---------------------------
 Browse the Clickstream Data
@@ -92,6 +90,7 @@ Browse the Clickstream Data
    .. code:: bash
 
        docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
+
 
     Your output should resemble:
 
@@ -166,6 +165,11 @@ Verify the data
        :alt: Clickstream data
 
 
+#.  In |c3|, view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+
+    .. image:: images/c3_connectors.png
+       :alt: Connectors
+
 
 .. _clickstream-view-grafana:
 
@@ -220,12 +224,8 @@ Send the KSQL tables to Elasticsearch and Grafana.
         {"id":1,"slug":"click-stream-analysis","status":"success","uid":"lUHTGDTmz","url":"/d/lUHTGDTmz/click-stream-analysis","version":4}
 
 
-        Navigate to:
-                http://localhost:3000/d/lUHTGDTmz/click-stream-analysis
-        (Default user: admin / password: admin)
-
 #.  Open your your browser using the URL output from the previous step's command.
-    You can login with user ID ``admin`` and password ``admin``.
+    You can login with user ID ``user`` and password ``user``.
 
     **Important:** If you already have Grafana UI open, you may need to
     enter the specific clickstream URL output by the previous step
