@@ -2,7 +2,7 @@
 version: '2'
 services:
   ksql-datagen:
-    image: confluentinc/ksql-examples:5.4.x-latest
+    image: ${REPOSITORY}/ksql-examples:${TAG}
     hostname: ksql-datagen
     container_name: ksql-datagen
     volumes:
@@ -17,7 +17,7 @@ services:
       STREAMS_SASL_MECHANISM: "PLAIN"
       STREAMS_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
   ksql-datagen-avro:
-    image: confluentinc/ksql-examples:5.4.x-latest
+    image: ${REPOSITORY}/ksql-examples:${TAG}
     hostname: ksql-datagen-avro
     container_name: ksql-datagen-avro
     volumes:
