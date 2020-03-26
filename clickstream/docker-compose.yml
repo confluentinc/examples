@@ -66,6 +66,7 @@ services:
       KSQL_KSQL_HIDDEN_TOPICS: '^_.*'
       # Configure embedded Kafka Connect
       KSQL_KSQL_CONNECT_WORKER_CONFIG: "/scripts/connect-config/ksqldb-embedded-connect.properties"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql-server/log4j.properties"
       KSQL_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_HOST: ksqldb-server
       ELASTIC_HOST: elasticsearch
