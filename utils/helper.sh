@@ -509,7 +509,6 @@ function validate_confluent_cloud_schema_registry() {
 
 function get_and_compile_kafka_streams_examples() {
 
-  echo "pwd: $PWD"
   [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
   (cd kafka-streams-examples && git fetch && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH} && git pull && mvn package -DskipTests)
   if [[ $? != 0 ]]; then
