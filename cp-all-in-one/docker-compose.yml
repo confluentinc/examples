@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: ${REPOSITORY}/cp-zookeeper:${TAG}
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: ${REPOSITORY}/cp-server:${TAG}
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker
     container_name: broker
     depends_on:
@@ -35,7 +35,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   schema-registry:
-    image: ${REPOSITORY}/cp-schema-registry:${TAG}
+    image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     hostname: schema-registry
     container_name: schema-registry
     depends_on:
@@ -83,7 +83,7 @@ services:
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
 
   control-center:
-    image: ${REPOSITORY}/cp-enterprise-control-center:${TAG}
+    image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -108,7 +108,7 @@ services:
       PORT: 9021
 
   ksql-server:
-    image: ${REPOSITORY}/cp-ksql-server:${TAG}
+    image: ${REPOSITORY}/cp-ksql-server:${CONFLUENT_DOCKER_TAG}
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
@@ -129,7 +129,7 @@ services:
       KSQL_KSQL_CONNECT_URL: "http://connect:8083"
 
   ksql-cli:
-    image: ${REPOSITORY}/cp-ksql-cli:${TAG}
+    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
     container_name: ksql-cli
     depends_on:
       - broker
@@ -139,7 +139,7 @@ services:
     tty: true
 
   ksql-datagen:
-    image: ${REPOSITORY}/ksql-examples:${TAG}
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     hostname: ksql-datagen
     container_name: ksql-datagen
     depends_on:
@@ -162,7 +162,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   rest-proxy:
-    image: ${REPOSITORY}/cp-kafka-rest:${TAG}
+    image: ${REPOSITORY}/cp-kafka-rest:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - zookeeper
       - broker
