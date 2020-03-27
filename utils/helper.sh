@@ -507,6 +507,18 @@ function validate_confluent_cloud_schema_registry() {
   return 0
 }
 
+function get_and_compile_kafka_streams_examples() {
+
+  [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
+  (cd kafka-streams-examples && git fetch && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH} && git pull && mvn clean compile -DskipTests package)
+  if [[ $? != 0 ]]; then
+    echo "ERROR: There seems to be a BUILD FAILURE error? Please troubleshoot"
+    exit 1
+  fi
+
+  return 0
+}
+
 function get_cluster_id_kafka () { 
   KAFKA_CLUSTER_ID=$(zookeeper-shell localhost:2181 get /cluster/id 2> /dev/null | grep version | jq -r .id)
   if [[ -z "$KAFKA_CLUSTER_ID" ]]; then
