@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:6.0.x-latest
+    image: ${REPOSITORY}/cp-zookeeper:${TAG}
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:6.0.x-latest
+    image: ${REPOSITORY}/cp-enterprise-kafka:${TAG}
     hostname: kafka
     container_name: kafka
     ports:
@@ -36,7 +36,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:6.0.x-latest
+    image: ${REPOSITORY}/cp-enterprise-control-center:${TAG}
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -71,7 +71,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
-    image: confluentinc/cp-kafka:6.0.x-latest
+    image: ${REPOSITORY}/cp-kafka:${TAG}
     hostname: kafka-create-topics
     container_name: kafka-create-topics
     depends_on:
@@ -126,7 +126,7 @@ services:
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.2-SNAPSHOT.jar
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
       # Connect producer
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
@@ -179,7 +179,7 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.4.2-SNAPSHOT.jar
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
@@ -208,7 +208,7 @@ services:
   # This container is just to transfer Replicator jars to the Connect worker
   # It is not used as a Connect worker
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:6.0.x-latest
+    image: ${REPOSITORY}/cp-enterprise-replicator:${TAG}
     hostname: replicator
     container_name: replicator
     volumes:
