@@ -2,13 +2,13 @@
 version: '2.2'
 services:
   zookeeper:
-    image: ${REPOSITORY}/cp-zookeeper:${TAG}
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: ${REPOSITORY}/cp-server:${TAG}
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     ports:
       - '9092:9092'
     depends_on:
@@ -32,7 +32,7 @@ services:
 
 
   control-center:
-    image: ${REPOSITORY}/cp-enterprise-control-center:${TAG}
+    image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     container_name: control-center
     cpus: 0.7
     restart: always
@@ -69,7 +69,7 @@ services:
 
 
   schema-registry:
-    image: ${REPOSITORY}/cp-schema-registry:${TAG}
+    image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - zookeeper
       - kafka
@@ -80,7 +80,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
 
   kafka-connect-cp:
-    image: ${REPOSITORY}/cp-server-connect:${TAG}
+    image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
     hostname: kafka-connect-cp
     container_name: kafka-connect-cp
     ports:
@@ -115,7 +115,7 @@ services:
 
   # KSQL
   ksql-server:
-    image: ${REPOSITORY}/cp-ksql-server:${TAG}
+    image: ${REPOSITORY}/cp-ksql-server:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
       - schema-registry
@@ -164,7 +164,7 @@ services:
 
   # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
-    image: ${REPOSITORY}/ksql-examples:${TAG}
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
       - schema-registry
@@ -187,7 +187,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   ksql-cli:
-    image: ${REPOSITORY}/cp-ksql-cli:${TAG}
+    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
       - schema-registry

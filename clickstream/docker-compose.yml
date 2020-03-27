@@ -3,14 +3,14 @@ version: '2'
 services:
   zookeeper:
     container_name: zookeeper
-    image: ${REPOSITORY}/cp-zookeeper:${TAG}
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
     container_name: kafka
-    image: ${REPOSITORY}/cp-server:${TAG}
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - zookeeper
     #ports:
@@ -39,7 +39,7 @@ services:
 
   schema-registry:
     container_name: schema-registry
-    image: ${REPOSITORY}/cp-schema-registry:${TAG}
+    image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - zookeeper
       - kafka
@@ -49,7 +49,7 @@ services:
 
   ksqldb-server:
     container_name: ksqldb-server
-    image: ${REPOSITORY}/cp-ksqldb-server:${TAG}
+    image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
     ports: 
       - 8088:8088
       - 8083:8083
@@ -83,7 +83,7 @@ services:
 
   ksql-cli:
     container_name: ksql-cli
-    image: ${REPOSITORY}/cp-ksql-cli:${TAG}
+    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - ksqldb-server
     entrypoint: /bin/sh
@@ -123,7 +123,7 @@ services:
      - $PWD/ksql/ksql-clickstream-demo/demo:/scripts
 
   control-center:
-    image: ${REPOSITORY}/cp-enterprise-control-center:${TAG}
+    image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     hostname: control-center
     container_name: control-center
     depends_on:
