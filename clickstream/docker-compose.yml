@@ -49,7 +49,7 @@ services:
 
   ksqldb-server:
     container_name: ksqldb-server
-    image: ${REPOSITORY}/cp-ksqldb-server:0.7.0
+    image: ${REPOSITORY}/cp-ksqldb-server:${TAG}
     ports: 
       - 8088:8088
       - 8083:8083
