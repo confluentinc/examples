@@ -510,8 +510,7 @@ function validate_confluent_cloud_schema_registry() {
 function get_and_compile_kafka_streams_examples() {
 
   [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-  (cd kafka-streams-examples && git fetch && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH} && git pull)
-  [[ -f "kafka-streams-examples/target/kafka-streams-examples-${CONFLUENT}-standalone.jar" ]] || (cd kafka-streams-examples && mvn package -DskipTests)
+  (cd kafka-streams-examples && git fetch && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH} && git pull & mvn package -DskipTests)
   if [[ $? != 0 ]]; then
     echo "ERROR: There seems to be a BUILD FAILURE error with confluentinc/kafka-streams-examples. Please troubleshoot and try again."
     exit 1
