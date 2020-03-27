@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.4.1
+    image: ${REPOSITORY}/cp-zookeeper:${TAG}
     hostname: zookeeper
     container_name: zookeeper
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-enterprise-kafka:5.4.1
+    image: ${REPOSITORY}/cp-enterprise-kafka:${TAG}
     hostname: kafka
     container_name: kafka
     ports:
@@ -36,7 +36,7 @@ services:
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.4.1
+    image: ${REPOSITORY}/cp-enterprise-control-center:${TAG}
     hostname: control-center
     container_name: control-center
     depends_on:
@@ -71,7 +71,7 @@ services:
 
   # This "container" is a workaround to pre-create topics
   kafka-create-topics:
-    image: confluentinc/cp-kafka:5.4.1
+    image: ${REPOSITORY}/cp-kafka:${TAG}
     hostname: kafka-create-topics
     container_name: kafka-create-topics
     depends_on:
@@ -208,7 +208,7 @@ services:
   # This container is just to transfer Replicator jars to the Connect worker
   # It is not used as a Connect worker
   replicator-for-jar-transfer:
-    image: confluentinc/cp-enterprise-replicator:5.4.1
+    image: ${REPOSITORY}/cp-enterprise-replicator:${TAG}
     hostname: replicator
     container_name: replicator
     volumes:
