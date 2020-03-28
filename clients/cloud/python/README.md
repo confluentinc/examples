@@ -19,6 +19,23 @@ $ ./producer.py -f $HOME/.confluent/librdkafka.config -t hello
 %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
 ```
 
+## CA Certificates
+
+### macOS
+
+On newer versions of macOS (e.g. 10.15), it may be required to add an additional dependency:
+
+```bash
+$ pip install certifi
+```
+
+Add the following property to the config dict objects in `producer.py` and `consumer.py`:
+
+```
+ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
+
+```
+
 ### CentOS
 
 ```bash
