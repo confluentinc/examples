@@ -29,7 +29,7 @@ sleep 10
 
 if is_ce; then PROPERTIES=" propertiesFile=$CONFLUENT_HOME/etc/ksql/datagen.properties"; else PROPERTIES=""; fi
 kafka-topics --zookeeper localhost:2181 --create --topic ratings --partitions 4 --replication-factor 1
-ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500 $PROPERTIES &>/dev/null &
+ksql-datagen quickstart=ratings format=avro topic=ratings msgRate=1 $PROPERTIES &>/dev/null &
 sleep 10
 
 ksql http://localhost:8088 <<EOF
