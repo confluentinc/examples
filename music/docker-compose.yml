@@ -69,7 +69,7 @@ services:
                        cub kafka-ready -b kafka:29092 1 20 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
                        cub sr-ready schema-registry 8081 20 && \
-                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-6.0.0-SNAPSHOT-standalone.jar \
+                       java -cp /usr/share/java/kafka-streams-examples/kafka-streams-examples-6.0.0-beta200328203642-standalone.jar \
                        io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver \
                        kafka:29092 http://schema-registry:8081'"
     environment:
