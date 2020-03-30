@@ -66,8 +66,8 @@ services:
       KSQL_KSQL_HIDDEN_TOPICS: '^_.*'
       # Configure embedded Kafka Connect
       KSQL_KSQL_CONNECT_WORKER_CONFIG: "/scripts/connect-config/ksqldb-embedded-connect.properties"
-      # Writes output to /usr/logs/ksql-kafka.log
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling2.properties -Dlog4j.debug"
+      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql-server/log4j.properties"
+      KSQL_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_HOST: ksqldb-server
       ELASTIC_HOST: elasticsearch
       GRAFANA_HOST: grafana
@@ -79,7 +79,6 @@ services:
       - $PWD/ksql/ksql-clickstream-demo/demo/:/scripts
       - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
       - $PWD/confluent-hub-components/:/usr/share/confluent-hub-components
-      - $PWD/log4j-rolling.properties:/etc/ksql/log4j-rolling2.properties
 
   ksql-cli:
     container_name: ksql-cli
