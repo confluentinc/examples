@@ -2,8 +2,9 @@
 
 * [Overview](#overview)
 * [Beginner Cloud](#beginner-cloud)
-* [Advanced Demo](#advanced-demo)
+* [Hybrid Cloud](#hybrid-cloud)
 * [Client Code Examples](#client-code-examples)
+* [Build Your Own Cloud Demo)(#build-your-own-cloud-demo)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
 
 
@@ -31,7 +32,18 @@ It steps through the following workflow.
 * Run a Java consumer: showcase a Wildcard ACL
 * Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
-# Advanced Demo
+
+# Cloud ETL
+
+The [cloud ETL demo](https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) showcases a cloud ETL solution leveraging all fully-managed services on Confluent Cloud.
+Using Confluent Cloud CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into Confluent Cloud, then a Confluent Cloud KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+
+The documentation for running this demo is at [https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud](https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud)
+
+![image](../cloud-etl/docs/images/topology.png)
+
+
+# Hybrid Cloud
 
 [This end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) showcases a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 Data streams into topics both a local cluster and a cluster in Confluent Cloud, and Confluent Replicator copies the on-prem data to Confluent Cloud so that stream processing can happen in the Cloud.
@@ -58,6 +70,15 @@ If you are looking for code examples of producers writing to and consumers readi
 It provides client examples written in various programming languages.
 
 ![image](../clients/cloud/images/clients-all.png)
+
+
+# Build Your Own Cloud Demo
+
+As a next step, you may want to build your own custom demo or test environment.
+We have a Docker Compose file called (cp-all-in-one-cloud)[../cp-all-in-one-cloud/README.md] -- use this with your pre-configured Confluent Cloud instance.
+This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
+Using this as a foundation, you can then add any connectors or applications.
+
 
 # Auto-generate Configurations to connect to Confluent Cloud
 
