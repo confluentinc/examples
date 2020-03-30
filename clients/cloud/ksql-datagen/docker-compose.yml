@@ -7,7 +7,7 @@ services:
     container_name: ksql-datagen
     volumes:
       - $PWD/delta_configs/ksql-datagen.delta:/tmp/ksql-datagen.delta
-    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=json topic=test1 maxInterval=2000 bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
+    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=json topic=test1 msgRate=5 bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
@@ -22,7 +22,7 @@ services:
     container_name: ksql-datagen-avro
     volumes:
       - $PWD/delta_configs/ksql-datagen.delta:/tmp/ksql-datagen.delta
-    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=avro topic=test2 maxInterval=2000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
+    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=avro topic=test2 msgRate=5 schemaRegistryUrl=$SCHEMA_REGISTRY_URL bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"

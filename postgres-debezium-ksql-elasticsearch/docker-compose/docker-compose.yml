@@ -178,7 +178,7 @@ services:
                        cub sr-ready schema-registry 8081 300 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 20 && \
-		               /usr/bin/ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500 bootstrap-server=kafka:29092 schemaRegistryUrl=http://schema-registry:8081'"
+		               /usr/bin/ksql-datagen quickstart=ratings format=avro topic=ratings msgRate=10 bootstrap-server=kafka:29092 schemaRegistryUrl=http://schema-registry:8081'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"

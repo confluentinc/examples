@@ -29,14 +29,14 @@ screen -d -m -S CP_demo -t mysql mysql -uroot demo
 screen -S CP_demo -p 0 -X screen -t topic-raw kafka-avro-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://localhost:8081 --topic asgard.demo.customers-raw --from-beginning  | jq '.'
 screen -S CP_demo -p 0 -X screen -t topic-flat kafka-avro-console-consumer --bootstrap-server localhost:9092 --property schema.registry.url=http://localhost:8081 --topic asgard.demo.customers --from-beginning  | jq '.'
 screen -S CP_demo -p 0 -X screen -t ksql ksql
-screen -S CP_demo -p 0 -X screen -t datagen ~/git/ksql/bin/ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500
+screen -S CP_demo -p 0 -X screen -t datagen ~/git/ksql/bin/ksql-datagen quickstart=ratings format=avro topic=ratings msgRate=10
 ----
 
 === Start ratings datagen (if not already in `screen`)
 
 [source,bash]
 ----
-~/git/ksql/bin/ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500
+~/git/ksql/bin/ksql-datagen quickstart=ratings format=avro topic=ratings msgRate=10
 ----
 
 
