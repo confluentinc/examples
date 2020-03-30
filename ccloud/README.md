@@ -75,7 +75,7 @@ It provides client examples written in various programming languages.
 # Build Your Own Cloud Demo
 
 As a next step, you may want to build your own custom demo or test environment.
-We have a Docker Compose file called (cp-all-in-one-cloud)[../cp-all-in-one-cloud/README.md] -- use this with your pre-configured Confluent Cloud instance.
+We have a Docker Compose file called [cp-all-in-one-cloud](../cp-all-in-one-cloud/README.md) -- use this with your pre-configured Confluent Cloud instance.
 This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
 Using this as a foundation, you can then add any connectors or applications.
 
