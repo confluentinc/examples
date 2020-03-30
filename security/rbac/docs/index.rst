@@ -33,11 +33,12 @@ Caveats
 Prerequisites
 -------------
 
-* :ref:`Confluent CLI <cli-install>`: |confluent-cli| must be installed on your machine, version ``v0.127.0`` or higher (note: as of |cp| 5.3, the |confluent-cli| is a separate :ref:`download <cli-install>`).
+* Download `Confluent Platform <https://www.confluent.io/download/>`__ |release| tarball: without modified properties files or else the demo may not work.
 
-* `Confluent Platform 5.3 or higher <https://www.confluent.io/download/>`__: use a clean install of |cp| without modified properties files, or else the demo is not guaranteed to work.
+* This demo has been validated with the tarball download of |cp|, running macOS version 10.15.3, bash version 3.2.57 .  This demo may not work with deb/rpm installs.
 
 * jq tool must be installed on your machine.
+
 
 Run the demo
 ------------
