@@ -8,6 +8,7 @@ Produce messages to and consume messages from a Kafka cluster using [Confluent P
 * [Confluent's Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed on your machine. Check that you are using version 1.0.0 or higher (e.g., `pip show confluent-kafka`).
 * Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
 * If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+
 ## Configure SSL trust store
 
 Depending on your operating system or Linux distro you may need to take extra steps to set up the SSL CA root certificates. If your systems does not have the SSL CA root certificates properly set up, here is an example of an error message you may see.
@@ -19,19 +20,35 @@ $ ./producer.py -f $HOME/.confluent/librdkafka.config -t hello
 %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
 ```
 
+### macOS
+
+On newer versions of macOS (e.g. 10.15), it may be required to add an additional dependency:
+
+```bash
+$ pip install certifi
+```
+
+Add the `ssl.ca.location` property to the config dict object in `producer.py` and `consumer.py`, and its value should correspond to the location of the appropriate CA certificates file on your host:
+
+```
+ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
+
+```
+
 ### CentOS
 
 ```bash
 $ sudo yum reinstall ca-certificates
 ```
 
-Add the following property to the config dict objects in `producer.py` and `consumer.py`:
+Add the `ssl.ca.location` property to the config dict object in `producer.py` and `consumer.py`, and its value should correspond to the location of the appropriate CA certificates file on your host:
 
 ```
 ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
 ```
 
 For more information see the librdkafka docs on which this python producer is built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
+
 
 # Example 1: Hello World!
 
