@@ -28,7 +28,7 @@ On newer versions of macOS (e.g. 10.15), it may be required to add an additional
 $ pip install certifi
 ```
 
-Add the following property to the config dict objects in `producer.py` and `consumer.py`:
+Add the `ssl.ca.location` property to the config dict object in `producer.py` and `consumer.py`, and its value should correspond to the location of the appropriate CA certificates file on your host:
 
 ```
 ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
@@ -41,7 +41,7 @@ ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
 $ sudo yum reinstall ca-certificates
 ```
 
-Add the following property to the config dict objects in `producer.py` and `consumer.py`:
+Add the `ssl.ca.location` property to the config dict object in `producer.py` and `consumer.py`, and its value should correspond to the location of the appropriate CA certificates file on your host:
 
 ```
 ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
