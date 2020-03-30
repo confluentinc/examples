@@ -136,65 +136,44 @@ Now this persistent query will show in the queries list.
 
 === Create a new table
 
-Next let's work on the `song-feed` topic, which effectively represents a table of songs. Data in a KSQL `TABLE` are required to have key of type `String`. In this demo, the table can be keyed on the song's ID for joins and aggregations to work on that table.
+Next let's work on the `song-feed` topic, which effectively represents a table of songs.
 
-However the original Kafka topic has a key of type `Long` and the ID field is of type `BIGINT`. You can still create a `TABLE` with a few https://docs.confluent.io/current/ksql/docs/syntax-reference.html#what-to-do-if-your-key-is-not-set-or-is-in-a-different-format[simple steps]:
+The original Kafka topic has a key of type `Long`, which maps to ksqlDB's `BIGINT` sql type, and the ID field stores a copy of the key. To register the topic `song-feed`, from the KSQL query editor:
  
-* Create a `STREAM` from the original Kafka topic `song-feed`:
+* Create a `TABLE` from the original Kafka topic `song-feed`:
 
 [source,bash]
 ----
-CREATE STREAM ksql_songfeed WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO');
+CREATE TABLE ksql_song WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO', KEY='ID');
 ----
 
-* View the contents of this stream.  Before running this query, under `Add query properties`, set `auto.offset.reset=Earliest`.
+* View the contents of this table and confirm that the entries in this KSQL table have a `ROWKEY` that matches the String ID of the song.
  
 [source,bash]
 ----
-SELECT * FROM ksql_songfeed EMIT CHANGES limit 5;
+SELECT * FROM ksql_song EMIT CHANGES limit 5;
 ----
- 
-Then `DESCRIBE` the stream to see the fields associated with this topic and notice that the field `ID` is of type `BIGINT`.
+
+Then `DESCRIBE` the table to see the fields associated with this topic and notice that the field `ID` is of type `BIGINT`.
  
 [source,bash]
 ----
-DESCRIBE ksql_songfeed;
+DESCRIBE ksql_song;
 ----
 
-You can also `Describe` the stream via the C3 GUI to see the same output:
+You can also `Describe` the table via the C3 GUI to see the same output:
 
 image::images/describe_songfeed.png[describe-song-feed]
  
-* Use the `PARTITION BY` clause to assign a key and use the `CAST` function to change the field type to `String`.
- 
-[source,bash]
-----
-CREATE STREAM ksql_songfeedwithkey WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='AVRO') AS SELECT CAST(ID AS STRING) AS ID, ALBUM, ARTIST, NAME, GENRE FROM ksql_songfeed PARTITION BY ID;
-----
- 
-* Convert the above stream into a TABLE with the `ID` field as its key, which is now of type `String`. This TABLE is a materialized view of events with only the latest value for each key, which represents an up-to-date table of songs.
- 
-[source,bash]
-----
-CREATE TABLE ksql_songtable WITH (KAFKA_TOPIC='KSQL_SONGFEEDWITHKEY', VALUE_FORMAT='Avro', KEY='ID');
-----
-
-Confirm that the entries in this KSQL table have a `ROWKEY` that matches the String ID of the song.
-
-[source,bash]
-----
-SELECT * FROM ksql_songtable EMIT CHANGES limit 5;
-----
-
 === Join play events with the table of songs
 
-At this point we have created a stream of filtered play events called `ksql_playevents_min_duration` and a table of song metadata called `ksql_songtable`.
+At this point we have created a stream of filtered play events called `ksql_playevents_min_duration` and a table of song metadata called `ksql_song`.
 
 Enrich the stream of play events with song metadata using a Stream-Table `JOIN`. This will result in a new stream of play events enriched with descriptive song information like song title along with each play event.
 
 [source,bash]
 ----
-CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION, 1 AS KEYCOL FROM ksql_playevents_min_duration plays LEFT JOIN ksql_songtable songtable ON plays.SONG_ID = songtable.ID;
+CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION, 1 AS KEYCOL FROM ksql_playevents_min_duration plays LEFT JOIN ksql_song songs ON plays.SONG_ID = songs.ID;
 ----
 
 Notice the addition of a clause `1 AS KEYCOL.` For every row, this creates a new field `KEYCOL` that has a value of 1. `KEYCOL` can be later used in other derived streams and tables to do aggregations on a global basis.
