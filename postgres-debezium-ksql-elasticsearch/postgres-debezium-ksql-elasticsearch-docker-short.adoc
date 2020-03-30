@@ -162,7 +162,7 @@ CREATE STREAM CUSTOMERS_SRC WITH (KAFKA_TOPIC='asgard.public.customers', VALUE_F
 CREATE STREAM CUSTOMERS_SRC_REKEY WITH (PARTITIONS=1) AS SELECT * FROM CUSTOMERS_SRC PARTITION BY ID;
 -- Wait for a moment here; if you run the CTAS _immediately_ after the CSAS it may fail
 -- with error `Could not fetch the AVRO schema from schema registry. Subject not found.; error code: 40401`
-CREATE TABLE CUSTOMERS WITH (KAFKA_TOPIC='CUSTOMERS_SRC_REKEY', VALUE_FORMAT ='AVRO', KEY='ID');
+CREATE TABLE CUSTOMERS (ROWKEY INTEGER KEY) WITH (KAFKA_TOPIC='CUSTOMERS_SRC_REKEY', VALUE_FORMAT ='AVRO', KEY='ID');
 ----
 
 == Demo
