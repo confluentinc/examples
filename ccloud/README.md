@@ -4,7 +4,7 @@
 * [Beginner Cloud](#beginner-cloud)
 * [Hybrid Cloud](#hybrid-cloud)
 * [Client Code Examples](#client-code-examples)
-* [Build Your Own Cloud Demo)(#build-your-own-cloud-demo)
+* [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
 
 
