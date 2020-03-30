@@ -12,9 +12,7 @@ check_running_cp ${CONFLUENT_SHORT} || exit
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
 confluent local start
 
-[[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-(cd kafka-streams-examples && git fetch && git pull && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH})
-[[ -f "kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar" ]] || (cd kafka-streams-examples && mvn clean package -DskipTests)
+get_and_compile_kafka_streams_examples || exit 1
 java -cp kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
 
 sleep 5
