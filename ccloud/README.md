@@ -44,7 +44,7 @@ It includes:
 
 * Confluent Cloud
 * Confluent Cloud Schema Registry
-* KSQL
+* ksqlDB
 * Confluent Replicator
 * Confluent Control Center
 * Kafka Connect
@@ -66,8 +66,8 @@ Use these per-component configurations for Confluent Platform components and cli
 
 * Confluent Platform Components:
   * Confluent Schema Registry
-  * KSQL Data Generator
-  * KSQL server
+  * ksqlDB Data Generator
+  * ksqlDB server
   * Confluent Replicator (standalone binary)
   * Confluent Control Center
   * Kafka Connect

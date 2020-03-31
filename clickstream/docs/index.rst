@@ -1,7 +1,7 @@
 .. _clickstream-demo:
 
-Clickstream Data Analysis Pipeline Using KSQL
-=============================================
+Clickstream Data Analysis Pipeline Using ksqlDB
+===============================================
 
 These steps will guide you through how to setup your environment and run the clickstream analysis tutorial from a Docker container.
 
@@ -118,11 +118,11 @@ Browse the Clickstream Data
 
 
 
--------------------------------
-Load the Streaming Data to KSQL
--------------------------------
+---------------------------------
+Load the Streaming Data to ksqlDB
+---------------------------------
 
-#.  Launch the KSQL CLI:
+#.  Launch the ksqlDB CLI:
 
     .. code:: bash
 
@@ -176,7 +176,7 @@ Verify the data
 ---------------------------------------------
 Load the Clickstream Data in Grafana
 ---------------------------------------------
-Send the KSQL tables to Elasticsearch and Grafana.
+Send the ksqlDB tables to Elasticsearch and Grafana.
 
 #. Set up the required Elasticsearch document mapping template
 
@@ -184,7 +184,7 @@ Send the KSQL tables to Elasticsearch and Grafana.
 
        docker-compose exec elasticsearch bash -c '/scripts/elastic-dynamic-template.sh'
 
-#. Run this command to send the KSQL tables to Elasticsearch and
+#. Run this command to send the ksqlDB tables to Elasticsearch and
    Grafana:
 
    .. code:: bash
