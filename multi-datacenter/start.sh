@@ -7,36 +7,21 @@ check_jq || exit 1
 
 docker-compose up -d
 
-# Verify Kafka Connect dc1 has started within MAX_WAIT seconds
+# Verify Kafka Connect Worker connect-dc2 has started
 MAX_WAIT=120
-CUR_WAIT=0
-echo "Waiting up to $MAX_WAIT seconds for Kafka Connect to start"
-while [[ ! $(docker-compose logs connect-dc1) =~ "Finished starting connectors and tasks" ]]; do
-  sleep 10
-  CUR_WAIT=$(( CUR_WAIT+10 ))
-  if [[ "$CUR_WAIT" -gt "$MAX_WAIT" ]]; then
-    echo -e "\nERROR: The logs in connect-dc1 container do not show 'Finished starting connectors and tasks' after $MAX_WAIT seconds. Please troubleshoot with 'docker-compose ps' and 'docker-compose logs'.\n"
-    exit 1
-  fi
-done
-echo "Connect dc1 has started!"
+echo "Waiting up to $MAX_WAIT seconds for Connect to start"
+retry $MAX_WAIT check_connect_up connect-dc2 || exit 1
+retry $MAX_WAIT check_connect_up connect-dc1 || exit 1
+sleep 2 # give connect an exta moment to fully mature
+echo "connect-dc1 and connect-dc2 have started!"
 
-# Verify Kafka Connect dc2 has started within MAX_WAIT seconds
-MAX_WAIT=120
-CUR_WAIT=0
-echo "Waiting up to $MAX_WAIT seconds for Kafka Connect to start"
-while [[ ! $(docker-compose logs connect-dc2) =~ "Finished starting connectors and tasks" ]]; do
-  sleep 10
-  CUR_WAIT=$(( CUR_WAIT+10 ))
-  if [[ "$CUR_WAIT" -gt "$MAX_WAIT" ]]; then
-    echo -e "\nERROR: The logs in connect-dc2 container do not show 'Finished starting connectors and tasks' after $MAX_WAIT seconds. Please troubleshoot with 'docker-compose ps' and 'docker-compose logs'.\n"
-    exit 1
-  fi
-done
-echo "Connect dc2 has started!"
-
-echo "Sleeping 15 seconds to wait for topics to be populated"
-sleep 15
+# Verify topics exist
+MAX_WAIT=30
+echo "Waiting up to $MAX_WAIT seconds for topics to exist"
+retry $MAX_WAIT check_topic_exists broker-dc1 zookeeper-dc1:2181 topic1 || exit 1
+retry $MAX_WAIT check_topic_exists broker-dc1 zookeeper-dc1:2181 topic2 || exit 1
+retry $MAX_WAIT check_topic_exists broker-dc2 zookeeper-dc2:2182 topic1 || exit 1
+echo "Topics exist!"
 
 echo -e "\n\nReplicator: dc1 topic1 -> dc2 topic1"
 ./submit_replicator_dc1_to_dc2.sh
@@ -47,24 +32,23 @@ echo -e "\n\nReplicator: dc1 topic2 -> dc2 topic2.replica"
 echo -e "\n\nReplicator: dc2 topic1 -> dc1 topic1"
 ./submit_replicator_dc2_to_dc1.sh
 
-echo -e "\nsleeping 60s"
-sleep 60
+# Verify connectors are running
+MAX_WAIT=60
+echo
+echo "Waiting up to $MAX_WAIT seconds for connectors to be in RUNNING state"
+retry $MAX_WAIT check_connector_status_running 8382 replicator-dc1-to-dc2-topic1 || exit 1
+retry $MAX_WAIT check_connector_status_running 8382 replicator-dc1-to-dc2-topic2 || exit 1
+retry $MAX_WAIT check_connector_status_running 8381 replicator-dc2-to-dc1-topic1 || exit 1
+echo "Connectors are running!"
 
 # Register the same schema for the replicated topic topic2.replica as was created for the original topic topic2
 curl -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data "{\"schema\": $(curl -s http://localhost:8081/subjects/topic2-value/versions/latest | jq '.schema')}" http://localhost:8081/subjects/topic2.replica-value/versions
+echo
 
-# Verify Confluent Control Center has started within MAX_WAIT seconds
+# Verify Confluent Control Center has started
 MAX_WAIT=300
-CUR_WAIT=0
 echo "Waiting up to $MAX_WAIT seconds for Confluent Control Center to start"
-while [[ ! $(docker-compose logs control-center) =~ "Started NetworkTrafficServerConnector" ]]; do
-  sleep 10
-  CUR_WAIT=$(( CUR_WAIT+10 ))
-  if [[ "$CUR_WAIT" -gt "$MAX_WAIT" ]]; then
-    echo -e "\nERROR: The logs in control-center container do not show 'Started NetworkTrafficServerConnector' after $MAX_WAIT seconds. Please troubleshoot with 'docker-compose ps' and 'docker-compose logs'.\n"
-    exit 1
-  fi
-done
+retry $MAX_WAIT check_control_center_up control-center || exit 1
 echo "Control Center has started!"
 
 ./read-topics.sh
