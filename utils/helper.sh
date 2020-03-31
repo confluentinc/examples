@@ -723,10 +723,10 @@ check_control_center_up() {
 
 check_topic_exists() {
   containerName=$1
-  zkConn=$2
+  brokerConn=$2
   topic=$3
 
-  docker-compose exec $containerName kafka-topics --zookeeper $zkConn --describe --topic $topic >/dev/null
+  docker-compose exec $containerName kafka-topics --bootstrap-server $brokerConn --describe --topic $topic >/dev/null
   return $?
 }
 

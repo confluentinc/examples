@@ -18,9 +18,9 @@ echo "connect-dc1 and connect-dc2 have started!"
 # Verify topics exist
 MAX_WAIT=30
 echo "Waiting up to $MAX_WAIT seconds for topics to exist"
-retry $MAX_WAIT check_topic_exists broker-dc1 zookeeper-dc1:2181 topic1 || exit 1
-retry $MAX_WAIT check_topic_exists broker-dc1 zookeeper-dc1:2181 topic2 || exit 1
-retry $MAX_WAIT check_topic_exists broker-dc2 zookeeper-dc2:2182 topic1 || exit 1
+retry $MAX_WAIT check_topic_exists broker-dc1 broker-dc1:9091 topic1 || exit 1
+retry $MAX_WAIT check_topic_exists broker-dc1 broker-dc1:9091 topic2 || exit 1
+retry $MAX_WAIT check_topic_exists broker-dc2 broker-dc2:9092 topic1 || exit 1
 echo "Topics exist!"
 
 echo -e "\n\nReplicator: dc1 topic1 -> dc2 topic1"
