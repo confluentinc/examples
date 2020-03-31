@@ -679,6 +679,68 @@ function wait_for_connector_up() {
 
 }
 
+retry() {
+    local -r -i max_wait="$1"; shift
+    local -r cmd="$@"
+
+    local -i sleep_interval=5
+    local -i curr_wait=0
+
+    until $cmd
+    do
+        if (( curr_wait >= max_wait ))
+        then
+            echo "ERROR: Failed after $curr_wait seconds. Please troubleshoot and run again."
+            return 1
+        else
+            printf "."
+            curr_wait=$((curr_wait+sleep_interval))
+            sleep $sleep_interval
+        fi
+    done
+    printf "\n"
+}
+
+check_connect_up() {
+  containerName=$1
+
+  FOUND=$(docker-compose logs $containerName | grep "Herder started")
+  if [ -z "$FOUND" ]; then
+    return 1
+  fi
+  return 0
+}
+
+check_control_center_up() {
+  containerName=$1
+
+  FOUND=$(docker-compose logs $containerName | grep "Started NetworkTrafficServerConnector")
+  if [ -z "$FOUND" ]; then
+    return 1
+  fi
+  return 0
+}
+
+check_topic_exists() {
+  containerName=$1
+  brokerConn=$2
+  topic=$3
+
+  docker-compose exec $containerName kafka-topics --bootstrap-server $brokerConn --describe --topic $topic >/dev/null
+  return $?
+}
+
+check_connector_status_running() {
+  port=$1
+  connectorName=$2
+
+  STATE=$(curl --silent "http://localhost:$port/connectors/$connectorName/status" | jq -r '.connector.state')
+  if [[ "$STATE" != "RUNNING" ]]; then
+    return 1
+  fi
+  return 0
+}
+
 function ccloud_login(){
 
   URL=$1
