@@ -7,7 +7,7 @@ check_jq || exit 1
 
 docker-compose up -d
 
-# Verify Kafka Connect Worker connect-dc2 has started
+# Verify Kafka Connect workers have started
 MAX_WAIT=120
 echo "Waiting up to $MAX_WAIT seconds for Connect to start"
 retry $MAX_WAIT check_connect_up connect-dc2 || exit 1
