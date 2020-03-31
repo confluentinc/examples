@@ -638,7 +638,7 @@ In this exercise, you will create one persistent query that enriches the `orders
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
 If you are running on local install, then type `ksql` to get to the ksqlDB CLI prompt.
-If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksql-server:8088` to get to the ksqlDB CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksql-cli ksql http://ksqldb-server:8088` to get to the ksqlDB CLI prompt.
 
 Assume you already have a ksqlDB stream of orders called `orders` and a ksqlDB table of customers called `customers_table`.
 From the ksqlDB CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.

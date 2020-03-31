@@ -62,7 +62,7 @@ Whatever works for you :)
 [source,bash]
 ----
 cd docker-compose
-docker-compose exec ksql-cli ksql http://ksql-server:8088
+docker-compose exec ksql-cli ksql http://ksqldb-server:8088
 ----
 
 .Postgres CLI
@@ -86,7 +86,7 @@ docker-compose_datagen-ratings_1    bash -c echo Waiting for K ...   Up
 docker-compose_kafka-connect-cp_1   /etc/confluent/docker/run        Up      0.0.0.0:18083->18083/tcp, 8083/tcp, 9092/tcp
 docker-compose_kafka_1              /etc/confluent/docker/run        Up      0.0.0.0:9092->9092/tcp
 docker-compose_ksql-cli_1           /bin/sh                          Up
-docker-compose_ksql-server_1        /etc/confluent/docker/run        Up      8088/tcp
+docker-compose_ksqldb-server_1      /etc/confluent/docker/run        Up      8088/tcp
 docker-compose_postgres_1           docker-entrypoint.sh postgres    Up      5432/tcp
 docker-compose_schema-registry_1    /etc/confluent/docker/run        Up      8081/tcp
 docker-compose_zookeeper_1          /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp
