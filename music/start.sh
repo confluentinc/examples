@@ -13,7 +13,7 @@ echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.prop
 confluent local start
 
 get_and_compile_kafka_streams_examples || exit 1
-java -cp kafka-streams-examples/target/kafka-streams-examples-${JAR_VERSION}-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
+java -cp kafka-streams-examples/target/kafka-streams-examples-${CONFLUENT}-standalone.jar io.confluent.examples.streams.interactivequeries.kafkamusic.KafkaMusicExampleDriver &>/dev/null &
 
 sleep 5
 
