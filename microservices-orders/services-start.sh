@@ -4,7 +4,7 @@
 . ../utils/config.env
 
 RESTPORT=18894
-JAR=/usr/share/java/kafka-streams-examples/kafka-streams-examples-${JAR_VERSION}-standalone.jar
+JAR=/usr/share/java/kafka-streams-examples/kafka-streams-examples-${CONFLUENT}-standalone.jar
 
 java -cp $JAR io.confluent.examples.streams.microservices.OrdersService broker:9092 http://schema-registry:8081 localhost $RESTPORT > /dev/null 2>&1 &
 
