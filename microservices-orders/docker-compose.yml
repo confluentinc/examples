@@ -115,7 +115,7 @@ services:
       PORT: 9021
 
   ksql-server:
-    image: ${REPOSITORY}/cp-ksql-server:${CONFLUENT_DOCKER_TAG}
+    image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
     hostname: ksql-server
     container_name: ksql-server
     depends_on:
