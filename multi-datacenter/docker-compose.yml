@@ -2,7 +2,7 @@
 version: '2'
 services:
   zookeeper-dc1:
-    image: confluentinc/cp-zookeeper:5.5.x-latest
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-dc1
     container_name: zookeeper-dc1
     ports:
@@ -12,7 +12,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   zookeeper-dc2:
-    image: confluentinc/cp-zookeeper:5.5.x-latest
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-dc2
     container_name: zookeeper-dc2
     ports:
@@ -22,7 +22,7 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
 
   broker-dc1:
-    image: confluentinc/cp-server:5.5.x-latest
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker-dc1
     container_name: broker-dc1
     depends_on:
@@ -47,7 +47,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
 
   broker-dc2:
-    image: confluentinc/cp-server:5.5.x-latest
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker-dc2
     container_name: broker-dc2
     depends_on:
@@ -72,7 +72,7 @@ services:
       CONFLUENT_METRICS_ENABLE: 'true'
 
   schema-registry-dc1:
-    image: confluentinc/cp-schema-registry:5.5.x-latest
+    image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     hostname: schema-registry-dc1
     container_name: schema-registry-dc1
     restart: always
@@ -88,7 +88,7 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
 
   schema-registry-dc2:
-    image: confluentinc/cp-schema-registry:5.5.x-latest
+    image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     hostname: schema-registry-dc2
     container_name: schema-registry-dc2
     restart: always
@@ -106,7 +106,7 @@ services:
       SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: ERROR
 
   connect-dc2:
-    image: confluentinc/cp-enterprise-replicator:5.5.x-latest
+    image: ${REPOSITORY}/cp-enterprise-replicator:${CONFLUENT_DOCKER_TAG}
     hostname: connect-dc2
     container_name: connect-dc2
     depends_on:
@@ -149,7 +149,7 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
 
   connect-dc1:
-    image: confluentinc/cp-enterprise-replicator:5.5.x-latest
+    image: ${REPOSITORY}/cp-enterprise-replicator:${CONFLUENT_DOCKER_TAG}
     hostname: connect-dc1
     container_name: connect-dc1
     depends_on:
@@ -192,7 +192,7 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
 
   datagen-dc1-topic1:
-    image: confluentinc/ksql-examples:5.5.x-latest
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     hostname: datagen-dc1-topic1
     container_name: datagen-dc1-topic1
     depends_on:
@@ -207,7 +207,7 @@ services:
                        sleep 50 && \
                        cub sr-ready schema-registry-dc1 8081 90 && \
                        sleep 10 && \
-                       /usr/bin/ksql-datagen schema=/tmp/schema-dc1.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
+                       /usr/bin/ksql-datagen schema=/tmp/schema-dc1.avro key=userid format=avro topic=topic1 msgRate=1 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-silent.properties"
@@ -216,7 +216,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   datagen-dc1-topic2:
-    image: confluentinc/ksql-examples:5.5.x-latest
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     hostname: datagen-dc1-topic2
     container_name: datagen-dc1-topic2
     depends_on:
@@ -230,7 +230,7 @@ services:
                        sleep 50 && \
                        cub sr-ready schema-registry-dc1 8081 90 && \
                        sleep 20 && \
-                       /usr/bin/ksql-datagen format=avro quickstart=users topic=topic2 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
+                       /usr/bin/ksql-datagen format=avro quickstart=users topic=topic2 msgRate=1 schemaRegistryUrl=http://schema-registry-dc1:8081 bootstrap-server=broker-dc1:29091 propertiesFile=/tmp/datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-silent.properties"
@@ -239,7 +239,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   datagen-dc2-topic1:
-    image: confluentinc/ksql-examples:5.5.x-latest
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     hostname: datagen-dc2-topic1
     container_name: datagen-dc2-topic1
     depends_on:
@@ -254,7 +254,7 @@ services:
                        sleep 50 && \
                        cub sr-ready schema-registry-dc2 8082 90 && \
                        sleep 10 && \
-                       /usr/bin/ksql-datagen schema=/tmp/schema-dc2.avro key=userid format=avro topic=topic1 maxInterval=1000 schemaRegistryUrl=http://schema-registry-dc2:8082 bootstrap-server=broker-dc2:29092 propertiesFile=/tmp/datagen.properties'"
+                       /usr/bin/ksql-datagen schema=/tmp/schema-dc2.avro key=userid format=avro topic=topic1 msgRate=1 schemaRegistryUrl=http://schema-registry-dc2:8082 bootstrap-server=broker-dc2:29092 propertiesFile=/tmp/datagen.properties'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-silent.properties"
@@ -264,7 +264,7 @@ services:
 
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.5.x-latest
+    image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     hostname: control-center
     container_name: control-center
     depends_on:

@@ -2,13 +2,13 @@
 version: '2.2'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:5.5.x-latest
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-server:5.5.x-latest
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     ports:
       - '9092:9092'
     depends_on:
@@ -32,7 +32,7 @@ services:
 
 
   control-center:
-    image: confluentinc/cp-enterprise-control-center:5.5.x-latest
+    image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     container_name: control-center
     cpus: 0.7
     restart: always
@@ -59,8 +59,8 @@ services:
       CONTROL_CENTER_STREAMS_CACHE_MAX_BYTES_BUFFERING: 100000000
       CONTROL_CENTER_CONNECT_ES-CONNECT_CLUSTER: "http://kafka-connect-cp:18083"
       CONTROL_CENTER_CONNECT_DEBEZIUM-CONNECT_CLUSTER: "http://connect-debezium:8083"
-      CONTROL_CENTER_KSQL_URL: "http://ksql-server:8088"
-      CONTROL_CENTER_KSQL_ADVERTISED_URL: "http://localhost:8088"
+      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "https://schema-registry:8081"
       CONTROL_CENTER_DEPRECATED_VIEWS_ENABLE: "true"
       CONTROL_CENTER_STREAMS_CONSUMER_REQUEST_TIMEOUT_MS: "960032"
@@ -69,7 +69,7 @@ services:
 
 
   schema-registry:
-    image: confluentinc/cp-schema-registry:5.5.x-latest
+    image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - zookeeper
       - kafka
@@ -80,7 +80,7 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
 
   kafka-connect-cp:
-    image: confluentinc/cp-server-connect:5.5.x-latest
+    image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
     hostname: kafka-connect-cp
     container_name: kafka-connect-cp
     ports:
@@ -115,7 +115,7 @@ services:
 
   # KSQL
   ksql-server:
-    image: confluentinc/cp-ksql-server:5.5.x-latest
+    image: ${REPOSITORY}/cp-ksql-server:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
       - schema-registry
@@ -164,8 +164,7 @@ services:
 
   # Runs the Kafka KSQL data generator for ratings
   datagen-ratings:
-    # Downrev ksql-examples to 5.1.2 due to DEVX-798 (work around issues in 5.2.0)
-    image: confluentinc/ksql-examples:5.5.x-latest
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
       - schema-registry
@@ -179,7 +178,7 @@ services:
                        cub sr-ready schema-registry 8081 300 && \
                        echo Waiting a few seconds for topic creation to finish... && \
                        sleep 20 && \
-		               /usr/bin/ksql-datagen quickstart=ratings format=avro topic=ratings maxInterval=500 bootstrap-server=kafka:29092 schemaRegistryUrl=http://schema-registry:8081'"
+		               /usr/bin/ksql-datagen quickstart=ratings format=avro topic=ratings msgRate=1 bootstrap-server=kafka:29092 schemaRegistryUrl=http://schema-registry:8081'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
@@ -188,7 +187,7 @@ services:
       STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
   ksql-cli:
-    image: confluentinc/cp-ksql-cli:5.5.x-latest
+    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
       - schema-registry

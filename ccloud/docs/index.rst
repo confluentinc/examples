@@ -213,9 +213,9 @@ ksqlDB
       
        Stream Name              | Kafka Topic              | Format 
       --------------------------------------------------------------
-       PAGEVIEWS_ORIGINAL       | pageviews                | AVRO   
+       PAGEVIEWS_ORIGINAL       | pageviews                | AVRO
        PAGEVIEWS_FEMALE         | PAGEVIEWS_FEMALE         | AVRO   
-       PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | AVRO   
+       PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | AVRO
       --------------------------------------------------------------
 
 
@@ -225,7 +225,7 @@ ksqlDB
       --------------------------------------
        ROWTIME  | BIGINT           (system) 
        ROWKEY   | VARCHAR(STRING)  (system) 
-       USERID   | VARCHAR(STRING)  (key)    
+       USERID   | VARCHAR(STRING)
        PAGEID   | VARCHAR(STRING)           
        REGIONID | VARCHAR(STRING)           
        GENDER   | VARCHAR(STRING)           
@@ -252,8 +252,8 @@ ksqlDB
       --------------------------------------
        ROWTIME  | BIGINT           (system) 
        ROWKEY   | VARCHAR(STRING)  (system) 
-       GENDER   | VARCHAR(STRING)  (key)    
-       REGIONID | VARCHAR(STRING)  (key)    
+       GENDER   | VARCHAR(STRING)
+       REGIONID | VARCHAR(STRING)
        NUMUSERS | BIGINT                    
       --------------------------------------
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
@@ -291,8 +291,8 @@ ksqlDB
 
    .. sourcecode:: bash
 
-      ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 LIMIT 3;
-      ksql> SELECT * FROM USERS_ORIGINAL LIMIT 3;
+      ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 EMIT CHANGES LIMIT 3;
+      ksql> SELECT * FROM USERS_ORIGINAL EMIT CHANGES LIMIT 3;
 
 #. In this demo, ksqlDB is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor ksqlDB queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the ksqlDB query names shown above, and |c3| is showing the records that are incoming to each query.
 

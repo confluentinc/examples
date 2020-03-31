@@ -9,14 +9,11 @@ check_jot || exit 1
 check_netstat || exit 1
 check_running_elasticsearch 5.6.5 || exit 1
 check_running_kibana || exit 1
-check_running_cp ${CP_VERSION_MAJOR} || exit 1
+check_running_cp ${CONFLUENT_SHORT} || exit 1
 
 ./stop.sh
 
-./get-kafka-streams-examples.sh
-if [[ $? != 0 ]]; then
-  exit 1
-fi
+get_and_compile_kafka_streams_examples || exit 1
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
 confluent local start

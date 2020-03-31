@@ -657,8 +657,9 @@ Then create the following persistent queries:
 
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/ksql.commands`.
 
+
 The CLI parser will give immediate feedback whether your ksqlDB queries worked or not.
-Use ``SELECT * FROM <stream or table name>;`` to see the rows in each query.
+Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
 
 

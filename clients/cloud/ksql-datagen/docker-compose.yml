@@ -2,12 +2,12 @@
 version: '2'
 services:
   ksql-datagen:
-    image: confluentinc/ksql-examples:5.5.x-latest
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     hostname: ksql-datagen
     container_name: ksql-datagen
     volumes:
       - $PWD/delta_configs/ksql-datagen.delta:/tmp/ksql-datagen.delta
-    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=json topic=test1 maxInterval=2000 bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
+    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=json topic=test1 msgRate=2 bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
@@ -17,12 +17,12 @@ services:
       STREAMS_SASL_MECHANISM: "PLAIN"
       STREAMS_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
   ksql-datagen-avro:
-    image: confluentinc/ksql-examples:5.5.x-latest
+    image: ${REPOSITORY}/ksql-examples:${CONFLUENT_DOCKER_TAG}
     hostname: ksql-datagen-avro
     container_name: ksql-datagen-avro
     volumes:
       - $PWD/delta_configs/ksql-datagen.delta:/tmp/ksql-datagen.delta
-    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=avro topic=test2 maxInterval=2000 schemaRegistryUrl=$SCHEMA_REGISTRY_URL bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
+    command: "bash -c '/usr/bin/ksql-datagen quickstart=orders format=avro topic=test2 msgRate=2 schemaRegistryUrl=$SCHEMA_REGISTRY_URL bootstrap-server=$BOOTSTRAP_SERVERS propertiesFile=/tmp/ksql-datagen.delta'"
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
@@ -66,7 +66,7 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # CLASSPATH required due to CC-2422
-      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-5.5.0-SNAPSHOT.jar
+      CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-${CONFLUENT}.jar
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
