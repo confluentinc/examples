@@ -116,10 +116,10 @@ services:
     extra_hosts:
       - "moby:127.0.0.1"
 
-  ksql-server:
+  ksqldb-server:
     image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
-    hostname: ksql-server
-    container_name: ksql-server
+    hostname: ksqldb-server
+    container_name: ksqldb-server
     depends_on:
       - kafka
     ports:
@@ -127,7 +127,7 @@ services:
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_BOOTSTRAP_SERVERS: "kafka:29092"
-      KSQL_HOST_NAME: ksql-server
+      KSQL_HOST_NAME: ksqldb-server
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
       KSQL_AUTO_OFFSET_RESET: "earliest"
@@ -142,7 +142,7 @@ services:
       - $PWD/ksql.commands:/tmp/ksql.commands
     depends_on:
       - kafka
-      - ksql-server
+      - ksqldb-server
     entrypoint: /bin/sh
     tty: true
 
@@ -159,7 +159,7 @@ services:
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:32181'
-      CONTROL_CENTER_KSQL_MUSIC_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_MUSIC_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_MUSIC_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONTROL_CENTER_REPLICATION_FACTOR: 1

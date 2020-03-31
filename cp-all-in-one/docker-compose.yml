@@ -93,14 +93,14 @@ services:
       - broker
       - schema-registry
       - connect
-      - ksql-server
+      - ksqldb-server
     ports:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_CONNECT_CLUSTER: 'connect:8083'
-      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONTROL_CENTER_REPLICATION_FACTOR: 1
@@ -109,10 +109,10 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
 
-  ksql-server:
+  ksqldb-server:
     image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
-    hostname: ksql-server
-    container_name: ksql-server
+    hostname: ksqldb-server
+    container_name: ksqldb-server
     depends_on:
       - broker
       - connect
@@ -121,7 +121,7 @@ services:
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_BOOTSTRAP_SERVERS: "broker:29092"
-      KSQL_HOST_NAME: ksql-server
+      KSQL_HOST_NAME: ksqldb-server
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
       KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
@@ -135,7 +135,7 @@ services:
     depends_on:
       - broker
       - connect
-      - ksql-server
+      - ksqldb-server
     entrypoint: /bin/sh
     tty: true
 
@@ -144,7 +144,7 @@ services:
     hostname: ksql-datagen
     container_name: ksql-datagen
     depends_on:
-      - ksql-server
+      - ksqldb-server
       - broker
       - schema-registry
       - connect

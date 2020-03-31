@@ -126,7 +126,7 @@ Load the Streaming Data to KSQL
 
     .. code:: bash
 
-        docker-compose exec ksql-cli ksql http://ksql-server:8088
+        docker-compose exec ksql-cli ksql http://ksqldb-server:8088
 
 #.  Load the `clickstream-schema.sql <https://github.com/confluentinc/examples/blob/master/clickstream/ksql/ksql-clickstream-demo/demo/clickstream-schema.sql>`__
     file that runs the tutorial app.

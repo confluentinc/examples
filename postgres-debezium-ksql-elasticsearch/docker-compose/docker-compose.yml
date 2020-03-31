@@ -61,7 +61,7 @@ services:
       CONTROL_CENTER_STREAMS_CACHE_MAX_BYTES_BUFFERING: 100000000
       CONTROL_CENTER_CONNECT_ES-CONNECT_CLUSTER: "http://kafka-connect-cp:18083"
       CONTROL_CENTER_CONNECT_DEBEZIUM-CONNECT_CLUSTER: "http://connect-debezium:8083"
-      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "https://schema-registry:8081"
       CONTROL_CENTER_DEPRECATED_VIEWS_ENABLE: "true"
@@ -116,7 +116,7 @@ services:
 
 
   # KSQL
-  ksql-server:
+  ksqldb-server:
     image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - kafka
@@ -128,7 +128,7 @@ services:
     environment:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_BOOTSTRAP_SERVERS: "kafka:29092"
-      KSQL_HOST_NAME: ksql-server
+      KSQL_HOST_NAME: ksqldb-server
       KSQL_KSQL_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
@@ -192,7 +192,7 @@ services:
     depends_on:
       - kafka
       - schema-registry
-      - ksql-server
+      - ksqldb-server
     entrypoint: /bin/sh
     tty: true
 

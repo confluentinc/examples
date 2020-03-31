@@ -101,7 +101,7 @@ $ docker-compose up -d control-center
 ## KSQL Server
 
 ```bash
-$ docker-compose up -d ksql-server
+$ docker-compose up -d ksqldb-server
 ```
 
 ## KSQL CLI
