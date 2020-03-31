@@ -16,8 +16,8 @@ Overview
 The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-* |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
-* KSQL: Confluent Cloud KSQL running queries on input topics `users` and `pageviews` in |ccloud|.
+* |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating ksqlDB queries, streams monitoring, and more.
+* ksqlDB: Confluent Cloud ksqlDB running queries on input topics `users` and `pageviews` in |ccloud|.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
@@ -77,10 +77,10 @@ Setup
       schema.registry.url=https://<SR ENDPOINT>
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       basic.auth.credentials.source=USER_INFO
-      ksql.endpoint=https://<KSQL ENDPOINT>
-      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+      ksql.endpoint=https://<ksqlDB ENDPOINT>
+      ksql.basic.auth.user.info=<ksqlDB API KEY>:<ksqlDB API SECRET>
 
-   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated KSQL cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
+   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated ksqlDB cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
 
    .. code:: shell
 
@@ -95,7 +95,7 @@ Setup
       # SR ENDPOINT
       ccloud schema-registry cluster describe
 
-      # KSQL ENDPOINT
+      # ksqlDB ENDPOINT
       ccloud ksql app list
 
       # Credentials: API key and secret, one for each resource above
@@ -196,16 +196,16 @@ Playbook
 
   
 
-KSQL
-----
+ksqlDB
+------
 
-#. At the Confluent Cloud KSQL prompt, view the configured KSQL properties that were set with the KSQL server configuration file shown earlier.
+#. At the Confluent Cloud ksqlDB prompt, view the configured ksqlDB properties that were set with the ksqlDB server configuration file shown earlier.
 
    .. sourcecode:: bash
 
       ksql> SHOW PROPERTIES;
 
-#. View the existing KSQL streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
+#. View the existing ksqlDB streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -233,7 +233,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-#. View the existing KSQL tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
+#. View the existing ksqlDB tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
 
    .. sourcecode:: bash
 
@@ -259,7 +259,7 @@ KSQL
       For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
 
 
-#. View the existing KSQL queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
+#. View the existing ksqlDB queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
@@ -287,16 +287,16 @@ KSQL
       (Statistics of the local KSQL server interaction with the Kafka topic pageviews_enriched_r8_r9)
       
 
-#. At the KSQL prompt, view three messages from different KSQL streams and tables.
+#. At the ksqlDB prompt, view three messages from different ksqlDB streams and tables.
 
    .. sourcecode:: bash
 
       ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 EMIT CHANGES LIMIT 3;
       ksql> SELECT * FROM USERS_ORIGINAL EMIT CHANGES LIMIT 3;
 
-#. In this demo, KSQL is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor KSQL queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the KSQL query names shown above, and |c3| is showing the records that are incoming to each query.
+#. In this demo, ksqlDB is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor ksqlDB queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the ksqlDB query names shown above, and |c3| is showing the records that are incoming to each query.
 
-For example, view throughput and latency of the incoming records for the persistent KSQL "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
+For example, view throughput and latency of the incoming records for the persistent ksqlDB "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
 
 .. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
     :alt: image
@@ -399,7 +399,7 @@ The connectors used in this demo are configured to automatically write Avro-form
    .. figure:: images/topic_schema.png
       :alt: image
 
-3. From |c3|, view the KSQL streams which are configured for Avro format.
+3. From |c3|, view the ksqlDB streams which are configured for Avro format.
 
    .. figure:: images/ksql_dataformat.png
       :alt: image
@@ -479,7 +479,7 @@ Teardown
       $ ./stop-docker.sh
 
 
-2. Delete all |cp| topics in CCloud that this demo used, including topics used for |c3|, Kafka Connect, KSQL, and Confluent Schema Registry. Warning: this may have unintended consequence of deleting topics that you wanted to keep.
+2. Delete all |cp| topics in CCloud that this demo used, including topics used for |c3|, Kafka Connect, ksqlDB, and Confluent Schema Registry. Warning: this may have unintended consequence of deleting topics that you wanted to keep.
 
    .. sourcecode:: bash
 

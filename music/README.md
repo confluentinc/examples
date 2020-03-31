@@ -2,13 +2,13 @@
 
 # Overview
 
-The music demo is the KSQL version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.music).
-This isn't an exact replica of that demo because some features in Kafka Streams API are not available yet in KSQL (coming soon!).
-Some of these differences are noted in the [KSQL commands](ksql.commands).
+The music demo is the ksqlDB version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.music).
+This isn't an exact replica of that demo because some features in Kafka Streams API are not available yet in ksqlDB (coming soon!).
+Some of these differences are noted in the [ksqlDB commands](ksql.commands).
 
 ![image](images/ksql-music-demo-overview.jpg)
 
-Follow along with the video [Demo: Build a Streaming Application with KSQL](https://www.youtube.com/watch?v=ExEWJVjj-RA).
+Follow along with the video [Demo: Build a Streaming Application with ksqlDB](https://www.youtube.com/watch?v=ExEWJVjj-RA).
 
 # Prerequisites
 
@@ -29,8 +29,8 @@ Follow the [step-by-step guide](live-coding-ksql-music.adoc). This requires the 
 
 # What Should I see?
 
-* If you are running Confluent Platform, use Confluent Control Center to view and manage KSQL queries.  Using Google Chrome, navigate to http://localhost:9021/
+* If you are running Confluent Platform, use Confluent Control Center to view and manage ksqlDB queries.  Using Google Chrome, navigate to http://localhost:9021/
 
 ![image](images/ksql-flow.png)
 
-* Instead of using the music demos's REST endpoints, use KSQL to inspect the data.
+* Instead of using the music demos's REST endpoints, use ksqlDB to inspect the data.
