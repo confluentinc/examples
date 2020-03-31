@@ -217,7 +217,7 @@ We recommend using Confluent Control Center to manage your Kafka cluster, inspec
 
 [source,bash]
 ----
-$ docker-compose exec ksql-cli ksql http://ksql-server:8088
+$ docker-compose exec ksql-cli ksql http://ksqldb-server:8088
 ----
 
 === Troubleshooting Control Center 
@@ -232,7 +232,7 @@ However, if you choose to jump ahead to the end state, run the KSQL command file
 
 [source,bash]
 ----
-$ docker-compose exec ksql-cli ksql http://ksql-server:8088
+$ docker-compose exec ksql-cli ksql http://ksqldb-server:8088
 ....
 ksql> run script '/tmp/ksql.commands';
 ksql> exit

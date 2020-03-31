@@ -17,16 +17,15 @@ services:
       SCHEMA_REGISTRY_KAFKASTORE_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       SCHEMA_REGISTRY_KAFKASTORE_SASL_MECHANISM: "PLAIN"
 
-  ksql-server:
-    image: ${REPOSITORY}/cp-ksql-server:${CONFLUENT_DOCKER_TAG}
-    hostname: ksql-server
-    container_name: ksql-server
+  ksqldb-server:
+    image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
+    hostname: ksqldb-server
+    container_name: ksqldb-server
     ports:
       - "8089:8089"
     environment:
-      KSQL_HOST_NAME: ksql-server
+      KSQL_HOST_NAME: ksqldb-server
       KSQL_CONFIG_DIR: "/etc/ksql"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
       KSQL_LISTENERS: "http://0.0.0.0:8089"
       KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_COMMIT_INTERVAL_MS: 0
@@ -75,7 +74,7 @@ services:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
-      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksql-server:8089"
+      CONTROL_CENTER_KSQL_KSQLDB1_URL: "http://ksqldb-server:8089"
       CONTROL_CENTER_KSQL_KSQLDB1_ADVERTISED_URL: "http://localhost:8089"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
       CONTROL_CENTER_SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE

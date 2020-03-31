@@ -97,14 +97,14 @@ services:
       - broker
       - schema-registry
       - connect
-      - ksql-server
+      - ksqldb-server
     ports:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:9092'
       CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_CONNECT_CLUSTER: http://connect:8083
-      CONTROL_CENTER_KSQL_MICROSERVICES_URL: "http://ksql-server:8088"
+      CONTROL_CENTER_KSQL_MICROSERVICES_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_MICROSERVICES_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
       CONTROL_CENTER_REPLICATION_FACTOR: 1
@@ -114,10 +114,10 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
 
-  ksql-server:
-    image: ${REPOSITORY}/cp-ksql-server:${CONFLUENT_DOCKER_TAG}
-    hostname: ksql-server
-    container_name: ksql-server
+  ksqldb-server:
+    image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
+    hostname: ksqldb-server
+    container_name: ksqldb-server
     depends_on:
       - broker
       - connect
@@ -127,7 +127,7 @@ services:
       KSQL_CONFIG_DIR: "/etc/ksql"
       KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql/log4j-rolling.properties"
       KSQL_BOOTSTRAP_SERVERS: "broker:9092"
-      KSQL_HOST_NAME: ksql-server
+      KSQL_HOST_NAME: ksqldb-server
       KSQL_LISTENERS: "http://0.0.0.0:8088"
       KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_CACHE_MAX_BYTES_BUFFERING: 0
@@ -142,7 +142,7 @@ services:
     depends_on:
       - broker
       - connect
-      - ksql-server
+      - ksqldb-server
     entrypoint: /bin/sh
     tty: true
 
@@ -152,7 +152,7 @@ services:
     depends_on:
       - broker
       - connect
-      - ksql-server
+      - ksqldb-server
     volumes:
       - $PWD/run-ksql.sh:/tmp/run-ksql.sh
       - $PWD/ksql.commands:/tmp/ksql.commands
