@@ -23,7 +23,7 @@ check_jq || exit 1
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=ksql-server.properties
-create_temp_configs $CONFLUENT_HOME/etc/ksql/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
+create_temp_configs $CONFLUENT_HOME/etc/ksqldb/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
 
 # Log in to Metadata Server (MDS)
 login_mds $MDS
@@ -83,6 +83,7 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster
 # - Grant principal User:${USER_KSQL} the DeveloperRead role to Topic:${KSQL_SERVICE_ID}ksql_processing_log
 # - Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Group:_confluent-ksql-${KSQL_SERVICE_ID} prefix"
 # - Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$TOPIC1"
+# - Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to TransactionalId:${KSQL_SERVICE_ID}
 # - Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${KSQL_SERVICE_ID}transient prefix
 # - Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to Topic:${KSQL_SERVICE_ID}transient prefix
 # - Grant principal User:${USER_KSQL} the ResourceOwner role to Topic:${CSAS_STREAM1}
@@ -126,6 +127,10 @@ confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role Deve
 echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the DeveloperRead role to Topic:$TOPIC1"
 echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:${USER_ADMIN_KSQL} the ResourceOwner role to TransactionalId:${KSQL_SERVICE_ID}"
+echo "confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource TransactionalId:${KSQL_SERVICE_ID} --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:${USER_ADMIN_KSQL} --role ResourceOwner --resource TransactionalId:${KSQL_SERVICE_ID} --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 STREAM=stream1
 echo -e "\n# KSQL CLI: create a new stream $STREAM and select * from that stream"
@@ -229,4 +234,4 @@ confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $K
 ##################################################
 
 SAVE_CONFIGS_DIR=/tmp/rbac_configs
-restore_configs $CONFLUENT_HOME/etc/ksql/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac
+restore_configs $CONFLUENT_HOME/etc/ksqldb/${FILENAME} $ORIGINAL_CONFIGS_DIR/${FILENAME} $SAVE_CONFIGS_DIR/${FILENAME}.rbac
