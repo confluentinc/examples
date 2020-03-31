@@ -1,6 +1,6 @@
 # Overview
 
-Produce messages to and consume messages from a Kafka cluster using the [KSQL datagen](https://docs.confluent.io/current/ksql/docs/tutorials/generate-custom-test-data.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) command-line tool.
+Produce messages to and consume messages from a Kafka cluster using the [ksqlDB datagen](https://docs.confluent.io/current/ksql/docs/tutorials/generate-custom-test-data.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) command-line tool.
 
 *Note: `ksql-datagen` is meant for development purposes only and is not suitable for a production environment*
 
