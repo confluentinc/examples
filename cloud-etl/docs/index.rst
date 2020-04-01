@@ -257,7 +257,7 @@ Validate
    .. figure:: images/flow.png
       :alt: image
 
-#. The demo's :devx-examples:`ksqlDB commands|cloud-etl/ksql.commands` used ksqlDB's REST API to generate a ksqlDB TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a ksqlDB TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
+#. The demo's :devx-examples:`ksqlDB commands|cloud-etl/statements.sql` used ksqlDB's REST API to generate a ksqlDB TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a ksqlDB TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
 
    .. code:: bash
 

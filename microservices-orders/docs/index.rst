@@ -655,7 +655,7 @@ Then create the following persistent queries:
    * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#joining
    * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#aggregating-windowing-and-sessionization
 
-   If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/ksql.commands`.
+   If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
 
 The CLI parser will give immediate feedback whether your ksqlDB queries worked or not.

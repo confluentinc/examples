@@ -18,6 +18,6 @@ java -cp kafka-streams-examples/target/kafka-streams-examples-${CONFLUENT}-stand
 sleep 5
 
 ksql http://localhost:8088 <<EOF
-run script 'ksql.commands';
+run script 'statements.sql';
 exit ;
 EOF

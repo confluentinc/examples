@@ -128,8 +128,7 @@ Load the Streaming Data to ksqlDB
 
         docker-compose exec ksql-cli ksql http://ksqldb-server:8088
 
-#.  Load the `clickstream-schema.sql <https://github.com/confluentinc/examples/blob/master/clickstream/ksql/ksql-clickstream-demo/demo/clickstream-schema.sql>`__
-    file that runs the tutorial app.
+#.  Load the :devx-examples:`statements.sql|clickstream/ksql/ksql-clickstream-demo/demo/statements.sql` file that runs the tutorial app.
 
     **Important:** Before running this step, you must have already run
     ksql-datagen utility to create the clickstream data, status codes,
@@ -137,7 +136,7 @@ Load the Streaming Data to ksqlDB
 
     .. code:: sql
 
-        RUN SCRIPT '/usr/share/doc/clickstream/clickstream-schema.sql';
+        RUN SCRIPT '/usr/share/doc/clickstream/statements.sql';
 
     The output will show either a blank message, or ``Executing statement``, similar to this: 
 
@@ -236,7 +235,7 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
 This dashboard demonstrates a series of streaming functionality where the title of each panel describes the type of stream
 processing required to generate the data. For example, the large chart in the middle is showing web-resource requests on a per-username basis
 using a Session window - where a sessions expire after 300 seconds of inactivity. Editing the panel allows you to view the datasource - which
-is named after the streams and tables captured in the ``clickstream-schema.sql`` file.
+is named after the streams and tables captured in the ``statements.sql`` file.
 
 
 

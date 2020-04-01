@@ -72,7 +72,7 @@ while read ksqlCmd; do
 }
 EOF
 )
-done <ksql.cleanup.commands
+done <cleanup_statements.sql
 
 # Delete subjects from Confluent Cloud Schema Registry
 schema_registry_subjects_to_delete="users-value pageviews-value"
