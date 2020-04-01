@@ -51,7 +51,7 @@ EOF
     echo -e "\nERROR: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response.  Please troubleshoot."
     exit 1
   fi
-done <ksql.commands
+done <statements.sql
 echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
 sleep 20
 

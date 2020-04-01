@@ -209,7 +209,7 @@ image::images/counts_results.png[results]
 
 === Compare KSQL Queries and Kafka Streams Java
 
-Compare the music applications written with link:ksql.commands[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.4.0-post/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
+Compare the music applications written with link:statements.sql[KSQL queries] and the https://github.com/confluentinc/kafka-streams-examples/blob/5.4.0-post/src/main/java/io/confluent/examples/streams/interactivequeries/kafkamusic/KafkaMusicExample.java[Kafka Streams java code].
 
 === KSQL CLI
 
@@ -234,6 +234,6 @@ However, if you choose to jump ahead to the end state, run the KSQL command file
 ----
 $ docker-compose exec ksql-cli ksql http://ksqldb-server:8088
 ....
-ksql> run script '/tmp/ksql.commands';
+ksql> run script '/tmp/statements.sql';
 ksql> exit
 ----

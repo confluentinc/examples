@@ -155,7 +155,7 @@ services:
       - ksqldb-server
     volumes:
       - $PWD/run-ksql.sh:/tmp/run-ksql.sh
-      - $PWD/ksql.commands:/tmp/ksql.commands
+      - $PWD/statements.sql:/tmp/statements.sql
     entrypoint: /bin/sh
     tty: true
     command: "/tmp/run-ksql.sh"
