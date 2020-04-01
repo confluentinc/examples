@@ -127,9 +127,8 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
-# Increasing wait time from 90s to 660s due to MCM-965
-echo -e "\n# Wait 660 seconds for the user credentials to propagate"
-sleep 660
+echo -e "\n# Wait 90 seconds for the user credentials to propagate"
+sleep 90
 
 
 ##################################################
