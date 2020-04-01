@@ -33,7 +33,7 @@ ksql-datagen quickstart=ratings format=avro topic=ratings msgRate=1 $PROPERTIES 
 sleep 10
 
 ksql http://localhost:8088 <<EOF
-run script 'ksql.commands';
+run script 'statements.sql';
 exit ;
 EOF
 

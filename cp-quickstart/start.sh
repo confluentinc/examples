@@ -25,6 +25,6 @@ sleep 20
 confluent local status connectors
 
 ksql http://localhost:8088 <<EOF
-run script 'ksql.commands';
+run script 'statements.sql';
 exit ;
 EOF

@@ -11,7 +11,7 @@ toc::[]
 image:images/ksql-debezium-es.png[Kafka Connect / KSQL / Elasticsearch]
 
 This is designed to be run as a step-by-step demo. 
-The `ksql_commands.sql` should match those run in this doc end-to-end and in theory you can just run the file, but I have not tested it. 
+The `statements.sql` should match those run in this doc end-to-end and in theory you can just run the file, but I have not tested it. 
 PRs welcome for a one-click script that just demonstrates the end-to-end running demo :)
 
 c.10 minutes

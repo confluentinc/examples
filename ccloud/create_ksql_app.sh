@@ -49,6 +49,6 @@ EOF
     echo -e "\nERROR: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response.  Please troubleshoot."
     exit 1
   fi
-done <ksql.commands
+done <statements.sql
 
 exit 0

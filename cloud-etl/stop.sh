@@ -91,7 +91,7 @@ while read ksqlCmd; do
 }
 EOF
 )
-done <ksql.cleanup.commands
+done <cleanup_statements.sql
 
 # Delete topics in Confluent Cloud
 topics_to_delete="$KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2"
