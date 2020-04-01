@@ -2,7 +2,7 @@
 
 * [Demos](#demos)
 * [Build Your Own](#build-your-own)
-* [Prerequisities](#prerequisites)
+* [Additional Demos](#additional-demos)
 
 
 # Demos
@@ -36,7 +36,6 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [Cloud ETL](cloud-etl/README.md)                 |   [Y](cloud-etl/README.md)   |   N   | Cloud ETL solution using fully-managed Confluent Cloud connectors and fully-managed ksqlDB <br><img src="cloud-etl/docs/images/topology.png" width="450">
 | [On-Prem Kafka to Cloud](ccloud/README.md)                 |   [Y](ccloud/README.md)   |   [Y](ccloud/README.md)    | This more advanced demo showcases an on-prem Kafka cluster and [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) cluster, and data copied between them with Confluent Replicator <br><img src="ccloud/docs/images/schema-registry-local.jpg" width="450">
 | [GKE to Cloud](kubernetes/replicator-gke-cc/README.md)                 |   N   |   [Y](kubernetes/replicator-gke-cc/README.md)    | Uses Google Kubernetes Engine, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top), and [Confluent Replicator](https://www.confluent.io/confluent-replicator/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) to explore a multicloud deployment <br><img src="kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png" width="450">
-| [GCP pipeline](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | N | [Y](https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/README.adoc) | Work with [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) to build cool pipelines into Google Cloud Platform (GCP) <br><img src="https://github.com/confluentinc/demo-scene/blob/master/gcp-pipeline/images/env-data-arch-01.png" width="450">
 
 
 ### Stream Processing
@@ -45,8 +44,6 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
 | [Clickstream](clickstream/README.md)       |   N   |   [Y](https://docs.confluent.io/current/tutorials/examples/clickstream/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top)    | Automated version of the [ksqlDB clickstream demo](https://docs.confluent.io/current/tutorials/examples/clickstream/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) <br><img src="clickstream/docs/images/grafana-success.png" width="450">
 | [Kafka Tutorials](https://kafka-tutorials.confluent.io?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top)       |   [Y](https://kafka-tutorials.confluent.io?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top)   |   [Y](https://kafka-tutorials.confluent.io?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top)   | Collection of common event streaming use cases, with each tutorial featuring an example scenario and several complete code solutions <br><img src="https://cdn.confluent.io/wp-content/uploads/Kafka-Tutorials-350x195.jpg" width="350">
-| [ksqlDB UDF](https://github.com/confluentinc/demo-scene/blob/master/ksql-udf-advanced-example/README.md?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) | [Y](https://github.com/confluentinc/demo-scene/blob/master/ksql-udf-advanced-example/README.md?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) | N | Advanced [ksqlDB User-Defined Function (UDF)](https://www.confluent.io/blog/build-udf-udaf-ksql-5-0?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) use case for connected cars <br><img src="https://www.confluent.io/wp-content/uploads/KSQL-1-350x195.png" width="350">
-| [ksqlDB workshop](https://github.com/confluentinc/demo-scene/blob/master/ksql-workshop/)   |   N   |   [Y](https://github.com/confluentinc/demo-scene/blob/master/ksql-workshop/)    | showcases Kafka event stream processing using ksqlDB and can run self-guided as a ksqlDB workshop <br><img src="https://github.com/confluentinc/demo-scene/blob/master/ksql-workshop/images/ksql_workshop_01.png" width="450">
 | [Microservices ecosystem](microservices-orders/README.md) |   [Y](microservices-orders/README.md)   |   N    | [Microservices orders Demo Application](https://github.com/confluentinc/kafka-streams-examples/tree/5.2.2-post/src/main/java/io/confluent/examples/streams/microservices) integrated into the Confluent Platform <br><img src="microservices-orders/docs/images/microservices-demo.jpg" width="450">
 | [Music demo](music/README.md)                   |   [Y](music/README.md)   |   [Y](music/README.md)    | ksqlDB version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) <br><img src="music/images/ksql-music-demo-overview.jpg" width="450">
 
@@ -55,13 +52,8 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
-| [CDC with MySQL](https://github.com/confluentinc/demo-scene/blob/master/no-more-silos/demo_no-more-silos.adoc) | N | [Y](https://github.com/confluentinc/demo-scene/blob/master/no-more-silos/demo_no-more-silos.adoc) | Self-paced steps to set up a change data capture (CDC) pipeline <br><img src="https://www.confluent.io/wp-content/uploads/kafka_connect-1.png" width="450">
-| [CDC with Postgres](postgres-debezium-ksql-elasticsearch/README.md) |   N   |   [Y](postgres-debezium-ksql-elasticsearch/README.md)    | Enrich event stream data with CDC data from Postgres and then stream into Elasticsearch <br><img src="postgres-debezium-ksql-elasticsearch/images/ksql-debezium-es.png" width="450">
 | [Clients](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Client applications in different programming languages <br><img src="clients/cloud/images/clients-all.png" width="450">
 | [Connect and Kafka Streams](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API <br><img src="connect-streams-pipeline/images/blog_connect_streams_diag.jpg" width="450">
-| [MQTT](https://github.com/confluentinc/demo-scene/blob/master/mqtt-connect-connector-demo/README.md) | [Y](https://github.com/confluentinc/demo-scene/blob/master/mqtt-connect-connector-demo/README.md) | N | Internet of Things (IoT) integration example using Apache Kafka + Kafka Connect + MQTT Connector + Sensor Data <br><img src="https://www.confluent.io/wp-content/uploads/dwg_MQTT.svg" width="450">
-| [MySQL and Debezium](mysql-debezium/README.md) |   [Y](mysql-debezium/README.md)   |   [Y](https://github.com/confluentinc/demo-scene/tree/master/build-a-streaming-pipeline) | End-to-end streaming ETL with ksqlDB for stream processing using the [Debezium Connector for MySQL](http://debezium.io/docs/connectors/mysql/) <br><img src="mysql-debezium/images/ksql-debezium-es.png" width="450">
-| [Syslog](https://github.com/confluentinc/demo-scene/tree/master/syslog) |   N   |   Y    | Real-time syslog processing with Apache Kafka and ksqlDB: filtering logs, event-driven alerting, and enriching events <br><img src="https://camo.githubusercontent.com/6436ef9d9bca4eaa9d300c713fee0e4be6db8ee6/68747470733a2f2f7777772e636f6e666c75656e742e696f2f77702d636f6e74656e742f75706c6f6164732f6b73716c5f7379736c6f6730312d31303234783235382e706e67" width="450">
 
 
 ### Confluent Platform
@@ -93,17 +85,10 @@ Using these as a foundation, you can then add any connectors or applications.
 Additional documentation: [Getting Started](https://docs.confluent.io/current/getting-started.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top)
 
 
-# Prerequisites
+# Additional Demos
 
-For local installs:
+Here are additional GitHub repos that offer an incredible set of Apache Kafka demos and scripts.
+They may be rough around the edges.
 
-* Download [Confluent Platform 5.4](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top)
-* Env var `CONFLUENT_HOME=/path/to/confluentplatform`
-* Env var `PATH` includes `$CONFLUENT_HOME/bin`
-* Each demo has its own set of prerequisites as well, documented individually in each demo
-
-For Docker: demos have been validated with
-
-* [Docker](https://docs.docker.com/install/) version 17.06.1-ce
-* [Docker Compose](https://docs.docker.com/compose/install/) version 1.14.0 with Docker Compose file format 2.1
-
+* [confluentinc/demo-scene](https://github.com/confluentinc/demo-scene/blob/master/README.md)
+* [vdesabou/kafka-docker-playground](https://github.com/vdesabou/kafka-docker-playground/blob/master/README.md)
