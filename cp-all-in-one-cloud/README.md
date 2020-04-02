@@ -4,32 +4,14 @@
 
 * Docker version 17.06.1-ce
 * Docker Compose version 1.14.0 with Docker Compose file format 2.1
-* [Confluent Cloud CLI](https://docs.confluent.io/current/cloud-quickstart.html#step-2-install-ccloud-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one-cloud)
-* [An initialized Confluent Cloud cluster used for development only](https://confluent.cloud)
+* You must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
+* Create a local file (e.g. at `$HOME/.confluent/java.config`) with configuration parameters to connect to your [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) Kafka cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file.
 
 # Setup
 
 Note: Use this in a *non-production* Confluent Cloud instance for development purposes only.
 
 ## Step 1
-
-On the host from which you are running Docker, ensure that you have properly initialized Confluent Cloud CLI and have a valid configuration file at `$HOME/.ccloud/config`. Example file:
-
-```bash
-$ cat $HOME/.ccloud/config
-bootstrap.servers=<BROKER ENDPOINT>
-ssl.endpoint.identification.algorithm=https
-security.protocol=SASL_SSL
-sasl.mechanism=PLAIN
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-
-# If you are using Confluent Cloud Schema Registry, add the following configuration parameters
-basic.auth.credentials.source=USER_INFO
-schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-schema.registry.url=https://<SR ENDPOINT>
-```
-
-## Step 2
 
 By default, the demo uses Confluent Schema Registry running in a local Docker container. If you prefer to use Confluent Cloud Schema Registry instead, you need to first set it up:
 
@@ -41,7 +23,7 @@ By default, the demo uses Confluent Schema Registry running in a local Docker co
    $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
    ```
 
-## Step 3
+## Step 2
 
 Generate a file of ENV variables used by Docker to set the bootstrap servers and security configuration.
 (See [documentation](https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-all-in-one-cloud) for more information on using this script.)
@@ -49,16 +31,16 @@ Generate a file of ENV variables used by Docker to set the bootstrap servers and
    a. If you want to use Confluent Schema Registry running in a local Docker container:
 
    ```bash
-   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config schema_registry_docker.config
+   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config schema_registry_docker.config
    ```
 
    b. If you want to use Confluent Cloud Schema Registry:
 
    ```bash
-   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.ccloud/config
+   $ ../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
    ```
 
-## Step 4
+## Step 3
 
 Source the generated file of ENV variables
 
