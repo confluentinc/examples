@@ -27,5 +27,10 @@ docker-compose exec broker-west-1 kafka-topics  --create \
         --replica-placement /etc/kafka/demo/placement-multi-region-async.json \
         --config min.insync.replicas=1
 
-# docker exec broker-west-1 kafka-configs --zookeeper zookeeper-west:2181 \
-# --entity-name multi-region-async --entity-type topics --alter --add-config min.insync.replicas=1
+echo -e "\n==> Creating topic multi-region-default"
+
+docker-compose exec broker-west-1 kafka-topics  \
+	--create \
+	--bootstrap-server broker-west-1:19091 \
+	--topic multi-region-default \
+        --config min.insync.replicas=1
