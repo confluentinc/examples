@@ -6,50 +6,47 @@ NOTE: Produce messages to and consume messages from [Confluent Cloud](https://ww
 
 * Java 1.8 or higher to run the demo application
 * Access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
-* Initialize a properties file at `src/main/resources/application-ccloud.properties` with configuration to your Confluent Cloud cluster:
+* Initialize properties file at `$HOME/.ccloud/config` with configuration to your Confluent Cloud cluster:
 
+[source]
+.$HOME/.ccloud/config
+----
+$ cat $HOME/.ccloud/config
+bootstrap.servers=<BROKER ENDPOINT>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+schema.registry.url=<SR ENDPOINT> 
+basic.auth.credentials.source=USER_INFO 
+schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD>
+----
+
+NOTE: To building and execute all examples, run `start.sh`.
+Run `stop.sh` to stop both examples.
+
+== Example 1: Producing and Consuming Avro messages
+
+This example is uses values that formatted as Avro and integrates with the Confluent Cloud Schema Registry.
+Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud).
+Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
+
+. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+
+. Verify your Confluent Cloud Schema Registry credentials work from your host. 
+In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
++
 [source,shell]
-.application-ccloud.properties
+.View the list of registered subjects
 ----
-❯ cat src/main/resources/application-ccloud.properties
-
-# topic config
-io.confluent.developer.config.topic.name=test
-io.confluent.developer.config.topic.replicas=3
-io.confluent.developer.config.topic.partitions=6
-
-# common configs
-spring.kafka.properties.ssl.endpoint.identification.algorithm=https
-spring.kafka.properties.sasl.mechanism=PLAIN
-spring.kafka.properties.request.timeout.ms=20000
-spring.kafka.properties.bootstrap.servers=bootstrap-server.confluent.cloud:9092
-spring.kafka.properties.retry.backoff.ms=500
-spring.kafka.properties.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<API_KEY>" password="<API_SECRET>";
-spring.kafka.properties.security.protocol=SASL_SSL
-
-# Cloud SR Config
-spring.kafka.properties.basic.auth.credentials.source=USER_INFO
-spring.kafka.properties.schema.registry.basic.auth.user.info=SR_KEY:SR_SECRET
-spring.kafka.properties.schema.registry.url=https://sr.confluent.cloud
-
-# producer configuration
-spring.kafka.producer.key-serializer=org.apache.kafka.common.serialization.StringSerializer
-spring.kafka.producer.value-serializer=io.confluent.kafka.serializers.KafkaAvroSerializer
-
-# consumer configuration
-spring.kafka.consumer.group-id=java-springboot
-spring.kafka.consumer.key-deserializer=org.apache.kafka.common.serialization.StringDeserializer
-spring.kafka.consumer.value-deserializer=io.confluent.kafka.serializers.KafkaAvroDeserializer
+$ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
 ----
-
-
-== Hello World!
 
 This Spring Boot application has two components - Producer (`ProducerExample.java`) and Consumer (`ConsumerExample.java`).
 Both components will be initialized during the Spring Boot application startup.
 The producer writes Kafka data to a topic in Confluent Cloud.
 Each record has a String key representing a username (e.g. `alice`) and a value of a count, formatted as Avro object
-+
+
 [source,json]
 ----
 {"namespace": "io.confluent.examples.clients.cloud",
@@ -63,31 +60,17 @@ Each record has a String key representing a username (e.g. `alice`) and a value 
 
 The consumer reads the same topic from Confluent Cloud and prints data to the console.
 
+== Example 2: Kafka Streams with Spring Boot
+
 The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
 
-. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
-
-+
-[source, shell]
+[source,shell]
 ----
- # Build the application
- $ ./gradlew clean build
-   
- # Run the app
- $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher <1>
-
- $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dspring.profiles.active=ccloud -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher <2> 
-
-$ SPRING_PROFILES_ACTIVE=ccloud java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher <3>
+include::start.sh[lines=36]
 ----
-<1> Run to use default config (local Confluent Platform installation) (`application.properties`)
-<2> Run to use Confluent Cloud config (`application-ccloud.properties`)
-<3> Alternative approach to activate Spring configuration profile
 
-+
-You should see:
+You should see following in the console:
 
-+
 [source,shell]
 ----
  ...
@@ -105,11 +88,9 @@ You should see:
  ...
 ----
 
-Verify that the consumer received all the messages:
+=== Verify that the consumer received all the messages:
 
-+
-You should see:
-+
+.You should see:
 ----
  ...
  2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 0}
@@ -123,26 +104,14 @@ You should see:
 2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 8}
 2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 9}
 ----
-When you are done, press `<ctrl>-c`.
 
-. Run the Kafka Streams application.
-+
-
+.Run the Kafka Streams application.
 [source,shell]
 ----
- $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher #<1>
-
- $ java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dspring.profiles.active=ccloud -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher #<2> 
-
- $ SPRING_PROFILES_ACTIVE=ccloud java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher <3>
+include::start.sh[lines=42]
 ----
-<1> Run using default (local) profile
-<2> Run using `ccloud` profile
-<3> Alternative way to activate `ccloud` profile  
 
-+
-You should see:
-+
+.You should see:
 ----
  ...
  [Consumed record]: alice, 0
@@ -169,4 +138,5 @@ You should see:
  ...
 ----
 
-  When you are done, press `<ctrl>-c.`
+NOTE: You can run the example in «auto mode» by running `start.sh`
+When you are done, run `stop.sh`

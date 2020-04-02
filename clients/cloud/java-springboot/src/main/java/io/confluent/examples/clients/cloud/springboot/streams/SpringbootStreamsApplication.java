@@ -22,12 +22,12 @@ public class SpringbootStreamsApplication {
   @Value("${io.confluent.developer.config.topic.name}")
   private String topicName;
 
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     SpringApplication.run(SpringbootStreamsApplication.class, args);
   }
 
   @Bean
-  KStream<String, Long> countAgg(StreamsBuilder builder) {
+  KStream<String, Long> countAgg(final StreamsBuilder builder) {
 
     final KStream<String, DataRecordAvro> stream = builder.stream(topicName);
     final KStream<String, Long> countAgg = stream
