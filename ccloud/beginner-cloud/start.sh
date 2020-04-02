@@ -12,7 +12,7 @@
 # Source library
 . ../../utils/helper.sh
 
-check_ccloud_version 0.255.0 || exit 1
+check_ccloud_version 0.264.0 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
@@ -127,9 +127,8 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
-# Increasing wait time from 90s to 660s due to MCM-965
-echo -e "\n# Wait 660 seconds for the user credentials to propagate"
-sleep 660
+echo -e "\n# Wait 120 seconds for the user credentials to propagate"
+sleep 120
 
 
 ##################################################
