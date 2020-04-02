@@ -1,6 +1,6 @@
 confluentPlatformImage: &cpImage
   image: 
-    tag: 5.3.1.0
+    tag: 5.4.1.0
  
 global:
   initContainer:
@@ -53,7 +53,7 @@ schemaregistry:
 connect:
   image:
     repository: cnfldemos/cp-server-connect-operator-with-datagen 
-    tag: 0.1.6-5.3.1.0
+    tag: 0.3.1-5.4.1.0
   tls:
     enabled: false
   loadBalancer:
