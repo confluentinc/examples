@@ -105,7 +105,7 @@ function check_ccloud_logged_in() {
 }
 
 function version_gt() { 
-	test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
 }
 
 function get_ccloud_version() {
@@ -114,16 +114,16 @@ function get_ccloud_version() {
 
 function check_ccloud_version() {
 
-	check_ccloud_binary || exit 1
+  check_ccloud_binary || exit 1
 
-	REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
-	CCLOUD_VER=$(get_ccloud_version)
+  REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
+  CCLOUD_VER=$(get_ccloud_version)
 
-	if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
-		echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
-		echo 'To update run: ccloud update'
-		exit 1
-	fi
+  if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
+    echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
+    echo 'To update run: ccloud update'
+    exit 1
+  fi
 }
 
 function check_cli_v2() {
@@ -431,11 +431,10 @@ function check_gcp_creds() {
     exit 1
   fi
 
-  gcloud auth activate-service-account --key-file $GCS_CREDENTIALS_FILE
-  if [[ "$?" -ne 0 ]]; then
+  gcloud auth activate-service-account --key-file $GCS_CREDENTIALS_FILE || {
     echo "ERROR: Cannot activate service account with key file $GCS_CREDENTIALS_FILE. Verify your credentials and try again."
     exit 1
-  fi
+  }
 
   # Create JSON-formatted string of the GCS credentials
   export GCS_CREDENTIALS=$(python ./stringify-gcp-credentials.py $GCS_CREDENTIALS_FILE)
@@ -482,16 +481,14 @@ function check_s3_creds() {
     exit 1
   fi
 
-  aws configure get aws_access_key_id --profile $S3_PROFILE 1>/dev/null
-  if [[ "$?" -ne 0 ]]; then
+  aws configure get aws_access_key_id --profile $S3_PROFILE 1>/dev/null || {
     echo "ERROR: Cannot determine aws_access_key_id from S3_PROFILE=$S3_PROFILE.  Verify your credentials and try again."
     exit 1
-  fi
-  aws configure get aws_secret_access_key --profile $S3_PROFILE 1>/dev/null
-  if [[ "$?" -ne 0 ]]; then
+  }
+  aws configure get aws_secret_access_key --profile $S3_PROFILE 1>/dev/null || {
     echo "ERROR: Cannot determine aws_secret_access_key from S3_PROFILE=$S3_PROFILE.  Verify your credentials and try again."
     exit 1
-  fi
+  }
   return 0
 }
 
@@ -499,23 +496,20 @@ function validate_confluent_cloud_schema_registry() {
   auth=$1
   sr_endpoint=$2
 
-  curl --silent -u $auth $sr_endpoint
-  if [[ "$?" -ne 0 ]]; then
+  curl --silent -u $auth $sr_endpoint || {
     echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
     exit 1
-  fi
+  }
   return 0
 }
 
 function get_and_compile_kafka_streams_examples() {
 
   [[ -d "kafka-streams-examples" ]] || git clone https://github.com/confluentinc/kafka-streams-examples.git
-  (cd kafka-streams-examples && git fetch && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH} && git pull && mvn package -DskipTests)
-  if [[ $? != 0 ]]; then
+  (cd kafka-streams-examples && git fetch && git checkout ${CONFLUENT_RELEASE_TAG_OR_BRANCH} && git pull && mvn package -DskipTests) || {
     echo "ERROR: There seems to be a BUILD FAILURE error with confluentinc/kafka-streams-examples. Please troubleshoot and try again."
     exit 1
-  fi
-
+  }
   return 0
 }
 
