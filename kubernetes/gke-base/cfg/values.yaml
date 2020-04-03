@@ -18,19 +18,21 @@ global:
 manager:
   name: manager
 
-operator:
-  name: operator
-  image:
-    tag: 0.176.1
+#operator:
+#  name: operator
+#  image:
+#    tag: 0.176.1
 
 zookeeper:
   <<: *cpImage
+  disableHostPort: true
   resources:
     cpu: 200m
     memory: 512Mi
   
 kafka:
   <<: *cpImage
+  disableHostPort: true
   resources:
     cpu: 200m
     memory: 1Gi
@@ -52,7 +54,7 @@ schemaregistry:
 
 connect:
   image:
-    repository: cnfldemos/cp-server-connect-operator-with-datagen 
+    repository: cnfldemos/cp-server-connect-operator-datagen 
     tag: 0.3.1-5.4.1.0
   tls:
     enabled: false
