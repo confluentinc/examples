@@ -90,5 +90,8 @@ Additional documentation: [Getting Started](https://docs.confluent.io/current/ge
 Here are additional GitHub repos that offer an incredible set of Apache Kafka demos.
 They are not maintained on a per-release basis like the demos in this repo, but they are a great resource.
 
-* [confluentinc/demo-scene](https://github.com/confluentinc/demo-scene/blob/master/README.md)
+* [confluentinc/demo-scene](https://github.com/confluentinc/demo-scene/blob/master/README.md), the most popular demos include:
+** [Workshop: Apache Kafka and ksqlDB in Action: Let’s Build a Streaming Data Pipeline!](https://github.com/confluentinc/demo-scene/tree/master/build-a-streaming-pipeline/workshop)
+** [Introduction to ksqlDB](https://github.com/confluentinc/demo-scene/tree/master/introduction-to-ksqldb)
+** [Kafka Connect Zero to Hero](https://github.com/confluentinc/demo-scene/tree/master/kafka-connect-zero-to-hero)
 * [vdesabou/kafka-docker-playground](https://github.com/vdesabou/kafka-docker-playground/blob/master/README.md)
