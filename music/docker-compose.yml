@@ -139,7 +139,7 @@ services:
     image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
     container_name: ksql-cli
     volumes:
-      - $PWD/ksql.commands:/tmp/ksql.commands
+      - $PWD/statements.sql:/tmp/statements.sql
     depends_on:
       - kafka
       - ksqldb-server

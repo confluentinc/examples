@@ -146,7 +146,7 @@ confluent local consume $TOPIC -- \
 
 # Create KSQL queries
 ksql http://localhost:8088 <<EOF
-run script '$PACKAGE.commands';
+run script '${PACKAGE}_statements.sql';
 exit ;
 EOF
 

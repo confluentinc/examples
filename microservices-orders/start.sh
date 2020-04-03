@@ -80,7 +80,7 @@ sleep 10
 
 # Create KSQL queries
 ksql http://localhost:8088 <<EOF
-run script 'ksql.commands';
+run script 'statements.sql';
 exit ;
 EOF
 

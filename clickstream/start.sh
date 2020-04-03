@@ -24,7 +24,7 @@ sleep 30
 
 # Run the KSQL queries
 docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
-run script '/scripts/clickstream-schema.sql';
+run script '/scripts/statements.sql';
 exit ;
 EOF"
 
