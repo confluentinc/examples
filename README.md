@@ -87,8 +87,8 @@ Additional documentation: [Getting Started](https://docs.confluent.io/current/ge
 
 # Additional Demos
 
-Here are additional GitHub repos that offer an incredible set of Apache Kafka demos.
-They are not maintained on a per-release basis like the demos in this repo, but they are a great resource.
+Here are additional GitHub repos that offer an incredible set of nearly a hundred other Apache Kafka demos.
+They are not maintained on a per-release basis like the demos in this repo, but they are an invaluable resource.
 
 * [confluentinc/demo-scene](https://github.com/confluentinc/demo-scene/blob/master/README.md), the most popular demos include:
 
