@@ -182,7 +182,7 @@ gke-base-wait-for-controlcenter: #_ Waits until the Control Center rollout is co
 
 gke-base-destroy-controlcenter: #_ Purge the Control Center package 
 	@$(call echo_stdout_header,Purge the Control Center package)
-	-helm delete controlcenter --namespace $(GKE_BASE_KUBECTL_CONTEXT)
+	-helm delete controlcenter --namespace $(GKE_BASE_KUBECTL_NAMESPACE)
 	@$(call echo_stdout_footer_pass,Control Center purged)
 
 gke-base-wait-for-controlcenter-destruction: #_ Waits until Control Center is destroyed
