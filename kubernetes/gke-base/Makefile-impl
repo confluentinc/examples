@@ -47,8 +47,14 @@ gke-destroy-cluster: gke-check-dependencies ## Destroys the GKE cluster built fr
 	gcloud --quiet container clusters delete $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE)
 	@$(call echo_stdout_footer_pass,GKE Cluster Deleted)
 
+gke-base-ensure-namespace:
+	@$(call echo_stdout_header,ensuring namespace is avaiable)	
+	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) apply -f $(GKE_BASE_MKFILE_DIR)cfg/operator-namespace.json
+	@$(call echo_stdout_footer_pass,namespace ready)
+
 gke-base-validate: gke-check-dependencies init
 	@echo
+	@make --no-print-directory gke-base-ensure-namespace
 	@$(call echo_pass,gke-base demo validation complete)
 
 ###### OPERATOR MANAGEMENT ######
