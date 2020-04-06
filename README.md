@@ -1,11 +1,16 @@
 ![image](images/confluent-logo-300-2.png)
 
-* [Demos](#demos)
+* [Overview](#overview)
+* [Where to Start](#where-to-start)
+* [Confluent Cloud](#confluent-cloud)
+* [Stream Processing](#stream-processing)
+* [Data Pipelines](#data-pipelines)
+* [Confluent Platform](#confluent-platform)
 * [Build Your Own](#build-your-own)
 * [Additional Demos](#additional-demos)
 
 
-# Demos
+# Overview
 
 This is a curated list of demos that showcase Apache Kafka® event stream processing on the Confluent Platform, an event stream processing platform that enables you to process, organize, and manage massive amounts of streaming data across cloud, on-prem, and serverless deployments.
 
@@ -13,21 +18,15 @@ This is a curated list of demos that showcase Apache Kafka® event stream proces
 <a href="http://www.youtube.com/watch?v=muQBd6gry0U" target="_blank"><img src="images/examples-video-thumbnail.jpg" width="360" height="270" border="10" /></a>
 </p>
 
-## Where to start
+# Where to start
 
 The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo) which spins up a Kafka event streaming application using ksqlDB for stream processing, with many security features enabled, in an end-to-end streaming ETL pipeline with a source connector pulling from live data and a sink connector connecting to Elasticsearch and Kibana for visualizations.
 `cp-demo` also comes with a tutorial and is a great configuration reference for Confluent Platform.
 
 <p align="center"><img src="https://raw.githubusercontent.com/confluentinc/cp-demo/5.4.1-post/docs/images/cp-demo-overview.jpg" width="600"></p>
 
-## Full demo list
 
-* [Confluent Cloud](#confluent-cloud)
-* [Stream Processing](#stream-processing)
-* [Data Pipelines](#data-pipelines)
-* [Confluent Platform](#confluent-platform)
-
-### Confluent Cloud
+# Confluent Cloud
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
@@ -38,7 +37,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [GKE to Cloud](kubernetes/replicator-gke-cc/README.md)                 |   N   |   [Y](kubernetes/replicator-gke-cc/README.md)    | Uses Google Kubernetes Engine, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top), and [Confluent Replicator](https://www.confluent.io/confluent-replicator/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) to explore a multicloud deployment <br><img src="kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png" width="450">
 
 
-### Stream Processing
+# Stream Processing
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
@@ -48,7 +47,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [Music demo](music/README.md)                   |   [Y](music/README.md)   |   [Y](music/README.md)    | ksqlDB version of the [Kafka Streams Demo Application](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) <br><img src="music/images/ksql-music-demo-overview.jpg" width="450">
 
 
-### Data Pipelines
+# Data Pipelines
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
@@ -56,7 +55,7 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 | [Connect and Kafka Streams](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API <br><img src="connect-streams-pipeline/images/blog_connect_streams_diag.jpg" width="450">
 
 
-### Confluent Platform
+# Confluent Platform
 
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
