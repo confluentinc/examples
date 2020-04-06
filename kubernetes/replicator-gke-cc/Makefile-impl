@@ -25,8 +25,8 @@ include $(THIS_MKFILE_DIR)../gke-base/Makefile-impl
 ###### REPLICATOR MANAGEMENT ######
 replicator-gke-cc-deploy-replicator: #_ Deploys Replicator into the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Replicator)
-	@echo "helm upgrade --install --namespace operator --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator $(OPERATOR_PATH)helm/confluent-operator"
-	@helm upgrade --install --namespace operator --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator $(OPERATOR_PATH)helm/confluent-operator
+	@echo "helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator $(OPERATOR_PATH)helm/confluent-operator"
+	@helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) --set replicator.enabled=true $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Replicator deployed)
 
 replicator-gke-cc-wait-for-replicator: #_ Waits until the Replicator rollout is complete
@@ -37,7 +37,7 @@ replicator-gke-cc-wait-for-replicator: #_ Waits until the Replicator rollout is 
 
 replicator-gke-cc-destroy-replicator: #_ Purge the Replicator package 
 	@$(call echo_stdout_header,Purge the Replicator package)
-	-helm delete --purge replicator
+	-helm delete replicator --namespace $(GKE_BASE_KUBECTL_NAMESPACE)
 	@$(call echo_stdout_footer_pass,Replicator purged)
 
 replicator-gke-cc-wait-for-replicator-destruction: #_ Waits until the Replicator cluster is destroyed
@@ -49,13 +49,13 @@ replicator-gke-cc-wait-for-replicator-destruction: #_ Waits until the Replicator
 ##### DEMO HELM CHART #####
 replicator-gke-cc-deploy-demo-helm: #_ Deploys the helm chart for some custom items for this demo
 	@$(call echo_stdout_header,Deploy Replicator Deploy Job)
-	@echo "helm upgrade --install --namespace operator $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc"
-	@helm upgrade --install --namespace operator $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc
+	@echo "helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc"
+	@helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator-gke-cc $(REPLICATOR_GKE_CC_MKFILE_DIR)helm/replicator-gke-cc
 	@$(call echo_stdout_footer_pass,Replicator Deploy Job deployed)
 
 replicator-gke-cc-destroy-demo-helm: #_ Destroys the deploy job and configuration for Replicator
 	@$(call echo_stdout_header,destory Deploy stock trades datagen connector)
-	-helm delete --purge replicator-gke-cc
+	-helm delete replicator-gke-cc --namespace $(GKE_BASE_KUBECTL_NAMESPACE)
 	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) delete configmap/stock-trades-datagen-connector
 	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
 #################################
