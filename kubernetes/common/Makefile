@@ -32,7 +32,7 @@ help: ## shows help for each target
 extended-help: 
 	@$(foreach m,$(MAKEFILE_LIST),grep -E '^[a-zA-Z_-]+:.*?#_ .*$$' $(m) | sort | awk 'BEGIN {FS = ":.*?#_ "}; {printf "\033[36m%-$(HELP_TAB_WIDTH)s\033[0m %s\n", $$1, $$2}';)
 
-OPERATOR_VERSION ?= 20190912-v0.65.1
+OPERATOR_VERSION ?= 20200310-v0.142.1
 OPERATOR_DOWNLOAD_PATH := $(COMMON_MKFILE_DIR)cp/operator/confluent-operator-$(OPERATOR_VERSION).tar.gz
 OPERATOR_PATH := $(dir $(OPERATOR_DOWNLOAD_PATH))$(OPERATOR_VERSION)/
 
@@ -47,17 +47,6 @@ ifeq (,$(wildcard $(OPERATOR_DOWNLOAD_PATH)))
 endif
 	@$(call echo_pass,Confluent Platform Operator helm bundle ready at: $(OPERATOR_PATH))
 
-ensure-tiller-serviceaccount: #_ Ensures there is a service account for Tiller
-	@$(call echo_stdout_header,ensure tiller service account)	
-	kubectl apply -f $(COMMON_MKFILE_DIR)cfg/serviceaccount-tiller.yaml
-	@$(call echo_stdout_footer_pass,tiller service account applied)
-
-helm-init: #_ Installs helm 
-	@$(call echo_stdout_header,helm init)
-	helm init --upgrade --wait --service-account tiller
-	@$(call echo_stdout_footer_pass,helm initialized)
-
-init: check-dependencies get-helm-bundle ensure-tiller-serviceaccount helm-init #_ Initializes the common dependencies 
-	@echo
+init: check-dependencies get-helm-bundle #_ Initializes the common dependencies @echo
 	@$(call echo_pass,common initialization complete)
 

@@ -20,5 +20,5 @@ This demo accomplishes this by overriding the ``connect`` image to instead use t
 
   connect:
   image:
-    repository: cnfldemos/cp-server-connect-operator-with-datagen 
-    tag: 0.1.6-5.3.1.0
+    repository: cnfldemos/cp-server-connect-operator-datagen
+    tag: 0.3.1-5.4.1.0

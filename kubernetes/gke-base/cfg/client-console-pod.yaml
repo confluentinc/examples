@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
   - name: client-console
-    image: docker.io/confluentinc/cp-server-operator:5.3.0.0
+    image: docker.io/confluentinc/cp-server-operator:5.4.1.0
     command: [sleep, "86400"]
     volumeMounts:
     - name: kafka-client-properties
