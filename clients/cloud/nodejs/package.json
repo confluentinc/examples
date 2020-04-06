@@ -1,7 +1,7 @@
 {
   "name": "confluent-examples-nodejs",
   "private": true,
-  "version": "5.4.0",
+  "version": "5.4.0-cp1",
   "engines": {
     "node": ">=8.6"
   },
