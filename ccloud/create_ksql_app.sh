@@ -25,7 +25,7 @@ ccloud ksql app configure-acls $ksqlAppId pageviews users USERS_ORIGINAL PAGEVIE
 for topic in USERS_ORIGINAL PAGEVIEWS_FEMALE PAGEVIEWS_FEMALE_LIKE_89 PAGEVIEWS_REGIONS; do
   echo "Creating topic $topic and ACL permitting KSQL to write to it"
   ccloud kafka topic create $topic
-  ccloud kafka acl create --allow --service-account-id $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $topic
+  ccloud kafka acl create --allow --service-account $(ccloud service-account list | grep $ksqlAppId | awk '{print $1;}') --operation WRITE --topic $topic
 done
 
 # Submit KSQL queries

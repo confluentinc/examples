@@ -22,14 +22,21 @@ check_jq || exit
 export CONFIG_FILE=~/.ccloud/config
 
 check_ccloud_config $CONFIG_FILE || exit 1
-check_ccloud_version 0.239.0 || exit 1
+check_ccloud_version 0.264.0 || exit 1
 check_ccloud_logged_in || exit 1
+
+#################################################################
+# Generate CCloud configurations
+#################################################################
 
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
+
+# Set Kafka cluster
+ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 
 # Validate credentials to Confluent Cloud Schema Registry
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
