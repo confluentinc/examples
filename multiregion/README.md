@@ -27,7 +27,7 @@ Here are some relevant configuration parameters that are used by Multi-Region Re
 ### Broker
 * `broker.rack`: identifies the location of the broker. For the demo, it represents a region, either `east` or `west`
 * `replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector`: allows clients to read from followers (in contrast, clients are typically only allowed to read from leaders)
-* `confluent.log.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}`: This sets the default replica placement constraint configuration to use when creating a topic.
+* `confluent.log.placement.constraints`: sets the default replica placement constraint configuration for newly created topics.
 
 ### Client
 * `client.rack`: identifies the location of the client. For the demo, it represents a region, either `east` or `west`
@@ -303,7 +303,7 @@ Observations:
 
 * In the first case, the topic `single-region` has no leader, because it had only two replicas in the ISR, both of which were in the `west` region and are now down.
 * In the second case, the topic `multi-region-sync` automatically elected a new leader in `east` (e.g. replica 3 in the above output).  Clients can failover to those replicas in the east region.
-* In the third case, the topics `multi-region-async` and `multi-region-default` also have no leader, because they had only two replicas in the ISR, both of which were in the `west` region and are now down.  The observers in the `east` region are not eligible to become leaders automatically because they were not in the ISR.
+* In the last two cases, the topics `multi-region-async` and `multi-region-default` also have no leader, because they had only two replicas in the ISR, both of which were in the `west` region and are now down.  The observers in the `east` region are not eligible to become leaders automatically because they were not in the ISR.
 
 ### Fail over observers
 
@@ -343,7 +343,7 @@ Observations for topics `multi-region-async` and `multi-region-default`:
 
 ### Permanent Failover
 
-At this point in the example, if the brokers `broker-west-1` and `broker-west-2` come back online then by default the leaders for the topics `multi-region-async` and `multi-region-default` will be elected back to a replica with a rack of `west` (replica 1 or 2). To change this fallback behavior we can change the configuration of assignment of the affected topic. Here we are going to perform a permanent fallback to the east region for the topic `multi-region-default`.
+At this point in the example, if the brokers `broker-west-1` and `broker-west-2` come back online, then by default the leaders for the topics `multi-region-async` and `multi-region-default` will be elected back to a replica with a rack in `west` (i.e., replica 1 or 2). To change this fallback behavior we can change the configuration of assignment of the affected topic. Here we are going to perform a permanent fallback to the east region for the topic `multi-region-default`.
 
 
 ```

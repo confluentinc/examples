@@ -2,7 +2,8 @@ echo -e "\n==> Switching replica placement constraints for multi-region-default\
 
 docker-compose exec broker-east-3 kafka-configs \
 	--bootstrap-server broker-east-3:19093 \
-	--alter --topic multi-region-default \
+	--alter \
+	--topic multi-region-default \
 	--replica-placement /etc/kafka/demo/placement-multi-region-async-reverse.json
 
 
