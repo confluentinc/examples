@@ -41,13 +41,13 @@ The following applications or libraries are required to be installed and availab
 +==================+===================+==========================================================+
 | ``kubectl``      | ``1.18.0``        | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
 +------------------+-------------------+----------------------------------------------------------+
-| ``helm``         | ``3.1.2``        | https://github.com/helm/helm/releases/tag/v2.12.3        |
+| ``helm``         | ``3.1.2``         | https://github.com/helm/helm/releases/tag/v2.12.3        |
 +------------------+-------------------+----------------------------------------------------------+
 | ``gcloud``       | ``286.0.0``       | https://cloud.google.com/sdk/install                     |
 | ``GCP sdk core`` | ``2020.03.24``    |                                                          |
 | ``GKE cluster``  | ``1.15.11-gke.1`` |                                                          |
 +------------------+-------------------+----------------------------------------------------------+
-| ``ccloud``       | ``v1.0.0``      | https://docs.confluent.io/current/cloud/cli/install.html |
+| ``ccloud``       | ``v1.0.0``        | https://docs.confluent.io/current/cloud/cli/install.html |
 +------------------+-------------------+----------------------------------------------------------+
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
