@@ -25,9 +25,16 @@ check_ccloud_config $CONFIG_FILE || exit 1
 check_ccloud_version 0.239.0 || exit 1
 check_ccloud_logged_in || exit 1
 
+#################################################################
+# Generate CCloud configurations
+#################################################################
+
 DELTA_CONFIGS_DIR="delta_configs"
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
+
+# Set Kafka cluster
+ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 
 # Clean up KSQL
 echo "Clean up KSQL"

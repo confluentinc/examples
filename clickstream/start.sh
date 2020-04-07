@@ -10,7 +10,7 @@ docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components conf
 docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:5.4.1
 
 docker-compose up -d
-echo -e "\nSleeping 60 seconds while demo starts\n"
+echo -e "\nSleeping 60 seconds while Docker containers start\n"
 sleep 60
 
 # Run the source connectors (with ksqlDB CLI) that generate data
@@ -19,7 +19,7 @@ run script '/scripts/create-connectors.sql';
 exit ;
 EOF"
 
-echo -e "\nSleeping 30 seconds\n"
+echo -e "\nSleeping 30 seconds until ksqlDB server starts and topics have data\n"
 sleep 30
 
 # Run the KSQL queries
