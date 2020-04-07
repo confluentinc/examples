@@ -125,12 +125,12 @@ The script creates each topic with a different replica placement policy that spe
 The replica placement policy file is defined with the argument `--replica-placement <path-to-replica-placement-policy-json>` mentioned earlier (these files are in the [config](config/) directory).
 Each placement also has a minimum `count` associated with it that allows users to guarantee a certain spread of replicas throughout the cluster.
 
-| Topic name           | Leader  | Followers (sync replicas) | Observers (async replicas) | ISR list  |
-|----------------------|---------|---------------------------|----------------------------|-----------|
-| single-region        | 1x west | 1x west                   | n/a                        | {1,2}     |
-| multi-region-sync    | 1x west | 1x west, 2x east          | n/a                        | {1,2,3,4} |
-| multi-region-async   | 1x west | 1x west                   | 2x east                    | {1,2}     |
-| multi-region-default | 1x west | 1x west                   | 2x east                    | {1,2}     |
+| Topic name           | Leader  | Followers (sync replicas) | Observers (async replicas) | ISR list  | Use default placement constraints |
+|----------------------|---------|---------------------------|----------------------------|-----------|-----------------------------------|
+| single-region        | 1x west | 1x west                   | n/a                        | {1,2}     | no                                |
+| multi-region-sync    | 1x west | 1x west, 2x east          | n/a                        | {1,2,3,4} | no                                |
+| multi-region-async   | 1x west | 1x west                   | 2x east                    | {1,2}     | no                                |
+| multi-region-default | 1x west | 1x west                   | 2x east                    | {1,2}     | yes                               |
 
 The playbook below highlights client performance differences between these topics depending on the relative location of clients and brokers.
 
@@ -343,8 +343,7 @@ Observations for topics `multi-region-async` and `multi-region-default`:
 
 ### Permanent Failover
 
-At this point in the example, if the brokers `broker-west-1` and `broker-west-2` come back online, then by default the leaders for the topics `multi-region-async` and `multi-region-default` will be elected back to a replica with a rack in `west` (i.e., replica 1 or 2). To change this fallback behavior we can change the configuration of assignment of the affected topic. Here we are going to perform a permanent fallback to the east region for the topic `multi-region-default`.
-
+At this point in the example, if the brokers `broker-west-1` and `broker-west-2` come back online, then by default the leaders for the topics `multi-region-async` and `multi-region-default` will be elected back to a replica with a rack in `west` (i.e., replica 1 or 2). To change this behavior we can change the topic placement constraints configuration and replica assignment of the affected topic. Here we are going to change the topic placement constraints configuration and replica assignment for `multi-region-default`.
 
 ```
 ./scripts/permanent-fallback.sh

@@ -29,6 +29,8 @@ docker-compose exec broker-west-1 kafka-topics  --create \
 
 echo -e "\n==> Creating topic multi-region-default"
 
+# Note that the --replica-placement flag is not needed because we want to use
+# the default placement constraints in this topic
 docker-compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
