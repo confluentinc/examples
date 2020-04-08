@@ -4,7 +4,7 @@ docker-compose exec broker-east-3 kafka-configs \
 	--bootstrap-server broker-east-3:19093 \
 	--alter \
 	--topic multi-region-default \
-	--replica-placement /etc/kafka/demo/placement-multi-region-async-reverse.json
+	--replica-placement /etc/kafka/demo/placement-multi-region-default-reverse.json
 
 
 echo -e "\n==> Running Confluent Rebalancer on multi-region-default\n"

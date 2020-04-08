@@ -196,6 +196,7 @@ Observations:
 * In the first and third cases, topics `single-region` and `multi-region-async` have nearly the same throughput performance (e.g., `1.15 MB/sec` and `1.09 MB/sec`, respectively, in the above example), because only the replicas in the `west` region need to ack.
 * In the second case for topic `multi-region-sync`, due to the poor network bandwidth between the `east` and `west` regions and due to an ISR made up of brokers in both regions, it took a big throughput hit (e.g., `0.01 MB/sec` in the above example). This is because the producer is waiting for an `ack` from all members of the ISR before continuing, including those in `west` and `east`.
 * The observers in the third case for topic `multi-region-async` didn't affect the overall producer throughput because the `west` region is sending an `ack` back to the producer after it has been replicated twice in the `west` region, and it is not waiting for the async copy to the `east` region. 
+* This example doesn't produce to `multi-region-default` as the behavior should be the same as `multi-region-async` since the configuration is the same.
 
 ## Consumer Testing
 
@@ -224,6 +225,7 @@ Observations:
 
 * In the first case, the consumer running in `east` reads from the leader in `west`, and so it is negatively impacted by the low bandwidth between `east` and `west`.  Its throughput is lower (e.g. `0.9025` MB.sec in the above example).
 * In the second case, the consumer running in `east` reads from the follower that is also in `east`. Its throughput is higher (e.g. `3.9356` MB.sec in the above example).
+* This example doesn't consume from `multi-region-default` as the behavior should be the same as `multi-region-async` since the configuration is the same.
 
 ## Monitoring Observers
 
@@ -343,7 +345,9 @@ Observations for topics `multi-region-async` and `multi-region-default`:
 
 ### Permanent Failover
 
-At this point in the example, if the brokers `broker-west-1` and `broker-west-2` come back online, then by default the leaders for the topics `multi-region-async` and `multi-region-default` will be elected back to a replica with a rack in `west` (i.e., replica 1 or 2). To change this behavior we can change the topic placement constraints configuration and replica assignment of the affected topic. Here we are going to change the topic placement constraints configuration and replica assignment for `multi-region-default`.
+At this point in the example, if the brokers in the `west` region come back online, then by default the leaders for the topics `multi-region-async` and `multi-region-default` will automatically be elected back to a replica in `west` (i.e., replica 1 or 2). This may be desirable in some circumstances, but if you don't want them to automatically failback, change the topic placement constraints configuration and replica assignment.
+
+In the next step, change the topic placement constraints configuration and replica assignment for `multi-region-default`.
 
 ```
 ./scripts/permanent-fallback.sh
