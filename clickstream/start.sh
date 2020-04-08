@@ -44,21 +44,4 @@ Navigate to:
       http://localhost:9021
 EOF
 
-echo -e "\nSleeping 30 seconds then starting clickstream sessionizing\n"
-sleep 30
-
-for i in {1..100}; do
-
- 
- docker-compose exec ksqldb-server curl -X PUT localhost:8083/connectors/DATAGEN_CLICKSTREAM/pause
-
- echo -e "\nPaused the clickstream datagen for 35 seconds\n"
- sleep 35
-
-
- docker-compose exec ksqldb-server curl -X PUT localhost:8083/connectors/DATAGEN_CLICKSTREAM/resume
-
- echo -e "\Resumed the clickstream datagen for 90 seconds. Then the cycle will repeat\n"
- sleep 90
-
-done
+./sessionize-data.sh

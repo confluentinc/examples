@@ -147,7 +147,6 @@ Load the Streaming Data to ksqlDB
          Executing statement
         ---------
 
-
 ---------------------------------------------
 Verify the data
 ---------------------------------------------
@@ -237,7 +236,31 @@ processing required to generate the data. For example, the large chart in the mi
 using a Session window - where a sessions expire after 300 seconds of inactivity. Editing the panel allows you to view the datasource - which
 is named after the streams and tables captured in the ``statements.sql`` file.
 
+---------------------------------------------
+Sessionize the data
+---------------------------------------------
 
+One of the tables created by the demo, CLICK_USER_SESSIONS, shows a count of user activity
+for a given user session.  All clicks from the user count towards the total user activity for the current
+session.  If a user is inactive for 30 seconds, then any subsequent click activity is counted
+towards a new session.
+
+The clickstream demo simulates user sessions with a script.  The script pauses the DATAGEN_CLICKSTREAM 
+connector every 90 seconds for a 35 second period of inactivity.  By stopping the DATAGEN_CLICKSTREAM connector 
+for some time greater than 30 seconds, you will see distinct user sessions.
+
+You'll probably use a longer inactivity gap for session windows in practice.  But the demo uses 30 seconds so you can see the sessions
+in action in a reasonable amount of time.
+
+Session windows are different because they monitor user behavior and
+other window implementations consider only time.
+
+To generate the session data execute the following statement from the ``examples/clickstream`` directory:
+
+.. code:: bash
+    ./sessionize-data.sh
+
+The script will issue some statements to the console about where it is in the process.
 
 ---------------
 Troubleshooting
