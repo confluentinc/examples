@@ -1,0 +1,3 @@
+  ksql-cli:
+    volumes:
+      - $PWD/statements.sql:/tmp/statements.sql
