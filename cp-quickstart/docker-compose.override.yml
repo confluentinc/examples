@@ -1,0 +1,6 @@
+---
+version: '2'
+services:
+  ksql-cli:
+    volumes:
+      - $PWD/statements.sql:/tmp/statements.sql
