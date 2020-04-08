@@ -16,6 +16,7 @@ retry $MAX_WAIT check_connect_up connect || exit 1
 sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
+# Configure datagen connectors
 . ./connectors/submit_datagen_pageviews_config.sh
 . ./connectors/submit_datagen_users_config.sh
 

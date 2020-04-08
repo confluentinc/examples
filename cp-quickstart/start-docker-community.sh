@@ -16,9 +16,10 @@ retry $MAX_WAIT check_connect_up connect || exit 1
 sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
-wget https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_pageviews_cos.config
+# Configure datagen connectors
+wget -O connector_pageviews_cos.config  https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_pageviews_cos.config
 curl -X POST -H "Content-Type: application/json" --data @connector_pageviews_cos.config http://localhost:8083/connectors
-wget https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_users_cos.config
+wget -O connector_users_cos.config https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_users_cos.config
 curl -X POST -H "Content-Type: application/json" --data @connector_users_cos.config http://localhost:8083/connectors
 
 # Verify topics exist
