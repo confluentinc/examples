@@ -64,10 +64,24 @@ services:
       KSQL_AUTO_OFFSET_RESET: "earliest"
       KSQL_COMMIT_INTERVAL_MS: 2000
       KSQL_KSQL_HIDDEN_TOPICS: '^_.*'
-      # Configure embedded Kafka Connect
-      KSQL_KSQL_CONNECT_WORKER_CONFIG: "/scripts/connect-config/ksqldb-embedded-connect.properties"
-      KSQL_LOG4J_OPTS: "-Dlog4j.configuration=file:/etc/ksql-server/log4j.properties"
-      KSQL_LOG4J_ROOT_LOGLEVEL: INFO
+
+      # ksqlDB embedded Connect worker
+      KSQL_CONNECT_BOOTSTRAP_SERVERS: kafka:29092
+      KSQL_CONNECT_REST_ADVERTISED_HOST_NAME: ksqldb'
+      KSQL_CONNECT_REST_PORT: 8083
+      KSQL_CONNECT_GROUP_ID: ksqldb-kafka-connect-group-01
+      KSQL_CONNECT_CONFIG_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-configs
+      KSQL_CONNECT_OFFSET_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-offsets
+      KSQL_CONNECT_STATUS_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-status
+      KSQL_CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      KSQL_CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
+      KSQL_CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
+      KSQL_CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
+      KSQL_CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: '[%d] %p %X{connector.context}%m (%c:%L)%n'
+      KSQL_CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components/,/data/connect-jars'
+
       CONNECT_HOST: ksqldb-server
       ELASTIC_HOST: elasticsearch
       GRAFANA_HOST: grafana
