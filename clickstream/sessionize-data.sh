@@ -14,7 +14,7 @@
 # other window implementations are driven only by time.
 
 
-echo "Starting to run the session data, I'll pause for 90 seconds to allow more data to generate"
+echo "Running for 90 seconds to allow clickstream data to generate"
 
 sleep 90
 for i in {1..100}; do
@@ -22,13 +22,13 @@ for i in {1..100}; do
  
  docker-compose exec ksqldb-server curl -X PUT localhost:8083/connectors/DATAGEN_CLICKSTREAM/pause
 
- echo "Paused the clickstream datagen for 35 seconds"
+ echo "Pausing the clickstream datagen for 35 seconds"
  sleep 35
 
 
  docker-compose exec ksqldb-server curl -X PUT localhost:8083/connectors/DATAGEN_CLICKSTREAM/resume
 
- echo "Resumed the clickstream datagen for 90 seconds. Then the cycle will repeat"
+ echo "Resuming the clickstream datagen for 90 seconds. Then the cycle will repeat"
  sleep 90
 
 done
