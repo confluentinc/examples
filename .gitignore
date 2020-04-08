@@ -20,4 +20,4 @@ log.*
 *.csr
 *.srl
 *_creds
-*/cp-all-in-one/
+cp-quickstart/docker-compose.yml
