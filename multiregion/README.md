@@ -338,7 +338,7 @@ Topic: multi-region-default	PartitionCount: 1	ReplicationFactor: 4	Configs: min.
 
 Observations for topics `multi-region-async` and `multi-region-default`:
 
-* It has a leader again (e.g. replica 3 in the above output)
+* They have leaders again (e.g. replica 3 in the above output)
 * The observers are now in the ISR list (e.g. replicas 3,4 in the above output)
 
 ### Permanent Failover
