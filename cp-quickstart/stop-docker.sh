@@ -3,4 +3,4 @@
 # Source library 
 . ../utils/helper.sh
 
-docker-compose down
+docker-compose down -v
