@@ -3,7 +3,7 @@
 # Source library
 . ../utils/helper.sh
 
-wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/master/cp-all-in-one/docker-compose.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one/docker-compose.yml
 
 ./stop-docker.sh
 
