@@ -3,7 +3,7 @@
 # Source library
 . ../utils/helper.sh
 
-wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one/docker-compose.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-community/docker-compose.yml
 
 ./stop-docker.sh
 
@@ -17,8 +17,10 @@ sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
 # Configure datagen connectors
-. ./connectors/submit_datagen_pageviews_config.sh
-. ./connectors/submit_datagen_users_config.sh
+wget -O connector_pageviews_cos.config  https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_pageviews_cos.config
+curl -X POST -H "Content-Type: application/json" --data @connector_pageviews_cos.config http://localhost:8083/connectors
+wget -O connector_users_cos.config https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_users_cos.config
+curl -X POST -H "Content-Type: application/json" --data @connector_users_cos.config http://localhost:8083/connectors
 
 # Verify topics exist
 MAX_WAIT=30
