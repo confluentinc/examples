@@ -254,7 +254,7 @@ The script will issue some statements to the console about where it is in the pr
 View the data in Grafana
 ---------------------------------------------
 
-Now open your your browser using the URL output from the previous step's command.
+Now open your your browser using the URL output from the step where you loaded the data into Grafana.
     You can login with user ID ``user`` and password ``user``.
 
     **Important:** If you already have Grafana UI open, you may need to
