@@ -245,8 +245,9 @@ other window implementations consider only time.
 
 To generate the session data execute the following statement from the ``examples/clickstream`` directory:
 
-.. code:: bash
-    ./sessionize-data.sh
+ .. code:: bash
+
+     ./sessionize-data.sh
 
 The script will issue some statements to the console about where it is in the process.
 
