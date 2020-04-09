@@ -90,7 +90,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
   connect-local:
-    image: cnfldemos/cp-server-connect-datagen:0.2.0-5.4.0
+    image: cnfldemos/cp-server-connect-datagen:${KAFKA_CONNECT_DATAGEN_DOCKER_TAG}
     hostname: connect-local
     container_name: connect-local
     depends_on:
@@ -140,7 +140,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
   connect-cloud:
-    image: cnfldemos/cp-server-connect-datagen:0.2.0-5.4.0
+    image: cnfldemos/cp-server-connect-datagen:${KAFKA_CONNECT_DATAGEN_DOCKER_TAG}
     hostname: connect-cloud
     container_name: connect-cloud
     depends_on:
