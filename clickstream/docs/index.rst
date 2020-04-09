@@ -92,7 +92,7 @@ Browse the Clickstream Data
        docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
 
-    Your output should resemble:
+  Your output should resemble:
 
    .. code:: bash
 
@@ -108,7 +108,7 @@ Browse the Clickstream Data
        docker-compose exec tools confluent local consume clickstream_users -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
 
-    Your output should resemble:
+  Your output should resemble:
 
    .. code:: bash
 
@@ -245,9 +245,9 @@ other window implementations consider only time.
 
 To generate the session data execute the following statement from the ``examples/clickstream`` directory:
 
- .. code:: bash
+.. code:: bash
 
-     ./sessionize-data.sh
+    ./sessionize-data.sh
 
 The script will issue some statements to the console about where it is in the process.
 
