@@ -10,10 +10,10 @@ services:
     ports:
       - "2181:2181"
     environment:
-        ZOOKEEPER_SERVER_ID: 1
-        ZOOKEEPER_CLIENT_PORT: 2181
-        ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
-      
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+
   zookeeper-central:
     image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-central
@@ -23,9 +23,9 @@ services:
     ports:
       - "2182:2182"
     environment:
-        ZOOKEEPER_SERVER_ID: 2
-        ZOOKEEPER_CLIENT_PORT: 2182
-        ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 2182
+      ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
     depends_on:
       - zookeeper-west
 
@@ -38,9 +38,9 @@ services:
     ports:
       - "2183:2183"
     environment:
-        ZOOKEEPER_SERVER_ID: 3
-        ZOOKEEPER_CLIENT_PORT: 2183
-        ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 2183
+      ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
     depends_on:
       - zookeeper-west
       - zookeeper-central
@@ -64,9 +64,13 @@ services:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-west-1:19091,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9091
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-east-3:19093
       KAFKA_JMX_PORT: 8091
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
     depends_on:
       - zookeeper-west
       - zookeeper-central
@@ -89,9 +93,13 @@ services:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-west-2:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-east-3:19093
       KAFKA_JMX_PORT: 8092
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
     depends_on:
       - zookeeper-west
       - zookeeper-central
@@ -117,9 +125,13 @@ services:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-east-3:19093,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-east-3:19093
       KAFKA_JMX_PORT: 8093
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
     depends_on:
       - zookeeper-west
       - zookeeper-central
@@ -144,9 +156,13 @@ services:
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-east-4:19094,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9094
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2 
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-east-3:19093
       KAFKA_JMX_PORT: 8094
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
     depends_on:
       - zookeeper-west
       - zookeeper-central

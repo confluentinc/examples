@@ -21,11 +21,18 @@ docker-compose exec broker-west-1 kafka-topics  --create \
 echo -e "\n==> Creating topic multi-region-async"
 
 docker-compose exec broker-west-1 kafka-topics  --create \
-        --bootstrap-server broker-west-1:19091 \
-        --topic multi-region-async \
-        --partitions 1 \
-        --replica-placement /etc/kafka/demo/placement-multi-region-async.json \
-        --config min.insync.replicas=1
+	--bootstrap-server broker-west-1:19091 \
+	--topic multi-region-async \
+	--partitions 1 \
+	--replica-placement /etc/kafka/demo/placement-multi-region-async.json \
+	--config min.insync.replicas=1
 
-# docker exec broker-west-1 kafka-configs --zookeeper zookeeper-west:2181 \
-# --entity-name multi-region-async --entity-type topics --alter --add-config min.insync.replicas=1
+echo -e "\n==> Creating topic multi-region-default"
+
+# Note that the --replica-placement flag is not needed because we want to use
+# the default placement constraints in this topic
+docker-compose exec broker-west-1 kafka-topics  \
+	--create \
+	--bootstrap-server broker-west-1:19091 \
+	--topic multi-region-default \
+	--config min.insync.replicas=1
