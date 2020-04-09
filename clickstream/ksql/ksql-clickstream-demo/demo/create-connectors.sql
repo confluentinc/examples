@@ -20,5 +20,5 @@ CREATE SOURCE CONNECTOR datagen_clickstream WITH (
   'connector.class'          = 'io.confluent.kafka.connect.datagen.DatagenConnector',
   'kafka.topic'              = 'clickstream',
   'quickstart'               = 'clickstream',
-  'maxInterval'              = '100',
+  'maxInterval'              = '30',
   'format'                   = 'json');
