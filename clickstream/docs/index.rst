@@ -169,33 +169,6 @@ Verify the data
        :alt: Connectors
 
 
----------------------------------------------
-Sessionize the data
----------------------------------------------
-
-One of the tables created by the demo, CLICK_USER_SESSIONS, shows a count of user activity
-for a given user session.  All clicks from the user count towards the total user activity for the current
-session.  If a user is inactive for 30 seconds, then any subsequent click activity is counted
-towards a new session.
-
-The clickstream demo simulates user sessions with a script.  The script pauses the DATAGEN_CLICKSTREAM 
-connector every 90 seconds for a 35 second period of inactivity.  By stopping the DATAGEN_CLICKSTREAM connector 
-for some time greater than 30 seconds, you will see distinct user sessions.
-
-You'll probably use a longer inactivity gap for session windows in practice.  But the demo uses 30 seconds so you can see the sessions
-in action in a reasonable amount of time.
-
-Session windows are different because they monitor user behavior and
-other window implementations consider only time.
-
-To generate the session data execute the following statement from the ``examples/clickstream`` directory:
-
-.. code:: bash
-    ./sessionize-data.sh
-
-The script will issue some statements to the console about where it is in the process.
-
-
 .. _clickstream-view-grafana:
 
 ---------------------------------------------
@@ -249,7 +222,39 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
         {"id":1,"slug":"click-stream-analysis","status":"success","uid":"lUHTGDTmz","url":"/d/lUHTGDTmz/click-stream-analysis","version":4}
 
 
-#.  Open your your browser using the URL output from the previous step's command.
+This step will output a URL, you'll want to save it as you'll need it after the next step.
+
+---------------------------------------------
+Sessionize the data
+---------------------------------------------
+
+One of the tables created by the demo, CLICK_USER_SESSIONS, shows a count of user activity
+for a given user session.  All clicks from the user count towards the total user activity for the current
+session.  If a user is inactive for 30 seconds, then any subsequent click activity is counted
+towards a new session.
+
+The clickstream demo simulates user sessions with a script.  The script pauses the DATAGEN_CLICKSTREAM 
+connector every 90 seconds for a 35 second period of inactivity.  By stopping the DATAGEN_CLICKSTREAM connector 
+for some time greater than 30 seconds, you will see distinct user sessions.
+
+You'll probably use a longer inactivity gap for session windows in practice.  But the demo uses 30 seconds so you can see the sessions
+in action in a reasonable amount of time.
+
+Session windows are different because they monitor user behavior and
+other window implementations consider only time.
+
+To generate the session data execute the following statement from the ``examples/clickstream`` directory:
+
+.. code:: bash
+    ./sessionize-data.sh
+
+The script will issue some statements to the console about where it is in the process.
+
+---------------------------------------------
+View the data in Grafana
+---------------------------------------------
+
+Now open your your browser using the URL output from the previous step's command.
     You can login with user ID ``user`` and password ``user``.
 
     **Important:** If you already have Grafana UI open, you may need to
