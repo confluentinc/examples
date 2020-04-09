@@ -43,3 +43,5 @@ Navigate to:
 - Confluent Control Center:
       http://localhost:9021
 EOF
+
+./sessionize-data.sh
