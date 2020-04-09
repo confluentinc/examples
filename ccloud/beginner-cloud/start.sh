@@ -127,8 +127,8 @@ echo -e "\n# Specify active API key that was just created"
 echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
-echo -e "\n# Wait 120 seconds for the user credentials to propagate"
-sleep 120
+echo -e "\n# Wait 180 seconds for the user credentials to propagate"
+sleep 180 
 
 
 ##################################################
