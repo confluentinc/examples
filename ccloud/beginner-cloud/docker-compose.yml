@@ -2,7 +2,7 @@
 version: '2'
 services:
   connect-cloud:
-    image: cnfldemos/cp-server-connect-datagen:0.2.0-5.4.0
+    image: cnfldemos/cp-server-connect-datagen:${KAFKA_CONNECT_DATAGEN_DOCKER_TAG}
     hostname: connect-cloud
     container_name: connect-cloud
     ports:
