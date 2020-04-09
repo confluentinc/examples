@@ -91,8 +91,7 @@ Browse the Clickstream Data
 
        docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
-
-  Your output should resemble:
+   Your output should resemble:
 
    .. code:: bash
 
@@ -107,8 +106,7 @@ Browse the Clickstream Data
 
        docker-compose exec tools confluent local consume clickstream_users -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
-
-  Your output should resemble:
+   Your output should resemble:
 
    .. code:: bash
 
