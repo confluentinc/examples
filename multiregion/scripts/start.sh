@@ -60,6 +60,18 @@ echo -e "\nFail over the observers in the topic multi-region-async to the east r
 
 docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
 
+docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-default --partition 0
+
+echo "Sleeping 30 seconds"
+sleep 30
+
+${DIR}/describe-topics.sh
+
+echo "Sleeping 5 seconds"
+sleep 5
+
+${DIR}/permanent-fallback.sh
+
 echo "Sleeping 30 seconds"
 sleep 30
 
