@@ -46,16 +46,20 @@ if __name__ == '__main__':
     # Create topic if needed
     ccloud_lib.create_topic(conf, topic)
 
+    delivered_records = 0
+
     # Optional per-message on_delivery handler (triggered by poll() or flush())
     # when a message has been successfully delivered or
     # permanently failed delivery (after retries).
     def acked(err, msg):
+        global delivered_records
         """Delivery report handler called on
         successful or failed delivery of message
         """
         if err is not None:
             print("Failed to deliver message: {}".format(err))
         else:
+            delivered_records += 1
             print("Produced record to topic {} partition [{}] @ offset {}"
                   .format(msg.topic(), msg.partition(), msg.offset()))
 
@@ -70,4 +74,4 @@ if __name__ == '__main__':
 
     p.flush(10)
 
-    print("10 messages were produced to topic {}!".format(topic))
+    print("{} messages were produced to topic {}!".format(delivered_records, topic))
