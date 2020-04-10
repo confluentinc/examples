@@ -25,8 +25,8 @@ public class ProducerExample {
   public void produce() {
     // Produce sample data
     range(0, 10).forEach(i -> {
-      String key = "alice";
-      DataRecordAvro record = new DataRecordAvro((long) i);
+      final String key = "alice";
+      final DataRecordAvro record = new DataRecordAvro((long) i);
       log.info("Producing record: {}\t{}", key, record);
       producer.send(topic.name(), key, record).addCallback(
           result -> {
