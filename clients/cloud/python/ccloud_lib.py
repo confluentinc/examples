@@ -21,7 +21,7 @@
 #
 # =============================================================================
 
-import argparse
+import argparse, sys
 from confluent_kafka import avro, KafkaError
 from confluent_kafka.admin import AdminClient, NewTopic
 from uuid import uuid4
@@ -159,5 +159,7 @@ def create_topic(conf, topic):
             print("Topic {} created".format(topic))
         except Exception as e:
             # Continue if error code TOPIC_ALREADY_EXISTS, which may be true
+            # Otherwise fail fast
             if e.args[0].code() != KafkaError.TOPIC_ALREADY_EXISTS:
                 print("Failed to create topic {}: {}".format(topic, e))
+                sys.exit(1)
