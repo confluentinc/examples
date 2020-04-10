@@ -7,7 +7,7 @@ check_env || exit 1
 check_mvn || exit 1
 check_jot || exit 1
 check_netstat || exit 1
-check_running_elasticsearch 5.6.5 || exit 1
+check_running_elasticsearch 5.6.16 || exit 1
 check_running_kibana || exit 1
 check_running_cp ${CONFLUENT_SHORT} || exit 1
 
