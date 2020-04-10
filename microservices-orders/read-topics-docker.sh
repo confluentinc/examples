@@ -35,6 +35,7 @@ docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broke
 
 # Read queries
 docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+SET CLI COLUMN-WIDTH 15
 SELECT * FROM orders_cust1_joined EMIT CHANGES LIMIT 3;
 SELECT * FROM FRAUD_ORDER EMIT CHANGES LIMIT 2;
 exit ;
