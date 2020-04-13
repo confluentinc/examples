@@ -111,14 +111,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-eclipse-plugin</artifactId>
-        <version>2.19.1</version>
-        <configuration>
-            <downloadJavadocs>true</downloadJavadocs>
-        </configuration>
-      </plugin>
-      <plugin>
           <groupId>io.confluent</groupId>
           <artifactId>kafka-schema-registry-maven-plugin</artifactId>
           <version>${confluent.version}</version>
