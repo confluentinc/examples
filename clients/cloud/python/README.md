@@ -143,7 +143,7 @@ $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent
 5. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
 
 ```bash
-$ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config-t test2
+$ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
 Producing Avro record: alice	0
 Producing Avro record: alice	1
 Producing Avro record: alice	2
