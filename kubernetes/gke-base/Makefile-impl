@@ -30,7 +30,7 @@ GKE_BASE_ADDITIONAL_HELM_FLAGS ?=
 GKE_BASE_SKIP_CLICKS ?=
 GKE_BASE_SKIP_CLIENT_CONSOLE ?=
  
-GKE_BASE_HELM_COMMON_FLAGS := --wait --timeout=5m -f $(GKE_BASE_MKFILE_DIR)cfg/values.yaml --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} $(GKE_BASE_ADDITIONAL_HELM_FLAGS)
+GKE_BASE_HELM_COMMON_FLAGS := --wait --timeout=5m -f $(GKE_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} $(GKE_BASE_ADDITIONAL_HELM_FLAGS)
 
 gke-check-dependencies: check-dependencies
 	@$(call check-var-defined,GCP_PROJECT_ID)
@@ -60,7 +60,7 @@ gke-base-validate: gke-check-dependencies init
 ###### OPERATOR MANAGEMENT ######
 gke-base-deploy-operator: #_ Deploys the Confluent Operator into the configured k8s cluster 
 	@$(call echo_stdout_header,deploy operator)	
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set operator.enabled=true operator $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set operator.image.tag=$(OPERATOR_VERSION) --set operator.enabled=true operator $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,operator deployed)
 
 gke-base-wait-for-operator: #_ Waits until the Confluent Operator rollout status is complete
@@ -82,7 +82,7 @@ gke-base-wait-for-operator-destruction: #j Will wait until the Confluent Operato
 ###### ZOOKEEPER MANAGEMENT ######
 gke-base-deploy-zookeeper: #_ Deploys Zookeeper into the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Zookeeper)
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set zookeeper.replicas=$(GKE_BASE_ZOOKEEPER_REPLICAS) --set zookeeper.enabled=true zookeeper $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set zookeeper.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set zookeeper.replicas=$(GKE_BASE_ZOOKEEPER_REPLICAS) --set zookeeper.enabled=true zookeeper $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Zookeeper deployed)
 
 gke-base-wait-for-zookeeper: #_ Waits until the Zookeeper rollout is complete
@@ -108,7 +108,7 @@ gke-base-wait-for-zookeeper-destruction: #_ Waits until the Zookeper cluster is 
 ######### KAFKA MANAGEMENT ######
 gke-base-deploy-kafka: #_ Deploys Kafka into the configured k8s cluster
 	@$(call echo_stdout_header,deploy kafka) 
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set kafka.replicas=$(GKE_BASE_KAFKA_REPLICAS) --set kafka.enabled=true kafka $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set kafka.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set kafka.replicas=$(GKE_BASE_KAFKA_REPLICAS) --set kafka.enabled=true kafka $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka deployed)
 
 gke-base-wait-for-kafka: #_ Waits until the Kafka rollout is complete
@@ -131,7 +131,7 @@ gke-base-wait-for-kafka-destruction: #_ Waits until the Kafka cluster is destroy
 ### SCHEMA REGISTRY MANAGEMENT ##
 gke-base-deploy-schemaregistry: #_ Deploys the Schmea Registry to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Schema Registry)
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set schemaregistry.enabled=true --set schemaregistry.replicas=$(GKE_BASE_SCHEMA_REGISTRY_REPLICAS) schemaregistry $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set schemaregistry.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set schemaregistry.enabled=true --set schemaregistry.replicas=$(GKE_BASE_SCHEMA_REGISTRY_REPLICAS) schemaregistry $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Schema Registry deployed)
 
 gke-base-wait-for-schemaregistry: #_ Waits until the Schema Registry rollout is complete
@@ -154,7 +154,7 @@ gke-base-wait-for-schemaregistry-destruction: #_ Waits until the Schema Registry
 ##### CONNECT  MANAGEMENT #######
 gke-base-deploy-connect: #_ Deploys Kafka Connect to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Kafka Connect)
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set connect.enabled=true --set connect.replicas=$(GKE_BASE_CONNECT_REPLICAS) connect $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set connect.image.tag=$(OPERATOR_KAFKA_CONNECT_DATAGEN_IMAGE_TAG) --set connect.enabled=true --set connect.replicas=$(GKE_BASE_CONNECT_REPLICAS) connect $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Kafka Connect deployed)
 
 gke-base-wait-for-connect: #_ Waits until the Kafka Connect rollout is complete
@@ -177,7 +177,7 @@ gke-base-wait-for-connect-destruction: #_ Waits until Kafka Connect is destroyed
 ### CONTROL CENTER MANAGEMENT ####
 gke-base-deploy-controlcenter: #_ Deploys Confluent Control Center to the configured k8s cluster
 	@$(call echo_stdout_header,Deploy Control Center)
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set controlcenter.enabled=true controlcenter $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set controlcenter.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set controlcenter.enabled=true controlcenter $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,Control Center deployed)
 
 gke-base-wait-for-controlcenter: #_ Waits until the Control Center rollout is complete
