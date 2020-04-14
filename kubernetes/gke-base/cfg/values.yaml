@@ -1,10 +1,4 @@
-confluentPlatformImage: &cpImage
-  image: 
-    tag: 5.4.1.0
- 
 global:
-  initContainer:
-    <<: *cpImage
   provider:
     registry:
       fqdn: docker.io 
@@ -15,23 +9,13 @@ global:
       parameters:
         type: pd-ssd 
 
-manager:
-  name: manager
-
-#operator:
-#  name: operator
-#  image:
-#    tag: 0.176.1
-
 zookeeper:
-  <<: *cpImage
   disableHostPort: true
   resources:
     cpu: 200m
     memory: 512Mi
   
 kafka:
-  <<: *cpImage
   disableHostPort: true
   resources:
     cpu: 200m
@@ -47,7 +31,6 @@ kafka:
     - auto.create.topics.enable=true
 
 schemaregistry:
-  <<: *cpImage
   dependencies:
     kafka:
       bootstrapEndpoint: kafka:9071 
@@ -55,7 +38,6 @@ schemaregistry:
 connect:
   image:
     repository: cnfldemos/cp-server-connect-operator-datagen 
-    tag: 0.3.1-5.4.1.0
   tls:
     enabled: false
   loadBalancer:
@@ -69,7 +51,6 @@ connect:
       url: http://schemaregistry:8081 
 
 controlcenter:
-  <<: *cpImage
   loadBalancer:
     enabled: false
   dependencies:
