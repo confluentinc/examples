@@ -496,7 +496,7 @@ function validate_confluent_cloud_schema_registry() {
   auth=$1
   sr_endpoint=$2
 
-  curl --silent -u $auth $sr_endpoint || {
+  curl --silent -u $auth $sr_endpoint > /dev/null || {
     echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
     exit 1
   }

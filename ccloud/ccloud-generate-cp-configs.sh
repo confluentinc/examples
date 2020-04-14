@@ -69,7 +69,6 @@
 #   schema.registry.url=https://<SR ENDPOINT>
 #
 ################################################################################
-
 CONFIG_FILE=$1
 if [[ -z "$CONFIG_FILE" ]]; then
   CONFIG_FILE=~/.ccloud/config
@@ -79,7 +78,6 @@ if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
   exit 1
 fi
-echo "CONFIG_FILE: $CONFIG_FILE"
 
 SR_CONFIG_FILE=$2
 if [[ -z "$SR_CONFIG_FILE" ]]; then
@@ -90,9 +88,8 @@ if [[ ! -f "$SR_CONFIG_FILE" ]]; then
   echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
   exit 1
 fi
-echo "SR_CONFIG_FILE: $SR_CONFIG_FILE"
 
-echo -e "\nGenerating component configurations based on the files $CONFIG_FILE ($SR_CONFIG_FILE)\n" 
+echo -e "\nGenerating CP component configurations from $CONFIG_FILE and Schema Registry configurations from $SR_CONFIG_FILE\n" 
 
 # Set permissions
 PERM=600
@@ -103,7 +100,6 @@ else
   # BSD
   PERM=$(stat -f "%OLp" $CONFIG_FILE)
 fi
-#echo "INFO: setting file permission to $PERM"
 
 # Make destination
 DEST="delta_configs"
@@ -121,18 +117,11 @@ SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
 CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
 CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
-#echo "bootstrap.servers: $BOOTSTRAP_SERVERS"
-#echo "sasl.jaas.config: $SASL_JAAS_CONFIG"
-#echo "key: $CLOUD_KEY"
-#echo "secret: $CLOUD_SECRET"
 
 # Schema Registry
 BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
-#echo "basic.auth.credentials.source: $BASIC_AUTH_CREDENTIALS_SOURCE"
-#echo "schema.registry.basic.auth.user.info: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO"
-#echo "schema.registry.url: $SCHEMA_REGISTRY_URL"
 
 # KSQL
 KSQL_ENDPOINT=$( grep "^ksql.endpoint" $CONFIG_FILE | awk -F'=' '{print $2;}' )
