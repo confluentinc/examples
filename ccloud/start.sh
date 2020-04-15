@@ -48,8 +48,9 @@ SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
-# Set Kafka cluster
+# Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 
 # Validate credentials to Confluent Cloud Schema Registry
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
@@ -72,6 +73,8 @@ if check_cp; then
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   # Workaround for MMA-3564
   echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
 
@@ -93,7 +96,6 @@ rest.advertised.name=connect-cloud
 rest.hostname=connect-cloud
 group.id=connect-cloud
 EOF
-serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
