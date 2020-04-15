@@ -695,6 +695,16 @@ retry() {
     printf "\n"
 }
 
+check_connect_up_logFile() {
+  logFile=$1
+
+  FOUND=$(grep "Herder started" $logFile)
+  if [ -z "$FOUND" ]; then
+    return 1
+  fi
+  return 0
+}
+
 check_connect_up() {
   containerName=$1
 
@@ -760,6 +770,55 @@ END
   if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
     echo "Failed to log into your cluster.  Please check all parameters and run again"
   fi
+
+  return 0
+}
+
+function ccloud_cli_get_service_account() {
+  CLOUD_KEY=$1
+  CONFIG_FILE=$2
+
+  if [[ "$CLOUD_KEY" == "" ]]; then
+    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
+    exit 1
+  fi
+  serviceAccount=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $3;}')
+  if [[ "$serviceAccount" == "" ]]; then
+    echo "ERROR: Could not associate key $CLOUD_KEY to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
+    exit 1
+  fi
+  if ! [[ "$serviceAccount" =~ ^-?[0-9]+$ ]]; then
+    echo "ERROR: $serviceAccount value is not a valid value for a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
+    exit 1
+  fi
+
+  echo "$serviceAccount"
+
+  return 0
+}
+
+function create_connect_topics_and_acls() {
+  serviceAccount=$1
+
+  echo "Creating topics and ACLs for connect for service account $serviceAccount"
+  for topic in connect-offsets connect-statuses connect-configs _confluent-monitoring _confluent-command ; do
+    ccloud kafka topic create $topic &>/dev/null
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
+  done
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-cloud
+
+  echo "Creating topics and ACLs for connectors for service account $serviceAccount"
+  for topic in __consumer_timestamps ; do
+    ccloud kafka topic create $topic &>/dev/null
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
+  done
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-replicator
+  ccloud kafka acl create --allow --service-account 59781 --operation describe --cluster-scope
+  ccloud kafka acl create --allow --service-account 59781 --operation describe --topic pageviews
+  ccloud kafka acl create --allow --service-account 59781 --operation describe-configs --topic pageviews
+  ccloud kafka acl create --allow --service-account 59781 --operation describe --topic __consumer_timestamps
 
   return 0
 }

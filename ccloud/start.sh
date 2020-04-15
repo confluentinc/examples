@@ -48,8 +48,9 @@ SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
-# Set Kafka cluster
+# Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 
 # Validate credentials to Confluent Cloud Schema Registry
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
@@ -72,6 +73,8 @@ if check_cp; then
   echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
   # Workaround for MMA-3564
   echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
 
@@ -80,6 +83,7 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 sleep 20
 . ./connectors/submit_datagen_pageviews_config.sh
 #sleep 5
+echo
 
 # Start Connect that connects to CCloud cluster
 mkdir -p $CONFLUENT_CURRENT/connect
@@ -92,12 +96,16 @@ rest.advertised.name=connect-cloud
 rest.hostname=connect-cloud
 group.id=connect-cloud
 EOF
+create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
-sleep 40
+MAX_WAIT=40
+echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Confluent Cloud to start"
+retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 
 # Produce to topic users in CCloud cluster
 ccloud kafka topic create users
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 . ./connectors/submit_datagen_users_config.sh
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
@@ -106,6 +114,7 @@ ccloud kafka topic create users
 
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud kafka topic create pageviews
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
 . ./connectors/submit_replicator_config.sh
 echo -e "\nStarting Replicator and sleeping 60 seconds"
 sleep 60
