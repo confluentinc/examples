@@ -103,6 +103,7 @@ retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-cclo
 
 # Produce to topic users in CCloud cluster
 ccloud kafka topic create users
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 . ./connectors/submit_datagen_users_config.sh
 
 # Stop the Connect that starts with Confluent CLI to run Replicator that includes its own Connect workers
@@ -111,6 +112,7 @@ ccloud kafka topic create users
 
 # Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud kafka topic create pageviews
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
 . ./connectors/submit_replicator_config.sh
 echo -e "\nStarting Replicator and sleeping 60 seconds"
 sleep 60
