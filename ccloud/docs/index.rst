@@ -89,8 +89,8 @@ Setup
 
       # BROKER ENDPOINT
       ccloud kafka cluster list
-      ccloud kafka cluster use <Id>
-      ccloud kafka cluster describe <Id>
+      ccloud kafka cluster use <id>
+      ccloud kafka cluster describe <id>
 
       # SR ENDPOINT
       ccloud schema-registry cluster describe
