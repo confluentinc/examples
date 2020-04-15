@@ -32,22 +32,22 @@ if ! check_cp ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software. Exiting"
   exit 1
 fi
-echo
+printf "\n"
 
 echo ====== Cleaning up previous run
 ./stop.sh
 echo ====== Done with cleanup
-echo
+printf "\n"
 
 
 echo ====== Installing kafka-connect-datagen
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
-echo
+printf "\n"
 
 echo ====== Starting local Kafka Connect
 confluent local start connect
 CONFLUENT_CURRENT=`confluent local current | tail -1`
-echo
+printf "\n"
 
 echo ====== Generate CCloud configurations
 SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
@@ -55,18 +55,17 @@ SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
-echo
+printf "\n"
 
 echo ====== Set current Confluent Cloud 
 # Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
-echo
 
 echo ====== Validate Schema Registry credentials
 # Validate credentials to Confluent Cloud Schema Registry
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
-echo
+printf "\n"
 
 echo ====== Start local Confluent Control Center to monitor Cloud and local clusters
 # For the KSQL Server backed to Confluent Cloud, set the REST port, instead of the default 8088 which is already in use by the local KSQL server
@@ -90,16 +89,16 @@ if check_cp; then
   ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
 fi
-echo 
+printf "\n"
 
 echo ====== Create topic pageviews in local cluster
 kafka-topics --bootstrap-server localhost:9092 --create --topic pageviews --partitions 6 --replication-factor 1
 sleep 20
-echo 
+printf "\n"
 
 echo ====== Submit datagen connector for pageviews 
 . ./connectors/submit_datagen_pageviews_config.sh
-echo  
+printf "\n"
 
 echo ====== Start Local Connect cluster that connects to CCloud Kafka
 mkdir -p $CONFLUENT_CURRENT/connect
@@ -118,30 +117,30 @@ connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.
 MAX_WAIT=40
 echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Confluent Cloud to start"
 retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
-echo 
+printf "\n"
 
 echo ====== Create topic users in CCloud cluster
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 . ./connectors/submit_datagen_users_config.sh
-echo
+printf "\n"
 
 echo ====== submit Datagen connector for users
 . ./connectors/submit_datagen_users_config.sh
-echo ======
+printf "\n"
 
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud kafka topic create pageviews
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
-echo
+printf "\n"
 
 echo ====== Starting Replicator and sleeping 60 seconds
 . ./connectors/submit_replicator_config.sh
-echo
+printf "\n"
 sleep 60
 
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1
-echo
+printf "\n"
 
 echo -e "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
