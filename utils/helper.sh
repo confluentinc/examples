@@ -806,6 +806,9 @@ function create_connect_topics_and_acls() {
     ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
     ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
   done
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-cloud
+
+  return 0
 }
 
 function ccloud_cli_set_kafka_cluster_use() {

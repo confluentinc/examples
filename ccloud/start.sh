@@ -80,6 +80,7 @@ kafka-topics --zookeeper localhost:2181 --create --topic pageviews --partitions 
 sleep 20
 . ./connectors/submit_datagen_pageviews_config.sh
 #sleep 5
+echo
 
 # Start Connect that connects to CCloud cluster
 mkdir -p $CONFLUENT_CURRENT/connect
