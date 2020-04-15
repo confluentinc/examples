@@ -92,7 +92,10 @@ done
 topics_to_delete="pageviews users PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS PAGEVIEWS_FEMALE_LIKE_89 USERS_ORIGINAL"
 for topic in $topics_to_delete
 do
-  ccloud kafka topic delete $topic
+  ccloud kafka topic describe $topic &>/dev/null
+  if [[ "$?" == 0 ]]; then
+    ccloud kafka topic delete $topic
+  fi
 done
 
 #./ccloud-delete-all-topics.sh

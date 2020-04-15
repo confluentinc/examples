@@ -764,6 +764,39 @@ END
   return 0
 }
 
+function ccloud_cli_get_service_account() {
+  CLOUD_KEY=$1
+  CONFIG_FILE=$2
+
+  if [[ "$CLOUD_KEY" == "" ]]; then
+    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
+    exit 1
+  fi
+  serviceAccount=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $3;}')
+  if [[ "$serviceAccount" == "" ]]; then
+    echo "ERROR: Could not associate key $CLOUD_KEY to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
+    exit 1
+  fi
+  if ! [[ "$serviceAccount" =~ ^-?[0-9]+$ ]]; then
+    echo "ERROR: $serviceAccount value is not a valid value for a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
+    exit 1
+  fi
+
+  echo "$serviceAccount"
+
+  return 0
+}
+
+function create_connect_topics_and_acls() {
+  serviceAccount=$1
+
+  for topic in connect-offsets ; do
+    echo "Creating topic $topic and ACL permitting the service account $serviceAccount to write to it"
+    ccloud kafka topic create $topic
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --prefix $topic
+  done
+}
+
 function ccloud_cli_set_kafka_cluster_use() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
