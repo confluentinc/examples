@@ -89,7 +89,7 @@ if [[ ! -f "$SR_CONFIG_FILE" ]]; then
   exit 1
 fi
 
-echo -e "\nGenerating CP component configurations from $CONFIG_FILE and Schema Registry configurations from $SR_CONFIG_FILE\n" 
+echo -e "\nGenerating component configurations from $CONFIG_FILE and Schema Registry configurations from $SR_CONFIG_FILE\n" 
 
 # Set permissions
 PERM=600
