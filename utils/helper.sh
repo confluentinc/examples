@@ -815,6 +815,10 @@ function create_connect_topics_and_acls() {
     ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
   done
   ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-replicator
+  ccloud kafka acl create --allow --service-account 59781 --operation describe --cluster-scope
+  ccloud kafka acl create --allow --service-account 59781 --operation describe --topic pageviews
+  ccloud kafka acl create --allow --service-account 59781 --operation describe-configs --topic pageviews
+  ccloud kafka acl create --allow --service-account 59781 --operation describe --topic __consumer_timestamps
 
   return 0
 }
