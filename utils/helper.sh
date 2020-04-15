@@ -800,8 +800,8 @@ function ccloud_cli_get_service_account() {
 function create_connect_topics_and_acls() {
   serviceAccount=$1
 
+  echo "Creating topics and ACLs for connect and connectors for service account $serviceAccount"
   for topic in connect-offsets connect-statuses connect-configs _confluent ; do
-    echo "Creating topic $topic and ACL permitting the service account $serviceAccount to write to it"
     ccloud kafka topic create $topic &>/dev/null
     ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
     ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
