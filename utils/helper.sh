@@ -695,6 +695,16 @@ retry() {
     printf "\n"
 }
 
+check_connect_up_logFile() {
+  logFile=$1
+
+  FOUND=$(grep "Herder started" $logFile)
+  if [ -z "$FOUND" ]; then
+    return 1
+  fi
+  return 0
+}
+
 check_connect_up() {
   containerName=$1
 
@@ -790,10 +800,11 @@ function ccloud_cli_get_service_account() {
 function create_connect_topics_and_acls() {
   serviceAccount=$1
 
-  for topic in connect-offsets ; do
+  for topic in connect-offsets connect-statuses connect-configs ; do
     echo "Creating topic $topic and ACL permitting the service account $serviceAccount to write to it"
     ccloud kafka topic create $topic
-    ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --prefix $topic
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
+    ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
   done
 }
 

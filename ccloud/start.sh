@@ -96,7 +96,9 @@ serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit
 create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
-sleep 40
+MAX_WAIT=40
+echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Confluent Cloud to start"
+retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 
 # Produce to topic users in CCloud cluster
 ccloud kafka topic create users
