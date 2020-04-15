@@ -801,13 +801,12 @@ function create_connect_topics_and_acls() {
   serviceAccount=$1
 
   echo "Creating topics and ACLs for connect for service account $serviceAccount"
-  for topic in connect-offsets connect-statuses connect-configs _confluent ; do
+  for topic in connect-offsets connect-statuses connect-configs _confluent-monitoring ; do
     ccloud kafka topic create $topic &>/dev/null
     ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
     ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
   done
   ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-cloud
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group confluent.monitoring.interceptor.connector-producer --prefix
 
   echo "Creating topics and ACLs for connectors for service account $serviceAccount"
   for topic in __consumer_timestamps ; do
