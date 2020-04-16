@@ -25,7 +25,11 @@ export CONFIG_FILE=~/.ccloud/config
 check_ccloud_config $CONFIG_FILE || exit 1
 check_ccloud_version 0.264.0 || exit 1
 check_ccloud_logged_in || exit 1
-printf "Done\n"
+printf "Done\n\n"
+
+echo ====== Cleaning up previous run
+./stop-docker.sh
+printf "\nDone with cleanup\n\n"
 
 echo ====== Generate CCloud configurations
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
@@ -47,18 +51,21 @@ echo ====== Validate credentials to Confluent Cloud Schema Registry
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
-echo ====== Starting local services in Docker
-docker-compose up -d
-printf "\n"
-
-echo "Sleeping 120 seconds to wait for all services to come up"
-printf "\n"
-sleep 120
-
 echo ====== Creating cloud topics
 ccloud kafka topic create users
 ccloud kafka topic create pageviews
 printf "\n"
+
+echo ====== Starting local services in Docker
+docker-compose up -d
+printf "\n"
+
+MAX_WAIT=60
+let TOTAL_WAIT=MAX_WAIT*2
+echo "Waiting up to $TOTAL_WAIT seconds for the connect workers to start"
+retry $MAX_WAIT check_connect_up connect-cloud || exit 1
+retry $MAX_WAIT check_connect_up connect-local || exit 1
+printf "\n\n"
 
 echo ====== Deploying kafka-connect-datagen for users 
 . ./connectors/submit_datagen_users_config.sh
@@ -71,10 +78,6 @@ printf "\n\n"
 echo ====== Deploying Replicator
 . ./connectors/submit_replicator_docker_config.sh
 printf "\n\n"
-
-echo ====== Sleeping for 30 seconds
-sleep 30
-printf "\n"
 
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1
