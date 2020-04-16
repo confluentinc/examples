@@ -14,7 +14,7 @@ This example features a deployment of `Confluent Platform <https://www.confluent
 
 If you'd like a primer on running |co-long| in GKE with lower resource requirements, see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
 
-This demo is featured in the `Conquering Hybrid Cloud with Replicated Event-Driven Architectures blog post`<https://www.confluent.io/blog/replicated-event-driven-architectures-for-hybrid-cloud-kafka/>`__ which provides more details on use cases for replicated event streaming architectures.
+This demo is featured in the `Conquering Hybrid Cloud with Replicated Event-Driven Architectures blog post <https://www.confluent.io/blog/replicated-event-driven-architectures-for-hybrid-cloud-kafka/>`__ which provides more details on use cases for replicated event streaming architectures.
 
 The major components of this demo are:
 
@@ -523,4 +523,3 @@ Suggested Reading
 -----------------
 
 - Blog post: `Conquering Hybrid Cloud with Replicated Event-Driven Architectures <https://www.confluent.io/blog/replicated-event-driven-architectures-for-hybrid-cloud-kafka/>`__
-
