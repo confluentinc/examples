@@ -95,8 +95,10 @@ gke-base-destroy-zookeeper: #_ Purge the Zookeeper package
 	@$(call echo_stdout_header,Purge the Zookeeper package)
 	-helm delete zookeeper --namespace $(GKE_BASE_KUBECTL_NAMESPACE)
 # There are currently some issues with ZK cleanup in the Helm packages, for now i'm helping along with extra delete commands
-#	-kubectl -n $(GKE_BASE_KUBECTL_NAMESPACE) delete sts/zookeeper
-# -kubectl -n operator delete service/zookeeper;kubectl -n $(GKE_BASE_KUBECTL_NAMESPACE) delete service/zookeeper-0-internal;
+	-kubectl -n $(GKE_BASE_KUBECTL_NAMESPACE) delete sts/zookeeper
+	-kubectl -n operator delete service/zookeeper;kubectl -n $(GKE_BASE_KUBECTL_NAMESPACE) delete service/zookeeper-0-internal;
+	-kubectl -n operator delete service/zookeeper;kubectl -n $(GKE_BASE_KUBECTL_NAMESPACE) delete service/zookeeper-1-internal;
+	-kubectl -n operator delete service/zookeeper;kubectl -n $(GKE_BASE_KUBECTL_NAMESPACE) delete service/zookeeper-2-internal;
 	@$(call echo_stdout_footer_pass,Zookeeper purged)
 
 gke-base-wait-for-zookeeper-destruction: #_ Waits until the Zookeper cluster is destroyed
