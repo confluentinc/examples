@@ -34,7 +34,7 @@ echo -e "\n-----platinum-----"
 docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:9092 --topic platinum --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property schema.registry.url=http://schema-registry:8081 --from-beginning --max-messages 3 --timeout-ms 10000
 
 # Read queries
-docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
 SET CLI COLUMN-WIDTH 15
 SELECT * FROM orders_cust1_joined EMIT CHANGES LIMIT 3;
 SELECT * FROM FRAUD_ORDER EMIT CHANGES LIMIT 2;

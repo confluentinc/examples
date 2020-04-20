@@ -135,9 +135,9 @@ services:
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
       KSQL_KSQL_CONNECT_URL: "http://connect:8083"
 
-  ksql-cli:
-    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
-    container_name: ksql-cli
+  ksqldb-cli:
+    image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
+    container_name: ksqldb-cli
     depends_on:
       - broker
       - connect
@@ -148,7 +148,7 @@ services:
     tty: true
 
   ksql-query-setup:
-    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
+    image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
     container_name: ksql-query-setup
     depends_on:
       - broker
