@@ -5,7 +5,7 @@
 
 check_env || exit 1
 check_mvn || exit 1
-check_running_cp ${CONFLUENT_SHORT} || exit 
+check_running_cp ${CP_VERSION_FULL} || exit 
 
 ./stop.sh
 

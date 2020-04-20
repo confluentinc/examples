@@ -6,7 +6,7 @@
 echo ====== Verifying prerequisites
 check_env || exit 1
 check_jq || exit 1
-check_running_cp ${CONFLUENT_SHORT} || exit 1
+check_running_cp ${CP_VERSION_FULL} || exit 1
 
 # File with Confluent Cloud configuration parameters: example template
 #   $ cat ~/.ccloud/config
