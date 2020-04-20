@@ -35,7 +35,7 @@ services:
       STREAMS__SCHEMA_REGISTRY_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
       STREAMS__SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
   connect:
-    image: cnfldemos/cp-server-connect-datagen:0.2.0-5.4.0
+    image: cnfldemos/cp-server-connect-datagen:0.3.1-5.4.1
     hostname: connect
     container_name: connect
     volumes:
