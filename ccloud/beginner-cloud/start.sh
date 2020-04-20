@@ -89,10 +89,12 @@ ccloud environment use $ENVIRONMENT
 # Create a new Kafka cluster and specify it as the default
 ##################################################
 
-CLUSTER_NAME="demo-kafka-cluster"
+CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
+CLUSTER_CLOUD="${CLUSTER_CLOUD:-gcp}"
+CLUSTER_REGION="${CLUSTER_REGION:-us-central1}"
 echo -e "\n# Create and specify active Kafka cluster"
-echo "ccloud kafka cluster create $CLUSTER_NAME --cloud gcp --region us-central1"
-OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud gcp --region us-central1)
+echo "ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION"
+OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
