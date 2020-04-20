@@ -55,10 +55,10 @@ Option 2: Provide all arguments on command line, except password for which you w
 ```
 
 # Advanced demo usage
-The demo script provides variables allowing you to alter the default Kafka cluster name, cloud provider, region.  For example:
+The demo script provides variables allowing you to alter the default Kafka cluster name, cloud provider, and region.  For example:
 
 ```bash
-CLUSTER_NAME=my-demo-cluster CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start.sh https://confluent.cloud user@email.com
+CLUSTER_NAME=my-demo-cluster CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start.sh <url to cloud> <cloud email> 
 ``` 
 
 Here are the variables and their default values:
