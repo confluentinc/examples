@@ -130,7 +130,7 @@ echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
 echo -e "\n# Wait 120 seconds for the user credentials to propagate"
-sleep 240
+sleep 120
 
 ##################################################
 # Produce and consume with Confluent Cloud CLI
