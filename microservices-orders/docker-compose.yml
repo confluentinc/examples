@@ -169,6 +169,7 @@ services:
       - "18894:18894"
     volumes:
       - $PWD/services-start.sh:/tmp/services-start.sh
+      - $PWD/config.env:/tmp/config.env
     command: "bash -c 'echo Waiting for Kafka to be ready... && \
                        cub kafka-ready -b broker:9092 1 30 && \
                        echo Waiting for Confluent Schema Registry to be ready... && \
