@@ -144,7 +144,7 @@ The original Kafka topic has a key of type `Long`, which maps to ksqlDB's `BIGIN
 
 [source,bash]
 ----
-CREATE TABLE ksql_song WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO', KEY='ID');
+CREATE TABLE ksql_song (ROWKEY BIGINT KEY) WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO', KEY='ID');
 ----
 
 * View the contents of this table and confirm that the entries in this KSQL table have a `ROWKEY` that matches the String ID of the song.
