@@ -94,9 +94,9 @@ services:
       - $PWD/ksql/ksql-clickstream-demo/demo/connect-config:/usr/share/java/null-smt
       - $PWD/confluent-hub-components/:/usr/share/confluent-hub-components
 
-  ksql-cli:
-    container_name: ksql-cli
-    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
+  ksqldb-cli:
+    container_name: ksqldb-cli
+    image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
     depends_on:
       - ksqldb-server
     entrypoint: /bin/sh
