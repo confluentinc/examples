@@ -14,7 +14,7 @@ echo -e "\nSleeping 60 seconds while Docker containers start\n"
 sleep 60
 
 # Run the source connectors (with ksqlDB CLI) that generate data
-docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
 run script '/scripts/create-connectors.sql';
 exit ;
 EOF"
@@ -23,7 +23,7 @@ echo -e "\nSleeping 30 seconds until ksqlDB server starts and topics have data\n
 sleep 30
 
 # Run the KSQL queries
-docker-compose exec ksql-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
 run script '/scripts/statements.sql';
 exit ;
 EOF"

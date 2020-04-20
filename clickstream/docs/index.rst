@@ -59,7 +59,7 @@ are quite large and depending on your network connection may take
         elasticsearch     /usr/local/bin/docker-entr ...   Up      0.0.0.0:9200->9200/tcp, 9300/tcp              
         grafana           /run.sh                          Up      0.0.0.0:3000->3000/tcp                        
         kafka             /etc/confluent/docker/run        Up      9092/tcp                                      
-        ksql-cli          /bin/sh                          Up                                                    
+        ksqldb-cli        /bin/sh                          Up                                                    
         ksqldb-server     bash -c # Manually install ...   Up      0.0.0.0:8083->8083/tcp, 0.0.0.0:8088->8088/tcp
         schema-registry   /etc/confluent/docker/run        Up      8081/tcp                                      
         tools             /bin/bash                        Up                                                    
@@ -124,7 +124,7 @@ Load the Streaming Data to ksqlDB
 
     .. code:: bash
 
-        docker-compose exec ksql-cli ksql http://ksqldb-server:8088
+        docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
 
 #.  Load the :devx-examples:`statements.sql|clickstream/ksql/ksql-clickstream-demo/demo/statements.sql` file that runs the tutorial app.
 
