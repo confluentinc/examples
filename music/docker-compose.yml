@@ -135,9 +135,9 @@ services:
       KSQL_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
       KSQL_CONSUMER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor"
 
-  ksql-cli:
-    image: ${REPOSITORY}/cp-ksql-cli:${CONFLUENT_DOCKER_TAG}
-    container_name: ksql-cli
+  ksqldb-cli:
+    image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
+    container_name: ksqldb-cli
     volumes:
       - $PWD/statements.sql:/tmp/statements.sql
     depends_on:
