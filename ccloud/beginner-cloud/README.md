@@ -54,6 +54,20 @@ Option 2: Provide all arguments on command line, except password for which you w
 ./start.sh <url to cloud> <cloud email>
 ```
 
+# Advanced demo usage
+The demo script provides variables allowing you to alter the default Kafka cluster name, cloud provider, and region.  For example:
+
+```bash
+CLUSTER_NAME=my-demo-cluster CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start.sh <url to cloud> <cloud email> 
+``` 
+
+Here are the variables and their default values:
+| Variable | Default |
+| --- | --- |
+| CLUSTER_NAME | demo-kafka-cluster |
+| CLUSTER_CLOUD | gcp |
+| CLUSTER_REGION | us-central1 |
+
 # Clean up after the demo
 
 If a demo run ended prematurely, it may not have totally cleaned up after itself and a new run may error out with the following message:
@@ -75,6 +89,7 @@ Use this script with extreme caution and only in non-production environments.
 ```bash
 ./cleanup.sh <url to cloud> <cloud email> <cloud password>
 ```
+
 
 # Other Resources
 
