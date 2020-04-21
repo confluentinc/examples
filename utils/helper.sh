@@ -734,6 +734,11 @@ check_topic_exists() {
   return $?
 }
 
+check_ccloud_cluster_ready() {
+  ccloud kafka topic list &>/dev/null
+  return $?
+}
+
 check_connector_status_running() {
   port=$1
   connectorName=$2
