@@ -131,7 +131,7 @@ ccloud api-key use $API_KEY --resource $CLUSTER
 
 MAX_WAIT=720
 echo
-echo "Waiting up to $MAX_WAIT seconds for the Confluent Cluster to be ready and credentials to propagate"
+echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
 retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
 printf "\n\n"
 
