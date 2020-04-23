@@ -17,7 +17,7 @@ while read -r line ; do echo "$line" | base64 --decode; echo; done <<< "$(aws ki
 
 if check_confluent_binary; then
 
-  check_running_cp ${CP_VERSION_FULL} || exit
+  check_running_cp ${CONFLUENT} || exit
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_IN:"
   echo -e "confluent local consume $KAFKA_TOPIC_NAME_IN -- --cloud --from-beginning --property print.key=true --max-messages 10"

@@ -37,7 +37,7 @@ function cleanup() {
 . ../../utils/helper.sh
 
 check_env || exit 1
-check_running_cp ${CP_VERSION_FULL} || exit
+check_running_cp ${CONFLUENT} || exit
 check_cli_v2 || exit
 
 ##################################################

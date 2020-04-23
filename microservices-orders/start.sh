@@ -9,7 +9,7 @@ check_jot || exit 1
 check_netstat || exit 1
 check_running_elasticsearch 5.6.16 || exit 1
 check_running_kibana || exit 1
-check_running_cp ${CP_VERSION_FULL} || exit 1
+check_running_cp ${CONFLUENT} || exit 1
 
 ./stop.sh
 
