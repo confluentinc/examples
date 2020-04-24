@@ -99,6 +99,8 @@ confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role Develop
 
 echo -e "\n# Consume messages from the topic $TOPIC3, after authorization (should pass)"
 echo 'curl -u '"${USER_CLIENT_RP}:${USER_CLIENT_RP}1"' --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/records'
+# Execute twice due to https://github.com/confluentinc/kafka-rest/issues/432
+curl -u $USER_CLIENT_RP:${USER_CLIENT_RP}1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/records
 curl -u $USER_CLIENT_RP:${USER_CLIENT_RP}1 --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/$CONSUMER_GROUP/instances/my_consumer_instance/records
 echo
 
