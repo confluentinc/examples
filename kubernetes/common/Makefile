@@ -44,10 +44,10 @@ get-helm-bundle: #_ Download the Confluent Operator Helm bundle locally in prepa
 ifeq (,$(wildcard $(OPERATOR_DOWNLOAD_PATH)))
 	@mkdir -p $(dir $(OPERATOR_DOWNLOAD_PATH))
 	@echo "downloading Confluent Operator to $(OPERATOR_DOWNLOAD_PATH)"
-	@curl -s https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-$(OPERATOR_HELM_CHART_VERSION).tar.gz --output $(OPERATOR_DOWNLOAD_PATH)
+	@curl -s https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-$(OPERATOR_BUNDLE_VERSION).tar.gz --output $(OPERATOR_DOWNLOAD_PATH)
 endif
 ifeq (,$(wildcard $(OPERATOR_PATH)))
-	@mkdir -p $(dir $(OPERATOR_DOWNLOAD_PATH))$(OPERATOR_HELM_CHART_VERSION)/
+	@mkdir -p $(dir $(OPERATOR_DOWNLOAD_PATH))$(OPERATOR_BUNDLE_VERSION)/
 	@echo "Extracting operator to $(OPERATOR_PATH)"
 	@tar xf $(OPERATOR_DOWNLOAD_PATH) -C $(OPERATOR_PATH)
 endif
