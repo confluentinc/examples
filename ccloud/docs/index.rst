@@ -29,15 +29,17 @@ The major components of the demo are:
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
+=======
 Warning
--------
+=======
 
 This demo uses real |ccloud| resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 
+=============
 Prerequisites
--------------
+=============
 
 1. The following are prerequisites for the demo:
 
