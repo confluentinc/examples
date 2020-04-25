@@ -95,5 +95,7 @@ do
   ccloud kafka topic describe $topic > /dev/null 2>&1 && ccloud kafka topic delete $topic 
 done
 
+echo
+echo
 echo "Note: not deleting the connect topics in case they are used by other applications.  Remaining topics in cluster:"
 ccloud kafka topic list
