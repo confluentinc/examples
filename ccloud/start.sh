@@ -81,8 +81,6 @@ if check_cp; then
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.url=$KSQL_ENDPOINT" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.basic.auth.user.info=$KSQL_BASIC_AUTH_USER_INFO" >> $C3_CONFIG
   # Workaround for MMA-3564
   echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
   ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
