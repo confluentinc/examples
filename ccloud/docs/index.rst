@@ -30,14 +30,14 @@ The major components of the demo are:
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
 Warning
-=======
+-------
 
 This demo uses real |ccloud| resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 
 Prerequisites
-=============
+-------------
 
 1. The following are prerequisites for the demo:
 
@@ -143,7 +143,7 @@ Run
 Playbook
 ========
 
-|ccloud|
+|ccloud| CLI
 -------------------
 
 #. Validate you can list topics in your cluster.
@@ -182,12 +182,12 @@ Confluent Replicator
 Confluent Replicator copies data from a source Kafka cluster to a destination Kafka cluster.
 In this demo, the source cluster is a local install of a self-managed cluster, and the destination cluster is |ccloud|.
 
-#. |c3| is configured to manage the connect-cloud cluster running on port 8087, which is running a datagen connector and the |crep| connector
+#. |c3| is configured to manage the connect-cloud cluster running on port 8087, which is running a datagen connector and the |crep| connector. From the |c3| UI, view the connect clusters.
 
    .. figure:: images/c3_clusters.png
       :alt: image
 
-#. View the |crep| configuration from the |c3| UI. Notice that it is replicating the topic ``pageviews``.
+#. Click on `replicator` to view the |crep| configuration. Notice that it is replicating the topic ``pageviews``.
 
    .. figure:: images/c3_replicator_config.png
       :alt: image
@@ -203,24 +203,19 @@ Confluent Schema Registry
 
 The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the |ccloud| |sr|.
 
-1. View all the |sr| subjects.
+#. View all the |sr| subjects.
 
    .. sourcecode:: bash
 
         # Confluent Cloud Schema Registry
         $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
 
-2. From |c3|, under **MANAGEMENT –> Topics -> Schema**: view the schema for `pageviews` and `users`.  The topic value is using a Schema registered with |sr| (the topic key is just a String).
+#. From the Confluent Cloud UI, view the schema for the ``pageviews`` topic. The topic value is using a Schema registered with |sr| (the topic key is just a String).
 
    .. figure:: images/topic_schema.png
       :alt: image
 
-3. From |c3|, view the ksqlDB streams which are configured for Avro format.
-
-   .. figure:: images/ksql_dataformat.png
-      :alt: image
-
-4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this :ref:`step-by-step guide <schemaregistry_migrate>`. Refer to the file :devx-examples:`submit_replicator_schema_migration_config.sh|ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>` for an example of a working Replicator configuration for schema migration.
+#. If you need to migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this :ref:`step-by-step guide <schemaregistry_migrate>`. Refer to the file :devx-examples:`submit_replicator_schema_migration_config.sh|ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>` for an example of a working Replicator configuration for schema migration.
 
 ===============================
 Confluent Cloud Configurations
