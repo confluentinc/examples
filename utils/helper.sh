@@ -805,13 +805,11 @@ function ccloud_cli_get_service_account() {
 function create_c3_acls() {
   serviceAccount=$1
 
+  echo "Creating _confluent-command and ACLs for Confluent Control Center for service account $serviceAccount"
   ccloud kafka topic create _confluent-command --partitions 1
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-command --prefix
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-command --prefix
-
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic _confluent-controlcenter --prefix
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic _confluent --prefix
 
   return 0
 }
