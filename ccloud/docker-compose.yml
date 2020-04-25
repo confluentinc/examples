@@ -39,9 +39,6 @@ services:
     image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     hostname: control-center
     container_name: control-center
-    depends_on:
-      - zookeeper
-      - kafka
     ports:
       - "9021:9021"
     environment:
