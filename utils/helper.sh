@@ -805,11 +805,16 @@ function ccloud_cli_get_service_account() {
 function create_c3_acls() {
   serviceAccount=$1
 
-  echo "Creating _confluent-command and ACLs for Confluent Control Center for service account $serviceAccount"
+  echo "Confluent Control Center: creating _confluent-command and ACLs for service account $serviceAccount"
   ccloud kafka topic create _confluent-command --partitions 1
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent --prefix
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent --prefix
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic _confluent --prefix
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic _confluent-controlcenter --prefix
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --consumer-group _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --consumer-group _confluent-controlcenter --prefix
 
   return 0
 }
@@ -817,7 +822,7 @@ function create_c3_acls() {
 function create_connect_topics_and_acls() {
   serviceAccount=$1
 
-  echo "Creating topics and ACLs for connect for service account $serviceAccount"
+  echo "Connect: creating topics and ACLs for service account $serviceAccount"
   for topic in connect-offsets connect-statuses connect-configs _confluent-monitoring _confluent-command ; do
     ccloud kafka topic create $topic &>/dev/null
     ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
@@ -825,17 +830,17 @@ function create_connect_topics_and_acls() {
   done
   ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-cloud
 
-  echo "Creating topics and ACLs for connectors for service account $serviceAccount"
+  echo "Connectors: creating topics and ACLs for service account $serviceAccount"
   for topic in __consumer_timestamps ; do
     ccloud kafka topic create $topic &>/dev/null
     ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic --prefix
     ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic --prefix
   done
   ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --consumer-group connect-replicator
-  ccloud kafka acl create --allow --service-account 59781 --operation describe --cluster-scope
-  ccloud kafka acl create --allow --service-account 59781 --operation describe --topic pageviews
-  ccloud kafka acl create --allow --service-account 59781 --operation describe-configs --topic pageviews
-  ccloud kafka acl create --allow --service-account 59781 --operation describe --topic __consumer_timestamps
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation describe --cluster-scope
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation describe --topic pageviews
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation describe-configs --topic pageviews
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation describe --topic __consumer_timestamps
 
   return 0
 }
