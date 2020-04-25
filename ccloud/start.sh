@@ -73,6 +73,7 @@ KSQL_LISTENER=8089
 # For the Connect cluster backed to Confluent Cloud, set the REST port, instead of the default 8083 which is already in use by the local connect cluster
 CONNECT_REST_PORT=8087
 
+create_c3_acls $serviceAccount
 if check_cp; then
   mkdir -p $CONFLUENT_CURRENT/control-center
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties

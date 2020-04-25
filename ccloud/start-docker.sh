@@ -42,8 +42,9 @@ printf "\n"
 echo ====== Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
-ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
-ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
+
+echo ====== Set ACLs for Confluent Control Center and Kafka Cnnect
+create_c3_acls $serviceAccount
 create_connect_topics_and_acls $serviceAccount
 printf "\n"
 
@@ -60,10 +61,10 @@ echo ====== Starting local services in Docker
 docker-compose up -d
 printf "\n"
 
-MAX_WAIT=60
-let TOTAL_WAIT=MAX_WAIT*2
-echo "Waiting up to $TOTAL_WAIT seconds for the connect workers to start"
+MAX_WAIT=120
+echo "Waiting up to $MAX_WAIT seconds for connect-cloud to start"
 retry $MAX_WAIT check_connect_up connect-cloud || exit 1
+echo "Waiting up to $MAX_WAIT seconds for connect-local to start"
 retry $MAX_WAIT check_connect_up connect-local || exit 1
 printf "\n\n"
 

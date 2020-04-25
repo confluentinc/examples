@@ -802,6 +802,20 @@ function ccloud_cli_get_service_account() {
   return 0
 }
 
+function create_c3_acls() {
+  serviceAccount=$1
+
+  ccloud kafka topic create _confluent-command --partitions 1
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-command --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-command --prefix
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
+
+  return 0
+}
+
 function create_connect_topics_and_acls() {
   serviceAccount=$1
 
