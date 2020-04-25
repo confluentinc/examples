@@ -129,7 +129,7 @@ Run
 
    .. sourcecode:: bash
 
-      # For Confluent Platform local install using Confluent CLI
+      # For Confluent Platform local
       $ ./start.sh
 
       # For Docker Compose
@@ -161,51 +161,11 @@ Playbook
      ccloud kafka topic consume test -b
 
 
-|c3|
-----
-
-#. **Monitoring –> Data Streams –> Message Delivery**: hover over
-   any chart to see number of messages and average latency within a
-   minute time interval.
-
-   .. figure:: images/message_delivery_ccloud.png
-      :alt: image
-
-#. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage :ref:`Kafka
-   connectors <controlcenter_userguide_connect>`, and more
-   specifically for this demo, :ref:`Confluent Replicator <multi_dc>`.
-
-   -  Kafka Connect **Sources** tab shows the connector
-      ``replicator``. Click ``Edit`` to see the details of the connector configuration.
-
-      .. figure:: images/connect_source_ccloud.png
-         :alt: image
-
-#. **Management –> Topics –> Topic Information**: For a given topic,
-   click on the three dots ``...`` next to the topic name to see more
-   options per topic including in sync replicas, schema, topic
-   messages, and configuration settings. Shown below is replica info.
-
-   .. figure:: images/topic_info_ccloud.png
-      :alt: image
-  
-.. note:: There will not be any details on the |c3| System Health pages about brokers or topics because |ccloud| does not provide the Confluent Metrics Reporter instrumentation outside of the |ccloud|. Therefore, you should expect to see the following graphic on the System Health page.
-
-   .. figure:: images/rocketship.png
-      :alt: image
-
-  
 
 ksqlDB
 ------
 
-#. At the Confluent Cloud ksqlDB prompt, view the configured ksqlDB properties that were set with the ksqlDB server configuration file shown earlier.
-
-   .. sourcecode:: bash
-
-      ksql> SHOW PROPERTIES;
-
-#. View the existing ksqlDB streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
+#. From the Confluent Cloud UI, view the existing ksqlDB streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
 
    .. sourcecode:: bash
 
