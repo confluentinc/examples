@@ -68,8 +68,6 @@ validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $
 printf "Done\n\n"
 
 echo ====== Start local Confluent Control Center to monitor Cloud and local clusters
-# For the KSQL Server backed to Confluent Cloud, set the REST port, instead of the default 8088 which is already in use by the local KSQL server
-KSQL_LISTENER=8089
 # For the Connect cluster backed to Confluent Cloud, set the REST port, instead of the default 8083 which is already in use by the local connect cluster
 CONNECT_REST_PORT=8087
 
@@ -83,7 +81,8 @@ if check_cp; then
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
   echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
   echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.url=$KSQL_ENDPOINT" >> $C3_CONFIG
+  echo "confluent.controlcenter.ksql.basic.auth.user.info=$KSQL_BASIC_AUTH_USER_INFO" >> $C3_CONFIG
   # Workaround for MMA-3564
   echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
   ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
