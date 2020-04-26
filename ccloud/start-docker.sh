@@ -63,7 +63,7 @@ echo ====== Starting local services in Docker
 docker-compose up -d
 printf "\n"
 
-MAX_WAIT=180
+MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for connect-local to start"
 retry $MAX_WAIT check_connect_up connect-local || exit 1
 echo "Waiting up to $MAX_WAIT seconds for connect-cloud to start"
