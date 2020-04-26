@@ -21,6 +21,7 @@ This enables you to:
 *  Harness the power of `ksqlDB <https://www.confluent.io/product/ksql/>`__ for stream processing
 
 
+========================
 End-to-end Streaming ETL
 ========================
 
@@ -62,12 +63,14 @@ The data set is a stream of log messages, which in this demo is mock data captur
 |                       | ``SUM_PER_SOURCE``    |                       |
 +-----------------------+-----------------------+-----------------------+
 
+=======
 Warning
 =======
 
 This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis, and one of the cloud storage providers.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
+=============
 Prerequisites
 =============
 
@@ -91,6 +94,7 @@ Local Tools
 -  ``python``
 -  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 
+============
 Run the Demo
 ============
 

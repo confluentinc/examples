@@ -29,6 +29,7 @@ The major components of the demo are:
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
+=======
 Warning
 =======
 
@@ -36,6 +37,7 @@ This demo uses real |ccloud| resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 
+=============
 Prerequisites
 =============
 
@@ -129,7 +131,7 @@ Run
 
    .. sourcecode:: bash
 
-      # For Confluent Platform local install using Confluent CLI
+      # For Confluent Platform local
       $ ./start.sh
 
       # For Docker Compose
@@ -143,7 +145,7 @@ Run
 Playbook
 ========
 
-|ccloud|
+|ccloud| CLI
 -------------------
 
 #. Validate you can list topics in your cluster.
@@ -161,225 +163,41 @@ Playbook
      ccloud kafka topic consume test -b
 
 
-|c3|
-----
-
-#. **Monitoring –> Data Streams –> Message Delivery**: hover over
-   any chart to see number of messages and average latency within a
-   minute time interval.
-
-   .. figure:: images/message_delivery_ccloud.png
-      :alt: image
-
-#. **Management –> Kafka Connect**: |c3| uses the Kafka Connect API to manage :ref:`Kafka
-   connectors <controlcenter_userguide_connect>`, and more
-   specifically for this demo, :ref:`Confluent Replicator <multi_dc>`.
-
-   -  Kafka Connect **Sources** tab shows the connector
-      ``replicator``. Click ``Edit`` to see the details of the connector configuration.
-
-      .. figure:: images/connect_source_ccloud.png
-         :alt: image
-
-#. **Management –> Topics –> Topic Information**: For a given topic,
-   click on the three dots ``...`` next to the topic name to see more
-   options per topic including in sync replicas, schema, topic
-   messages, and configuration settings. Shown below is replica info.
-
-   .. figure:: images/topic_info_ccloud.png
-      :alt: image
-  
-.. note:: There will not be any details on the |c3| System Health pages about brokers or topics because |ccloud| does not provide the Confluent Metrics Reporter instrumentation outside of the |ccloud|. Therefore, you should expect to see the following graphic on the System Health page.
-
-   .. figure:: images/rocketship.png
-      :alt: image
-
-  
 
 ksqlDB
 ------
 
-#. At the Confluent Cloud ksqlDB prompt, view the configured ksqlDB properties that were set with the ksqlDB server configuration file shown earlier.
+#. From the Confluent Cloud UI, view the ksqlDB application flow.
 
-   .. sourcecode:: bash
+   .. figure:: images/ksqlDB_flow.png
+      :alt: image
 
-      ksql> SHOW PROPERTIES;
+#. Click on any stream to view its messages and its schema.
 
-#. View the existing ksqlDB streams and describe one of those streams called ``PAGEVIEWS_FEMALE_LIKE_89``.
-
-   .. sourcecode:: bash
-
-      ksql> SHOW STREAMS;
-      
-       Stream Name              | Kafka Topic              | Format 
-      --------------------------------------------------------------
-       PAGEVIEWS_ORIGINAL       | pageviews                | AVRO
-       PAGEVIEWS_FEMALE         | PAGEVIEWS_FEMALE         | AVRO   
-       PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | AVRO
-      --------------------------------------------------------------
-
-
-      ksql> DESCRIBE PAGEVIEWS_FEMALE_LIKE_89;
-      
-       Field    | Type                      
-      --------------------------------------
-       ROWTIME  | BIGINT           (system) 
-       ROWKEY   | VARCHAR(STRING)  (system) 
-       USERID   | VARCHAR(STRING)
-       PAGEID   | VARCHAR(STRING)           
-       REGIONID | VARCHAR(STRING)           
-       GENDER   | VARCHAR(STRING)           
-      --------------------------------------
-      For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
-
-
-#. View the existing ksqlDB tables and describe one of those tables called ``PAGEVIEWS_REGIONS``.
-
-   .. sourcecode:: bash
-
-      ksql> SHOW TABLES;
-      
-       Table Name        | Kafka Topic       | Format | Windowed 
-      -----------------------------------------------------------
-       PAGEVIEWS_REGIONS | PAGEVIEWS_REGIONS | AVRO   | true     
-       USERS_ORIGINAL    | users             | AVRO   | false    
-      -----------------------------------------------------------
-
-
-      ksql> DESCRIBE PAGEVIEWS_REGIONS;
-      
-       Field    | Type                      
-      --------------------------------------
-       ROWTIME  | BIGINT           (system) 
-       ROWKEY   | VARCHAR(STRING)  (system) 
-       GENDER   | VARCHAR(STRING)
-       REGIONID | VARCHAR(STRING)
-       NUMUSERS | BIGINT                    
-      --------------------------------------
-      For runtime statistics and query details run: DESCRIBE EXTENDED <Stream,Table>;
-
-
-#. View the existing ksqlDB queries, which are continuously running, and explain one of those queries called ``CSAS_PAGEVIEWS_FEMALE_LIKE_89``.
-
-   .. sourcecode:: bash
-
-      ksql> SHOW QUERIES;
-
-       Query ID                      | Kafka Topic              | Query String
-      ----------------------------------------------------------------------------------------------------------
-       CTAS_PAGEVIEWS_REGIONS        | PAGEVIEWS_REGIONS        | CREATE TABLE pageviews_regions WITH (value_format='avro') AS SELECT gender, regionid , COUNT(*) AS numusers FROM pageviews_female WINDOW TUMBLING (size 30 second) GROUP BY gender, regionid HAVING COUNT(*) > 1;                 
-       CSAS_PAGEVIEWS_FEMALE         | PAGEVIEWS_FEMALE         | CREATE STREAM pageviews_female AS SELECT users_original.userid AS userid, pageid, regionid, gender FROM pageviews_original LEFT JOIN users_original ON pageviews_original.userid = users_original.userid WHERE gender = 'FEMALE'; 
-       CSAS_PAGEVIEWS_FEMALE_LIKE_89 | pageviews_enriched_r8_r9 | CREATE STREAM pageviews_female_like_89 WITH (kafka_topic='pageviews_enriched_r8_r9', value_format='AVRO') AS SELECT * FROM pageviews_female WHERE regionid LIKE '%_8' OR regionid LIKE '%_9';                                     
-      ----------------------------------------------------------------------------------------------------------
-
-
-
-      ksql> EXPLAIN CSAS_PAGEVIEWS_FEMALE_LIKE_89;
-      
-      Type                 : QUERY
-      SQL                  : CREATE STREAM pageviews_female_like_89 WITH (kafka_topic='pageviews_enriched_r8_r9', value_format='AVRO') AS SELECT * FROM pageviews_female WHERE regionid LIKE '%_8' OR regionid LIKE '%_9';
-      
-      
-      Local runtime statistics
-      ------------------------
-      messages-per-sec:         0   total-messages:        43     last-message: 4/23/18 10:28:29 AM EDT
-       failed-messages:         0 failed-messages-per-sec:         0      last-failed:       n/a
-      (Statistics of the local KSQL server interaction with the Kafka topic pageviews_enriched_r8_r9)
-      
-
-#. At the ksqlDB prompt, view three messages from different ksqlDB streams and tables.
-
-   .. sourcecode:: bash
-
-      ksql> SELECT * FROM PAGEVIEWS_FEMALE_LIKE_89 EMIT CHANGES LIMIT 3;
-      ksql> SELECT * FROM USERS_ORIGINAL EMIT CHANGES LIMIT 3;
-
-#. In this demo, ksqlDB is run with Confluent Monitoring Interceptors configured which enables |c3| Data Streams to monitor ksqlDB queries. The consumer group names ``_confluent-ksql-default_query_`` correlate to the ksqlDB query names shown above, and |c3| is showing the records that are incoming to each query.
-
-For example, view throughput and latency of the incoming records for the persistent ksqlDB "Create Stream As Select" query ``CSAS_PAGEVIEWS_FEMALE``, which is displayed as ``_confluent-ksql-default_query_CSAS_PAGEVIEWS_FEMALE`` in |c3|.
-
-.. figure:: images/ksql_query_CSAS_PAGEVIEWS_FEMALE.png
-    :alt: image
-
+   .. figure:: images/ksqlDB_stream_messages.png
+      :alt: image
 
 
 Confluent Replicator
 --------------------
 
-Confluent Replicator copies data from a source Kafka cluster to a
-destination Kafka cluster. In this demo, the source cluster is a local install that represents
-a self-managed cluster, and the destination cluster is |ccloud|.
+Confluent Replicator copies data from a source Kafka cluster to a destination Kafka cluster.
+In this demo, the source cluster is a local install of a self-managed cluster, and the destination cluster is |ccloud|.
 
-1. View the Confluent Replicator configuration.
+#. |c3| is configured to manage the connect-cloud cluster running on port 8087, which is running a datagen connector and the |crep| connector. From the |c3| UI, view the connect clusters.
 
-   .. sourcecode:: bash
-
-      # For Confluent Platform local install using Confluent CLI
-      $ cat connectors/submit_replicator_config.sh
-
-      # For Docker Compose
-      $ cat connectors/submit_replicator_docker_config.sh
-      
-2. View topic ``pageviews`` in the local cluster
-
-   .. sourcecode:: bash
-
-     $ ccloud kafka topic describe test
-     Topic: test PartitionCount: 6 ReplicationFactor: 3
-       Topic | Partition | Leader | Replicas |   ISR    
-     +-------+-----------+--------+----------+---------+
-       test  |         0 |      3 | [3 4 0]  | [3 4 0]  
-       test  |         1 |      6 | [6 3 7]  | [6 3 7]  
-       test  |         2 |      7 | [7 8 6]  | [7 8 6]  
-       test  |         3 |      1 | [1 2 3]  | [1 2 3]  
-       test  |         4 |      8 | [8 5 1]  | [8 5 1]  
-       test  |         5 |      0 | [0 1 4]  | [0 1 4]  
-     
-     Configuration
-      
-                        Name                   |        Value         
-     +-----------------------------------------+---------------------+
-       compression.type                        | producer             
-       leader.replication.throttled.replicas   |                      
-       message.downconversion.enable           | true                 
-       min.insync.replicas                     |                   2  
-       segment.jitter.ms                       |                   0  
-       cleanup.policy                          | delete               
-       flush.ms                                | 9223372036854775807  
-       follower.replication.throttled.replicas |                      
-       segment.bytes                           |          1073741824  
-       retention.ms                            |           604800000  
-       flush.messages                          | 9223372036854775807  
-       message.format.version                  | 2.3-IV1              
-       file.delete.delay.ms                    |               60000  
-       max.compaction.lag.ms                   | 9223372036854775807  
-       max.message.bytes                       |             2097164  
-       min.compaction.lag.ms                   |                   0  
-       message.timestamp.type                  | CreateTime           
-       preallocate                             | false                
-       index.interval.bytes                    |                4096  
-       min.cleanable.dirty.ratio               |                 0.5  
-       unclean.leader.election.enable          | false                
-       delete.retention.ms                     |            86400000  
-       retention.bytes                         |                  -1  
-       segment.ms                              |           604800000  
-       message.timestamp.difference.max.ms     | 9223372036854775807  
-       segment.index.bytes                     |            10485760  
-
-
-3. View the replicated topics ``pageviews`` in the |ccloud| cluster. In |c3|, for a given topic listed
-   in **Management –> Topics**, click on the three dots ``...`` next to the topic name to see more
-   options per topic including in sync replicas, schema, topic
-   messages, and configuration settings. Shown below is replica info.
-
-   .. figure:: images/topic_info_ccloud_pageviews.png 
+   .. figure:: images/c3_clusters.png
       :alt: image
 
+#. Click on `replicator` to view the |crep| configuration. Notice that it is replicating the topic ``pageviews``.
 
-4. You can manage Confluent Replicator in the **Management –> Kafka Connect** page. The **Sources** tab shows the connector ``replicator``. Click ``Edit`` to see the details of the connector configuration.
+   .. figure:: images/c3_replicator_config.png
+      :alt: image
 
-   .. figure:: images/connect_source_ccloud.png
-    :alt: image
+#. Validate that messages are replicated from the local ``pageviews`` topic to the Confluent Cloud ``pageviews`` topic. From the Confluent Cloud UI, view messages in this topic.
+
+   .. figure:: images/cloud_pageviews_messages.png
+      :alt: image
 
 
 Confluent Schema Registry
@@ -387,24 +205,19 @@ Confluent Schema Registry
 
 The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the |ccloud| |sr|.
 
-1. View all the |sr| subjects.
+#. View all the |sr| subjects.
 
    .. sourcecode:: bash
 
         # Confluent Cloud Schema Registry
         $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
 
-2. From |c3|, under **MANAGEMENT –> Topics -> Schema**: view the schema for `pageviews` and `users`.  The topic value is using a Schema registered with |sr| (the topic key is just a String).
+#. From the Confluent Cloud UI, view the schema for the ``pageviews`` topic. The topic value is using a Schema registered with |sr| (the topic key is just a String).
 
    .. figure:: images/topic_schema.png
       :alt: image
 
-3. From |c3|, view the ksqlDB streams which are configured for Avro format.
-
-   .. figure:: images/ksql_dataformat.png
-      :alt: image
-
-4. To migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this :ref:`step-by-step guide <schemaregistry_migrate>`. Refer to the file :devx-examples:`submit_replicator_schema_migration_config.sh|ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>` for an example of a working Replicator configuration for schema migration.
+#. If you need to migrate schemas from on-prem |sr| to |ccloud| |sr|, follow this :ref:`step-by-step guide <schemaregistry_migrate>`. Refer to the file :devx-examples:`submit_replicator_schema_migration_config.sh|ccloud/connectors/submit_replicator_schema_migration_config.sh#L13-L33>` for an example of a working Replicator configuration for schema migration.
 
 ===============================
 Confluent Cloud Configurations

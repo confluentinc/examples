@@ -68,8 +68,6 @@ validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $
 printf "Done\n\n"
 
 echo ====== Start local Confluent Control Center to monitor Cloud and local clusters
-# For the KSQL Server backed to Confluent Cloud, set the REST port, instead of the default 8088 which is already in use by the local KSQL server
-KSQL_LISTENER=8089
 # For the Connect cluster backed to Confluent Cloud, set the REST port, instead of the default 8083 which is already in use by the local connect cluster
 CONNECT_REST_PORT=8087
 
@@ -81,11 +79,25 @@ if check_cp; then
   # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
-  echo "confluent.controlcenter.connect.cluster=http://localhost:$CONNECT_REST_PORT" >> $C3_CONFIG
-  echo "confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud" >> $C3_CONFIG
-  echo "confluent.controlcenter.ksql.url=http://localhost:$KSQL_LISTENER" >> $C3_CONFIG
-  # Workaround for MMA-3564
-  echo "confluent.metrics.topic.max.message.bytes=8388608" >> $C3_CONFIG
+
+cat <<EOF >> $C3_CONFIG
+# Kafka clusters
+confluent.controlcenter.kafka.local.bootstrap.servers=localhost:9092
+confluent.controlcenter.kafka.cloud.bootstrap.servers=$BOOTSTRAP_SERVERS
+confluent.controlcenter.kafka.cloud.ssl.endpoint.identification.algorithm=https
+confluent.controlcenter.kafka.cloud.sasl.mechanism=PLAIN
+confluent.controlcenter.kafka.cloud.security.protocol=SASL_SSL
+confluent.controlcenter.kafka.cloud.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$CLOUD_KEY\" password=\"$CLOUD_SECRET\";
+
+# Connect clusters
+confluent.controlcenter.connect.local.cluster=http://localhost:8083
+confluent.controlcenter.connect.cloud.cluster=http://localhost:$CONNECT_REST_PORT
+
+confluent.controlcenter.data.dir=$CONFLUENT_CURRENT/control-center/data-ccloud
+# Workaround for MMA-3564
+confluent.metrics.topic.max.message.bytes=8388608
+EOF
+
   ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic _confluent-controlcenter --prefix
   ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic _confluent-controlcenter --prefix
   control-center-start $C3_CONFIG > $CONFLUENT_CURRENT/control-center/control-center-ccloud.stdout 2>&1 &
@@ -115,7 +127,7 @@ EOF
 create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
-MAX_WAIT=40
+MAX_WAIT=120
 echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Confluent Cloud to start"
 retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 printf "\n\n"
