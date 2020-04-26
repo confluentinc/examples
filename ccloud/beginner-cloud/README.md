@@ -6,7 +6,6 @@ You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/in
 
 [start.sh](start.sh) is a fully scripted demo that shows users how to interact with Confluent Cloud, stepping through the following workflow using the CLI, and it takes about 8 minutes to complete:
 
-* Log in to Confluent Cloud
 * Create a new environment and specify it as the default
 * Create a new Kafka cluster and specify it as the default
 * Create a user key/secret pair and specify it as the default
@@ -33,40 +32,32 @@ If you choose to run it against your Confluent Cloud cluster, be aware that it:
 ## Pre-requisites
 
 * Access to a Confluent Cloud cluster
-* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v0.192.0 or later
-* Docker and Docker Compose (for the local Connect worker)
+* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v1.0.0 or later
+* Confluent Cloud user credentials saved in `~/.netrc` (save with command `ccloud login --save`)
+* Docker and Docker Compose for the local Connect worker
 * `timeout` installed on your host
 * `mvn` installed on your host
 * `jq` installed on your host
-* `expect` installed on your host
 
-## Usage
-
-Option 1: Provide all arguments on command line
+## Run demo
 
 ```bash
-./start.sh <url to cloud> <cloud email> <cloud password>
-```
-
-Option 2: Provide all arguments on command line, except password for which you will be prompted
-
-```bash
-./start.sh <url to cloud> <cloud email>
-```
+./start.sh
 
 # Advanced demo usage
+
 The demo script provides variables allowing you to alter the default Kafka cluster name, cloud provider, and region.  For example:
 
 ```bash
-CLUSTER_NAME=my-demo-cluster CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start.sh <url to cloud> <cloud email> 
+CLUSTER_NAME=my-demo-cluster CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start.sh
 ``` 
 
 Here are the variables and their default values:
 | Variable | Default |
 | --- | --- |
 | CLUSTER_NAME | demo-kafka-cluster |
-| CLUSTER_CLOUD | gcp |
-| CLUSTER_REGION | us-central1 |
+| CLUSTER_CLOUD | aws |
+| CLUSTER_REGION | us-west-2 |
 
 # Clean up after the demo
 
@@ -87,7 +78,7 @@ But you could consider running the following script to delete the demo's topics,
 Use this script with extreme caution and only in non-production environments.
 
 ```bash
-./cleanup.sh <url to cloud> <cloud email> <cloud password>
+./cleanup.sh
 ```
 
 

@@ -136,6 +136,17 @@ function check_cli_v2() {
   return 0
 }
 
+function check_ccloud_cli_netrc() {
+
+  if [[ ! -f "$HOME/.netrc" ]]; then
+    echo "ERROR: Before running the demo, save your Confluent Cloud CLI user credentials locally with the command 'ccloud login --save'"
+    exit 1
+  fi
+
+  return 0
+
+}
+
 function check_timeout() {
   if [[ $(type timeout 2>&1) =~ "not found" ]]; then
     echo "'timeout' is not found. Install 'timeout' and try again"
