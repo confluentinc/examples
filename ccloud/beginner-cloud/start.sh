@@ -62,7 +62,7 @@ echo -e "\n# Specify $CLUSTER as the active Kafka cluster"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 
-BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint")
+BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 ##################################################
@@ -79,8 +79,8 @@ if [[ $status != 0 ]]; then
 fi
 echo "$OUTPUT" | jq .
 
-echo -e "\n# Specify active API key that was just created"
 API_KEY=$(echo "$OUTPUT" | jq -r ".key")
+echo -e "\n# Associate the API key $API_KEY to the Kafka cluster $CLUSTER"
 echo "ccloud api-key use $API_KEY --resource $CLUSTER"
 ccloud api-key use $API_KEY --resource $CLUSTER
 
@@ -89,7 +89,7 @@ echo
 echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
 retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
 # Still required sleep
-sleep 30
+sleep 60
 printf "\n\n"
 
 
@@ -136,7 +136,7 @@ OUTPUT=$(ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME
 echo "$OUTPUT" | jq .
 SERVICE_ACCOUNT_ID=$(echo "$OUTPUT" | jq -r ".id")
 
-echo -e "\n# Create an API key and secret for the new service account"
+echo -e "\n# Create an API key and secret for the service account $SERVICE_ACCOUNT_ID"
 echo "ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json"
 OUTPUT=$(ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json)
 echo "$OUTPUT" | jq .
@@ -152,7 +152,7 @@ security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
 EOF
-echo "cat $CLIENT_CONFIG"
+echo "$ cat $CLIENT_CONFIG"
 cat $CLIENT_CONFIG
 
 echo -e "\n# Wait 90 seconds for the service account credentials to propagate"

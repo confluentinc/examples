@@ -21,10 +21,10 @@ check_ccloud_cli_netrc || exit 1
 
 ENVIRONMENT_NAME="demo-script-env"
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')
-echo "ENVIRONMENT: $ENVIRONMENT"
+#echo "ENVIRONMENT: $ENVIRONMENT"
 CLUSTER_NAME="demo-kafka-cluster"
 CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
-echo "CLUSTER: $CLUSTER"
+#echo "CLUSTER: $CLUSTER"
 CLIENT_CONFIG="/tmp/client.config"
 
 ##################################################
