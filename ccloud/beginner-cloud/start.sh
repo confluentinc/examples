@@ -172,7 +172,7 @@ echo -e "\n# By default, no ACLs are configured"
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 
-echo -e "\n# Run the Java producer to $TOPIC1: before ACLs"
+echo -e "\n# Run the Java producer to $TOPIC1: before ACLs (expected to fail)"
 mvn -q -f $POM clean package
 if [[ $? != 0 ]]; then
   echo "ERROR: There seems to be a build failure error compiling the client code? Please troubleshoot"
