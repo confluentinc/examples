@@ -97,7 +97,7 @@ function check_ccloud_logged_in() {
   check_ccloud_v2 || exit 1
 
   if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must log in to run that command." ]]; then
-    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login' before running the demo."
+    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login [--save]' before running the demo."
     exit 1
   fi
 
@@ -134,17 +134,6 @@ function check_cli_v2() {
   fi
 
   return 0
-}
-
-function check_ccloud_cli_netrc() {
-
-  if [[ ! -f "$HOME/.netrc" ]]; then
-    echo "ERROR: Before running the demo, save your Confluent Cloud CLI user credentials locally with the command 'ccloud login --save'"
-    exit 1
-  fi
-
-  return 0
-
 }
 
 function check_timeout() {

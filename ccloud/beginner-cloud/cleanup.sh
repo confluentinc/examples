@@ -17,7 +17,7 @@ check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
-check_ccloud_cli_netrc || exit 1
+check_ccloud_logged_in || exit 1
 
 ENVIRONMENT_NAME="demo-script-env"
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')

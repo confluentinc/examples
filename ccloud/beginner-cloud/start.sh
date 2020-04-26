@@ -18,7 +18,7 @@ check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
 check_docker || exit 1
-check_ccloud_cli_netrc || exit 1
+check_ccloud_logged_in || exit 1
 
 ##################################################
 # Create a new environment and specify it as the default
@@ -28,12 +28,12 @@ ENVIRONMENT_NAME="demo-script-env"
 echo -e "\n# Create a new Confluent Cloud environment $ENVIRONMENT_NAME"
 echo "ccloud environment create $ENVIRONMENT_NAME -o json"
 OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
-echo "$OUTPUT" | jq .
-ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
 if [[ $? != 0 ]]; then
-  echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"
+  echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again"
   exit 1
 fi
+echo "$OUTPUT" | jq .
+ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
 #echo $ENVIRONMENT
 
 echo -e "\n# Specify $ENVIRONMENT as the active environment"
