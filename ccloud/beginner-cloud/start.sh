@@ -25,7 +25,7 @@ check_ccloud_cli_netrc || exit 1
 ##################################################
 
 ENVIRONMENT_NAME="demo-script-env"
-echo -e "\n# Create and specify active environment"
+echo -e "\n# Create a new Confluent Cloud environment $ENVIRONMENT_NAME"
 echo "ccloud environment create $ENVIRONMENT_NAME -o json"
 OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
 echo "$OUTPUT" | jq .
@@ -36,7 +36,7 @@ if [[ $? != 0 ]]; then
 fi
 #echo $ENVIRONMENT
 
-echo -e "\n# Specify active environment that was just created"
+echo -e "\n# Specify $ENVIRONMENT as the active environment"
 echo "ccloud environment use $ENVIRONMENT"
 ccloud environment use $ENVIRONMENT
 
@@ -47,7 +47,7 @@ ccloud environment use $ENVIRONMENT
 CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
 CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
 CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
-echo -e "\n# Create and specify active Kafka cluster"
+echo -e "\n# Create a new Confluent Cloud cluster $CLUSTER_NAME"
 echo "ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION"
 OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
 status=$?
@@ -58,7 +58,7 @@ if [[ $status != 0 ]]; then
 fi
 CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
 
-echo -e "\n# Specify active Kafka cluster that was just created"
+echo -e "\n# Specify $CLUSTER as the active Kafka cluster"
 echo "ccloud kafka cluster use $CLUSTER"
 ccloud kafka cluster use $CLUSTER
 
@@ -69,9 +69,9 @@ BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".end
 # Create a user key/secret pair and specify it as the default
 ##################################################
 
-echo -e "\n# Create API key for $EMAIL"
-echo "ccloud api-key create --description \"Demo credentials for $EMAIL\" --resource $CLUSTER -o json"
-OUTPUT=$(ccloud api-key create --description "Demo credentials for $EMAIL" --resource $CLUSTER -o json)
+echo -e "\n# Create a new API key for user"
+echo "ccloud api-key create --description \"Demo credentials\" --resource $CLUSTER -o json"
+OUTPUT=$(ccloud api-key create --description "Demo credentials" --resource $CLUSTER -o json)
 status=$?
 if [[ $status != 0 ]]; then
   echo "ERROR: Failed to create an API key.  Please troubleshoot and run again"
@@ -99,7 +99,7 @@ printf "\n\n"
 
 TOPIC1="demo-topic-1"
 
-echo -e "\n# Create new Kafka topic $TOPIC1"
+echo -e "\n# Create a new Kafka topic $TOPIC1"
 echo "ccloud kafka topic create $TOPIC1"
 ccloud kafka topic create $TOPIC1
 status=$?
@@ -108,7 +108,7 @@ if [[ $status != 0 ]]; then
   exit 1
 fi
 
-echo -e "\n# Produce to topic $TOPIC1"
+echo -e "\n# Produce 10 messages to topic $TOPIC1"
 echo '(for i in `seq 1 10`; do echo "${i}" ; done) | \'
 echo "timeout 10s ccloud kafka topic produce $TOPIC1"
 (for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
@@ -118,7 +118,7 @@ if [[ $status != 0 && $status != 124 ]]; then
   exit 1
 fi
 
-echo -e "\n# Consume from topic $TOPIC1"
+echo -e "\n# Consume messages from topic $TOPIC1"
 echo "ccloud kafka topic consume $TOPIC1 -b"
 timeout 10s ccloud kafka topic consume $TOPIC1 -b
 
@@ -133,13 +133,13 @@ RANDOM_NUM=$((1 + RANDOM % 1000000))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
 echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME -o json"
 OUTPUT=$(ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json)
-echo "$OUTPUT"
+echo "$OUTPUT" | jq .
 SERVICE_ACCOUNT_ID=$(echo "$OUTPUT" | jq -r ".id")
 
 echo -e "\n# Create an API key and secret for the new service account"
 echo "ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json"
 OUTPUT=$(ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json)
-echo "$OUTPUT"
+echo "$OUTPUT" | jq .
 API_KEY_SA=$(echo "$OUTPUT" | jq -r ".key")
 API_SECRET_SA=$(echo "$OUTPUT" | jq -r ".secret")
 
@@ -152,6 +152,7 @@ security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
 EOF
+echo "cat $CLIENT_CONFIG"
 cat $CLIENT_CONFIG
 
 echo -e "\n# Wait 90 seconds for the service account credentials to propagate"
@@ -226,7 +227,7 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 
 TOPIC2="demo-topic-2"
 
-echo -e "\n# Create new Kafka topic $TOPIC2"
+echo -e "\n# Create a new Kafka topic $TOPIC2"
 echo "ccloud kafka topic create $TOPIC2"
 ccloud kafka topic create $TOPIC2
 
@@ -267,7 +268,7 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 
 TOPIC3=pageviews
 
-echo -e "\n# Create new Kafka topic $TOPIC3"
+echo -e "\n# Create a new Kafka topic $TOPIC3"
 echo "ccloud kafka topic create $TOPIC3"
 ccloud kafka topic create $TOPIC3
 
@@ -293,10 +294,12 @@ source delta_configs/env.delta
 echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
 echo "docker-compose up -d"
 docker-compose up -d
-echo -e "\n# Wait 60 seconds for Connect to start"
-sleep 60
+MAX_WAIT=60
+echo "Waiting up to $MAX_WAIT seconds for Docker container for connect to be up"
+retry $MAX_WAIT check_connect_up connect-cloud || exit 1
+sleep 5
 
-echo -e "\n# Post the configuration for the kafka-connect-datagen connector"
+echo -e "\n# Post the configuration for the kafka-connect-datagen connector that produces data to Confluent Cloud topic $TOPIC3"
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
