@@ -197,6 +197,7 @@ echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --op
 echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
+echo
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
@@ -239,6 +240,7 @@ echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --op
 echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
+echo
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
@@ -283,6 +285,7 @@ echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --op
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
 echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
+echo
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
@@ -352,6 +355,7 @@ echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --op
 echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
+echo
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
