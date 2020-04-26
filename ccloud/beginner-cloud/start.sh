@@ -86,9 +86,9 @@ ccloud api-key use $API_KEY --resource $CLUSTER
 
 MAX_WAIT=720
 echo
-echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
+echo "Waiting for Confluent Cloud cluster to be ready and for credentials to propagate"
 retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
-# Still required sleep
+# Estimating another 60s wait still sometimes required
 sleep 60
 printf "\n\n"
 
@@ -117,6 +117,8 @@ if [[ $status != 0 && $status != 124 ]]; then
   echo "ERROR: There seems to be a failure with 'ccloud kafka topic produce' command. Please troubleshoot"
   exit 1
 fi
+# Print messages to give user feedback during script run because it's not printed above
+(for i in `seq 1 10`; do echo "${i}" ; done)
 
 echo -e "\n# Consume messages from topic $TOPIC1"
 echo "ccloud kafka topic consume $TOPIC1 -b"
