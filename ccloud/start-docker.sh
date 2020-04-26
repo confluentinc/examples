@@ -52,16 +52,18 @@ echo ====== Validate credentials to Confluent Cloud Schema Registry
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
-echo ====== Creating cloud topics
+echo ====== Creating cloud topics users and pageviews and setting ACLs
 ccloud kafka topic create users
 ccloud kafka topic create pageviews
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 printf "\n"
 
 echo ====== Starting local services in Docker
 docker-compose up -d
 printf "\n"
 
-MAX_WAIT=180
+MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for connect-local to start"
 retry $MAX_WAIT check_connect_up connect-local || exit 1
 echo "Waiting up to $MAX_WAIT seconds for connect-cloud to start"
