@@ -31,4 +31,4 @@ You may also run an [end-to-end Confluent Cloud demo](https://docs.confluent.io/
 
 # Confluent Cloud
 
-[![](images/confluent-cloud.jpeg)](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
+[![](images/confluent-cloud.png)](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
