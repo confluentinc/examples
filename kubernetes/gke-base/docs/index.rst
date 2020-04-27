@@ -32,7 +32,7 @@ The following applications or libraries are required to be installed and availab
 +==================+================+=========================================================+
 | ``kubectl``      | ``1.18.0``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
 +------------------+----------------+---------------------------------------------------------+
-| ``helm``         | ``3.1.2``      | https://github.com/helm/helm/releases/tag/v2.12.3       |
+| ``helm``         | ``3.1.2``      | https://github.com/helm/helm/releases/tag/v3.1.2       |
 +------------------+----------------+---------------------------------------------------------+
 | ``gcloud``       | ``286.0.0``    |  https://cloud.google.com/sdk/install                   |
 | ``GCP sdk core`` | ``2020.03.24`` |                                                         |
