@@ -4,7 +4,7 @@
 
 * [Various programming languages](cloud/README.md)
 
-<br><img src="cloud/images/clients-all.png" width="400"><br>
+<a href="cloud/README.md" target="_blank"><img src="cloud/images/clients-all.png" width="400"></a>
 
 # Avro
 
