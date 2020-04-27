@@ -36,6 +36,14 @@ are quite large and depending on your network connection may take
        cd examples/clickstream
        git checkout |release_post_branch|
 
+#. Get the Jar files for the source and sink connectors
+
+  .. code:: bash
+
+      docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.3.1
+      docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:5.4.1
+
+
 #. Launch the tutorial in Docker.
 
    .. code:: bash
@@ -63,7 +71,17 @@ are quite large and depending on your network connection may take
         ksqldb-server     bash -c # Manually install ...   Up      0.0.0.0:8083->8083/tcp, 0.0.0.0:8088->8088/tcp
         schema-registry   /etc/confluent/docker/run        Up      8081/tcp                                      
         tools             /bin/bash                        Up                                                    
-        zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp    
+        zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp   
+
+
+#. Once you've confirmed everything is running in previous step, run the source connectors via ksqldb-cli 
+
+   .. code:: bash
+
+        docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+        run script '/scripts/create-connectors.sql';
+        exit ;
+        EOF"
 
 ---------------------------
 Browse the Clickstream Data
