@@ -17,58 +17,14 @@ check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
-
-
-##################################################
-# Read URL, EMAIL, PASSWORD from command line arguments
-#
-#  Rudimentary argument processing and must be in order:
-#    <url to cloud> <cloud email> <cloud password>
-##################################################
-URL=$1
-EMAIL=$2
-PASSWORD=$3
-if [[ -z "$URL" ]]; then
-  read -s -p "Cloud cluster: " URL
-  echo ""
-fi
-if [[ -z "$EMAIL" ]]; then
-  read -s -p "Cloud user email: " EMAIL
-  echo ""
-fi
-if [[ -z "$PASSWORD" ]]; then
-  read -s -p "Cloud user password: " PASSWORD
-  echo ""
-fi
-
-
-##################################################
-# Log in to Confluent Cloud
-##################################################
-
-echo -e "\n# Login"
-OUTPUT=$(
-expect <<END
-  log_user 1
-  spawn ccloud login --url $URL
-  expect "Email: "
-  send "$EMAIL\r";
-  expect "Password: "
-  send "$PASSWORD\r";
-  expect "Logged in as "
-  set result $expect_out(buffer)
-END
-)
-echo "$OUTPUT"
-if [[ ! "$OUTPUT" =~ "Logged in as" ]]; then
-  echo "Failed to log into your cluster.  Please check all parameters and run again"
-  exit 1
-fi
+check_ccloud_logged_in || exit 1
 
 ENVIRONMENT_NAME="demo-script-env"
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')
+#echo "ENVIRONMENT: $ENVIRONMENT"
 CLUSTER_NAME="demo-kafka-cluster"
 CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
+#echo "CLUSTER: $CLUSTER"
 CLIENT_CONFIG="/tmp/client.config"
 
 ##################################################
