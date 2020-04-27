@@ -134,7 +134,7 @@ Load the Streaming Data to ksqlDB
 
     .. code:: sql
 
-        RUN SCRIPT '/usr/share/doc/clickstream/statements.sql';
+        RUN SCRIPT '/scripts/statements.sql';
 
     The output will show either a blank message, or ``Executing statement``, similar to this: 
 
