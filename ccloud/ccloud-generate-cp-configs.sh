@@ -68,6 +68,12 @@
 #   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
 #   schema.registry.url=https://<SR ENDPOINT>
 #
+# If you are using Confluent Cloud KSQL, add the following configuration parameters
+# to file above (arg 1 CONFIG_FILE)
+#
+#   ksql.endpoint=<KSQL ENDPOINT>
+#   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+#
 ################################################################################
 CONFIG_FILE=$1
 if [[ -z "$CONFIG_FILE" ]]; then
