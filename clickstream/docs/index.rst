@@ -36,7 +36,7 @@ are quite large and depending on your network connection may take
        cd examples/clickstream
        git checkout |release_post_branch|
 
-#. Get the Jar files for the source and sink connectors
+#. Get the Jar files for ``kafka-connect-datagen`` (source connector) and ``kafka-connect-elasticsearch`` (sink connector).
 
    .. code:: bash
 
