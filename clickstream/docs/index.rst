@@ -101,7 +101,8 @@ Once you've confirmed all the Docker containers are running, create the source c
          Executing statement
         ---------
 
-    After the `RUN SCRIPT` command completes, exit out of the `ksqldb-cli` with a `CTRL+D`
+    After the ``RUN SCRIPT`` command completes, exit out of the ``ksqldb-cli`` with a ``CTRL+D`` command
+    
 
 #. Now the `clickstream` generator is running, simulating the stream of clicks. Sample these messages in ``clickstream``:
 
