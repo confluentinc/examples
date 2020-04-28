@@ -101,7 +101,7 @@ Once you've confirmed all the Docker containers are running, create the source c
          Executing statement
         ---------
 
-   After the `RUN SCRIPT` command completes, exit out of the `ksqldb-cli` with a `CTRL+D`
+    After the `RUN SCRIPT` command completes, exit out of the `ksqldb-cli` with a `CTRL+D`
 
 #. Now the `clickstream` generator is running, simulating the stream of clicks. Sample these messages in ``clickstream``:
 
@@ -151,7 +151,7 @@ Once you've confirmed all the Docker containers are running, create the source c
 
 #. Go to |c3| UI at http://localhost:9021 and view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
 
-    .. image:: images/c3_datagen_connectors.png
+   .. image:: images/c3_datagen_connectors.png
        :alt: Datagen Connectors 
 
 
@@ -257,8 +257,8 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
 
 #. In the |c3| UI at http://localhost:9021, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
 
-    .. image:: images/c3_connectors.png
-       :alt: Connectors
+   .. image:: images/c3_connectors.png
+        :alt: Connectors
 
 
 ---------------------------------------------
