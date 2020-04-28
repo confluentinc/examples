@@ -198,11 +198,11 @@ Consumed record with key alice and value 9,                       and updated to
     {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
     ```
 
-# Example 3: Do All the Above in Docker
+# Example 3: Run All the Above in Docker
 
-You may run these same scripts in Docker.
+You also may run all the above examples from within Docker.
 
-1. Copy your local file with configuration parameters to connect to your Confluent Cloud instance to the current directory.
+1. Copy to the current directory your local file with configuration parameters to connect to your Confluent Cloud instance.
 
 ```bash
 $ cp $HOME/.confluent/librdkafka.config .
