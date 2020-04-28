@@ -101,6 +101,8 @@ Once you've confirmed all the Docker containers are running, create the source c
          Executing statement
         ---------
 
+   After the `RUN SCRIPT` command completes, exit out of the `ksqldb-cli` with a `CTRL+D`
+
 #. Now the `clickstream` generator is running, simulating the stream of clicks. Sample these messages in ``clickstream``:
 
    .. code:: bash
@@ -147,10 +149,10 @@ Once you've confirmed all the Docker containers are running, create the source c
        3	{"user_id":3,"username":"Ferd88","registered_at":1481373367271,"first_name":"Dimitri","last_name":"Jushcke","city":"Raleigh","level":"Silver"}
 
 
-#.  In |c3|, view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
+#. Go to |c3| UI at http://localhost:9021 and view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
 
-    .. image:: images/c3_connectors.png
-       :alt: Connectors 
+    .. image:: images/c3_datagen_connectors.png
+       :alt: Datagen Connectors 
 
 
 
@@ -197,13 +199,6 @@ Verify the data
 
     .. image:: images/stream_clickstream.png
        :alt: Clickstream data
-
-
-#.  In |c3|, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
-
-    .. image:: images/c3_connectors.png
-       :alt: Connectors
-
 
 .. _clickstream-view-grafana:
 
@@ -258,7 +253,13 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
         {"id":1,"slug":"click-stream-analysis","status":"success","uid":"lUHTGDTmz","url":"/d/lUHTGDTmz/click-stream-analysis","version":4}
 
 
-This step will output a URL, you'll want to save it as you'll need it after the next step.
+#. Navigate to the Grafana dashboard (username/password is user/user) at http://localhost:3000
+
+#. In the |c3| UI at http://localhost:9021, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+
+    .. image:: images/c3_connectors.png
+       :alt: Connectors
+
 
 ---------------------------------------------
 Sessionize the data
