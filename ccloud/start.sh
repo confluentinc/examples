@@ -142,6 +142,8 @@ echo ====== submit Datagen connector for users
 printf "\n"
 
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
+# Create pageviews topic because Replicator cannot automatically create the destination topic
+# when replication factor (RF) in the origin cluster < RF in the destination cluster
 ccloud kafka topic create pageviews
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
 printf "\n"

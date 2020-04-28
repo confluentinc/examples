@@ -54,9 +54,11 @@ printf "Done\n\n"
 
 echo ====== Creating cloud topics users and pageviews and setting ACLs
 ccloud kafka topic create users
+ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
+# Create pageviews topic because Replicator cannot automatically create the destination topic
+# when replication factor (RF) in the origin cluster < RF in the destination cluster
 ccloud kafka topic create pageviews
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 printf "\n"
 
 echo ====== Starting local services in Docker
