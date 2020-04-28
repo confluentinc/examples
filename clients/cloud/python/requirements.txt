@@ -1,7 +1,1 @@
-requests
-fastavro>=0.23.0
-avro-python3==1.9.2.1
-jsonschema
-protobuf
-confluent-kafka
-confluent-kafka[avro]
+confluent-kafka[avro,jsonschema,protobuf]
