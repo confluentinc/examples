@@ -75,7 +75,7 @@ are quite large and depending on your network connection may take
         zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp   
 
 
-#. Once you've confirmed everything is running in previous step, run the source connectors via ksqldb-cli 
+#. Once you've confirmed all the Docker containers are running, create the source connectors that generate mock data. This demo leverages the embedded Connect worker in ksqlDB, so run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create those connectors.
 
    .. code:: bash
 
