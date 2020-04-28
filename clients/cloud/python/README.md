@@ -197,3 +197,32 @@ Consumed record with key alice and value 9,                       and updated to
     $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
     {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
     ```
+
+# Example 3: Do All the Above in Docker
+
+You may run these same scripts in Docker.
+
+1. Copy your local file with configuration parameters to connect to your Confluent Cloud instance to the current directory.
+
+```bash
+$ cp $HOME/.confluent/librdkafka.config .
+```
+
+2. Build the Docker image.
+
+```bash
+$ docker build --build-arg CONFIGFILE=librdkafka.config -t cloud-demo-python . 
+```
+
+```bash
+$ docker run -it --rm cloud-demo-python
+```
+
+4. Run the python applications from within the container shell. See earlier sections for more details.
+
+```bash
+root@6970a2a9e65b:/# ./producer.py -f librdkafka.config -t test1
+root@6970a2a9e65b:/# ./consumer.py -f librdkafka.config -t test1
+root@6970a2a9e65b:/# ./producer_ccsr.py -f librdkafka.config -t test2
+root@6970a2a9e65b:/# ./consumer_ccsr.py -f librdkafka.config -t test2
+```
