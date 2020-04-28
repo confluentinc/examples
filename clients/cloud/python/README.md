@@ -214,6 +214,8 @@ $ cp $HOME/.confluent/librdkafka.config .
 $ docker build -t cloud-demo-python . 
 ```
 
+3. Run the Docker image.
+
 ```bash
 $ docker run -v $PWD/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python
 ```
