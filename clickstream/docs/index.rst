@@ -86,7 +86,7 @@ Once you've confirmed all the Docker containers are running, create the source c
 
         docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
 
-#.  Run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create those connectors.
+#.  Run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create three source connectors for generating mock data.
 
     .. code:: sql
 
@@ -117,7 +117,7 @@ Once you've confirmed all the Docker containers are running, create the source c
       ...
 
 
-#. A second data generator is already running, this one for the HTTP status codes. Samples these messages in ``clickstream_codes``:
+#. The second data generator running is for the HTTP status codes. Samples these messages in ``clickstream_codes``:
 
    .. code:: bash
 
@@ -131,7 +131,7 @@ Once you've confirmed all the Docker containers are running, create the source c
        302	{"code":302,"definition":"Redirect"}
        302	{"code":302,"definition":"Redirect"}
 
-#. A third data generator is already running, this one for the user information. Samples these messages in ``clickstream_users``:
+#. The third data generator is for the user information. Samples these messages in ``clickstream_users``:
 
 
    .. code:: bash
@@ -145,6 +145,12 @@ Once you've confirmed all the Docker containers are running, create the source c
        1	{"user_id":1,"username":"Ferd88","registered_at":1490759617459,"first_name":"Curran","last_name":"Vanyard","city":"Palo Alto","level":"Gold"}
        2	{"user_id":2,"username":"bobk_43","registered_at":1457530469406,"first_name":"Antonio","last_name":"De Banke","city":"London","level":"Platinum"}
        3	{"user_id":3,"username":"Ferd88","registered_at":1481373367271,"first_name":"Dimitri","last_name":"Jushcke","city":"Raleigh","level":"Silver"}
+
+
+#.  In |c3|, view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
+
+    .. image:: images/c3_connectors.png
+       :alt: Connectors 
 
 
 
@@ -193,7 +199,7 @@ Verify the data
        :alt: Clickstream data
 
 
-#.  In |c3|, view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+#.  In |c3|, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
 
     .. image:: images/c3_connectors.png
        :alt: Connectors
