@@ -144,6 +144,8 @@ printf "\n"
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 ccloud kafka topic create pageviews
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
+ccloud kafka acl create --allow --service-account $serviceAccount --operation describe --topic pageviews
+ccloud kafka acl create --allow --service-account $serviceAccount --operation describe-configs --topic pageviews
 printf "\n"
 
 echo ====== Starting Replicator and sleeping 60 seconds
