@@ -40,7 +40,6 @@ are quite large and depending on your network connection may take
 
    .. code:: bash
 
-       PWD=$(pwd)
        docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.3.1
        docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:5.4.1
 
@@ -75,20 +74,34 @@ are quite large and depending on your network connection may take
         zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp   
 
 
-#. Once you've confirmed all the Docker containers are running, create the source connectors that generate mock data. This demo leverages the embedded Connect worker in ksqlDB, so run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create those connectors.
-
-   .. code:: bash
-
-        docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
-        run script '/scripts/create-connectors.sql';
-        exit ;
-        EOF"
-
 ---------------------------
-Browse the Clickstream Data
+Create the Clickstream Data
 ---------------------------
 
-#. A data generator is already running, simulating the stream of clicks. Sample these messages in ``clickstream``:
+Once you've confirmed all the Docker containers are running, create the source connectors that generate mock data. This demo leverages the embedded Connect worker in ksqlDB. 
+
+#.  Launch the ksqlDB CLI:
+
+    .. code:: bash
+
+        docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
+
+#.  Run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create those connectors.
+
+    .. code:: sql
+
+        RUN SCRIPT '/scripts/create-connectors.sql';
+
+    The output will show either a blank message, or ``Executing statement``, similar to this: 
+
+    ::
+
+         Message
+        ---------
+         Executing statement
+        ---------
+
+#. Now the `clickstream` generator is running, simulating the stream of clicks. Sample these messages in ``clickstream``:
 
    .. code:: bash
 
@@ -204,7 +217,7 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
 
    .. code:: bash
 
-       docker-compose exec kafka-connect bash -c '/scripts/ksql-tables-to-grafana.sh'
+       docker-compose exec ksqldb-server bash -c '/scripts/ksql-tables-to-grafana.sh'
 
    Your output should resemble:
 
