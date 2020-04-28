@@ -20,4 +20,3 @@ log.*
 *.csr
 *.srl
 *_creds
-**/librdkafka.config
