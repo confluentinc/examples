@@ -89,7 +89,7 @@ do
 done
 
 # Delete topics in Confluent Cloud
-topics_to_delete="pageviews users PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS PAGEVIEWS_FEMALE_LIKE_89 USERS_ORIGINAL"
+topics_to_delete="pageviews users PAGEVIEWS_FEMALE PAGEVIEWS_REGIONS PAGEVIEWS_FEMALE_LIKE_89 USERS_ORIGINAL connect-demo-configs connect-demo-offsets connect-demo-statuses"
 for topic in $topics_to_delete
 do
   ccloud kafka topic describe $topic > /dev/null 2>&1 && ccloud kafka topic delete $topic 
@@ -97,5 +97,5 @@ done
 
 echo
 echo
-echo "Note: not deleting the connect topics in case they are used by other applications.  Remaining topics in cluster:"
+echo "Note: not deleting Confluent Control Center and related topics in case they are used by other applications.  Remaining topics in cluster:"
 ccloud kafka topic list
