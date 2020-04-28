@@ -202,11 +202,7 @@ Consumed record with key alice and value 9,                       and updated to
 
 You also may run all the above code from within Docker.
 
-1. Copy to the current directory your local file with configuration parameters to connect to your Confluent Cloud instance.
-
-```bash
-$ cp $HOME/.confluent/librdkafka.config .
-```
+1. Ensure you have created a local file with configuration parameters to connect to your Confluent Cloud instance at `$HOME/.confluent/librdkafka.config`.
 
 2. Build the Docker image.
 
@@ -217,7 +213,7 @@ $ docker build -t cloud-demo-python .
 3. Run the Docker image.
 
 ```bash
-$ docker run -v $PWD/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python
+$ docker run -v $HOME/.confluent/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python bash
 ```
 
 4. Run the python applications from within the container shell. See earlier sections for more details.
