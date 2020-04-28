@@ -127,7 +127,7 @@ EOF
 create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
-MAX_WAIT=120
+MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Confluent Cloud to start"
 retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 printf "\n\n"
