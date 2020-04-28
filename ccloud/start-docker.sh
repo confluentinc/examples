@@ -53,12 +53,12 @@ validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $
 printf "Done\n\n"
 
 echo ====== Creating cloud topics users and pageviews and setting ACLs
+# users
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
-# Create pageviews topic because Replicator cannot automatically create the destination topic
-# when replication factor (RF) in the origin cluster < RF in the destination cluster
-ccloud kafka topic create pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
+# pageviews
+# No need to pre-create topic pageviews in Confluent Cloud because Replicator will do this automatically
+create_replicator_acls $serviceAccount pageviews
 printf "\n"
 
 echo ====== Starting local services in Docker

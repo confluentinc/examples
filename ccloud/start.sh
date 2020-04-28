@@ -109,7 +109,7 @@ kafka-topics --bootstrap-server localhost:9092 --create --topic pageviews --part
 sleep 20
 printf "\n"
 
-echo ====== Submit datagen connector for pageviews 
+echo ====== Deploying kafka-connect-datagen for pageviews
 . ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
@@ -137,15 +137,13 @@ ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 printf "\n"
 
-echo ====== submit Datagen connector for users
+echo ====== Deploying kafka-connect-datagen for users
 . ./connectors/submit_datagen_users_config.sh
 printf "\n"
 
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
-# Create pageviews topic because Replicator cannot automatically create the destination topic
-# when replication factor (RF) in the origin cluster < RF in the destination cluster
-ccloud kafka topic create pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
+# No need to pre-create topic pageviews in Confluent Cloud because Replicator will do this automatically
+create_replicator_acls $serviceAccount pageviews
 printf "\n"
 
 echo ====== Starting Replicator and sleeping 60 seconds
