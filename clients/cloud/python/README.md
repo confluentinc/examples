@@ -200,7 +200,7 @@ Consumed record with key alice and value 9,                       and updated to
 
 # Example 3: Run All the Above in Docker
 
-You also may run all the above examples from within Docker.
+You also may run all the above code from within Docker.
 
 1. Copy to the current directory your local file with configuration parameters to connect to your Confluent Cloud instance.
 
