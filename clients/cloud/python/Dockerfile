@@ -6,7 +6,4 @@ RUN pip3 install -U confluent-kafka
 RUN pip3 install -U confluent-kafka[avro]
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10
 
-ARG CONFIGFILE
-
 COPY *.py ./
-COPY $CONFIGFILE ./

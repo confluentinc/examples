@@ -211,18 +211,18 @@ $ cp $HOME/.confluent/librdkafka.config .
 2. Build the Docker image.
 
 ```bash
-$ docker build --build-arg CONFIGFILE=librdkafka.config -t cloud-demo-python . 
+$ docker build -t cloud-demo-python . 
 ```
 
 ```bash
-$ docker run -it --rm cloud-demo-python
+$ docker run -v $PWD/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python
 ```
 
 4. Run the python applications from within the container shell. See earlier sections for more details.
 
 ```bash
-root@6970a2a9e65b:/# ./producer.py -f librdkafka.config -t test1
-root@6970a2a9e65b:/# ./consumer.py -f librdkafka.config -t test1
-root@6970a2a9e65b:/# ./producer_ccsr.py -f librdkafka.config -t test2
-root@6970a2a9e65b:/# ./consumer_ccsr.py -f librdkafka.config -t test2
+root@6970a2a9e65b:/# ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
+root@6970a2a9e65b:/# ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
+root@6970a2a9e65b:/# ./producer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
+root@6970a2a9e65b:/# ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
 ```
