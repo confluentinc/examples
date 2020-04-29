@@ -827,6 +827,22 @@ function create_c3_acls() {
   return 0
 }
 
+function create_replicator_acls() {
+  serviceAccount=$1
+  topic=$2
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE-CONFIGS --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation ALTER-CONFIGS --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --cluster-scope
+  
+  return 0
+}
+
 function create_connect_topics_and_acls() {
   serviceAccount=$1
 
