@@ -109,9 +109,8 @@ if [[ $status != 0 ]]; then
 fi
 
 echo -e "\n# Produce 10 messages to topic $TOPIC1"
-echo '(for i in `seq 1 10`; do echo "${i}" ; done) | tee | \'
-echo "timeout 10s ccloud kafka topic produce $TOPIC1"
-(for i in `seq 1 10`; do echo "${i}" ; done) | tee | timeout 10s ccloud kafka topic produce $TOPIC1
+echo 'seq 1 10 | tee /dev/tty | ccloud kafka topic produce $TOPIC1'
+seq 1 10 | tee /dev/tty | ccloud kafka topic produce $TOPIC1
 status=$?
 if [[ $status != 0 && $status != 124 ]]; then
   echo "ERROR: There seems to be a failure with 'ccloud kafka topic produce' command. Please troubleshoot"
