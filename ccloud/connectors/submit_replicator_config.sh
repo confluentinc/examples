@@ -17,6 +17,7 @@ DATA=$( cat << EOF
     "topic.whitelist": "pageviews",
     "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
+    "dest.topic.replication.factor": 3,
     "dest.kafka.bootstrap.servers": "$BOOTSTRAP_SERVERS",
     "dest.kafka.security.protocol": "SASL_SSL",
     "dest.kafka.sasl.mechanism": "PLAIN",
