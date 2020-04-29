@@ -55,22 +55,10 @@ function check_ccloud_binary() {
   fi
 }
 
-function check_ccloud() {
-
-  check_ccloud_binary || exit 1
-
-  if [[ ! -e "$HOME/.ccloud/config" ]]; then
-    echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
-    exit 1
-  fi
-
-  return 0
-}
-
 function check_ccloud_v1() {
   expected_version="0.2.0"
 
-  check_ccloud || exit 1
+  check_ccloud_binary || exit 1
 
   actual_version=$(ccloud version | grep -i "version" | awk '{print $3;}')
   if ! [[ $actual_version =~ $expected_version ]]; then
@@ -83,7 +71,7 @@ function check_ccloud_v1() {
 
 function check_ccloud_v2() {
 
-  check_ccloud || exit 1
+  check_ccloud_binary || exit 1
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
