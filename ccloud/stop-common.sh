@@ -33,6 +33,9 @@ DELTA_CONFIGS_DIR="delta_configs"
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 
+# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+
 # Set Kafka cluster
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 
