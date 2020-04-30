@@ -39,15 +39,6 @@ echo ====== Cleaning up previous run
 ./stop.sh
 printf "\nDone with cleanup\n\n"
 
-echo ====== Installing kafka-connect-datagen
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
-printf "\n"
-
-echo ====== Starting local Kafka Connect
-confluent local start connect
-CONFLUENT_CURRENT=`confluent local current | tail -1`
-printf "\n"
-
 echo ====== Generate CCloud configurations
 SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
@@ -58,6 +49,15 @@ printf "\n"
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+
+echo ====== Installing kafka-connect-datagen
+confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
+printf "\n"
+
+echo ====== Starting local Kafka Connect
+confluent local start connect
+CONFLUENT_CURRENT=`confluent local current | tail -1`
+printf "\n"
 
 echo ====== Set current Confluent Cloud 
 # Set Kafka cluster and service account
