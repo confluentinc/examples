@@ -39,6 +39,9 @@ DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 printf "\n"
 
+# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+
 echo ====== Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
