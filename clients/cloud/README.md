@@ -8,12 +8,12 @@ Each client example takes as an argument a properties file with the configuratio
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
-| [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/go.png)](go/)         |
-| [![](images/scala.png)](scala/)   | [![](images/confluent-cli.png)](confluent-cli/) | [![](images/ruby.png)](ruby/)     |
-| [![](images/groovy.png)](groovy/) | [![](images/kotlin.png)](kotlin/)               | [![](images/nodejs.png)](nodejs/) |
-| [![](images/kafkacat.jpg)](kafkacat/) | [![](images/dotnet.png)](csharp/)           | [![](images/c.png)](c/) |
-| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [![](images/ksql-datagen.png)](ksql-datagen/) | [![](images/rust.png)](rust/) |
-| [![](images/kafka.png)](kafka-commands/) | [![](images/clojure.png)](clojure/) | |
+| [![](images/java.png)](java/) <br/>Java     | [![](images/python.png)](python/) <br/>Python              | [![](images/go.png)](go/) <br/>Go         |
+| [![](images/scala.png)](scala/) <br/>Scala   | [![](images/confluent-cli.png)](confluent-cli/) <br/>Confluent CLI | [![](images/ruby.png)](ruby/) <br/>Ruby     |
+| [![](images/groovy.png)](groovy/) <br/>Groovy | [![](images/kotlin.png)](kotlin/) <br/>Kotlin               | [![](images/nodejs.png)](nodejs/) <br/>Node.JS|
+| [![](images/kafkacat.jpg)](kafkacat/) <br/>kafkacat| [![](images/dotnet.png)](csharp/) <br/>C#         | [![](images/c.png)](c/) <br/>C|
+| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) <br/>Kafka Connect DataGen| [![](images/ksql-datagen.png)](ksql-datagen/) <br/>KSQL Datagen| [![](images/rust.png)](rust/) <br/> Rust|
+| [![](images/kafka.png)](kafka-commands/) <br/> Kafka commands| [![](images/clojure.png)](clojure/) <br/> Clojure| |
 
 ## Confluent Cloud and Confluent Cloud Schema Registry
 
@@ -21,8 +21,8 @@ The following subset includes examples with Confluent Schema Registry and Avro d
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
-| [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/confluent-cli.png)](confluent-cli/) |
-| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [![](images/ksql-datagen.png)](ksql-datagen/) | [![](images/kafka.png)](kafka-commands/) |
+| [![](images/java.png)](java/) <br/>Java    | [![](images/python.png)](python/) <br/>Python              | [![](images/confluent-cli.png)](confluent-cli/) <br/>Confluent CLI|
+| [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) <br/>Kafka Connect Datagen| [![](images/ksql-datagen.png)](ksql-datagen/) <br/>KSQL Datagen| [![](images/kafka.png)](kafka-commands/) <br/>Kafka commands|
 
 
 # Other Confluent Cloud Demos
