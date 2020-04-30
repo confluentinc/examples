@@ -488,6 +488,8 @@ function validate_confluent_cloud_schema_registry() {
     echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
     exit 1
   }
+
+  echo "Validated credentials to Confluent Cloud Schema Registry at $sr_endpoint"
   return 0
 }
 
@@ -617,12 +619,12 @@ function check_credentials_ksql() {
              -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
              --silent \
              -u $credentials)
-  echo $response
   if [[ "$response" =~ "Unauthorized" ]]; then
-    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $credentials and try again."
+    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
 
+  echo "Validated credentials to Confluent Cloud KSQL at $ksql_endpoint"
   return 0
 }
 
@@ -857,6 +859,26 @@ function create_connect_topics_and_acls() {
   return 0
 }
 
+function ccloud_demo_preflight_check() {
+  CLOUD_KEY=$1
+  CONFIG_FILE=$2
+
+  ccloud_validate_environment_set || exit 1
+  ccloud_cli_set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
+  validate_confluent_cloud_schema_registry "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
+  validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+}
+
+function ccloud_validate_environment_set() {
+  ccloud environment list | grep '*' &>/dev/null || {
+    echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' andset 'ccloud environment use' and try again"
+    exit 1
+  }
+
+  return 0
+  
+}
+
 function ccloud_cli_set_kafka_cluster_use() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
@@ -871,7 +893,7 @@ function ccloud_cli_set_kafka_cluster_use() {
     exit 1
   fi
   ccloud kafka cluster use $kafkaCluster
-  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:\n"
+  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:"
   ccloud kafka cluster describe $kafkaCluster
   
   return 0
