@@ -46,7 +46,7 @@ echo ====== Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 
-echo ====== Set ACLs for Confluent Control Center and Kafka Cnnect
+echo ====== Set ACLs for Confluent Control Center and Kafka Connect
 create_c3_acls $serviceAccount
 create_connect_topics_and_acls $serviceAccount
 printf "\n"
