@@ -7,7 +7,7 @@
 # a .env file, which is actually a symbolic link to <examples-root>/utils/config.env.  That file
 # contains values which get substituted here when docker-compose parses this file.
 #
-# If you'd like to view the docker-compose.yml file rendered with it's environment variable substituions
+# If you'd like to view the docker-compose.yml file rendered with its environment variable substituions
 # you can execute the `docker-compose config` command.  Take note that some demos provide additional 
 # environment variable values by exporting them in a script prior to running `docker-compose up`.
 ---
