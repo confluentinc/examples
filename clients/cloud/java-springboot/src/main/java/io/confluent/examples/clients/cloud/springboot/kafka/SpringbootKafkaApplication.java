@@ -17,7 +17,7 @@ public class SpringbootKafkaApplication {
   private int numPartitions;
 
   @Value("${io.confluent.developer.config.topic.replicas}")
-  private final int replicas = 1;
+  private int replicas;
 
   @Bean
   NewTopic moviesTopic() {
