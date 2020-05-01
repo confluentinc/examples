@@ -57,7 +57,12 @@ Each record has a String key representing a username (e.g. `alice`) and a value 
 }
 ----
 
-Run producer and consumer application by executing `startProducerConsumer.sh`.
+.Run the Kafka Producer / Consumer application.
+[source,shell]
+----
+./startProducerConsumer.sh
+----
+
 This command will build jar and executes `spring-kafka` powered producer and consumer.
 The consumer reads the same topic from Confluent Cloud and prints data to the console.
 
@@ -106,7 +111,7 @@ The Kafka Streams API reads the same topic from Confluent Cloud and does a state
 .Run the Kafka Streams application.
 [source,shell]
 ----
-include::startStreams.sh[lines=28]
+./startStreams.sh
 ----
 
 .You should see:
