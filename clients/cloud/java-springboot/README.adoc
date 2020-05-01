@@ -1,0 +1,144 @@
+= Spring Boot with Java Example Confluent Cloud Client
+:experimental:
+
+NOTE: Produce messages to and consume messages from https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud] using the Spring Boot using Java API.
+
+== Prerequisites
+
+* Java 1.8
+* Create a local file (e.g. at `$HOME/.ccloud/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud], or any other cluster.  
+Follow https://github.com/confluentinc/configuration-templates/tree/master/README.md[these detailed instructions] to properly create this file.
+* If you are running on Confluent Cloud, you must have access to a link:https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud] cluster.
+
+[source]
+.Confluent Cloud config file example
+----
+$ cat $HOME/.ccloud/java.config
+bootstrap.servers=<BROKER ENDPOINT>
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+schema.registry.url=<SR ENDPOINT> 
+basic.auth.credentials.source=USER_INFO 
+schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD>
+----
+
+== Example 1: Producing and Consuming Avro messages
+
+This example is uses values that formatted as Avro and integrates with the Confluent Cloud Schema Registry.
+Before using Confluent Cloud Schema Registry, check its https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[availability and limits].
+Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
+
+. As described in the https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud quickstart], in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+
+. Verify your Confluent Cloud Schema Registry credentials work from your host. 
+In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.
++
+[source,shell]
+.View the list of registered subjects
+----
+$ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+----
+
+This Spring Boot application has two components - Producer (`ProducerExample.java`) and Consumer (`ConsumerExample.java`).
+Both components will be initialized during the Spring Boot application startup.
+The producer writes Kafka data to a topic in Confluent Cloud.
+Each record has a String key representing a username (e.g. `alice`) and a value of a count, formatted as Avro object
+
+[source,json]
+----
+{"namespace": "io.confluent.examples.clients.cloud",
+ "type": "record",
+ "name": "DataRecordAvro",
+ "fields": [
+     {"name": "count", "type": "long"}
+ ]
+}
+----
+
+.Run the Kafka Producer / Consumer application.
+[source,shell]
+----
+./startProducerConsumer.sh
+----
+
+This command will build jar and executes `spring-kafka` powered producer and consumer.
+The consumer reads the same topic from Confluent Cloud and prints data to the console.
+
+You should see following in the console:
+
+[source,shell]
+----
+ ...
+ 2020-02-13 14:41:57.924  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 20
+2020-02-13 14:41:57.927  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 21
+2020-02-13 14:41:57.927  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 22
+2020-02-13 14:41:57.927  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 23
+2020-02-13 14:41:57.928  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 24
+2020-02-13 14:41:57.928  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 25
+2020-02-13 14:41:57.928  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 26
+2020-02-13 14:41:57.929  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 27
+2020-02-13 14:41:57.929  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 28
+2020-02-13 14:41:57.930  INFO 44191 --- [ad | producer-1] i.c.e.c.c.springboot.ProducerExample     : Produced record to topic test partition 3 @ offset 29
+ 10 messages were produced to topic test
+ ...
+----
+
+=== Verify that the consumer received all the messages:
+
+.You should see:
+----
+ ...
+ 2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 0}
+2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 1}
+2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 2}
+2020-02-13 14:41:58.248  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 3}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 4}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 5}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 6}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 7}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 8}
+2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 9}
+----
+
+NOTE: When you are done, press kbd:[Ctrl + c].
+
+== Example 2: Kafka Streams with Spring Boot
+
+The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
+
+.Run the Kafka Streams application.
+[source,shell]
+----
+./startStreams.sh
+----
+
+.You should see:
+----
+ ...
+ [Consumed record]: alice, 0
+ [Consumed record]: alice, 1
+ [Consumed record]: alice, 2
+ [Consumed record]: alice, 3
+ [Consumed record]: alice, 4
+ [Consumed record]: alice, 5
+ [Consumed record]: alice, 6
+ [Consumed record]: alice, 7
+ [Consumed record]: alice, 8
+ [Consumed record]: alice, 9
+ ...
+ [Running count]: alice, 0
+ [Running count]: alice, 1
+ [Running count]: alice, 3
+ [Running count]: alice, 6
+ [Running count]: alice, 10
+ [Running count]: alice, 15
+ [Running count]: alice, 21
+ [Running count]: alice, 28
+ [Running count]: alice, 36
+ [Running count]: alice, 45
+ ...
+----
+
+NOTE: When you are done, press kbd:[Ctrl + c].
