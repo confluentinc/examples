@@ -1,19 +1,19 @@
 = Spring Boot with Java Example Confluent Cloud Client
 :experimental:
 
-NOTE: Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the Spring Boot using Java API.
+NOTE: Produce messages to and consume messages from https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud] using the Spring Boot using Java API.
 
 == Prerequisites
 
 * Java 1.8 or higher to run the demo application
-* Create a local file (e.g. at `$HOME/.ccloud/config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, link:https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud], or any other cluster.  
-Follow link:https://github.com/confluentinc/configuration-templates/tree/master/README.md[these detailed instructions] to properly create this file.
+* Create a local file (e.g. at `$HOME/.ccloud/java.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud], or any other cluster.  
+Follow https://github.com/confluentinc/configuration-templates/tree/master/README.md[these detailed instructions] to properly create this file.
 * If you are running on Confluent Cloud, you must have access to a link:https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud] cluster.
 
 [source]
 .Confluent Cloud config file example
 ----
-$ cat $HOME/.ccloud/config
+$ cat $HOME/.ccloud/java.config
 bootstrap.servers=<BROKER ENDPOINT>
 ssl.endpoint.identification.algorithm=https
 security.protocol=SASL_SSL
@@ -27,10 +27,10 @@ schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD>
 == Example 1: Producing and Consuming Avro messages
 
 This example is uses values that formatted as Avro and integrates with the Confluent Cloud Schema Registry.
-Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud).
+Before using Confluent Cloud Schema Registry, check its https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[availability and limits].
 Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
 
-. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
+. As described in the https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud quickstart], in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
 
 . Verify your Confluent Cloud Schema Registry credentials work from your host. 
 In the output below, substitute your values for `<SR API KEY>`, `<SR API SECRET>`, and `<SR ENDPOINT>`.

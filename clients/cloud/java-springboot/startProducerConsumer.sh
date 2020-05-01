@@ -10,7 +10,7 @@ BLUE='\033[0;34m'
 
 echo -e "\n${BLUE}\t☁️  Generating a config from Confluent Cloud properties... ${NC}\n"
 
-export CONFIG_FILE=~/.ccloud/config
+export CONFIG_FILE=~/.ccloud/java.config
 check_ccloud_config $CONFIG_FILE || exit
 
 SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
