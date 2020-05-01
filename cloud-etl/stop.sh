@@ -12,6 +12,9 @@ check_ccloud_logged_in || exit 1
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
+# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+
 validate_cloud_storage config/demo.cfg || exit 1
 
 # Set Kafka cluster

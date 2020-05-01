@@ -39,6 +39,9 @@ DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 printf "\n"
 
+# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+
 echo ====== Set Kafka cluster and service account
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
@@ -53,12 +56,12 @@ validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $
 printf "Done\n\n"
 
 echo ====== Creating cloud topics users and pageviews and setting ACLs
+# users
 ccloud kafka topic create users
-ccloud kafka topic create pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
-ccloud kafka acl create --allow --service-account $serviceAccount --operation describe --topic pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation describe-configs --topic pageviews
+# pageviews
+# No need to pre-create topic pageviews in Confluent Cloud because Replicator will do this automatically
+create_replicator_acls $serviceAccount pageviews
 printf "\n"
 
 echo ====== Starting local services in Docker

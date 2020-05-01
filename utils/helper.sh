@@ -55,22 +55,10 @@ function check_ccloud_binary() {
   fi
 }
 
-function check_ccloud() {
-
-  check_ccloud_binary || exit 1
-
-  if [[ ! -e "$HOME/.ccloud/config" ]]; then
-    echo "'ccloud' is not initialized. Run 'ccloud init' and try again"
-    exit 1
-  fi
-
-  return 0
-}
-
 function check_ccloud_v1() {
   expected_version="0.2.0"
 
-  check_ccloud || exit 1
+  check_ccloud_binary || exit 1
 
   actual_version=$(ccloud version | grep -i "version" | awk '{print $3;}')
   if ! [[ $actual_version =~ $expected_version ]]; then
@@ -83,7 +71,7 @@ function check_ccloud_v1() {
 
 function check_ccloud_v2() {
 
-  check_ccloud || exit 1
+  check_ccloud_binary || exit 1
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
@@ -211,7 +199,7 @@ function check_running_cp() {
 
   expected_version=$1
 
-  actual_version=$( confluent local version 2>/dev/null | awk -F':' '{print $2;}' | awk '$1 > 0 { print substr($1,1,3)}' )
+  actual_version=$( confluent local version 2>/dev/null | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
   if [[ $expected_version != $actual_version ]]; then
     printf "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
@@ -500,6 +488,8 @@ function validate_confluent_cloud_schema_registry() {
     echo "ERROR: Could not validate credentials to Confluent Cloud Schema Registry. Please troubleshoot"
     exit 1
   }
+
+  echo "Validated credentials to Confluent Cloud Schema Registry at $sr_endpoint"
   return 0
 }
 
@@ -629,12 +619,12 @@ function check_credentials_ksql() {
              -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
              --silent \
              -u $credentials)
-  echo $response
   if [[ "$response" =~ "Unauthorized" ]]; then
-    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $credentials and try again."
+    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
 
+  echo "Validated credentials to Confluent Cloud KSQL at $ksql_endpoint"
   return 0
 }
 
@@ -827,6 +817,22 @@ function create_c3_acls() {
   return 0
 }
 
+function create_replicator_acls() {
+  serviceAccount=$1
+  topic=$2
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE-CONFIGS --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation ALTER-CONFIGS --topic $topic
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --cluster-scope
+  
+  return 0
+}
+
 function create_connect_topics_and_acls() {
   serviceAccount=$1
 
@@ -845,6 +851,26 @@ function create_connect_topics_and_acls() {
   return 0
 }
 
+function ccloud_demo_preflight_check() {
+  CLOUD_KEY=$1
+  CONFIG_FILE=$2
+
+  ccloud_validate_environment_set || exit 1
+  ccloud_cli_set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
+  validate_confluent_cloud_schema_registry "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
+  validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+}
+
+function ccloud_validate_environment_set() {
+  ccloud environment list | grep '*' &>/dev/null || {
+    echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' andset 'ccloud environment use' and try again"
+    exit 1
+  }
+
+  return 0
+  
+}
+
 function ccloud_cli_set_kafka_cluster_use() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
@@ -859,7 +885,7 @@ function ccloud_cli_set_kafka_cluster_use() {
     exit 1
   fi
   ccloud kafka cluster use $kafkaCluster
-  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:\n"
+  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:"
   ccloud kafka cluster describe $kafkaCluster
   
   return 0

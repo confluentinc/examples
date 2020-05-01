@@ -6,7 +6,7 @@
 echo ====== Verifying prerequisites
 check_env || exit 1
 check_jq || exit 1
-check_running_cp ${CONFLUENT_SHORT} || exit 1
+check_running_cp ${CONFLUENT} || exit 1
 
 # File with Confluent Cloud configuration parameters: example template
 #   $ cat ~/.ccloud/config
@@ -39,6 +39,17 @@ echo ====== Cleaning up previous run
 ./stop.sh
 printf "\nDone with cleanup\n\n"
 
+echo ====== Generate CCloud configurations
+SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
+./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
+
+DELTA_CONFIGS_DIR=delta_configs
+source $DELTA_CONFIGS_DIR/env.delta
+printf "\n"
+
+# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+
 echo ====== Installing kafka-connect-datagen
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
 printf "\n"
@@ -46,14 +57,6 @@ printf "\n"
 echo ====== Starting local Kafka Connect
 confluent local start connect
 CONFLUENT_CURRENT=`confluent local current | tail -1`
-printf "\n"
-
-echo ====== Generate CCloud configurations
-SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
-./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
-
-DELTA_CONFIGS_DIR=delta_configs
-source $DELTA_CONFIGS_DIR/env.delta
 printf "\n"
 
 echo ====== Set current Confluent Cloud 
@@ -109,7 +112,7 @@ kafka-topics --bootstrap-server localhost:9092 --create --topic pageviews --part
 sleep 20
 printf "\n"
 
-echo ====== Submit datagen connector for pageviews 
+echo ====== Deploying kafka-connect-datagen for pageviews
 . ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
@@ -127,7 +130,7 @@ EOF
 create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
-MAX_WAIT=120
+MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Confluent Cloud to start"
 retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 printf "\n\n"
@@ -137,15 +140,13 @@ ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 printf "\n"
 
-echo ====== submit Datagen connector for users
+echo ====== Deploying kafka-connect-datagen for users
 . ./connectors/submit_datagen_users_config.sh
 printf "\n"
 
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
-ccloud kafka topic create pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation describe --topic pageviews
-ccloud kafka acl create --allow --service-account $serviceAccount --operation describe-configs --topic pageviews
+# No need to pre-create topic pageviews in Confluent Cloud because Replicator will do this automatically
+create_replicator_acls $serviceAccount pageviews
 printf "\n"
 
 echo ====== Starting Replicator and sleeping 60 seconds

@@ -43,6 +43,7 @@ If you choose to run it against your Confluent Cloud cluster, be aware that it:
 
 ```bash
 ./start.sh
+```
 
 # Advanced demo usage
 

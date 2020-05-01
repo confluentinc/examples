@@ -36,6 +36,14 @@ are quite large and depending on your network connection may take
        cd examples/clickstream
        git checkout |release_post_branch|
 
+#. Get the Jar files for ``kafka-connect-datagen`` (source connector) and ``kafka-connect-elasticsearch`` (sink connector).
+
+   .. code:: bash
+
+       docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.3.1
+       docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:5.4.1
+
+
 #. Launch the tutorial in Docker.
 
    .. code:: bash
@@ -63,13 +71,40 @@ are quite large and depending on your network connection may take
         ksqldb-server     bash -c # Manually install ...   Up      0.0.0.0:8083->8083/tcp, 0.0.0.0:8088->8088/tcp
         schema-registry   /etc/confluent/docker/run        Up      8081/tcp                                      
         tools             /bin/bash                        Up                                                    
-        zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp    
+        zookeeper         /etc/confluent/docker/run        Up      2181/tcp, 2888/tcp, 3888/tcp   
+
 
 ---------------------------
-Browse the Clickstream Data
+Create the Clickstream Data
 ---------------------------
 
-#. A data generator is already running, simulating the stream of clicks. Sample these messages in ``clickstream``:
+Once you've confirmed all the Docker containers are running, create the source connectors that generate mock data. This demo leverages the embedded Connect worker in ksqlDB. 
+
+#.  Launch the ksqlDB CLI:
+
+    .. code:: bash
+
+        docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
+
+#.  Run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create three source connectors for generating mock data.
+
+    .. code:: sql
+
+        RUN SCRIPT '/scripts/create-connectors.sql';
+
+    The output will show either a blank message, or ``Executing statement``, similar to this: 
+
+    ::
+
+         Message
+        ---------
+         Executing statement
+        ---------
+
+    After the ``RUN SCRIPT`` command completes, exit out of the ``ksqldb-cli`` with a ``CTRL+D`` command
+    
+
+#. Now the `clickstream` generator is running, simulating the stream of clicks. Sample these messages in ``clickstream``:
 
    .. code:: bash
 
@@ -85,7 +120,7 @@ Browse the Clickstream Data
       ...
 
 
-#. A second data generator is already running, this one for the HTTP status codes. Samples these messages in ``clickstream_codes``:
+#. The second data generator running is for the HTTP status codes. Samples these messages in ``clickstream_codes``:
 
    .. code:: bash
 
@@ -99,7 +134,7 @@ Browse the Clickstream Data
        302	{"code":302,"definition":"Redirect"}
        302	{"code":302,"definition":"Redirect"}
 
-#. A third data generator is already running, this one for the user information. Samples these messages in ``clickstream_users``:
+#. The third data generator is for the user information. Samples these messages in ``clickstream_users``:
 
 
    .. code:: bash
@@ -113,6 +148,12 @@ Browse the Clickstream Data
        1	{"user_id":1,"username":"Ferd88","registered_at":1490759617459,"first_name":"Curran","last_name":"Vanyard","city":"Palo Alto","level":"Gold"}
        2	{"user_id":2,"username":"bobk_43","registered_at":1457530469406,"first_name":"Antonio","last_name":"De Banke","city":"London","level":"Platinum"}
        3	{"user_id":3,"username":"Ferd88","registered_at":1481373367271,"first_name":"Dimitri","last_name":"Jushcke","city":"Raleigh","level":"Silver"}
+
+
+#. Go to |c3| UI at http://localhost:9021 and view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
+
+   .. image:: images/c3_datagen_connectors.png
+       :alt: Datagen Connectors 
 
 
 
@@ -160,13 +201,6 @@ Verify the data
     .. image:: images/stream_clickstream.png
        :alt: Clickstream data
 
-
-#.  In |c3|, view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
-
-    .. image:: images/c3_connectors.png
-       :alt: Connectors
-
-
 .. _clickstream-view-grafana:
 
 ---------------------------------------------
@@ -185,7 +219,7 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
 
    .. code:: bash
 
-       docker-compose exec kafka-connect bash -c '/scripts/ksql-tables-to-grafana.sh'
+       docker-compose exec ksqldb-server bash -c '/scripts/ksql-tables-to-grafana.sh'
 
    Your output should resemble:
 
@@ -220,7 +254,13 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
         {"id":1,"slug":"click-stream-analysis","status":"success","uid":"lUHTGDTmz","url":"/d/lUHTGDTmz/click-stream-analysis","version":4}
 
 
-This step will output a URL, you'll want to save it as you'll need it after the next step.
+#. Navigate to the Grafana dashboard (username/password is user/user) at http://localhost:3000
+
+#. In the |c3| UI at http://localhost:9021, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+
+   .. image:: images/c3_connectors.png
+        :alt: Connectors
+
 
 ---------------------------------------------
 Sessionize the data
