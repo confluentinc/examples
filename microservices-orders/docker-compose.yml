@@ -1,3 +1,15 @@
+# docker-compose supports environment variable substitution with the ${VARIABLE-NAME} syntax.
+# Environment variables can be sourced in a variety of ways.  One of those ways is through
+# a well known '.env' file located in the same folder as the docker-compose.yml file.  See the Docker
+# documentation for details: https://docs.docker.com/compose/environment-variables/#the-env-file
+# 
+# This feature is being used to parameterize some values within this file.  In this directory is also
+# a .env file, which is actually a symbolic link to <examples-root>/utils/config.env.  That file
+# contains values which get substituted here when docker-compose parses this file.
+#
+# If you'd like to view the docker-compose.yml file rendered with its environment variable substituions
+# you can execute the `docker-compose config` command.  Take note that some demos provide additional 
+# environment variable values by exporting them in a script prior to running `docker-compose up`.
 ---
 version: '2'
 services:
