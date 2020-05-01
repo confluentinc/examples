@@ -126,6 +126,9 @@ rest.port=$CONNECT_REST_PORT
 rest.advertised.name=connect-cloud
 rest.hostname=connect-cloud
 group.id=connect-cloud
+config.storage.topic=connect-demo-configs
+offset.storage.topic=connect-demo-offsets
+status.storage.topic=connect-demo-statuses
 EOF
 create_connect_topics_and_acls $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
