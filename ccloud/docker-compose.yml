@@ -167,9 +167,9 @@ services:
       CONNECT_PRODUCER_CLIENT_ID: "connect-cloud-worker-producer"
       CONNECT_REST_PORT: 8087
       CONNECT_GROUP_ID: "connect-cloud"
-      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: connect-statuses
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-demo-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-demo-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: connect-demo-statuses
       CONNECT_REPLICATION_FACTOR: 3
       CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 3
       CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 3
