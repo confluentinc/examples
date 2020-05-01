@@ -1,4 +1,5 @@
 = Spring Boot with Java Example Confluent Cloud Client
+:experimental:
 
 NOTE: Produce messages to and consume messages from [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) using the Spring Boot using Java API.
 
@@ -22,9 +23,6 @@ schema.registry.url=<SR ENDPOINT>
 basic.auth.credentials.source=USER_INFO 
 schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD>
 ----
-
-NOTE: To building and execute all examples, run `start.sh`.
-Run `stop.sh` to stop both examples.
 
 == Example 1: Producing and Consuming Avro messages
 
@@ -59,16 +57,9 @@ Each record has a String key representing a username (e.g. `alice`) and a value 
 }
 ----
 
+Run producer and consumer application by executing `startProducerConsumer.sh`.
+This command will build jar and executes `spring-kafka` powered producer and consumer.
 The consumer reads the same topic from Confluent Cloud and prints data to the console.
-
-== Example 2: Kafka Streams with Spring Boot
-
-The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
-
-[source,shell]
-----
-include::start.sh[lines=36]
-----
 
 You should see following in the console:
 
@@ -106,10 +97,16 @@ You should see following in the console:
 2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 9}
 ----
 
+NOTE: When you are done, press kbd:[Ctrl + c].
+
+== Example 2: Kafka Streams with Spring Boot
+
+The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
+
 .Run the Kafka Streams application.
 [source,shell]
 ----
-include::start.sh[lines=42]
+include::startStreams.sh[lines=28]
 ----
 
 .You should see:
@@ -139,5 +136,4 @@ include::start.sh[lines=42]
  ...
 ----
 
-NOTE: You can run the example in «auto mode» by running `start.sh`
-When you are done, run `stop.sh`
+NOTE: When you are done, press kbd:[Ctrl + c].

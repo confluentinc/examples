@@ -22,18 +22,11 @@ source $DELTA_CONFIGS_DIR/env.delta
 
 validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 
+
 echo -e "\n${BLUE}\t🍃  Building Spring Boot application... ${NC}"
 
 ./gradlew build
 
 echo -e "${GREEN}\t🍃  Starting Spring Boot application (spring-kafka API)... ${NC}"
 
-java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher &
-
-echo $! > PID.app
-
-echo -e "${GREEN}\t🍃  Starting Spring Boot application (Kafka Streams)... ${NC}"
-
-java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.streams.SpringbootStreamsApplication org.springframework.boot.loader.PropertiesLauncher &
-
-echo $! > PID.streams
+java -cp build/libs/java-springboot-0.0.1-SNAPSHOT.jar -Dloader.main=io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication org.springframework.boot.loader.PropertiesLauncher 
