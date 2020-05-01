@@ -1,0 +1,59 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.commercehub.gradle.plugin:gradle-avro-plugin:0.15.1'
+  }
+}
+
+plugins {
+  id 'org.springframework.boot' version '2.2.4.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+  id 'java'
+}
+
+repositories {
+  jcenter()
+
+  maven {
+    url 'https://packages.confluent.io/maven'
+  }
+}
+
+apply plugin: 'com.commercehub.gradle.plugin.avro'
+apply plugin: 'idea'
+
+group = 'io.confluent.examples.clients.cloud'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '8'
+
+bootJar {
+  mainClassName = "io.confluent.examples.clients.cloud.springboot.kafka.SpringbootKafkaApplication"
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter'
+  implementation 'org.apache.kafka:kafka-streams'
+  implementation 'org.springframework.kafka:spring-kafka'
+
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+
+  implementation 'org.apache.kafka:kafka-streams'
+  implementation 'org.apache.avro:avro'
+  implementation 'io.confluent:kafka-streams-avro-serde:5.4.0'
+
+  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
+  testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
+
+test {
+  useJUnitPlatform()
+}
