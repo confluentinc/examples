@@ -539,6 +539,115 @@ function get_service_id_ksql () {
   return 0
 }
 
+function cloud_create_and_use_environment() {
+  ENVIRONMENT_NAME=$1
+
+  OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
+  if [[ $? != 0 ]]; then
+    echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again"
+    exit 1
+  fi
+  ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
+  ccloud environment use $ENVIRONMENT &>/dev/null
+
+  echo $ENVIRONMENT
+
+  return 0
+}
+
+function cloud_create_and_use_cluster() {
+  CLUSTER_NAME=$1
+  CLUSTER_CLOUD=$2
+  CLUSTER_REGION=$3
+
+  OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
+  status=$?
+  if [[ $status != 0 ]]; then
+    echo "ERROR: Failed to create Kafka cluster $CLUSTER_NAME. Please troubleshoot and run again"
+    exit 1
+  fi
+  CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
+  ccloud kafka cluster use $CLUSTER
+
+  echo $CLUSTER
+
+  return 0
+}
+
+function cloud_create_service_account() {
+  SERVICE_NAME=$1
+
+  OUTPUT=$(ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json)
+  SERVICE_ACCOUNT_ID=$(echo "$OUTPUT" | jq -r ".id")
+
+  echo $SERVICE_ACCOUNT_ID
+
+  return 0
+}
+
+function cloud_create_credentials_resource() {
+  SERVICE_ACCOUNT_ID=$1
+  RESOURCE=$2
+
+  OUTPUT=$(ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json)
+  API_KEY_SA=$(echo "$OUTPUT" | jq -r ".key")
+  API_SECRET_SA=$(echo "$OUTPUT" | jq -r ".secret")
+
+  echo "${API_KEY_SA}:${API_SECRET_SA}"
+
+  return 0
+}
+
+function cloud_create_ksql_app() {
+  KSQL_NAME=$1
+  CLUSTER=$2
+
+  KSQL=$(ccloud ksql app create --cluster $CLUSTER -o json $KSQL_NAME | jq -r ".id")
+  echo $KSQL
+
+  return 0
+}
+
+function cloud_create_demo_stack() {
+  ENVIRONMENT_NAME="demo-script-env"
+  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
+
+  RANDOM_NUM=$((1 + RANDOM % 1000000))
+  SERVICE_NAME="demo-app-$RANDOM_NUM"
+  SERVICE_ACCOUNT_ID=$(cloud_create_service_account $SERVICE_NAME)
+
+  CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
+  CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
+  CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
+  CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
+  BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
+  CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
+
+  SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".cluster_id")
+  SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
+
+  KSQL_NAME="demo-ksql-$RANDOM_NUM"
+  KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
+  KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
+
+  CLIENT_CONFIG="/tmp/client-$RANDOM_NUM.config"
+  cat <<EOF > $CLIENT_CONFIG
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+security.protocol=SASL_SSL
+bootstrap.servers=${BOOTSTRAP_SERVERS}
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="`echo $CLUSTER_CREDS | awk -F: '{print $1}'`" password\="`echo $CLUSTER_CREDS | awk -F: '{print $2}'`";
+basic.auth.credentials.source=USER_INFO
+schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
+schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`
+ksql.endpoint=${KSQL}
+ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $1}'`
+EOF
+  cat $CLIENT_CONFIG
+
+  return 0
+}
+
 function check_ccloud_config() {
   expected_configfile=$1
 
