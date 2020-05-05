@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#########################################
+# This scripts uses real Confluent Cloud resources.
+# To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it.
+#########################################
+
 
 # Source library
 . ../../utils/helper.sh
@@ -30,6 +35,6 @@ retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 
-echo
-echo "Spin down..."
-cloud_delete_demo_stack $RANDOM_NUM
+#echo
+#echo "Spin down..."
+#cloud_delete_demo_stack $RANDOM_NUM

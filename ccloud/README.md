@@ -1,6 +1,7 @@
 ![image](../images/confluent-logo-300-2.png)
 
 * [Overview](#overview)
+* [Warning](#warning)
 * [Confluent Cloud CLI Demo](#confluent-cloud-cli)
 * [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
 * [Hybrid Cloud](#hybrid-cloud)
@@ -15,6 +16,11 @@
 It has a web interface and local command line interface that you can use to manage cluster resources, Kafka topics, Schema Registry, and other services.
 
 This repo has a few resources to help you validate your solutions on Confluent Cloud.
+
+# Warning
+
+All demos/scripts that connect to Confluent Cloud use real Confluent Cloud resources.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and ensure all resources are destroyed after you are done running it.
 
 # Confluent Cloud CLI
 
