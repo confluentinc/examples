@@ -60,7 +60,7 @@ gke-base-validate: gke-check-dependencies init
 ###### OPERATOR MANAGEMENT ######
 gke-base-deploy-operator: #_ Deploys the Confluent Operator into the configured k8s cluster 
 	@$(call echo_stdout_header,deploy operator)	
-	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set operator.image.tag=$(OPERATOR_VERSION) --set operator.enabled=true operator $(OPERATOR_PATH)helm/confluent-operator
+	helm upgrade --install --namespace $(GKE_BASE_KUBECTL_NAMESPACE) $(GKE_BASE_HELM_COMMON_FLAGS) --set operator.enabled=true operator $(OPERATOR_PATH)helm/confluent-operator
 	@$(call echo_stdout_footer_pass,operator deployed)
 
 gke-base-wait-for-operator: #_ Waits until the Confluent Operator rollout status is complete
