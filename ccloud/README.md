@@ -48,8 +48,8 @@ The [ccloud stack](beginner-cloud/ccloud_stack_spin_up.sh) is a script that uses
 * Create a new Kafka cluster and associated credentials
 * Enable Schema Registry and associated credentials
 * Create a new KSQL app and associated credentials
-* Create local configuration file with all above connection information
 * Create ACLs with wildcard for the service account
+* Generate a local configuration file with all above connection information, useful for other demos/automation
 
 To spin up the stack:
 
