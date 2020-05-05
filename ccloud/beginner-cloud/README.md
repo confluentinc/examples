@@ -114,7 +114,7 @@ To spin down the stack:
 
 ## Difference between demos
 
-The difference between `ccloud_stack_spin_up.sh` and `start.sh` is that the former spins up all the resources in Confluent Cloud for use in downstream demos/automation, whereas the latter is just to show off step-by-step Confluent Cloud CLI commands and it cleans up after itself.
+The difference between `start.sh` and `ccloud_stack_spin_up.sh` is that the former demonstrates step-by-step Confluent Cloud CLI commands and it cleans up after itself, whereas the latter spins up all the resources in Confluent Cloud for use in downstream demos/automation.
 
 # Other Resources
 
