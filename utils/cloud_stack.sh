@@ -37,6 +37,7 @@ function cloud_create_demo_stack() {
   echo "Waiting for Confluent Cloud cluster to be ready and for credentials to propagate"
   retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
   # Estimating another 60s wait still sometimes required
+  echo "Sleeping another 60s"
   sleep 60
   printf "\n\n"
 
