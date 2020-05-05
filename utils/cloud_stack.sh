@@ -13,7 +13,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 ################################################################
 
 function cloud_create_demo_stack() {
-  RANDOM_NUM=$((1 + RANDOM % 1000000))
+  RANDOM_NUM=$1
   echo "RANDOM_NUM: $RANDOM_NUM"
 
   ENVIRONMENT_NAME="demo-env-$RANDOM_NUM"
@@ -62,6 +62,7 @@ schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{pr
 ksql.endpoint=${KSQL_ENDPOINT}
 ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $2}'`
 EOF
+  echo "$CLIENT_CONFIG:\n"
   cat $CLIENT_CONFIG
 
   return 0
@@ -89,7 +90,7 @@ function cloud_delete_demo_stack() {
   ccloud environment delete $ENVIRONMENT
 
   CLIENT_CONFIG="/tmp/client-$RANDOM_NUM.config"
-  rm -r $CLIENT_CONFIG
+  rm -f $CLIENT_CONFIG
 
   return 0
 }
