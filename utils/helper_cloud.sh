@@ -666,15 +666,14 @@ function cloud_delete_demo_stack() {
   echo "KSQL: $KSQL"
   ccloud ksql app delete $KSQL
 
+  SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep demo-app-$RANDOM_NUM | awk '{print $1;}')
+  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
   cloud_delete_demo_stack_acls $SERVICE_ACCOUNT_ID
+  ccloud service-account delete $SERVICE_ACCOUNT_ID 
 
   CLUSTER=$(ccloud kafka cluster list | grep demo-kafka-cluster-$RANDOM_NUM | tr -d '\*' | awk '{print $1;}')
   echo "CLUSTER: $CLUSTER"
   ccloud kafka cluster delete $CLUSTER
-
-  SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep demo-app-$RANDOM_NUM | awk '{print $1;}')
-  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
-  ccloud service-account delete $SERVICE_ACCOUNT_ID 
 
   ENVIRONMENT=$(ccloud environment list | grep demo-env-$RANDOM_NUM | tr -d '\*' | awk '{print $1;}')
   echo "ENVIRONMENT: $ENVIRONMENT"

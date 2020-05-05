@@ -33,5 +33,10 @@ retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo
+echo "Local configuration file at $CONFIG_FILE:"
+cat $CONFIG_FILE
+echo
+
+echo
 echo "To spin down this stack, run './ccloud_stack_spin_down.sh $RANDOM_NUM'"
 echo
