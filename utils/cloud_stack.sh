@@ -32,6 +32,14 @@ function cloud_create_demo_stack() {
   CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
   echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
 
+  MAX_WAIT=720
+  echo
+  echo "Waiting for Confluent Cloud cluster to be ready and for credentials to propagate"
+  retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
+  # Estimating another 60s wait still sometimes required
+  sleep 60
+  printf "\n\n"
+
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(cloud_enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".endpoint_url")
@@ -44,8 +52,6 @@ function cloud_create_demo_stack() {
   KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
   echo "KSQL: $KSQL, KSQL_ENDPOINT: $KSQL_ENDPOINT, KSQL_CREDS: $KSQL_CREDS"
 
-  echo "Sleeping for 40 seconds before creating ACLs"
-  sleep 40
   cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
   ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 
@@ -62,7 +68,7 @@ schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{pr
 ksql.endpoint=${KSQL_ENDPOINT}
 ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $2}'`
 EOF
-  echo "$CLIENT_CONFIG:\n"
+  echo "$CLIENT_CONFIG:"
   cat $CLIENT_CONFIG
 
   return 0

@@ -16,6 +16,8 @@ check_ccloud_logged_in || exit 1
 
 RANDOM_NUM=$((1 + RANDOM % 1000000))
 
+echo "Spin up:"
 cloud_create_demo_stack $RANDOM_NUM
 
+echo "Spin down:"
 cloud_delete_demo_stack $RANDOM_NUM
