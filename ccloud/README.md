@@ -41,7 +41,7 @@ It steps through the following workflow:
 
 # Fully Managed Stack in Confluent Cloud
 
-The [ccloud stack](beginner-cloud/ccloud_stack.sh) is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
+The [ccloud stack](beginner-cloud/ccloud_stack_spin_up.sh) is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
 
 * Create a new environment
 * Create a new service account
@@ -50,6 +50,22 @@ The [ccloud stack](beginner-cloud/ccloud_stack.sh) is a script that uses the Con
 * Create a new KSQL app and associated credentials
 * Broad ACLs for the service account
 * Local configuration file with connection information
+
+To spin up the stack:
+
+```bash
+./ccloud_stack_spin_up.sh
+...
+# Spinning up stack
+...
+To spin down this stack, run './ccloud_stack_spin_down.sh <RANDOM_NUM>'"
+```
+
+To spin down the stack:
+
+```bash
+./ccloud stack_spin_down.sh <RANDOM_NUM>
+```
 
 # Cloud ETL
 
