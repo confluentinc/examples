@@ -605,13 +605,11 @@ function cloud_create_demo_stack() {
   echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
 
   MAX_WAIT=720
-  echo
   echo "Waiting for Confluent Cloud cluster to be ready and for credentials to propagate"
   retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
   # Estimating another 60s wait still sometimes required
   echo "Sleeping another 60s"
   sleep 60
-  printf "\n\n"
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(cloud_enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
@@ -641,6 +639,7 @@ schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{pr
 ksql.endpoint=${KSQL_ENDPOINT}
 ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $2}'`
 EOF
+  echo
   echo "$CLIENT_CONFIG:"
   cat $CLIENT_CONFIG
 
