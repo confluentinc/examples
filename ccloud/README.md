@@ -1,7 +1,8 @@
 ![image](../images/confluent-logo-300-2.png)
 
 * [Overview](#overview)
-* [Beginner Cloud](#beginner-cloud)
+* [Confluent Cloud CLI Demo](#confluent-cloud-cli)
+* [Spin Up Fully Managed Stack in Confluent Cloud](#spin-up-fully-managed-stack-in-confluent-cloud)
 * [Hybrid Cloud](#hybrid-cloud)
 * [Client Code Examples](#client-code-examples)
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
@@ -15,7 +16,7 @@ It has a web interface and local command line interface that you can use to mana
 
 This repo has a few resources to help you validate your solutions on Confluent Cloud.
 
-# Beginner Cloud
+# Confluent Cloud CLI
 
 [This beginner demo](beginner-cloud/README.md) is a fully scripted demo that shows users how to interact with Confluent Cloud using the Confluent Cloud CLI.
 It steps through the following workflow:
@@ -31,6 +32,18 @@ It steps through the following workflow:
 * Run a Java consumer: showcase a Wildcard ACL
 * Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
+
+# Spin Up Fully Managed Stack in Confluent Cloud
+
+The [ccloud stack](beginner-cloud/ccloud_stack.sh] is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
+
+* Create a new environment
+* Create a new service account
+* Create a new Kafka cluster and associated credentials
+* Enable Schema Registry and associated credentials
+* Create a new KSQL app and associated credentials
+* Broad ACLs for the service account
+* Local configuration file with connection information
 
 # Cloud ETL
 
