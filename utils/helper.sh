@@ -580,6 +580,18 @@ function cloud_create_service_account() {
   return 0
 }
 
+function cloud_enable_schema_registry() {
+  SCHEMA_REGISTRY_CLOUD=$1
+  SCHEMA_REGISTRY_GEO=$2
+
+  OUTPUT=$(ccloud schema-registry cluster enable --cloud aws --geo us -o json)
+  SCHEMA_REGISTRY=$(echo "$OUTPUT" | jq -r ".id")
+
+  echo $SCHEMA_REGISTRY
+
+  return 0
+}
+
 function cloud_create_credentials_resource() {
   SERVICE_ACCOUNT_ID=$1
   RESOURCE=$2
@@ -603,49 +615,28 @@ function cloud_create_ksql_app() {
   return 0
 }
 
-function cloud_create_demo_stack() {
-  RANDOM_NUM=$((1 + RANDOM % 1000000))
+function cloud_create_wildcard_acls() {
+  SERVICE_ACCOUNT_ID=$1
 
-  ENVIRONMENT_NAME="demo-env-$RANDOM_NUM"
-  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
-  echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
-
-  SERVICE_NAME="demo-app-$RANDOM_NUM"
-  SERVICE_ACCOUNT_ID=$(cloud_create_service_account $SERVICE_NAME)
-  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
-
-  CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
-  CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
-  CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
-  CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
-  BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
-  CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
-  echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
-
-  SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".cluster_id")
-  SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
-
-  KSQL_NAME="demo-ksql-$RANDOM_NUM"
-  KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
-  KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
-
-  CLIENT_CONFIG="/tmp/client-$RANDOM_NUM.config"
-  cat <<EOF > $CLIENT_CONFIG
-ssl.endpoint.identification.algorithm=https
-sasl.mechanism=PLAIN
-security.protocol=SASL_SSL
-bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="`echo $CLUSTER_CREDS | awk -F: '{print $1}'`" password\="`echo $CLUSTER_CREDS | awk -F: '{print $2}'`";
-basic.auth.credentials.source=USER_INFO
-schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
-schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`
-ksql.endpoint=${KSQL}
-ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $1}'`
-EOF
-  cat $CLIENT_CONFIG
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
 
   return 0
 }
+
+function cloud_delete_demo_stack_acls() {
+  SERVICE_ACCOUNT_ID=$1
+
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
+
+  return 0
+}
+
 
 function check_ccloud_config() {
   expected_configfile=$1
