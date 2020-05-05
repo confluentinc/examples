@@ -55,11 +55,9 @@ To spin up the stack:
 
 ```bash
 ./ccloud_stack_spin_up.sh
-...
-To spin down this stack, run './ccloud_stack_spin_down.sh /tmp/client-<SERVICE_ACCOUNT_ID>.config'
 ```
 
-To spin down the stack:
+To spin down the stack, pass the client properties file auto-generated in the step above:
 
 ```bash
 ./ccloud stack_spin_down.sh /tmp/client-<SERVICE_ACCOUNT_ID>.config
