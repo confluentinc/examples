@@ -15,15 +15,14 @@ check_ccloud_logged_in || exit 1
 
 prompt_continue_cloud_demo || exit 1
 
-RANDOM_NUM=$((1 + RANDOM % 1000000))
-
 echo
 echo "Spin up..."
-cloud_create_demo_stack $RANDOM_NUM
+cloud_create_demo_stack
 
 echo
 echo "Validating..."
-CONFIG_FILE=/tmp/client-$RANDOM_NUM.config
+SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+CONFIG_FILE=/tmp/client-$SERVICE_ACCOUNT_ID.config
 check_ccloud_config $CONFIG_FILE || exit 1
 ../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
@@ -40,5 +39,5 @@ cat $CONFIG_FILE
 echo
 
 echo
-echo "To spin down this stack, run './ccloud_stack_spin_down.sh $RANDOM_NUM'"
+echo "To spin down this stack, run './ccloud_stack_spin_down.sh $CONFIG_FILE'"
 echo

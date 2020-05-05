@@ -598,18 +598,18 @@ function ccloud_cli_set_kafka_cluster_use() {
 }
 
 function cloud_create_demo_stack() {
-  RANDOM_NUM=$1
+  RANDOM_NUM=$((1 + RANDOM % 1000000))
   echo "RANDOM_NUM: $RANDOM_NUM"
-
-  ENVIRONMENT_NAME="demo-env-$RANDOM_NUM"
-  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
-  echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
 
   SERVICE_NAME="demo-app-$RANDOM_NUM"
   SERVICE_ACCOUNT_ID=$(cloud_create_service_account $SERVICE_NAME)
-  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
+  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID, SERVICE_NAME: $SERVICE_NAME"
 
-  CLUSTER_NAME=demo-kafka-cluster-$RANDOM_NUM
+  ENVIRONMENT_NAME="demo-env-$SERVICE_ACCOUNT_ID"
+  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
+  echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
+
+  CLUSTER_NAME=demo-kafka-cluster-$SERVICE_ACCOUNT_ID
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
   CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
@@ -630,7 +630,7 @@ function cloud_create_demo_stack() {
   SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
   echo "SCHEMA_REGISTRY: $SCHEMA_REGISTRY, SCHEMA_REGISTRY_ENDPOINT: $SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_CREDS: $SCHEMA_REGISTRY_CREDS"
 
-  KSQL_NAME="demo-ksql-$RANDOM_NUM"
+  KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
   KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
   KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
   KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
@@ -639,7 +639,7 @@ function cloud_create_demo_stack() {
   cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
   ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 
-  CLIENT_CONFIG="/tmp/client-$RANDOM_NUM.config"
+  CLIENT_CONFIG="/tmp/client-$SERVICE_ACCOUNT_ID.config"
   cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
@@ -660,26 +660,24 @@ EOF
 }
 
 function cloud_delete_demo_stack() {
-  RANDOM_NUM=$1
+  SERVICE_ACCOUNT_ID=$1
 
-  KSQL=$(ccloud ksql app list | grep demo-ksql-$RANDOM_NUM | awk '{print $1;}')
+  KSQL=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
   echo "KSQL: $KSQL"
   ccloud ksql app delete $KSQL
 
-  SERVICE_ACCOUNT_ID=$(ccloud service-account list | grep demo-app-$RANDOM_NUM | awk '{print $1;}')
-  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
   cloud_delete_demo_stack_acls $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID 
 
-  CLUSTER=$(ccloud kafka cluster list | grep demo-kafka-cluster-$RANDOM_NUM | tr -d '\*' | awk '{print $1;}')
+  CLUSTER=$(ccloud kafka cluster list | grep demo-kafka-cluster-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
   echo "CLUSTER: $CLUSTER"
   ccloud kafka cluster delete $CLUSTER
 
-  ENVIRONMENT=$(ccloud environment list | grep demo-env-$RANDOM_NUM | tr -d '\*' | awk '{print $1;}')
+  ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
   echo "ENVIRONMENT: $ENVIRONMENT"
   ccloud environment delete $ENVIRONMENT
 
-  CLIENT_CONFIG="/tmp/client-$RANDOM_NUM.config"
+  CLIENT_CONFIG="/tmp/client-$SERVICE_ACCOUNT_ID.config"
   rm -f $CLIENT_CONFIG
 
   return 0
