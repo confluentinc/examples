@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #########################################
-# This scripts uses real Confluent Cloud resources.
+# This script uses real Confluent Cloud resources.
 # To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it.
 #########################################
 
@@ -10,13 +10,10 @@
 . ../../utils/helper.sh
 
 check_ccloud_version 1.0.0 || exit 1
-check_timeout || exit 1
-check_mvn || exit 1
-check_expect || exit 1
 check_jq || exit 1
-check_docker || exit 1
 check_ccloud_logged_in || exit 1
 
+prompt_continue_cloud_demo || exit 1
 
 RANDOM_NUM=$((1 + RANDOM % 1000000))
 

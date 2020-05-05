@@ -11,6 +11,19 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 # Library of functions
 ################################################################
 
+function prompt_continue_cloud_demo() {
+  echo "This demo uses real Confluent Cloud resources."
+  echo "To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it."
+  read -p "Do you still wish to run this script? [y/n] " -n 1 -r
+  echo    # (optional) move to a new line
+  if [[ ! $REPLY =~ ^[Yy]$ ]]
+  then
+      exit 1
+  fi
+
+  return 0
+}
+
 function check_ccloud_binary() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
     echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
