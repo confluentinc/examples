@@ -420,6 +420,21 @@ function wait_for_connector_up() {
 
 }
 
+check_ccloud_ksql_endpoint_ready() {
+  KSQL_ENDPOINT=$1
+
+  ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
+  if [[ "$ksqlAppId" == "" ]]; then
+    return 1
+  fi
+  STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
+  if [[ "$STATUS" == "" ]]; then
+    return 1
+  fi
+
+  return 0
+}
+
 check_ccloud_cluster_ready() {
   ccloud kafka topic list &>/dev/null
   return $?
