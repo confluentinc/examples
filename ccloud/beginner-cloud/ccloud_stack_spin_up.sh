@@ -17,9 +17,11 @@ prompt_continue_cloud_demo || exit 1
 
 RANDOM_NUM=$((1 + RANDOM % 1000000))
 
+echo
 echo "Spin up..."
 cloud_create_demo_stack $RANDOM_NUM
 
+echo
 echo "Validating..."
 CONFIG_FILE=/tmp/client-$RANDOM_NUM.config
 check_ccloud_config $CONFIG_FILE || exit 1
