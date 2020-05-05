@@ -561,11 +561,6 @@ function cloud_create_and_use_cluster() {
   CLUSTER_REGION=$3
 
   OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
-  status=$?
-  if [[ $status != 0 ]]; then
-    echo "ERROR: Failed to create Kafka cluster $CLUSTER_NAME. Please troubleshoot and run again"
-    exit 1
-  fi
   CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
   ccloud kafka cluster use $CLUSTER
 
@@ -609,12 +604,15 @@ function cloud_create_ksql_app() {
 }
 
 function cloud_create_demo_stack() {
-  ENVIRONMENT_NAME="demo-script-env"
-  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
-
   RANDOM_NUM=$((1 + RANDOM % 1000000))
+
+  ENVIRONMENT_NAME="demo-env-$RANDOM_NUM"
+  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
+  echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
+
   SERVICE_NAME="demo-app-$RANDOM_NUM"
   SERVICE_ACCOUNT_ID=$(cloud_create_service_account $SERVICE_NAME)
+  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
 
   CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
@@ -622,6 +620,7 @@ function cloud_create_demo_stack() {
   CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
   BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
+  echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
 
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".cluster_id")
   SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
