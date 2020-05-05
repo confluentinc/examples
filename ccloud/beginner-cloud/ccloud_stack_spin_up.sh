@@ -49,5 +49,6 @@ cat $CONFIG_FILE
 echo
 
 echo
-echo "To spin down this stack, run './ccloud_stack_spin_down.sh $CONFIG_FILE'"
+echo "To spin down this Confluent Cloud stack run ->"
+echo "    ./ccloud_stack_spin_down.sh $CONFIG_FILE"
 echo
