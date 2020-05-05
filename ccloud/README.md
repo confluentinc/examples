@@ -2,7 +2,7 @@
 
 * [Overview](#overview)
 * [Confluent Cloud CLI Demo](#confluent-cloud-cli)
-* [Spin Up Fully Managed Stack in Confluent Cloud](#spin-up-fully-managed-stack-in-confluent-cloud)
+* [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
 * [Hybrid Cloud](#hybrid-cloud)
 * [Client Code Examples](#client-code-examples)
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
@@ -33,9 +33,9 @@ It steps through the following workflow:
 * Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
 
-# Spin Up Fully Managed Stack in Confluent Cloud
+# Fully Managed Stack in Confluent Cloud
 
-The [ccloud stack](beginner-cloud/ccloud_stack.sh] is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
+The [ccloud stack](beginner-cloud/ccloud_stack.sh) is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
 
 * Create a new environment
 * Create a new service account
