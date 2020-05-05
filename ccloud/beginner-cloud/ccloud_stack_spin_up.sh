@@ -15,9 +15,17 @@ check_ccloud_logged_in || exit 1
 
 prompt_continue_cloud_demo || exit 1
 
+enable_ksql=false
+read -p "Do you also want to create a Confluent Cloud KSQL app (hourly charges may apply)? [y/n] " -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  enable_ksql=true
+fi
+
 echo
 echo "Spin up..."
-cloud_create_demo_stack
+cloud_create_demo_stack $enable_ksql
 
 echo
 echo "Validating..."
@@ -27,11 +35,13 @@ check_ccloud_config $CONFIG_FILE || exit 1
 ../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 
-MAX_WAIT=720
-echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+if $enable_ksql ; then
+  MAX_WAIT=720
+  echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
+  retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+fi
 
-ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE $enable_ksql || exit 1
 
 echo
 echo "Local configuration file at $CONFIG_FILE:"

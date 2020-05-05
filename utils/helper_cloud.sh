@@ -14,8 +14,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 function prompt_continue_cloud_demo() {
   echo "This demo uses real Confluent Cloud resources."
   echo "To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it."
-  read -p "Do you still wish to run this script? [y/n] " -n 1 -r
-  echo    # (optional) move to a new line
+  read -p "Do you still want to run this script? [y/n] " -n 1 -r
+  echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]
   then
       exit 1
@@ -560,11 +560,18 @@ function create_connect_topics_and_acls() {
 function ccloud_demo_preflight_check() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
+  enable_ksql=$3
+
+  if [ -z "$enable_ksql" ]; then
+    enable_ksql=true
+  fi
 
   ccloud_validate_environment_set || exit 1
   ccloud_cli_set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
   validate_confluent_cloud_schema_registry "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
-  validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+  if $enable_ksql ; then
+    validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+  fi
 }
 
 function ccloud_validate_environment_set() {
@@ -598,6 +605,8 @@ function ccloud_cli_set_kafka_cluster_use() {
 }
 
 function cloud_create_demo_stack() {
+  enable_ksql=$1
+
   RANDOM_NUM=$((1 + RANDOM % 1000000))
   echo "RANDOM_NUM: $RANDOM_NUM"
 
@@ -630,11 +639,13 @@ function cloud_create_demo_stack() {
   SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
   echo "SCHEMA_REGISTRY: $SCHEMA_REGISTRY, SCHEMA_REGISTRY_ENDPOINT: $SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_CREDS: $SCHEMA_REGISTRY_CREDS"
 
-  KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
-  KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
-  KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
-  KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
-  echo "KSQL: $KSQL, KSQL_ENDPOINT: $KSQL_ENDPOINT, KSQL_CREDS: $KSQL_CREDS"
+  if $enable_ksql ; then
+    KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
+    KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
+    KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
+    KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
+    echo "KSQL: $KSQL, KSQL_ENDPOINT: $KSQL_ENDPOINT, KSQL_CREDS: $KSQL_CREDS"
+  fi
 
   cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
   ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
@@ -662,9 +673,11 @@ EOF
 function cloud_delete_demo_stack() {
   SERVICE_ACCOUNT_ID=$1
 
-  KSQL=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
-  echo "KSQL: $KSQL"
-  ccloud ksql app delete $KSQL
+  if [[ $KSQL_ENDPOINT != "" ]]; then
+    KSQL=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
+    echo "KSQL: $KSQL"
+    ccloud ksql app delete $KSQL
+  fi
 
   cloud_delete_demo_stack_acls $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID 
