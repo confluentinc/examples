@@ -56,15 +56,13 @@ To spin up the stack:
 ```bash
 ./ccloud_stack_spin_up.sh
 ...
-# Spinning up stack
-...
-To spin down this stack, run './ccloud_stack_spin_down.sh <RANDOM_NUM>'"
+To spin down this stack, run './ccloud_stack_spin_down.sh /tmp/client-<SERVICE_ACCOUNT_ID>.config'
 ```
 
 To spin down the stack:
 
 ```bash
-./ccloud stack_spin_down.sh <RANDOM_NUM>
+./ccloud stack_spin_down.sh /tmp/client-<SERVICE_ACCOUNT_ID>.config
 ```
 
 # Cloud ETL
