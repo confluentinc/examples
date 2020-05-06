@@ -6,9 +6,11 @@ This directory includes examples of Kafka client applications, showcasing produc
 The README for each language walks through the necessary steps to run each example.
 Each client example takes as an argument a properties file with the configuration parameters that specify connection information for any of the following:
 
-* Kafka cluster running on your local host
+* Kafka cluster running on your local host (Download [Confluent Platform](https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud))
 * [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
 * Any other remote Kafka cluster
+
+Click on any language in the table below:
 
 |                                   |                                                 |                                   |
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|

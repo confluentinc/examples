@@ -10,12 +10,12 @@ Produce messages to and consume messages from a Kafka cluster using the Groovy v
 
 == Example 1: Hello World!
 
-In this example, the producer writes Kafka data to a topic in Confluent Cloud.
+In this example, the producer writes Kafka data to a topic in your Kafka cluster.
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
-The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
-The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
+The consumer reads the same topic and keeps a rolling sum of the counts as it processes each record.
+The Kafka Streams API reads the same topic and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
 
-. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the topic name:
 
 +
 [source,shell]
@@ -60,7 +60,7 @@ You should see:
  ...
 ----
 
-. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above.
+. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above.
 Verify that the consumer received all the messages:
 
 +
@@ -93,7 +93,7 @@ You should see:
 ----
 When you are done, press `<ctrl>-c`.
 
-. Run the Kafka Streams application, , passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above.
+. Run the Kafka Streams application, , passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above.
 Verify that the consumer received all the messages:
 +
 ....
