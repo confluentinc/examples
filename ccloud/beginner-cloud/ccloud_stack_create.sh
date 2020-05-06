@@ -24,7 +24,7 @@ then
 fi
 
 echo
-echo "Spin up..."
+echo "Creating..."
 cloud_create_demo_stack $enable_ksql
 
 echo
@@ -49,6 +49,6 @@ cat $CONFIG_FILE
 echo
 
 echo
-echo "To spin down this Confluent Cloud stack run ->"
-echo "    ./ccloud_stack_spin_down.sh $CONFIG_FILE"
+echo "To destroy this Confluent Cloud stack run ->"
+echo "    ./ccloud_stack_destroy.sh $CONFIG_FILE"
 echo

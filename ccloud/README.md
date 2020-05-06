@@ -41,7 +41,7 @@ It steps through the following workflow:
 
 # Fully Managed Stack in Confluent Cloud
 
-The [ccloud stack](beginner-cloud/ccloud_stack_spin_up.sh) is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
+The [ccloud stack](beginner-cloud/ccloud_stack_create.sh) is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
 
 * Create a new environment
 * Create a new service account
@@ -51,16 +51,16 @@ The [ccloud stack](beginner-cloud/ccloud_stack_spin_up.sh) is a script that uses
 * Create ACLs with wildcard for the service account
 * Generate a local configuration file with all above connection information, useful for other demos/automation
 
-To spin up the stack:
+To create the stack:
 
 ```bash
-./ccloud_stack_spin_up.sh
+./ccloud_stack_create.sh
 ```
 
-To spin down the stack, pass the client properties file auto-generated in the step above:
+To destroy the stack, pass the client properties file auto-generated in the step above:
 
 ```bash
-./ccloud stack_spin_down.sh /tmp/client-<SERVICE_ACCOUNT_ID>.config
+./ccloud stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 ```
 
 # Cloud ETL
