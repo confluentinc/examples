@@ -105,7 +105,7 @@ function check_aws() {
   return 0
 }
 
-function check_aws_version_v2() {
+function get_aws_cli_version() {
   version_major=$(aws --version 2>&1 | awk -F/ '{print $2;}' | head -c 1)
   if [[ "$version_major" -eq 2 ]]; then
     return 2
