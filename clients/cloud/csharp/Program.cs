@@ -37,16 +37,8 @@ namespace CCloud
                     .ToDictionary(
                         line => line.Substring(0, line.IndexOf('=')),
                         line => line.Substring(line.IndexOf('=') + 1));
-                Enum.TryParse(cloudConfig["sasl.mechanisms"], out SaslMechanism saslMechanism);
-                Enum.TryParse(cloudConfig["security.protocol"], out SecurityProtocol securityProtocol);
-                var clientConfig = new ClientConfig
-                {
-                    BootstrapServers = cloudConfig["bootstrap.servers"].Replace("\\", ""),
-                    SaslMechanism = saslMechanism,
-                    SecurityProtocol = securityProtocol,
-                    SaslUsername = cloudConfig["sasl.username"],
-                    SaslPassword = cloudConfig["sasl.password"],
-                };
+
+                var clientConfig = new ClientConfig(cloudConfig);
 
                 if (certDir != null)
                 {
@@ -142,8 +134,8 @@ namespace CCloud
                     while (true)
                     {
                         var cr = consumer.Consume(cts.Token);
-                        totalCount += JObject.Parse(cr.Value).Value<int>("count");
-                        Console.WriteLine($"Consumed record with key {cr.Key} and value {cr.Value}, and updated total count to {totalCount}");
+                        totalCount += JObject.Parse(cr.Message.Value).Value<int>("count");
+                        Console.WriteLine($"Consumed record with key {cr.Message.Key} and value {cr.Message.Value}, and updated total count to {totalCount}");
                     }
                 }
                 catch (OperationCanceledException)
