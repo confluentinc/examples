@@ -88,7 +88,10 @@ Use this script with extreme caution and only in non-production environments.
 
 ## Create the Stack
 
-The [ccloud stack](beginner-cloud/ccloud_stack_create.sh) is a script that uses the Confluent Cloud CLI to dynamically do the following things in Confluent Cloud:
+The [ccloud stack](ccloud_stack_create.sh) is a script that creates a stack of fully managed services in Confluent Cloud.
+It is a quick way to create fully managed components in Confluent Cloud, which you can then use for learning and building other demos.
+Please do not use this in a production environment.
+The script uses the Confluent Cloud CLI to dynamically do the following in Confluent Cloud:
 
 * Create a new environment
 * Create a new service account
