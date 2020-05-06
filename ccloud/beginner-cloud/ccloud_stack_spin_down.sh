@@ -9,7 +9,7 @@ check_jq || exit 1
 check_ccloud_logged_in || exit 1
 
 if [ -z "$1" ]; then
-  echo "ERROR: Must supply argument that is the client configuration file created from './ccloud_stack_spin_up.sh'"
+  echo "ERROR: Must supply argument that is the client configuration file created from './ccloud_stack_spin_up.sh'. (Is it in stacks-config/ folder?) "
   exit 1
 else
   CONFIG_FILE=$1

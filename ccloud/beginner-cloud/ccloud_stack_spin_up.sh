@@ -30,7 +30,7 @@ cloud_create_demo_stack $enable_ksql
 echo
 echo "Validating..."
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
-CONFIG_FILE=/tmp/client-$SERVICE_ACCOUNT_ID.config
+CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 check_ccloud_config $CONFIG_FILE || exit 1
 ../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta

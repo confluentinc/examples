@@ -650,7 +650,8 @@ function cloud_create_demo_stack() {
   cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
   ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 
-  CLIENT_CONFIG="/tmp/client-$SERVICE_ACCOUNT_ID.config"
+  mkdir -p stack-configs
+  CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   cat <<EOF > $CLIENT_CONFIG
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
@@ -664,8 +665,7 @@ ksql.endpoint=${KSQL_ENDPOINT}
 ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $2}'`
 EOF
   echo
-  echo "$CLIENT_CONFIG:"
-  cat $CLIENT_CONFIG
+  echo "Client configuration file saved to: $CLIENT_CONFIG"
 
   return 0
 }
@@ -690,7 +690,7 @@ function cloud_delete_demo_stack() {
   echo "ENVIRONMENT: $ENVIRONMENT"
   ccloud environment delete $ENVIRONMENT
 
-  CLIENT_CONFIG="/tmp/client-$SERVICE_ACCOUNT_ID.config"
+  CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   rm -f $CLIENT_CONFIG
 
   return 0
