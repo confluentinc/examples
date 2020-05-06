@@ -44,8 +44,11 @@ fi
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE $enable_ksql || exit 1
 
 echo
-echo "Local configuration file at $CONFIG_FILE:"
-cat $CONFIG_FILE
+echo "ACLs for service account: $SERVICE_ACCOUNT_ID"
+ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
+
+echo
+echo "Local client configuration file written to $CONFIG_FILE"
 echo
 
 echo

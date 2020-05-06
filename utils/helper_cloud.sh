@@ -608,15 +608,15 @@ function cloud_create_demo_stack() {
   enable_ksql=$1
 
   RANDOM_NUM=$((1 + RANDOM % 1000000))
-  echo "RANDOM_NUM: $RANDOM_NUM"
+  #echo "RANDOM_NUM: $RANDOM_NUM"
 
   SERVICE_NAME="demo-app-$RANDOM_NUM"
   SERVICE_ACCOUNT_ID=$(cloud_create_service_account $SERVICE_NAME)
-  echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID, SERVICE_NAME: $SERVICE_NAME"
+  echo "Creating Confluent Cloud stack for new service account id $SERVICE_ACCOUNT_ID of name $SERVICE_NAME"
 
   ENVIRONMENT_NAME="demo-env-$SERVICE_ACCOUNT_ID"
   ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
-  echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
+  #echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
 
   CLUSTER_NAME=demo-kafka-cluster-$SERVICE_ACCOUNT_ID
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
@@ -624,31 +624,30 @@ function cloud_create_demo_stack() {
   CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
   BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
-  echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
+  #echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
 
   MAX_WAIT=720
-  echo "Waiting for Confluent Cloud cluster to be ready and for credentials to propagate"
+  echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
   retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
   # Estimating another 60s wait still sometimes required
-  echo "Sleeping another 60s"
+  echo "Sleeping an additional 60s to ensure propagation of all metadata"
   sleep 60
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(cloud_enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".endpoint_url")
   SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
-  echo "SCHEMA_REGISTRY: $SCHEMA_REGISTRY, SCHEMA_REGISTRY_ENDPOINT: $SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_CREDS: $SCHEMA_REGISTRY_CREDS"
+  #echo "SCHEMA_REGISTRY: $SCHEMA_REGISTRY, SCHEMA_REGISTRY_ENDPOINT: $SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_CREDS: $SCHEMA_REGISTRY_CREDS"
 
   if $enable_ksql ; then
     KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
     KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
     KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
     KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
-    echo "KSQL: $KSQL, KSQL_ENDPOINT: $KSQL_ENDPOINT, KSQL_CREDS: $KSQL_CREDS"
+    #echo "KSQL: $KSQL, KSQL_ENDPOINT: $KSQL_ENDPOINT, KSQL_CREDS: $KSQL_CREDS"
   fi
 
   cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
-  ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 
   mkdir -p stack-configs
   CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
@@ -661,9 +660,14 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
 basic.auth.credentials.source=USER_INFO
 schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
 schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $2}'`
+EOF
+  if $enable_ksql ; then
+    cat <<EOF >> $CLIENT_CONFIG
 ksql.endpoint=${KSQL_ENDPOINT}
 ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $2}'`
 EOF
+  fi
+
   echo
   echo "Client configuration file saved to: $CLIENT_CONFIG"
 
@@ -672,6 +676,8 @@ EOF
 
 function cloud_delete_demo_stack() {
   SERVICE_ACCOUNT_ID=$1
+
+  echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
   if [[ $KSQL_ENDPOINT != "" ]]; then
     KSQL=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
