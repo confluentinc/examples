@@ -1,6 +1,8 @@
 ![image](../../images/confluent-logo-300-2.png)
 
-# Beginner Cloud
+# Confluent Cloud CLI
+
+## Overview
 
 You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) to interact with your [Confluent Cloud](https://confluent.cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) cluster.
 
@@ -17,9 +19,9 @@ You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/in
 * Run a Java consumer: showcase a Wildcard ACL
 * Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
-# Run the demo
+## Run the demo
 
-## DISCLAIMER
+### DISCLAIMER
 
 This demo is for reference purposes only and should be used to see a sample workflow using Confluent Cloud CLI
 
@@ -29,7 +31,7 @@ If you choose to run it against your Confluent Cloud cluster, be aware that it:
 - is for demo purposes only
 - should be used only on a non-production cluster
 
-## Pre-requisites
+### Pre-requisites
 
 * Access to a Confluent Cloud cluster
 * Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) v1.0.0 or later
@@ -39,13 +41,13 @@ If you choose to run it against your Confluent Cloud cluster, be aware that it:
 * `mvn` installed on your host
 * `jq` installed on your host
 
-## Run demo
+### Run demo
 
 ```bash
 ./start.sh
 ```
 
-# Advanced demo usage
+## Advanced demo usage
 
 The demo script provides variables allowing you to alter the default Kafka cluster name, cloud provider, and region.  For example:
 
@@ -60,7 +62,7 @@ Here are the variables and their default values:
 | CLUSTER_CLOUD | aws |
 | CLUSTER_REGION | us-west-2 |
 
-# Clean up after the demo
+## Clean up after the demo
 
 If a demo run ended prematurely, it may not have totally cleaned up after itself and a new run may error out with the following message:
 
@@ -81,7 +83,6 @@ Use this script with extreme caution and only in non-production environments.
 ```bash
 ./cleanup.sh
 ```
-
 
 # Other Resources
 
