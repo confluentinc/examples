@@ -142,8 +142,8 @@ namespace CCloud
                     while (true)
                     {
                         var cr = consumer.Consume(cts.Token);
-                        totalCount += JObject.Parse(cr.Value).Value<int>("count");
-                        Console.WriteLine($"Consumed record with key {cr.Key} and value {cr.Value}, and updated total count to {totalCount}");
+                        totalCount += JObject.Parse(cr.Message.Value).Value<int>("count");
+                        Console.WriteLine($"Consumed record with key {cr.Message.Key} and value {cr.Message.Value}, and updated total count to {totalCount}");
                     }
                 }
                 catch (OperationCanceledException)
