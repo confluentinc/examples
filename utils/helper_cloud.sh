@@ -108,9 +108,11 @@ function check_aws() {
 function check_aws_version_v2() {
   version_major=$(aws --version 2>&1 | awk -F/ '{print $2;}' | head -c 1)
   if [[ "$version_major" -eq 2 ]]; then
-    return 0
-  else
+    return 2
+  elif [[ "$version_major" -eq 1 ]]; then
     return 1
+  else
+    return 0
   fi
 }
 
@@ -612,7 +614,7 @@ function ccloud_demo_preflight_check() {
 
 function ccloud_validate_environment_set() {
   ccloud environment list | grep '*' &>/dev/null || {
-    echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' andset 'ccloud environment use' and try again"
+    echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' and set 'ccloud environment use' and try again"
     exit 1
   }
 
