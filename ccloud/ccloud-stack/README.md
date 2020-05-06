@@ -4,7 +4,7 @@
 
 ## Overview
 
-The [ccloud stack](ccloud_stack_create.sh) is a script that creates a stack of fully managed services in Confluent Cloud.
+This script creates a stack of fully managed services in Confluent Cloud.
 It is a quick way to create fully managed resources in Confluent Cloud, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the Confluent Cloud CLI to dynamically do the following in Confluent Cloud:
