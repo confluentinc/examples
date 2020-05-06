@@ -112,7 +112,9 @@ To spin down the stack, pass the client properties file auto-generated in the st
 
 ## Difference between demos
 
-The difference between `start.sh` and `ccloud_stack_spin_up.sh` is that the former demonstrates step-by-step Confluent Cloud CLI commands and it cleans up after itself, whereas the latter spins up all the resources in Confluent Cloud for use in downstream demos/automation.
+
+- `start.sh` is a fully scripted demo which demonstrates step-by-step Confluent Cloud CLI commands and it cleans up after itself.
+- `ccloud_stack_spin_up.sh` coordinates the creation of a suite of Confluent Cloud resources leaving them operational for experimentation or use in other demos/automation.
 
 # Other Resources
 
