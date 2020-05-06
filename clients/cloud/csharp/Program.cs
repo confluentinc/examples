@@ -37,16 +37,8 @@ namespace CCloud
                     .ToDictionary(
                         line => line.Substring(0, line.IndexOf('=')),
                         line => line.Substring(line.IndexOf('=') + 1));
-                Enum.TryParse(cloudConfig["sasl.mechanisms"], out SaslMechanism saslMechanism);
-                Enum.TryParse(cloudConfig["security.protocol"], out SecurityProtocol securityProtocol);
-                var clientConfig = new ClientConfig
-                {
-                    BootstrapServers = cloudConfig["bootstrap.servers"].Replace("\\", ""),
-                    SaslMechanism = saslMechanism,
-                    SecurityProtocol = securityProtocol,
-                    SaslUsername = cloudConfig["sasl.username"],
-                    SaslPassword = cloudConfig["sasl.password"],
-                };
+
+                var clientConfig = new ClientConfig(cloudConfig);
 
                 if (certDir != null)
                 {
