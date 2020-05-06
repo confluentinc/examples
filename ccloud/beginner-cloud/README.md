@@ -84,41 +84,6 @@ Use this script with extreme caution and only in non-production environments.
 ./cleanup.sh
 ```
 
-# Fully Managed Stack in Confluent Cloud
-
-## Create the Stack
-
-The [ccloud stack](ccloud_stack_create.sh) is a script that creates a stack of fully managed services in Confluent Cloud.
-It is a quick way to create fully managed components in Confluent Cloud, which you can then use for learning and building other demos.
-Please do not use this in a production environment.
-The script uses the Confluent Cloud CLI to dynamically do the following in Confluent Cloud:
-
-* Create a new environment
-* Create a new service account
-* Create a new Kafka cluster and associated credentials
-* Enable Schema Registry and associated credentials
-* Create a new KSQL app and associated credentials
-* Create ACLs with wildcard for the service account
-* Generate a local configuration file with all above connection information, useful for other demos/automation
-
-To create the stack:
-
-```bash
-./ccloud_stack_create.sh
-```
-
-To destroy the stack, pass the client properties file auto-generated in the step above:
-
-```bash
-./ccloud stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
-```
-
-## Difference between demos
-
-
-- `start.sh` is a fully scripted demo which demonstrates step-by-step Confluent Cloud CLI commands and it cleans up after itself.
-- `ccloud_stack_create.sh` coordinates the creation of a suite of Confluent Cloud resources leaving them operational for experimentation or use in other demos/automation.
-
 # Other Resources
 
 See other [Confluent Cloud demos](../README.md).

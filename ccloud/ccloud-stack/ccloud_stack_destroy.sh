@@ -24,3 +24,6 @@ echo "SERVICE_ACCOUNT_ID: $SERVICE_ACCOUNT_ID"
 echo
 echo "Destroying..."
 cloud_delete_demo_stack $SERVICE_ACCOUNT_ID
+
+echo
+echo "Tip: 'ccloud' CLI currently has no environment set"
