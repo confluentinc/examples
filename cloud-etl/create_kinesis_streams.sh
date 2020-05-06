@@ -18,9 +18,7 @@ sleep 60
 # File has ~500 records, so run several times to fulfill the flush size requirement of 1000 records / partition for the sink connectors
 echo -e "Writing ~11k records to Kinesis\n"
 for i in {1..22}; do
-  get_aws_cli_version
-  status=$?
-  if [[ "$status" -eq 2 ]]; then
+  if [[ get_aws_cli_verison -eq 2 ]]; then
     aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://./eventLogs.json --profile $AWS_PROFILE --cli-binary-format raw-in-base64-out >/dev/null
   else
     aws kinesis put-records --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --records file://./eventLogs.json --profile $AWS_PROFILE >/dev/null

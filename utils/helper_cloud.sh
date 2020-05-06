@@ -108,12 +108,11 @@ function check_aws() {
 function get_aws_cli_version() {
   version_major=$(aws --version 2>&1 | awk -F/ '{print $2;}' | head -c 1)
   if [[ "$version_major" -eq 2 ]]; then
-    return 2
-  elif [[ "$version_major" -eq 1 ]]; then
-    return 1
+    echo "2"
   else
-    return 0
+    echo "1"
   fi
+  return 0
 }
 
 function check_gsutil() {
