@@ -29,3 +29,9 @@ The following subset includes examples with Schema Registry and Avro data:
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
 | [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/confluent-cli.png)](confluent-cli/) |
 | [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [![](images/ksql-datagen.png)](ksql-datagen/) | [![](images/kafka.png)](kafka-commands/) |
+
+# Additional Resources
+
+
+* For clusters in Confluent Cloud: refer to [Best Practices for Developing Kafka Applications on Confluent Cloud](https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients) whitepaper for a practical guide to configuring, monitoring, and optimizing your Kafka client applications.
+* For on-prem clusters: refer to [Optimizing Your Apache Kafka Deployment](https://www.confluent.io/white-paper/optimizing-your-apache-kafka-deployment?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients) whitepaper for a practical guide to optimizing your Apache Kafka deployment for various services goals including throughput, latency, durability and availability, and useful metrics to monitor for performance and cluster health.
