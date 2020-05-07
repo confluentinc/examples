@@ -11,9 +11,9 @@ Produce messages to and consume messages from a Kafka cluster using [kafkacat](h
 
 # Example 1: Hello World!
 
-In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
+In this example, the producer writes Kafka data to a topic in your Kafka cluster. 
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
-The consumer reads the same topic from Confluent Cloud.
+The consumer reads the same topic.
 
 1. Create the topic in Confluent Cloud
 

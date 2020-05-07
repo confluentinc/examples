@@ -14,11 +14,11 @@ Produce messages to and consume messages from a Kafka cluster using the [ ZenDes
 
 # Example 1: Hello World!
 
-In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
+In this example, the producer writes Kafka data to a topic in your Kafka cluster. 
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
-The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
+The consumer reads the same topic and keeps a rolling sum of the counts as it processes each record.
 
-1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the topic name:
     ```bash
     $ ruby producer.rb -f $HOME/.confluent/librdkafa.config --topic test1
     Created topic test1
@@ -35,7 +35,7 @@ The consumer reads the same topic from Confluent Cloud and keeps a rolling sum o
     10 messages were successfully produced to topic test1!
     ```
 
-2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above. Verify that the consumer received all the messages:
     ```bash
     $ ruby consumer.rb -f $HOME/.confluent/librdkafa.config --topic test1
     Consuming messages from test1

@@ -15,7 +15,7 @@ Produce messages to and consume messages from a Kafka cluster using [Kafka Conne
 
 # Example 1: Hello World!
 
-In this example, the Kafka Connect Datagen connector writes Kafka data to a topic in Confluent Cloud. 
+In this example, the Kafka Connect Datagen connector writes Kafka data to a topic in your Kafka cluster. 
 Each record is mock data generated using the [orders schema](https://github.com/confluentinc/kafka-connect-datagen/blob/master/src/main/resources/orders_schema.avro).
 Use CLI to read that topic from Confluent Cloud.
 

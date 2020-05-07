@@ -43,7 +43,7 @@ $ curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
 
 This Spring Boot application has two components - Producer (`ProducerExample.java`) and Consumer (`ConsumerExample.java`).
 Both components will be initialized during the Spring Boot application startup.
-The producer writes Kafka data to a topic in Confluent Cloud.
+The producer writes Kafka data to a topic in your Kafka cluster.
 Each record has a String key representing a username (e.g. `alice`) and a value of a count, formatted as Avro object
 
 [source,json]
@@ -64,7 +64,7 @@ Each record has a String key representing a username (e.g. `alice`) and a value 
 ----
 
 This command will build jar and executes `spring-kafka` powered producer and consumer.
-The consumer reads the same topic from Confluent Cloud and prints data to the console.
+The consumer reads the same topic and prints data to the console.
 
 You should see following in the console:
 
@@ -106,7 +106,7 @@ NOTE: When you are done, press kbd:[Ctrl + c].
 
 == Example 2: Kafka Streams with Spring Boot
 
-The Kafka Streams API reads the same topic from Confluent Cloud and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
+The Kafka Streams API reads the same topic and does a stateful sum aggregation, also a rolling sum of the counts as it processes each record.
 
 .Run the Kafka Streams application.
 [source,shell]
