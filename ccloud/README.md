@@ -41,7 +41,7 @@ It steps through the following workflow:
 
 # Fully Managed Stack in Confluent Cloud
 
-The [ccloud stack](ccloud-stack/ccloud_stack_create.sh) is a script that creates a stack of fully managed services in Confluent Cloud.
+The [ccloud stack](ccloud-stack/README.md) is a script that creates a stack of fully managed services in Confluent Cloud.
 It is a quick way to create fully managed components in Confluent Cloud, which you can then use for learning and building other demos.
 Please do not use this in a production environment.
 The script uses the Confluent Cloud CLI to dynamically do the following in Confluent Cloud:
@@ -54,17 +54,7 @@ The script uses the Confluent Cloud CLI to dynamically do the following in Confl
 * Create ACLs with wildcard for the service account
 * Generate a local configuration file with all above connection information, useful for other demos/automation
 
-To create the stack:
-
-```bash
-./ccloud_stack_create.sh
-```
-
-To destroy the stack, pass the client properties file auto-generated in the step above:
-
-```bash
-./ccloud stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
-```
+To create the stack, it is one single command, see [instructions](ccloud-stack/README.md) for more info.
 
 # Cloud ETL
 

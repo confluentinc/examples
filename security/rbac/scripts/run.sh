@@ -24,7 +24,7 @@
 #
 # Requirements:
 #
-#   - Local install of the new Confluent CLI (v0.96.0 or above)
+#   - Local install of Confluent CLI (v0.96.0 or above)
 #
 ################################################################################
 
