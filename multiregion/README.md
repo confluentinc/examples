@@ -449,7 +449,8 @@ Stop the demo and all Docker containers.
 # Clean up the Docker environment
 for c in $(docker container ls -q --filter "name=pumba"); do docker container stop "$c" && docker container rm "$c"; done
 docker-compose down -v --remove-orphans
-for v in $(docker volume ls -q --filter="dangling=true"); do docker volume rm "$v"; done
+# More aggressive cleanup
+docker volume prune
 
 # Restart demo
 ./scripts/start.sh
