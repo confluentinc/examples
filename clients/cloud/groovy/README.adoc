@@ -1,4 +1,4 @@
-= Groovy Example Confluent Cloud Client
+= Overview
 
 Produce messages to and consume messages from a Kafka cluster using the Groovy version of Java Producer and Consumer, and Kafka Streams API.
 
