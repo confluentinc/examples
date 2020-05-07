@@ -89,33 +89,6 @@ function check_expect() {
   return 0
 }
 
-function check_aws() {
-  if [[ $(type aws 2>&1) =~ "not found" ]]; then
-    echo "AWS CLI is not found. Install AWS CLI and try again"
-    exit 1
-  fi
-
-  return 0
-}
-
-function check_gsutil() {
-  if [[ $(type gsutil 2>&1) =~ "not found" ]]; then
-    echo "Google Cloud gsutil is not found. Install Google Cloud gsutil and try again"
-    exit 1
-  fi
-
-  return 0
-}
-
-function check_az_tool() {
-  if [[ $(type az 2>&1) =~ "not found" ]]; then
-    echo "Azure CLI is not found. Install Azure CLI and try again"
-    exit 1
-  fi
-
-  return 0
-}
-
 function require_cp_or_exit() {
   command -v confluent >/dev/null 2>&1 || {
     printf "\nconfluent command not found.  Please check your Confluent Platform installation\n"
