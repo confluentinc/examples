@@ -1,4 +1,4 @@
-= Spring Boot with Java Example Confluent Cloud Client
+= Overview
 :experimental:
 
 NOTE: Produce messages to and consume messages from https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[Confluent Cloud] using the Spring Boot using Java API.
