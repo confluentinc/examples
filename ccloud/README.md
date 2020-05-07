@@ -8,6 +8,7 @@
 * [Client Code Examples](#client-code-examples)
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
+* [Additional Resources](#additional-resources)
 
 
 # Overview
@@ -127,3 +128,7 @@ Use these per-component configurations for Confluent Platform components and cli
 The [template examples](template_delta_configs) have delta configuration lines to add to each component or client.
 See [documentation](https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) for more information.
 
+
+# Additional Resources
+
+Refer to [Best Practices for Developing Kafka Applications on Confluent Cloud](https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) whitepaper for a practical guide to configuring, monitoring, and optimizing your Kafka client applications when using Confluent Cloud.
