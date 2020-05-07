@@ -32,6 +32,9 @@ source $DELTA_CONFIGS_DIR/env.delta
 printf "\n"
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+MAX_WAIT=720
+echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
+retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo ====== Installing kafka-connect-datagen
