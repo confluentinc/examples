@@ -616,7 +616,6 @@ function cloud_create_demo_stack() {
 
   ENVIRONMENT_NAME="demo-env-$SERVICE_ACCOUNT_ID"
   ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
-  #echo "ENVIRONMENT: $ENVIRONMENT, ENVIRONMENT_NAME: $ENVIRONMENT_NAME"
 
   CLUSTER_NAME=demo-kafka-cluster-$SERVICE_ACCOUNT_ID
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
@@ -624,7 +623,6 @@ function cloud_create_demo_stack() {
   CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
   BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
-  #echo "CLUSTER: $CLUSTER, BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS, CLUSTER_CREDS: $CLUSTER_CREDS"
 
   MAX_WAIT=720
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
@@ -637,14 +635,13 @@ function cloud_create_demo_stack() {
   SCHEMA_REGISTRY=$(cloud_enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".endpoint_url")
   SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
-  #echo "SCHEMA_REGISTRY: $SCHEMA_REGISTRY, SCHEMA_REGISTRY_ENDPOINT: $SCHEMA_REGISTRY_ENDPOINT, SCHEMA_REGISTRY_CREDS: $SCHEMA_REGISTRY_CREDS"
 
   if $enable_ksql ; then
     KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
     KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
     KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
     KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
-    #echo "KSQL: $KSQL, KSQL_ENDPOINT: $KSQL_ENDPOINT, KSQL_CREDS: $KSQL_CREDS"
+    ccloud ksql app configure-acls $KSQL
   fi
 
   cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
@@ -652,6 +649,22 @@ function cloud_create_demo_stack() {
   mkdir -p stack-configs
   CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   cat <<EOF > $CLIENT_CONFIG
+# ------------------------------
+# Confluent Cloud connection information for demo purposes only
+# Do not use in production
+# ------------------------------
+# ENVIRONMENT ID: ${ENVIRONMENT}
+# SERVICE ACCOUNT ID: ${SERVICE_ACCOUNT_ID.config}
+# KAFKA CLUSTER ID: ${CLUSTER}
+# SCHEMA REGISTRY CLUSTER ID: ${SCHEMA_REGISTRY}
+EOF
+  if $enable_ksql ; then
+    cat <<EOF >> $CLIENT_CONFIG
+# KSQL ID: ${KSQL}
+EOF
+  fi
+  cat <<EOF >> $CLIENT_CONFIG
+# ------------------------------
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
