@@ -9,4 +9,9 @@ jps | grep ReplicatorApp | awk '{print $1;}' | xargs kill -9
 jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
 jps | grep ConnectDistributed | awk '{print $1;}' | xargs kill -9
 
-./stop-common.sh
+if [ -z "$1" ]; then
+  echo "ERROR: Must supply argument that is the client configuration file created from './start.sh'. (Is it in stacks-config/ folder?) "
+  exit 1
+else
+  ccloud-stack/ccloud_stack_destroy.sh $CONFIG_FILE
+fi

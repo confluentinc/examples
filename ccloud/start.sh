@@ -5,39 +5,23 @@
 
 echo ====== Verifying prerequisites
 check_env || exit 1
+check_ccloud_version 1.0.0 || exit 1
+check_ccloud_logged_in || exit 1
 check_jq || exit 1
 check_running_cp ${CONFLUENT} || exit 1
-
-# File with Confluent Cloud configuration parameters: example template
-#   $ cat ~/.ccloud/config
-#   bootstrap.servers=<BROKER ENDPOINT>
-#   ssl.endpoint.identification.algorithm=https
-#   security.protocol=SASL_SSL
-#   sasl.mechanism=PLAIN
-#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-#   # Confluent Cloud Schema Registry
-#   basic.auth.credentials.source=USER_INFO
-#   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-#   schema.registry.url=https://<SR ENDPOINT>
-#   # Confluent Cloud KSQL
-#   ksql.endpoint=https://<KSQL ENDPOINT>
-#   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
-export CONFIG_FILE=~/.ccloud/config
-
-check_ccloud_config $CONFIG_FILE || exit 1
-check_ccloud_version 0.264.0 || exit 1
-check_ccloud_logged_in || exit 1
-printf "Done\n"
-
 if ! check_cp ; then
   echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software. Exiting"
   exit 1
 fi
 printf "\n"
 
-echo ====== Cleaning up previous run
-./stop.sh
-printf "\nDone with cleanup\n\n"
+echo ====== Create new Confluent Cloud stack
+prompt_continue_cloud_demo || exit 1
+cloud_create_demo_stack true
+SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
+export CONFIG_FILE=$CONFIG_FILE
+check_ccloud_config $CONFIG_FILE || exit 1
 
 echo ====== Generate CCloud configurations
 SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
@@ -162,3 +146,6 @@ echo ====== Creating Confluent Cloud KSQL application
 printf "\n"
 
 printf "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
+echo
+echo "Local client configuration file written to $CONFIG_FILE"
+echo

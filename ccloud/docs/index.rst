@@ -66,42 +66,7 @@ Run demo
 Setup
 -----
 
-#. By default, the demo reads the configuration parameters for your |ccloud| environment from a file at ``$HOME/.ccloud/config``. You can change this filename via the parameter ``CONFIG_FILE`` in :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Enter the configuration parameters for your |ccloud| cluster, replacing the values in ``<...>`` below particular for your |ccloud| environment:
-
-   .. code:: shell
-
-      $ cat $HOME/.ccloud/config
-      bootstrap.servers=<BROKER ENDPOINT>
-      ssl.endpoint.identification.algorithm=https
-      security.protocol=SASL_SSL
-      sasl.mechanism=PLAIN
-      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-      schema.registry.url=https://<SR ENDPOINT>
-      schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-      basic.auth.credentials.source=USER_INFO
-      ksql.endpoint=https://<ksqlDB ENDPOINT>
-      ksql.basic.auth.user.info=<ksqlDB API KEY>:<ksqlDB API SECRET>
-
-   To retrieve the values for the endpoints and credentials in the file above, find them using either the |ccloud| UI or |ccloud| CLI commands. If you have multiple |ccloud| clusters, make sure to use the one with the associated ksqlDB cluster.  The commands below demonstrate how to retrieve the values using the |ccloud| CLI.
-
-   .. code:: shell
-
-      # Login
-      ccloud login --url https://confluent.cloud
-
-      # BROKER ENDPOINT
-      ccloud kafka cluster list
-      ccloud kafka cluster use <id>
-      ccloud kafka cluster describe <id>
-
-      # SR ENDPOINT
-      ccloud schema-registry cluster describe
-
-      # ksqlDB ENDPOINT
-      ccloud ksql app list
-
-      # Credentials: API key and secret, one for each resource above
-      ccloud api-key create
+#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges.
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -124,7 +89,7 @@ Run
 
    .. code:: shell
 
-      ccloud login --url https://confluent.cloud
+      ccloud login --url https://confluent.cloud --save
 
 
 #. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take less than 5 minutes to complete.
