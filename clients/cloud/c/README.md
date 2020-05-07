@@ -20,11 +20,11 @@ cc   producer.c common.c json.c -o producer -lrdkafka -lm
 
 # Example 1: Hello World!
 
-In this example, the producer writes JSON data to a topic in Confluent Cloud.
+In this example, the producer writes JSON data to a topic in your Kafka cluster.
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
-The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
+The consumer reads the same topic and keeps a rolling sum of the counts as it processes each record.
 
-1. Run the producer, passing in arguments for (a) the topic name, and (b) the local file with configuration parameters to connect to your Confluent Cloud instance:
+1. Run the producer, passing in arguments for (a) the topic name, and (b) the local file with configuration parameters to connect to your Kafka cluster:
 
 ```bash
 $ ./producer test1 $HOME/.confluent/librdkafka.config
@@ -55,7 +55,7 @@ Message delivered to test1 [0] at offset 9 in 22.81ms: { "count": 10 }
 ```
 
 
-2. Run the consumer, passing in arguments for (a) the same topic name as used above, (b) the local file with configuration parameters to connect to your Confluent Cloud instance. Verify that the consumer received all the messages, then press Ctrl-C to exit.
+2. Run the consumer, passing in arguments for (a) the same topic name as used above, (b) the local file with configuration parameters to connect to your Kafka cluster. Verify that the consumer received all the messages, then press Ctrl-C to exit.
 
 ```bash
 $ ./consumer test1 $HOME/.confluent/librdkafka.config

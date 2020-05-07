@@ -11,13 +11,13 @@ Produce messages to and consume messages from a Kafka cluster using the .NET Pro
 
 # Example
 
-In this example, the producer writes records to a topic in Confluent Cloud. 
+In this example, the producer writes records to a topic in your Kafka cluster. 
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
-The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
+The consumer reads the same topic and keeps a rolling sum of the counts as it processes each record.
 
 ## Produce Records
 
-Run the example application, passing in arguments for (a) whether to produce or consume (produce) (b) the topic name (c) the local file with configuration parameters to connect to your Confluent Cloud instance and (d, Windows only) a local file with default trusted root CA certificates. 
+Run the example application, passing in arguments for (a) whether to produce or consume (produce) (b) the topic name (c) the local file with configuration parameters to connect to your Kafka cluster and (d, Windows only) a local file with default trusted root CA certificates. 
 
 > Note: On Windows, default trusted root CA certificates - which are required for secure access to Confluent Cloud - are stored in the Windows Registry. The .NET library does not currently have the capability to access these certificates, so you will need to obtain them from somewhere else, for example use the cacert.pem file distributed with curl: https://curl.haxx.se/ca/cacert.pem. 
 
@@ -61,7 +61,7 @@ Produced record to topic test1 partition [0] @ offset 9
 
 ## Consume Records
 
-Run the consumer, passing in arguments for (a) whether to produce or consume (consume) (b) the same topic name as used above (c) the local file with configuration parameters to connect to your Confluent Cloud instance and (d, Windows only) a local file with default trusted root CA certificates. Verify that the consumer received all the messages:
+Run the consumer, passing in arguments for (a) whether to produce or consume (consume) (b) the same topic name as used above (c) the local file with configuration parameters to connect to your Kafka cluster and (d, Windows only) a local file with default trusted root CA certificates. Verify that the consumer received all the messages:
 
 ```shell
 # Run the consumer (Windows)

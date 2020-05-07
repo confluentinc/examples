@@ -14,7 +14,7 @@ Produce messages to and consume messages from a Kafka cluster using the [ksqlDB 
 
 # Example 1: Hello World!
 
-In this example, `ksql-datagen` writes Kafka data to a topic in Confluent Cloud. 
+In this example, `ksql-datagen` writes Kafka data to a topic in your Kafka cluster. 
 Each record is mock data generated using the [orders schema](https://github.com/confluentinc/ksql/blob/master/ksqldb-examples/src/main/resources/orders_schema.avro).
 Use CLI to read that topic from Confluent Cloud.
 
