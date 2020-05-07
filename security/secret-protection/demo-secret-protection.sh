@@ -17,7 +17,7 @@
 # Requirements:
 #
 #   - Confluent Platform 5.4 or higher (https://www.confluent.io/download/)
-#   - Local install of the new Confluent CLI (v0.200.0 or above)
+#   - Local install of Confluent CLI (v0.200.0 or above)
 #
 ################################################################################
 

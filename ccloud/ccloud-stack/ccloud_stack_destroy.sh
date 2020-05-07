@@ -20,7 +20,6 @@ check_ccloud_config $CONFIG_FILE || exit 1
 source delta_configs/env.delta
 SERVICE_ACCOUNT_ID=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 
-echo
 echo "Destroying..."
 cloud_delete_demo_stack $SERVICE_ACCOUNT_ID
 
