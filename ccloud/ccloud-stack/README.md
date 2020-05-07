@@ -23,12 +23,44 @@ This demo is learning purposes only.
 If you choose to run it against your Confluent Cloud cluster, be aware that it creates resources and incurs charges.
 It is for demo purposes only and should be used only on a non-production cluster.
 
+## Pre-requisites
+
+* User account on [Confluent Cloud](https://docs.confluent.io/current/cloud/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud-stacks)
+* Local install of [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud-stacks) v1.0.0 or later
+* Confluent Cloud user credentials saved in `~/.netrc` (save with command `ccloud login --save`)
+
 ## Create
 
 To create the stack:
 
 ```bash
 ./ccloud_stack_create.sh
+```
+
+In addition to creating all the resources in Confluent Cloud with associated service account and ACLs, it also generates a local configuration file with all above connection information, useful for other demos/automation.
+It is written to `stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config` and resembles:
+
+```
+# ------------------------------
+# Confluent Cloud connection information for demo purposes only
+# Do not use in production
+# ------------------------------
+# ENVIRONMENT ID: <ENVIRONMENT ID>
+# SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
+# KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
+# SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
+# KSQL APP ID: <KSQL APP ID>
+# ------------------------------
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+bootstrap.servers=<BROKER ENDPOINT>
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+basic.auth.credentials.source=USER_INFO
+schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+schema.registry.url=https://<SR ENDPOINT>
+ksql.endpoint=<KSQL ENDPOINT>
+ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 ```
 
 ## Destroy
