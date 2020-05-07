@@ -654,7 +654,7 @@ function cloud_create_demo_stack() {
 # Do not use in production
 # ------------------------------
 # ENVIRONMENT ID: ${ENVIRONMENT}
-# SERVICE ACCOUNT ID: ${SERVICE_ACCOUNT_ID.config}
+# SERVICE ACCOUNT ID: ${SERVICE_ACCOUNT_ID}
 # KAFKA CLUSTER ID: ${CLUSTER}
 # SCHEMA REGISTRY CLUSTER ID: ${SCHEMA_REGISTRY}
 EOF

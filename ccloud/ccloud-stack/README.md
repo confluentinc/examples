@@ -31,6 +31,32 @@ To create the stack:
 ./ccloud_stack_create.sh
 ```
 
+In addition to creating all the resources in Confluent Cloud with associated service account and ACLs, it also generates a local configuration file with all above connection information, useful for other demos/automation.
+It is written to `stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config` and resembles:
+
+```
+# ------------------------------
+# Confluent Cloud connection information for demo purposes only
+# Do not use in production
+# ------------------------------
+# ENVIRONMENT ID: <ENVIRONMENT ID>
+# SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
+# KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
+# SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
+# KSQL APP ID: <KSQL APP ID>
+# ------------------------------
+ssl.endpoint.identification.algorithm=https
+security.protocol=SASL_SSL
+sasl.mechanism=PLAIN
+bootstrap.servers=<BROKER ENDPOINT>
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+basic.auth.credentials.source=USER_INFO
+schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+schema.registry.url=https://<SR ENDPOINT>
+ksql.endpoint=<KSQL ENDPOINT>
+ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+```
+
 ## Destroy
 
 To destroy the stack, pass the client properties file auto-generated in the step above:
