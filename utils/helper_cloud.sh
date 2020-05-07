@@ -96,6 +96,43 @@ function check_cli_v2() {
   return 0
 }
 
+function check_aws() {
+  if [[ $(type aws 2>&1) =~ "not found" ]]; then
+    echo "AWS CLI is not found. Install AWS CLI and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function get_aws_cli_version() {
+  version_major=$(aws --version 2>&1 | awk -F/ '{print $2;}' | head -c 1)
+  if [[ "$version_major" -eq 2 ]]; then
+    echo "2"
+  else
+    echo "1"
+  fi
+  return 0
+}
+
+function check_gsutil() {
+  if [[ $(type gsutil 2>&1) =~ "not found" ]]; then
+    echo "Google Cloud gsutil is not found. Install Google Cloud gsutil and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
+function check_az_tool() {
+  if [[ $(type az 2>&1) =~ "not found" ]]; then
+    echo "Azure CLI is not found. Install Azure CLI and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function validate_cloud_storage() {
   config=$1
 
@@ -576,7 +613,7 @@ function ccloud_demo_preflight_check() {
 
 function ccloud_validate_environment_set() {
   ccloud environment list | grep '*' &>/dev/null || {
-    echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' andset 'ccloud environment use' and try again"
+    echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' and set 'ccloud environment use' and try again"
     exit 1
   }
 
