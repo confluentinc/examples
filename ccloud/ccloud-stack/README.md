@@ -23,6 +23,12 @@ This demo is learning purposes only.
 If you choose to run it against your Confluent Cloud cluster, be aware that it creates resources and incurs charges.
 It is for demo purposes only and should be used only on a non-production cluster.
 
+## Pre-requisites
+
+* User account on [Confluent Cloud](https://docs.confluent.io/current/cloud/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud-stacks)
+* Local install of the new [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud-stacks) v1.0.0 or later
+* Confluent Cloud user credentials saved in `~/.netrc` (save with command `ccloud login --save`)
+
 ## Create
 
 To create the stack:
