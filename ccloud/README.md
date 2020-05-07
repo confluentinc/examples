@@ -1,7 +1,9 @@
 ![image](../images/confluent-logo-300-2.png)
 
 * [Overview](#overview)
-* [Beginner Cloud](#beginner-cloud)
+* [Warning](#warning)
+* [Confluent Cloud CLI Demo](#confluent-cloud-cli)
+* [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
 * [Hybrid Cloud](#hybrid-cloud)
 * [Client Code Examples](#client-code-examples)
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
@@ -15,7 +17,12 @@ It has a web interface and local command line interface that you can use to mana
 
 This repo has a few resources to help you validate your solutions on Confluent Cloud.
 
-# Beginner Cloud
+# Warning
+
+All demos/scripts that connect to Confluent Cloud use real Confluent Cloud resources.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and ensure all resources are destroyed after you are done running it.
+
+# Confluent Cloud CLI
 
 [This beginner demo](beginner-cloud/README.md) is a fully scripted demo that shows users how to interact with Confluent Cloud using the Confluent Cloud CLI.
 It steps through the following workflow:
@@ -31,6 +38,33 @@ It steps through the following workflow:
 * Run a Java consumer: showcase a Wildcard ACL
 * Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 
+
+# Fully Managed Stack in Confluent Cloud
+
+The [ccloud stack](ccloud-stack/ccloud_stack_create.sh) is a script that creates a stack of fully managed services in Confluent Cloud.
+It is a quick way to create fully managed components in Confluent Cloud, which you can then use for learning and building other demos.
+Please do not use this in a production environment.
+The script uses the Confluent Cloud CLI to dynamically do the following in Confluent Cloud:
+
+* Create a new environment
+* Create a new service account
+* Create a new Kafka cluster and associated credentials
+* Enable Schema Registry and associated credentials
+* Create a new KSQL app and associated credentials
+* Create ACLs with wildcard for the service account
+* Generate a local configuration file with all above connection information, useful for other demos/automation
+
+To create the stack:
+
+```bash
+./ccloud_stack_create.sh
+```
+
+To destroy the stack, pass the client properties file auto-generated in the step above:
+
+```bash
+./ccloud stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+```
 
 # Cloud ETL
 
