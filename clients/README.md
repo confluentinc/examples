@@ -2,7 +2,7 @@
 
 # Basic Producers and Consumers
 
-* [Various programming languages](cloud/README.md)
+* [Clients in various programming languages](cloud/README.md): run client examples to a Kafka cluster on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.
 
 <a href="cloud/README.md" target="_blank"><img src="cloud/images/clients-all.png" width="600"></a>
 

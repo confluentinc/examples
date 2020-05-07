@@ -52,11 +52,11 @@ For more information see the librdkafka docs on which this python producer is bu
 
 # Example 1: Hello World!
 
-In this example, the producer writes Kafka data to a topic in Confluent Cloud. 
+In this example, the producer writes Kafka data to a topic in your Kafka cluster.
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
-The consumer reads the same topic from Confluent Cloud and keeps a rolling sum of the counts as it processes each record.
+The consumer reads the same topic and keeps a rolling sum of the counts as it processes each record.
 
-1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the topic name:
 
 ```bash
 $ ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
@@ -83,7 +83,7 @@ Produced record to topic test1 partition [0] @ offset 9
 10 messages were produced to topic test1!
 ```
 
-2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
 $ ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
@@ -140,7 +140,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
 ```
 
-5. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+5. Run the Avro producer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the topic name:
 
 ```bash
 $ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
@@ -167,7 +167,7 @@ Produced record to topic test2 partition [0] @ offset 9
 10 messages were produced to topic test2!
 ```
 
-6. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+6. Run the Avro consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
 $ ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
@@ -202,7 +202,7 @@ Consumed record with key alice and value 9,                       and updated to
 
 You also may run all the above code from within Docker.
 
-1. Ensure you have created a local file with configuration parameters to connect to your Confluent Cloud instance at `$HOME/.confluent/librdkafka.config`.
+1. Ensure you have created a local file with configuration parameters to connect to your Kafka cluster at `$HOME/.confluent/librdkafka.config`.
 
 2. Build the Docker image.
 

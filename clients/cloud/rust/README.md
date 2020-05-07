@@ -8,9 +8,9 @@ Produce messages to and consume messages from a Kafka cluster using the [rust-rd
 * If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
 # Example 1: Hello World!
-In this example, the producer writes data to a Kafka topic in Confluent Cloud. 
+In this example, the producer writes data to a Kafka topic.
 Each record has a key representing a username (e.g. `alice`) and a value.
-The consumer reads the same topic from Confluent Cloud.
+The consumer reads the same topic.
 
 1. Build the producer and consumer binaries:
 
@@ -20,7 +20,7 @@ $ cargo build
     Finished dev [unoptimized + debuginfo] target(s) in 2.85s
 ```
 
-2. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the topic name:
+2. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the topic name:
 
 ```bash
 $ ./target/debug/producer --config $HOME/.confluent/librdkafka.config --topic test1
@@ -44,7 +44,7 @@ Successfully produced record to topic test1 partition [5] @ offset 124
 Successfully produced record to topic test1 partition [5] @ offset 125
 ```
 
-3. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Confluent Cloud instance and (b) the same topic name as used above. Verify that the consumer received all the messages:
+3. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above. Verify that the consumer received all the messages:
 
 ```bash
 $ ./target/debug/consumer --config $HOME/.confluent/librdkafka.config --topic test1
