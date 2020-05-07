@@ -11,11 +11,7 @@ source ./delta_configs/env.delta
 
 ./delete-topics.sh
 
-docker-compose down
-
-for v in $(docker volume ls -q --filter="dangling=true"); do
-        docker volume rm "$v"
-done
+docker-compose down -v
 
 # Delete subjects from Confluent Cloud Schema Registry
 schema_registry_subjects_to_delete="test2-value"
