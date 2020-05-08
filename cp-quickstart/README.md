@@ -33,7 +33,8 @@ For additional examples that showcase streaming applications within an event str
 ./start-docker-community.sh
 ```
 
-* Confluent Cloud similar quickstart: run the command below and then open your browser and navigate to Confluent Cloud at https://confluent.cloud :
+* Confluent Cloud similar quickstart: run the command below and then open your browser and navigate to Confluent Cloud at https://confluent.cloud .  If you choose to run it against your Confluent Cloud cluster, be aware that it creates resources and incurs charges.  It is for demo purposes only and should be used only on a non-production cluster.
+
 
 ```bash
 ./start-docker-cloud.sh
