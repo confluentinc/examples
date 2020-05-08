@@ -4,12 +4,12 @@
 * [Warning](#warning)
 * [Demos](#demos)
 
-** [Confluent Quickstart](#confluent-quickstart)
-** [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
-** [Client Code Examples](#client-code-examples)
-** [Confluent Cloud CLI Demo](#confluent-cloud-cli)
-** [Cloud ETL](#cloud-etl)
-** [Hybrid Cloud](#hybrid-cloud)
+  * [Confluent Quickstart](#confluent-quickstart)
+  * [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
+  * [Client Code Examples](#client-code-examples)
+  * [Confluent Cloud CLI Demo](#confluent-cloud-cli)
+  * [Cloud ETL](#cloud-etl)
+  * [Hybrid Cloud](#hybrid-cloud)
 
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
