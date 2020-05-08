@@ -1,8 +1,9 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 # Source library
-. ../../utils/helper.sh
+. $DIR/../../utils/helper.sh
 
 check_ccloud_version 1.0.0 || exit 1
 check_jq || exit 1
@@ -16,7 +17,8 @@ else
 fi
 
 check_ccloud_config $CONFIG_FILE || exit 1
-../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+$DIR/../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 SERVICE_ACCOUNT_ID=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 
