@@ -322,6 +322,8 @@ function cloud_create_wildcard_acls() {
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*'
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
 
   return 0
@@ -333,6 +335,8 @@ function cloud_delete_demo_stack_acls() {
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*'
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*'
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
 
   return 0
@@ -664,9 +668,9 @@ function cloud_create_demo_stack() {
   MAX_WAIT=720
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
   retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
-  # Estimating another 60s wait still sometimes required
-  echo "Sleeping an additional 60s to ensure propagation of all metadata"
-  sleep 60
+  # Estimating another 80s wait still sometimes required
+  echo "Sleeping an additional 80s to ensure propagation of all metadata"
+  sleep 80
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(cloud_enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)

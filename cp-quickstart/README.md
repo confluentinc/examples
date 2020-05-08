@@ -15,13 +15,13 @@ For additional examples that showcase streaming applications within an event str
 
 # Run demo
 
-* To run the [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/ce-quickstart.html#ce-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the local tarball install of Confluent Platform:
+* To run the [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/ce-quickstart.html#ce-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the local tarball install of Confluent Platform, and then open your browser and navigate to the Control Center at http://localhost:9021/:
 
 ```bash
 ./start.sh
 ```
 
-* To run the [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the Docker version of Confluent Platform:
+* To run the [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the Docker version of Confluent Platform, and then open your browser and navigate to the Control Center at http://localhost:9021/:
 
 ```bash
 ./start-docker.sh
@@ -33,4 +33,8 @@ For additional examples that showcase streaming applications within an event str
 ./start-docker-community.sh
 ```
 
-* If you are running Confluent Platform, open your browser and navigate to the Control Center at http://localhost:9021/
+* To run the similar Quick Start on Confluent Cloud, and then open your browser and navigate to Control Cloud at https://confluent.cloud :
+
+```bash
+./start-docker-cloud.sh
+```
