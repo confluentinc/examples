@@ -4,6 +4,7 @@
 * [Warning](#warning)
 * [Confluent Cloud CLI Demo](#confluent-cloud-cli)
 * [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
+* [Confluent Quickstart](#confluent-quickstart)
 * [Hybrid Cloud](#hybrid-cloud)
 * [Client Code Examples](#client-code-examples)
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
@@ -56,6 +57,10 @@ The script uses the Confluent Cloud CLI to dynamically do the following in Confl
 * Generate a local configuration file with all above connection information, useful for other demos/automation
 
 To create the stack, it is one single command, see [instructions](ccloud-stack/README.md) for more info.
+
+# Confluent Quickstart
+
+See the [cp-quickstart](../cp-quickstart) for an automated version of the Confluent Platform Quickstart, but this one running in Confluent Cloud.
 
 # Cloud ETL
 
