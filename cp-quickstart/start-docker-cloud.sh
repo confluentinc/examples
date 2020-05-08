@@ -24,6 +24,7 @@ read -p "Do you acknowledge this script creates a Confluent Cloud KSQL app (hour
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit 1; fi
 
+echo
 echo ====== Create new Confluent Cloud stack
 cloud_create_demo_stack true
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
