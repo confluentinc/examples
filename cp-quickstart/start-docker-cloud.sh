@@ -14,8 +14,6 @@ check_ccloud_logged_in || exit 1
 
 wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml
 
-./stop-docker.sh
-
 echo ====== Create new Confluent Cloud stack
 prompt_continue_cloud_demo || exit 1
 read -p "Do you acknowledge this script creates a Confluent Cloud KSQL app (hourly charges may apply)? [y/n] " -n 1 -r
@@ -52,8 +50,13 @@ echo "connect has started!"
 . ./connectors/submit_datagen_pageviews_config_cloud.sh
 . ./connectors/submit_datagen_users_config_cloud.sh
 
+echo "Sleeping 30 seconds to give kafka-connect-datagen a chance to start producing messages"
+sleep 30
+
 # Run the KSQL queries
 echo -e "\nSubmit KSQL queries\n"
+ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
+ccloud ksql app configure-acls $ksqlAppId pageviews users PAGEVIEWS_FEMALE pageviews_enriched_r8_r9 PAGEVIEWS_REGIONS
 properties='"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"'
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"

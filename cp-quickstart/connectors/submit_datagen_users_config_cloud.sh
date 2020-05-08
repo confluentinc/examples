@@ -22,7 +22,7 @@ DATA=$( cat << EOF
     "value.converter.schema.registry.basic.auth.user.info": "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO",
     "value.converter.schema.registry.url": "$SCHEMA_REGISTRY_URL",
     "producer.interceptor.classes": "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor",
-    "max.interval": 1000,
+    "max.interval": 2000,
     "iterations": 1000000000,
     "tasks.max": "1"
   }
