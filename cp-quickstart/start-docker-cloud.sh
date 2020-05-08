@@ -73,3 +73,12 @@ EOF
     echo -e "\nWARN: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response. Please troubleshoot."
   fi
 done <statements.sql
+
+echo
+echo "Local client configuration file written to $CONFIG_FILE"
+echo
+
+echo
+echo "To destroy this demo run ->"
+echo "    ./stop-docker-cloud.sh $CONFIG_FILE"
+echo
