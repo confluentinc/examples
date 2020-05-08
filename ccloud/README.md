@@ -28,6 +28,9 @@ This repo has a few resources to help you validate your solutions on Confluent C
 All demos/scripts that connect to Confluent Cloud use real Confluent Cloud resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and ensure all resources are destroyed after you are done running it.
 
+Do not run any demo against your production Confluent Cloud cluster.
+Some of these scripts create clusters, topics, resources, ACLs, service accounts, etc, and delete them as well, so run them only in a development cluster.
+
 # Demos
 
 ## Confluent Quickstart
@@ -91,19 +94,7 @@ Data streams into topics both a local cluster and a cluster in Confluent Cloud, 
 
 The documentation for running this demo, and its accompanying playbook, is at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud)
 
-![image](docs/images/schema-registry-local.jpg)
-
-It includes:
-
-* Confluent Cloud
-* Confluent Cloud Schema Registry
-* ksqlDB
-* Confluent Replicator
-* Confluent Control Center
-* Kafka Connect
-* `kafka-connect-datagen` connectors
-
-NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.
+![image](docs/images/services-in-cloud.jpg)
 
 # Build Your Own Cloud Demo
 
