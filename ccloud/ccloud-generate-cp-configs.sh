@@ -95,7 +95,8 @@ if [[ ! -f "$SR_CONFIG_FILE" ]]; then
   exit 1
 fi
 
-echo -e "\nGenerating component configurations from $CONFIG_FILE and Schema Registry configurations from $SR_CONFIG_FILE\n" 
+echo -e "\nGenerating component configurations from $CONFIG_FILE and Schema Registry configurations from $SR_CONFIG_FILE" 
+echo -e "\n(If you want to run any of these components to talk to Confluent Cloud, these are the configurations to add to the properties file for each component)"
 
 # Set permissions
 PERM=600
