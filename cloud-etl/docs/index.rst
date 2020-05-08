@@ -20,6 +20,9 @@ This enables you to:
 *  Use Kafka to aggregate data in single source of truth
 *  Harness the power of `ksqlDB <https://www.confluent.io/product/ksql/>`__ for stream processing
 
+.. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
+         `blog post <https://www.confluent.io/blog/build-a-cloud-etl-pipeline-with-confluent-cloud/>`__.
+
 
 ========================
 End-to-end Streaming ETL

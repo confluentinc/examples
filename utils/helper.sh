@@ -427,3 +427,35 @@ function props_to_env() {
     fi
   done
 }
+
+PRETTY_PASS="\e[32m✔ \033\e[0m"
+function print_pass() {
+  printf "${PRETTY_PASS}${1}\n"
+}
+
+PRETTY_ERROR="\e[31m✘ \033\e[0m"
+function print_error() {
+  printf "${PRETTY_ERROR}${1}"
+}
+
+function exit_with_error()
+{
+  local USAGE="\nUsage: exit_with_error -c code -n name -m message -l line_number\n"
+  local NAME=""
+  local MESSAGE=""
+  local CODE=$UNSPECIFIED_ERROR
+  local LINE=
+  OPTIND=1
+  while getopts ":n:m:c:l:" opt; do
+    case ${opt} in
+      n ) NAME=${OPTARG};;
+      m ) MESSAGE=${OPTARG};;
+      c ) CODE=${OPTARG};;
+      l ) LINE=${OPTARG};;
+      ? ) printf $USAGE;return 1;;
+    esac
+  done
+  shift $((OPTIND-1))
+  print_error "error ${CODE} occurred in ${NAME} at line $LINE\n\t${MESSAGE}\n"
+  exit $CODE
+}
