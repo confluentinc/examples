@@ -50,13 +50,14 @@ echo "connect has started!"
 . ./connectors/submit_datagen_pageviews_config_cloud.sh
 . ./connectors/submit_datagen_users_config_cloud.sh
 
+echo
 echo "Sleeping 30 seconds to give kafka-connect-datagen a chance to start producing messages"
 sleep 30
 
 # Run the KSQL queries
 echo -e "\nSubmit KSQL queries\n"
 ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
-ccloud ksql app configure-acls $ksqlAppId pageviews users PAGEVIEWS_FEMALE pageviews_enriched_r8_r9 PAGEVIEWS_REGIONS
+ccloud ksql app configure-acls $ksqlAppId pageviews users PAGEVIEWS_FEMALE pageviews_female_like_89 PAGEVIEWS_REGIONS
 properties='"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"'
 while read ksqlCmd; do
   echo -e "\n$ksqlCmd\n"
@@ -77,11 +78,11 @@ EOF
   fi
 done <statements.sql
 
+echo "-----------------------------------------------------------"
+
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
 echo
-
-echo
-echo "To destroy this demo run ->"
+echo "Confluent Cloud KSQL is running and accruing charges. To destroy this demo run and verify ->"
 echo "    ./stop-docker-cloud.sh $CONFIG_FILE"
 echo
