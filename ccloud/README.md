@@ -10,6 +10,7 @@
   * [Confluent Cloud CLI Demo](#confluent-cloud-cli)
   * [Cloud ETL](#cloud-etl)
   * [Hybrid Cloud](#hybrid-cloud)
+  * [Confluent Operator with Cloud](#confluent-operator-with-cloud)
 
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
@@ -86,7 +87,6 @@ The documentation for running this demo is at [https://docs.confluent.io/current
 
 ![image](../cloud-etl/docs/images/topology.png)
 
-
 ## Hybrid Cloud
 
 [This end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) showcases a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
@@ -96,13 +96,37 @@ The documentation for running this demo, and its accompanying playbook, is at [h
 
 ![image](docs/images/services-in-cloud.jpg)
 
+## Confluent Operator with Cloud
+
+[This Kubernetes example](https://docs.confluent.io/current/tutorials/examples/kubernetes/replicator-gke-cc/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kubernetes) features a deployment of Confluent Platform on Google Kubernetes Engine (GKE) leveraging Confluent Operator and Confluent Replicator, highlighting a data replication strategy to Confluent Cloud.
+Upon running this demo, you will have a GKE based Confluent Platform deployment with simulated data replicating to your Confluent Cloud cluster.
+
+![image](../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png)
+
 # Build Your Own Cloud Demo
 
-As a next step, you may want to build your own custom demo or test environment.
-We have a Docker Compose file called [cp-all-in-one-cloud](../cp-all-in-one-cloud/README.md) -- use this with your existing Confluent Cloud instance.
+## Fully Managed Stack in Confluent Cloud
+
+The [ccloud stack](ccloud-stack/README.md) is a script that creates a stack of fully managed services in Confluent Cloud.
+It is a quick way to create fully managed components in Confluent Cloud, which you can then use for learning and building other demos.
+Please do not use this in a production environment.
+The script uses the Confluent Cloud CLI to dynamically do the following in Confluent Cloud:
+
+* Create a new environment
+* Create a new service account
+* Create a new Kafka cluster and associated credentials
+* Enable Schema Registry and associated credentials
+* Create a new KSQL app and associated credentials
+* Create ACLs with wildcard for the service account
+* Generate a local configuration file with all above connection information, useful for other demos/automation
+
+To create the stack, it is one single command, see [instructions](ccloud-stack/README.md) for more info.
+
+## Docker for Self-Managed Components 
+
+The Docker Compose file called [cp-all-in-one-cloud](https://github.com/confluentinc/cp-all-in-one/tree/latest/cp-all-in-one-cloud) can be used with Confluent Cloud.
 This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
 Using this as a foundation, you can then add any connectors or applications.
-
 
 # Auto-generate Configurations to connect to Confluent Cloud
 
