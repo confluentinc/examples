@@ -2,11 +2,15 @@
 
 * [Overview](#overview)
 * [Warning](#warning)
-* [Confluent Cloud CLI Demo](#confluent-cloud-cli)
-* [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
-* [Confluent Quickstart](#confluent-quickstart)
-* [Hybrid Cloud](#hybrid-cloud)
-* [Client Code Examples](#client-code-examples)
+* [Demos](#demos)
+
+** [Confluent Quickstart](#confluent-quickstart)
+** [Fully Managed Stack in Confluent Cloud](#fully-managed-stack-in-confluent-cloud)
+** [Client Code Examples](#client-code-examples)
+** [Confluent Cloud CLI Demo](#confluent-cloud-cli)
+** [Cloud ETL](#cloud-etl)
+** [Hybrid Cloud](#hybrid-cloud)
+
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
 * [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
 * [Additional Resources](#additional-resources)
@@ -24,24 +28,13 @@ This repo has a few resources to help you validate your solutions on Confluent C
 All demos/scripts that connect to Confluent Cloud use real Confluent Cloud resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and ensure all resources are destroyed after you are done running it.
 
-# Confluent Cloud CLI
+# Demos
 
-[This beginner demo](beginner-cloud/README.md) is a fully scripted demo that shows users how to interact with Confluent Cloud using the Confluent Cloud CLI.
-It steps through the following workflow:
+## Confluent Quickstart
 
-* Create a new environment and specify it as the default
-* Create a new Kafka cluster and specify it as the default
-* Create a user key/secret pair and specify it as the default
-* Produce and consume with Confluent Cloud CLI
-* Create a service account key/secret pair
-* Run a Java producer: before and after ACLs
-* Run a Java producer: showcase a Prefix ACL
-* Run Connect and kafka-connect-datagen connector with permissions
-* Run a Java consumer: showcase a Wildcard ACL
-* Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
+See the [cp-quickstart](../cp-quickstart) for an automated version of the Confluent Platform Quickstart, but this one running in Confluent Cloud.
 
-
-# Fully Managed Stack in Confluent Cloud
+## Fully Managed Stack in Confluent Cloud
 
 The [ccloud stack](ccloud-stack/README.md) is a script that creates a stack of fully managed services in Confluent Cloud.
 It is a quick way to create fully managed components in Confluent Cloud, which you can then use for learning and building other demos.
@@ -58,11 +51,30 @@ The script uses the Confluent Cloud CLI to dynamically do the following in Confl
 
 To create the stack, it is one single command, see [instructions](ccloud-stack/README.md) for more info.
 
-# Confluent Quickstart
+## Client Code Examples
 
-See the [cp-quickstart](../cp-quickstart) for an automated version of the Confluent Platform Quickstart, but this one running in Confluent Cloud.
+If you are looking for code examples of producers writing to and consumers reading from Confluent Cloud, or producers and consumers using Avro with Confluent Schema Registry, checkout the [clients subdirectory of examples](../clients).
+It provides client examples written in various programming languages.
 
-# Cloud ETL
+![image](../clients/cloud/images/clients-all.png)
+
+## Confluent Cloud CLI
+
+[This beginner demo](beginner-cloud/README.md) is a fully scripted demo that shows users how to interact with Confluent Cloud using the Confluent Cloud CLI.
+It steps through the following workflow:
+
+* Create a new environment and specify it as the default
+* Create a new Kafka cluster and specify it as the default
+* Create a user key/secret pair and specify it as the default
+* Produce and consume with Confluent Cloud CLI
+* Create a service account key/secret pair
+* Run a Java producer: before and after ACLs
+* Run a Java producer: showcase a Prefix ACL
+* Run Connect and kafka-connect-datagen connector with permissions
+* Run a Java consumer: showcase a Wildcard ACL
+* Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
+
+## Cloud ETL
 
 The [cloud ETL demo](https://docs.confluent.io/current/tutorials/examples/cloud-etl/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) showcases a cloud ETL solution leveraging all fully-managed services on Confluent Cloud.
 Using Confluent Cloud CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into Confluent Cloud, then a Confluent Cloud KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
@@ -72,7 +84,7 @@ The documentation for running this demo is at [https://docs.confluent.io/current
 ![image](../cloud-etl/docs/images/topology.png)
 
 
-# Hybrid Cloud
+## Hybrid Cloud
 
 [This end-to-end Confluent Cloud demo](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud) showcases a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 Data streams into topics both a local cluster and a cluster in Confluent Cloud, and Confluent Replicator copies the on-prem data to Confluent Cloud so that stream processing can happen in the Cloud.
@@ -92,14 +104,6 @@ It includes:
 * `kafka-connect-datagen` connectors
 
 NOTE: Do not run this demo against your production Confluent Cloud cluster. Run this demo only in a development cluster.
-
-# Client Code Examples
-
-If you are looking for code examples of producers writing to and consumers reading from Confluent Cloud, or producers and consumers using Avro with Confluent Schema Registry, checkout the [clients subdirectory of examples](../clients).
-It provides client examples written in various programming languages.
-
-![image](../clients/cloud/images/clients-all.png)
-
 
 # Build Your Own Cloud Demo
 
