@@ -246,7 +246,7 @@ Troubleshooting the demo
 Teardown
 ========
 
-1. Stop the demo, destroy all local components.
+1. Stop the demo, destroy all resources in |ccloud| and local components.
 
    .. sourcecode:: bash
 
@@ -256,10 +256,4 @@ Teardown
       # For Docker Compose
       $ ./stop-docker.sh
 
-
-2. Delete all |cp| topics in CCloud that this demo used, including topics used for |c3|, Kafka Connect, ksqlDB, and Confluent Schema Registry. Warning: this may have unintended consequence of deleting topics that you wanted to keep.
-
-   .. sourcecode:: bash
-
-        $ ./ccloud-delete-all-topics.sh
-
+2. Always verify that resources in |ccloud| have been destroyed.

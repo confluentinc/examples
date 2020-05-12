@@ -23,8 +23,7 @@ export CONFIG_FILE=$CONFIG_FILE
 check_ccloud_config $CONFIG_FILE || exit 1
 
 echo ====== Generate CCloud configurations
-SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
-./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
+./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
