@@ -87,7 +87,7 @@ Hybrid Cloud
 ------------
 
 The :ref:`hybrid cloud demo <quickstart-demos-ccloud>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-Data streams into topics both a local cluster and a cluster in |ccloud|, and |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
+Data streams into topics, in both the local cluster and the |ccloud| cluster. |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
 .. figure:: images/services-in-cloud.jpg
    :alt: image
