@@ -12,7 +12,7 @@ This repo has a few resources to help you validate your solutions on |ccloud|.
 Warning
 =======
 
-All demos/scripts that connect to |ccloud| use real |ccloud| resources.
+All demos that connect to |ccloud| use real |ccloud| resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and ensure all resources are destroyed after you are done running it.
 
 These demos are meant for development environments only, do not run any demo against your production |ccloud| cluster.
@@ -23,16 +23,16 @@ The scripts provide functions to delete created resources; however, you should v
 Demos
 =====
 
-Confluent Quickstart
---------------------
+Confluent Cloud Quickstart
+--------------------------
 
-See the :devx-examples:`cp-quickstart|cp-quickstart/` for an automated version of the :ref:`Confluent Platform Quickstart <quickstart>`, but this one running in |ccloud|.
+The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated version of the :ref:`Confluent Platform Quickstart <quickstart>`, but this one runs in |ccloud|.
 
 Fully Managed Stack in Confluent Cloud
 --------------------------------------
 
-The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` `ccloud stack <ccloud-stack/README.md>`__ is a script that creates a stack of fully managed services in |ccloud|.
-It is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
+The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
+Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Please do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 
@@ -44,12 +44,14 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create ACLs with wildcard for the service account
 -  Generate a local configuration file with all above connection information, useful for other demos/automation
 
-To create the stack, it is one single command, see :devx-examples:`instructions|ccloud/ccloud-stack/README.md` for more info.
+.. figure:: images/cloud-stack.png
+   :alt: image
+
 
 Client Code Examples
 --------------------
 
-If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, checkout the :devx-examples:`clients subdirectory|ccloud/clients/`.
+If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, checkout the :devx-examples:`clients examples|ccloud/clients/`.
 It provides client examples written in various programming languages.
 
 .. figure:: ../clients/images/clients-all.png
@@ -58,7 +60,7 @@ It provides client examples written in various programming languages.
 Confluent Cloud CLI
 -------------------
 
-:devx-examples:`This beginner demo|ccloud/beginner-cloud/README.md` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
+The :devx-examples:`Confluent Cloud CLI demo|ccloud/beginner-cloud/README.md` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
 It steps through the following workflow:
 
 -  Create a new environment and specify it as the default
@@ -108,7 +110,7 @@ Fully Managed Stack in Confluent Cloud
 --------------------------------------
 
 The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` `ccloud stack <ccloud-stack/README.md>`__ is a script that creates a stack of fully managed services in |ccloud|.
-It is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
+Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Please do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 
@@ -120,17 +122,22 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create ACLs with wildcard for the service account
 -  Generate a local configuration file with all above connection information, useful for other demos/automation
 
-To create the stack, it is one single command, see :devx-examples:`instructions|ccloud/ccloud-stack/README.md` for more info.
+.. figure:: images/cloud-stack.png
+   :alt: image
 
-Docker for Self-Managed Components
-----------------------------------
+
+Self Managed Components to Confluent Cloud
+------------------------------------------
 
 The :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud>` can be used with Confluent Cloud.
 This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud. Using this as a foundation, you can then add any connectors or applications.
 
-==========================================================
+.. figure:: images/cp-all-in-one-cloud.png
+   :alt: image
+
+
 Auto-generate Configurations to connect to Confluent Cloud
-==========================================================
+----------------------------------------------------------
 
 The :ref:`configuration generation script <auto-generate-configs>` reads a configuration file and auto-generates delta configurations for all |cp| components and clients.
 Use these per-component configurations for Confluent Platform components and clients connecting to Confluent Cloud:
