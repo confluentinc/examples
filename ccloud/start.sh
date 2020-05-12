@@ -3,21 +3,26 @@
 # Source library
 . ../utils/helper.sh
 
+NAME=`basename "$0"`
+
 echo ====== Verifying prerequisites
-check_env || exit 1
+check_env \
+  && print_pass "Confluent Platform installed" \
+  || exit 1
+check_cp \
+  || exit_with_error -c $? -n $NAME -l $LINENO -m "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software"
+check_running_cp ${CONFLUENT} \
+  && print_pass "Confluent Platform version ${CONFLUENT} ok" \
+  || exit 1
 check_ccloud_version 1.0.0 \
   && print_pass "ccloud version ok" \
   || exit 1
 check_ccloud_logged_in \
   && print_pass "logged into ccloud CLI" \
   || exit 1
-check_jq || exit 1
-check_running_cp ${CONFLUENT} || exit 1
-if ! check_cp ; then
-  echo "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software. Exiting"
-  exit 1
-fi
-printf "\n"
+check_jq \
+  && print_pass "jq installed" \
+  || exit 1
 
 echo ====== Create new Confluent Cloud stack
 prompt_continue_cloud_demo || exit 1

@@ -4,12 +4,14 @@
 . ../utils/helper.sh
 
 echo ====== Verifying prerequisites
-check_jq || exit
 check_ccloud_version 1.0.0 \
   && print_pass "ccloud version ok" \
   || exit 1
 check_ccloud_logged_in \
   && print_pass "logged into ccloud CLI" \
+  || exit 1
+check_jq \
+  && print_pass "jq installed" \
   || exit 1
 
 echo ====== Create new Confluent Cloud stack
