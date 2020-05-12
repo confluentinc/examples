@@ -13,7 +13,6 @@
   * [Confluent Operator with Cloud](#confluent-operator-with-cloud)
 
 * [Build Your Own Cloud Demo](#build-your-own-cloud-demo)
-* [Auto-generate Configurations to connect to Confluent Cloud](#auto-generate-configurations-to-connect-to-confluent-cloud)
 * [Additional Resources](#additional-resources)
 
 
@@ -128,7 +127,7 @@ The Docker Compose file called [cp-all-in-one-cloud](https://github.com/confluen
 This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud.
 Using this as a foundation, you can then add any connectors or applications.
 
-# Auto-generate Configurations to connect to Confluent Cloud
+## Auto-generate Configurations to connect to Confluent Cloud
 
 [This script](ccloud-generate-cp-configs.sh) reads a configuration file (by default assumed to be at ``$HOME/.ccloud/config``) and auto-generates delta configurations into ``./delta_configs``.
 Use these per-component configurations for Confluent Platform components and clients connecting to Confluent Cloud:
