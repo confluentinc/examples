@@ -96,7 +96,7 @@ Confluent Operator with Cloud
 -----------------------------
 
 The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
-Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+Upon running this demo, you will have a GKE-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
    :alt: image
