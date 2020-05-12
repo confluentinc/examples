@@ -111,7 +111,7 @@ Fully Managed Stack in |ccloud|
 
 The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
-Please do not use this in a production environment.
+Do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 
 -  Create a new environment.
