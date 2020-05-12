@@ -156,7 +156,7 @@ echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1
 printf "\n"
 
-printf "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
+printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ or Confluent Control Center at http://localhost:9021\n"
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
 echo
