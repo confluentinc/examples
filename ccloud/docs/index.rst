@@ -108,6 +108,32 @@ Run
 
       $ cat stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
+   Your output should resemble:
+
+   ::
+
+      # ------------------------------
+      # Confluent Cloud connection information for demo purposes only
+      # Do not use in production
+      # ------------------------------
+      # ENVIRONMENT ID: <ENVIRONMENT ID>
+      # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
+      # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
+      # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
+      # KSQL APP ID: <KSQL APP ID>
+      # ------------------------------
+      ssl.endpoint.identification.algorithm=https
+      security.protocol=SASL_SSL
+      sasl.mechanism=PLAIN
+      bootstrap.servers=<BROKER ENDPOINT>
+      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+      basic.auth.credentials.source=USER_INFO
+      schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+      schema.registry.url=https://<SR ENDPOINT>
+      ksql.endpoint=<KSQL ENDPOINT>
+      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+
+      
 #. Log into the Confluent Cloud UI at http://confluent.cloud .
 
 #. Use Google Chrome to navigate to |c3| GUI at http://localhost:9021 . 
