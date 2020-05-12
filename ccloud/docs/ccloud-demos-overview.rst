@@ -50,7 +50,7 @@ Client Code Examples
 If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, checkout the :devx-examples:`clients subdirectory|ccloud/clients/`.
 It provides client examples written in various programming languages.
 
-.. figure:: ../clients/clients-all.png
+.. figure:: ../clients/images/clients-all.png
    :alt: image
 
 Confluent Cloud CLI
@@ -76,7 +76,7 @@ Cloud ETL
 The :ref:`cloud ETL demo <cloud-etl>` showcases a cloud ETL solution leveraging all fully-managed services on |ccloud|.
 Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into Confluent Cloud, then a Confluent Cloud KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
-.. figure:: ../cloud-etl/docs/images/topology.png
+.. figure:: ../../cloud-etl/docs/images/topology.png
    :alt: image
 
 Hybrid Cloud
@@ -94,7 +94,7 @@ Confluent Operator with Cloud
 The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` features a deployment of Confluent Platform on Google Kubernetes Engine (GKE) leveraging Confluent Operator and Confluent Replicator, highlighting a data replication strategy to Confluent Cloud.
 Upon running this demo, you will have a GKE based Confluent Platform deployment with simulated data replicating to your Confluent Cloud cluster.
 
-.. figure:: ../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
+.. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
    :alt: image
 
 
