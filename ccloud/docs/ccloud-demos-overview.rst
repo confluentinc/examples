@@ -39,7 +39,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create a new environment
 -  Create a new service account
 -  Create a new Kafka cluster and associated credentials
--  Enable Schema Registry and associated credentials
+-  Enable |sr-ccloud| and associated credentials
 -  Create a new KSQL app and associated credentials
 -  Create ACLs with wildcard for the service account
 -  Generate a local configuration file with all above connection information, useful for other demos/automation
@@ -66,7 +66,7 @@ It steps through the following workflow:
 -  Create a new environment and specify it as the default
 -  Create a new Kafka cluster and specify it as the default
 -  Create a user key/secret pair and specify it as the default
--  Produce and consume with Confluent Cloud CLI
+-  Produce and consume with |ccloud| CLI
 -  Create a service account key/secret pair
 -  Run a Java producer: before and after ACLs
 -  Run a Java producer: showcase a Prefix ACL
@@ -78,7 +78,7 @@ Cloud ETL
 ---------
 
 The :ref:`cloud ETL demo <cloud-etl>` showcases a cloud ETL solution leveraging all fully-managed services on |ccloud|.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into Confluent Cloud, then a Confluent Cloud KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a Confluent Cloud KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: ../../cloud-etl/docs/images/topology.png
    :alt: image
@@ -87,7 +87,7 @@ Hybrid Cloud
 ------------
 
 The :ref:`hybrid cloud demo <quickstart-demos-ccloud>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-Data streams into topics both a local cluster and a cluster in Confluent Cloud, and |crep| copies the on-prem data to Confluent Cloud so that stream processing can happen in the Cloud.
+Data streams into topics both a local cluster and a cluster in |ccloud|, and |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
 .. figure:: images/services-in-cloud.jpg
    :alt: image
@@ -95,8 +95,8 @@ Data streams into topics both a local cluster and a cluster in Confluent Cloud, 
 Confluent Operator with Cloud
 -----------------------------
 
-The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` features a deployment of Confluent Platform on Google Kubernetes Engine (GKE) leveraging Confluent Operator and Confluent Replicator, highlighting a data replication strategy to Confluent Cloud.
-Upon running this demo, you will have a GKE based Confluent Platform deployment with simulated data replicating to your Confluent Cloud cluster.
+The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
+Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
    :alt: image
@@ -109,7 +109,7 @@ Build Your Own Cloud Demo
 Fully Managed Stack in Confluent Cloud
 --------------------------------------
 
-The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` `ccloud stack <ccloud-stack/README.md>`__ is a script that creates a stack of fully managed services in |ccloud|.
+The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Please do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
@@ -117,7 +117,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create a new environment
 -  Create a new service account
 -  Create a new Kafka cluster and associated credentials
--  Enable Schema Registry and associated credentials
+-  Enable |sr-ccloud| and associated credentials
 -  Create a new KSQL app and associated credentials
 -  Create ACLs with wildcard for the service account
 -  Generate a local configuration file with all above connection information, useful for other demos/automation
@@ -129,8 +129,9 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Self Managed Components to Confluent Cloud
 ------------------------------------------
 
-The :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud>` can be used with Confluent Cloud.
-This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud. Using this as a foundation, you can then add any connectors or applications.
+The :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud>` can be used with |ccloud|.
+This file launches all services in |cp| (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to |ccloud|.
+Using this as a foundation, you can then add any connectors or applications.
 
 .. figure:: images/cp-all-in-one-cloud.png
    :alt: image
@@ -140,26 +141,45 @@ Auto-generate Configurations to connect to Confluent Cloud
 ----------------------------------------------------------
 
 The :ref:`configuration generation script <auto-generate-configs>` reads a configuration file and auto-generates delta configurations for all |cp| components and clients.
-Use these per-component configurations for Confluent Platform components and clients connecting to Confluent Cloud:
+Use these per-component configurations for |cp| components and clients connecting to |ccloud|:
 
--  Confluent Platform Components:
+* |cp| Components:
 
-   -  Confluent Schema Registry
-   -  ksqlDB Data Generator
-   -  ksqlDB server
-   -  Confluent Replicator (standalone binary)
-   -  Confluent Control Center
-   -  Kafka Connect
+  * |sr|
 
--  Kafka Clients:
+  * |ksql-cloud| Data Generator
 
-   -  Java (Producer/Consumer)
-   -  Java (Streams)
-   -  Python
-   -  .NET
-   -  Go
-   -  Node.js (https://github.com/Blizzard/node-rdkafka)
-   -  C++
+  * |ksql-cloud|
+
+  * |crep-full|
+
+  * |c3|
+
+  * |kconnect-long|
+
+  * Kafka connector
+
+  * |ak| command line tools
+
+* Kafka Clients:
+
+  * Java (Producer/Consumer)
+
+  * Java (Streams)
+
+  * Python
+
+  * .NET
+
+  * Go
+
+  * Node.js
+
+  * C++
+
+* OS:
+
+  * ENV file
 
 
 ====================
