@@ -3,7 +3,7 @@
 |ccloud| Demos
 ==============
 
-`Confluent Cloud <https://docs.confluent.io/current/cloud/index.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command line interface that you can use to manage cluster resources, Kafka topics, |sr|, and other services.
+`Confluent Cloud <https://docs.confluent.io/current/cloud/index.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command-line interface that you can use to manage cluster resources, |ak| topics, |sr|, and other services.
 
 This repo has a few resources to help you validate your solutions on |ccloud|.
 
@@ -93,7 +93,7 @@ Confluent Operator with Cloud
 -----------------------------
 
 The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
-Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+Upon running this demo, you will have a GKE-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
 
@@ -107,7 +107,7 @@ Fully Managed Stack in |ccloud|
 
 The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
-Please do not use this in a production environment.
+Do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 
 -  Create a new environment.
