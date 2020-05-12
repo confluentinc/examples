@@ -1,13 +1,14 @@
 .. _ccloud-demos-overview:
 
-Confluent Cloud Demos Overview
-==============================
+Confluent Cloud Demos
+=====================
 
 `Confluent Cloud <https://docs.confluent.io/current/cloud/index.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command line interface that you can use to manage cluster resources, Kafka topics, |sr|, and other services.
 
 This repo has a few resources to help you validate your solutions on |ccloud|.
 
 
+=======
 Warning
 =======
 
@@ -18,6 +19,7 @@ These demos are meant for development environments only, do not run any demo aga
 These scripts create environments, clusters, topics, ACLs, service accounts, applications, and other resources.
 The scripts provide functions to delete created resources; however, you should verify the deletion of all demo resources manually.
 
+=====
 Demos
 =====
 
@@ -98,6 +100,7 @@ Upon running this demo, you will have a GKE based Confluent Platform deployment 
    :alt: image
 
 
+=========================
 Build Your Own Cloud Demo
 =========================
 
@@ -125,6 +128,7 @@ Docker for Self-Managed Components
 The :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud>` can be used with Confluent Cloud.
 This file launches all services in Confluent Platform (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to Confluent Cloud. Using this as a foundation, you can then add any connectors or applications.
 
+==========================================================
 Auto-generate Configurations to connect to Confluent Cloud
 ==========================================================
 
@@ -151,6 +155,7 @@ Use these per-component configurations for Confluent Platform components and cli
    -  C++
 
 
+====================
 Additional Resources
 ====================
 
