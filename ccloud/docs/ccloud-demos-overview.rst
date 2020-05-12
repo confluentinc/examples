@@ -51,7 +51,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Client Code Examples
 --------------------
 
-If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, checkout the :devx-examples:`clients examples|ccloud/clients/`.
+If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to the :devx-examples:`client examples|clients/cloud/README.md`.
 It provides client examples written in various programming languages.
 
 .. figure:: ../clients/images/clients-all.png
@@ -129,8 +129,8 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Self Managed Components to Confluent Cloud
 ------------------------------------------
 
-The :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud>` can be used with |ccloud|.
-This file launches all services in |cp| (except for the Kafka brokers), runs them in containers in your local host, and automatically configures them to connect to |ccloud|.
+This :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud` can be used with |ccloud|.
+The ``docker-compose.yml`` launches all services in |cp| (except for the Kafka brokers), runs them in containers on your local host, and automatically configures them to connect to |ccloud|.
 Using this as a foundation, you can then add any connectors or applications.
 
 .. figure:: images/cp-all-in-one-cloud.png
