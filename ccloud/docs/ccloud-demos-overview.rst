@@ -9,7 +9,7 @@ This repo has a few resources to help you validate your solutions on |ccloud|.
 
 
 =======
-Warning
+Caution
 =======
 
 All demos that connect to |ccloud| use real |ccloud| resources.
@@ -46,7 +46,6 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
 .. figure:: images/cloud-stack.png
-   :alt: image
 
 
 Client Code Examples
@@ -56,7 +55,6 @@ If you are looking for code examples of producers writing to and consumers readi
 It provides client examples written in various programming languages.
 
 .. figure:: ../clients/images/clients-all.png
-   :alt: image
 
 |ccloud| CLI
 ------------
@@ -82,7 +80,6 @@ The :ref:`cloud ETL demo <cloud-etl>` showcases a cloud ETL solution leveraging 
 Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: ../../cloud-etl/docs/images/topology.png
-   :alt: image
 
 Hybrid Cloud
 ------------
@@ -91,7 +88,6 @@ The :ref:`hybrid cloud demo <quickstart-demos-ccloud>` and playbook showcase a h
 Data streams into topics, in both the local cluster and the |ccloud| cluster. |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
 .. figure:: images/services-in-cloud.jpg
-   :alt: image
 
 Confluent Operator with Cloud
 -----------------------------
@@ -100,7 +96,6 @@ The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` feature
 Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
-   :alt: image
 
 
 =========================
@@ -124,7 +119,6 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
 .. figure:: images/cloud-stack.png
-   :alt: image
 
 
 Self Managed Components to |ccloud| 
@@ -135,7 +129,6 @@ The ``docker-compose.yml`` launches all services in |cp| (except for the Kafka b
 Using this as a foundation, you can then add any connectors or applications.
 
 .. figure:: images/cp-all-in-one-cloud.png
-   :alt: image
 
 
 Auto-generate Configurations to connect to |ccloud|

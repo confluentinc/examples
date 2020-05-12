@@ -30,7 +30,7 @@ The major components of the demo are:
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
 =======
-Warning
+Caution
 =======
 
 This demo uses real |ccloud| resources.
@@ -292,7 +292,7 @@ Teardown
       $ ./stop-docker.sh
 
 
-2. Delete all |cp| topics in CCloud that this demo used, including topics used for |c3|, Kafka Connect, ksqlDB, and Confluent Schema Registry. Warning: this may have unintended consequence of deleting topics that you wanted to keep.
+2. Delete all |cp| topics in CCloud that this demo used, including topics used for |c3|, Kafka Connect, ksqlDB, and Confluent Schema Registry. Caution: this may have unintended consequence of deleting topics that you wanted to keep.
 
    .. sourcecode:: bash
 
