@@ -5,8 +5,12 @@
 
 echo ====== Verifying prerequisites
 check_env || exit 1
-check_ccloud_version 1.0.0 || exit 1
-check_ccloud_logged_in || exit 1
+check_ccloud_version 1.0.0 \
+  && print_pass "ccloud version ok" \
+  || exit 1
+check_ccloud_logged_in \
+  && print_pass "logged into ccloud CLI" \
+  || exit 1
 check_jq || exit 1
 check_running_cp ${CONFLUENT} || exit 1
 if ! check_cp ; then

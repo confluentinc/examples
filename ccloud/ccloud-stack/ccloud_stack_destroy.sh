@@ -16,7 +16,7 @@ else
   CONFIG_FILE=$1
 fi
 
-read -p "This script with destroy the entire environment specified in $CONFIG_FILE.  Do you wish to proceed? [y/n] " -n 1 -r
+read -p "This script will destroy the entire environment specified in $CONFIG_FILE.  Do you wish to proceed? [y/n] " -n 1 -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
