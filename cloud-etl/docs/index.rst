@@ -110,7 +110,10 @@ Because this demo interacts with real resources in Kinesis, a destination storag
 
    .. code:: shell
 
-      $ cat $HOME/.ccloud/config
+      cat $HOME/.ccloud/config
+
+   Your output should resemble:
+
       bootstrap.servers=<BROKER ENDPOINT>
       ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
