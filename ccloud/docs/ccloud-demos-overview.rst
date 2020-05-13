@@ -5,7 +5,7 @@
 
 `Confluent Cloud <https://docs.confluent.io/current/cloud/index.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command-line interface that you can use to manage cluster resources, |ak| topics, |sr|, and other services.
 
-This repo has a few resources to help you validate your solutions on |ccloud|.
+This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
 
 =======
@@ -28,6 +28,8 @@ Demos
 --------------------------
 
 The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated version of the :ref:`Confluent Platform Quickstart <quickstart>`, but this one runs in |ccloud|.
+
+.. figure:: ../../cp-quickstart/images/quickstart.png
 
 Fully Managed Stack in |ccloud|
 -------------------------------
