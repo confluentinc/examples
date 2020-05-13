@@ -42,6 +42,7 @@ retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 print_pass "Confluent Cloud KSQL is UP"
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 
+ccloud kafka topic create _confluent-monitoring
 ccloud kafka topic create pageviews
 ccloud kafka topic create users
 
