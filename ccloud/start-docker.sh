@@ -4,42 +4,35 @@
 . ../utils/helper.sh
 
 echo ====== Verifying prerequisites
-check_jq || exit
+check_ccloud_version 1.0.0 \
+  && print_pass "ccloud version ok" \
+  || exit 1
+check_ccloud_logged_in \
+  && print_pass "logged into ccloud CLI" \
+  || exit 1
+check_jq \
+  && print_pass "jq installed" \
+  || exit 1
 
-# File with Confluent Cloud configuration parameters: example template
-#   $ cat ~/.ccloud/config
-#   bootstrap.servers=<BROKER ENDPOINT>
-#   ssl.endpoint.identification.algorithm=https
-#   security.protocol=SASL_SSL
-#   sasl.mechanism=PLAIN
-#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
-#   # Confluent Cloud Schema Registry
-#   basic.auth.credentials.source=USER_INFO
-#   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-#   schema.registry.url=https://<SR ENDPOINT>
-#   # Confluent Cloud KSQL
-#   ksql.endpoint=https://<KSQL ENDPOINT>
-#   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
-export CONFIG_FILE=~/.ccloud/config
-
+echo ====== Create new Confluent Cloud stack
+prompt_continue_cloud_demo || exit 1
+cloud_create_demo_stack true
+SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
+export CONFIG_FILE=$CONFIG_FILE
 check_ccloud_config $CONFIG_FILE || exit 1
-check_ccloud_version 0.264.0 || exit 1
-check_ccloud_logged_in || exit 1
-printf "Done\n\n"
-
-echo ====== Cleaning up previous run
-./stop-docker.sh
-printf "\nDone with cleanup\n\n"
 
 echo ====== Generate CCloud configurations
-SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
-./ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
+./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 printf "\n"
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+MAX_WAIT=720
+echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
+retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo ====== Set Kafka cluster and service account
@@ -90,5 +83,7 @@ printf "\n\n"
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1
 
-printf "\nDONE! Connect to your Confluent Cloud UI or Confluent Control Center at http://localhost:9021\n"
-
+printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ or Confluent Control Center at http://localhost:9021\n"
+echo
+echo "Local client configuration file written to $CONFIG_FILE"
+echo
