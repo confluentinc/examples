@@ -28,6 +28,9 @@ The best demo to start with is [cp-demo](https://github.com/confluentinc/cp-demo
 
 # Confluent Cloud
 
+Refer to the [ccloud/README.md](ccloud/README.md) for a more detailed explanation of each of these Confluent Cloud demos.
+There are many examples from full end-to-end demos that create connectors, streams, and KSQL queries in Confluent Cloud, to resources that help you build your own demos.
+
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
 | [Confluent Cloud CLI](ccloud/beginner-cloud/README.md#confluent-cloud-cli) |  Y  |  N  | Fully automated demo interacting with your Confluent Cloud cluster using Confluent Cloud CLI <br><img src="clients/cloud/images/confluent-cli.png" width="300">
