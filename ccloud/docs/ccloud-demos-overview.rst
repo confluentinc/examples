@@ -29,6 +29,8 @@ Demos
 
 The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated version of the :ref:`Confluent Platform Quickstart <quickstart>`, but this one runs in |ccloud|.
 
+.. figure:: ../../cp-quickstart/images/quickstart.png
+
 Fully Managed Stack in |ccloud|
 -------------------------------
 
