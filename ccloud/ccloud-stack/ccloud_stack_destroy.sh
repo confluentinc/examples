@@ -10,10 +10,17 @@ check_jq || exit 1
 check_ccloud_logged_in || exit 1
 
 if [ -z "$1" ]; then
-  echo "ERROR: Must supply argument that is the client configuration file created from './ccloud_stack_create.sh'. (Is it in stacks-config/ folder?) "
+  echo "ERROR: Must supply argument that is the client configuration file created from './ccloud_stack_create.sh'. (Is it in stack-configs/ folder?) "
   exit 1
 else
   CONFIG_FILE=$1
+fi
+
+read -p "This script will destroy the entire environment specified in $CONFIG_FILE.  Do you wish to proceed? [y/n] " -n 1 -r
+echo
+if [[ ! $REPLY =~ ^[Yy]$ ]]
+then
+  exit 1
 fi
 
 check_ccloud_config $CONFIG_FILE || exit 1
