@@ -30,7 +30,7 @@ The major components of the demo are:
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
 =======
-Warning
+Caution
 =======
 
 This demo uses real |ccloud| resources.
