@@ -28,9 +28,15 @@ echo ====== Create new Confluent Cloud stack
 prompt_continue_cloud_demo || exit 1
 cloud_create_demo_stack true
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
+  echo "ERROR: Could not determine SERVICE_ACCOUNT_ID from 'ccloud kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack."
+  exit 1
+fi
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
-check_ccloud_config $CONFIG_FILE || exit 1
+check_ccloud_config $CONFIG_FILE \
+  && print_pass "$CONFIG_FILE ok" \
+  || exit 1
 
 echo ====== Generate CCloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
@@ -49,9 +55,22 @@ echo ====== Installing kafka-connect-datagen
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
 printf "\n"
 
-echo ====== Starting local Kafka Connect
-confluent local start connect
+echo ====== Starting local ZooKeeper, Kafka Broker, Schema Registry, Connect
+confluent local start zookeeper
+sleep 2
+
+# Start local Kafka with Confluent Metrics Reporter configured for Confluent Cloud
 CONFLUENT_CURRENT=`confluent local current | tail -1`
+mkdir -p $CONFLUENT_CURRENT/kafka
+KAFKA_CONFIG=$CONFLUENT_CURRENT/kafka/server.properties
+cp $CONFLUENT_HOME/etc/kafka/server.properties $KAFKA_CONFIG
+cat $DELTA_CONFIGS_DIR/metrics-reporter.delta >> $KAFKA_CONFIG
+kafka-server-start $KAFKA_CONFIG > $CONFLUENT_CURRENT/kafka/server.stdout 2>&1 &
+echo $! > $CONFLUENT_CURRENT/kafka/kafka.pid
+echo "Waiting 30s for the local Kafka broker to be UP"
+sleep 30
+
+confluent local start connect
 printf "\n"
 
 echo ====== Set current Confluent Cloud 

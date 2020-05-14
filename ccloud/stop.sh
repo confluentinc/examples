@@ -2,6 +2,8 @@
 
 # Kill processes
 confluent local destroy
+rm -fr /tmp/kafka-logs
+rm -fr /tmp/control-center-logs
 jps | grep DataGen | awk '{print $1;}' | xargs kill -9
 jps | grep KsqlServerMain | awk '{print $1;}' | xargs kill -9
 jps | grep SchemaRegistry | awk '{print $1;}' | xargs kill -9
