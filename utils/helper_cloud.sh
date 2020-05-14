@@ -668,6 +668,11 @@ function cloud_create_demo_stack() {
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
   CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
+  if [[ "$CLUSTER" == "" ]] ; then
+    print_error "Kafka cluster id is empty"
+    echo "ERROR: Could not create cluster. Please troubleshoot"
+    exit 1
+  fi
   BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
 

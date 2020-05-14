@@ -16,6 +16,7 @@ check_ccloud_logged_in \
   && print_pass "logged into ccloud CLI" \
   || exit 1
 
+echo
 wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml
 
 echo ====== Confirm
@@ -26,7 +27,7 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit 1; fi
 
 echo
 echo ====== Create new Confluent Cloud stack
-cloud_create_demo_stack true
+cloud_create_demo_stack true || exit 1
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE

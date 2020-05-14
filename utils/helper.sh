@@ -447,7 +447,7 @@ function print_pass() {
 
 PRETTY_ERROR="\e[31m✘ \033\e[0m"
 function print_error() {
-  printf "${PRETTY_ERROR}${1}"
+  printf "${PRETTY_ERROR}${1}\n"
 }
 
 function exit_with_error()
