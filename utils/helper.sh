@@ -407,6 +407,18 @@ check_connector_status_running() {
   return 0
 }
 
+check_confluent_local_service_ready() {
+  SERVICE=$1
+
+  STATUS=$(confluent local status | grep "$SERVICE is" | grep UP)
+  echo "STATUS: $STATUS"
+  if [[ "$STATUS" == "" ]]; then
+    return 1
+  fi
+
+  return 0
+}
+
 # Converts properties file of key/value pairs into prefixed environment variables for Docker
 # Naming convention: convert properties file into env vars as uppercase and replace '.' with '_'
 # Inverse of env_to_props: https://github.com/confluentinc/confluent-docker-utils/blob/master/confluent/docker_utils/dub.py
