@@ -57,6 +57,8 @@ printf "\n"
 
 echo ====== Starting local ZooKeeper, Kafka Broker, Schema Registry, Connect
 confluent local start zookeeper
+sleep 2
+
 # Start local Kafka with Confluent Metrics Reporter configured for Confluent Cloud
 CONFLUENT_CURRENT=`confluent local current | tail -1`
 mkdir -p $CONFLUENT_CURRENT/kafka
@@ -65,6 +67,9 @@ cp $CONFLUENT_HOME/etc/kafka/server.properties $KAFKA_CONFIG
 cat $DELTA_CONFIGS_DIR/metrics-reporter.delta >> $KAFKA_CONFIG
 kafka-server-start $KAFKA_CONFIG > $CONFLUENT_CURRENT/kafka/server.stdout 2>&1 &
 echo $! > $CONFLUENT_CURRENT/kafka/kafka.pid
+echo "Waiting 30s for the local Kafka broker to be UP"
+sleep 30
+
 confluent local start connect
 printf "\n"
 

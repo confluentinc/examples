@@ -297,6 +297,8 @@ chmod $PERM $C3_DELTA
 METRICS_REPORTER_DELTA=$DEST/metrics-reporter.delta
 echo "$METRICS_REPORTER_DELTA"
 rm -f $METRICS_REPORTER_DELTA
+echo "metric.reporters=io.confluent.metrics.reporter.ConfluentMetricsReporter" >> $METRICS_REPORTER_DELTA
+echo "confluent.metrics.reporter.topic.replicas=3" >> $METRICS_REPORTER_DELTA
 while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -305,7 +307,6 @@ while read -r line
     fi
   fi
 done < "$CONFIG_FILE"
-echo "confluent.metrics.reporter.topic.replicas=3" >> $METRICS_REPORTER_DELTA
 chmod $PERM $METRICS_REPORTER_DELTA
 
 ################################################################################
