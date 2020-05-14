@@ -25,7 +25,7 @@ fi
 
 echo
 echo "Creating..."
-cloud_create_demo_stack $enable_ksql
+cloud_create_demo_stack $enable_ksql || exit 1
 
 echo
 echo "Validating..."

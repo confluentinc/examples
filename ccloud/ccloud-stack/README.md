@@ -63,6 +63,21 @@ ksql.endpoint=<KSQL ENDPOINT>
 ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
 ```
 
+## Advanced usage
+
+You may explicitly set the cloud provider and region. For example:
+
+```bash
+CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
+```
+
+Here are the variables and their default values:
+
+| Variable | Default |
+| --- | --- |
+| CLUSTER_CLOUD | aws |
+| CLUSTER_REGION | us-west-2 |
+
 ## Destroy
 
 To destroy the stack, pass the client properties file auto-generated in the step above:

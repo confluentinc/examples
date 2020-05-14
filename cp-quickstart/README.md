@@ -44,3 +44,19 @@ For additional examples that showcase streaming applications within an event str
 ```bash
 ./start-docker-cloud.sh
 ```
+
+### Advanced usage
+
+You may explicitly set the cloud provider and region. For example:
+
+```bash
+CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start-docker-cloud.sh
+```
+
+Here are the variables and their default values:
+
+| Variable | Default |
+| --- | --- |
+| CLUSTER_CLOUD | aws |
+| CLUSTER_REGION | us-west-2 |
+
