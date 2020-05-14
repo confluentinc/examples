@@ -20,7 +20,9 @@ cloud_create_demo_stack true
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
-check_ccloud_config $CONFIG_FILE || exit 1
+check_ccloud_config $CONFIG_FILE \
+  && print_pass "$CONFIG_FILE ok" \
+  || exit 1
 
 echo ====== Generate CCloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE

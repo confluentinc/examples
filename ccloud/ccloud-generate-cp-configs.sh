@@ -301,11 +301,11 @@ while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
     if [[ ${line:0:9} == 'bootstrap' || ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
-      echo "metrics.reporter.$line" >> $METRICS_REPORTER_DELTA
+      echo "confluent.metrics.reporter.$line" >> $METRICS_REPORTER_DELTA
     fi
   fi
 done < "$CONFIG_FILE"
-echo "metrics.reporter.topic.replicas=3" >> $METRICS_REPORTER_DELTA
+echo "confluent.metrics.reporter.topic.replicas=3" >> $METRICS_REPORTER_DELTA
 chmod $PERM $METRICS_REPORTER_DELTA
 
 ################################################################################
