@@ -45,7 +45,7 @@ For additional examples that showcase streaming applications within an event str
 ./start-docker-cloud.sh
 ```
 
-## Advanced usage
+### Advanced usage
 
 You may explicitly set the cloud provider and region. For example:
 
