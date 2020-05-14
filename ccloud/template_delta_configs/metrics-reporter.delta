@@ -1,0 +1,6 @@
+metrics.reporter.ssl.endpoint.identification.algorithm=https
+metrics.reporter.sasl.mechanism=PLAIN
+metrics.reporter.security.protocol=SASL_SSL
+metrics.reporter.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
+metrics.reporter.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+metrics.reporter.topic.replicas=3

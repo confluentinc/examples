@@ -28,6 +28,7 @@
 # - KSQL server
 # - Confluent Replicator (executable)
 # - Confluent Control Center
+# - Confluent Metrics Reporter
 # - Confluent REST Proxy
 # - Kafka Connect
 # - Kafka connector
@@ -289,6 +290,23 @@ do
   fi
 done < $SR_CONFIG_FILE
 chmod $PERM $C3_DELTA
+
+################################################################################
+# Confluent Metrics Reporter to Confluent Cloud
+################################################################################
+METRICS_REPORTER_DELTA=$DEST/metrics-reporter.delta
+echo "$METRICS_REPORTER_DELTA"
+rm -f $METRICS_REPORTER_DELTA
+while read -r line
+  do
+  if [[ ! -z $line && ${line:0:1} != '#' ]]; then
+    if [[ ${line:0:9} == 'bootstrap' || ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
+      echo "metrics.reporter.$line" >> $METRICS_REPORTER_DELTA
+    fi
+  fi
+done < "$CONFIG_FILE"
+echo "metrics.reporter.topic.replicas=3" >> $METRICS_REPORTER_DELTA
+chmod $PERM $METRICS_REPORTER_DELTA
 
 ################################################################################
 # Confluent REST Proxy to Confluent Cloud

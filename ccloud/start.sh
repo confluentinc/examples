@@ -49,9 +49,17 @@ echo ====== Installing kafka-connect-datagen
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
 printf "\n"
 
-echo ====== Starting local Kafka Connect
-confluent local start connect
+echo ====== Starting local ZooKeeper, Kafka Broker, Schema Registry, Connect
+confluent local start zookeeper
+# Start local Kafka with Confluent Metrics Reporter configured for Confluent Cloud
 CONFLUENT_CURRENT=`confluent local current | tail -1`
+mkdir -p $CONFLUENT_CURRENT/kafka
+KAFKA_CONFIG=$CONFLUENT_CURRENT/kafka/server.properties
+cp $CONFLUENT_HOME/etc/kafka/server.properties $KAFKA_CONFIG
+cat $DELTA_CONFIGS_DIR/metrics-reporter.delta >> $KAFKA_CONFIG
+kafka-server-start $KAFKA_CONFIG > $CONFLUENT_CURRENT/kafka/server.stdout 2>&1 &
+echo $! > $CONFLUENT_CURRENT/kafka/kafka.pid
+confluent local start connect
 printf "\n"
 
 echo ====== Set current Confluent Cloud 
