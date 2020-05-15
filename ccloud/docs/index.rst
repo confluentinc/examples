@@ -92,7 +92,7 @@ Run
       ccloud login --url https://confluent.cloud --save
 
 
-#. Start the entire demo by running a single command.  You have two choices: using a |cp| local install or Docker Compose. This will take several minutes to complete as it creates new resources in |ccloud|.
+#. Start the entire demo by running a single command.  You have two choices: using Docker Compose or a |cp| local install. This will take several minutes to complete as it creates new resources in |ccloud|.
 
    .. sourcecode:: bash
 
@@ -369,3 +369,11 @@ Stop Demo
       ./stop.sh
 
 #. Always verify that resources in |ccloud| have been destroyed.
+
+
+====================
+Additional Resources
+====================
+
+-  To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
+
