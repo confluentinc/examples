@@ -41,17 +41,17 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 Prerequisites
 =============
 
-#. The following are prerequisites for the demo:
+1. The following are prerequisites for the demo:
 
    -  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only. Do not use a production cluster.
    -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
    -  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
    -  jq
 
-#. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
+2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
 By default, the demo looks for this configuration file at ``~/.ccloud/config``.
 
-#. This demo has been validated with:
+3. This demo has been validated with:
 
    -  Docker version 17.06.1-ce
    -  Docker Compose version 1.14.0 with Docker Compose file format 2.1
