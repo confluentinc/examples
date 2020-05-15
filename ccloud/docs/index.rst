@@ -199,7 +199,7 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
 
    .. literalinclude:: ../connectors/submit_replicator_docker_config.sh
       :lines: 13-41
-      :emphasize-lines: 25
+      :emphasize-lines: 13
 
 #. Validate that messages are replicated from the local ``pageviews`` topic to the Confluent Cloud ``pageviews`` topic. From the Confluent Cloud UI, view messages in this topic.
 
