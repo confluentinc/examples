@@ -154,14 +154,6 @@ Playbook
 
      ccloud kafka topic list
 
-#. Get familiar with the |ccloud| CLI.  For example, create a new topic called ``test``, produce some messages to that topic, and then consume from that topic.
-
-   .. sourcecode:: bash
-
-     ccloud kafka topic create test
-     ccloud kafka topic produce test
-     ccloud kafka topic consume test -b
-
 #. View the ACLs associated to the service account <SERVICE ACCOUNT ID> that was created for this demo at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
 
    .. sourcecode:: bash
@@ -208,6 +200,29 @@ Playbook
         User:69995       | ALLOW      | READ             | GROUP    | _confluent            | PREFIXED  
         User:69995       | ALLOW      | CREATE           | GROUP    | _confluent            | PREFIXED  
 
+
+kafka-connect-datagen
+---------------------
+
+#. In the demo, view :devx-examples:`this code|ccloud/connectors/submit_datagen_pageviews_config.sh` which automatically loads the ``kafka-connect-datagen`` connector for the Kafka topic ``pageviews`` into the ``connect-local`` cluster, which is later replicated by |crep| into |ccloud| (more on |crep| later).
+
+   .. literalinclude:: ../connectors/submit_datagen_pageviews_config.sh
+      :lines: 13-29
+
+#. In |c3|, view the data in the ``pageviews`` topic in the local cluster.
+
+   .. figure:: images/topic_pageviews.png
+      :alt: image
+
+#. In the demo, view :devx-examples:`this code|ccloud/connectors/submit_datagen_users_config.sh` which automatically loads the ``kafka-connect-datagen`` connector for the Kafka topic ``users`` into the ``connect-cloud`` cluster.
+
+   .. literalinclude:: ../connectors/submit_datagen_users_config.sh
+      :lines: 13-29
+
+#. In |c3|, view the data in the ``users`` topic in |ccloud|.
+
+   .. figure:: images/topic_users.png
+      :alt: image
 
 
 KSQL
