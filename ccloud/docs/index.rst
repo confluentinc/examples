@@ -348,9 +348,9 @@ Troubleshooting the demo
 3. If you ran with Docker, then run `docker-compose logs | grep ERROR`.
 
 
-========
-Teardown
-========
+=========
+Stop Demo
+=========
 
 1. Stop the demo, destroy all resources in |ccloud| and local components.
 
