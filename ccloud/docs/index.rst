@@ -264,6 +264,11 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
    .. figure:: images/c3_clusters.png
       :alt: image
 
+#. In the demo, view :devx-examples:`this code|ccloud/docker-compose.yml` to see the ``connect-cloud`` connect cluster which is connected to |ccloud|.
+
+   .. literalinclude:: ../docker-compose.yml
+      :lines: 168-237
+
 #. Click on `replicator` to view the |crep| configuration. Notice that it is replicating the topic ``pageviews`` from the local Kafka cluster to |ccloud|.
 
    .. figure:: images/c3_replicator_config.png
