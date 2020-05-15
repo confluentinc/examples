@@ -41,22 +41,22 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 Prerequisites
 =============
 
-1. The following are prerequisites for the demo:
+#. The following are prerequisites for the demo:
 
--  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only. Do not use a production cluster.
--  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
--  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
--  jq
+   -  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only. Do not use a production cluster.
+   -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
+   -  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
+   -  jq
 
-2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
+#. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
 By default, the demo looks for this configuration file at ``~/.ccloud/config``.
 
-3. This demo has been validated with:
+#. This demo has been validated with:
 
--  Docker version 17.06.1-ce
--  Docker Compose version 1.14.0 with Docker Compose file format 2.1
--  Java version 1.8.0_162
--  MacOS 10.12
+   -  Docker version 17.06.1-ce
+   -  Docker Compose version 1.14.0 with Docker Compose file format 2.1
+   -  Java version 1.8.0_162
+   -  MacOS 10.12
 
 
 ========
@@ -320,7 +320,7 @@ Confluent Cloud Configurations
 
         ./ccloud-generate-cp-configs.sh
 
-#. If you ran this demo as `start-docker.sh`, the configuration is available in the :devx-examples:`docker-compose.yml file|ccloud/docker-compose.yml`.
+#. If you ran this demo as `start-docker.sh`, configurations for all the |cp| components are available in the :devx-examples:`docker-compose.yml file|ccloud/docker-compose.yml`.
 
    ::
 
@@ -339,10 +339,9 @@ Confluent Cloud Configurations
 Troubleshooting the demo
 ========================
 
-1. If you can't run the demo due to error messages such as "'ccloud' is not found" or "'ccloud' is not initialized", validate that you have access to an initialized, working |ccloud| cluster and you have locally installed |ccloud| CLI.
+#. If you ran with Docker, then run `docker-compose logs | grep ERROR`.
 
-
-2. To view log files, look in the current Confluent CLI temp directory (requires demo to be actively running):
+#. To view log files, look in the current Confluent CLI temp directory (requires demo to be actively running):
 
    .. sourcecode:: bash
 
@@ -352,14 +351,12 @@ Troubleshooting the demo
         # View log file per service, e.g. for the Kafka broker
         confluent local log kafka
 
-3. If you ran with Docker, then run `docker-compose logs | grep ERROR`.
-
 
 =========
 Stop Demo
 =========
 
-1. Stop the demo, destroy all resources in |ccloud| and local components.
+#. Stop the demo, destroy all resources in |ccloud| and local components.
 
    .. sourcecode:: bash
 
@@ -371,4 +368,4 @@ Stop Demo
       # For Confluent Platform local install using Confluent CLI
       ./stop.sh
 
-2. Always verify that resources in |ccloud| have been destroyed.
+#. Always verify that resources in |ccloud| have been destroyed.
