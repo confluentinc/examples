@@ -194,6 +194,10 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
    .. figure:: images/c3_replicator_config.png
       :alt: image
 
+# :devx-examples:`This code|ccloud/connectors/submit_replicator_docker_config.sh>` loads the |crep| connector:
+
+   .. literalinclude:: ../connectors/submit_replicator_docker_config.sh
+
 #. Validate that messages are replicated from the local ``pageviews`` topic to the Confluent Cloud ``pageviews`` topic. From the Confluent Cloud UI, view messages in this topic.
 
    .. figure:: images/cloud_pageviews_messages.png
