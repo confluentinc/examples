@@ -439,3 +439,10 @@ Stop
    .. code:: bash
 
       ./stop.sh
+
+
+====================
+Additional Resources
+====================
+
+-  To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
