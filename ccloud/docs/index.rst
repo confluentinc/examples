@@ -162,6 +162,8 @@ Playbook
 
    For example, if the service account ID were 69995, your output would resemble:
 
+   ::
+
         ServiceAccountId | Permission |    Operation     | Resource |         Name          |   Type    
       +------------------+------------+------------------+----------+-----------------------+----------+
         User:69995       | ALLOW      | WRITE            | TOPIC    | _confluent-monitoring | PREFIXED  
