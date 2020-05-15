@@ -272,6 +272,11 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
    .. figure:: images/cloud_pageviews_messages.png
       :alt: image
 
+#. View the Consumer Lag for |crep| from the |ccloud| UI. In ``Consumers`` view, click on ``connect-replicator``. Your output should resemble:
+
+   .. figure:: images/replicator_consumer_lag.png
+      :alt: image
+
 
 Confluent Schema Registry
 -------------------------
