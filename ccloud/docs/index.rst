@@ -195,11 +195,11 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
    .. figure:: images/c3_replicator_config.png
       :alt: image
 
-#. In the demo, :devx-examples:`this code|ccloud/connectors/submit_replicator_docker_config.sh>` loads the |crep| connector into the ``connect-cloud`` cluster. Notice that |crep| configuration sets ``confluent.topic.replication.factor=3``, which is required because the source cluster has ``replication.factor=1`` and |ccloud| requires ``replication.factor=3``:
+#. In the demo, :devx-examples:`this code|ccloud/connectors/submit_replicator_docker_config.sh` automatically loads the |crep| connector into the ``connect-cloud`` cluster. Notice that |crep| configuration sets ``confluent.topic.replication.factor=3``, which is required because the source cluster has ``replication.factor=1`` and |ccloud| requires ``replication.factor=3``:
 
    .. literalinclude:: ../connectors/submit_replicator_docker_config.sh
       :lines: 13-41
-      :emphasize-lines: 13
+      :emphasize-lines: 8
 
 #. Validate that messages are replicated from the local ``pageviews`` topic to the Confluent Cloud ``pageviews`` topic. From the Confluent Cloud UI, view messages in this topic.
 
