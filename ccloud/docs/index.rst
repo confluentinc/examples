@@ -185,7 +185,7 @@ Confluent Replicator copies data from a source Kafka cluster to a destination Ka
 In this demo, the source cluster is a local install of a self-managed cluster, and the destination cluster is |ccloud|.
 |crep| is replicating a Kafka topic from the local install to |ccloud|.
 
-#. |c3| is configured to manage the connect-cloud cluster running on port 8087, which is running a datagen connector and the |crep| connector. From the |c3| UI, view the connect clusters.
+#. |c3| is configured to manage a locally running connect cluster called ``connect-cloud`` running on port 8087, which is running a datagen connector and the |crep| connector. From the |c3| UI, view the connect clusters.
 
    .. figure:: images/c3_clusters.png
       :alt: image
@@ -195,7 +195,7 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
    .. figure:: images/c3_replicator_config.png
       :alt: image
 
-# :devx-examples:`This code|ccloud/connectors/submit_replicator_docker_config.sh>` loads the |crep| connector. Notice that |crep| configuration sets ``confluent.topic.replication.factor=3``, which is required because the source cluster has ``replication.factor=1`` and |ccloud| requires ``replication.factor=3``:
+#. In the demo, :devx-examples:`this code|ccloud/connectors/submit_replicator_docker_config.sh>` loads the |crep| connector into the ``connect-cloud`` cluster. Notice that |crep| configuration sets ``confluent.topic.replication.factor=3``, which is required because the source cluster has ``replication.factor=1`` and |ccloud| requires ``replication.factor=3``:
 
   .. literalinclude:: ../connectors/submit_replicator_docker_config.sh
      :emphasize-lines: 25
