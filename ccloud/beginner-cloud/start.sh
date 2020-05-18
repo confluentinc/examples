@@ -312,7 +312,7 @@ DATA=$( cat << EOF
   "config": {
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "kafka.topic": "$TOPIC3",
-    "quickstart": "pageviews"
+    "quickstart": "pageviews",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
