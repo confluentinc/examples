@@ -270,7 +270,7 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 # - Confluent Hub: https://www.confluent.io/hub/
 ##################################################
 
-TOPIC3=pageviews
+TOPIC3="demo-topic-3"
 
 echo -e "\n# Create a new Kafka topic $TOPIC3"
 echo "ccloud kafka topic create $TOPIC3"
@@ -304,15 +304,16 @@ echo "Waiting up to $MAX_WAIT seconds for Docker container for connect to be up"
 retry $MAX_WAIT check_connect_up connect-cloud || exit 1
 sleep 5
 
-echo -e "\n# Post the configuration for the kafka-connect-datagen connector that produces data to Confluent Cloud topic $TOPIC3"
+echo -e "\n# Post the configuration for the kafka-connect-datagen connector that produces pageviews data to Confluent Cloud topic $TOPIC3"
+CONNECTOR=datagen-$TOPIC3
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
-  "name": "datagen-$TOPIC3",
+  "name": "$CONNECTOR",
   "config": {
     "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
     "kafka.topic": "$TOPIC3",
-    "quickstart": "$TOPIC3",
+    "quickstart": "pageviews",
     "key.converter": "org.apache.kafka.connect.storage.StringConverter",
     "value.converter": "org.apache.kafka.connect.json.JsonConverter",
     "value.converter.schemas.enable": "false",
@@ -334,12 +335,12 @@ echo -e "\n\n# Wait 20 seconds for kafka-connect-datagen to start producing mess
 sleep 20
 
 echo -e "\n# Verify connector is running"
-echo "curl --silent http://localhost:8083/connectors/datagen-$TOPIC3/status"
-curl --silent http://localhost:8083/connectors/datagen-$TOPIC3/status
-STATE=$(curl --silent http://localhost:8083/connectors/datagen-$TOPIC3/status | jq -r '.connector.state')
+echo "curl --silent http://localhost:8083/connectors/$CONNECTOR/status"
+curl --silent http://localhost:8083/connectors/$CONNECTOR/status
+STATE=$(curl --silent http://localhost:8083/connectors/$CONNECTOR/status | jq -r '.connector.state')
 #echo $STATE
 if [[ "$STATE" != "RUNNING" ]]; then
-  echo "ERROR: datagaen-$TOPIC3 is not running.  Please troubleshoot the Docker logs."
+  echo "ERROR: connector $CONNECTOR is not running.  Please troubleshoot the Docker logs."
   exit $?
 fi
 
