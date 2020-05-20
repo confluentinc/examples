@@ -12,13 +12,13 @@ This page describes a few resources to help you build and validate your solution
 Caution
 =======
 
-All demos that connect to |ccloud| use real |ccloud| resources.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and ensure all resources are destroyed after you are done running it.
+All the following demos and examples use real |ccloud| resources.
+They create environments, clusters, topics, ACLs, service accounts, applications, and other resources.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and manually verify that all |ccloud| resources are destroyed after you are done.
 
 These demos are meant for development environments only.
 Do not run any demo against your production |ccloud| cluster.
-These scripts create environments, clusters, topics, ACLs, service accounts, applications, and other resources.
-The scripts provide functions to delete created resources; however, you should verify the deletion of all demo resources manually.
+
 
 =====
 Demos
