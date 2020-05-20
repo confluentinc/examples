@@ -5,6 +5,11 @@ Clickstream Data Analysis Pipeline Using ksqlDB
 
 These steps will guide you through how to setup your environment and run the clickstream analysis tutorial from a Docker container.
 
+.. figure:: images/clickstream_demo_flow.png
+   :alt: image
+
+
+
 .. include:: ../../../../quickstart/includes/docker-prereqs.rst
 
 - If you are using Linux as your host, for the Elasticsearch container to start successfully you must first run: 
