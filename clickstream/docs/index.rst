@@ -5,8 +5,8 @@ Clickstream Data Analysis Pipeline Using ksqlDB
 
 These steps will guide you through how to setup your environment and run the clickstream analysis tutorial from a Docker container.
 
- .. image:: images/clickstream_demo_flow.png
-     :alt: Clickstream Demo Flow
+.. figure:: images/clickstream_demo_flow.png
+   :alt: image
 
 
 
