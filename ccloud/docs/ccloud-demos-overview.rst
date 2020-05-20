@@ -185,7 +185,7 @@ You can chain these utilities to build your own demos.
 For example, let's say you want an easy way to test a connector not yet available in |ccloud|, or to build a |ak| demo in |ccloud| and run |crest| client or |c3| against your |ccloud| cluster.
 You can build a demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in these few easy steps.
 
-#. Create a fully-managed :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` of fully managed services in |ccloud|. One of the outputs is a local configuration file, e.g. ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config`` , with key-value pairs of the required connection values to |ccloud|.
+#. Create a :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` of fully managed services in |ccloud|. One of the outputs is a local configuration file, e.g. ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config`` , with key-value pairs of the required connection values to |ccloud|.
 
 #. Run the :ref:`configuration generation script <auto-generate-configs>`, passing in that local configuration file as input, e.g. ``./ccloud-generate-cp-configs.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It auto-generates delta configuration files for all |cp| components and clients. One of these delta configuration files is ``delta_configs/env.delta`` for environment variables, and it resembles :devx-examples:`this example|ccloud/template_delta_configs/env.delta`.
 
@@ -193,7 +193,7 @@ You can build a demo with a mix of fully-managed services in |ccloud| and self-m
 
 #. Run the desired |cp| services locally using :devx-cp-all-in-one:`this Docker-based example|cp-all-in-one-cloud`, e.g. ``docker-compose up -d``. The Docker Compose file launches |cp| services on your localhost and uses environment variable substitution to populate the parameters with the connection values to your |ccloud| so that they can communicate with |ccloud|.
 
-#. Refer to the :devx-examples:`library of functions|utils/helper_cloud.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
+#. Refer to the :devx-examples:`library of bash functions|utils/helper_cloud.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
 
 ====================
