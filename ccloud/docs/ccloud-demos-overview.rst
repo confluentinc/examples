@@ -185,13 +185,13 @@ You can chain these utilities to build your own demos.
 For example, let's say you want to build an |ak| demo with a mix of fully-managed services in |ccloud| and self-managed components (e.g. |c3| or |kconnect-long|) on your local host.
 Here are the steps you could take:
 
-#. Run the :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` to create a stack of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|.
+#. Run :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` to create a stack of fully managed services in |ccloud|. One of the outputs is a local configuration file, e.g. ```stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config`` , with key-value pairs of the required connection values to |ccloud|.
 
-#. Using the local configuration file as input, run the :ref:`configuration generation script <auto-generate-configs>` which reads the local configuration file and auto-generates delta configurations for all |cp| components and clients. One of these output files is ``delta_configs/env.delta`` of environment variables, and it will resemble :devx-examples:`this example|ccloud/template_delta_configs/env.delta`.
+#. Run the :ref:`configuration generation script <auto-generate-configs>`, passing in that local configuration file as input, e.g. ``./ccloud-generate-cp-configs.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It auto-generates delta configuration files for all |cp| components and clients. One of these delta configuration files is ``delta_configs/env.delta`` for environment variables, and it resembles :devx-examples:`this example|ccloud/template_delta_configs/env.delta`.
 
-#. Source that file ``env.delta`` to export variables into the shell environment.
+#. Source that file to export variables into the shell environment, e.g. ``source delta_configs/env.delta``.
 
-#. Run the desired |cp| services using :devx-cp-all-in-one:`this Docker-based example|cp-all-in-one-cloud`. The Docker Compose file launches |cp| services on your localhost and uses environment variable substitution to populate the parameters with the connection values to your |ccloud|.
+#. Run the desired |cp| services using :devx-cp-all-in-one:`this Docker-based example|cp-all-in-one-cloud`, e.g. ``docker-compose up -d``. The Docker Compose file launches |cp| services on your localhost and uses environment variable substitution to populate the parameters with the connection values to your |ccloud| so that they can communicate with |ccloud|.
 
 #. Refer to the :devx-examples:`library of functions|utils/helper_cloud.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
