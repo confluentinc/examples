@@ -123,16 +123,6 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 .. figure:: images/cloud-stack.png
 
 
-Self Managed Components to |ccloud| 
------------------------------------
-
-This :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud` can be used with |ccloud|.
-The ``docker-compose.yml`` launches all services in |cp| (except for the Kafka brokers), runs them in containers on localhost, and automatically configures them to connect to |ccloud|.
-Using this as a foundation, you can then add any connectors or applications.
-
-.. figure:: images/cp-all-in-one-cloud.png
-
-
 Auto-generate Configurations to connect to |ccloud|
 ---------------------------------------------------
 
@@ -178,12 +168,23 @@ Use these per-component configurations for |cp| components and clients connectin
   * ENV file
 
 
-Put It All Together
--------------------
+Self Managed Components to |ccloud|
+-----------------------------------
 
-You can chain these utilities to build your own demos.
-For example, let's say you want an easy way to test a connector not yet available in |ccloud|, or to build a |ak| demo in |ccloud| and run |crest| client or |c3| against your |ccloud| cluster.
-You can build a demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in these few easy steps.
+This :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud` can be used with |ccloud|.
+The ``docker-compose.yml`` launches all services in |cp| (except for the Kafka brokers), runs them in containers on localhost, and automatically configures them to connect to |ccloud|.
+Using this as a foundation, you can then add any connectors or applications.
+
+.. figure:: images/cp-all-in-one-cloud.png
+
+
+Hybrid |ccloud| and On-prem Demos
+---------------------------------
+
+You can chain these utilities to build your own hybrid demos that span |ccloud| and on-prem.
+For example, let's say you want an easy way to test an end-to-end workflow with a connector not yet available in |ccloud|.
+Or perhaps you want to build a |ak| demo in |ccloud| and run the |crest| client or |c3| against it.
+You can build a demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in a few easy steps.
 
 #. Create a :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` of fully managed services in |ccloud|. One of the outputs is a local configuration file, e.g. ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config`` , with key-value pairs of the required connection values to |ccloud|.
 
