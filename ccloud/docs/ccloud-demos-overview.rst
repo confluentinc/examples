@@ -182,7 +182,7 @@ Put It All Together
 -------------------
 
 You can chain these utilities to build your own demos.
-For example, let's say you want an easy way to test a connector not yet available in |ccloud|, or to build an |ak| demo in |ccloud| and run |crest| client or |c3| against your |ccloud| cluster.
+For example, let's say you want an easy way to test a connector not yet available in |ccloud|, or to build a |ak| demo in |ccloud| and run |crest| client or |c3| against your |ccloud| cluster.
 You can build a demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in these few easy steps.
 
 #. Create a fully-managed :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` of fully managed services in |ccloud|. One of the outputs is a local configuration file, e.g. ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config`` , with key-value pairs of the required connection values to |ccloud|.
