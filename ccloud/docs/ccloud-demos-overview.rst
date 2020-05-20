@@ -178,8 +178,8 @@ Using this as a foundation, you can then add any connectors or applications.
 .. figure:: images/cp-all-in-one-cloud.png
 
 
-Hybrid |ccloud| and On-prem Demos
----------------------------------
+Put It All Together
+-------------------
 
 You can chain these utilities to build your own hybrid demos that span |ccloud| and on-prem.
 For example, you want an easy way to test an end-to-end workflow with a connector not yet available in |ccloud|.
