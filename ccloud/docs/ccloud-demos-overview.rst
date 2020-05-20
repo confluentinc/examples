@@ -127,7 +127,7 @@ Self Managed Components to |ccloud|
 -----------------------------------
 
 This :devx-cp-all-in-one:`Docker-based environment|cp-all-in-one-cloud` can be used with |ccloud|.
-The ``docker-compose.yml`` launches all services in |cp| (except for the Kafka brokers), runs them in containers on your local host, and automatically configures them to connect to |ccloud|.
+The ``docker-compose.yml`` launches all services in |cp| (except for the Kafka brokers), runs them in containers on localhost, and automatically configures them to connect to |ccloud|.
 Using this as a foundation, you can then add any connectors or applications.
 
 .. figure:: images/cp-all-in-one-cloud.png
@@ -182,7 +182,7 @@ Put It All Together
 -------------------
 
 You can chain these utilities to build your own demos.
-For example, let's say you want to build an |ak| demo with a mix of fully-managed services in |ccloud| and self-managed components (e.g. |c3| or |kconnect-long|) on your local host.
+For example, let's say you want to build an |ak| demo with a mix of fully-managed services in |ccloud| and self-managed components (e.g. |c3| or |kconnect-long|) on localhost.
 Here are the steps you could take:
 
 #. Run :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` to create a stack of fully managed services in |ccloud|. One of the outputs is a local configuration file, e.g. ```stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config`` , with key-value pairs of the required connection values to |ccloud|.
