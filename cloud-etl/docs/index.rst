@@ -275,7 +275,7 @@ Validate
 
 #. This flow is the result of this set of :devx-examples:`ksqlDB statements|cloud-etl/statements.sql`. It generated a ksqlDB TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a ksqlDB TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``.
 
-   .. literalinclude:: ../connectors/statements.sql
+   .. literalinclude:: ../statements.sql
 
 #. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
 
