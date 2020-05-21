@@ -201,29 +201,33 @@ Run
 Validate
 --------
 
+#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`. For example, here is the :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json` used in the demo.
+
+   .. literalinclude:: ../connectors/kinesis.json
+
 #. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.
 
    .. code:: bash
 
-      ccloud connector list      
+      ccloud connector list
 
-   Sample output:
+   Your output should resemble:
 
    .. code:: bash
 
-           ID     |         Name         | Status  |  Type   
+           ID     |         Name         | Status  |  Type
       +-----------+----------------------+---------+--------+
-        lcc-knjgv | demo-KinesisSource   | RUNNING | source  
-        lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink    
-        lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink    
+        lcc-knjgv | demo-KinesisSource   | RUNNING | source
+        lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink
+        lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink
 
-#. The demo automatically created these connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`.  Describe any connector in more detail.
+#. Describe any running connector in more detail, in this case ``lcc-knjgv`` which corresponds to the the AWS Kinesis connector. 
 
    .. code:: bash
 
       ccloud connector describe lcc-knjgv
 
-   Sample output:
+   Your output should resemble:
 
    .. code:: bash
 
@@ -269,7 +273,11 @@ Validate
    .. figure:: images/flow.png
       :alt: image
 
-#. The demo's :devx-examples:`ksqlDB commands|cloud-etl/statements.sql` used ksqlDB's REST API to generate a ksqlDB TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a ksqlDB TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
+#. This flow is the result of this set of :devx-examples:`ksqlDB statements|cloud-etl/statements.sql`. It generated a ksqlDB TABLE ``COUNT_PER_SOURCE``, formatted as JSON, and its underlying Kafka topic is ``COUNT_PER_SOURCE``. It also generated a ksqlDB TABLE ``SUM_PER_SOURCE``, formatted as Avro, and its underlying Kafka topic is ``SUM_PER_SOURCE``.
+
+   .. literalinclude:: ../connectors/statements.sql
+
+#. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
 
    .. code:: bash
 
@@ -284,7 +292,7 @@ Validate
       EOF
       )
 
-   Sample output:
+   Your output should resemble:
 
    .. code:: bash
 
@@ -319,7 +327,7 @@ Validate
 
       curl --silent -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/SUM_PER_SOURCE-value/versions/latest | jq -r '.schema' | jq .
 
-   Sample output:
+   Your output should resemble:
 
    .. code:: json
 
@@ -348,13 +356,13 @@ Validate
       }
 
 
-#. View the data from Kinesis, |ak|, and cloud storage after running the demo.  Sample output shown below:
+#. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`provided script|cloud-etl/read-data.sh`.
 
    .. code:: bash
 
       ./read-data.sh
 
-   Sample output:
+   Your output should resemble:
 
    .. code:: shell
 
