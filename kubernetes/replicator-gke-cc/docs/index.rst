@@ -12,7 +12,7 @@ Overview
 
 This example features a deployment of `Confluent Platform <https://www.confluent.io/product/confluent-platform/>`__ on `Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`__ leveraging `Confluent Operator <https://docs.confluent.io/current/installation/operator/index.html>`__ and `Confluent Replicator <https://docs.confluent.io/current/connect/kafka-connect-replicator/index.html>`__, highlighting a data replication strategy to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.  
 
-If you'd like a primer on running |co-long| in GKE with lower resource requirements, see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
+If you'd like a primer on running |co-long| in GKE with lower resource requirements, see the :ref:`Confluent Platform on Google Kubernetes Engine demo <quickstart-demos-operator-gke>`.
 
 This demo is featured in the `Conquering Hybrid Cloud with Replicated Event-Driven Architectures blog post <https://www.confluent.io/blog/replicated-event-driven-architectures-for-hybrid-cloud-kafka/>`__ which provides more details on use cases for replicated event streaming architectures.
 

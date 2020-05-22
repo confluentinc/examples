@@ -651,9 +651,8 @@ Then create the following persistent queries:
 
    The following APIs will be helpful:
 
-   * https://docs.confluent.io/current/ksql/docs/developer-guide/create-a-stream.html#create-a-persistent-streaming-query-from-a-stream
-   * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#joining
-   * https://docs.confluent.io/current/ksql/docs/tutorials/examples.html#aggregating-windowing-and-sessionization
+   * https://docs.ksqldb.io/en/latest/developer-guide/create-a-stream/
+   * https://docs.ksqldb.io/en/latest/tutorials/examples/
 
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
