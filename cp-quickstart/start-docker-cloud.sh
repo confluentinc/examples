@@ -6,9 +6,6 @@
 #########################################
 
 NAME=`basename "$0"`
-LOG_FILE="$NAME.log"
-
-printf "\n>>>>>>>>>> starting %s @ %s >>>>>>>>>>\n\n" $NAME "$(date)" >> "$LOG_FILE"
 
 # Source library
 source ../utils/helper.sh
@@ -32,7 +29,6 @@ print_pass "Prerequisite check pass"
 	printf "\n"
 } 
 
-printf "\nThis demo writes a log file located at:\n\t%s\n" "$(cd $(dirname $LOG_FILE);echo $PWD)/$LOG_FILE"
 printf "\nFor your reference the demo will highlight some commands in "; print_code "code format"
 printf "\nFor example:\n"
 print_code_pass -c "successful command";
@@ -41,20 +37,20 @@ print_code_error -c "failed command" -m "failed command message"
 
 printf "\n====== Starting\n\n"
 
-(wget -q -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml | tee -a $LOG_FILE) \
-  && print_pass "retrieved docker-compose.yml from https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml" \
+wget -q -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml \
+  && print_pass "retrieved docker-compose.yml from https://github.com/confluentinc/cp-all-in-one/cp-all-in-one-cloud/docker-compose.yml" \
   || exit_with_error -c $? -n "$NAME" -m "could not obtain cp-all-in-one docker-compose.yml" -l $(($LINENO -2))
 
 printf "\n====== Creating new Confluent Cloud stack using the cloud_create_demo_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/helper_cloud.sh"
-(cloud_create_demo_stack true | tee -a $LOG_FILE) \
+cloud_create_demo_stack true  \
 	&& print_code_pass -c "ccloud_create_demo_stack true"
 
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name | split("-")[3]')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
-(check_ccloud_config $CONFIG_FILE | tee -a $LOG_FILE) || exit 1
+check_ccloud_config $CONFIG_FILE || exit 1
 
-(../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE | tee -a $LOG_FILE) \
+../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE \
 	&& print_code_pass -c "../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE"
 
 DELTA_CONFIGS=delta_configs/env.delta
@@ -92,7 +88,7 @@ $CMD \
 print_pass "Topics created"
  
 printf "\n====== Starting local connect cluster in Docker to generate simulated data\n"
-docker-compose up -d connect >> $LOG_FILE \
+docker-compose up -d connect \
   && print_code_pass -c "docker-compose up -d connect" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -2))
 
@@ -106,8 +102,8 @@ print_pass "Kafka Connect has started"
  
 printf "\n";print_process_start "====== Starting kafka-connect-datagen connectors to produce sample data."
 printf "\tSee https://www.confluent.io/hub/confluentinc/kafka-connect-datagen for more information\n"
-source ./connectors/submit_datagen_pageviews_config_cloud.sh >> $LOG_FILE 2>&1
-source ./connectors/submit_datagen_users_config_cloud.sh >> $LOG_FILE 2>&1
+source ./connectors/submit_datagen_pageviews_config_cloud.sh
+source ./connectors/submit_datagen_users_config_cloud.sh 
 printf "\nSleeping 30 seconds to give kafka-connect-datagen a chance to start producing messages\n"
 sleep 30
 
@@ -144,7 +140,6 @@ while read ksqlCmd; do # from docker-cloud-statements.sql
 EOF
 	))
 	echo "$response" | {
-		echo "$reponse" >> $LOG_FILE
 	  read body
 	  read code
 	  if [[ "$code" -gt 299 ]];
@@ -170,4 +165,3 @@ printf "\nTo view the Avro formatted data in the pageviews topic:\n\t";print_cod
 printf "\nConfluent Cloud KSQL is running and accruing charges. To destroy this demo, run and verify ->\n"
 printf "\t./stop-docker-cloud.sh $CONFIG_FILE\n"
 
-printf "\n<<<<<<<<<< exiting %s @ %s <<<<<<<<<<\n\n" $NAME "$(date)" >> "$NAME.log"

@@ -41,11 +41,11 @@ For additional examples that showcase streaming applications within an event str
 
 * Confluent Cloud is a similar quickstart to Confluent Platform. After logging into the `ccloud` CLI, run the command below and open your browser navigating to https://confluent.cloud. Be aware the demo creates real cloud resources and incurs charges.  This is for demonstration purposes and should only be used for development environments.
 
-* This demo also shows usage of the various data formats supported by Confluent Cloud, Schema Registry and ksqlDB.  The demo deploys a small ksqlDB application which builds streams and tables using Avro, Protobuf and JSON based formats.  The demo provides sample commands at the end of its startup showing how to consume Protobuf and Avro based data streams.
-
 ```bash
 ./start-docker-cloud.sh
 ```
+
+* This demo also shows usage of the various data formats supported by Confluent Cloud, Schema Registry and ksqlDB.  The demo deploys a [ksqlDB application](cp-quickstart/docker-cloud-statements.sql) which builds streams and tables using Avro, Protobuf and JSON based formats.  The demo provides sample commands at the end of its startup showing how to consume Protobuf and Avro based data streams.
 
 ### Advanced usage
 

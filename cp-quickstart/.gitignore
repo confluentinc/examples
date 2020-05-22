@@ -1,4 +1,4 @@
 docker-compose.yml
 connector_pageviews_cos.config
 connector_users_cos.config
-*.log
+
