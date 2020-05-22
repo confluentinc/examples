@@ -154,13 +154,12 @@ printf "\nksqlDB ready\n"
 printf "\nLocal client configuration file written to $CONFIG_FILE\n\n"
 
 printf "====== Verify\n"
-printf "If you have a local install of the Confluent Platform, you can run the following commands to view streaming data formatted in Avro and Protobuf. (If you do not have the tools, you can follow the Confluent Platform quick start to obtain them: https://docs.confluent.io/current/quickstart/ce-quickstart.html)\n"
 
-# Note: The values which are substituted here are sourced into the environment above
-#		where we call source ./delta_configs/env.delta
-printf "\nTo view the Protobuf formatted data in the users topic:\n\t";print_code "kafka-protobuf-console-consumer --consumer.config ./delta_configs/ak-tools-ccloud.delta --bootstrap-server $BOOTSTRAP_SERVERS --property schema.registry.url=$SCHEMA_REGISTRY_URL --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property basic.auth.credentials.source=USER_INFO --topic users"
+printf "\nHere are some sample commands you can run to view data streaming in Avro and Protobuf format with the Kafka console commands.\n"
 
-printf "\nTo view the Avro formatted data in the pageviews topic:\n\t";print_code "kafka-avro-console-consumer --consumer.config ./delta_configs/ak-tools-ccloud.delta --bootstrap-server $BOOTSTRAP_SERVERS --property schema.registry.url=$SCHEMA_REGISTRY_URL --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property basic.auth.credentials.source=USER_INFO --topic pageviews"
+printf "\nTo view the Protobuf formatted data in the users topic:\n\t";print_code "docker run -it --rm --mount type=bind,source="$(pwd)"/delta_configs/ak-tools-ccloud.delta,target=/opt/docker/ak-tools-ccloud.delta cnfldemos/cp-server-connect-datagen:$KAFKA_CONNECT_DATAGEN_DOCKER_TAG kafka-protobuf-console-consumer --consumer.config /opt/docker/ak-tools-ccloud.delta --bootstrap-server $BOOTSTRAP_SERVERS --property schema.registry.url=$SCHEMA_REGISTRY_URL --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property basic.auth.credentials.source=USER_INFO --topic users"
+
+printf "\nTo view the Avro formatted data in the pageviews topic:\n\t";print_code "docker run -it --rm --mount type=bind,source="$(pwd)"/delta_configs/ak-tools-ccloud.delta,target=/opt/docker/ak-tools-ccloud.delta cnfldemos/cp-server-connect-datagen:$KAFKA_CONNECT_DATAGEN_DOCKER_TAG kafka-avro-console-consumer --consumer.config /opt/docker/ak-tools-ccloud.delta --bootstrap-server $BOOTSTRAP_SERVERS --property schema.registry.url=$SCHEMA_REGISTRY_URL --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property basic.auth.credentials.source=USER_INFO --topic pageviews"
 
 printf "\nConfluent Cloud KSQL is running and accruing charges. To destroy this demo, run and verify ->\n"
 printf "\t./stop-docker-cloud.sh $CONFIG_FILE\n"
