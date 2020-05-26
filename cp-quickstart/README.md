@@ -39,7 +39,7 @@ For additional examples that showcase streaming applications within an event str
 
 ## Confluent Cloud
 
-* Confluent Cloud is a similar quickstart to Confluent Platform. After logging into the `ccloud` CLI, run the command below and open your browser navigating to https://confluent.cloud. Be aware the demo creates real cloud resources and incurs charges.  This is for demonstration purposes and should only be used for development environments.
+* This quickstart for Confluent Cloud is similar to those above for Confluent Platform. After logging into the `ccloud` CLI, run the command below and open your browser navigating to https://confluent.cloud. Be aware the demo creates real cloud resources and incurs charges.  This is for demonstration purposes and should only be used for development environments.
 
 ```bash
 ./start-docker-cloud.sh
