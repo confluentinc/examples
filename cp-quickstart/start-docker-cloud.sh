@@ -30,10 +30,6 @@ print_pass "Prerequisite check pass"
 } 
 
 printf "\nFor your reference the demo will highlight some commands in "; print_code "code format"
-printf "\nFor example:\n"
-print_code_pass -c "successful command";
-printf "\n"
-print_code_error -c "failed command" -m "failed command message"
 
 printf "\n====== Starting\n\n"
 
