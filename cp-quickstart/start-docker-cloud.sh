@@ -112,7 +112,7 @@ ksqlAppId=$(eval $CMD) \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
 printf "\nConfiguring ksqlDB ACLs\n"
-CMD="ccloud ksql app configure-acls $ksqlAppId pageviews users PAGEVIEWS_FEMALE pageviews_female_like_89"
+CMD="ccloud ksql app configure-acls $ksqlAppId pageviews users"
 $CMD \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
