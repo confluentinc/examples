@@ -49,11 +49,11 @@ check_ccloud_config $CONFIG_FILE || exit 1
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE \
 	&& print_code_pass -c "../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE"
 
-DELTA_CONFIGS=delta_configs/env.delta
-printf "\nSetting local environment based on values in $DELTA_CONFIGS\n"
-CMD="source $DELTA_CONFIGS"
+DELTA_CONFIGS_ENV=delta_configs/env.delta
+printf "\nSetting local environment based on values in $DELTA_CONFIGS_ENV\n"
+CMD="source $DELTA_CONFIGS_ENV"
 eval $CMD \
-    && print_code_pass -c "source $DELTA_CONFIGS" \
+    && print_code_pass -c "source $DELTA_CONFIGS_ENV" \
     || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
