@@ -567,6 +567,7 @@ function create_cloud_connector_acls() {
   ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
   ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --prefix --topic dlq-lcc
   ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --prefix --topic dlq-lcc
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --prefix --consumer-group connect-lcc
 
   return 0
 }
