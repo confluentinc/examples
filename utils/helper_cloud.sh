@@ -96,6 +96,15 @@ function check_cli_v2() {
   return 0
 }
 
+function check_psql() {
+  if [[ $(type psql 2>&1) =~ "not found" ]]; then
+    echo "psql is not found. Install psql and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_aws() {
   if [[ $(type aws 2>&1) =~ "not found" ]]; then
     echo "AWS CLI is not found. Install AWS CLI and try again"
