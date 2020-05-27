@@ -18,9 +18,9 @@ check_aws_rds_db_ready() {
 
   STATUS=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER | jq -r ".DBInstances[0].DBInstanceStatus")
   if [[ "$STATUS" -eq "available" ]]; then
-    return 1
+    return 0
   fi
-  return 0
+  return 1
 }
 
 #################################################################
@@ -43,22 +43,24 @@ MAX_WAIT=1200
 echo
 echo "Waiting up to $MAX_WAIT seconds for AWS RDS PostgreSQL database to be available"
 retry $MAX_WAIT check_aws_rds_db_ready "confluentdemo" || exit 1
+print_pass "Database confluentdemo is available"
 
 CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier confluentdemo | jq -r ".DBInstances[0].Endpoint.Address")
 CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier confluentdemo | jq -r ".DBInstances[0].Endpoint.Port")
 
+echo "Creating eventLogs.sql"
 echo "CREATE TABLE eventLogs (eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);" > eventLogs.sql
 for row in $(jq -r '.[] .Data' eventLogs.json); do
-  read eventSourceIP eventAction result eventDuration <<(echo $(echo "$row" | jq -r '.eventSourceIP, .eventAction, .result, .eventDuration'))
+  read -r eventSourceIP eventAction result eventDuration <<<"$(echo "$row" | jq -r '"\(.eventSourceIP) \(.eventAction) \(.result) \(.eventDuration)"')"
   echo "insert into eventLogs (eventSourceIP, eventAction, result, eventDuration) values ('$eventSourceIP', '$eventAction', '$result', $eventDuration);" >> eventLogs.sql
 done
+print_pass "eventLogs.sql created"
 
-psql \
+PGPASSWORD=pg12345678 psql \
    --file eventLogs.sql \
    --host $CONNECTION_HOST \
    --port $CONNECTION_PORT \
    --username pg \
-   --password pg12345678 \
    --dbname confluentdemo
 
 exit 0
