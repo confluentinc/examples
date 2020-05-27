@@ -652,6 +652,7 @@ Then create the following persistent queries:
    The following APIs will be helpful:
 
    * https://docs.ksqldb.io/en/latest/developer-guide/create-a-stream/
+   * https://docs.ksqldb.io/en/latest/tutorials/examples/#joining
    * https://docs.ksqldb.io/en/latest/tutorials/examples/
 
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
