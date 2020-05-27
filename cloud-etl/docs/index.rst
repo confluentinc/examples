@@ -30,19 +30,20 @@ End-to-end Streaming ETL
 
 This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
--  Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in |ccloud|
+-  Cloud source connectors: writes data from a cloud service to Kafka topics in |ccloud|, one of:
 
    - :ref:`cc_kinesis-source`
+   - :ref:`cc_postgresql-source`
 
--  ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
-
-   - `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
-
--  Cloud storage sink connector: writes data from Kafka topics to cloud storage, one of:
+-  Cloud sink connectors: writes data from Kafka topics in |ccloud| to cloud storage, one of:
 
    - :ref:`cc_azure_blob_sink`
    - :ref:`cc_gcs_connect_sink`
    - :ref:`cc_s3_connect_sink`
+
+-  ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
+
+   - `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
 
 -  |sr-ccloud|: for centralized management of schemas and checks compatibility as schemas evolve 
 
@@ -55,14 +56,14 @@ The data set is a stream of log messages, which in this demo is mock data captur
 +-----------------------+-----------------------+-----------------------+
 | Component             | Consumes From         | Produces To           |
 +=======================+=======================+=======================+
-| Kinesis source        | Kinesis stream        | Kafka topic           |
-| connector             | ``demo-logs``         | ``eventLogs``         |
+| Kinesis/PostgreSQL    | Kinesis stream or     | Kafka topic           |
+| source connector      | RDS table             | ``eventLogs``         |
 +-----------------------+-----------------------+-----------------------+
 | ksqlDB                | ``eventLogs``         | ksqlDB streams and    |
 |                       |                       | tables                |
 +-----------------------+-----------------------+-----------------------+
-| GCS/S3/Blob sink      | ksqlDB tables         | GCS/S3/Blob           |
-| connector             | ``COUNT_PER_SOURCE``, |                       |
+| GCS/S3/Blob           | ksqlDB tables         | GCS/S3/Blob           |
+| sink connector        | ``COUNT_PER_SOURCE``, |                       |
 |                       | ``SUM_PER_SOURCE``    |                       |
 +-----------------------+-----------------------+-----------------------+
 
@@ -70,7 +71,7 @@ The data set is a stream of log messages, which in this demo is mock data captur
 Caution
 =======
 
-This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis, and one of the cloud storage providers.
+This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS, and one of the cloud storage providers.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 =============
@@ -89,7 +90,7 @@ Local Tools
 
 -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
--  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis and (optional) if destination is AWS S3
+-  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
@@ -104,7 +105,7 @@ Run the Demo
 Setup
 -----
 
-Because this demo interacts with real resources in Kinesis, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
+Because this demo interacts with real resources in Kinesis or RDS, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
 #. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges.
 
@@ -123,7 +124,7 @@ Because this demo interacts with real resources in Kinesis, a destination storag
      cd cloud-etl
 
 
-#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis.  Also set the required parameters for the respective destination cloud storage provider:
+#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis or RDS.  Also set the required parameters for the respective destination cloud storage provider:
 
    - GCP GCS
 
