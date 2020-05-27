@@ -54,17 +54,19 @@ ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 
 #################################################################
-# Source: create and populate Kinesis streams and create connectors
+# Source: create and populate source endpoints
 #################################################################
-echo -e "\nSource: create and populate Kinesis streams and create connectors\n"
-./create_kinesis_streams.sh || exit 1
+echo -e "\nSource: setup $DATA_SOURCE and populate data\n"
+./create_${DATA_SOURCE}.sh || exit 1
 
+#################################################################
 # Create input topic and create source connector
+#################################################################
 ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $AWS_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $AWS_PROFILE)
-create_connector_cloud connectors/kinesis.json || exit 1
-wait_for_connector_up connectors/kinesis.json 240 || exit 1
+create_connector_cloud connectors/${DATA_SOURCE}.json || exit 1
+wait_for_connector_up connectors/${DATA_SOURCE}.json 240 || exit 1
 
 #################################################################
 # Confluent Cloud KSQL application
