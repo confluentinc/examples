@@ -653,7 +653,7 @@ Then create the following persistent queries:
 
    * https://docs.ksqldb.io/en/latest/developer-guide/create-a-stream/
    * https://docs.ksqldb.io/en/latest/tutorials/examples/#joining
-   * https://docs.ksqldb.io/en/latest/tutorials/examples/
+   * https://docs.ksqldb.io/en/latest/tutorials/examples/#aggregating-windowing-and-sessionization
 
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
