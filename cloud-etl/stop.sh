@@ -15,7 +15,8 @@ fi
 echo "Clean up AWS RDS"
 aws rds delete-db-instance \
     --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
-    --skip-final-snapshot > /dev/null
+    --skip-final-snapshot \
+    --profile $AWS_PROFILE > /dev/null
 
 echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then

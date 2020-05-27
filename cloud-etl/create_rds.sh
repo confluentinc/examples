@@ -49,7 +49,7 @@ aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.
 
 echo "Creating eventLogs.sql"
 rm -fr eventLogs.sql
-timestamp="1590510745323"
+timestamp="2020-05-27 05:31:41.123595505+00:00"
 for row in $(jq -r '.[] .Data' eventLogs.json); do
   read -r eventSourceIP eventAction result eventDuration <<<"$(echo "$row" | jq -r '"\(.eventSourceIP) \(.eventAction) \(.result) \(.eventDuration)"')"
   echo -e "$timestamp\t$eventSourceIP\t$eventAction\t$result\t$eventDuration" >> eventLogs.sql
@@ -63,7 +63,7 @@ PGPASSWORD=pg12345678 psql \
    --port $CONNECTION_PORT \
    --username pg \
    --dbname $DB_INSTANCE_IDENTIFIER \
-   --command "CREATE TABLE eventLogs (timestamp VARCAR(255), eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);"
+   --command "CREATE TABLE eventLogs (timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);"
 echo "Populate table eventLogs"
 PGPASSWORD=pg12345678 psql \
    --host $CONNECTION_HOST \
