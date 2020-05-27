@@ -84,7 +84,7 @@ echo -e "\nSleeping 60 seconds waiting for data to be sent to $DESTINATION_STORA
 sleep 60
 ./read-data.sh
 
-printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ or Confluent Control Center at http://localhost:9021\n"
+printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/\n"
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
 echo

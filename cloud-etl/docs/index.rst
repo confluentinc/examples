@@ -116,7 +116,7 @@ Because this demo interacts with real resources in Kinesis, a destination storag
      cd examples
      git checkout |release|-post
 
-#. Change directory to the |ccloud| demo.
+#. Change directory to the ``cloud-etl`` demo.
 
    .. sourcecode:: bash
 
