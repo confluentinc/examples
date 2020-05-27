@@ -57,6 +57,7 @@ ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 # Source: create and populate source endpoints
 #################################################################
 echo -e "\nSource: setup $DATA_SOURCE and populate data\n"
+create_cloud_connector_acls $SERVICE_ACCOUNT_ID
 ./create_${DATA_SOURCE}.sh || exit 1
 
 #################################################################

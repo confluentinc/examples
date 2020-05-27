@@ -55,8 +55,8 @@ for row in $(jq -r '.[] .Data' eventLogs.json); do
 done
 
 echo "Create table eventLogs"
-CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER | jq -r ".DBInstances[0].Endpoint.Address")
-CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER | jq -r ".DBInstances[0].Endpoint.Port")
+export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER | jq -r ".DBInstances[0].Endpoint.Address")
+export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER | jq -r ".DBInstances[0].Endpoint.Port")
 PGPASSWORD=pg12345678 psql \
    --host $CONNECTION_HOST \
    --port $CONNECTION_PORT \

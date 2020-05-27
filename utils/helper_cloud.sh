@@ -561,6 +561,16 @@ function ccloud_cli_get_service_account() {
   return 0
 }
 
+function create_cloud_connector_acls() {
+  serviceAccount=$1
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --prefix --topic dlq-lcc
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --prefix --topic dlq-lcc
+
+  return 0
+}
+
 function create_c3_acls() {
   serviceAccount=$1
 
