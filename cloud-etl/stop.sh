@@ -6,12 +6,17 @@
 # Source demo-specific configurations
 source config/demo.cfg
 
-# Clean up AWS Kinesis and cloud storage
 echo "Clean up AWS Kinesis"
 aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --profile $AWS_PROFILE > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
   aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --profile $AWS_PROFILE
 fi
+
+echo "Clean up AWS RDS"
+aws rds delete-db-instance \
+    --db-instance-identifier confluentdemo \
+    --skip-final-snapshot
+
 echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
   aws s3 rm --recursive s3://$S3_BUCKET/topics/${KAFKA_TOPIC_NAME_OUT1} --region $STORAGE_REGION --profile $S3_PROFILE
