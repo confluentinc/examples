@@ -17,7 +17,7 @@ check_aws_rds_db_ready() {
   DB_INSTANCE_IDENTIFIER=$1
 
   STATUS=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER | jq -r ".DBInstances[0].DBInstanceStatus")
-  if [[ "$STATUS" -eq "available" ]]; then
+  if [[ "$STATUS" == "available" ]]; then
     return 0
   fi
   return 1
@@ -56,7 +56,7 @@ for row in $(jq -r '.[] .Data' eventLogs.json); do
   echo -e "$eventSourceIP\t$eventAction\t$result\t$eventDuration" >> eventLogs.sql
 done
 
-echo "Connecting to database to create table eventLogs"
+echo "Create table eventLogs"
 CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier confluentdemo | jq -r ".DBInstances[0].Endpoint.Address")
 CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier confluentdemo | jq -r ".DBInstances[0].Endpoint.Port")
 PGPASSWORD=pg12345678 psql \
@@ -65,7 +65,7 @@ PGPASSWORD=pg12345678 psql \
    --username pg \
    --dbname confluentdemo \
    --command "CREATE TABLE eventLogs (eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);"
-echo "Connecting to database to populate table eventLogs"
+echo "Populate table eventLogs"
 PGPASSWORD=pg12345678 psql \
    --host $CONNECTION_HOST \
    --port $CONNECTION_PORT \

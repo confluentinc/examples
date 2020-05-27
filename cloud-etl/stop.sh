@@ -15,7 +15,7 @@ fi
 echo "Clean up AWS RDS"
 aws rds delete-db-instance \
     --db-instance-identifier confluentdemo \
-    --skip-final-snapshot
+    --skip-final-snapshot > /dev/null
 
 echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
