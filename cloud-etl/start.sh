@@ -6,26 +6,48 @@
 # Source library
 . ../utils/helper.sh
 
+check_ccloud_version 1.0.0 \
+  && print_pass "ccloud version ok" \
+  || exit 1
+check_ccloud_logged_in \
+  && print_pass "logged into ccloud CLI" \
+  || exit 1
+check_python \
+  && print_pass "python installed" \
+  || exit 1
+
 # Source demo-specific configurations
 source config/demo.cfg
 
-check_ccloud_config $CONFIG_FILE || exit 1
-check_ccloud_version 0.255.0 || exit 1
-check_ccloud_logged_in || exit 1
-check_python || exit 1
+validate_cloud_storage config/demo.cfg \
+  && print_pass "cloud storage validated" \
+  || exit 1
 
-validate_cloud_storage config/demo.cfg || exit 1
+echo ====== Create new Confluent Cloud stack
+prompt_continue_cloud_demo || exit 1
+cloud_create_demo_stack true
+SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
+  echo "ERROR: Could not determine SERVICE_ACCOUNT_ID from 'ccloud kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack."
+  exit 1
+fi
+CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
+export CONFIG_FILE=$CONFIG_FILE
+check_ccloud_config $CONFIG_FILE \
+  && print_pass "$CONFIG_FILE ok" \
+  || exit 1
 
-./stop.sh || exit 1
-
-#################################################################
-# Generate CCloud configurations
-#################################################################
+echo ====== Generate CCloud configurations
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
+
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
+printf "\n"
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+MAX_WAIT=720
+echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
+retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
 
 # Set Kafka cluster
@@ -62,4 +84,7 @@ echo -e "\nSleeping 60 seconds waiting for data to be sent to $DESTINATION_STORA
 sleep 60
 ./read-data.sh
 
-echo -e "\nDONE!\n"
+printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ or Confluent Control Center at http://localhost:9021\n"
+echo
+echo "Local client configuration file written to $CONFIG_FILE"
+echo
