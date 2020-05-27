@@ -32,6 +32,16 @@ else
   az storage blob delete-batch --source $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --pattern "topics/${KAFKA_TOPIC_NAME_OUT2}/*"
 fi
 
+# Delete connectors		
+ for f in connectors/*.json; do		
+   connector=$(cat $f | jq -r .name)		
+   connectorId=$(ccloud connector list | grep $connector | awk '{print $1}')		
+   if [[ "$connectorId" != "" ]]; then		
+     echo "Deleting connector $connector with id $connectorId"		
+     ccloud connector delete $connectorId		
+   fi		
+done
+
 # Destroy Confluent Cloud resources
 if [ -z "$1" ]; then
   echo "ERROR: Must supply argument that is the client configuration file created from './start.sh'. (Is it in stack-configs/ folder?) "

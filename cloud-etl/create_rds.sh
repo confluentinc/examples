@@ -47,15 +47,15 @@ SECURITY_GROUP=$(aws rds describe-db-instances --db-instance-identifier $DB_INST
 aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all
 aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all
 
-echo "Creating eventLogs.sql"
-rm -fr eventLogs.sql
+echo "Creating $KAFKA_TOPIC_NAME_IN.sql"
+rm -fr $KAFKA_TOPIC_NAME_IN.sql
 timestamp="2020-05-27 05:31:41.123595505+00:00"
-for row in $(jq -r '.[] .Data' eventLogs.json); do
+for row in $(jq -r '.[] .Data' $KAFKA_TOPIC_NAME_IN.json); do
   read -r eventSourceIP eventAction result eventDuration <<<"$(echo "$row" | jq -r '"\(.eventSourceIP) \(.eventAction) \(.result) \(.eventDuration)"')"
-  echo -e "$timestamp\t$eventSourceIP\t$eventAction\t$result\t$eventDuration" >> eventLogs.sql
+  echo -e "$timestamp\t$eventSourceIP\t$eventAction\t$result\t$eventDuration" >> $KAFKA_TOPIC_NAME_IN.sql
 done
 
-echo "Create table eventLogs"
+echo "Create table $KAFKA_TOPIC_NAME_IN"
 export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
 export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
 PGPASSWORD=pg12345678 psql \
@@ -63,14 +63,14 @@ PGPASSWORD=pg12345678 psql \
    --port $CONNECTION_PORT \
    --username pg \
    --dbname $DB_INSTANCE_IDENTIFIER \
-   --command "CREATE TABLE eventLogs (timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);"
-echo "Populate table eventLogs"
+   --command "CREATE TABLE $KAFKA_TOPIC_NAME_IN (timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);"
+echo "Populate table $KAFKA_TOPIC_NAME_IN"
 PGPASSWORD=pg12345678 psql \
    --host $CONNECTION_HOST \
    --port $CONNECTION_PORT \
    --username pg \
    --dbname $DB_INSTANCE_IDENTIFIER \
-   --command "\copy eventLogs from 'eventLogs.sql';"
+   --command "\copy $KAFKA_TOPIC_NAME_IN from '$KAFKA_TOPIC_NAME_IN.sql';"
 print_pass "AWS RDS database ready"
 
 exit 0

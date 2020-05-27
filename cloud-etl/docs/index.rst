@@ -51,15 +51,15 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 Data Flow
 ---------
 
-The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventLogs.json|cloud-etl/eventLogs.json`.
+The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventlogs.json|cloud-etl/eventlogs.json`.
 
 +-----------------------+-----------------------+-----------------------+
 | Component             | Consumes From         | Produces To           |
 +=======================+=======================+=======================+
 | Kinesis/PostgreSQL    | Kinesis stream or     | Kafka topic           |
-| source connector      | RDS table             | ``eventLogs``         |
+| source connector      | RDS table             | ``eventlogs``         |
 +-----------------------+-----------------------+-----------------------+
-| ksqlDB                | ``eventLogs``         | ksqlDB streams and    |
+| ksqlDB                | ``eventlogs``         | ksqlDB streams and    |
 |                       |                       | tables                |
 +-----------------------+-----------------------+-----------------------+
 | GCS/S3/Blob           | ksqlDB tables         | GCS/S3/Blob           |
@@ -251,7 +251,7 @@ Validate
         kafka.region        | us-west2                                                 
         tasks.max           |                                                       1  
         aws.secret.key.id   | ****************                                         
-        kafka.topic         | eventLogs                                                
+        kafka.topic         | eventlogs                                                
         kafka.api.key       | ****************                                         
         kinesis.position    | TRIM_HORIZON                                             
         kinesis.region      | us-west-2                                                
@@ -374,8 +374,8 @@ Validate
       {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
       {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
    
-      Data from Kafka topic eventLogs:
-      confluent local consume eventLogs -- --cloud --from-beginning --property print.key=true --max-messages 10
+      Data from Kafka topic eventlogs:
+      confluent local consume eventlogs -- --cloud --from-beginning --property print.key=true --max-messages 10
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
