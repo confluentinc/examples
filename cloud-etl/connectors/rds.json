@@ -11,6 +11,7 @@
     "connection.user": "pg",
     "connection.password": "pg12345678",
     "db.name": "$DB_INSTANCE_IDENTIFIER",
+    "timestamp.column.name": "timestamp",
     "table.whitelist": "eventLogs",
     "data.format": "JSON"
 }
