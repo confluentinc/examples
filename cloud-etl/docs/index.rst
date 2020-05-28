@@ -378,7 +378,7 @@ Validate
 
    .. code:: bash
 
-      ./read-data.sh
+      ./read-data.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
    Your output should resemble:
 
