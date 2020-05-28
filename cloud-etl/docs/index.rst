@@ -6,8 +6,16 @@
 Cloud ETL Demo
 ==============
 
+As enterprises move more and more of their applications to the cloud, they are also moving their on-prem ETL (extract, transform, load) pipelines to the cloud, as well as building new ones.
 This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream or AWS RDS Postgres database into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+
+.. figure:: images/cloud-etl.png
+   :alt: image
+
+There are many powerful use cases for these real-time cloud ETL pipelines, and this demo showcases one such use case—a log ingestion pipeline that spans multiple cloud providers.
+Using |ccloud| CLI, the demo creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS Postgres database into |ccloud|.
+Then it creates a |ccloud| ksqlDB application that processes that data.
+Finally, a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: images/topology.png
    :alt: image
