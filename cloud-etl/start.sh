@@ -66,6 +66,10 @@ create_cloud_connector_acls $SERVICE_ACCOUNT_ID
 ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $AWS_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $AWS_PROFILE)
+if [[ "${DATA_SOURCE}" == "rds" ]]; then
+  export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
+  export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
+fi
 create_connector_cloud connectors/${DATA_SOURCE}.json || exit 1
 wait_for_connector_up connectors/${DATA_SOURCE}.json 240 || exit 1
 

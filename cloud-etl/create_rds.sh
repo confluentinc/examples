@@ -38,8 +38,7 @@ aws rds create-db-instance \
     --profile $AWS_PROFILE > /dev/null
 status=$?
 if [[ "$status" != 0 ]]; then
-  echo "ERROR: Could not create database, troubleshoot and try again"
-  exit 1
+  echo "WARNING: Could not create database, troubleshoot and try again"
 fi
 
 MAX_WAIT=1200
