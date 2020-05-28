@@ -24,7 +24,7 @@ check_aws_rds_db_ready() {
 #################################################################
 # Source: create and populate AWS RDS database
 #################################################################
-echo "Creating AWS RDS Postgres database"
+echo "Creating AWS RDS PostgreSQL database"
 aws rds create-db-instance \
     --db-name $DB_INSTANCE_IDENTIFIER \
     --db-instance-identifier $DB_INSTANCE_IDENTIFIER \

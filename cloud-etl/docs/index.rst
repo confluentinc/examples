@@ -13,7 +13,7 @@ This demo showcases a cloud ETL solution leveraging all fully-managed services o
    :alt: image
 
 There are many powerful use cases for these real-time cloud ETL pipelines, and this demo showcases one such use case—a log ingestion pipeline that spans multiple cloud providers.
-Using |ccloud| CLI, the demo creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS Postgres database into |ccloud|.
+Using |ccloud| CLI, the demo creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS PostgreSQL database into |ccloud|.
 Then it creates a |ccloud| ksqlDB application that processes that data.
 Finally, a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
@@ -73,7 +73,7 @@ It resembles this:
 | Component             | Consumes From         | Produces To           |
 +=======================+=======================+=======================+
 | Kinesis/PostgreSQL    | Kinesis stream or     | Kafka topic           |
-| source connector      | RDS Postgres table    | ``eventlogs``         |
+| source connector      | RDS PostgreSQL table  | ``eventlogs``         |
 +-----------------------+-----------------------+-----------------------+
 | ksqlDB                | ``eventlogs``         | ksqlDB streams and    |
 |                       |                       | tables                |
@@ -87,7 +87,7 @@ It resembles this:
 Caution
 =======
 
-This ``cloud-etl`` demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS Postgres, and one of the cloud storage providers.
+This ``cloud-etl`` demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS PostgreSQL, and one of the cloud storage providers.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 =============
@@ -105,7 +105,7 @@ Local Tools
 
 -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
--  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS Postgres, and (optional) if destination is AWS S3
+-  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
@@ -120,7 +120,7 @@ Run the Demo
 Setup
 -----
 
-Because this demo interacts with real resources in Kinesis or RDS Postgres, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
+Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
 #. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges so carefully evaluate the cost of resources before launching the demo.
 
@@ -148,7 +148,7 @@ Because this demo interacts with real resources in Kinesis or RDS Postgres, a de
      - ``KINESIS_REGION``
      - ``AWS_PROFILE``
 
-   - AWS RDS (Postgres)
+   - AWS RDS (PostgreSQL)
 
      - ``DATA_SOURCE='rds'``
      - ``DB_INSTANCE_IDENTIFIER``
@@ -237,7 +237,7 @@ Connectors
 #. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
 
    - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
-   - :devx-examples:`Postgres source connector configuration file|cloud-etl/connectors/rds.json`
+   - :devx-examples:`PostgreSQL source connector configuration file|cloud-etl/connectors/rds.json`
    - :devx-examples:`GCS sink connector configuration file|cloud-etl/connectors/gcs_no_avro.json`
    - :devx-examples:`GCS sink connector with Avro configuration file|cloud-etl/connectors/gcs_avro.json`
    - :devx-examples:`S3 sink connector configuration file|cloud-etl/connectors/s3_no_avro.json`
@@ -508,7 +508,7 @@ Validate
 
       ./add_entries_kinesis.sh
       
-   If you are running RDS Postgres:
+   If you are running RDS PostgreSQL:
 
    .. code:: bash
 
