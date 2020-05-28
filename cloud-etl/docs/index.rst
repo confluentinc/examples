@@ -231,13 +231,13 @@ Run
 #. Log into the Confluent Cloud UI at http://confluent.cloud .
 
 
-Validate
---------
+Connectors
+----------
 
 #. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
 
    - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
-   - :devx-examples:`Postgress source connector configuration file|cloud-etl/connectors/rds.json`
+   - :devx-examples:`Postgres source connector configuration file|cloud-etl/connectors/rds.json`
    - :devx-examples:`GCS sink connector configuration file|cloud-etl/connectors/gcs_no_avro.json`
    - :devx-examples:`GCS sink connector with Avro configuration file|cloud-etl/connectors/gcs_avro.json`
    - :devx-examples:`S3 sink connector configuration file|cloud-etl/connectors/s3_no_avro.json`
@@ -255,21 +255,21 @@ Validate
 
       ccloud connector list
 
-   If you ran the demo with Kinesis as the souce and GCS as the sink, your output should resemble:
+   If you ran the demo with Kinesis as the souce and S3 as the sink, your output should resemble:
 
    .. code:: bash
 
-           ID     |         Name         | Status  |  Type
-      +-----------+----------------------+---------+--------+
-        lcc-knjgv | demo-KinesisSource   | RUNNING | source
-        lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink
-        lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink
+           ID     |        Name         | Status  |  Type  | Trace  
+      +-----------+---------------------+---------+--------+-------+
+        lcc-2jrx1 | demo-S3Sink-no-avro | RUNNING | sink   |        
+        lcc-vnrqp | demo-KinesisSource  | RUNNING | source |        
+        lcc-5qwrn | demo-S3Sink-avro    | RUNNING | sink   |       
 
-#. Describe any running connector in more detail, in this case ``lcc-knjgv`` which corresponds to the the AWS Kinesis connector. 
+#. Describe any running connector in more detail, in this case ``lcc-vnrqp`` which corresponds to the the AWS Kinesis connector. 
 
    .. code:: bash
 
-      ccloud connector describe lcc-knjgv
+      ccloud connector describe lcc-vnrqp
 
    Your output should resemble:
 
@@ -277,40 +277,48 @@ Validate
 
       Connector Details
       +--------+--------------------+
-      | ID     | lcc-knjgv          |
+      | ID     | lcc-vnrqp          |
       | Name   | demo-KinesisSource |
       | Status | RUNNING            |
       | Type   | source             |
+      | Trace  |                    |
       +--------+--------------------+
       
       
       Task Level Details
-        Task_ID |  State   
-      +---------+---------+
-              0 | RUNNING  
+        TaskId |  State   
+      +--------+---------+
+             0 | RUNNING  
       
       
       Configuration Details
-           Configuration    |                          Value                           
+              Config        |                          Value
       +---------------------+---------------------------------------------------------+
-        schema.registry.url | https://psrc-lz3xz.us-central1.gcp.confluent.cloud       
-        value.converter     | io.confluent.connect.replicator.util.ByteArrayConverter  
-        aws.access.key.id   | ****************                                         
-        kafka.region        | us-west2                                                 
-        tasks.max           |                                                       1  
-        aws.secret.key.id   | ****************                                         
-        kafka.topic         | eventlogs                                                
-        kafka.api.key       | ****************                                         
-        kinesis.position    | TRIM_HORIZON                                             
-        kinesis.region      | us-west-2                                                
-        kinesis.stream      | demo-logs                                                
-        cloud.environment   | prod                                                     
-        connector.class     | KinesisSource                                            
-        key.converter       | org.apache.kafka.connect.storage.StringConverter         
-        name                | demo-KinesisSource                                       
-        kafka.api.secret    | ****************                                         
-        kafka.endpoint      | SASL_SSL://pkc-4r087.us-west2.gcp.confluent.cloud:9092   
+        name                | demo-KinesisSource
+        kafka.api.key       | ****************
+        kafka.api.secret    | ****************
+        schema.registry.url | https://psrc-4yovk.us-east-2.aws.confluent.cloud
+        cloud.environment   | prod
+        kafka.endpoint      | SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
+        kafka.region        | us-west-2
+        kafka.user.id       |                                                   73800
+        kinesis.position    | TRIM_HORIZON
+        kinesis.region      | us-west-2
+        kinesis.stream      | demo-logs
+        aws.secret.key.id   | ****************
+        connector.class     | KinesisSource
+        tasks.max           |                                                       1
+        aws.access.key.id   | ****************
 
+
+#. View these same connectors from the Confluent Cloud UI at https://confluent.cloud/ 
+
+   .. figure:: images/connectors.png
+      :alt: image
+
+
+ksqlDB
+------
 
 #. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html#data-flow>`__ through your ksqlDB application:
 
@@ -398,6 +406,15 @@ Validate
           }
         ]
       }
+
+#. View these same queries from the Confluent Cloud UI at https://confluent.cloud/ 
+
+.. figure:: images/ksqldb_queries.png
+   :alt: image
+
+
+Validate
+--------
 
 
 #. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`read-data.sh|cloud-etl/read-data.sh` script.
@@ -496,6 +513,12 @@ Validate
    .. code:: bash
 
       ./add_entries_rds.sh
+
+#. View the new messages from the Confluent Cloud UI.
+
+.. figure:: images/messages.png
+   :alt: image
+
 
       
 Stop
