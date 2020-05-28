@@ -480,7 +480,7 @@ function check_credentials_ksql() {
 function create_connector_cloud() {
   file=$1
 
-  echo -e "\nTrying to create connector from $file\n"
+  echo -e "\nCreating connector from $file\n"
 
   # About the Confluent Cloud CLI command 'ccloud connector create':
   # - Typical usage of this CLI would be 'ccloud connector create --config <filename>'

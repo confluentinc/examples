@@ -53,10 +53,9 @@ aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.
 
 echo "Creating $KAFKA_TOPIC_NAME_IN.sql"
 rm -fr $KAFKA_TOPIC_NAME_IN.sql
-timestamp="2020-05-27 05:31:41.123595505+00:00"
 for row in $(jq -r '.[] .Data' $KAFKA_TOPIC_NAME_IN.json); do
   read -r eventSourceIP eventAction result eventDuration <<<"$(echo "$row" | jq -r '"\(.eventSourceIP) \(.eventAction) \(.result) \(.eventDuration)"')"
-  echo -e "$timestamp\t$eventSourceIP\t$eventAction\t$result\t$eventDuration" >> $KAFKA_TOPIC_NAME_IN.sql
+  echo -e "$eventSourceIP\t$eventAction\t$result\t$eventDuration" >> $KAFKA_TOPIC_NAME_IN.sql
 done
 
 echo "Create table $KAFKA_TOPIC_NAME_IN"
@@ -68,13 +67,9 @@ PGPASSWORD=pg12345678 psql \
    --username pg \
    --dbname $DB_INSTANCE_IDENTIFIER \
    --command "CREATE TABLE $KAFKA_TOPIC_NAME_IN (timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, eventSourceIP VARCHAR(255), eventAction VARCHAR(255), result VARCHAR(255), eventDuration BIGINT);"
-echo "Populate table $KAFKA_TOPIC_NAME_IN"
-PGPASSWORD=pg12345678 psql \
-   --host $CONNECTION_HOST \
-   --port $CONNECTION_PORT \
-   --username pg \
-   --dbname $DB_INSTANCE_IDENTIFIER \
-   --command "\copy $KAFKA_TOPIC_NAME_IN from '$KAFKA_TOPIC_NAME_IN.sql';"
+
+./add_entries_rds.sh
+
 print_pass "AWS RDS database ready"
 
 exit 0

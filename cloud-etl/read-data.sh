@@ -28,6 +28,7 @@ if [[ "${DATA_SOURCE}" == "kinesis" ]]; then
 
 elif [[ "${DATA_SOURCE}" == "rds" ]]; then
 
+  echo -e "\nData from Postgres database $DB_INSTANCE_IDENTIFIER in AWS RDS with limit 10:"
   export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
   export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
   PGPASSWORD=pg12345678 psql \
@@ -35,7 +36,7 @@ elif [[ "${DATA_SOURCE}" == "rds" ]]; then
      --port $CONNECTION_PORT \
      --username pg \
      --dbname $DB_INSTANCE_IDENTIFIER \
-     --command "select * from $KAFKA_TOPIC_NAME_IN limit 5;"
+     --command "select * from $KAFKA_TOPIC_NAME_IN limit 10;"
 
 fi
 

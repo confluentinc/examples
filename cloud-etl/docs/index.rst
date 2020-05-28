@@ -122,7 +122,7 @@ Setup
 
 Because this demo interacts with real resources in Kinesis or RDS Postgres, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
-#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges.
+#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges so carefully evaluate the cost of resources before launching the demo.
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -234,7 +234,18 @@ Run
 Validate
 --------
 
-#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`. For example, if you configured the demo to source data from Kinesis, it ran this :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json`.
+#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
+
+   - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
+   - :devx-examples:`Postgress source connector configuration file|cloud-etl/connectors/rds.json`
+   - :devx-examples:`GCS sink connector configuration file|cloud-etl/connectors/gcs_no_avro.json`
+   - :devx-examples:`GCS sink connector with Avro configuration file|cloud-etl/connectors/gcs_avro.json`
+   - :devx-examples:`S3 sink connector configuration file|cloud-etl/connectors/s3_no_avro.json`
+   - :devx-examples:`S3 sink connector with Avro configuration file|cloud-etl/connectors/s3_avro.json`
+   - :devx-examples:`Azure Blob sink connector configuration file|cloud-etl/connectors/az_no_avro.json`
+   - :devx-examples:`Azure Blob sink connector with Avro configuration file|cloud-etl/connectors/az_avro.json`
+
+   For example, if you configured the demo to source data from Kinesis, it ran this :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json`.
 
    .. literalinclude:: ../connectors/kinesis.json
 
@@ -244,7 +255,7 @@ Validate
 
       ccloud connector list
 
-   Your output should resemble:
+   If you ran the demo with Kinesis as the souce and GCS as the sink, your output should resemble:
 
    .. code:: bash
 
@@ -470,7 +481,22 @@ Validate
       gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000001000.avro
       gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000002000.avro
       gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000003000.avro
+
+
+#. Add more entries in the source and see them propagate through the pipeline by viewing messages in the Confluent Cloud UI or CLI.
+
+   If you are running Kinesis:
+
+   .. code:: bash
+
+      ./add_entries_kinesis.sh
       
+   If you are running RDS Postgres:
+
+   .. code:: bash
+
+      ./add_entries_rds.sh
+
       
 Stop
 ----

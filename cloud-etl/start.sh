@@ -95,7 +95,7 @@ echo -e "\nSink: setup $DESTINATION_STORAGE cloud storage and create connectors\
 #################################################################
 echo -e "\nSleeping 60 seconds waiting for data to be sent to $DESTINATION_STORAGE\n"
 sleep 60
-./read-data.sh
+./read-data.sh $CONFIG_FILE
 
 printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/\n"
 echo
