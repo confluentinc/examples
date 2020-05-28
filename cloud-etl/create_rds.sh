@@ -36,6 +36,11 @@ aws rds create-db-instance \
     --license-model postgresql-license \
     --region $RDS_REGION \
     --profile $AWS_PROFILE > /dev/null
+status=$?
+if [[ "$status" != 0 ]]; then
+  echo "ERROR: Could not create database, troubleshoot and try again"
+  exit 1
+fi
 
 MAX_WAIT=1200
 echo

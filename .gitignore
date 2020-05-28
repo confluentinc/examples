@@ -21,4 +21,4 @@ log.*
 *.srl
 *_creds
 **/stack-configs/
-**/eventLogs.sql
+**/eventlogs.sql
