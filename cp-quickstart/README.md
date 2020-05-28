@@ -45,7 +45,7 @@ For additional examples that showcase streaming applications within an event str
 ./start-docker-cloud.sh
 ```
 
-* This demo also shows usage of the various data formats supported by Confluent Cloud, Schema Registry and ksqlDB.  The demo deploys a [ksqlDB application](cp-quickstart/docker-cloud-statements.sql) which builds streams and tables using Avro, Protobuf and JSON based formats.  The demo provides sample commands at the end of its startup showing how to consume Protobuf based data streams (e.g. `users` topic) and Avro based data streams (e.g. `pageviews` topic)
+* This demo also shows usage of the various data formats supported by Confluent Cloud, Schema Registry and ksqlDB.  The demo deploys a [ksqlDB application](docker-cloud-statements.sql) which builds streams and tables using Avro, Protobuf and JSON based formats.  The demo provides sample commands at the end of its startup showing how to consume Protobuf based data streams (e.g. `users` topic) and Avro based data streams (e.g. `pageviews` topic)
 
 ### Advanced usage
 
