@@ -220,7 +220,7 @@ Run
 Validate
 --------
 
-#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`. For example, here is the :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json` used in the demo.
+#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`. For example, if you configured the demo to source data from Kinesis, it ran this :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json`.
 
    .. literalinclude:: ../connectors/kinesis.json
 
