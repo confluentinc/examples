@@ -149,10 +149,18 @@ function validate_cloud_source() {
 
   if [[ "$DATA_SOURCE" == "kinesis" ]]; then
     check_aws || exit 1
+    if [[ -z "$KINESIS_REGION" || -z "$AWS_PROFILE" ]]; then
+      echo "ERROR: DATA_SOURCE=kinesis, but KINESIS_REGION or AWS_PROFILE is not set.  Please set these parameters in config/demo.cfg and try again."
+      exit 1
+    fi
     aws kinesis list-streams --profile $AWS_PROFILE --region $KINESIS_REGION > /dev/null \
       || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws kinesis list-streams'.  Check credentials and run again."
   elif [[ "$DATA_SOURCE" == "rds" ]]; then
     check_aws || exit 1
+    if [[ -z "$RDS_REGION" || -z "$AWS_PROFILE" ]]; then
+      echo "ERROR: DATA_SOURCE=rds, but RDS_REGION or AWS_PROFILE is not set.  Please set these parameters in config/demo.cfg and try again."
+      exit 1
+    fi
     aws rds describe-db-instances --profile $AWS_PROFILE --region $RDS_REGION > /dev/null \
       || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws rds describe-db-instances'.  Check credentials and run again."
   else
