@@ -3,6 +3,8 @@
 #################################################################
 # Initialization
 #################################################################
+NAME=`basename "$0"`
+
 # Source library
 . ../utils/helper.sh
 
@@ -19,10 +21,14 @@ check_python \
 # Source demo-specific configurations
 source config/demo.cfg
 
+validate_cloud_source config/demo.cfg \
+  && print_pass "cloud source $DATA_SOURCE ok" \
+  || exit 1
 validate_cloud_storage config/demo.cfg \
-  && print_pass "cloud storage validated" \
+  && print_pass "cloud storage $DESTINATION_STORAGE ok" \
   || exit 1
 
+echo
 echo ====== Create new Confluent Cloud stack
 prompt_continue_cloud_demo || exit 1
 cloud_create_demo_stack true
@@ -94,4 +100,7 @@ sleep 60
 printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/\n"
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
+echo
+echo "Cloud resources are provisioned and accruing charges. To destroy this demo and associated resources run ->"
+echo "    ./stop.sh $CONFIG_FILE"
 echo

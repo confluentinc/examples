@@ -142,6 +142,27 @@ function check_az_tool() {
   return 0
 }
 
+function validate_cloud_source() {
+  config=$1
+
+  source $config
+
+  if [[ "$DATA_SOURCE" == "kinesis" ]]; then
+    check_aws || exit 1
+    aws kinesis list-streams --profile $AWS_PROFILE --region $KINESIS_REGION > /dev/null \
+      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws kinesis list-streams'.  Check credentials and run again."
+  elif [[ "$DATA_SOURCE" == "rds" ]]; then
+    check_aws || exit 1
+    aws rds describe-db-instances --profile $AWS_PROFILE --region $RDS_REGION > /dev/null \
+      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws rds describe-db-instances'.  Check credentials and run again."
+  else
+    echo "Cloud source $cloudsource is not valid.  Must be one of [kinesis|rds]."
+    exit 1
+  fi
+
+  return 0
+}
+
 function validate_cloud_storage() {
   config=$1
 
@@ -151,6 +172,8 @@ function validate_cloud_storage() {
   if [[ "$storage" == "s3" ]]; then
     check_aws || exit 1
     check_s3_creds $S3_PROFILE $S3_BUCKET || exit 1
+    aws s3api list-buckets --profile $S3_PROFILE --region $STORAGE_REGION > /dev/null \
+      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws s3api list-buckets'.  Check credentials and run again."
   elif [[ "$storage" == "gcs" ]]; then
     check_gsutil || exit 1
     check_gcp_creds $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
