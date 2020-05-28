@@ -665,8 +665,8 @@ function ccloud_cli_set_kafka_cluster_use() {
     exit 1
   fi
   ccloud kafka cluster use $kafkaCluster
-  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:"
-  ccloud kafka cluster describe $kafkaCluster
+  endpoint=$(ccloud kafka cluster describe $kafkaCluster -o json | jq -r ".endpoint" | cut -c 12-)
+  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster at $endpoint"
 
   return 0
 }
