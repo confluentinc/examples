@@ -7,7 +7,7 @@ Cloud ETL Demo
 ==============
 
 This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream or AWS RDS Postgres database into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: images/topology.png
    :alt: image
@@ -17,7 +17,7 @@ This enables you to:
 
 *  Build business applications on a full event streaming platform
 *  Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
-*  Use Kafka to aggregate data in single source of truth
+*  Use Kafka to aggregate data into a single source of truth
 *  Harness the power of `ksqlDB <https://www.confluent.io/product/ksql/>`__ for stream processing
 
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
@@ -41,19 +41,25 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
    - :ref:`cc_gcs_connect_sink`
    - :ref:`cc_s3_connect_sink`
 
--  ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
+-  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
 
-   - `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
-
--  |sr-ccloud|: for centralized management of schemas and checks compatibility as schemas evolve 
-
-   - :ref:`cloud-install-schema-registry`
+-  :ref:`Confluent Cloud Schema Registry <cloud-install-schema-registry>`: centralized management of schemas and compatibility checks as schemas evolve 
 
 
 Data Flow
 ---------
 
 The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventlogs.json|cloud-etl/eventlogs.json`.
+It resembles this:
+
+.. sourcecode:: bash
+
+   {"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
+   {"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
+   {"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
+   {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
+   {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
+
 
 +-----------------------+-----------------------+-----------------------+
 | Component             | Consumes From         | Produces To           |
@@ -73,7 +79,7 @@ The data set is a stream of log messages, which in this demo is mock data captur
 Caution
 =======
 
-This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS Postgres, and one of the cloud storage providers.
+This ``cloud-etl`` demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS Postgres, and one of the cloud storage providers.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 =============
