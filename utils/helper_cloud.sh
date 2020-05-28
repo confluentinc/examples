@@ -755,7 +755,7 @@ function cloud_create_demo_stack() {
 EOF
   if $enable_ksql ; then
     cat <<EOF >> $CLIENT_CONFIG
-# KSQL ID: ${KSQL}
+# KSQLDB APP ID: ${KSQL}
 EOF
   fi
   cat <<EOF >> $CLIENT_CONFIG

@@ -30,7 +30,7 @@ End-to-end Streaming ETL
 
 This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
--  Cloud source connectors: writes data from a cloud service to Kafka topics in |ccloud|, one of:
+-  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
 
    - :ref:`cc_kinesis-source`
    - :ref:`cc_postgresql-source`
@@ -46,6 +46,8 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
    - `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
 
 -  |sr-ccloud|: for centralized management of schemas and checks compatibility as schemas evolve 
+
+   - :ref:`cloud-install-schema-registry`
 
 
 Data Flow
@@ -82,8 +84,7 @@ Cloud services
 --------------
 
 -  `Confluent Cloud cluster <https://confluent.cloud>`__: for development only. Do not use a production cluster.
--  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ provisioned in your |ccloud|
--  AWS or GCP or Azure access
+-  Access to AWS and (optional) GCP or Azure
 
 Local Tools
 -----------
@@ -199,7 +200,7 @@ Run
       # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
       # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
-      # KSQL APP ID: <KSQL APP ID>
+      # KSQLDB APP ID: <KSQLDB APP ID>
       # ------------------------------
       ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
@@ -209,8 +210,8 @@ Run
       basic.auth.credentials.source=USER_INFO
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
-      ksql.endpoint=<KSQL ENDPOINT>
-      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+      ksql.endpoint=<KSQLDB ENDPOINT>
+      ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 
 
 #. Log into the Confluent Cloud UI at http://confluent.cloud .
