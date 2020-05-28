@@ -249,13 +249,18 @@ Connectors
 
    .. literalinclude:: ../connectors/kinesis.json
 
+#. Let's say you ran the demo with Kinesis as the source and S3 as the sink, the pipeline would resemble:
+
+   .. figure:: images/data-kinesis-s3.png
+      :alt: image
+
 #. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.
 
    .. code:: bash
 
       ccloud connector list
 
-   If you ran the demo with Kinesis as the souce and S3 as the sink, your output should resemble:
+   Your output should resemble:
 
    .. code:: bash
 
