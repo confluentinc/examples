@@ -169,13 +169,13 @@ Run
 
       ccloud login --url https://confluent.cloud
 
-#. Run the demo. This will take several minutes to complete as it creates new resources in |ccloud|.
+#. Run the demo. This will take several minutes to complete as it creates new resources in |ccloud| and services in other cloud providers.
 
    .. code:: bash
 
       ./start.sh
 
-#. For more advanced usage, you may explicitly set the cloud provider and region. This may be required if you need to set the |ccloud| resources to a specific cloud provider that matches the cloud storage provider.
+#. For more advanced usage, you may explicitly set the cloud provider and region when you start the demo. This may be required if you need to set the |ccloud| cluster to a specific cloud provider and region that match the cloud storage provider.
 
    .. code:: bash
 
@@ -374,7 +374,7 @@ Validate
       }
 
 
-#. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`provided script|cloud-etl/read-data.sh`.
+#. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`read-data.sh|cloud-etl/read-data.sh` script.
 
    .. code:: bash
 
@@ -397,7 +397,7 @@ Validate
       {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
    
       Data from Kafka topic eventlogs:
-      confluent local consume eventlogs -- --cloud --from-beginning --property print.key=true --max-messages 10
+      confluent local consume eventlogs -- --cloud --config stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config --from-beginning --property print.key=true --max-messages 10
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
@@ -410,7 +410,7 @@ Validate
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
    
       Data from Kafka topic COUNT_PER_SOURCE:
-      confluent local consume COUNT_PER_SOURCE -- --cloud --from-beginning --property print.key=true --max-messages 10
+      confluent local consume COUNT_PER_SOURCE -- --cloud --config stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config --from-beginning --property print.key=true --max-messages 10
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":1}
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":2}
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":3}
@@ -423,7 +423,7 @@ Validate
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":10}
    
       Data from Kafka topic SUM_PER_SOURCE:
-      confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
+      confluent local consume SUM_PER_SOURCE -- --cloud --config stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
       192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":1}}
       192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":4}}
       192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":5}}
@@ -464,7 +464,7 @@ Stop
 
    .. code:: bash
 
-      ./stop.sh
+      ./stop.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
 #. Always verify that resources in |ccloud| have been destroyed.
 
