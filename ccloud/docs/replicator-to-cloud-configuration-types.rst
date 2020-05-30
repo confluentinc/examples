@@ -155,7 +155,7 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 - Configure |crep|
 
-.. include:: includes/replicator-from-origin-onprem.rst
+.. include:: includes/replicator-from-origin-ccloud.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
