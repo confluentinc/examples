@@ -7,11 +7,11 @@ Whether you are migrating from on-prem to cloud or have a persistent multi-datac
 
 .. figure:: images/replicator-to-ccloud.png
 
-========================
-|kconnect-long| Concepts
-========================
+=======================
+Brief Concepts Overview
+=======================
 
-Before diving into the different ways to deploy |crep|, let's first reprise some basic concepts regarding |crep| and |kconnect-long|.
+Before diving into the different ways to configure |crep|, let's first reprise some basic concepts regarding |crep| and |kconnect-long|.
 This will help you understand the logic for configuring |crep|.
 
 - As a Kafka connector, |crep| runs on Connect workers. Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker with it.
@@ -23,7 +23,7 @@ This will help you understand the logic for configuring |crep|.
 Configuration Types
 ===================
 
-There are several ways to deploy |crep| to copy Kafka data to |ccloud|.
+There are several ways to configure |crep| to copy Kafka data to |ccloud|.
 
 The simplest configuration type is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the Connect worker's default behavior with regards to its embedded producer.
