@@ -1,11 +1,11 @@
 .. _replicator-to-cloud-tutorial:
 
-|crep| to |ccloud| Tutorial
-===========================
+|crep-full| to |ccloud| Tutorial
+================================
 
-This Docker-based tutorial shows you several ways to deploy |crep| where the destination Kafka cluster is |ccloud|.
+This tutorial shows you several ways to deploy |crep-full| where the destination Kafka cluster is |ccloud|.
 
-|crep| is a source connector, and so the easiest deployment model is where |crep| runs on a self-managed connect cluster that is backed to the destination |ccloud| cluster, which means that the connect workers are using the destination |ccloud| cluster for its connect topics `offset.storage.topic`, `config.storage.topic`, and `status.storage.topic`.
+|crep| is a source connector, so the easiest deployment model is where |crep| runs on a self-managed connect cluster that is backed to the destination |ccloud| cluster, which means that the connect workers are using the destination |ccloud| cluster for its connect topics `offset.storage.topic`, `config.storage.topic`, and `status.storage.topic`.
 
 :ref:`Example 1 <onprem-cloud-destination>`: on-prem to |ccloud| where |crep| runs on a connect cluster backed to the destination |ccloud| cluster 
 :ref:`Example 2 <cloud-cloud-destination>`: |ccloud| to |ccloud| where |crep| runs on a connect cluster backed to the destination |ccloud| cluster
