@@ -3,5 +3,5 @@ The origin cluster can have a varied set of security features enabled, but for s
 
 .. sourcecode:: bash
 
-   src.kafka.bootstrap.servers=<bootstrap-servers-onprem>
+   src.kafka.bootstrap.servers=<bootstrap-servers-origin>
 

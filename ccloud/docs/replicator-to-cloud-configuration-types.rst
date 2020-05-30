@@ -42,8 +42,10 @@ There are two configuration examples of where |crep| runs on a :ref:`connect-bac
 - :ref:`onprem-cloud-destination`
 - :ref:`cloud-cloud-destination`
 
-If you do not want your self-managed Connect cluster backed to the destination |ccloud| cluster, you can have a Connect cluster backed to the origin cluster instead.
-This configuration is more complex because there are some additional overrides you will need to configure.
+There are scenarios where you may not be able to have your self-managed Connect cluster backed to the destination |ccloud| cluster.
+For example, highly secure origin clusters may block incoming network connections and only allow push connections, in which case an incoming connection from |crep| running on the destination cluster would not work.
+In this case, you can have a Connect cluster backed to the origin cluster instead and push the replicated data to the destination cluster.
+This configuration is more complex because there are overrides you will need to configure.
 
 .. figure:: images/replicator-worker-origin.png
 
@@ -93,7 +95,7 @@ Configure ACLs
 |ccloud| to |ccloud| with Connect Backed to Destination
 -------------------------------------------------------
 
-In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
+In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
 .. include:: includes/generic-subset.rst
 
@@ -139,6 +141,8 @@ Configure |kconnect-long|
 
 .. include:: includes/connect-worker-to-origin-onprem.rst
 
+.. include:: includes/connect-worker-override-policy.rst
+
 Configure |crep|
 ^^^^^^^^^^^^^^^^
 
@@ -146,10 +150,10 @@ Configure |crep|
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
+.. include:: includes/replicator-overrides.rst
+
 Configure ACLs
 ^^^^^^^^^^^^^^
-
-.. include:: includes/replicator-overrides.rst
 
 .. include:: includes/set-acls-destination.rst
 
@@ -159,7 +163,7 @@ Configure ACLs
 |ccloud| to |ccloud| with Connect Backed to Origin
 --------------------------------------------------
 
-In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
+In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
 .. include:: includes/generic-subset.rst
 
@@ -169,6 +173,8 @@ Configure |kconnect-long|
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. include:: includes/connect-worker-to-origin-ccloud.rst
+
+.. include:: includes/connect-worker-override-policy.rst
 
 Configure |crep|
 ^^^^^^^^^^^^^^^^
