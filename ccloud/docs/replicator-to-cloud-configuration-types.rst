@@ -54,8 +54,8 @@ Connect Cluster Backed to Destination
 
 .. _onprem-cloud-destination:
 
-On-prem to |ccloud| Backed to Destination
------------------------------------------
+On-prem to |ccloud| with Connect Backed to Destination
+------------------------------------------------------
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
@@ -80,8 +80,8 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. _cloud-cloud-destination:
 
-|ccloud| to |ccloud| Backed to Destination
-------------------------------------------
+|ccloud| to |ccloud| with Connect Backed to Destination
+-------------------------------------------------------
 
 In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
@@ -112,8 +112,8 @@ Connect Cluster Backed to Origin
 
 .. _onprem-cloud-origin:
 
-On-prem to |ccloud| Backed to Origin
-------------------------------------
+On-prem to |ccloud| with Connect Backed to Origin
+-------------------------------------------------
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
@@ -140,8 +140,8 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. _cloud-cloud-origin:
 
-|ccloud| to |ccloud| Backed to Origin
--------------------------------------
+|ccloud| to |ccloud| with Connect Backed to Origin
+--------------------------------------------------
 
 In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
