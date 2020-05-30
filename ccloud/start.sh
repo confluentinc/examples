@@ -14,14 +14,14 @@ check_cp \
 check_running_cp ${CONFLUENT} \
   && print_pass "Confluent Platform version ${CONFLUENT} ok" \
   || exit 1
+check_jq \
+  && print_pass "jq installed" \
+  || exit 1
 ccloud::validate_version_ccloud_cli 1.0.0 \
   && print_pass "ccloud version ok" \
   || exit 1
 ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" \
-  || exit 1
-check_jq \
-  && print_pass "jq installed" \
   || exit 1
 
 echo ====== Create new Confluent Cloud stack

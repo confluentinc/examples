@@ -13,12 +13,12 @@
 . ../../utils/helper.sh
 
 ccloud::validate_version_ccloud_cli 1.0.0 || exit 1
+ccloud::validate_logged_in_ccloud_cli || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
 check_docker || exit 1
-ccloud::validate_logged_in_ccloud_cli || exit 1
 
 ##################################################
 # Create a new environment and specify it as the default
