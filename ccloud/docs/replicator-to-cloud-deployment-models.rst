@@ -23,7 +23,7 @@ This will help you understand the logic for configuring |crep|.
 Deployment Models
 =================
 
-There are several ways to deploy |crep| to copy Kafka data to |ccloud.
+There are several ways to deploy |crep| to copy Kafka data to |ccloud|.
 The simplest deployment model is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the Connect worker's default behavior with regards to its embedded producer.
 
