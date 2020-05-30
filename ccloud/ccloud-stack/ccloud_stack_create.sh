@@ -44,7 +44,7 @@ fi
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE $enable_ksql || exit 1
 
 echo
-echo "ACLs for in this cluster:"
+echo "ACLs in this cluster:"
 ccloud kafka acl list
 
 echo
