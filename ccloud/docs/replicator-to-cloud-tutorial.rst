@@ -35,9 +35,9 @@ Connect Worker Configuration
 |crep| Configuration
 --------------------
 
-.. include:: includes/replicator-from-on-prem-origin.rst
+.. include:: includes/replicator-from-origin-onprem.rst
 
-.. include:: includes/replicator-to-ccloud-destination.rst
+.. include:: includes/replicator-to-destination-ccloud.rst
 
 |crep| Authorization
 --------------------
@@ -57,14 +57,14 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 Connect Worker Configuration
 ----------------------------
 
-.. include:: includes/connect-worker-to-ccloud-destination.rst
+.. include:: includes/connect-worker-to-destination-ccloud.rst
 
 |crep| Configuration
 --------------------
 
-.. include:: includes/replicator-from-ccloud-origin.rst
+.. include:: includes/replicator-from-origin-ccloud.rst
 
-.. include:: includes/replicator-to-ccloud-destination.rst
+.. include:: includes/replicator-to-destination-ccloud.rst
 
 |crep| Authorization
 --------------------
@@ -91,9 +91,9 @@ Connect Worker Configuration
 |crep| Configuration
 --------------------
 
-.. include:: includes/replicator-from-onprem-origin.rst
+.. include:: includes/replicator-from-origin-onprem.rst
 
-.. include:: includes/replicator-to-ccloud-destination.rst
+.. include:: includes/replicator-to-destination-ccloud.rst
 
 .. include:: includes/replicator-overrides.rst
 
@@ -115,14 +115,14 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 Connect Worker Configuration
 ----------------------------
 
-.. include:: includes/connect-worker-to-ccloud-origin.rst
+.. include:: includes/connect-worker-to-origin-ccloud.rst
 
 |crep| Configuration
 --------------------
 
-.. include:: includes/replicator-from-on-prem-origin.rst
+.. include:: includes/replicator-from-origin-onprem.rst
 
-.. include:: includes/replicator-to-ccloud-destination.rst
+.. include:: includes/replicator-to-destination-ccloud.rst
 
 .. include:: includes/replicator-overrides.rst
 
