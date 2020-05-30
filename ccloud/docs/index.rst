@@ -16,8 +16,8 @@ Overview
 The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-* |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating KSQL queries, streams monitoring, and more.
-* KSQL: Confluent Cloud KSQL running queries on input topics `users` and `pageviews` in |ccloud|.
+* |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating ksqlDB queries, streams monitoring, and more.
+* KSQL: Confluent Cloud ksqlDB running queries on input topics `users` and `pageviews` in |ccloud|.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
@@ -122,7 +122,7 @@ Run
       # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
       # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
-      # KSQL APP ID: <KSQL APP ID>
+      # KSQLDB APP ID: <KSQLDB APP ID>
       # ------------------------------
       ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
@@ -132,8 +132,8 @@ Run
       basic.auth.credentials.source=USER_INFO
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
-      ksql.endpoint=<KSQL ENDPOINT>
-      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+      ksql.endpoint=<KSQLDB ENDPOINT>
+      ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 
       
 #. Log into the Confluent Cloud UI at http://confluent.cloud .
@@ -230,12 +230,12 @@ kafka-connect-datagen
 KSQL
 ----
 
-#. In the demo, the Confluent Cloud KSQL queries were created using the REST API in :devx-examples:`this code|ccloud/create_ksql_app.sh` with proper credentials.
+#. In the demo, the Confluent Cloud ksqlDB queries were created using the REST API in :devx-examples:`this code|ccloud/create_ksql_app.sh` with proper credentials.
 
    .. literalinclude:: ../create_ksql_app.sh
       :lines: 31-52
 
-#. From the Confluent Cloud UI, view the KSQL application flow.
+#. From the Confluent Cloud UI, view the ksqlDB application flow.
 
    .. figure:: images/ksqlDB_flow.png
       :alt: image
