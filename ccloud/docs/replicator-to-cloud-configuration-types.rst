@@ -22,7 +22,7 @@ Even the :ref:`Replicator executable <replicator_executable>` has a bundled Conn
 Connect's embedded producer configuration can be configured directly on the Connect worker or overridden by any connector, including |crep|.
 Unlike other source connectors, |crep| has an admin client that it needs for interacting with the destination cluster, and it can be configured with the prefix ``dest.``.
 
-A Connect cluster also has an admin client for creating Kafka topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
+A Connect worker also has an admin client for creating Kafka topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
 
 
 ===================
@@ -65,7 +65,7 @@ On-prem to |ccloud| with Connect Backed to Destination
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
-.. include:: includes/generic-subset.rst
+.. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-prem cluster|ccloud/docs/config/backed-to-destination/replicator-origin-onprem-backed-to-destination.cfg` configuration file.
 
 .. figure:: images/onprem-ccloud-destination.png
 
@@ -86,8 +86,6 @@ Configure ACLs
 
 .. include:: includes/set-acls-destination.rst
 
-.. seealso:: Try this out with the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-prem cluster|ccloud/docs/config/backed-to-destination/replicator-origin-onprem-backed-to-destination.cfg` configuration file.
-
 
 .. _cloud-cloud-destination:
 
@@ -96,7 +94,7 @@ Configure ACLs
 
 In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
-.. include:: includes/generic-subset.rst
+.. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from Confluent Cloud|ccloud/docs/config/backed-to-destination/replicator-origin-ccloud-backed-to-destination.cfg` configuration file.
 
 .. figure:: images/ccloud-ccloud-destination.png
 
@@ -117,9 +115,6 @@ Configure ACLs
 
 .. include:: includes/set-acls-origin-and-destination.rst
 
-.. seealso:: Try this out with the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from Confluent Cloud|ccloud/docs/config/backed-to-destination/replicator-origin-ccloud-backed-to-destination.cfg` configuration file.
-
-
 
 .. _connect-backed-origin:
 
@@ -134,7 +129,7 @@ On-prem to |ccloud| with Connect Backed to Origin
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
-.. include:: includes/generic-subset.rst
+.. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to origin|ccloud/docs/config/backed-to-origin/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-prem cluster|ccloud/docs/config/backed-to-origin/replicator-origin-onprem-backed-to-origin.cfg` configuration file.
 
 .. figure:: images/onprem-ccloud-origin.png
 
@@ -159,9 +154,6 @@ Configure ACLs
 
 .. include:: includes/set-acls-destination.rst
 
-.. seealso:: Try this out with the :devx-examples:`Connect worker backed to origin|ccloud/docs/config/backed-to-origin/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-prem cluster|ccloud/docs/config/backed-to-origin/replicator-origin-onprem-backed-to-origin.cfg` configuration file.
-
-
 
 .. _cloud-cloud-origin:
 
@@ -170,7 +162,7 @@ Configure ACLs
 
 In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
-.. include:: includes/generic-subset.rst
+.. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to origin|ccloud/docs/config/backed-to-origin/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from Confluent Cloud|ccloud/docs/config/backed-to-origin/replicator-origin-ccloud-backed-to-origin.cfg` configuration file.
 
 .. figure:: images/ccloud-ccloud-origin.png
 
@@ -194,8 +186,6 @@ Configure ACLs
 ^^^^^^^^^^^^^^
 
 .. include:: includes/set-acls-origin-and-destination.rst
-
-.. seealso:: Try this out with the :devx-examples:`Connect worker backed to origin|ccloud/docs/config/backed-to-origin/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from Confluent Cloud|ccloud/docs/config/backed-to-origin/replicator-origin-ccloud-backed-to-origin.cfg` configuration file.
 
 
 ==========================================================
