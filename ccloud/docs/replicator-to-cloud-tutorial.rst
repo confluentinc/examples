@@ -27,6 +27,8 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. include:: includes/generic-subset.rst
 
+.. figure:: images/onprem-ccloud-destination.png
+
 Connect Worker Configuration
 ----------------------------
 
@@ -53,6 +55,8 @@ Connect Worker Configuration
 In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a connect cluster backed to the destination |ccloud| cluster.
 
 .. include:: includes/generic-subset.rst
+
+.. figure:: images/ccloud-ccloud-destination.png
 
 Connect Worker Configuration
 ----------------------------
@@ -83,6 +87,8 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. include:: includes/generic-subset.rst
 
+.. figure:: images/onprem-ccloud-origin.png
+
 Connect Worker Configuration
 ----------------------------
 
@@ -111,6 +117,8 @@ Connect Worker Configuration
 In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a connect cluster backed to the origin on-prem cluster.
 
 .. include:: includes/generic-subset.rst
+
+.. figure:: images/ccloud-ccloud-origin.png
 
 Connect Worker Configuration
 ----------------------------
