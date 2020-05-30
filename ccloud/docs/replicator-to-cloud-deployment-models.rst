@@ -3,16 +3,21 @@
 |crep-full| to |ccloud| Deployment Models
 =========================================
 
-There are several ways to deploy |crep-full| between two |ak| clusters, specifically where the destination Kafka cluster is |ccloud|.
+Copying Kafka data to |ccloud| is easy with |crep-full|.
 
-To reprise some basic concepts regarding |crep| and |kconnect-long|:
+.. figure:: images/onprem-ccloud-destination.png
+
+Before diving into the different ways to deploy |crep|, let's first reprise some basic concepts regarding |crep| and |kconnect-long|.
+This will help you understand the logic for configuring |crep|.
 
 - As a Kafka connector, |crep| runs on Connect workers. Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker with it.
 - |crep| has an embedded consumer that reads data from the origin cluster.
 - |crep| is specifically a source connector, and as with all source connectors, it relies on the Connect worker's embedded producer to write data to the destination cluster, in this case |ccloud|.
 - A Connect cluster creates three Kafka topics for management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
 
-To replicate data to |ccloud|, the easiest deployment model is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
+There are several ways to deploy |crep| to copy Kafka data to |ccloud.
+The simplest deployment model is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
+This allows |crep| to leverage the Connect worker's default behavior with regards to its embedded producer.
 
 - :ref:`Example 1 <onprem-cloud-destination>`: on-prem to |ccloud| where |crep| runs on a Connect cluster backed to the destination |ccloud| cluster 
 - :ref:`Example 2 <cloud-cloud-destination>`: |ccloud| to |ccloud| where |crep| runs on a Connect cluster backed to the destination |ccloud| cluster
