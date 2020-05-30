@@ -162,7 +162,7 @@ function ccloud::validate_cloud_source() {
       exit 1
     fi
     aws kinesis list-streams --profile $AWS_PROFILE --region $KINESIS_REGION > /dev/null \
-      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws kinesis list-streams'.  Check credentials and run again."
+      || { echo "Could not run 'aws kinesis list-streams'.  Check credentials and run again." ; exit 1; }
   elif [[ "$DATA_SOURCE" == "rds" ]]; then
     ccloud::validate_aws_cli_installed || exit 1
     if [[ -z "$RDS_REGION" || -z "$AWS_PROFILE" ]]; then
@@ -170,7 +170,7 @@ function ccloud::validate_cloud_source() {
       exit 1
     fi
     aws rds describe-db-instances --profile $AWS_PROFILE --region $RDS_REGION > /dev/null \
-      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws rds describe-db-instances'.  Check credentials and run again."
+      || { echo "Could not run 'aws rds describe-db-instances'.  Check credentials and run again." ; exit 1; }
   else
     echo "Cloud source $cloudsource is not valid.  Must be one of [kinesis|rds]."
     exit 1
@@ -189,7 +189,7 @@ function ccloud::validate_cloud_storage() {
     ccloud::validate_aws_cli_installed || exit 1
     ccloud::validate_credentials_s3 $S3_PROFILE $S3_BUCKET || exit 1
     aws s3api list-buckets --profile $S3_PROFILE --region $STORAGE_REGION > /dev/null \
-      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws s3api list-buckets'.  Check credentials and run again."
+      || { echo "Could not run 'aws s3api list-buckets'.  Check credentials and run again." ; exit 1; }
   elif [[ "$storage" == "gcs" ]]; then
     ccloud::validate_gsutil_installed || exit 1
     ccloud::validate_credentials_gcp $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
