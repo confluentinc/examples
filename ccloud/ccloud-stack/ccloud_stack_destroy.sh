@@ -5,7 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 # Source library
 . $DIR/../../utils/helper.sh
 
-ccloud::validate_version_ccloud_cli 1.0.0 || exit 1
+ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
 check_jq || exit 1
 ccloud::validate_logged_in_ccloud_cli || exit 1
 

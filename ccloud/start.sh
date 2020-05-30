@@ -17,7 +17,7 @@ check_running_cp ${CONFLUENT} \
 check_jq \
   && print_pass "jq installed" \
   || exit 1
-ccloud::validate_version_ccloud_cli 1.0.0 \
+ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok" \
   || exit 1
 ccloud::validate_logged_in_ccloud_cli \

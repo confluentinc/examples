@@ -8,7 +8,7 @@ NAME=`basename "$0"`
 # Source library
 . ../utils/helper.sh
 
-ccloud::validate_version_ccloud_cli 1.0.0 \
+ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok" \
   || exit 1
 ccloud::validate_logged_in_ccloud_cli \

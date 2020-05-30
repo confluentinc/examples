@@ -13,7 +13,7 @@ source ../utils/helper.sh
 check_jq \
   && print_pass "jq found"
 
-ccloud::validate_version_ccloud_cli 1.0.0 \
+ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok"
 
 ccloud::validate_logged_in_ccloud_cli \
