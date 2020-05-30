@@ -1,0 +1,16 @@
+{
+    "name": "demo-RDSPostgresSource",
+    "connector.class": "PostgresSource",
+    "tasks.max": "1",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret": "$CLOUD_SECRET",
+    "connection.host": "$CONNECTION_HOST",
+    "connection.port": "$CONNECTION_PORT",
+    "connection.user": "pg",
+    "connection.password": "pg12345678",
+    "db.name": "$DB_INSTANCE_IDENTIFIER",
+    "timestamp.column.name": "timestamp",
+    "table.whitelist": "$KAFKA_TOPIC_NAME_IN",
+    "topic.prefix": "",
+    "data.format": "JSON"
+}

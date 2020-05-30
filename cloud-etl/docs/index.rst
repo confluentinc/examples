@@ -6,8 +6,16 @@
 Cloud ETL Demo
 ==============
 
+As enterprises move more and more of their applications to the cloud, they are also moving their on-prem ETL (extract, transform, load) pipelines to the cloud, as well as building new ones.
 This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
+
+.. figure:: images/cloud-etl.png
+   :alt: image
+
+There are many powerful use cases for these real-time cloud ETL pipelines, and this demo showcases one such use case—a log ingestion pipeline that spans multiple cloud providers.
+Using |ccloud| CLI, the demo creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS PostgreSQL database into |ccloud|.
+Then it creates a |ccloud| ksqlDB application that processes that data.
+Finally, a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: images/topology.png
    :alt: image
@@ -17,7 +25,7 @@ This enables you to:
 
 *  Build business applications on a full event streaming platform
 *  Span multiple cloud providers (AWS, GCP, Azure) and on-prem datacenters
-*  Use Kafka to aggregate data in single source of truth
+*  Use Kafka to aggregate data into a single source of truth
 *  Harness the power of `ksqlDB <https://www.confluent.io/product/ksql/>`__ for stream processing
 
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
@@ -30,39 +38,48 @@ End-to-end Streaming ETL
 
 This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
--  Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in |ccloud|
+-  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
 
    - :ref:`cc_kinesis-source`
+   - :ref:`cc_postgresql-source`
 
--  ksqlDB: streaming SQL engine that enables real-time data processing against Kafka
-
-   - `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__
-
--  Cloud storage sink connector: writes data from Kafka topics to cloud storage, one of:
+-  Cloud sink connectors: writes data from Kafka topics in |ccloud| to cloud storage, one of:
 
    - :ref:`cc_azure_blob_sink`
    - :ref:`cc_gcs_connect_sink`
    - :ref:`cc_s3_connect_sink`
 
--  |sr-ccloud|: for centralized management of schemas and checks compatibility as schemas evolve 
+-  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
+
+-  :ref:`Confluent Cloud Schema Registry <cloud-install-schema-registry>`: centralized management of schemas and compatibility checks as schemas evolve 
 
 
 Data Flow
 ---------
 
-The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventLogs.json|cloud-etl/eventLogs.json`.
+The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventlogs.json|cloud-etl/eventlogs.json`.
+It resembles this:
+
+.. sourcecode:: bash
+
+   {"eventSourceIP":"192.168.1.1","eventAction":"Upload","result":"Pass","eventDuration":3}
+   {"eventSourceIP":"192.168.1.1","eventAction":"Create","result":"Pass","eventDuration":2}
+   {"eventSourceIP":"192.168.1.1","eventAction":"Delete","result":"Fail","eventDuration":5}
+   {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
+   {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
+
 
 +-----------------------+-----------------------+-----------------------+
 | Component             | Consumes From         | Produces To           |
 +=======================+=======================+=======================+
-| Kinesis source        | Kinesis stream        | Kafka topic           |
-| connector             | ``demo-logs``         | ``eventLogs``         |
+| Kinesis/PostgreSQL    | Kinesis stream or     | Kafka topic           |
+| source connector      | RDS PostgreSQL table  | ``eventlogs``         |
 +-----------------------+-----------------------+-----------------------+
-| ksqlDB                | ``eventLogs``         | ksqlDB streams and    |
+| ksqlDB                | ``eventlogs``         | ksqlDB streams and    |
 |                       |                       | tables                |
 +-----------------------+-----------------------+-----------------------+
-| GCS/S3/Blob sink      | ksqlDB tables         | GCS/S3/Blob           |
-| connector             | ``COUNT_PER_SOURCE``, |                       |
+| GCS/S3/Blob           | ksqlDB tables         | GCS/S3/Blob           |
+| sink connector        | ``COUNT_PER_SOURCE``, |                       |
 |                       | ``SUM_PER_SOURCE``    |                       |
 +-----------------------+-----------------------+-----------------------+
 
@@ -70,7 +87,7 @@ The data set is a stream of log messages, which in this demo is mock data captur
 Caution
 =======
 
-This demo uses real cloud resources, including that of |ccloud|, AWS Kinesis, and one of the cloud storage providers.
+This ``cloud-etl`` demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS PostgreSQL, and one of the cloud storage providers.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
 
 =============
@@ -81,15 +98,14 @@ Cloud services
 --------------
 
 -  `Confluent Cloud cluster <https://confluent.cloud>`__: for development only. Do not use a production cluster.
--  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ provisioned in your |ccloud|
--  AWS or GCP or Azure access
+-  Access to AWS and (optional) GCP or Azure
 
 Local Tools
 -----------
 
 -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GPC GCS
--  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis and (optional) if destination is AWS S3
+-  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
@@ -104,9 +120,9 @@ Run the Demo
 Setup
 -----
 
-Because this demo interacts with real resources in Kinesis, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
+Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
-#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges.
+#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges so carefully evaluate the cost of resources before launching the demo.
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -123,7 +139,23 @@ Because this demo interacts with real resources in Kinesis, a destination storag
      cd cloud-etl
 
 
-#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source, e.g. AWS Kinesis.  Also set the required parameters for the respective destination cloud storage provider:
+#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source:
+
+   - AWS Kinesis
+
+     - ``DATA_SOURCE='kinesis'``
+     - ``KINESIS_STREAM_NAME``
+     - ``KINESIS_REGION``
+     - ``AWS_PROFILE``
+
+   - AWS RDS (PostgreSQL)
+
+     - ``DATA_SOURCE='rds'``
+     - ``DB_INSTANCE_IDENTIFIER``
+     - ``RDS_REGION``
+     - ``AWS_PROFILE``
+
+#. In the same demo configuration file, set the required parameters for the destination cloud storage provider:
 
    - GCP GCS
 
@@ -152,11 +184,17 @@ Run
 
       ccloud login --url https://confluent.cloud
 
-#. Run the demo. This will take several minutes to complete as it creates new resources in |ccloud|.
+#. Run the demo. This will take several minutes to complete as it creates new resources in |ccloud| and services in other cloud providers.
 
    .. code:: bash
 
       ./start.sh
+
+#. For more advanced usage, you may explicitly set the cloud provider and region when you start the demo. This may be required if you need to set the |ccloud| cluster to a specific cloud provider and region that match the cloud storage provider.
+
+   .. code:: bash
+
+      CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start.sh
 
 #. As part of this script run, it creates a new |ccloud| stack of fully managed resources and generates a local configuration file with all connection information, cluster IDs, and credentials, which is useful for other demos/automation. View this local configuration file, where ``SERVICE ACCOUNT ID`` is auto-generated by the script.
 
@@ -176,7 +214,7 @@ Run
       # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
       # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
-      # KSQL APP ID: <KSQL APP ID>
+      # KSQLDB APP ID: <KSQLDB APP ID>
       # ------------------------------
       ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
@@ -186,19 +224,35 @@ Run
       basic.auth.credentials.source=USER_INFO
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
-      ksql.endpoint=<KSQL ENDPOINT>
-      ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+      ksql.endpoint=<KSQLDB ENDPOINT>
+      ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 
 
 #. Log into the Confluent Cloud UI at http://confluent.cloud .
 
 
-Validate
---------
+Connectors
+----------
 
-#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in a configuration file from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`. For example, here is the :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json` used in the demo.
+#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
+
+   - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
+   - :devx-examples:`PostgreSQL source connector configuration file|cloud-etl/connectors/rds.json`
+   - :devx-examples:`GCS sink connector configuration file|cloud-etl/connectors/gcs_no_avro.json`
+   - :devx-examples:`GCS sink connector with Avro configuration file|cloud-etl/connectors/gcs_avro.json`
+   - :devx-examples:`S3 sink connector configuration file|cloud-etl/connectors/s3_no_avro.json`
+   - :devx-examples:`S3 sink connector with Avro configuration file|cloud-etl/connectors/s3_avro.json`
+   - :devx-examples:`Azure Blob sink connector configuration file|cloud-etl/connectors/az_no_avro.json`
+   - :devx-examples:`Azure Blob sink connector with Avro configuration file|cloud-etl/connectors/az_avro.json`
+
+   For example, if you configured the demo to source data from Kinesis, it ran this :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json`.
 
    .. literalinclude:: ../connectors/kinesis.json
+
+#. Let's say you ran the demo with Kinesis as the source and S3 as the sink, the pipeline would resemble:
+
+   .. figure:: images/data-kinesis-s3.png
+      :alt: image
 
 #. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.
 
@@ -210,17 +264,17 @@ Validate
 
    .. code:: bash
 
-           ID     |         Name         | Status  |  Type
-      +-----------+----------------------+---------+--------+
-        lcc-knjgv | demo-KinesisSource   | RUNNING | source
-        lcc-nwkxv | demo-GcsSink-avro    | RUNNING | sink
-        lcc-3r7w2 | demo-GcsSink-no-avro | RUNNING | sink
+           ID     |        Name         | Status  |  Type  | Trace  
+      +-----------+---------------------+---------+--------+-------+
+        lcc-2jrx1 | demo-S3Sink-no-avro | RUNNING | sink   |        
+        lcc-vnrqp | demo-KinesisSource  | RUNNING | source |        
+        lcc-5qwrn | demo-S3Sink-avro    | RUNNING | sink   |       
 
-#. Describe any running connector in more detail, in this case ``lcc-knjgv`` which corresponds to the the AWS Kinesis connector. 
+#. Describe any running connector in more detail, in this case ``lcc-vnrqp`` which corresponds to the the AWS Kinesis connector. 
 
    .. code:: bash
 
-      ccloud connector describe lcc-knjgv
+      ccloud connector describe lcc-vnrqp
 
    Your output should resemble:
 
@@ -228,40 +282,48 @@ Validate
 
       Connector Details
       +--------+--------------------+
-      | ID     | lcc-knjgv          |
+      | ID     | lcc-vnrqp          |
       | Name   | demo-KinesisSource |
       | Status | RUNNING            |
       | Type   | source             |
+      | Trace  |                    |
       +--------+--------------------+
       
       
       Task Level Details
-        Task_ID |  State   
-      +---------+---------+
-              0 | RUNNING  
+        TaskId |  State   
+      +--------+---------+
+             0 | RUNNING  
       
       
       Configuration Details
-           Configuration    |                          Value                           
+              Config        |                          Value
       +---------------------+---------------------------------------------------------+
-        schema.registry.url | https://psrc-lz3xz.us-central1.gcp.confluent.cloud       
-        value.converter     | io.confluent.connect.replicator.util.ByteArrayConverter  
-        aws.access.key.id   | ****************                                         
-        kafka.region        | us-west2                                                 
-        tasks.max           |                                                       1  
-        aws.secret.key.id   | ****************                                         
-        kafka.topic         | eventLogs                                                
-        kafka.api.key       | ****************                                         
-        kinesis.position    | TRIM_HORIZON                                             
-        kinesis.region      | us-west-2                                                
-        kinesis.stream      | demo-logs                                                
-        cloud.environment   | prod                                                     
-        connector.class     | KinesisSource                                            
-        key.converter       | org.apache.kafka.connect.storage.StringConverter         
-        name                | demo-KinesisSource                                       
-        kafka.api.secret    | ****************                                         
-        kafka.endpoint      | SASL_SSL://pkc-4r087.us-west2.gcp.confluent.cloud:9092   
+        name                | demo-KinesisSource
+        kafka.api.key       | ****************
+        kafka.api.secret    | ****************
+        schema.registry.url | https://psrc-4yovk.us-east-2.aws.confluent.cloud
+        cloud.environment   | prod
+        kafka.endpoint      | SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
+        kafka.region        | us-west-2
+        kafka.user.id       |                                                   73800
+        kinesis.position    | TRIM_HORIZON
+        kinesis.region      | us-west-2
+        kinesis.stream      | demo-logs
+        aws.secret.key.id   | ****************
+        connector.class     | KinesisSource
+        tasks.max           |                                                       1
+        aws.access.key.id   | ****************
 
+
+#. View these same connectors from the Confluent Cloud UI at https://confluent.cloud/ 
+
+   .. figure:: images/connectors.png
+      :alt: image
+
+
+ksqlDB
+------
 
 #. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html#data-flow>`__ through your ksqlDB application:
 
@@ -350,12 +412,21 @@ Validate
         ]
       }
 
+#. View these same queries from the Confluent Cloud UI at https://confluent.cloud/ 
 
-#. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`provided script|cloud-etl/read-data.sh`.
+.. figure:: images/ksqldb_queries.png
+   :alt: image
+
+
+Validate
+--------
+
+
+#. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`read-data.sh|cloud-etl/read-data.sh` script.
 
    .. code:: bash
 
-      ./read-data.sh
+      ./read-data.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
    Your output should resemble:
 
@@ -373,8 +444,8 @@ Validate
       {"eventSourceIP":"192.168.1.2","eventAction":"Upload","result":"Pass","eventDuration":1}
       {"eventSourceIP":"192.168.1.2","eventAction":"Create","result":"Pass","eventDuration":3}
    
-      Data from Kafka topic eventLogs:
-      confluent local consume eventLogs -- --cloud --from-beginning --property print.key=true --max-messages 10
+      Data from Kafka topic eventlogs:
+      confluent local consume eventlogs -- --cloud --config stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config --from-beginning --property print.key=true --max-messages 10
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Create","result":"Pass","eventDuration":1}
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Delete","result":"Fail","eventDuration":1}
@@ -387,7 +458,7 @@ Validate
       5   {"eventSourceIP":"192.168.1.5","eventAction":"Upload","result":"Pass","eventDuration":4}
    
       Data from Kafka topic COUNT_PER_SOURCE:
-      confluent local consume COUNT_PER_SOURCE -- --cloud --from-beginning --property print.key=true --max-messages 10
+      confluent local consume COUNT_PER_SOURCE -- --cloud --config stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config --from-beginning --property print.key=true --max-messages 10
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":1}
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":2}
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":3}
@@ -400,7 +471,7 @@ Validate
       192.168.1.5	{"EVENTSOURCEIP":"192.168.1.5","COUNT":10}
    
       Data from Kafka topic SUM_PER_SOURCE:
-      confluent local consume SUM_PER_SOURCE -- --cloud --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
+      confluent local consume SUM_PER_SOURCE -- --cloud --config stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10
       192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":1}}
       192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":4}}
       192.168.1.2	{"EVENTSOURCEIP":{"string":"192.168.1.2"},"SUM":{"long":5}}
@@ -414,25 +485,46 @@ Validate
    
       Objects in Cloud storage gcs:
    
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000000000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000001000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000002000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000003000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000004000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000000000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000001000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000002000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000003000.bin
-      gs://confluent-cloud-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000004000.bin
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000000000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000001000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000002000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000003000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000000000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000001000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000002000.avro
-      gs://confluent-cloud-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000003000.avro
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000000000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000001000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000002000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000003000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+1+0000004000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000000000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000001000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000002000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000003000.bin
+      gs://confluent-cloud-etl-demo/topics/COUNT_PER_SOURCE/year=2020/month=02/day=26/hour=03/COUNT_PER_SOURCE+3+0000004000.bin
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000000000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000001000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000002000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+1+0000003000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000000000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000001000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000002000.avro
+      gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000003000.avro
+
+
+#. Add more entries in the source and see them propagate through the pipeline by viewing messages in the Confluent Cloud UI or CLI.
+
+   If you are running Kinesis:
+
+   .. code:: bash
+
+      ./add_entries_kinesis.sh
       
+   If you are running RDS PostgreSQL:
+
+   .. code:: bash
+
+      ./add_entries_rds.sh
+
+#. View the new messages from the Confluent Cloud UI.
+
+.. figure:: images/messages.png
+   :alt: image
+
+
       
 Stop
 ----
@@ -441,7 +533,7 @@ Stop
 
    .. code:: bash
 
-      ./stop.sh
+      ./stop.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
 #. Always verify that resources in |ccloud| have been destroyed.
 
