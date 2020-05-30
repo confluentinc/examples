@@ -30,9 +30,9 @@ This allows |crep| to leverage the Connect worker's default behavior with regard
 
 .. figure:: images/replicator-worker-destination.png
 
-There are two examples of where |crep| runs on :ref:`connect-backed-destination`:
+There are two examples of where |crep| runs on a :ref:`connect-backed-destination`:
 
-- :ref:`on-prem to Confluent Cloud <onprem-cloud-destination>`
+- :ref:`On-prem to Confluent Cloud <onprem-cloud-destination>`
 - :ref:`Confluent Cloud to to Confluent Cloud <cloud-cloud-destination>`
 
 However, if you do not want to back your self-managed Connect cluster backed to the destination |ccloud| cluster, you can also have a Connect cluster backed to the origin cluster instead of |ccloud|.
@@ -41,17 +41,19 @@ This deployment model is more complex because there are some additional override
 
 .. figure:: images/replicator-worker-origin.png
 
-There are two examples of where |crep| runs on :ref:`connect-backed-origin`:
+There are two examples of where |crep| runs on a :ref:`connect-backed-origin`:
 
-- :ref:`on-prem to Confluent Cloud <onprem-cloud-origin>`
+- :ref:`On-prem to Confluent Cloud <onprem-cloud-origin>`
 - :ref:`Confluent Cloud to to Confluent Cloud <cloud-cloud-origin>`
 
 
 .. _connect-backed-destination:
 
 =====================================
-Connect Cluster backed to Destination
+Connect Cluster Backed to Destination
 =====================================
+
+.. figure:: images/replicator-worker-destination.png
 
 .. _onprem-cloud-destination:
 
@@ -98,8 +100,10 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 .. _connect-backed-origin:
 
 ================================
-Connect Cluster backed to Origin
+Connect Cluster Backed to Origin
 ================================
+
+.. figure:: images/replicator-worker-origin.png
 
 .. _onprem-cloud-origin:
 

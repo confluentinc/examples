@@ -1,4 +1,4 @@
-The connect worker is backed to the origin on-prem Kafka cluster, which can have a varied set of security features enabled, but for simplicity in this example we show no features, just PLAINTEXT.
+The Connect worker is backed to the origin on-prem Kafka cluster, which can have a varied set of security features enabled, but for simplicity in this example we show no features, just PLAINTEXT.
 
 .. sourcecode:: bash
 

@@ -1,4 +1,4 @@
-Since the connect workers are backed to the origin cluster, by default |crep| would produce data to the origin cluster.
+Since the Connect workers are backed to the origin cluster, by default |crep| would produce data to the origin cluster.
 To override this default behavior, you need to configure |crep| to produce data to the destination |ccloud| cluster, by adding configuration parameters with the prefix ``producer.override.``:
 
 .. sourcecode:: bash
