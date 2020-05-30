@@ -17,7 +17,7 @@ This will help you understand the logic for configuring |crep|.
 - As a Kafka connector, |crep| runs on Connect workers. Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker with it.
 - |crep| has an embedded consumer that reads data from the origin cluster.
 - |crep| is specifically a source connector, and as with all source connectors, it relies on the Connect worker's embedded producer to write data to the destination cluster, in this case |ccloud|.
-- A Connect cluster creates three Kafka topics for management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
+- A Connect cluster uses the admin client to create three Kafka topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
 
 ===================
 Configuration Types
@@ -26,25 +26,21 @@ Configuration Types
 There are several ways to configure |crep| to copy Kafka data to |ccloud|.
 
 The simplest configuration type is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
-This allows |crep| to leverage the Connect worker's default behavior with regards to its embedded producer.
-
-.. figure:: images/replicator-worker-destination.png
+This allows |crep| to leverage the Connect worker's default behavior with regards to its admin client and embedded producer.
 
 There are two examples of where |crep| runs on a :ref:`connect-backed-destination`:
 
 - :ref:`On-prem to Confluent Cloud <onprem-cloud-destination>`
-- :ref:`Confluent Cloud to to Confluent Cloud <cloud-cloud-destination>`
+- :ref:`Confluent Cloud to Confluent Cloud <cloud-cloud-destination>`
 
 However, if you do not want to back your self-managed Connect cluster backed to the destination |ccloud| cluster, you can also have a Connect cluster backed to the origin cluster instead of |ccloud|.
 This also means that the Connect workers are using the origin cluster for its Connect management topics.
 This configuration type is more complex because there are some additional overrides you will need to configure.
 
-.. figure:: images/replicator-worker-origin.png
-
 There are two examples of where |crep| runs on a :ref:`connect-backed-origin`:
 
 - :ref:`On-prem to Confluent Cloud <onprem-cloud-origin>`
-- :ref:`Confluent Cloud to to Confluent Cloud <cloud-cloud-origin>`
+- :ref:`Confluent Cloud to Confluent Cloud <cloud-cloud-origin>`
 
 
 .. _connect-backed-destination:
@@ -92,9 +88,7 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
-.. include:: includes/set-acls-destination.rst
-
-.. include:: includes/set-acls-origin.rst
+.. include:: includes/set-acls-origin-and-destination.rst
 
 
 .. _connect-backed-origin:
@@ -146,9 +140,7 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. include:: includes/replicator-overrides.rst
 
-.. include:: includes/set-acls-destination.rst
-
-.. include:: includes/set-acls-origin.rst
+.. include:: includes/set-acls-origin-and-destination.rst
 
 
 ==========================================================
