@@ -3,22 +3,20 @@
 ################################################################
 # helper_cloud.sh
 # --------------------------------------------------------------
-# This library of functions automate common tasks to interface
-#   with Confluent Cloud https://confluent.cloud/ 
-#
+# This library of functions automates common tasks with Confluent Cloud https://confluent.cloud/ 
 # These are intended to be examples for demos and testing.
 #
-# Example usage at https://github.com/confluentinc/examples
+# Example usage in https://github.com/confluentinc/examples
 #
-# Get this library:
+# Get the library:
 #
 #   wget -O helper_cloud.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/helper_cloud.sh
 #   source ./helper_cloud.sh
 #
 # Support:
 #
-#   1. There are no guarantees for backwards compatibility
-#   2. Community support via https://github.com/confluentinc/examples/issues
+#   1. Community support via https://github.com/confluentinc/examples/issues
+#   2. There are no guarantees for backwards compatibility
 #   3. PRs welcome ;) 
 ################################################################
 
