@@ -1,9 +1,9 @@
-.. _replicator-to-cloud-tutorial:
+.. _replicator-to-cloud-deployment-models:
 
-|crep-full| to |ccloud| Tutorial
-================================
+|crep-full| to |ccloud| Deployment Models
+=========================================
 
-This tutorial shows you several ways to deploy |crep-full| between two |ak| clusters, specifically where the destination Kafka cluster is |ccloud|.
+There are several ways to deploy |crep-full| between two |ak| clusters, specifically where the destination Kafka cluster is |ccloud|.
 
 To reprise some basic concepts regarding |crep| and |kconnect-long|:
 
@@ -153,6 +153,7 @@ Connect Worker Configuration
 Additional Resources
 ==========================================================
 
+- For additional considerations on running |crep| to |ccloud|, refer to :ref:`cloud-migrate-topics`.
 - To run a |ccloud| demo that showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster, see :ref:`quickstart-demos-ccloud`..
 - To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
 - For a practical guide to configuring, monitoring, and optimizing your |ak| client applications, see the `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf>`__ whitepaper.
