@@ -13,7 +13,7 @@ The script uses the Confluent Cloud CLI to dynamically do the following in Confl
 * Create a new service account
 * Create a new Kafka cluster and associated credentials
 * Enable Schema Registry and associated credentials
-* Create a new KSQL app and associated credentials
+* Create a new ksqlDB app and associated credentials
 * Create ACLs with wildcard for the service account
 * Generate a local configuration file with all above connection information, useful for other demos/automation
 
@@ -49,7 +49,7 @@ It is written to `stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
 # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
 # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
-# KSQL APP ID: <KSQL APP ID>
+# KSQLDB APP ID: <KSQLDB APP ID>
 # ------------------------------
 ssl.endpoint.identification.algorithm=https
 security.protocol=SASL_SSL
@@ -59,8 +59,8 @@ sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule require
 basic.auth.credentials.source=USER_INFO
 schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
 schema.registry.url=https://<SR ENDPOINT>
-ksql.endpoint=<KSQL ENDPOINT>
-ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+ksql.endpoint=<KSQLDB ENDPOINT>
+ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 ```
 
 ## Advanced usage

@@ -96,6 +96,15 @@ function check_cli_v2() {
   return 0
 }
 
+function check_psql() {
+  if [[ $(type psql 2>&1) =~ "not found" ]]; then
+    echo "psql is not found. Install psql and try again"
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_aws() {
   if [[ $(type aws 2>&1) =~ "not found" ]]; then
     echo "AWS CLI is not found. Install AWS CLI and try again"
@@ -133,6 +142,35 @@ function check_az_tool() {
   return 0
 }
 
+function validate_cloud_source() {
+  config=$1
+
+  source $config
+
+  if [[ "$DATA_SOURCE" == "kinesis" ]]; then
+    check_aws || exit 1
+    if [[ -z "$KINESIS_REGION" || -z "$AWS_PROFILE" ]]; then
+      echo "ERROR: DATA_SOURCE=kinesis, but KINESIS_REGION or AWS_PROFILE is not set.  Please set these parameters in config/demo.cfg and try again."
+      exit 1
+    fi
+    aws kinesis list-streams --profile $AWS_PROFILE --region $KINESIS_REGION > /dev/null \
+      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws kinesis list-streams'.  Check credentials and run again."
+  elif [[ "$DATA_SOURCE" == "rds" ]]; then
+    check_aws || exit 1
+    if [[ -z "$RDS_REGION" || -z "$AWS_PROFILE" ]]; then
+      echo "ERROR: DATA_SOURCE=rds, but RDS_REGION or AWS_PROFILE is not set.  Please set these parameters in config/demo.cfg and try again."
+      exit 1
+    fi
+    aws rds describe-db-instances --profile $AWS_PROFILE --region $RDS_REGION > /dev/null \
+      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws rds describe-db-instances'.  Check credentials and run again."
+  else
+    echo "Cloud source $cloudsource is not valid.  Must be one of [kinesis|rds]."
+    exit 1
+  fi
+
+  return 0
+}
+
 function validate_cloud_storage() {
   config=$1
 
@@ -142,6 +180,8 @@ function validate_cloud_storage() {
   if [[ "$storage" == "s3" ]]; then
     check_aws || exit 1
     check_s3_creds $S3_PROFILE $S3_BUCKET || exit 1
+    aws s3api list-buckets --profile $S3_PROFILE --region $STORAGE_REGION > /dev/null \
+      || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws s3api list-buckets'.  Check credentials and run again."
   elif [[ "$storage" == "gcs" ]]; then
     check_gsutil || exit 1
     check_gcp_creds $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
@@ -440,7 +480,7 @@ function check_credentials_ksql() {
 function create_connector_cloud() {
   file=$1
 
-  echo -e "\nTrying to create connector from $file\n"
+  echo -e "\nCreating connector from $file\n"
 
   # About the Confluent Cloud CLI command 'ccloud connector create':
   # - Typical usage of this CLI would be 'ccloud connector create --config <filename>'
@@ -552,6 +592,17 @@ function ccloud_cli_get_service_account() {
   return 0
 }
 
+function create_cloud_connector_acls() {
+  serviceAccount=$1
+
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --prefix --topic dlq-lcc
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --prefix --topic dlq-lcc
+  ccloud kafka acl create --allow --service-account $serviceAccount --operation READ --prefix --consumer-group connect-lcc
+
+  return 0
+}
+
 function create_c3_acls() {
   serviceAccount=$1
 
@@ -645,8 +696,8 @@ function ccloud_cli_set_kafka_cluster_use() {
     exit 1
   fi
   ccloud kafka cluster use $kafkaCluster
-  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster:"
-  ccloud kafka cluster describe $kafkaCluster
+  endpoint=$(ccloud kafka cluster describe $kafkaCluster -o json | jq -r ".endpoint" | cut -c 12-)
+  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster at $endpoint"
 
   return 0
 }
@@ -712,7 +763,7 @@ function cloud_create_demo_stack() {
 EOF
   if $enable_ksql ; then
     cat <<EOF >> $CLIENT_CONFIG
-# KSQL ID: ${KSQL}
+# KSQLDB APP ID: ${KSQL}
 EOF
   fi
   cat <<EOF >> $CLIENT_CONFIG
