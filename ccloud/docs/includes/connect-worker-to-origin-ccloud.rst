@@ -8,13 +8,13 @@ The Connect worker's admin client requires connection information to the origin 
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 6-11
 
-The Connect worker's embedded producer and embedded consumer require connection information to the origin |ccloud|.
+The Connect worker's embedded producer requires connection information to the origin |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
-   :lines: 13-23
+   :lines: 14-17
 
-If you are using |c3| and doing stream monitoring then the embedded producer and consumer's monitoring interceptors require connection information to the origin |ccloud|.
+If you are using |c3| and doing stream monitoring then the embedded producer's monitoring interceptors require connection information to the origin |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
-   :lines: 25-35
+   :lines: 26-29
 

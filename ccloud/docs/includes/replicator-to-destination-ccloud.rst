@@ -15,13 +15,13 @@ Use the prefix ``dest.`` to set these configuration parameters.
    dest.kafka.sasl.mechanism=PLAIN
    dest.kafka.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";
 
-If your deployment has Confluent Control Center end-to-end streams monitoring setup to gather data in Confluent Cloud, then you also need to setup the Confluent Monitoring Interceptors to send data to your |ccloud| cluster, which also requires appropriate connection information set for the embedded consumer.
+If your deployment has Confluent Control Center end-to-end streams monitoring setup to gather data in Confluent Cloud, then you also need to setup the Confluent Monitoring Interceptors to send data to your |ccloud| cluster, which also requires appropriate connection information set for the embedded consumer with the prefix ``src.consumer``.
 
 .. sourcecode:: bash
 
-      src.consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
-      src.consumer.confluent.monitoring.interceptor.bootstrap.servers=<bootstrap-servers-destination>
-      src.consumer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
-      src.consumer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
-      src.consumer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";
+   src.consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+   src.consumer.confluent.monitoring.interceptor.bootstrap.servers=<bootstrap-servers-destination>
+   src.consumer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
+   src.consumer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
+   src.consumer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";
 
