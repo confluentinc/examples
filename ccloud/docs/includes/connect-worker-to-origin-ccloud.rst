@@ -1,12 +1,22 @@
-The connect worker is backed to the origin |ccloud| cluster.
-All these bootstrap server values and API key credentials refer to the origin cluster, not the destination cluster.
+The connect workers in the connect clusters should be configured to connect to |ccloud|.
 
-   .. literalinclude:: ../template_delta_configs/connect-ccloud.delta
-      :lines: 1-35
+#. The connect cluster's admin topics must be set to replication factor of 3 as required by |ccloud|.
 
-There is one additional required configuration parameter for the connect worker that is required when the worker is backed to the origin cluster instead of the destination cluster, which allows the connectors (|crep| in this case) to override some configurations.
+   .. literalinclude:: ../config/connect-ccloud-origin.delta
+      :lines: 1-4
 
-   .. sourcecode:: bash
+#. The connect worker's admin client requires connection information to the origin |ccloud|.
 
-      connector.client.config.override.policy=all
+   .. literalinclude:: ../config/connect-ccloud-origin.delta
+      :lines: 7-11
+
+#. The connect worker's embedded producer and embedded consumer require connection information to the origin |ccloud|.
+
+   .. literalinclude:: ../config/connect-ccloud-origin.delta
+      :lines: 13-23
+
+#. If you are using |c3| and doing stream monitoring then the embedded producer and consumer's monitoring interceptors require connection information to the origin |ccloud|.
+
+   .. literalinclude:: ../config/connect-ccloud-origin.delta
+      :lines: 25-35
 

@@ -30,7 +30,7 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 Connect Worker Configuration
 ----------------------------
 
-.. include:: includes/connect-worker-to-ccloud-destination.rst 
+.. include:: includes/connect-worker-to-destination-ccloud.rst 
 
 |crep| Configuration
 --------------------
@@ -86,7 +86,7 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 Connect Worker Configuration
 ----------------------------
 
-.. include:: includes/connect-worker-to-origin.rst
+.. include:: includes/connect-worker-to-origin-onprem.rst
 
 |crep| Configuration
 --------------------
