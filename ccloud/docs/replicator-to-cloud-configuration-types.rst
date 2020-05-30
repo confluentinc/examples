@@ -25,7 +25,7 @@ Configuration Types
 ===================
 
 There are several ways to configure |crep| to copy Kafka data to |ccloud|.
-The simplest configuration type is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
+The simplest configuration is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the default behavior of the Connect worker's admin client and embedded producer.
 
 There are two configuration examples of where |crep| runs on a :ref:`connect-backed-destination`:
@@ -33,13 +33,17 @@ There are two configuration examples of where |crep| runs on a :ref:`connect-bac
 - :ref:`onprem-cloud-destination`
 - :ref:`cloud-cloud-destination`
 
-If you do not want your self-managed Connect cluster backed to the destination |ccloud| cluster, instead you can have a Connect cluster backed to the origin cluster.
-This configuration type is more complex because there are some additional overrides you will need to configure.
+.. figure:: images/replicator-worker-destination.png
+
+If you do not want your self-managed Connect cluster backed to the destination |ccloud| cluster, you can have a Connect cluster backed to the origin cluster instead.
+This configuration is more complex because there are some additional overrides you will need to configure.
 
 There are two configuration examples of where |crep| runs on a :ref:`connect-backed-origin`:
 
 - :ref:`onprem-cloud-origin`
 - :ref:`cloud-cloud-origin`
+
+.. figure:: images/replicator-worker-origin.png
 
 
 .. _connect-backed-destination:
@@ -47,8 +51,6 @@ There are two configuration examples of where |crep| runs on a :ref:`connect-bac
 =====================================
 Connect Cluster Backed to Destination
 =====================================
-
-.. figure:: images/replicator-worker-destination.png
 
 .. _onprem-cloud-destination:
 
@@ -61,11 +63,17 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. figure:: images/onprem-ccloud-destination.png
 
+- Configure |kconnect-long|
+
 .. include:: includes/connect-worker-to-destination-ccloud.rst 
+
+- Configure |crep|
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
+
+- Configure ACLs
 
 .. include:: includes/set-acls-destination.rst
 
@@ -81,11 +89,17 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. figure:: images/ccloud-ccloud-destination.png
 
+- Configure |kconnect-long|
+
 .. include:: includes/connect-worker-to-destination-ccloud.rst
+
+- Configure |crep|
 
 .. include:: includes/replicator-from-origin-ccloud.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
+
+- Configure ACLs
 
 .. include:: includes/set-acls-origin-and-destination.rst
 
@@ -95,8 +109,6 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 ================================
 Connect Cluster Backed to Origin
 ================================
-
-.. figure:: images/replicator-worker-origin.png
 
 .. _onprem-cloud-origin:
 
@@ -109,11 +121,17 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. figure:: images/onprem-ccloud-origin.png
 
+- Configure |kconnect-long|
+
 .. include:: includes/connect-worker-to-origin-onprem.rst
+
+- Configure |crep|
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
+
+- Configure ACLs
 
 .. include:: includes/replicator-overrides.rst
 
@@ -131,13 +149,19 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. figure:: images/ccloud-ccloud-origin.png
 
+- Configure |kconnect-long|
+
 .. include:: includes/connect-worker-to-origin-ccloud.rst
+
+- Configure |crep|
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
 .. include:: includes/replicator-overrides.rst
+
+- Configure ACLs
 
 .. include:: includes/set-acls-origin-and-destination.rst
 

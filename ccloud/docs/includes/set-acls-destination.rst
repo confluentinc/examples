@@ -1,5 +1,5 @@
-|crep| must be authorized to read Kafka data from the origin cluster and write Kafka data in the destination |ccloud| cluster.
-Best practices is that |crep| should be run with a |ccloud| service account, not super user credentials, so you will have to use |ccloud| CLI to configure appropriate ACLs for the service account id corresponding to |crep| in the destination cluster.
+|crep| must have authorization to read Kafka data from the origin cluster and write Kafka data in the destination |ccloud| cluster.
+|crep| should be run with a |ccloud| service account, not super user credentials, you will have to use |ccloud| CLI to configure appropriate ACLs for the service account id corresponding to |crep| in |ccloud|.
 For more details on |crep| ACLs, see :ref:`replicator_security_overview`.
 
 .. sourcecode:: bash

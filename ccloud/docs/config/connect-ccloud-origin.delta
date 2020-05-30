@@ -1,9 +1,9 @@
-# Configuration for embedded admin client
 replication.factor=3
 config.storage.replication.factor=3
 offset.storage.replication.factor=3
 status.storage.replication.factor=3
 
+# Configuration for embedded admin client
 bootstrap.servers=<bootstrap-servers-destination>
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN

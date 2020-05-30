@@ -1,12 +1,13 @@
-The Connect worker is backed to the origin on-prem Kafka cluster, which can have a varied set of security features enabled, but for simplicity in this example we show no features, just PLAINTEXT.
+The Connect worker is backed to the origin on-prem Kafka cluster, which can have a varied set of security features enabled, but for simplicity in this example we show no security configurations, just PLAINTEXT.
 
 .. sourcecode:: bash
 
-   # Configuration for embedded admin client
-   replication.factor=<replication factor>
-   config.storage.replication.factor=<replication factor>
-   offset.storage.replication.factor=<replication factor>
-   status.storage.replication.factor=<replication factor>
+   replication.factor=<replication-factor-onprem>
+   config.storage.replication.factor=<replication-factor-onprem>
+   offset.storage.replication.factor=<replication-factor-onprem>
+   status.storage.replication.factor=<replication-factor-onprem>
+
+The Connect worker’s admin client requires connection information to the onprem cluster.
    
    bootstrap.servers=<bootstrap-servers-onprem>
    

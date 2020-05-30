@@ -1,6 +1,5 @@
 The Connect workers in the Connect clusters should be configured to |ccloud|.
-
-The Connect cluster's admin topics must be set to replication factor of 3 as required by |ccloud|.
+To start, the Connect cluster's admin topics must be set to replication factor of 3 as required by |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 1-4
@@ -8,7 +7,7 @@ The Connect cluster's admin topics must be set to replication factor of 3 as req
 The Connect worker's admin client requires connection information to the origin |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
-   :lines: 7-11
+   :lines: 6-11
 
 The Connect worker's embedded producer and embedded consumer require connection information to the origin |ccloud|.
 
