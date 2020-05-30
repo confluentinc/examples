@@ -7,7 +7,7 @@
 
 
 # Source library
-. ../../utils/helper.sh
+source ../../utils/helper.sh
 
 check_ccloud_version 1.0.0 || exit 1
 check_jq || exit 1

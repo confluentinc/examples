@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source Confluent Platform versions
-. ../utils/config.env
+source ../utils/config.env
 
 # This script is purely to output some interesting data to help you understand the replication process
 

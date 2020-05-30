@@ -1,6 +1,6 @@
 #!/bin/bash
 
 # Source library 
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 docker-compose down -v

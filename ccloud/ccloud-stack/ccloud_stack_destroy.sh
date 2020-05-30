@@ -3,7 +3,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 # Source library
-. $DIR/../../utils/helper.sh
+source $DIR/../../utils/helper.sh
 
 check_ccloud_version 1.0.0 || exit 1
 check_jq || exit 1
