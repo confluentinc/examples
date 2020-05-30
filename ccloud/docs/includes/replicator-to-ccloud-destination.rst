@@ -1,0 +1,25 @@
+The destination cluster is your |ccloud| cluster, and |crep| needs to know how to connect to it.
+Use the prefix ``dest.`` to set these configuration parameters.
+
+   .. sourcecode:: bash
+
+      # Confluent Replicator license topic must have replication factor set to 3 for Confluent Cloud
+      confluent.topic.replication.factor=3
+
+      # New user topics that Confluent Replicator creates must have replication factor set to 3 for Confluent Cloud 
+      dest.topic.replication.factor=3
+
+      # Connection information to Confluent Cloud
+      dest.kafka.bootstrap.servers=<Confluent Cloud bootstrap server>
+      dest.kafka.security.protocol=SASL_SSL
+      dest.kafka.sasl.mechanism=PLAIN
+      dest.kafka.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CCLOUD_API_KEY>" password="<CCLOUD_API_SECRET>";
+
+If your deployment has Confluent Control Center end-to-end streams monitoring setup to gather data in Confluent Cloud, then you also need to setup the Confluent Monitoring Interceptors to send data to your |ccloud| cluster, which also requires appropriate connection information set for the embedded consumer.
+
+      src.consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
+      src.consumer.confluent.monitoring.interceptor.bootstrap.servers=<Confluent Cloud bootstrap server>
+      src.consumer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
+      src.consumer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
+      src.consumer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<CCLOUD_API_KEY>" password="<CCLOUD_API_SECRET>";
+
