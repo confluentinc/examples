@@ -3,18 +3,26 @@
 |crep-full| to |ccloud| Tutorial
 ================================
 
-This tutorial shows you several ways to deploy |crep-full| where the destination Kafka cluster is |ccloud|.
+This tutorial shows you several ways to deploy |crep-full| between two |ak| clusters, specifically where the destination Kafka cluster is |ccloud|.
 
-|crep| is a source connector, so the easiest deployment model is where |crep| runs on a self-managed connect cluster that is backed to the destination |ccloud| cluster, which means that the connect workers are using the destination |ccloud| cluster for its connect topics `offset.storage.topic`, `config.storage.topic`, and `status.storage.topic`.
+To reprise some basic concepts regarding |crep| and |kconnect-long|:
 
-:ref:`Example 1 <onprem-cloud-destination>`: on-prem to |ccloud| where |crep| runs on a connect cluster backed to the destination |ccloud| cluster 
-:ref:`Example 2 <cloud-cloud-destination>`: |ccloud| to |ccloud| where |crep| runs on a connect cluster backed to the destination |ccloud| cluster
+- As a Kafka connector, |crep| runs on Connect workers. Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker with it.
+- |crep| has an embedded consumer that reads data from the origin cluster.
+- |crep| is specifically a source connector, and as with all source connectors, it relies on the Connect worker's embedded producer to write data to the destination cluster, in this case |ccloud|.
+- A Connect cluster creates three Kafka topics for management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
 
-However, if you do not want to back your self-managed connect cluster to the destination |ccloud| cluster, you can also have a connect cluster backed to the origin cluster instead of |ccloud|, which means that the connect workers are using the origin cluster for its connect topics `offset.storage.topic`, `config.storage.topic`, and `status.storage.topic`.
+To replicate data to |ccloud|, the easiest deployment model is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
+
+- :ref:`Example 1 <onprem-cloud-destination>`: on-prem to |ccloud| where |crep| runs on a Connect cluster backed to the destination |ccloud| cluster 
+- :ref:`Example 2 <cloud-cloud-destination>`: |ccloud| to |ccloud| where |crep| runs on a Connect cluster backed to the destination |ccloud| cluster
+
+However, if you do not want to back your self-managed Connect cluster backed to the destination |ccloud| cluster, you can also have a Connect cluster backed to the origin cluster instead of |ccloud|.
+This also means that the Connect workers are using the origin cluster for its Connect management topics.
 This deployment model is more complex because there are some additional overrides you will need to configure.
 
-:ref:`Example 3 <onprem-cloud-origin>`: on-prem to |ccloud| where |crep| runs on a connect cluster backed to the origin on-prem cluster
-:ref:`Example 4 <cloud-cloud-origin>`: |ccloud| to |ccloud| where |crep| runs on a connect cluster backed to the origin |ccloud| cluster
+- :ref:`Example 3 <onprem-cloud-origin>`: on-prem to |ccloud| where |crep| runs on a Connect cluster backed to the origin on-prem cluster
+- :ref:`Example 4 <cloud-cloud-origin>`: |ccloud| to |ccloud| where |crep| runs on a Connect cluster backed to the origin |ccloud| cluster
 
 
 .. _onprem-cloud-destination:
@@ -23,7 +31,7 @@ This deployment model is more complex because there are some additional override
 On-prem to |ccloud|: Connect Cluster backed to Destination
 ==========================================================
 
-In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a connect cluster backed to the destination |ccloud| cluster.
+In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
 .. include:: includes/generic-subset.rst
 
@@ -52,7 +60,7 @@ Connect Worker Configuration
 |ccloud| to |ccloud|: Connect Cluster backed to Destination
 ===========================================================
 
-In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a connect cluster backed to the destination |ccloud| cluster.
+In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
 .. include:: includes/generic-subset.rst
 
@@ -83,7 +91,7 @@ Connect Worker Configuration
 On-prem to |ccloud|: Connect Cluster backed to Origin
 =====================================================
 
-In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a connect cluster backed to the origin on-prem cluster.
+In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
 .. include:: includes/generic-subset.rst
 
@@ -114,7 +122,7 @@ Connect Worker Configuration
 |ccloud| to |ccloud|: Connect Cluster backed to Origin
 ======================================================
 
-In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a connect cluster backed to the origin on-prem cluster.
+In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
 .. include:: includes/generic-subset.rst
 

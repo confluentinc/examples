@@ -8,12 +8,5 @@ The connect worker is backed to the origin on-prem Kafka cluster, which can have
    offset.storage.replication.factor=<replication factor>
    status.storage.replication.factor=<replication factor>
    
-   bootstrap.servers=<<bootstrap servers for on-prem>
+   bootstrap.servers=<bootstrap-servers-onprem>
    
-   # Configuration for embedded producer using the prefix 'producer.'
-   
-   # Configuration for embedded consumer using the prefix 'consumer.'
-   
-   # Configuration for embedded producer's Confluent Monitoring Interceptors using the prefix 'producer.confluent.monitoring.interceptor.'
-   
-   # Configuration for embedded consumer's Confluent Monitoring Interceptors using the prefix 'consumer.confluent.monitoring.interceptor.'

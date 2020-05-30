@@ -3,14 +3,14 @@ Best practices is that |crep| should be run with a |ccloud| service account, not
 Since the origin cluster in this example is also |ccloud|, you will have to also configure appropriate ACLs for the service account id corresponding to |crep| in the origin cluster as well as the destination cluster..
 For more details on |crep| ACLs, pleasee see :ref:`replicator_security_overview`.
 
-   .. sourcecode:: bash
+.. sourcecode:: bash
 
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation CREATE --topic <replicated-topic>
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation WRITE --topic <replicated-topic>
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation READ --topic <replicated-topic>
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE --topic <replicated-topic>
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE-CONFIGS --topic <replicated-topic>
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation ALTER-CONFIGS --topic <replicated-topic>
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE --cluster-scope
-      ccloud kafka acl create --allow --service-account <service-account-id> --operation CREATE --cluster-scope
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation CREATE --topic <replicated-topic>
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation WRITE --topic <replicated-topic>
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation READ --topic <replicated-topic>
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE --topic <replicated-topic>
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE-CONFIGS --topic <replicated-topic>
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation ALTER-CONFIGS --topic <replicated-topic>
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE --cluster-scope
+   ccloud kafka acl create --allow --service-account <service-account-id> --operation CREATE --cluster-scope
 
