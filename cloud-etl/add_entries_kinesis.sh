@@ -9,7 +9,7 @@
 # Source demo-specific configurations
 source config/demo.cfg
 
-if [[ $(get_aws_cli_version) -eq 2 ]]; then
+if [[ $(ccloud::get_version_aws_cli) -eq 2 ]]; then
   V2_OPTS="--cli-binary-format raw-in-base64-out"
 fi
 #aws kinesis describe-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION

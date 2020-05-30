@@ -16,7 +16,7 @@ source $DELTA_CONFIGS_DIR/env.delta
 # Confluent Cloud KSQL application
 #################################################################
 echo -e "\nConfluent Cloud KSQL application\n"
-validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+ccloud::validate_ksql_up "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
 
 # Create required topics and ACLs
 echo -e "Configure ACLs for Confluent Cloud KSQL"

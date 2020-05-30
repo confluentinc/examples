@@ -12,12 +12,12 @@
 # Source library
 . ../../utils/helper.sh
 
-check_ccloud_version 0.255.0 || exit 1
+ccloud::validate_version_ccloud_cli 0.255.0 || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
-check_ccloud_logged_in || exit 1
+ccloud::validate_logged_in_ccloud_cli || exit 1
 
 ENVIRONMENT_NAME="demo-script-env"
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')

@@ -9,11 +9,11 @@
 # Source library
 . ../../utils/helper.sh
 
-check_ccloud_version 1.0.0 || exit 1
+ccloud::validate_version_ccloud_cli 1.0.0 || exit 1
 check_jq || exit 1
-check_ccloud_logged_in || exit 1
+ccloud::validate_logged_in_ccloud_cli || exit 1
 
-prompt_continue_cloud_demo || exit 1
+ccloud::prompt_continue_ccloud_demo || exit 1
 
 enable_ksql=false
 read -p "Do you also want to create a Confluent Cloud KSQL app (hourly charges may apply)? [y/n] " -n 1 -r
@@ -25,13 +25,13 @@ fi
 
 echo
 echo "Creating..."
-cloud_create_demo_stack $enable_ksql || exit 1
+ccloud::create_ccloud_stack $enable_ksql || exit 1
 
 echo
 echo "Validating..."
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
-check_ccloud_config $CONFIG_FILE || exit 1
+ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 ../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 
@@ -41,7 +41,7 @@ if $enable_ksql ; then
   retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 fi
 
-ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE $enable_ksql || exit 1
+ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE $enable_ksql || exit 1
 
 echo
 echo "ACLs for in this cluster:"

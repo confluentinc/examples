@@ -1,17 +1,31 @@
 #!/bin/bash
 
 ################################################################
-# Source Confluent Platform versions
+# helper_cloud.sh
+# --------------------------------------------------------------
+# This library of functions automate common tasks and checks
+# to interface with Confluent Cloud.
+#
+# Use this library in your environment:
+#
+#   wget -O helper_cloud.sh \
+#       https://raw.githubusercontent.com/confluentinc/examples/latest/utils/helper_cloud.sh
+#
+# Community support via https://github.com/confluentinc/examples/issues
 ################################################################
+
+
+# --------------------------------------------------------------
+# Initialize
+# --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-. "$DIR/config.env"
 
 
-################################################################
-# Library of functions
-################################################################
+# --------------------------------------------------------------
+# Library
+# --------------------------------------------------------------
 
-function prompt_continue_cloud_demo() {
+function ccloud::prompt_continue_ccloud_demo() {
   echo "This demo uses real Confluent Cloud resources."
   echo "To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it."
   read -p "Do you still want to run this script? [y/n] " -n 1 -r
@@ -24,30 +38,16 @@ function prompt_continue_cloud_demo() {
   return 0
 }
 
-function check_ccloud_binary() {
+function ccloud::validate_ccloud_cli_installed() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
     echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
     exit 1
   fi
 }
 
-function check_ccloud_v1() {
-  expected_version="0.2.0"
+function ccloud::validate_ccloud_cli_v2() {
 
-  check_ccloud_binary || exit 1
-
-  actual_version=$(ccloud version | grep -i "version" | awk '{print $3;}')
-  if ! [[ $actual_version =~ $expected_version ]]; then
-    echo "This demo requires Confluent Cloud CLI version $expected_version but the running version is '$actual_version'. Please update your version and try again."
-    exit 1
-  fi
-
-  return 0
-}
-
-function check_ccloud_v2() {
-
-  check_ccloud_binary || exit 1
+  ccloud::validate_ccloud_cli_installed || exit 1
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
@@ -57,8 +57,8 @@ function check_ccloud_v2() {
   return 0
 }
 
-function check_ccloud_logged_in() {
-  check_ccloud_v2 || exit 1
+function ccloud::validate_logged_in_ccloud_cli() {
+  ccloud::validate_ccloud_cli_v2 || exit 1
 
   if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must log in to run that command." ]]; then
     echo "ERROR: Log into Confluent Cloud with the command 'ccloud login [--save]' before running the demo."
@@ -68,16 +68,16 @@ function check_ccloud_logged_in() {
   return 0
 }
 
-function get_ccloud_version() {
+function ccloud::get_version_ccloud_cli() {
   ccloud version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
 }
 
-function check_ccloud_version() {
+function ccloud::validate_version_ccloud_cli() {
 
-  check_ccloud_binary || exit 1
+  ccloud::validate_ccloud_cli_installed || exit 1
 
   REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
-  CCLOUD_VER=$(get_ccloud_version)
+  CCLOUD_VER=$(ccloud::get_version_ccloud_cli)
 
   if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
     echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
@@ -86,7 +86,7 @@ function check_ccloud_version() {
   fi
 }
 
-function check_cli_v2() {
+function ccloud::validate_version_confluent_cli_v2() {
 
   if [[ -z $(confluent version | grep "Go") ]]; then
     echo "This demo requires the new Confluent CLI. Please update your version and try again."
@@ -96,7 +96,7 @@ function check_cli_v2() {
   return 0
 }
 
-function check_psql() {
+function ccloud::validate_psql_installed() {
   if [[ $(type psql 2>&1) =~ "not found" ]]; then
     echo "psql is not found. Install psql and try again"
     exit 1
@@ -105,7 +105,7 @@ function check_psql() {
   return 0
 }
 
-function check_aws() {
+function ccloud::validate_aws_cli_installed() {
   if [[ $(type aws 2>&1) =~ "not found" ]]; then
     echo "AWS CLI is not found. Install AWS CLI and try again"
     exit 1
@@ -114,7 +114,7 @@ function check_aws() {
   return 0
 }
 
-function get_aws_cli_version() {
+function ccloud::get_version_aws_cli() {
   version_major=$(aws --version 2>&1 | awk -F/ '{print $2;}' | head -c 1)
   if [[ "$version_major" -eq 2 ]]; then
     echo "2"
@@ -124,7 +124,7 @@ function get_aws_cli_version() {
   return 0
 }
 
-function check_gsutil() {
+function ccloud::validate_gsutil_installed() {
   if [[ $(type gsutil 2>&1) =~ "not found" ]]; then
     echo "Google Cloud gsutil is not found. Install Google Cloud gsutil and try again"
     exit 1
@@ -133,7 +133,7 @@ function check_gsutil() {
   return 0
 }
 
-function check_az_tool() {
+function ccloud::validate_az_installed() {
   if [[ $(type az 2>&1) =~ "not found" ]]; then
     echo "Azure CLI is not found. Install Azure CLI and try again"
     exit 1
@@ -142,13 +142,13 @@ function check_az_tool() {
   return 0
 }
 
-function validate_cloud_source() {
+function ccloud::validate_cloud_source() {
   config=$1
 
   source $config
 
   if [[ "$DATA_SOURCE" == "kinesis" ]]; then
-    check_aws || exit 1
+    ccloud::validate_aws_cli_installed || exit 1
     if [[ -z "$KINESIS_REGION" || -z "$AWS_PROFILE" ]]; then
       echo "ERROR: DATA_SOURCE=kinesis, but KINESIS_REGION or AWS_PROFILE is not set.  Please set these parameters in config/demo.cfg and try again."
       exit 1
@@ -156,7 +156,7 @@ function validate_cloud_source() {
     aws kinesis list-streams --profile $AWS_PROFILE --region $KINESIS_REGION > /dev/null \
       || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws kinesis list-streams'.  Check credentials and run again."
   elif [[ "$DATA_SOURCE" == "rds" ]]; then
-    check_aws || exit 1
+    ccloud::validate_aws_cli_installed || exit 1
     if [[ -z "$RDS_REGION" || -z "$AWS_PROFILE" ]]; then
       echo "ERROR: DATA_SOURCE=rds, but RDS_REGION or AWS_PROFILE is not set.  Please set these parameters in config/demo.cfg and try again."
       exit 1
@@ -171,23 +171,23 @@ function validate_cloud_source() {
   return 0
 }
 
-function validate_cloud_storage() {
+function ccloud::validate_cloud_storage() {
   config=$1
 
   source $config
   storage=$DESTINATION_STORAGE
 
   if [[ "$storage" == "s3" ]]; then
-    check_aws || exit 1
-    check_s3_creds $S3_PROFILE $S3_BUCKET || exit 1
+    ccloud::validate_aws_cli_installed || exit 1
+    ccloud::validate_credentials_s3 $S3_PROFILE $S3_BUCKET || exit 1
     aws s3api list-buckets --profile $S3_PROFILE --region $STORAGE_REGION > /dev/null \
       || exit_with_error -c $? -n "helper_cloud.sh" -l $LINENO -m "Could not run 'aws s3api list-buckets'.  Check credentials and run again."
   elif [[ "$storage" == "gcs" ]]; then
-    check_gsutil || exit 1
-    check_gcp_creds $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
+    ccloud::validate_gsutil_installed || exit 1
+    ccloud::validate_credentials_gcp $GCS_CREDENTIALS_FILE $GCS_BUCKET || exit 1
   elif [[ "$storage" == "az" ]]; then
-    check_az_tool || exit 1
-    check_az_creds $AZBLOB_STORAGE_ACCOUNT $AZBLOB_CONTAINER || exit 1
+    ccloud::validate_az_installed || exit 1
+    ccloud::validate_credentials_az $AZBLOB_STORAGE_ACCOUNT $AZBLOB_CONTAINER || exit 1
   else
     echo "Storage destination $storage is not valid.  Must be one of [s3|gcs|az]."
     exit 1
@@ -196,7 +196,7 @@ function validate_cloud_storage() {
   return 0
 }
 
-function check_gcp_creds() {
+function ccloud::validate_credentials_gcp() {
   GCS_CREDENTIALS_FILE=$1
   GCS_BUCKET=$2
 
@@ -218,7 +218,7 @@ function check_gcp_creds() {
   return 0
 }
 
-function check_az_creds() {
+function ccloud::validate_credentials_az() {
   AZBLOB_STORAGE_ACCOUNT=$1
   AZBLOB_CONTAINER=$2
 
@@ -246,7 +246,7 @@ function check_az_creds() {
   return 0
 }
 
-function check_s3_creds() {
+function ccloud::validate_credentials_s3() {
   S3_PROFILE=$1
   S3_BUCKET=$2
 
@@ -266,7 +266,7 @@ function check_s3_creds() {
   return 0
 }
 
-function validate_confluent_cloud_schema_registry() {
+function ccloud::validate_schema_registry_up() {
   auth=$1
   sr_endpoint=$2
 
@@ -280,7 +280,7 @@ function validate_confluent_cloud_schema_registry() {
 }
 
 
-function cloud_create_and_use_environment() {
+function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
 
   OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
@@ -296,7 +296,7 @@ function cloud_create_and_use_environment() {
   return 0
 }
 
-function cloud_create_and_use_cluster() {
+function ccloud::create_and_use_cluster() {
   CLUSTER_NAME=$1
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
@@ -310,7 +310,7 @@ function cloud_create_and_use_cluster() {
   return 0
 }
 
-function cloud_create_service_account() {
+function ccloud::create_service_account() {
   SERVICE_NAME=$1
 
   OUTPUT=$(ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json)
@@ -321,7 +321,7 @@ function cloud_create_service_account() {
   return 0
 }
 
-function cloud_enable_schema_registry() {
+function ccloud::enable_schema_registry() {
   SCHEMA_REGISTRY_CLOUD=$1
   SCHEMA_REGISTRY_GEO=$2
 
@@ -333,7 +333,7 @@ function cloud_enable_schema_registry() {
   return 0
 }
 
-function cloud_create_credentials_resource() {
+function ccloud::create_credentials_resource() {
   SERVICE_ACCOUNT_ID=$1
   RESOURCE=$2
 
@@ -346,7 +346,7 @@ function cloud_create_credentials_resource() {
   return 0
 }
 
-function cloud_create_ksql_app() {
+function ccloud::create_ksql_app() {
   KSQL_NAME=$1
   CLUSTER=$2
 
@@ -356,7 +356,7 @@ function cloud_create_ksql_app() {
   return 0
 }
 
-function cloud_create_wildcard_acls() {
+function ccloud::create_acls_wildcard() {
   SERVICE_ACCOUNT_ID=$1
 
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
@@ -372,7 +372,7 @@ function cloud_create_wildcard_acls() {
   return 0
 }
 
-function cloud_delete_demo_stack_acls() {
+function ccloud::delete_acls_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
 
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
@@ -388,7 +388,7 @@ function cloud_delete_demo_stack_acls() {
   return 0
 }
 
-function check_ccloud_config() {
+function ccloud::validate_ccloud_config() {
   expected_configfile=$1
 
   if [[ ! -f "$expected_configfile" ]]; then
@@ -410,12 +410,12 @@ function check_ccloud_config() {
   return 0
 }
 
-function validate_ccloud_ksql() {
+function ccloud::validate_ksql_up() {
   ksql_endpoint=$1
   ccloud_config_file=$2
   credentials=$3
 
-  check_ccloud_logged_in || exit 1
+  ccloud::validate_logged_in_ccloud_cli || exit 1
 
   if [[ "$ksql_endpoint" == "" ]]; then
     echo "ERROR: Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
@@ -432,12 +432,12 @@ function validate_ccloud_ksql() {
     exit 1
   fi
 
-  check_credentials_ksql "$ksql_endpoint" "$ccloud_config_file" "$credentials" || exit 1
+  ccloud::validate_credentials_ksql "$ksql_endpoint" "$ccloud_config_file" "$credentials" || exit 1
 
   return 0
 }
 
-function check_account_azure() {
+function ccloud::validate_azure_account() {
   AZBLOB_STORAGE_ACCOUNT=$1
 
   if [[ "$AZBLOB_STORAGE_ACCOUNT" == "default" ]]; then
@@ -459,7 +459,7 @@ function check_account_azure() {
   return 0
 }
 
-function check_credentials_ksql() {
+function ccloud::validate_credentials_ksql() {
   ksql_endpoint=$1
   ccloud_config_file=$2
   credentials=$3
@@ -477,7 +477,7 @@ function check_credentials_ksql() {
   return 0
 }
 
-function create_connector_cloud() {
+function ccloud::create_connector() {
   file=$1
 
   echo -e "\nCreating connector from $file\n"
@@ -499,7 +499,7 @@ EOF
   return 0
 }
 
-function wait_for_connector_up() {
+function ccloud::wait_for_connector_up() {
   filename=$1
   maxWait=$2
 
@@ -540,7 +540,7 @@ check_ccloud_cluster_ready() {
   return $?
 }
 
-function ccloud_login(){
+function ccloud::login_ccloud_cli(){
 
   URL=$1
   EMAIL=$2
@@ -569,7 +569,7 @@ END
   return 0
 }
 
-function ccloud_cli_get_service_account() {
+function ccloud::get_service_account() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
 
@@ -592,7 +592,7 @@ function ccloud_cli_get_service_account() {
   return 0
 }
 
-function create_cloud_connector_acls() {
+function ccloud::create_acls_connector() {
   serviceAccount=$1
 
   ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
@@ -603,7 +603,7 @@ function create_cloud_connector_acls() {
   return 0
 }
 
-function create_c3_acls() {
+function ccloud::create_acls_control_center() {
   serviceAccount=$1
 
   echo "Confluent Control Center: creating _confluent-command and ACLs for service account $serviceAccount"
@@ -621,7 +621,7 @@ function create_c3_acls() {
 }
 
 
-function create_replicator_acls() {
+function ccloud::create_acls_replicator() {
   serviceAccount=$1
   topic=$2
 
@@ -637,7 +637,7 @@ function create_replicator_acls() {
   return 0
 }
 
-function create_connect_topics_and_acls() {
+function ccloud::create_acls_connect_topics() {
   serviceAccount=$1
 
   echo "Connect: creating topics and ACLs for service account $serviceAccount"
@@ -655,7 +655,7 @@ function create_connect_topics_and_acls() {
   return 0
 }
 
-function ccloud_demo_preflight_check() {
+function ccloud::validate_ccloud_stack_up() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
   enable_ksql=$3
@@ -664,15 +664,15 @@ function ccloud_demo_preflight_check() {
     enable_ksql=true
   fi
 
-  ccloud_validate_environment_set || exit 1
-  ccloud_cli_set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
-  validate_confluent_cloud_schema_registry "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
+  ccloud::validate_environment_set || exit 1
+  ccloud::set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
+  ccloud::validate_schema_registry_up "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
   if $enable_ksql ; then
-    validate_ccloud_ksql "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+    ccloud::validate_ksql_up "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
   fi
 }
 
-function ccloud_validate_environment_set() {
+function ccloud::validate_environment_set() {
   ccloud environment list | grep '*' &>/dev/null || {
     echo "ERROR: could not determine if environment is set. Run 'ccloud environment list' and set 'ccloud environment use' and try again"
     exit 1
@@ -682,7 +682,7 @@ function ccloud_validate_environment_set() {
 
 }
 
-function ccloud_cli_set_kafka_cluster_use() {
+function ccloud::set_kafka_cluster_use() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
 
@@ -702,30 +702,30 @@ function ccloud_cli_set_kafka_cluster_use() {
   return 0
 }
 
-function cloud_create_demo_stack() {
+function ccloud::create_ccloud_stack() {
   enable_ksql=$1
 
   RANDOM_NUM=$((1 + RANDOM % 1000000))
   #echo "RANDOM_NUM: $RANDOM_NUM"
 
   SERVICE_NAME="demo-app-$RANDOM_NUM"
-  SERVICE_ACCOUNT_ID=$(cloud_create_service_account $SERVICE_NAME)
+  SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
   echo "Creating Confluent Cloud stack for new service account id $SERVICE_ACCOUNT_ID of name $SERVICE_NAME"
 
   ENVIRONMENT_NAME="demo-env-$SERVICE_ACCOUNT_ID"
-  ENVIRONMENT=$(cloud_create_and_use_environment $ENVIRONMENT_NAME)
+  ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME)
 
   CLUSTER_NAME=demo-kafka-cluster-$SERVICE_ACCOUNT_ID
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
-  CLUSTER=$(cloud_create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
+  CLUSTER=$(ccloud::create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
   if [[ "$CLUSTER" == "" ]] ; then
     print_error "Kafka cluster id is empty"
     echo "ERROR: Could not create cluster. Please troubleshoot"
     exit 1
   fi
   BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
-  CLUSTER_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
+  CLUSTER_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
 
   MAX_WAIT=720
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
@@ -735,19 +735,19 @@ function cloud_create_demo_stack() {
   sleep 80
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
-  SCHEMA_REGISTRY=$(cloud_enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
+  SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".endpoint_url")
-  SCHEMA_REGISTRY_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
+  SCHEMA_REGISTRY_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
 
   if $enable_ksql ; then
     KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
-    KSQL=$(cloud_create_ksql_app $KSQL_NAME $CLUSTER)
+    KSQL=$(ccloud::create_ksql_app $KSQL_NAME $CLUSTER)
     KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
-    KSQL_CREDS=$(cloud_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
+    KSQL_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
     ccloud ksql app configure-acls $KSQL
   fi
 
-  cloud_create_wildcard_acls $SERVICE_ACCOUNT_ID
+  ccloud::create_acls_wildcard $SERVICE_ACCOUNT_ID
 
   mkdir -p stack-configs
   CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
@@ -790,7 +790,7 @@ EOF
   return 0
 }
 
-function cloud_delete_demo_stack() {
+function ccloud::destroy_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
@@ -801,7 +801,7 @@ function cloud_delete_demo_stack() {
     ccloud ksql app delete $KSQL
   fi
 
-  cloud_delete_demo_stack_acls $SERVICE_ACCOUNT_ID
+  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID 
 
   CLUSTER=$(ccloud kafka cluster list | grep demo-kafka-cluster-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')

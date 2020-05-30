@@ -14,10 +14,10 @@ check_cp \
 check_running_cp ${CONFLUENT} \
   && print_pass "Confluent Platform version ${CONFLUENT} ok" \
   || exit 1
-check_ccloud_version 1.0.0 \
+ccloud::validate_version_ccloud_cli 1.0.0 \
   && print_pass "ccloud version ok" \
   || exit 1
-check_ccloud_logged_in \
+ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" \
   || exit 1
 check_jq \
@@ -25,8 +25,8 @@ check_jq \
   || exit 1
 
 echo ====== Create new Confluent Cloud stack
-prompt_continue_cloud_demo || exit 1
-cloud_create_demo_stack true
+ccloud::prompt_continue_ccloud_demo || exit 1
+ccloud::create_ccloud_stack true
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
   echo "ERROR: Could not determine SERVICE_ACCOUNT_ID from 'ccloud kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack."
@@ -34,7 +34,7 @@ if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
 fi
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
-check_ccloud_config $CONFIG_FILE \
+ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
@@ -49,7 +49,7 @@ printf "\n"
 MAX_WAIT=720
 echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
 retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
-ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo ====== Installing kafka-connect-datagen
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
@@ -75,20 +75,20 @@ printf "\n"
 
 echo ====== Set current Confluent Cloud 
 # Set Kafka cluster and service account
-ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
-serviceAccount=$(ccloud_cli_get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
+ccloud::set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+serviceAccount=$(ccloud::get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 printf "\n"
 
 echo ====== Validate Schema Registry credentials
 # Validate credentials to Confluent Cloud Schema Registry
-validate_confluent_cloud_schema_registry $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
+ccloud::validate_schema_registry_up $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
 echo ====== Start local Confluent Control Center to monitor Cloud and local clusters
 # For the Connect cluster backed to Confluent Cloud, set the REST port, instead of the default 8083 which is already in use by the local connect cluster
 CONNECT_REST_PORT=8087
 
-create_c3_acls $serviceAccount
+ccloud::create_acls_control_center $serviceAccount
 if check_cp; then
   mkdir -p $CONFLUENT_CURRENT/control-center
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
@@ -144,7 +144,7 @@ config.storage.topic=connect-demo-configs
 offset.storage.topic=connect-demo-offsets
 status.storage.topic=connect-demo-statuses
 EOF
-create_connect_topics_and_acls $serviceAccount
+ccloud::create_acls_connect_topics $serviceAccount
 export CLASSPATH=$(find ${CONFLUENT_HOME}/share/java/kafka-connect-replicator/replicator-rest-extension-*)
 connect-distributed $CONNECT_CONFIG > $CONFLUENT_CURRENT/connect/connect-ccloud.stdout 2>&1 &
 MAX_WAIT=240
@@ -163,7 +163,7 @@ printf "\n"
 
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
 # No need to pre-create topic pageviews in Confluent Cloud because Replicator will do this automatically
-create_replicator_acls $serviceAccount pageviews
+ccloud::create_acls_replicator $serviceAccount pageviews
 printf "\n"
 
 echo ====== Starting Replicator and sleeping 60 seconds

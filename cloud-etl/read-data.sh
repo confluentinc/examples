@@ -16,7 +16,7 @@ else
   CONFIG_FILE=$1
 fi
 
-check_aws || exit 1
+ccloud::validate_aws_cli_installed || exit 1
 check_timeout || exit 1
 
 echo -e "\nRead data to validate end-to-end processing\n"
