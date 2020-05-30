@@ -15,9 +15,16 @@ Brief Concepts Overview
 Before diving into the different ways to configure |crep|, let's first reprise some basic concepts regarding |crep| and |kconnect-long|.
 This will help you understand the logic for configuring |crep| because how the |kconnect-long| cluster is configured will affect how |crep| should be configured.
 
-- |crep| is a Kafka connector and runs on Connect workers. Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker inside.
-- There is an embedded consumer within |crep| that reads data from the origin cluster.
-- |crep| is more specifically a source connector, and as with all source connectors, it leverages the Connect worker's embedded producer to write data to the destination cluster, which in this case is |ccloud|.
+|crep| is a Kafka connector and runs on Connect workers.
+Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker inside.
+
+There is an embedded consumer within |crep| that reads data from the origin cluster.
+|crep| is more specifically a source connector, and like all other source connectors, it leverages the Connect worker's embedded producer to write data to the destination cluster, which in this case is |ccloud|.
+Connect's embedded producer configuration can be configured directly on the Connect worker or overridden by any connector, including |crep|.
+
+|crep| also has an admin client that it needs for interacting with the destination cluster.
+This is unique to |crep|, unlike other source connectors, and it can be configured with the prefix ``dest.``.
+
 - A Connect cluster uses the admin client to create three Kafka topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
 
 
@@ -28,22 +35,22 @@ Configuration Types
 The simplest configuration is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the default behavior of the Connect worker's admin client and embedded producer.
 
+.. figure:: images/replicator-worker-destination.png
+
 There are two configuration examples of where |crep| runs on a :ref:`connect-backed-destination`:
 
 - :ref:`onprem-cloud-destination`
 - :ref:`cloud-cloud-destination`
 
-.. figure:: images/replicator-worker-destination.png
-
 If you do not want your self-managed Connect cluster backed to the destination |ccloud| cluster, you can have a Connect cluster backed to the origin cluster instead.
 This configuration is more complex because there are some additional overrides you will need to configure.
+
+.. figure:: images/replicator-worker-origin.png
 
 There are two configuration examples of where |crep| runs on a :ref:`connect-backed-origin`:
 
 - :ref:`onprem-cloud-origin`
 - :ref:`cloud-cloud-origin`
-
-.. figure:: images/replicator-worker-origin.png
 
 
 .. _connect-backed-destination:

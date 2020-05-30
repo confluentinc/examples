@@ -1,5 +1,4 @@
-The Connect workers in the Connect clusters should be configured to |ccloud|.
-To start, the Connect cluster's admin topics must be set to replication factor of 3 as required by |ccloud|.
+Set the management topics to replication factor of 3 as required by |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 1-4
