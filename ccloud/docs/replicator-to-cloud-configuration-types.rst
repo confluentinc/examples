@@ -4,6 +4,7 @@
 ======================================
 
 Whether you are migrating from on-prem to cloud or have a persistent "bridge to cloud" strategy, you can use |crep-full| to copy Kafka data to |ccloud|.
+Learn the different ways to configure |crep| and |kconnect-long|.
 
 .. figure:: images/replicator-to-ccloud.png
 
@@ -24,7 +25,6 @@ This will help you understand the logic for configuring |crep| because how the |
 Configuration Types
 ===================
 
-There are several ways to configure |crep| to copy Kafka data to |ccloud|.
 The simplest configuration is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the default behavior of the Connect worker's admin client and embedded producer.
 
@@ -63,17 +63,20 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. figure:: images/onprem-ccloud-destination.png
 
-- Configure |kconnect-long|
+Configure |kconnect-long|
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. include:: includes/connect-worker-to-destination-ccloud.rst 
 
-- Configure |crep|
+Configure |crep|
+^^^^^^^^^^^^^^^^
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
-- Configure ACLs
+Configure ACLs
+^^^^^^^^^^^^^^
 
 .. include:: includes/set-acls-destination.rst
 
@@ -89,17 +92,20 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. figure:: images/ccloud-ccloud-destination.png
 
-- Configure |kconnect-long|
+Configure |kconnect-long|
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. include:: includes/connect-worker-to-destination-ccloud.rst
 
-- Configure |crep|
+Configure |crep|
+^^^^^^^^^^^^^^^^
 
 .. include:: includes/replicator-from-origin-ccloud.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
-- Configure ACLs
+Configure ACLs
+^^^^^^^^^^^^^^
 
 .. include:: includes/set-acls-origin-and-destination.rst
 
@@ -121,17 +127,20 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. figure:: images/onprem-ccloud-origin.png
 
-- Configure |kconnect-long|
+Configure |kconnect-long|
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. include:: includes/connect-worker-to-origin-onprem.rst
 
-- Configure |crep|
+Configure |crep|
+^^^^^^^^^^^^^^^^
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
-- Configure ACLs
+Configure ACLs
+^^^^^^^^^^^^^^
 
 .. include:: includes/replicator-overrides.rst
 
@@ -149,11 +158,13 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. figure:: images/ccloud-ccloud-origin.png
 
-- Configure |kconnect-long|
+Configure |kconnect-long|
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. include:: includes/connect-worker-to-origin-ccloud.rst
 
-- Configure |crep|
+Configure |crep|
+^^^^^^^^^^^^^^^^
 
 .. include:: includes/replicator-from-origin-ccloud.rst
 
@@ -161,7 +172,8 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. include:: includes/replicator-overrides.rst
 
-- Configure ACLs
+Configure ACLs
+^^^^^^^^^^^^^^
 
 .. include:: includes/set-acls-origin-and-destination.rst
 
