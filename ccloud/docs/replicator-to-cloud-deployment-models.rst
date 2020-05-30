@@ -7,6 +7,10 @@ Copying Kafka data to |ccloud| is easy with |crep-full|.
 
 .. figure:: images/onprem-ccloud-destination.png
 
+========================
+|kconnect-long| Concepts
+========================
+
 Before diving into the different ways to deploy |crep|, let's first reprise some basic concepts regarding |crep| and |kconnect-long|.
 This will help you understand the logic for configuring |crep|.
 
@@ -15,26 +19,39 @@ This will help you understand the logic for configuring |crep|.
 - |crep| is specifically a source connector, and as with all source connectors, it relies on the Connect worker's embedded producer to write data to the destination cluster, in this case |ccloud|.
 - A Connect cluster creates three Kafka topics for management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
 
+=================
+Deployment Models
+=================
+
 There are several ways to deploy |crep| to copy Kafka data to |ccloud.
 The simplest deployment model is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the Connect worker's default behavior with regards to its embedded producer.
 
-- :ref:`Example 1 <onprem-cloud-destination>`: on-prem to |ccloud| where |crep| runs on a Connect cluster backed to the destination |ccloud| cluster 
-- :ref:`Example 2 <cloud-cloud-destination>`: |ccloud| to |ccloud| where |crep| runs on a Connect cluster backed to the destination |ccloud| cluster
+There are two examples of where |crep| runs on :ref:`connect-backed-destination`:
+
+- :ref:`on-prem to Confluent Cloud <onprem-cloud-destination>`
+- :ref:`Confluent Cloud to to Confluent Cloud <cloud-cloud-destination>`
 
 However, if you do not want to back your self-managed Connect cluster backed to the destination |ccloud| cluster, you can also have a Connect cluster backed to the origin cluster instead of |ccloud|.
 This also means that the Connect workers are using the origin cluster for its Connect management topics.
 This deployment model is more complex because there are some additional overrides you will need to configure.
 
-- :ref:`Example 3 <onprem-cloud-origin>`: on-prem to |ccloud| where |crep| runs on a Connect cluster backed to the origin on-prem cluster
-- :ref:`Example 4 <cloud-cloud-origin>`: |ccloud| to |ccloud| where |crep| runs on a Connect cluster backed to the origin |ccloud| cluster
+There are two examples of where |crep| runs on :ref:`connect-backed-origin`:
 
+- :ref:`on-prem to Confluent Cloud <onprem-cloud-origin>`
+- :ref:`Confluent Cloud to to Confluent Cloud <cloud-cloud-origin>`
+
+
+.. _connect-backed-destination:
+
+=====================================
+Connect Cluster backed to Destination
+=====================================
 
 .. _onprem-cloud-destination:
 
-==========================================================
-On-prem to |ccloud|: Connect Cluster backed to Destination
-==========================================================
+On-prem to |ccloud|
+-------------------
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
@@ -42,28 +59,19 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. figure:: images/onprem-ccloud-destination.png
 
-Connect Worker Configuration
-----------------------------
-
 .. include:: includes/connect-worker-to-destination-ccloud.rst 
-
-|crep| Configuration
---------------------
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
-|crep| Authorization
---------------------
-
 .. include:: includes/set-acls-destination.rst
+
 
 .. _cloud-cloud-destination:
 
-===========================================================
-|ccloud| to |ccloud|: Connect Cluster backed to Destination
-===========================================================
+|ccloud| to |ccloud|
+--------------------
 
 In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
 
@@ -71,30 +79,27 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. figure:: images/ccloud-ccloud-destination.png
 
-Connect Worker Configuration
-----------------------------
-
 .. include:: includes/connect-worker-to-destination-ccloud.rst
-
-|crep| Configuration
---------------------
 
 .. include:: includes/replicator-from-origin-ccloud.rst
 
 .. include:: includes/replicator-to-destination-ccloud.rst
 
-|crep| Authorization
---------------------
-
 .. include:: includes/set-acls-destination.rst
 
 .. include:: includes/set-acls-origin.rst
 
+
+.. _connect-backed-origin:
+
+================================
+Connect Cluster backed to Origin
+================================
+
 .. _onprem-cloud-origin:
 
-=====================================================
-On-prem to |ccloud|: Connect Cluster backed to Origin
-=====================================================
+On-prem to |ccloud|
+-------------------
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
@@ -102,13 +107,7 @@ In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, a
 
 .. figure:: images/onprem-ccloud-origin.png
 
-Connect Worker Configuration
-----------------------------
-
 .. include:: includes/connect-worker-to-origin-onprem.rst
-
-|crep| Configuration
---------------------
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
@@ -116,16 +115,13 @@ Connect Worker Configuration
 
 .. include:: includes/replicator-overrides.rst
 
-|crep| Authorization
---------------------
-
 .. include:: includes/set-acls-destination.rst
+
 
 .. _cloud-cloud-origin:
 
-======================================================
-|ccloud| to |ccloud|: Connect Cluster backed to Origin
-======================================================
+|ccloud| to |ccloud|
+--------------------
 
 In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
 
@@ -133,13 +129,7 @@ In this example, |crep| copies data from |ccloud| to |ccloud|, and |crep| runs o
 
 .. figure:: images/ccloud-ccloud-origin.png
 
-Connect Worker Configuration
-----------------------------
-
 .. include:: includes/connect-worker-to-origin-ccloud.rst
-
-|crep| Configuration
---------------------
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
@@ -147,12 +137,10 @@ Connect Worker Configuration
 
 .. include:: includes/replicator-overrides.rst
 
-|crep| Authorization
---------------------
-
 .. include:: includes/set-acls-destination.rst
 
 .. include:: includes/set-acls-origin.rst
+
 
 ==========================================================
 Additional Resources
