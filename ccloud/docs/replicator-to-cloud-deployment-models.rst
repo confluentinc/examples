@@ -5,7 +5,7 @@
 
 Copying Kafka data to |ccloud| is easy with |crep-full|.
 
-.. figure:: images/onprem-ccloud-destination.png
+.. figure:: images/replicator-to-ccloud.png
 
 ========================
 |kconnect-long| Concepts
