@@ -24,8 +24,11 @@ Deployment Models
 =================
 
 There are several ways to deploy |crep| to copy Kafka data to |ccloud|.
+
 The simplest deployment model is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep| to leverage the Connect worker's default behavior with regards to its embedded producer.
+
+.. figure:: images/replicator-worker-destination.png
 
 There are two examples of where |crep| runs on :ref:`connect-backed-destination`:
 
@@ -35,6 +38,8 @@ There are two examples of where |crep| runs on :ref:`connect-backed-destination`
 However, if you do not want to back your self-managed Connect cluster backed to the destination |ccloud| cluster, you can also have a Connect cluster backed to the origin cluster instead of |ccloud|.
 This also means that the Connect workers are using the origin cluster for its Connect management topics.
 This deployment model is more complex because there are some additional overrides you will need to configure.
+
+.. figure:: images/replicator-worker-origin.png
 
 There are two examples of where |crep| runs on :ref:`connect-backed-origin`:
 
