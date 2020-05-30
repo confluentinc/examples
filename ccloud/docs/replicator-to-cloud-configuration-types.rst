@@ -30,7 +30,7 @@ Configuration Types
 ===================
 
 The simplest configuration is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
-This allows |crep| to leverage the default behavior of the Connect worker's admin client and embedded producer.
+This allows |crep|, which is a source connector, to leverage the default behavior of the Connect worker's admin client and embedded producer.
 
 .. figure:: images/replicator-worker-destination.png
 
