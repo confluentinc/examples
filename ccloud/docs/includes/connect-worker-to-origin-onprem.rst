@@ -8,7 +8,7 @@ The |kconnect| worker is backed to the origin on-premises |ak| cluster, so set t
    status.storage.replication.factor=<replication-factor-origin>
 
 The origin on-premises |ak| cluster can have a varied set of security features enabled, but for simplicity in this example we show no security configurations, just PLAINTEXT.
-The Connect worker’s admin client requires connection information to the onprem cluster.
+The |kconnect| worker’s admin client requires connection information to the on-premises cluster.
 
 .. sourcecode:: bash
    
