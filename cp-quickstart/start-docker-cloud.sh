@@ -13,17 +13,17 @@ source ../utils/helper.sh
 check_jq \
   && print_pass "jq found"
 
-check_ccloud_version 1.0.0 \
+ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok"
 
-check_ccloud_logged_in \
+ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" 
 
 print_pass "Prerequisite check pass"
 
 [[ -z "$AUTO" ]] && {
   printf "\n====== Confirm\n\n"
-  prompt_continue_cloud_demo || exit 1
+  ccloud::prompt_continue_ccloud_demo || exit 1
   read -p "Do you acknowledge this script creates a Confluent Cloud KSQL app (hourly charges may apply)? [y/n] " -n 1 -r
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit 1; fi
 	printf "\n"
@@ -37,14 +37,14 @@ wget -q -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-
   && print_pass "retrieved docker-compose.yml from https://github.com/confluentinc/cp-all-in-one/blob/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml" \
   || exit_with_error -c $? -n "$NAME" -m "could not obtain cp-all-in-one docker-compose.yml" -l $(($LINENO -2))
 
-printf "\n====== Creating new Confluent Cloud stack using the cloud_create_demo_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/helper_cloud.sh"
-cloud_create_demo_stack true  \
-	&& print_code_pass -c "ccloud_create_demo_stack true"
+printf "\n====== Creating new Confluent Cloud stack using the ccloud::create_ccloud_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/helper_cloud.sh"
+ccloud::create_ccloud_stack true  \
+	&& print_code_pass -c "cccloud::create_ccloud_stack true"
 
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name | split("-")[3]')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
-check_ccloud_config $CONFIG_FILE || exit 1
+ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 
 ../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE \
 	&& print_code_pass -c "../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE"
@@ -59,10 +59,10 @@ eval $CMD \
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 MAX_WAIT=720
 printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 print_pass "Confluent Cloud KSQL is UP"
 
-ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 printf "\n";print_process_start "====== Pre-creating topics"
 

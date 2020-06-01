@@ -5,7 +5,7 @@ CONFIG_FILE=$HOME/.confluent/java.config
 source ../../../utils/helper.sh 
 
 check_env || exit
-check_ccloud_config $CONFIG_FILE || exit
+ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
 set -eu
 

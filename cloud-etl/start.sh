@@ -8,10 +8,10 @@ NAME=`basename "$0"`
 # Source library
 source ../utils/helper.sh
 
-check_ccloud_version 1.0.0 \
+ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok" \
   || exit 1
-check_ccloud_logged_in \
+ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" \
   || exit 1
 check_python \
@@ -21,17 +21,17 @@ check_python \
 # Source demo-specific configurations
 source config/demo.cfg
 
-validate_cloud_source config/demo.cfg \
+ccloud::validate_cloud_source config/demo.cfg \
   && print_pass "cloud source $DATA_SOURCE ok" \
   || exit 1
-validate_cloud_storage config/demo.cfg \
+ccloud::validate_cloud_storage config/demo.cfg \
   && print_pass "cloud storage $DESTINATION_STORAGE ok" \
   || exit 1
 
 echo
 echo ====== Create new Confluent Cloud stack
-prompt_continue_cloud_demo || exit 1
-cloud_create_demo_stack true
+ccloud::prompt_continue_ccloud_demo || exit 1
+ccloud::create_ccloud_stack true
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
   echo "ERROR: Could not determine SERVICE_ACCOUNT_ID from 'ccloud kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack."
@@ -39,7 +39,7 @@ if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
 fi
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
-check_ccloud_config $CONFIG_FILE \
+ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
@@ -53,17 +53,17 @@ printf "\n"
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 MAX_WAIT=720
 echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
-ccloud_demo_preflight_check $CLOUD_KEY $CONFIG_FILE || exit 1
+retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 # Set Kafka cluster
-ccloud_cli_set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+ccloud::set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
 
 #################################################################
 # Source: create and populate source endpoints
 #################################################################
 echo -e "\nSource: setup $DATA_SOURCE and populate data\n"
-create_cloud_connector_acls $SERVICE_ACCOUNT_ID
+ccloud::create_acls_connector $SERVICE_ACCOUNT_ID
 ./create_${DATA_SOURCE}.sh || exit 1
 
 #################################################################
@@ -76,8 +76,8 @@ if [[ "${DATA_SOURCE}" == "rds" ]]; then
   export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
   export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
 fi
-create_connector_cloud connectors/${DATA_SOURCE}.json || exit 1
-wait_for_connector_up connectors/${DATA_SOURCE}.json 240 || exit 1
+ccloud::create_connector connectors/${DATA_SOURCE}.json || exit 1
+ccloud::wait_for_connector_up connectors/${DATA_SOURCE}.json 240 || exit 1
 
 #################################################################
 # Confluent Cloud KSQL application
