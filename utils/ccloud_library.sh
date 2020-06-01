@@ -636,7 +636,6 @@ function ccloud::create_acls_replicator() {
   ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE-CONFIGS --topic $topic
   ccloud kafka acl create --allow --service-account $serviceAccount --operation ALTER-CONFIGS --topic $topic
   ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --cluster-scope
 
   return 0
 }
