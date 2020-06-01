@@ -1,4 +1,4 @@
-|crep| must have authorization to read Kafka data from the origin cluster and write Kafka data in the destination |ccloud| cluster.
+|crep| must have authorization to read |ak| data from the origin cluster and write |ak| data in the destination |ccloud| cluster.
 |crep| should be run with a |ccloud| service account, not super user credentials, so use |ccloud| CLI to configure appropriate ACLs for the service account id corresponding to |crep| in |ccloud|.
 For more details on |crep| ACLs, see :ref:`replicator_security_overview`.
 
@@ -12,4 +12,3 @@ For more details on |crep| ACLs, see :ref:`replicator_security_overview`.
    ccloud kafka acl create --allow --service-account <service-account-id> --operation ALTER-CONFIGS --topic <replicated-topic>
    ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE --cluster-scope
    ccloud kafka acl create --allow --service-account <service-account-id> --operation CREATE --cluster-scope
-
