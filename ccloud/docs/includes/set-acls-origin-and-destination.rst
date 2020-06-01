@@ -12,7 +12,6 @@ In the origin |ccloud|:
    ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation READ --topic <topic-origin>
    ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation DESCRIBE --topic <topic-origin>
    ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation DESCRIBE-CONFIGS --topic <topic-origin>
-   ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation ALTER-CONFIGS --topic <topic-origin>
    ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation DESCRIBE --cluster-scope
    ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation CREATE --cluster-scope
    ccloud kafka acl create --allow --service-account <service-account-id-origin> --operation CREATE --topic __consumer_timestamps
