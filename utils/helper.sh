@@ -3,8 +3,8 @@
 ################################################################
 # Source Confluent Platform versions
 ################################################################
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-source "$DIR/config.env"
+DIR_HELPER="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source "${DIR_HELPER}/config.env"
 
 
 ################################################################

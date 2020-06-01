@@ -7,8 +7,8 @@ source $DIR/../../utils/helper.sh
 source $DIR/../../utils/ccloud_library.sh
 
 ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
-check_jq || exit 1
 ccloud::validate_logged_in_ccloud_cli || exit 1
+check_jq || exit 1
 
 if [ -z "$1" ]; then
   echo "ERROR: Must supply argument that is the client configuration file created from './ccloud_stack_create.sh'. (Is it in stack-configs/ folder?) "
