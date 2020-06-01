@@ -3,7 +3,7 @@ Use the prefix ``dest.`` to set these configuration parameters.
 
 .. sourcecode:: bash
 
-   # Confluent Replicator license topic must have replication factor set to 3 for Confluent Cloud
+   # Confluent Replicator license topic must have replication factor set to 3 for |ccloud|
    confluent.topic.replication.factor=3
 
    # New user topics that Confluent Replicator creates must have replication factor set to 3 for Confluent Cloud 
@@ -24,4 +24,3 @@ If your deployment has Confluent Control Center end-to-end streams monitoring se
    src.consumer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
    src.consumer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
    src.consumer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";
-
