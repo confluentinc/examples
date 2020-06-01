@@ -13,7 +13,7 @@ Concepts Review
 ===============
 
 Before diving into the different ways to configure |crep|, first review some basic concepts regarding |crep| and |kconnect-long|.
-This will help you understand the logic for configuring |crep| because how the |kconnect-long| cluster is configured will affect how |crep| should be configured.
+This will help you understand the logic for configuring |crep| because the way that the |kconnect-long| cluster is configured dictates how |crep| should be configured.
 
 |crep| is a |ak| connector and runs on |kconnect| workers.
 Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker inside.
