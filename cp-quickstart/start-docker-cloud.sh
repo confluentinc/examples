@@ -9,7 +9,7 @@ NAME=`basename "$0"`
 
 # Source library
 source ../utils/helper.sh
-source ../utils/ccloud-library.sh
+source ../utils/ccloud_library.sh
 
 check_jq \
   && print_pass "jq found"
