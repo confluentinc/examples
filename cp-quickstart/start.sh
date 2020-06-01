@@ -2,6 +2,7 @@
 
 # Source library
 source ../utils/helper.sh
+source ../utils/ccloud_library.sh
 
 check_env || exit 1
 check_running_cp ${CONFLUENT} || exit
