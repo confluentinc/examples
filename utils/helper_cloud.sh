@@ -362,7 +362,7 @@ function ccloud::create_ksql_app() {
   return 0
 }
 
-function ccloud::create_acls_wildcard() {
+function ccloud::create_acls_all_resources_full_access() {
   SERVICE_ACCOUNT_ID=$1
 
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
@@ -374,6 +374,9 @@ function ccloud::create_acls_wildcard() {
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*'
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*'
+
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*'`
 
   return 0
 }
@@ -755,7 +758,7 @@ function ccloud::create_ccloud_stack() {
     ccloud ksql app configure-acls $KSQL
   fi
 
-  ccloud::create_acls_wildcard $SERVICE_ACCOUNT_ID
+  ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
 
   mkdir -p stack-configs
   CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
