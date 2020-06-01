@@ -125,7 +125,7 @@ Configure ACLs
 .. _connect-backed-origin:
 
 ================================
-Connect Cluster Backed to Origin
+|kconnect| Cluster Backed to Origin
 ================================
 
 For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two configuration examples:
