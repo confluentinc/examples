@@ -98,7 +98,7 @@ Configure ACLs
 |ccloud| to |ccloud| with Connect Backed to Destination
 -------------------------------------------------------
 
-In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
+In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a |kconnect| cluster backed to the destination |ccloud| cluster.
 
 .. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from Confluent Cloud|ccloud/docs/config/backed-to-destination/replicator-origin-ccloud-backed-to-destination.cfg` configuration file.
 
