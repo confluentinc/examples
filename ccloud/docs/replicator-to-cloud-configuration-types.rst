@@ -23,7 +23,7 @@ To configure the proper connection information for |crep| to interact with the o
 |crep| also has an admin client that it needs for interacting with the destination cluster, and it can be configured with the prefix ``dest.``.
 
 A |kconnect| worker also has an admin client for creating |ak| topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the |ak| cluster that backs the |kconnect| worker.
-Connect's embedded producer can be configured directly on the Connect worker or overridden by any connector, including |crep|.
+The |kconnect-long| embedded producer can be configured directly on the |kconnect| worker or overridden by any connector, including |crep|.
 
 
 ===================
