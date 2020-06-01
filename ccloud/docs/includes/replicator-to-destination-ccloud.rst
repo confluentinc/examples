@@ -6,7 +6,7 @@ Use the prefix ``dest.`` to set these configuration parameters.
    # Confluent Replicator license topic must have replication factor set to 3 for |ccloud|
    confluent.topic.replication.factor=3
 
-   # New user topics that Confluent Replicator creates must have replication factor set to 3 for Confluent Cloud 
+   # New user topics that |crep-full| creates must have replication factor set to 3 for |ccloud| 
    dest.topic.replication.factor=3
 
    # Connection information to Confluent Cloud
