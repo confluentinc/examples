@@ -1,4 +1,4 @@
-The Connect worker is backed to the origin on-prem Kafka cluster, so set the replication factor required for the origin onprem cluster:
+The |kconnect| worker is backed to the origin on-premises |ak| cluster, so set the replication factor required for the origin on-premises cluster:
 
 .. sourcecode:: bash
 
