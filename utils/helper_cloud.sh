@@ -505,26 +505,28 @@ EOF
   return 0
 }
 
+function ccloud::validate_connector_up() {
+  connectorName=$1
+
+  if [[ $(ccloud connector list | grep $connectorName | awk '{print $5;}') == "RUNNING" ]]; then
+    return 0
+  fi
+  
+  return 1
+}
+
 function ccloud::wait_for_connector_up() {
   filename=$1
   maxWait=$2
 
   connectorName=$(cat $filename | jq -r .name)
   echo "Waiting up to $maxWait seconds for connector $filename ($connectorName) to be RUNNING"
-  currWait=0
-  while [[ ! $(ccloud connector list | grep $connectorName | awk '{print $5;}') == "RUNNING" ]]; do
-    sleep 10
-    currWait=$(( currWait+10 ))
-    if [[ "$currWait" -gt "$maxWait" ]]; then
-      echo -e "\nERROR: Connector $filename ($connectorName) not RUNNING after $maxWait seconds.  Please troubleshoot.\n"
-      exit 1
-    fi
-  done
-  echo "Connector $filename ($connectorName) is RUNNING after $currWait seconds"
+  retry $maxWait ccloud::validate_connector_up $connectorName || exit 1
+  echo "Connector $filename ($connectorName) is RUNNING"
 
   return 0
-
 }
+
 
 function ccloud::validate_ccloud_ksql_endpoint_ready() {
   KSQL_ENDPOINT=$1
