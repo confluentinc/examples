@@ -11,4 +11,4 @@ For more details on |crep| ACLs, see :ref:`replicator_security_overview`.
    ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE-CONFIGS --topic <replicated-topic>
    ccloud kafka acl create --allow --service-account <service-account-id> --operation ALTER-CONFIGS --topic <replicated-topic>
    ccloud kafka acl create --allow --service-account <service-account-id> --operation DESCRIBE --cluster-scope
-   ccloud kafka acl create --allow --service-account <service-account-id> --operation CREATE --cluster-scope
+
