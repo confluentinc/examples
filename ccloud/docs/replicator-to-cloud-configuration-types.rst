@@ -66,7 +66,7 @@ For this case where |crep| runs on a :ref:`connect-backed-destination`, there ar
 
 .. _onprem-cloud-destination:
 
-On-prem to |ccloud| with Connect Backed to Destination
+On-premises to |ccloud| with |kconnect| Backed to Destination
 ------------------------------------------------------
 
 In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the destination |ccloud| cluster.
