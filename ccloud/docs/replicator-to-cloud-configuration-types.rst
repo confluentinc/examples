@@ -22,7 +22,7 @@ Even the :ref:`Replicator executable <replicator_executable>` has a bundled Conn
 To configure the proper connection information for |crep| to interact with the origin cluster, use the prefix ``src.``.
 |crep| also has an admin client that it needs for interacting with the destination cluster, and it can be configured with the prefix ``dest.``.
 
-A Connect worker also has an admin client for creating Kafka topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the Kafka cluster that backs the Connect worker.
+A |kconnect| worker also has an admin client for creating |ak| topics for its own management, ``offset.storage.topic``, ``config.storage.topic``, and ``status.storage.topic``, and these are in the |ak| cluster that backs the |kconnect| worker.
 Connect's embedded producer can be configured directly on the Connect worker or overridden by any connector, including |crep|.
 
 
@@ -208,4 +208,3 @@ Additional Resources
 - To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
 - For a practical guide to configuring, monitoring, and optimizing your |ak| client applications, see the `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf>`__ whitepaper.
 - To run a |crep| tutorial with an active-active multi-datacenter design, with two instances of |crep-full| that copy data bidirectionally between the datacenters, see :ref:`replicator`.
-
