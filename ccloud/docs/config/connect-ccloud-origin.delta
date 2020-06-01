@@ -1,0 +1,35 @@
+replication.factor=3
+config.storage.replication.factor=3
+offset.storage.replication.factor=3
+status.storage.replication.factor=3
+
+# Configuration for embedded admin client
+bootstrap.servers=<bootstrap-servers-destination>
+ssl.endpoint.identification.algorithm=https
+sasl.mechanism=PLAIN
+security.protocol=SASL_SSL
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-origin>" password="<api-secret-origin>";
+
+# Configuration for embedded producer
+producer.ssl.endpoint.identification.algorithm=https
+producer.sasl.mechanism=PLAIN
+producer.security.protocol=SASL_SSL
+producer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-origin>" password="<api-secret-origin>";
+
+# Configuration for embedded consumer
+consumer.ssl.endpoint.identification.algorithm=https
+consumer.sasl.mechanism=PLAIN
+consumer.security.protocol=SASL_SSL
+consumer.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-origin>" password="<api-secret-origin>";
+
+# Configuration for embedded producer.confluent.monitoring.interceptor
+producer.confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
+producer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
+producer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
+producer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-origin>" password="<api-secret-origin>";
+
+# Configuration for embedded consumer.confluent.monitoring.interceptor
+consumer.confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
+consumer.confluent.monitoring.interceptor.sasl.mechanism=PLAIN
+consumer.confluent.monitoring.interceptor.security.protocol=SASL_SSL
+consumer.confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-origin>" password="<api-secret-origin>";
