@@ -56,7 +56,7 @@ For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two
 .. _connect-backed-destination:
 
 =====================================
-Connect Cluster Backed to Destination
+|kconnect| Cluster Backed to Destination
 =====================================
 
 For this case where |crep| runs on a :ref:`connect-backed-destination`, there are two configuration examples:
