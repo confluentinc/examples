@@ -135,7 +135,7 @@ For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two
 
 .. _onprem-cloud-origin:
 
-On-prem to |ccloud| with Connect Backed to Origin
+On-premises to |ccloud| with |kconnect| Backed to Origin
 -------------------------------------------------
 
 In this example, |crep| copies data from an on-premises |ak| cluster to |ccloud|, and |crep| runs on a |kconnect| cluster backed to the origin on-premises cluster.
