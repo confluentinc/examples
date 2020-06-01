@@ -30,27 +30,27 @@ Connect's embedded producer can be configured directly on the Connect worker or 
 Configuration Types
 ===================
 
-The simplest configuration is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
+The first type is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
 This allows |crep|, which is a source connector, to leverage the default behavior of the Connect worker's admin client and embedded producer.
 
 .. figure:: images/replicator-worker-destination.png
 
-There are two configuration examples of where |crep| runs on a :ref:`connect-backed-destination`:
+For this case where |crep| runs on a :ref:`connect-backed-destination`, there are two configuration examples:
 
-- :ref:`onprem-cloud-destination`
-- :ref:`cloud-cloud-destination`
+- Example 1.1: :ref:`onprem-cloud-destination`
+- Example 1.2: :ref:`cloud-cloud-destination`
 
-There are scenarios where you may not be able to have your self-managed Connect cluster backed to the destination |ccloud| cluster.
-For example, highly secure origin clusters may block incoming network connections and only allow push connections, in which case an incoming connection from |crep| running on the destination cluster would fail.
+There are scenarios in which your self-managed Connect cluster may not be able to be backed to the destination |ccloud| cluster.
+For example, some highly secure clusters may block incoming network connections and only allow push connections, in which case an incoming connection from |crep| running on the destination cluster to the origin cluster would fail.
 In this case, you can have a Connect cluster backed to the origin cluster instead and push the replicated data to the destination cluster.
-This configuration is more complex because there are overrides you will need to configure.
+This second configuration type is more complex because there are overrides you will need to configure.
 
 .. figure:: images/replicator-worker-origin.png
 
-There are two configuration examples of where |crep| runs on a :ref:`connect-backed-origin`:
+For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two configuration examples:
 
-- :ref:`onprem-cloud-origin`
-- :ref:`cloud-cloud-origin`
+- Example 2.1: :ref:`onprem-cloud-origin`
+- Example 2.2: :ref:`cloud-cloud-origin`
 
 
 .. _connect-backed-destination:
@@ -58,6 +58,11 @@ There are two configuration examples of where |crep| runs on a :ref:`connect-bac
 =====================================
 Connect Cluster Backed to Destination
 =====================================
+
+For this case where |crep| runs on a :ref:`connect-backed-destination`, there are two configuration examples:
+
+- Example 1.1: :ref:`onprem-cloud-destination`
+- Example 1.2: :ref:`cloud-cloud-destination`
 
 .. _onprem-cloud-destination:
 
@@ -122,6 +127,11 @@ Configure ACLs
 ================================
 Connect Cluster Backed to Origin
 ================================
+
+For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two configuration examples:
+
+- Example 2.1: :ref:`onprem-cloud-origin`
+- Example 2.2: :ref:`cloud-cloud-origin`
 
 .. _onprem-cloud-origin:
 
