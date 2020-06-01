@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source library
-. ../../../utils/helper.sh
+source ../../../utils/helper.sh
 
 source ./delta_configs/env.delta
 

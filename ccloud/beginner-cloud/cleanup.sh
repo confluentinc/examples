@@ -10,7 +10,7 @@
 ################################################################################
 
 # Source library
-. ../../utils/helper.sh
+source ../../utils/helper.sh
 
 check_ccloud_version 0.255.0 || exit 1
 check_timeout || exit 1

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source Confluent Platform versions
-. /tmp/config.env
+source /tmp/config.env
 
 RESTPORT=18894
 JAR=/usr/share/java/kafka-streams-examples/kafka-streams-examples-${CONFLUENT}-standalone.jar
