@@ -8,7 +8,7 @@ The |kconnect| worker's admin client requires connection information to the orig
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 6-11
 
-The Connect worker's embedded producer requires connection information to the origin |ccloud|.
+The |kconnect| worker's embedded producer requires connection information to the origin |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 14-17
