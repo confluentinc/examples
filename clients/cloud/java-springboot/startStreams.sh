@@ -6,7 +6,7 @@ GREEN='\033[0;32m'
 BLUE='\033[0;34m'
 
 # including some common utilities (`check_ccloud_config`, `validate_confluent_cloud_schema_registry`, etc)
-. ../../../utils/helper.sh
+source ../../../utils/helper.sh
 
 echo -e "\n${BLUE}\t☁️  Generating a config from Confluent Cloud properties... ${NC}\n"
 

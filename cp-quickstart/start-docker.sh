@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source library
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one/docker-compose.yml
 
@@ -17,8 +17,8 @@ sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
 # Configure datagen connectors
-. ./connectors/submit_datagen_pageviews_config.sh
-. ./connectors/submit_datagen_users_config.sh
+source ./connectors/submit_datagen_pageviews_config.sh
+source ./connectors/submit_datagen_users_config.sh
 
 # Verify topics exist
 MAX_WAIT=30

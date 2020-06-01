@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ../config/local-demo.env
+source ../config/local-demo.env
 
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF

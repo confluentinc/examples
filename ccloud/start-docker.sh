@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source library
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 echo ====== Verifying prerequisites
 check_ccloud_version 1.0.0 \
@@ -75,15 +75,15 @@ retry $MAX_WAIT check_connect_up connect-cloud || exit 1
 printf "\n\n"
 
 echo ====== Deploying kafka-connect-datagen for users 
-. ./connectors/submit_datagen_users_config.sh
+source ./connectors/submit_datagen_users_config.sh
 printf "\n\n"
 
 echo ====== Deploying kafka-connect-datagen for pageviews
-. ./connectors/submit_datagen_pageviews_config.sh
+source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
 echo ====== Deploying Replicator
-. ./connectors/submit_replicator_docker_config.sh
+source ./connectors/submit_replicator_docker_config.sh
 printf "\n\n"
 
 echo ====== Creating Confluent Cloud KSQL application
