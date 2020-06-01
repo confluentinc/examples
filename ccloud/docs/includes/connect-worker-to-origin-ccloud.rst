@@ -3,7 +3,7 @@ Set the management topics to replication factor of 3 as required by |ccloud|.
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 1-4
 
-The Connect worker's admin client requires connection information to the origin |ccloud|.
+The |kconnect| worker's admin client requires connection information to the origin |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 6-11
@@ -17,4 +17,3 @@ If you are using |c3| and doing stream monitoring then the embedded producer's m
 
 .. literalinclude:: config/connect-ccloud-origin.delta
    :lines: 26-29
-
