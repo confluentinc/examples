@@ -71,7 +71,7 @@ On-premises to |ccloud| with |kconnect| Backed to Destination
 
 In this example, |crep| copies data from an on-premises |ak| cluster to |ccloud|, and |crep| runs on a |kconnect| cluster backed to the destination |ccloud| cluster.
 
-.. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-prem cluster|ccloud/docs/config/backed-to-destination/replicator-origin-onprem-backed-to-destination.cfg` configuration file.
+.. seealso:: There are many other configuration parameters for the |kconnect| worker and |crep|, but these examples show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to destination|ccloud/docs/config/backed-to-destination/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-premises cluster|ccloud/docs/config/backed-to-destination/replicator-origin-onprem-backed-to-destination.cfg` configuration file.
 
 .. figure:: images/onprem-ccloud-destination.png
 
