@@ -44,7 +44,7 @@ Prerequisites
 1. The following are prerequisites for the demo:
 
    -  An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__ used for development only. Do not use a production cluster.
-   -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v0.239.0 or later
+   -  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
    -  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
    -  jq
 
