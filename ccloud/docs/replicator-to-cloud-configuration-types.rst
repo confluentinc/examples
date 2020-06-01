@@ -40,7 +40,7 @@ For this case where |crep| runs on a :ref:`connect-backed-destination`, there ar
 - Example 1.1: :ref:`onprem-cloud-destination`
 - Example 1.2: :ref:`cloud-cloud-destination`
 
-There are scenarios in which your self-managed Connect cluster may not be able to be backed to the destination |ccloud| cluster.
+There are scenarios in which your self-managed |kconnect| cluster may not be able to be backed to the destination |ccloud| cluster.
 For example, some highly secure clusters may block incoming network connections and only allow push connections, in which case an incoming connection from |crep| running on the destination cluster to the origin cluster would fail.
 In this case, you can have a Connect cluster backed to the origin cluster instead and push the replicated data to the destination cluster.
 This second configuration type is more complex because there are overrides you will need to configure.
