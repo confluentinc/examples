@@ -342,10 +342,12 @@ CONNECT_DELTA=$DEST/connect-ccloud.delta
 echo "$CONNECT_DELTA"
 rm -f $CONNECT_DELTA
 cat <<EOF > $CONNECT_DELTA
+# Configuration for embedded admin client
 replication.factor=3
 config.storage.replication.factor=3
 offset.storage.replication.factor=3
 status.storage.replication.factor=3
+
 EOF
 while read -r line
   do
@@ -359,7 +361,10 @@ while read -r line
     fi
   fi
 done < "$CONFIG_FILE"
-echo -e "\n# Connect producer and consumer specific configuration" >> $CONNECT_DELTA
+
+for prefix in "producer" "consumer" "producer.confluent.monitoring.interceptor" "consumer.confluent.monitoring.interceptor" ; do
+
+echo -e "\n# Configuration for embedded $prefix" >> $CONNECT_DELTA
 while read -r line
   do
   if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -367,13 +372,14 @@ while read -r line
       line=${line/\\/}
     fi
     if [[ ${line:0:4} == 'sasl' || ${line:0:3} == 'ssl' || ${line:0:8} == 'security' ]]; then
-      echo "producer.$line" >> $CONNECT_DELTA
-      echo "producer.confluent.monitoring.interceptor.$line" >> $CONNECT_DELTA
-      echo "consumer.$line" >> $CONNECT_DELTA
-      echo "consumer.confluent.monitoring.interceptor.$line" >> $CONNECT_DELTA
+      echo "${prefix}.$line" >> $CONNECT_DELTA
     fi
   fi
 done < "$CONFIG_FILE"
+
+done
+
+
 cat <<EOF >> $CONNECT_DELTA
 
 # Confluent Schema Registry for Kafka Connect
