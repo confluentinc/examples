@@ -6,7 +6,7 @@
 NAME=`basename "$0"`
 
 # Source library
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 check_ccloud_version 1.0.0 \
   && print_pass "ccloud version ok" \

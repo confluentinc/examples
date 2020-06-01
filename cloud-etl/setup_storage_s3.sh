@@ -1,7 +1,7 @@
 #!/bin/bash
   
 # Source library
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 # Source demo-specific configurations
 source config/demo.cfg
