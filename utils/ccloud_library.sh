@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################
-# helper_cloud.sh
+# ccloud_library.sh
 # --------------------------------------------------------------
 # This library of functions automates common tasks with Confluent Cloud https://confluent.cloud/ 
 # These are intended to be examples for demos and testing.
@@ -10,8 +10,8 @@
 #
 # Get the library:
 #
-#   wget -O helper_cloud.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/helper_cloud.sh
-#   source ./helper_cloud.sh
+#   wget -O ccloud_library.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/ccloud_library.sh
+#   source ./ccloud_library.sh
 #
 # Support:
 #

@@ -5,7 +5,7 @@
 ################################################################
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source "$DIR/config.env"
-source "$DIR/helper_cloud.sh"
+source "$DIR/ccloud_library.sh"
 
 
 ################################################################
