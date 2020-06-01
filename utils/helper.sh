@@ -31,6 +31,16 @@ function check_env() {
   return 0
 }
 
+function validate_version_confluent_cli_v2() {
+
+  if [[ -z $(confluent version | grep "Go") ]]; then
+    echo "This demo requires the new Confluent CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
 function check_python() {
   if [[ $(type python 2>&1) =~ "not found" ]]; then
     echo "'python' is not found. Install python and try again."

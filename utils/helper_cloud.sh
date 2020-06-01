@@ -92,16 +92,6 @@ function ccloud::validate_version_ccloud_cli() {
   fi
 }
 
-function ccloud::validate_version_confluent_cli_v2() {
-
-  if [[ -z $(confluent version | grep "Go") ]]; then
-    echo "This demo requires the new Confluent CLI. Please update your version and try again."
-    exit 1
-  fi
-
-  return 0
-}
-
 function ccloud::validate_psql_installed() {
   if [[ $(type psql 2>&1) =~ "not found" ]]; then
     echo "psql is not found. Install psql and try again"

@@ -5,7 +5,7 @@ source ../utils/helper.sh
 
 check_env || exit 1
 check_running_cp ${CONFLUENT} || exit
-ccloud::validate_version_confluent_cli_v2 || exit
+validate_version_confluent_cli_v2 || exit
 
 ./stop.sh
 
