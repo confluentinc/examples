@@ -15,7 +15,7 @@ Concepts Review
 Before diving into the different ways to configure |crep|, let's first reprise some basic concepts regarding |crep| and |kconnect-long|.
 This will help you understand the logic for configuring |crep| because how the |kconnect-long| cluster is configured will affect how |crep| should be configured.
 
-|crep| is a Kafka connector and runs on Connect workers.
+|crep| is a |ak| connector and runs on |kconnect| workers.
 Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker inside.
 
 |crep| has an embedded consumer that reads data from the origin cluster, and the Connect worker has an embedded producer that copies that data to the destination cluster, which in this case is |ccloud|.
