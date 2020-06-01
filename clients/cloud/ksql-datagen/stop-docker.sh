@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source library
-. ../../../utils/helper.sh
+source ../../../utils/helper.sh
 
 CONFIG_FILE=$HOME/.confluent/java.config
 ccloud::validate_ccloud_config $CONFIG_FILE || exit

@@ -2,7 +2,7 @@
 
 
 # Source library
-. ../../../utils/helper.sh
+source ../../../utils/helper.sh
 
 check_env || exit 1
 ccloud::validate_version_confluent_cli_v2 || exit 1
@@ -21,6 +21,6 @@ mkdir -p /tmp/rbac_configs
 openssl genrsa -out /tmp/tokenKeypair.pem 2048 
 openssl rsa -in /tmp/tokenKeypair.pem -outform PEM -pubout -out /tmp/tokenPublicKey.pem
 
-. ../config/local-demo.env
+source ../config/local-demo.env
 
 confluent local destroy

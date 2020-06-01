@@ -4,8 +4,8 @@
 # Source Confluent Platform versions
 ################################################################
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-. "$DIR/config.env"
-. "$DIR/helper_cloud.sh"
+source "$DIR/config.env"
+source "$DIR/helper_cloud.sh"
 
 
 ################################################################

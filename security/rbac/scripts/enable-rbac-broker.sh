@@ -8,8 +8,8 @@
 ################################################################################
 
 # Source library
-. ../../../utils/helper.sh
-. ./rbac_lib.sh
+source ../../../utils/helper.sh
+source ./rbac_lib.sh
 
 check_env || exit 1
 ccloud::validate_version_confluent_cli_v2 || exit 1
@@ -19,7 +19,7 @@ check_jq || exit 1
 # Initialize
 ##################################################
 
-. ../config/local-demo.env
+source ../config/local-demo.env
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=server.properties

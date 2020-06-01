@@ -6,7 +6,7 @@
 NAME=`basename "$0"`
 
 # Source library
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok" \

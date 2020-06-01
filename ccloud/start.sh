@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source library
-. ../utils/helper.sh
+source ../utils/helper.sh
 
 NAME=`basename "$0"`
 
@@ -127,7 +127,7 @@ sleep 20
 printf "\n"
 
 echo ====== Deploying kafka-connect-datagen for pageviews
-. ./connectors/submit_datagen_pageviews_config.sh
+source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
 echo ====== Start Local Connect cluster that connects to CCloud Kafka
@@ -158,7 +158,7 @@ ccloud kafka acl create --allow --service-account $serviceAccount --operation WR
 printf "\n"
 
 echo ====== Deploying kafka-connect-datagen for users
-. ./connectors/submit_datagen_users_config.sh
+source ./connectors/submit_datagen_users_config.sh
 printf "\n"
 
 echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageviews'
@@ -167,7 +167,7 @@ ccloud::create_acls_replicator $serviceAccount pageviews
 printf "\n"
 
 echo ====== Starting Replicator and sleeping 60 seconds
-. ./connectors/submit_replicator_config.sh
+source ./connectors/submit_replicator_config.sh
 sleep 60
 printf "\n"
 
