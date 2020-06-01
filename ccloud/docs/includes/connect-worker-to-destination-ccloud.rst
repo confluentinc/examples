@@ -8,7 +8,7 @@ The Connect worker's admin client requires connection information to the destina
 .. literalinclude:: config/connect-ccloud-destination.delta
    :lines: 6-11
 
-The Connect worker's embedded producer requires connection information to the destination |ccloud|.
+The |kconnect| worker's embedded producer requires connection information to the destination |ccloud|.
 
 .. literalinclude:: config/connect-ccloud-destination.delta
    :lines: 14-17
@@ -17,4 +17,3 @@ If you are using |c3| and doing stream monitoring then the embedded producer's m
 
 .. literalinclude:: config/connect-ccloud-destination.delta
    :lines: 26-29
-
