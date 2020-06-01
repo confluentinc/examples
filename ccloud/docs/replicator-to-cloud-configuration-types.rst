@@ -55,9 +55,9 @@ For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two
 
 .. _connect-backed-destination:
 
-=====================================
+========================================
 |kconnect| Cluster Backed to Destination
-=====================================
+========================================
 
 For this case where |crep| runs on a :ref:`connect-backed-destination`, there are two configuration examples:
 
@@ -67,7 +67,7 @@ For this case where |crep| runs on a :ref:`connect-backed-destination`, there ar
 .. _onprem-cloud-destination:
 
 On-premises to |ccloud| with |kconnect| Backed to Destination
-------------------------------------------------------
+-------------------------------------------------------------
 
 In this example, |crep| copies data from an on-premises |ak| cluster to |ccloud|, and |crep| runs on a |kconnect| cluster backed to the destination |ccloud| cluster.
 
@@ -96,7 +96,7 @@ Configure ACLs
 .. _cloud-cloud-destination:
 
 |ccloud| to |ccloud| with |kconnect| Backed to Destination
--------------------------------------------------------
+----------------------------------------------------------
 
 In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a |kconnect| cluster backed to the destination |ccloud| cluster.
 
@@ -124,9 +124,9 @@ Configure ACLs
 
 .. _connect-backed-origin:
 
-================================
+===================================
 |kconnect| Cluster Backed to Origin
-================================
+===================================
 
 For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two configuration examples:
 
@@ -136,7 +136,7 @@ For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two
 .. _onprem-cloud-origin:
 
 On-premises to |ccloud| with |kconnect| Backed to Origin
--------------------------------------------------
+--------------------------------------------------------
 
 In this example, |crep| copies data from an on-premises |ak| cluster to |ccloud|, and |crep| runs on a |kconnect| cluster backed to the origin on-premises cluster.
 
@@ -199,9 +199,9 @@ Configure ACLs
 .. include:: includes/set-acls-origin-and-destination.rst
 
 
-==========================================================
+====================
 Additional Resources
-==========================================================
+====================
 
 - For additional considerations on running |crep| to |ccloud|, refer to :ref:`cloud-migrate-topics`.
 - To run a |ccloud| demo that showcases a hybrid |ak| cluster: one cluster is a self-managed |ak| cluster running locally, the other is a |ccloud| cluster, see :ref:`quickstart-demos-ccloud`..
