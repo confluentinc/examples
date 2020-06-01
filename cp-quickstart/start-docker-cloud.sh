@@ -59,7 +59,7 @@ eval $CMD \
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 MAX_WAIT=720
 printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT check_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
 print_pass "Confluent Cloud KSQL is UP"
 
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1

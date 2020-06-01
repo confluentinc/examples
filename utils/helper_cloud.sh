@@ -526,7 +526,7 @@ function ccloud::wait_for_connector_up() {
 
 }
 
-check_ccloud_ksql_endpoint_ready() {
+function ccloud::validate_ccloud_ksql_endpoint_ready() {
   KSQL_ENDPOINT=$1
 
   ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
@@ -541,7 +541,7 @@ check_ccloud_ksql_endpoint_ready() {
   return 0
 }
 
-check_ccloud_cluster_ready() {
+function ccloud::validate_ccloud_cluster_ready() {
   ccloud kafka topic list &>/dev/null
   return $?
 }
@@ -735,7 +735,7 @@ function ccloud::create_ccloud_stack() {
 
   MAX_WAIT=720
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
-  retry $MAX_WAIT check_ccloud_cluster_ready || exit 1
+  retry $MAX_WAIT ccloud::validate_ccloud_cluster_ready || exit 1
   # Estimating another 80s wait still sometimes required
   echo "Sleeping an additional 80s to ensure propagation of all metadata"
   sleep 80
