@@ -95,7 +95,7 @@ Configure ACLs
 
 .. _cloud-cloud-destination:
 
-|ccloud| to |ccloud| with Connect Backed to Destination
+|ccloud| to |ccloud| with |kconnect| Backed to Destination
 -------------------------------------------------------
 
 In this example, |crep| copies data from one |ccloud| cluster to another |ccloud| cluster, and |crep| runs on a |kconnect| cluster backed to the destination |ccloud| cluster.
