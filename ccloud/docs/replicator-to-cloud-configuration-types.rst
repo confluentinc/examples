@@ -138,7 +138,7 @@ For this case where |crep| runs on a :ref:`connect-backed-origin`, there are two
 On-prem to |ccloud| with Connect Backed to Origin
 -------------------------------------------------
 
-In this example, |crep| copies data from an on-prem Kafka cluster to |ccloud|, and |crep| runs on a Connect cluster backed to the origin on-prem cluster.
+In this example, |crep| copies data from an on-premises |ak| cluster to |ccloud|, and |crep| runs on a |kconnect| cluster backed to the origin on-premises cluster.
 
 .. seealso:: There are many other configuration parameters for the Connect worker and |crep|, but we will show you only the significant ones. For an example with complete configurations, refer to the :devx-examples:`Connect worker backed to origin|ccloud/docs/config/backed-to-origin/docker-compose.yml` Docker configuration and the :devx-examples:`Replicator reading from an on-premises cluster|ccloud/docs/config/backed-to-origin/replicator-origin-onprem-backed-to-origin.cfg` configuration file.
 
