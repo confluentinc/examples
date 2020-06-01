@@ -12,7 +12,7 @@ source ../../../utils/helper.sh
 source ./rbac_lib.sh
 
 check_env || exit 1
-check_cli_v2 || exit 1
+ccloud::validate_version_confluent_cli_v2 || exit 1
 check_jq || exit 1
 
 ##################################################

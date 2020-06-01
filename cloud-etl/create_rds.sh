@@ -9,11 +9,11 @@ source ../utils/helper.sh
 # Source demo-specific configurations
 source config/demo.cfg
 
-check_psql \
+ccloud::validate_psql_installed \
   && print_pass "psql installed" \
   || exit 1
 
-check_aws_rds_db_ready() {
+ccloud::validate_aws_cli_installed_rds_db_ready() {
   STATUS=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].DBInstanceStatus")
   if [[ "$STATUS" == "available" ]]; then
     return 0
@@ -44,7 +44,7 @@ fi
 MAX_WAIT=1200
 echo
 echo "Waiting up to $MAX_WAIT seconds for AWS RDS PostgreSQL database $DB_INSTANCE_IDENTIFIER to be available"
-retry $MAX_WAIT check_aws_rds_db_ready $DB_INSTANCE_IDENTIFIER || exit 1
+retry $MAX_WAIT ccloud::validate_aws_cli_installed_rds_db_ready $DB_INSTANCE_IDENTIFIER || exit 1
 print_pass "Database $DB_INSTANCE_IDENTIFIER is available"
 
 SECURITY_GROUP=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId")
