@@ -3,7 +3,7 @@
 |crep-full| to |ccloud| Configurations
 ======================================
 
-Whether you are migrating from on-prem to cloud or have a persistent "bridge to cloud" strategy, you can use |crep-full| to copy Kafka data to |ccloud|.
+Whether you are migrating from on-premises to cloud or have a persistent "bridge to cloud" strategy, you can use |crep-full| to copy |ak| data to |ccloud|.
 Learn the different ways to configure |crep| and |kconnect-long|.
 
 .. figure:: images/replicator-to-ccloud.png
