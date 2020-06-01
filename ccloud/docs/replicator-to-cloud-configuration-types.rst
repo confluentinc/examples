@@ -18,7 +18,7 @@ This will help you understand the logic for configuring |crep| because how the |
 |crep| is a |ak| connector and runs on |kconnect| workers.
 Even the :ref:`Replicator executable <replicator_executable>` has a bundled Connect worker inside.
 
-|crep| has an embedded consumer that reads data from the origin cluster, and the Connect worker has an embedded producer that copies that data to the destination cluster, which in this case is |ccloud|.
+|crep| has an embedded consumer that reads data from the origin cluster, and the |kconnect| worker has an embedded producer that copies that data to the destination cluster, which in this case is |ccloud|.
 To configure the proper connection information for |crep| to interact with the origin cluster, use the prefix ``src.``.
 |crep| also has an admin client that it needs for interacting with the destination cluster, and it can be configured with the prefix ``dest.``.
 
