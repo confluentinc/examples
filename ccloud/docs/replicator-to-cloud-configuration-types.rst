@@ -30,7 +30,7 @@ The |kconnect-long| embedded producer can be configured directly on the |kconnec
 Configuration Types
 ===================
 
-The first type is where |crep| runs on a self-managed Connect cluster that is backed to the destination |ccloud| cluster.
+The first type is where |crep| runs on a self-managed |kconnect| cluster that is backed to the destination |ccloud| cluster.
 This allows |crep|, which is a source connector, to leverage the default behavior of the Connect worker's admin client and embedded producer.
 
 .. figure:: images/replicator-worker-destination.png
