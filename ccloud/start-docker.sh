@@ -83,9 +83,12 @@ echo ====== Deploying kafka-connect-datagen for pageviews
 source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
-echo ====== Deploying Replicator
+echo ====== Starting Replicator
 source ./connectors/submit_replicator_docker_config.sh
-printf "\n\n"
+MAX_WAIT=120
+echo "Waiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
+retry $MAX_WAIT ccloud::validate_topic_exists pageviews || exit 1
+print "\n\n"
 
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1

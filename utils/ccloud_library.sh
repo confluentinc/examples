@@ -544,6 +544,14 @@ function ccloud::validate_ccloud_cluster_ready() {
   return $?
 }
 
+function ccloud::validate_topic_exists() {
+  topic=$1
+
+  ccloud kafka topic describe $topic &>/dev/null
+  return $?
+}
+
+
 function ccloud::login_ccloud_cli(){
 
   URL=$1

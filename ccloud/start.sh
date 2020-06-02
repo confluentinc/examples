@@ -167,10 +167,12 @@ echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageview
 ccloud::create_acls_replicator $serviceAccount pageviews
 printf "\n"
 
-echo ====== Starting Replicator and sleeping 60 seconds
+echo ====== Starting Replicator
 source ./connectors/submit_replicator_config.sh
-sleep 60
-printf "\n"
+MAX_WAIT=120
+echo "Waiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
+retry $MAX_WAIT ccloud::validate_topic_exists pageviews || exit 1
+print "\n\n"
 
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1
