@@ -186,8 +186,8 @@ echo "Local client configuration file written to $CONFIG_FILE"
 echo
 
 echo
-echo "To destroy this Confluent Cloud stack run ->"
-echo "    ./ccloud_stack_destroy.sh $CONFIG_FILE"
+echo "To stop this demo and destroy Confluent Cloud resources run ->"
+echo "    ./stop.sh $CONFIG_FILE"
 echo
 
 echo
