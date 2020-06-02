@@ -556,12 +556,8 @@ function ccloud::validate_subject_exists() {
   sr_url=$2
   sr_credentials=$3
 
-  OUTPUT=$(curl --silent -u $sr_credentials $sr_url/subjects/$subject/versions/latest | jq -r ".subject")
-  if [[ "$OUTPUT" =~ "$subject" ]]; then
-    return 0
-  fi
-
-  return 1
+  curl --silent -u $sr_credentials $sr_url/subjects/$subject/versions/latest | jq -r ".subject" | grep $subject > /dev/null
+  return $?
 }
 
 function ccloud::login_ccloud_cli(){

@@ -184,3 +184,12 @@ printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ o
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
 echo
+
+echo
+echo "To destroy this Confluent Cloud stack run ->"
+echo "    ./ccloud_stack_destroy.sh $CONFIG_FILE"
+echo
+
+echo
+ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
