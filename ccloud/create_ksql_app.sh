@@ -5,6 +5,7 @@
 #################################################################
 # Source library
 source ../utils/helper.sh
+source ../utils/ccloud_library.sh
 
 #################################################################
 # Source CCloud configurations

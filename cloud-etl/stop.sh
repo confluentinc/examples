@@ -2,6 +2,7 @@
 
 # Source library 
 source ../utils/helper.sh
+source ../utils/ccloud_library.sh
 
 # Source demo-specific configurations
 source config/demo.cfg
