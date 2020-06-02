@@ -2,6 +2,7 @@
 
 # Source library
 source ../utils/helper.sh
+source ../utils/ccloud_library.sh
 
 echo ====== Verifying prerequisites
 ccloud::validate_version_ccloud_cli 1.7.0 \

@@ -3,9 +3,8 @@
 ################################################################
 # Source Confluent Platform versions
 ################################################################
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-source "$DIR/config.env"
-source "$DIR/helper_cloud.sh"
+DIR_HELPER="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source "${DIR_HELPER}/config.env"
 
 
 ################################################################
@@ -25,6 +24,16 @@ function check_env() {
 
   if [[ $(type kafka-server-start 2>&1) =~ "not found" ]]; then
     echo "Cannot find 'kafka-server-start'. Please add \$CONFLUENT_HOME/bin to \$PATH (e.g. 'export PATH=\${CONFLUENT_HOME}/bin:\${PATH}') and try again."
+    exit 1
+  fi
+
+  return 0
+}
+
+function validate_version_confluent_cli_v2() {
+
+  if [[ -z $(confluent version | grep "Go") ]]; then
+    echo "This demo requires the new Confluent CLI. Please update your version and try again."
     exit 1
   fi
 

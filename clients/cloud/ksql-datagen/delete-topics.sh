@@ -2,6 +2,7 @@
 
 # Source library
 source ../../../utils/helper.sh
+source ../../../utils/ccloud_library.sh
 
 source ./delta_configs/env.delta
 
