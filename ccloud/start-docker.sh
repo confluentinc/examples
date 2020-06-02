@@ -55,7 +55,7 @@ echo ====== Validate credentials to Confluent Cloud Schema Registry
 ccloud::validate_schema_registry_up $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
-echo ====== Creating cloud topics users and pageviews and setting ACLs
+echo ====== Create topic users and set ACLs in CCloud cluster
 # users
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
