@@ -39,7 +39,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
-echo ====== Generate CCloud configurations
+echo ====== Generate Confluent Cloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
@@ -94,7 +94,7 @@ if check_cp; then
   mkdir -p $CONFLUENT_CURRENT/control-center
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
   cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
-  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
+  # Stop the Control Center that starts with Confluent CLI to run Control Center to Confluent Cloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
 
@@ -131,7 +131,7 @@ echo ====== Deploying kafka-connect-datagen for pageviews
 source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
-echo ====== Start Local Connect cluster that connects to CCloud Kafka
+echo ====== Start Local Connect cluster that connects to Confluent Cloud Kafka
 mkdir -p $CONFLUENT_CURRENT/connect
 CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
 cp $CONFLUENT_CURRENT/connect/connect.properties $CONNECT_CONFIG
@@ -153,7 +153,7 @@ echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Co
 retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 printf "\n\n"
 
-echo ====== Create topic users and set ACLs in CCloud cluster
+echo ====== Create topic users and set ACLs in Confluent Cloud cluster
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 printf "\n"

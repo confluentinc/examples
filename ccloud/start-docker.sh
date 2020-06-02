@@ -29,7 +29,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
-echo ====== Generate CCloud configurations
+echo ====== Generate Confluent Cloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
@@ -55,7 +55,7 @@ echo ====== Validate credentials to Confluent Cloud Schema Registry
 ccloud::validate_schema_registry_up $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
-echo ====== Create topic users and set ACLs in CCloud cluster
+echo ====== Create topic users and set ACLs in Confluent Cloud cluster
 # users
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
