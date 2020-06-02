@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################
-# helper_cloud.sh
+# ccloud_library.sh
 # --------------------------------------------------------------
 # This library of functions automates common tasks with Confluent Cloud https://confluent.cloud/ 
 # These are intended to be examples for demos and testing.
@@ -10,8 +10,11 @@
 #
 # Get the library:
 #
-#   wget -O helper_cloud.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/helper_cloud.sh
-#   source ./helper_cloud.sh
+#   wget -O ccloud_library.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/ccloud_library.sh
+#
+# Use the library from your script:
+#
+#   source ./ccloud_library.sh
 #
 # Support:
 #
@@ -90,16 +93,6 @@ function ccloud::validate_version_ccloud_cli() {
     echo 'To update run: ccloud update'
     exit 1
   fi
-}
-
-function ccloud::validate_version_confluent_cli_v2() {
-
-  if [[ -z $(confluent version | grep "Go") ]]; then
-    echo "This demo requires the new Confluent CLI. Please update your version and try again."
-    exit 1
-  fi
-
-  return 0
 }
 
 function ccloud::validate_psql_installed() {
@@ -643,7 +636,6 @@ function ccloud::create_acls_replicator() {
   ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE-CONFIGS --topic $topic
   ccloud kafka acl create --allow --service-account $serviceAccount --operation ALTER-CONFIGS --topic $topic
   ccloud kafka acl create --allow --service-account $serviceAccount --operation DESCRIBE --cluster-scope
-  ccloud kafka acl create --allow --service-account $serviceAccount --operation CREATE --cluster-scope
 
   return 0
 }

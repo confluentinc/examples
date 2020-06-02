@@ -8,6 +8,7 @@
 
 # Source library
 source ../../utils/helper.sh
+source ../../utils/ccloud_library.sh
 
 ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
 check_jq || exit 1

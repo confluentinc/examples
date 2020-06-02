@@ -9,6 +9,7 @@ NAME=`basename "$0"`
 
 # Source library
 source ../utils/helper.sh
+source ../utils/ccloud_library.sh
 
 check_jq \
   && print_pass "jq found"
@@ -37,7 +38,7 @@ wget -q -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-
   && print_pass "retrieved docker-compose.yml from https://github.com/confluentinc/cp-all-in-one/blob/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml" \
   || exit_with_error -c $? -n "$NAME" -m "could not obtain cp-all-in-one docker-compose.yml" -l $(($LINENO -2))
 
-printf "\n====== Creating new Confluent Cloud stack using the ccloud::create_ccloud_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/helper_cloud.sh"
+printf "\n====== Creating new Confluent Cloud stack using the ccloud::create_ccloud_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/ccloud_library.sh"
 ccloud::create_ccloud_stack true  \
 	&& print_code_pass -c "cccloud::create_ccloud_stack true"
 
