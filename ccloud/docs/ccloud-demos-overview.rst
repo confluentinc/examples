@@ -219,7 +219,7 @@ You can build any demo with a mix of fully-managed services in |ccloud| and self
 
       docker-compose up -d <service>
 
-#. Refer to the :devx-examples:`library of bash functions|utils/helper_cloud.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
+#. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
 
 ====================
