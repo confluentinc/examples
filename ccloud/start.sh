@@ -169,10 +169,12 @@ printf "\n"
 
 echo ====== Starting Replicator
 source ./connectors/submit_replicator_config.sh
-MAX_WAIT=120
-echo "Waiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
+MAX_WAIT=60
+printf "\nWaiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
 retry $MAX_WAIT ccloud::validate_topic_exists pageviews || exit 1
-print "\n\n"
+printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be created in Confluent Cloud Schema Registry"
+retry $MAX_WAIT ccloud::validate_subject_exists "pageviews-value" $SCHEMA_REGISTRY_URL $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO || exit 1
+printf "\n\n"
 
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1

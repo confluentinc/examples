@@ -551,6 +551,21 @@ function ccloud::validate_topic_exists() {
   return $?
 }
 
+function ccloud::validate_subject_exists() {
+  subject=$1
+  sr_url=$2
+  sr_credentials=$3
+
+  echo "subject: $subject"
+  echo "sr_url: $sr_url"
+  echo "sr_credentials: $sr_credentials"
+  OUTPUT=$(curl -u $sr_credentials $sr_url/subjects/$subject/versions/latest)
+  if [[ "$OUTPUT" =~ "error_code" ]]; then
+    return 1
+  fi
+
+  return 0
+}
 
 function ccloud::login_ccloud_cli(){
 
