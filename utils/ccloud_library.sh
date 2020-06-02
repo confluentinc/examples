@@ -556,8 +556,8 @@ function ccloud::validate_subject_exists() {
   sr_url=$2
   sr_credentials=$3
 
-  OUTPUT=$(curl -u $sr_credentials $sr_url/subjects/$subject/versions/latest)
-  if [[ "$OUTPUT" =~ "error_code" ]]; then
+  OUTPUT=$(curl --silent -u $sr_credentials $sr_url/subjects/$subject/versions/latest | jq -r ".error_code")
+  if [[ "$OUTPUT" =~ "40401" ]]; then
     return 1
   fi
 
