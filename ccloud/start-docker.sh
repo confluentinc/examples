@@ -72,7 +72,7 @@ printf "\n"
 MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for topic pageviews to exist in local cluster"
 retry $MAX_WAIT check_topic_exists kafka kafka:9092 pageviews || exit 1
-echo "Topic pageviews exists in local cluster exist!"
+echo "Topic pageviews exists in local cluster!"
 
 MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for connect-local to start"
