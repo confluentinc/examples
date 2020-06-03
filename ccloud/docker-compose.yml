@@ -92,29 +92,6 @@ services:
       CONFLUENT_METRICS_TOPIC_REPLICATION: 3
       PORT: 9021
 
-
-  # This "container" is a workaround to pre-create topics
-  kafka-create-topics:
-    image: ${REPOSITORY}/cp-kafka:${CONFLUENT_DOCKER_TAG}
-    hostname: kafka-create-topics
-    container_name: kafka-create-topics
-    depends_on:
-      - kafka
-    # We defined a dependency on "kafka", but `depends_on` will NOT wait for the
-    # dependencies to be "ready" before starting the "kafka-create-topics"
-    # container;  it waits only until the dependencies have started.  Hence we
-    # must control startup order more explicitly.
-    # See https://docs.docker.com/compose/startup-order/
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b kafka:29092 1 20 && \
-                       kafka-topics --zookeeper zookeeper:2181 --create --topic pageviews --partitions 6 --replication-factor 1 && \
-                       sleep infinity'"
-    environment:
-      # The following settings are listed here only to satisfy the image's requirements.
-      # We override the image's `command` anyways, hence this container will not start a broker.
-      KAFKA_BROKER_ID: ignored
-      KAFKA_ZOOKEEPER_CONNECT: ignored
-
   connect-local:
     image: cnfldemos/cp-server-connect-datagen:${KAFKA_CONNECT_DATAGEN_DOCKER_TAG}
     hostname: connect-local
