@@ -24,7 +24,7 @@
 #
 # Confluent Platform Components:
 # - Confluent Schema Registry
-# - ksqlDB Data Generator
+# - KSQL Data Generator
 # - ksqlDB server
 # - Confluent Replicator (executable)
 # - Confluent Control Center
