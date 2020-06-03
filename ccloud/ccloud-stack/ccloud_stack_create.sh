@@ -17,7 +17,7 @@ ccloud::validate_logged_in_ccloud_cli || exit 1
 ccloud::prompt_continue_ccloud_demo || exit 1
 
 enable_ksqldb=false
-read -p "Do you also want to create a Confluent Cloud KSQL app (hourly charges may apply)? [y/n] " -n 1 -r
+read -p "Do you also want to create a Confluent Cloud ksqlDB app (hourly charges may apply)? [y/n] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then

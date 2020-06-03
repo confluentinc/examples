@@ -176,7 +176,7 @@ printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be 
 retry $MAX_WAIT ccloud::validate_subject_exists "pageviews-value" $SCHEMA_REGISTRY_URL $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO || exit 1
 printf "\n\n"
 
-echo ====== Creating Confluent Cloud KSQL application
+echo ====== Creating Confluent Cloud ksqlDB application
 ./create_ksqldb_app.sh || exit 1
 printf "\n"
 
