@@ -300,7 +300,7 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
 
-  OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
+  OUTPUT=$(ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
   CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
   ccloud kafka cluster use $CLUSTER
 
