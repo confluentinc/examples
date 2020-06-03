@@ -349,7 +349,7 @@ function ccloud::create_ksql_app() {
   KSQL_NAME=$1
   CLUSTER=$2
 
-  KSQL=$(ccloud ksql app create --cluster $CLUSTER -o json $KSQL_NAME | jq -r ".id")
+  KSQL=$(ccloud ksql app create --cluster $CLUSTER -o json "$KSQL_NAME" | jq -r ".id")
   echo $KSQL
 
   return 0
