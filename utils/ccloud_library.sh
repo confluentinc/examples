@@ -708,29 +708,26 @@ function ccloud::set_kafka_cluster_use() {
 function ccloud::create_ccloud_stack() {
   enable_ksql=$1
 
-  RANDOM_NUM=$((1 + RANDOM % 1000000))
-  #echo "RANDOM_NUM: $RANDOM_NUM"
+  if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
+    # Service Account is not received so it will be created
+    local RANDOM_NUM=$((1 + RANDOM % 1000000))
+    SERVICE_NAME=${SERVICE_NAME:-"demo-app-$RANDOM_NUM"}
+    SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
+    
+  fi
 
-  SERVICE_NAME="demo-app-$RANDOM_NUM"
-  SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
   echo "Creating Confluent Cloud stack for new service account id $SERVICE_ACCOUNT_ID of name $SERVICE_NAME"
 
-  ENVIRONMENT_NAME="demo-env-$SERVICE_ACCOUNT_ID"
-  ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME)
-
-  CLUSTER_NAME=demo-kafka-cluster-$SERVICE_ACCOUNT_ID
+  if [[ -z "$ENVIRONMENT" ]]; then
+    # Environment is not received so it will be created
+    echo "You need to specify a demo Type!"
+    ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
+    ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) 
+  fi
+  
+  CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
-  KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
-
-  mkdir -p stack-configs
-  CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
-
-  ccloud::create_ccloud_stack_sub
-}
-
-function ccloud::create_ccloud_stack_sub() {
-  
   CLUSTER=$(ccloud::create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
   if [[ "$CLUSTER" == "" ]] ; then
     print_error "Kafka cluster id is empty"
@@ -753,6 +750,7 @@ function ccloud::create_ccloud_stack_sub() {
   SCHEMA_REGISTRY_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
 
   if $enable_ksql ; then
+    KSQL_NAME=${KSQL_NAME:-"demo-ksql-$SERVICE_ACCOUNT_ID"}
     KSQL=$(ccloud::create_ksql_app $KSQL_NAME $CLUSTER)
     KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
     KSQL_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
@@ -761,6 +759,11 @@ function ccloud::create_ccloud_stack_sub() {
 
   ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
 
+  if [[ -z "$CLIENT_CONFIG" ]]; then
+    mkdir -p stack-configs
+    CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
+    
+  fi
   
   cat <<EOF > $CLIENT_CONFIG
 # ------------------------------
