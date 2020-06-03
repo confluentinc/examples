@@ -69,7 +69,7 @@ docker-compose up -d
 printf "\n"
 
 # Verify topics exist
-MAX_WAIT=120
+MAX_WAIT=240
 echo "Waiting up to $MAX_WAIT seconds for topic pageviews to exist in local cluster"
 retry $MAX_WAIT check_topic_exists kafka kafka:9092 pageviews || exit 1
 echo "Topic pageviews exists in local cluster exist!"
@@ -91,7 +91,7 @@ printf "\n\n"
 
 echo ====== Starting Replicator
 source ./connectors/submit_replicator_docker_config.sh
-MAX_WAIT=60
+MAX_WAIT=120
 printf "\nWaiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
 retry $MAX_WAIT ccloud::validate_topic_exists pageviews || exit 1
 printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be created in Confluent Cloud Schema Registry"
