@@ -29,7 +29,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
-echo ====== Generate CCloud configurations
+echo ====== Generate Confluent Cloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
@@ -55,7 +55,7 @@ echo ====== Validate credentials to Confluent Cloud Schema Registry
 ccloud::validate_schema_registry_up $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
-echo ====== Create topic users and set ACLs in CCloud cluster
+echo ====== Create topic users and set ACLs in Confluent Cloud cluster
 # users
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
@@ -75,6 +75,14 @@ echo "Waiting up to $MAX_WAIT seconds for connect-cloud to start"
 retry $MAX_WAIT check_connect_up connect-cloud || exit 1
 printf "\n\n"
 
+echo ====== Create topic pageviews in local cluster
+docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --create --topic pageviews --partitions 6 --replication-factor 1
+MAX_WAIT=30
+echo "Waiting up to $MAX_WAIT seconds for topic pageviews to exist in local cluster"
+retry $MAX_WAIT check_topic_exists kafka kafka:9092 pageviews || exit 1
+echo "Topic pageviews exists in local cluster"
+printf "\n"
+
 echo ====== Deploying kafka-connect-datagen for users 
 source ./connectors/submit_datagen_users_config.sh
 printf "\n\n"
@@ -83,8 +91,13 @@ echo ====== Deploying kafka-connect-datagen for pageviews
 source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
-echo ====== Deploying Replicator
+echo ====== Starting Replicator
 source ./connectors/submit_replicator_docker_config.sh
+MAX_WAIT=120
+printf "\nWaiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
+retry $MAX_WAIT ccloud::validate_topic_exists pageviews || exit 1
+printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be created in Confluent Cloud Schema Registry"
+retry $MAX_WAIT ccloud::validate_subject_exists "pageviews-value" $SCHEMA_REGISTRY_URL $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO || exit 1
 printf "\n\n"
 
 echo ====== Creating Confluent Cloud KSQL application
@@ -94,3 +107,12 @@ printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ o
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
 echo
+
+echo
+echo "To stop this demo and destroy Confluent Cloud resources run ->"
+echo "    ./stop-docker.sh $CONFIG_FILE"
+echo
+
+echo
+ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"

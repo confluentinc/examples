@@ -39,7 +39,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
-echo ====== Generate CCloud configurations
+echo ====== Generate Confluent Cloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
@@ -94,7 +94,7 @@ if check_cp; then
   mkdir -p $CONFLUENT_CURRENT/control-center
   C3_CONFIG=$CONFLUENT_CURRENT/control-center/control-center-ccloud.properties
   cp $CONFLUENT_HOME/etc/confluent-control-center/control-center-production.properties $C3_CONFIG
-  # Stop the Control Center that starts with Confluent CLI to run Control Center to CCloud
+  # Stop the Control Center that starts with Confluent CLI to run Control Center to Confluent Cloud
   jps | grep ControlCenter | awk '{print $1;}' | xargs kill -9
   cat $DELTA_CONFIGS_DIR/control-center-ccloud.delta >> $C3_CONFIG
 
@@ -131,7 +131,7 @@ echo ====== Deploying kafka-connect-datagen for pageviews
 source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
-echo ====== Start Local Connect cluster that connects to CCloud Kafka
+echo ====== Start Local Connect cluster that connects to Confluent Cloud Kafka
 mkdir -p $CONFLUENT_CURRENT/connect
 CONNECT_CONFIG=$CONFLUENT_CURRENT/connect/connect-ccloud.properties
 cp $CONFLUENT_CURRENT/connect/connect.properties $CONNECT_CONFIG
@@ -153,7 +153,7 @@ echo "Waiting up to $MAX_WAIT seconds for the connect worker that connects to Co
 retry $MAX_WAIT check_connect_up_logFile $CONFLUENT_CURRENT/connect/connect-ccloud.stdout || exit 1
 printf "\n\n"
 
-echo ====== Create topic users and set ACLs in CCloud cluster
+echo ====== Create topic users and set ACLs in Confluent Cloud cluster
 ccloud kafka topic create users
 ccloud kafka acl create --allow --service-account $serviceAccount --operation WRITE --topic users
 printf "\n"
@@ -167,10 +167,14 @@ echo ====== Replicate local topic 'pageviews' to Confluent Cloud topic 'pageview
 ccloud::create_acls_replicator $serviceAccount pageviews
 printf "\n"
 
-echo ====== Starting Replicator and sleeping 60 seconds
+echo ====== Starting Replicator
 source ./connectors/submit_replicator_config.sh
-sleep 60
-printf "\n"
+MAX_WAIT=60
+printf "\nWaiting up to $MAX_WAIT seconds for the topic pageviews to be created in Confluent Cloud"
+retry $MAX_WAIT ccloud::validate_topic_exists pageviews || exit 1
+printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be created in Confluent Cloud Schema Registry"
+retry $MAX_WAIT ccloud::validate_subject_exists "pageviews-value" $SCHEMA_REGISTRY_URL $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO || exit 1
+printf "\n\n"
 
 echo ====== Creating Confluent Cloud KSQL application
 ./create_ksql_app.sh || exit 1
@@ -180,3 +184,12 @@ printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ o
 echo
 echo "Local client configuration file written to $CONFIG_FILE"
 echo
+
+echo
+echo "To stop this demo and destroy Confluent Cloud resources run ->"
+echo "    ./stop.sh $CONFIG_FILE"
+echo
+
+echo
+ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
