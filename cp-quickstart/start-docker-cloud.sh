@@ -59,8 +59,8 @@ eval $CMD \
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 MAX_WAIT=720
-printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be UP"
+retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 print_pass "Confluent Cloud KSQL is UP"
 
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
@@ -108,12 +108,12 @@ printf "\n====== Setting up ksqlDB\n"
 
 printf "Obtaining the ksqlDB App Id\n"
 CMD="ccloud ksql app list -o json | jq -r '.[].id'"
-ksqlAppId=$(eval $CMD) \
-  && print_code_pass -c "$CMD" -m "$ksqlAppId" \
+ksqlDBAppId=$(eval $CMD) \
+  && print_code_pass -c "$CMD" -m "$ksqlDBAppId" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
 printf "\nConfiguring ksqlDB ACLs\n"
-CMD="ccloud ksql app configure-acls $ksqlAppId pageviews users"
+CMD="ccloud ksql app configure-acls $ksqlDBAppId pageviews users"
 $CMD \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
@@ -122,9 +122,9 @@ sleep 60
 printf "\nSubmitting KSQL queries via curl to the ksqlDB REST endpoint\n"
 printf "\tSee https://docs.ksqldb.io/en/latest/developer-guide/api/ for more information\n"
 while read ksqlCmd; do # from docker-cloud-statements.sql
-	response=$(curl -w "\n%{http_code}" -X POST $KSQL_ENDPOINT/ksql \
+	response=$(curl -w "\n%{http_code}" -X POST $KSQLDB_ENDPOINT/ksql \
 	       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
-	       -u $KSQL_BASIC_AUTH_USER_INFO \
+	       -u $KSQLDB_BASIC_AUTH_USER_INFO \
 	       --silent \
 	       -d @<(cat <<EOF
 	{

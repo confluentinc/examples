@@ -74,7 +74,7 @@ Run the demo
          ./enable-rbac-schema-registry.sh
          ./enable-rbac-connect.sh
          ./enable-rbac-rest-proxy.sh
-         ./enable-rbac-ksql-server.sh
+         ./enable-rbac-ksqldb-server.sh
          ./enable-rbac-control-center.sh
 
 #. After you run the demo, view the configuration files:

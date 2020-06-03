@@ -24,8 +24,8 @@
 #
 # Confluent Platform Components:
 # - Confluent Schema Registry
-# - KSQL Data Generator
-# - KSQL server
+# - ksqlDB Data Generator
+# - ksqlDB server
 # - Confluent Replicator (executable)
 # - Confluent Control Center
 # - Confluent Metrics Reporter
@@ -69,11 +69,11 @@
 #   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
 #   schema.registry.url=https://<SR ENDPOINT>
 #
-# If you are using Confluent Cloud KSQL, add the following configuration parameters
+# If you are using Confluent Cloud ksqlDB, add the following configuration parameters
 # to file above (arg 1 CONFIG_FILE)
 #
-#   ksql.endpoint=<KSQL ENDPOINT>
-#   ksql.basic.auth.user.info=<KSQL API KEY>:<KSQL API SECRET>
+#   ksql.endpoint=<ksqlDB ENDPOINT>
+#   ksql.basic.auth.user.info=<ksqlDB API KEY>:<ksqlDB API SECRET>
 #
 ################################################################################
 CONFIG_FILE=$1
@@ -131,9 +131,9 @@ BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $SR_CONFI
 SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
 
-# KSQL
-KSQL_ENDPOINT=$( grep "^ksql.endpoint" $CONFIG_FILE | awk -F'=' '{print $2;}' )
-KSQL_BASIC_AUTH_USER_INFO=$( grep "^ksql.basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+# ksqlDB
+KSQLDB_ENDPOINT=$( grep "^ksql.endpoint" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+KSQLDB_BASIC_AUTH_USER_INFO=$( grep "^ksql.basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
 
 ################################################################################
 # Build configuration file with CCloud connection parameters and
@@ -213,31 +213,31 @@ REPLICATOR_SASL_JAAS_CONFIG=${REPLICATOR_SASL_JAAS_CONFIG//\"/\\\"}
 chmod $PERM $REPLICATOR_PRODUCER_DELTA
 
 ################################################################################
-# KSQL Server runs locally and connects to Confluent Cloud
+# ksqlDB Server runs locally and connects to Confluent Cloud
 ################################################################################
-KSQL_SERVER_DELTA=$DEST/ksql-server-ccloud.delta
-echo "$KSQL_SERVER_DELTA"
-cp $INTERCEPTORS_CONFIG_FILE $KSQL_SERVER_DELTA
-echo -e "\n# KSQL Server specific configuration" >> $KSQL_SERVER_DELTA
-echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_SERVER_DELTA
-echo "consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor" >> $KSQL_SERVER_DELTA
-echo "ksql.streams.producer.retries=2147483647" >> $KSQL_SERVER_DELTA
-echo "ksql.streams.producer.confluent.batch.expiry.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
-echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQL_SERVER_DELTA
-echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQL_SERVER_DELTA
-echo "ksql.streams.replication.factor=3" >> $KSQL_SERVER_DELTA
-echo "ksql.internal.topic.replicas=3" >> $KSQL_SERVER_DELTA
-echo "ksql.sink.replicas=3" >> $KSQL_SERVER_DELTA
-echo -e "\n# Confluent Schema Registry configuration for KSQL Server" >> $KSQL_SERVER_DELTA
+KSQLDB_SERVER_DELTA=$DEST/ksqldb-server-ccloud.delta
+echo "$KSQLDB_SERVER_DELTA"
+cp $INTERCEPTORS_CONFIG_FILE $KSQLDB_SERVER_DELTA
+echo -e "\n# ksqlDB Server specific configuration" >> $KSQLDB_SERVER_DELTA
+echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQLDB_SERVER_DELTA
+echo "consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor" >> $KSQLDB_SERVER_DELTA
+echo "ksql.streams.producer.retries=2147483647" >> $KSQLDB_SERVER_DELTA
+echo "ksql.streams.producer.confluent.batch.expiry.ms=9223372036854775807" >> $KSQLDB_SERVER_DELTA
+echo "ksql.streams.producer.request.timeout.ms=300000" >> $KSQLDB_SERVER_DELTA
+echo "ksql.streams.producer.max.block.ms=9223372036854775807" >> $KSQLDB_SERVER_DELTA
+echo "ksql.streams.replication.factor=3" >> $KSQLDB_SERVER_DELTA
+echo "ksql.internal.topic.replicas=3" >> $KSQLDB_SERVER_DELTA
+echo "ksql.sink.replicas=3" >> $KSQLDB_SERVER_DELTA
+echo -e "\n# Confluent Schema Registry configuration for ksqlDB Server" >> $KSQLDB_SERVER_DELTA
 while read -r line
 do
   if [[ ${line:0:29} == 'basic.auth.credentials.source' ]]; then
-    echo "ksql.schema.registry.$line" >> $KSQL_SERVER_DELTA
+    echo "ksql.schema.registry.$line" >> $KSQLDB_SERVER_DELTA
   elif [[ ${line:0:15} == 'schema.registry' ]]; then
-    echo "ksql.$line" >> $KSQL_SERVER_DELTA
+    echo "ksql.$line" >> $KSQLDB_SERVER_DELTA
   fi
 done < $SR_CONFIG_FILE
-chmod $PERM $KSQL_SERVER_DELTA
+chmod $PERM $KSQLDB_SERVER_DELTA
 
 ################################################################################
 # KSQL DataGen for Confluent Cloud
@@ -732,7 +732,7 @@ export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INF
 export SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
 export CLOUD_KEY=$CLOUD_KEY
 export CLOUD_SECRET=$CLOUD_SECRET
-export KSQL_ENDPOINT=$KSQL_ENDPOINT
-export KSQL_BASIC_AUTH_USER_INFO=$KSQL_BASIC_AUTH_USER_INFO
+export KSQLDB_ENDPOINT=$KSQLDB_ENDPOINT
+export KSQLDB_BASIC_AUTH_USER_INFO=$KSQLDB_BASIC_AUTH_USER_INFO
 EOF
 chmod $PERM $ENV_CONFIG

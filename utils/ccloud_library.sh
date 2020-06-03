@@ -345,12 +345,12 @@ function ccloud::create_credentials_resource() {
   return 0
 }
 
-function ccloud::create_ksql_app() {
-  KSQL_NAME=$1
+function ccloud::create_ksqldb_app() {
+  KSQLDB_NAME=$1
   CLUSTER=$2
 
-  KSQL=$(ccloud ksql app create --cluster $CLUSTER -o json "$KSQL_NAME" | jq -r ".id")
-  echo $KSQL
+  KSQLDB=$(ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME" | jq -r ".id")
+  echo $KSQLDB
 
   return 0
 }
@@ -412,29 +412,29 @@ function ccloud::validate_ccloud_config() {
   return 0
 }
 
-function ccloud::validate_ksql_up() {
-  ksql_endpoint=$1
+function ccloud::validate_ksqldb_up() {
+  ksqldb_endpoint=$1
   ccloud_config_file=$2
   credentials=$3
 
   ccloud::validate_logged_in_ccloud_cli || exit 1
 
-  if [[ "$ksql_endpoint" == "" ]]; then
-    echo "ERROR: Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
+  if [[ "$ksqldb_endpoint" == "" ]]; then
+    echo "ERROR: Provision a ksqlDB cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
-  ksqlAppId=$(ccloud ksql app list | grep "$ksql_endpoint" | awk '{print $1}')
-  if [[ "$ksqlAppId" == "" ]]; then
-    echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint is not found. Provision a KSQL cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
+  ksqlDBAppId=$(ccloud ksql app list | grep "$ksqldb_endpoint" | awk '{print $1}')
+  if [[ "$ksqlDBAppId" == "" ]]; then
+    echo "ERROR: Confluent Cloud ksqlDB endpoint $ksqldb_endpoint is not found. Provision a ksqlDB cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
-  STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
+  STATUS=$(ccloud ksql app describe $ksqlDBAppId | grep "Status" | grep UP)
   if [[ "$STATUS" == "" ]]; then
-    echo "ERROR: Confluent Cloud KSQL endpoint $ksql_endpoint with id $ksqlAppId is not in UP state. Troubleshoot and try again."
+    echo "ERROR: Confluent Cloud ksqlDB endpoint $ksqldb_endpoint with id $ksqlDBAppId is not in UP state. Troubleshoot and try again."
     exit 1
   fi
 
-  ccloud::validate_credentials_ksql "$ksql_endpoint" "$ccloud_config_file" "$credentials" || exit 1
+  ccloud::validate_credentials_ksqldb "$ksqldb_endpoint" "$ccloud_config_file" "$credentials" || exit 1
 
   return 0
 }
@@ -461,21 +461,21 @@ function ccloud::validate_azure_account() {
   return 0
 }
 
-function ccloud::validate_credentials_ksql() {
-  ksql_endpoint=$1
+function ccloud::validate_credentials_ksqldb() {
+  ksqldb_endpoint=$1
   ccloud_config_file=$2
   credentials=$3
 
-  response=$(curl ${ksql_endpoint}/info \
+  response=$(curl ${ksqldb_endpoint}/info \
              -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
              --silent \
              -u $credentials)
   if [[ "$response" =~ "Unauthorized" ]]; then
-    echo "ERROR: Authorization failed to the KSQL cluster. Check your KSQL credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $ccloud_config_file and try again."
+    echo "ERROR: Authorization failed to the ksqlDB cluster. Check your ksqlDB credentials set in the configuration parameter ksql.basic.auth.user.info in your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
 
-  echo "Validated credentials to Confluent Cloud KSQL at $ksql_endpoint"
+  echo "Validated credentials to Confluent Cloud ksqlDB at $ksqldb_endpoint"
   return 0
 }
 
@@ -524,14 +524,14 @@ function ccloud::wait_for_connector_up() {
 }
 
 
-function ccloud::validate_ccloud_ksql_endpoint_ready() {
-  KSQL_ENDPOINT=$1
+function ccloud::validate_ccloud_ksqldb_endpoint_ready() {
+  KSQLDB_ENDPOINT=$1
 
-  ksqlAppId=$(ccloud ksql app list | grep "$KSQL_ENDPOINT" | awk '{print $1}')
-  if [[ "$ksqlAppId" == "" ]]; then
+  ksqlDBAppId=$(ccloud ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
+  if [[ "$ksqlDBAppId" == "" ]]; then
     return 1
   fi
-  STATUS=$(ccloud ksql app describe $ksqlAppId | grep "Status" | grep UP)
+  STATUS=$(ccloud ksql app describe $ksqlDBAppId | grep "Status" | grep UP)
   if [[ "$STATUS" == "" ]]; then
     return 1
   fi
@@ -677,17 +677,17 @@ function ccloud::create_acls_connect_topics() {
 function ccloud::validate_ccloud_stack_up() {
   CLOUD_KEY=$1
   CONFIG_FILE=$2
-  enable_ksql=$3
+  enable_ksqldb=$3
 
-  if [ -z "$enable_ksql" ]; then
-    enable_ksql=true
+  if [ -z "$enable_ksqldb" ]; then
+    enable_ksqldb=true
   fi
 
   ccloud::validate_environment_set || exit 1
   ccloud::set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
   ccloud::validate_schema_registry_up "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
-  if $enable_ksql ; then
-    ccloud::validate_ksql_up "$KSQL_ENDPOINT" "$CONFIG_FILE" "$KSQL_BASIC_AUTH_USER_INFO" || exit 1
+  if $enable_ksqldb ; then
+    ccloud::validate_ksqldb_up "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_BASIC_AUTH_USER_INFO" || exit 1
   fi
 }
 
@@ -722,7 +722,7 @@ function ccloud::set_kafka_cluster_use() {
 }
 
 function ccloud::create_ccloud_stack() {
-  enable_ksql=$1
+  enable_ksqldb=$1
 
   RANDOM_NUM=$((1 + RANDOM % 1000000))
   #echo "RANDOM_NUM: $RANDOM_NUM"
@@ -758,12 +758,12 @@ function ccloud::create_ccloud_stack() {
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".endpoint_url")
   SCHEMA_REGISTRY_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
 
-  if $enable_ksql ; then
-    KSQL_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
-    KSQL=$(ccloud::create_ksql_app $KSQL_NAME $CLUSTER)
-    KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
-    KSQL_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
-    ccloud ksql app configure-acls $KSQL
+  if $enable_ksqldb ; then
+    KSQLDB_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
+    KSQLDB=$(ccloud::create_ksqldb_app $KSQLDB_NAME $CLUSTER)
+    KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
+    KSQLDB_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
+    ccloud ksql app configure-acls $KSQLDB
   fi
 
   ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
@@ -780,9 +780,9 @@ function ccloud::create_ccloud_stack() {
 # KAFKA CLUSTER ID: ${CLUSTER}
 # SCHEMA REGISTRY CLUSTER ID: ${SCHEMA_REGISTRY}
 EOF
-  if $enable_ksql ; then
+  if $enable_ksqldb ; then
     cat <<EOF >> $CLIENT_CONFIG
-# KSQLDB APP ID: ${KSQL}
+# KSQLDB APP ID: ${KSQLDB}
 EOF
   fi
   cat <<EOF >> $CLIENT_CONFIG
@@ -796,10 +796,10 @@ basic.auth.credentials.source=USER_INFO
 schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
 schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $2}'`
 EOF
-  if $enable_ksql ; then
+  if $enable_ksqldb ; then
     cat <<EOF >> $CLIENT_CONFIG
-ksql.endpoint=${KSQL_ENDPOINT}
-ksql.basic.auth.user.info=`echo $KSQL_CREDS | awk -F: '{print $1}'`:`echo $KSQL_CREDS | awk -F: '{print $2}'`
+ksql.endpoint=${KSQLDB_ENDPOINT}
+ksql.basic.auth.user.info=`echo $KSQLDB_CREDS | awk -F: '{print $1}'`:`echo $KSQLDB_CREDS | awk -F: '{print $2}'`
 EOF
   fi
 
@@ -814,10 +814,10 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
-  if [[ $KSQL_ENDPOINT != "" ]]; then
-    KSQL=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
-    echo "KSQL: $KSQL"
-    ccloud ksql app delete $KSQL
+  if [[ $KSQLDB_ENDPOINT != "" ]]; then
+    KSQLDB=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
+    echo "KSQLDB: $KSQLDB"
+    ccloud ksql app delete $KSQLDB
   fi
 
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID

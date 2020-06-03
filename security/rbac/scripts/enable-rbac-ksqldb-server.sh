@@ -69,7 +69,7 @@ echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL"
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to the KSQL cluster"
+echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to the ksqlDB cluster"
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
@@ -216,7 +216,7 @@ echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL"
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to the KSQL cluster"
+echo -e "\n# List the role bindings for the principal User:$USER_ADMIN_KSQL to the ksqlDB cluster"
 echo "confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding list --principal User:$USER_ADMIN_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 
@@ -224,7 +224,7 @@ echo -e "\n# List the role bindings for the principal User:$USER_KSQL"
 echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-echo -e "\n# List the role bindings for the principal User:$USER_KSQL to the KSQL cluster"
+echo -e "\n# List the role bindings for the principal User:$USER_KSQL to the ksqlDB cluster"
 echo "confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID"
 confluent iam rolebinding list --principal User:$USER_KSQL --kafka-cluster-id $KAFKA_CLUSTER_ID --ksql-cluster-id $KSQL_SERVICE_ID
 

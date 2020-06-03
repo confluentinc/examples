@@ -230,9 +230,9 @@ kafka-connect-datagen
 KSQL
 ----
 
-#. In the demo, the Confluent Cloud ksqlDB queries were created using the REST API in :devx-examples:`this code|ccloud/create_ksql_app.sh` with proper credentials.
+#. In the demo, the Confluent Cloud ksqlDB queries were created using the REST API in :devx-examples:`this code|ccloud/create_ksqldb_app.sh` with proper credentials.
 
-   .. literalinclude:: ../create_ksql_app.sh
+   .. literalinclude:: ../create_ksqldb_app.sh
       :lines: 31-52
 
 #. From the Confluent Cloud UI, view the ksqlDB application flow.
