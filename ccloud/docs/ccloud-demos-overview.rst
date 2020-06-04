@@ -219,6 +219,8 @@ You can build any demo with a mix of fully-managed services in |ccloud| and self
 
       docker-compose up -d <service>
 
+   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the |kconnect-long| Docker image as described in :ref:`connect_adding_connectors_to_images`, and then substitute that Docker image in your Docker Compose.
+
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
 
