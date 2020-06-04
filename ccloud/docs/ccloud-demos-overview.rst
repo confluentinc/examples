@@ -195,8 +195,6 @@ You can build any demo with a mix of fully-managed services in |ccloud| and self
 
       ./ccloud_stack_create.sh
 
-   If you already have provisionred resources in |ccloud|, you can skip this step.
-
 #. Run the :ref:`configuration generation script <auto-generate-configs>`, passing in that local configuration file (created in previous step) as input. This script generates delta configuration files for all |cp| components and clients, including information for bootstrap servers, endpoints, and credentials required to connect to |ccloud|.
 
    .. sourcecode:: bash
