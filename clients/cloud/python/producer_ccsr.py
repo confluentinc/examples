@@ -97,5 +97,5 @@ if __name__ == '__main__':
 
     producer.flush()
 
-    print("10 messages were produced to topic {}!".format(topic))
+    print("{} messages were produced to topic {}!".format(delivered_records, topic))
 
