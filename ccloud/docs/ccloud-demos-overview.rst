@@ -178,10 +178,10 @@ Using this as a foundation, you can then add any connectors or applications.
 .. figure:: images/cp-all-in-one-cloud.png
 
 
-Put It All Together
--------------------
+Run On-Prem Components with |ccloud|
+------------------------------------
 
-You can chain these utilities to build your own hybrid demos that span |ccloud| and on-prem.
+You can chain these utilities to build your own hybrid demos that span on-prem and |ccloud|, where some self-managed components run on-prem and fully-managed services run in |ccloud|.
 
 For example, you may want an easy way to run a connector not yet available in |ccloud|.
 In this case, you can run a self-managed connect worker and connector on prem and connect it to your |ccloud| cluster.
@@ -194,6 +194,8 @@ You can build any demo with a mix of fully-managed services in |ccloud| and self
    .. sourcecode:: bash
 
       ./ccloud_stack_create.sh
+
+   If you already have provisionred resources in |ccloud|, you can skip this step.
 
 #. Run the :ref:`configuration generation script <auto-generate-configs>`, passing in that local configuration file (created in previous step) as input. This script generates delta configuration files for all |cp| components and clients, including information for bootstrap servers, endpoints, and credentials required to connect to |ccloud|.
 
