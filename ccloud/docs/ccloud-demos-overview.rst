@@ -178,8 +178,8 @@ Using this as a foundation, you can then add any connectors or applications.
 .. figure:: images/cp-all-in-one-cloud.png
 
 
-Run On-Prem Components with |ccloud|
-------------------------------------
+Put It All Together
+-------------------
 
 You can chain these utilities to build your own hybrid demos that span on-prem and |ccloud|, where some self-managed components run on-prem and fully-managed services run in |ccloud|.
 
