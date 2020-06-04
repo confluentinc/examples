@@ -729,14 +729,17 @@ function ccloud::create_ccloud_stack() {
     local RANDOM_NUM=$((1 + RANDOM % 1000000))
     SERVICE_NAME=${SERVICE_NAME:-"demo-app-$RANDOM_NUM"}
     SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
-    
   fi
 
-  echo "Creating Confluent Cloud stack for new service account id $SERVICE_ACCOUNT_ID of name $SERVICE_NAME"
+  if [[ "$SERVICE_NAME" == "" ]]; then
+    echo "ERROR: SERVICE_NAME it's not defined for $SERVICE_ACCOUNT_ID. If you are providing the SERVICE_ACCOUNT_ID to this function please also provide the SERVICE_NAME"
+    exit 1
+  fi
+
+  echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
 
   if [[ -z "$ENVIRONMENT" ]]; then
     # Environment is not received so it will be created
-    echo "You need to specify a demo Type!"
     ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
     ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) 
   fi
@@ -778,7 +781,6 @@ function ccloud::create_ccloud_stack() {
   if [[ -z "$CLIENT_CONFIG" ]]; then
     mkdir -p stack-configs
     CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
-    
   fi
   
   cat <<EOF > $CLIENT_CONFIG
