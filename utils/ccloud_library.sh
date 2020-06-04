@@ -739,7 +739,7 @@ function ccloud::create_ccloud_stack() {
   fi
 
   if [[ "$SERVICE_NAME" == "" ]]; then
-    echo "ERROR: SERVICE_NAME it's not defined for $SERVICE_ACCOUNT_ID. If you are providing the SERVICE_ACCOUNT_ID to this function please also provide the SERVICE_NAME"
+    echo "ERROR: SERVICE_NAME is not defined. If you are providing the SERVICE_ACCOUNT_ID to this function please also provide the SERVICE_NAME"
     exit 1
   fi
 
