@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright 2020 Confluent Inc.
 #
@@ -22,61 +22,80 @@
 # Writes Avro data, integration with Confluent Cloud Schema Registry
 #
 # =============================================================================
+from confluent_kafka import SerializingProducer
+from confluent_kafka.serialization import StringSerializer
+from confluent_kafka.schema_registry import SchemaRegistryClient
+from confluent_kafka.schema_registry.avro import AvroSerializer
 
-from confluent_kafka import Producer, KafkaError
-from confluent_kafka.avro import AvroProducer
 import json
 import ccloud_lib
 
-
 if __name__ == '__main__':
 
-    # Initialization
+    # Read arguments and configurations and initialize
     args = ccloud_lib.parse_args()
     config_file = args.config_file
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
-    # Create AvroProducer instance
-    p = AvroProducer({
+
+    # Create topic if needed
+    ccloud_lib.create_topic(conf, topic)
+
+    # for full list of configurations, see:
+    #  https://docs.confluent.io/current/clients/confluent-kafka-python/#schemaregistryclient
+    schema_registry_conf = {
+        'url': conf['schema.registry.url'],
+        'basic.auth.user.info': conf['schema.registry.basic.auth.user.info']}
+
+    schema_registry_client = SchemaRegistryClient(schema_registry_conf)
+
+    name_avro_serializer = AvroSerializer(ccloud_lib.name_schema,
+                                          schema_registry_client,
+                                          ccloud_lib.Name.name_to_dict)
+    count_avro_serializer = AvroSerializer(ccloud_lib.count_schema,
+                                           schema_registry_client,
+                                           ccloud_lib.Count.count_to_dict)
+
+    # for full list of configurations, see:
+    #  https://docs.confluent.io/current/clients/confluent-kafka-python/#serializingproducer
+    producer_conf = {
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': conf['sasl.mechanisms'],
         'security.protocol': conf['security.protocol'],
         'sasl.username': conf['sasl.username'],
         'sasl.password': conf['sasl.password'],
-        'schema.registry.url': conf['schema.registry.url'],
-        'schema.registry.basic.auth.credentials.source': conf['basic.auth.credentials.source'],
-        'schema.registry.basic.auth.user.info': conf['schema.registry.basic.auth.user.info'] 
-    }, default_key_schema=ccloud_lib.schema_key, default_value_schema=ccloud_lib.schema_value)
+        'key.serializer': name_avro_serializer,
+        'value.serializer': count_avro_serializer}
 
-    # Create topic if needed
-    ccloud_lib.create_topic(conf, topic)
+    producer = SerializingProducer(producer_conf)
+
+    delivered_records = 0
 
     # Optional per-message on_delivery handler (triggered by poll() or flush())
     # when a message has been successfully delivered or
     # permanently failed delivery (after retries).
     def acked(err, msg):
+        global delivered_records
         """Delivery report handler called on
         successful or failed delivery of message
         """
         if err is not None:
             print("Failed to deliver message: {}".format(err))
         else:
+            delivered_records += 1
             print("Produced record to topic {} partition [{}] @ offset {}"
                   .format(msg.topic(), msg.partition(), msg.offset()))
 
     for n in range(10):
         name_object = ccloud_lib.Name()
         name_object.name = "alice"
-        record_key = name_object.to_dict()
         count_object = ccloud_lib.Count()
         count_object.count = n
-        record_value = count_object.to_dict()
         print("Producing Avro record: {}\t{}".format(name_object.name, count_object.count))
-        p.produce(topic=topic, key=record_key, value=record_value, on_delivery=acked)
-        # p.poll() serves delivery reports (on_delivery)
-        # from previous produce() calls.
-        p.poll(0)
+        producer.produce(topic=topic, key=name_object, value=count_object, on_delivery=acked)
+        producer.poll(0)
 
-    p.flush(10)
+    producer.flush()
 
     print("10 messages were produced to topic {}!".format(topic))
+

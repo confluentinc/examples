@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #
 # Copyright 2020 Confluent Inc.
 #
@@ -29,13 +29,14 @@ import ccloud_lib
 
 if __name__ == '__main__':
 
-    # Initialization
+    # Read arguments and configurations and initialize
     args = ccloud_lib.parse_args()
     config_file = args.config_file
     topic = args.topic
     conf = ccloud_lib.read_ccloud_config(config_file)
+
     # Create Producer instance
-    p = Producer({
+    producer = Producer({
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': conf['sasl.mechanisms'],
         'security.protocol': conf['security.protocol'],
@@ -67,11 +68,11 @@ if __name__ == '__main__':
         record_key = "alice"
         record_value = json.dumps({'count': n})
         print("Producing record: {}\t{}".format(record_key, record_value))
-        p.produce(topic, key=record_key, value=record_value, on_delivery=acked)
+        producer.produce(topic, key=record_key, value=record_value, on_delivery=acked)
         # p.poll() serves delivery reports (on_delivery)
         # from previous produce() calls.
-        p.poll(0)
+        producer.poll(0)
 
-    p.flush(10)
+    producer.flush()
 
     print("{} messages were produced to topic {}!".format(delivered_records, topic))
