@@ -745,10 +745,13 @@ function ccloud::create_ccloud_stack() {
 
   echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
 
-  if [[ -z "$ENVIRONMENT" ]]; then
+  if [[ -z "$ENVIRONMENT" ]]; 
+  then
     # Environment is not received so it will be created
     ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
     ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) 
+  else
+    ccloud environment use $ENVIRONMENT &>/dev/null
   fi
   
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
