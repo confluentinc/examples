@@ -88,7 +88,7 @@ function ccloud::validate_version_ccloud_cli() {
   REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
   CCLOUD_VER=$(ccloud::get_version_ccloud_cli)
 
-  if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
+  if ccloud::version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
     echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
     echo 'To update run: ccloud update'
     exit 1
@@ -517,7 +517,7 @@ function ccloud::wait_for_connector_up() {
 
   connectorName=$(cat $filename | jq -r .name)
   echo "Waiting up to $maxWait seconds for connector $filename ($connectorName) to be RUNNING"
-  retry $maxWait ccloud::validate_connector_up $connectorName || exit 1
+  ccloud::retry $maxWait ccloud::validate_connector_up $connectorName || exit 1
   echo "Connector $filename ($connectorName) is RUNNING"
 
   return 0
@@ -566,7 +566,7 @@ function ccloud::login_ccloud_cli(){
   EMAIL=$2
   PASSWORD=$3
 
-  check_expect
+  ccloud::check_expect
 
   echo -e "\n# Login"
   OUTPUT=$(
@@ -748,7 +748,7 @@ function ccloud::create_ccloud_stack() {
 
   MAX_WAIT=720
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
-  retry $MAX_WAIT ccloud::validate_ccloud_cluster_ready || exit 1
+  ccloud::retry $MAX_WAIT ccloud::validate_ccloud_cluster_ready || exit 1
   # Estimating another 80s wait still sometimes required
   echo "Sleeping an additional 80s to ensure propagation of all metadata"
   sleep 80
@@ -833,6 +833,45 @@ function ccloud::destroy_ccloud_stack() {
 
   CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   rm -f $CLIENT_CONFIG
+
+  return 0
+}
+
+##############################################
+# These are some duplicate functions from 
+#  helper.sh to decouple the script files.  In 
+#  the future we can work to remove this 
+#  duplication if necessary
+##############################################
+function ccloud::retry() {
+    local -r -i max_wait="$1"; shift
+    local -r cmd="$@"
+
+    local -i sleep_interval=5
+    local -i curr_wait=0
+
+    until $cmd
+    do
+        if (( curr_wait >= max_wait ))
+        then
+            echo "ERROR: Failed after $curr_wait seconds. Please troubleshoot and run again."
+            return 1
+        else
+            printf "."
+            curr_wait=$((curr_wait+sleep_interval))
+            sleep $sleep_interval
+        fi
+    done
+    printf "\n"
+}
+function ccloud::version_gt() { 
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
+function ccloud::check_expect() {
+  if [[ $(type expect 2>&1) =~ "not found" ]]; then
+    echo "'expect' is not found. Install 'expect' and try again"
+    exit 1
+  fi
 
   return 0
 }
