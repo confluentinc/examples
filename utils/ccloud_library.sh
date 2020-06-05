@@ -754,7 +754,7 @@ function ccloud::create_ccloud_stack() {
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
-  CLUSTER=$(ccloud::create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
+  CLUSTER=$(ccloud::create_and_use_cluster "$CLUSTER_NAME" $CLUSTER_CLOUD $CLUSTER_REGION)
   if [[ "$CLUSTER" == "" ]] ; then
     echo "Kafka cluster id is empty"
     echo "ERROR: Could not create cluster. Please troubleshoot"
@@ -777,7 +777,7 @@ function ccloud::create_ccloud_stack() {
 
   if $enable_ksql ; then
     KSQL_NAME=${KSQL_NAME:-"demo-ksql-$SERVICE_ACCOUNT_ID"}
-    KSQL=$(ccloud::create_ksql_app $KSQL_NAME $CLUSTER)
+    KSQL=$(ccloud::create_ksql_app "$KSQL_NAME" $CLUSTER)
     KSQL_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
     KSQL_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $KSQL)
     ccloud ksql app configure-acls $KSQL
