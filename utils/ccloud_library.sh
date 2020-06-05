@@ -46,7 +46,14 @@ function ccloud::prompt_continue_ccloud_demo() {
 
   return 0
 }
+function ccloud::validate_expect_installed() {
+  if [[ $(type expect 2>&1) =~ "not found" ]]; then
+    echo "'expect' is not found. Install 'expect' and try again"
+    exit 1
+  fi
 
+  return 0
+}
 function ccloud::validate_ccloud_cli_installed() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
     echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
@@ -566,7 +573,7 @@ function ccloud::login_ccloud_cli(){
   EMAIL=$2
   PASSWORD=$3
 
-  ccloud::check_expect
+  ccloud::validate_expect_installed
 
   echo -e "\n# Login"
   OUTPUT=$(
@@ -866,12 +873,4 @@ function ccloud::retry() {
 }
 function ccloud::version_gt() { 
   test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
-}
-function ccloud::check_expect() {
-  if [[ $(type expect 2>&1) =~ "not found" ]]; then
-    echo "'expect' is not found. Install 'expect' and try again"
-    exit 1
-  fi
-
-  return 0
 }
