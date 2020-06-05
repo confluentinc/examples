@@ -2,10 +2,13 @@
 
 Produce messages to and consume messages from a Kafka cluster using [Confluent Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python).
 
-
 # Prerequisites
 
-* [Confluent's Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed on your machine. Check that you are using version 1.4.2 or higher (e.g., `pip show confluent-kafka`).
+* A functioning python environment with the [Confluent Python Client for Apache Kafka](https://github.com/confluentinc/confluent-kafka-python) installed.
+  * You can use [Virtualenv](https://virtualenv.pypa.io/en/latest/) with the following steps to create a virtual environment with the client installed.
+    - `virtualenv ccloud-venv`
+    - `source ./ccloud-venv/bin/activate`
+    - `pip install -r requirements.txt`
 * Create a local file (e.g. at `$HOME/.confluent/librdkafka.config`) with configuration parameters to connect to your Kafka cluster, which can be on your local host, [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), or any other cluster.  Follow [these detailed instructions](https://github.com/confluentinc/configuration-templates/tree/master/README.md) to properly create this file. 
 * If you are running on Confluent Cloud, you must have access to a [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) cluster
 
@@ -14,7 +17,7 @@ Produce messages to and consume messages from a Kafka cluster using [Confluent P
 Depending on your operating system or Linux distro you may need to take extra steps to set up the SSL CA root certificates. If your systems does not have the SSL CA root certificates properly set up, here is an example of an error message you may see.
 
 ```
-$ ./producer.py -f $HOME/.confluent/librdkafka.config -t hello
+$ ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
 %3|1554125834.196|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
 %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
 %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
@@ -50,7 +53,7 @@ ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
 For more information see the librdkafka docs on which this python producer is built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
 
 
-# Example 1: Hello World!
+# Example 1: Basic Produce & Consume
 
 In this example, the producer writes Kafka data to a topic in your Kafka cluster.
 Each record has a key representing a username (e.g. `alice`) and a value of a count, formatted as json (e.g. `{"count": 0}`).
