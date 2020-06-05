@@ -246,7 +246,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: ignored
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.5
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
     hostname: elasticsearch
     container_name: elasticsearch
     depends_on:
