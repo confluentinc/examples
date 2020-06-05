@@ -85,7 +85,7 @@ function ccloud::validate_version_ccloud_cli() {
 
   ccloud::validate_ccloud_cli_installed || exit 1
 
-  REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
+  REQUIRED_CCLOUD_VER=${1:-"1.7.0"}
   CCLOUD_VER=$(ccloud::get_version_ccloud_cli)
 
   if ccloud::version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
