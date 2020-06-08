@@ -1,1 +1,3 @@
+requests
+certifi
 confluent-kafka[avro,jsonschema,protobuf]
