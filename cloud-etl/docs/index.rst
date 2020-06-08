@@ -338,9 +338,9 @@ ksqlDB
 
    .. code:: bash
 
-      curl -X POST $KSQL_ENDPOINT/ksql \
+      curl -X POST $KSQLDB_ENDPOINT/ksql \
              -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
-             -u $KSQL_BASIC_AUTH_USER_INFO \
+             -u $KSQLDB_BASIC_AUTH_USER_INFO \
              -d @<(cat <<EOF
       {
         "ksql": "SHOW QUERIES;",

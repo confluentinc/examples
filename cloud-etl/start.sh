@@ -53,8 +53,8 @@ printf "\n"
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 MAX_WAIT=720
-echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be UP"
+retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 # Set Kafka cluster
@@ -81,9 +81,9 @@ ccloud::create_connector connectors/${DATA_SOURCE}.json || exit 1
 ccloud::wait_for_connector_up connectors/${DATA_SOURCE}.json 240 || exit 1
 
 #################################################################
-# Confluent Cloud KSQL application
+# Confluent Cloud ksqlDB application
 #################################################################
-./create_ksql_app.sh || exit 1
+./create_ksqldb_app.sh || exit 1
 
 #################################################################
 # Sink: setup cloud storage and create connectors

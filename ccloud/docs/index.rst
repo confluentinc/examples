@@ -17,7 +17,7 @@ The major components of the demo are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 * |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating ksqlDB queries, streams monitoring, and more.
-* KSQL: Confluent Cloud ksqlDB running queries on input topics `users` and `pageviews` in |ccloud|.
+* ksqlDB: Confluent Cloud ksqlDB running queries on input topics `users` and `pageviews` in |ccloud|.
 * Two Kafka Connect clusters: one cluster connects to the local self-managed cluster and one connects to the |ccloud| cluster. Both Connect worker processes themselves are running locally.
 
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `pageviews` locally
@@ -230,9 +230,9 @@ kafka-connect-datagen
 KSQL
 ----
 
-#. In the demo, the Confluent Cloud ksqlDB queries were created using the REST API in :devx-examples:`this code|ccloud/create_ksql_app.sh` with proper credentials.
+#. In the demo, the Confluent Cloud ksqlDB queries were created using the REST API in :devx-examples:`this code|ccloud/create_ksqldb_app.sh` with proper credentials.
 
-   .. literalinclude:: ../create_ksql_app.sh
+   .. literalinclude:: ../create_ksqldb_app.sh
       :lines: 31-52
 
 #. From the Confluent Cloud UI, view the ksqlDB application flow.

@@ -96,10 +96,10 @@ Detailed walk-thru of this example is available in the whitepaper [Kafka Seriali
 
 ![image](images/example_5.png)
 
-## Example 6: JDBC source connector with Avro to KSQL -> Key:Long and Value:Avro
+## Example 6: JDBC source connector with Avro to ksqlDB -> Key:Long and Value:Avro
 
 * [Kafka Connect JDBC source connector](jdbcavroksql-connector.properties) produces Avro values, and null keys, to a Kafka topic.
-* [KSQL](jdbcavro_statements.sql) reads from the Kafka topic and then uses `PARTITION BY` to create a new stream of messages with `BIGINT` keys.
+* [ksqlDB](jdbcavro_statements.sql) reads from the Kafka topic and then uses `PARTITION BY` to create a new stream of messages with `BIGINT` keys.
 
 ![image](images/example_6.png)
 

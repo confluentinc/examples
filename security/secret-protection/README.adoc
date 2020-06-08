@@ -147,7 +147,7 @@ newTopicName   <<<<<<<
 
 So far we have covered how to create the master encryption key and encrypt secrets in the configuration files.
 We recommend that you operationalize this workflow by augmenting your orchestration tooling to distribute everything that you need for secret protection to work to the destination hosts.
-These hosts may include Kafka brokers, Connect workers, Confluent Schema Registry instances, KSQL servers, Confluent Control Center, etc., any service using password encryption.
+These hosts may include Kafka brokers, Connect workers, Confluent Schema Registry instances, ksqlDB servers, Confluent Control Center, etc., any service using password encryption.
 The CLI is flexible to accommodate whatever secret distribution model you prefer: you can either do the secret generation and configuration modification on each destination host directly, or do it all a single host and then distribute the encrypted secrets to the destination hosts.
 There are four required tasks:
 

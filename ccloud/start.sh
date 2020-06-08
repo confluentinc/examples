@@ -48,8 +48,8 @@ printf "\n"
 
 # Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
 MAX_WAIT=720
-echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be UP"
+retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo ====== Installing kafka-connect-datagen
@@ -176,8 +176,8 @@ printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be 
 retry $MAX_WAIT ccloud::validate_subject_exists "pageviews-value" $SCHEMA_REGISTRY_URL $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO || exit 1
 printf "\n\n"
 
-echo ====== Creating Confluent Cloud KSQL application
-./create_ksql_app.sh || exit 1
+echo ====== Creating Confluent Cloud ksqlDB application
+./create_ksqldb_app.sh || exit 1
 printf "\n"
 
 printf "\nDONE! Connect to your Confluent Cloud UI at https://confluent.cloud/ or Confluent Control Center at http://localhost:9021\n"
