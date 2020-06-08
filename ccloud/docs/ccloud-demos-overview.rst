@@ -181,7 +181,7 @@ Using this as a foundation, you can then add any connectors or applications.
 Put It All Together
 -------------------
 
-You can chain these utilities to build your own hybrid demos that span |ccloud| and on-prem.
+You can chain these utilities to build your own hybrid demos that span on-prem and |ccloud|, where some self-managed components run on-prem and fully-managed services run in |ccloud|.
 
 For example, you may want an easy way to run a connector not yet available in |ccloud|.
 In this case, you can run a self-managed connect worker and connector on prem and connect it to your |ccloud| cluster.
@@ -218,6 +218,8 @@ You can build any demo with a mix of fully-managed services in |ccloud| and self
    .. sourcecode:: bash
 
       docker-compose up -d <service>
+
+   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in :ref:`connect_adding_connectors_to_images`, and then substitute that Docker image in your Docker Compose file.
 
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 

@@ -15,6 +15,8 @@ check_running_cp ${CONFLUENT} || exit 1
 
 get_and_compile_kafka_streams_examples || exit 1
 
+confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$CONFLUENT
+confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:$CONFLUENT
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
 confluent local start
 sleep 5

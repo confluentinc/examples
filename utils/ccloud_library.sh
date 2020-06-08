@@ -46,7 +46,14 @@ function ccloud::prompt_continue_ccloud_demo() {
 
   return 0
 }
+function ccloud::validate_expect_installed() {
+  if [[ $(type expect 2>&1) =~ "not found" ]]; then
+    echo "'expect' is not found. Install 'expect' and try again"
+    exit 1
+  fi
 
+  return 0
+}
 function ccloud::validate_ccloud_cli_installed() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
     echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
@@ -85,10 +92,10 @@ function ccloud::validate_version_ccloud_cli() {
 
   ccloud::validate_ccloud_cli_installed || exit 1
 
-  REQUIRED_CCLOUD_VER=${1:-"0.185.0"}
+  REQUIRED_CCLOUD_VER=${1:-"1.7.0"}
   CCLOUD_VER=$(ccloud::get_version_ccloud_cli)
 
-  if version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
+  if ccloud::version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
     echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
     echo 'To update run: ccloud update'
     exit 1
@@ -517,7 +524,7 @@ function ccloud::wait_for_connector_up() {
 
   connectorName=$(cat $filename | jq -r .name)
   echo "Waiting up to $maxWait seconds for connector $filename ($connectorName) to be RUNNING"
-  retry $maxWait ccloud::validate_connector_up $connectorName || exit 1
+  ccloud::retry $maxWait ccloud::validate_connector_up $connectorName || exit 1
   echo "Connector $filename ($connectorName) is RUNNING"
 
   return 0
@@ -566,7 +573,7 @@ function ccloud::login_ccloud_cli(){
   EMAIL=$2
   PASSWORD=$3
 
-  check_expect
+  ccloud::validate_expect_installed
 
   echo -e "\n# Login"
   OUTPUT=$(
@@ -724,20 +731,33 @@ function ccloud::set_kafka_cluster_use() {
 function ccloud::create_ccloud_stack() {
   enable_ksqldb=$1
 
-  RANDOM_NUM=$((1 + RANDOM % 1000000))
-  #echo "RANDOM_NUM: $RANDOM_NUM"
+  if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
+    # Service Account is not received so it will be created
+    local RANDOM_NUM=$((1 + RANDOM % 1000000))
+    SERVICE_NAME=${SERVICE_NAME:-"demo-app-$RANDOM_NUM"}
+    SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
+  fi
 
-  SERVICE_NAME="demo-app-$RANDOM_NUM"
-  SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
-  echo "Creating Confluent Cloud stack for new service account id $SERVICE_ACCOUNT_ID of name $SERVICE_NAME"
+  if [[ "$SERVICE_NAME" == "" ]]; then
+    echo "ERROR: SERVICE_NAME is not defined. If you are providing the SERVICE_ACCOUNT_ID to this function please also provide the SERVICE_NAME"
+    exit 1
+  fi
 
-  ENVIRONMENT_NAME="demo-env-$SERVICE_ACCOUNT_ID"
-  ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME)
+  echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
 
-  CLUSTER_NAME=demo-kafka-cluster-$SERVICE_ACCOUNT_ID
+  if [[ -z "$ENVIRONMENT" ]]; 
+  then
+    # Environment is not received so it will be created
+    ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
+    ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) 
+  else
+    ccloud environment use $ENVIRONMENT &>/dev/null
+  fi
+  
+  CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
-  CLUSTER=$(ccloud::create_and_use_cluster $CLUSTER_NAME $CLUSTER_CLOUD $CLUSTER_REGION)
+  CLUSTER=$(ccloud::create_and_use_cluster "$CLUSTER_NAME" $CLUSTER_CLOUD $CLUSTER_REGION)
   if [[ "$CLUSTER" == "" ]] ; then
     echo "Kafka cluster id is empty"
     echo "ERROR: Could not create cluster. Please troubleshoot"
@@ -748,7 +768,7 @@ function ccloud::create_ccloud_stack() {
 
   MAX_WAIT=720
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
-  retry $MAX_WAIT ccloud::validate_ccloud_cluster_ready || exit 1
+  ccloud::retry $MAX_WAIT ccloud::validate_ccloud_cluster_ready || exit 1
   # Estimating another 80s wait still sometimes required
   echo "Sleeping an additional 80s to ensure propagation of all metadata"
   sleep 80
@@ -759,17 +779,20 @@ function ccloud::create_ccloud_stack() {
   SCHEMA_REGISTRY_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
 
   if $enable_ksqldb ; then
-    KSQLDB_NAME="demo-ksql-$SERVICE_ACCOUNT_ID"
-    KSQLDB=$(ccloud::create_ksqldb_app $KSQLDB_NAME $CLUSTER)
-    KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQL -o json | jq -r ".endpoint")
+    KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
+    KSQLDB=$(ccloud::create_ksql_app "$KSQLDB_NAME" $CLUSTER)
+    KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQLDB -o json | jq -r ".endpoint")
     KSQLDB_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
     ccloud ksql app configure-acls $KSQLDB
   fi
 
   ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
 
-  mkdir -p stack-configs
-  CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
+  if [[ -z "$CLIENT_CONFIG" ]]; then
+    mkdir -p stack-configs
+    CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
+  fi
+  
   cat <<EOF > $CLIENT_CONFIG
 # ------------------------------
 # Confluent Cloud connection information for demo purposes only
@@ -835,4 +858,35 @@ function ccloud::destroy_ccloud_stack() {
   rm -f $CLIENT_CONFIG
 
   return 0
+}
+
+##############################################
+# These are some duplicate functions from 
+#  helper.sh to decouple the script files.  In 
+#  the future we can work to remove this 
+#  duplication if necessary
+##############################################
+function ccloud::retry() {
+    local -r -i max_wait="$1"; shift
+    local -r cmd="$@"
+
+    local -i sleep_interval=5
+    local -i curr_wait=0
+
+    until $cmd
+    do
+        if (( curr_wait >= max_wait ))
+        then
+            echo "ERROR: Failed after $curr_wait seconds. Please troubleshoot and run again."
+            return 1
+        else
+            printf "."
+            curr_wait=$((curr_wait+sleep_interval))
+            sleep $sleep_interval
+        fi
+    done
+    printf "\n"
+}
+function ccloud::version_gt() { 
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
 }
