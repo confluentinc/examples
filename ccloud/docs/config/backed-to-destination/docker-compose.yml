@@ -3,7 +3,7 @@ version: '2'
 services:
 
   connect-destination:
-    image: confluentinc/cp-enterprise-replicator:5.5.0
+    image: confluentinc/cp-enterprise-replicator:6.1.x-latest
     hostname: connect-destination
     container_name: connect-destination
     ports:
