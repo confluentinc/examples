@@ -139,7 +139,7 @@ def read_ccloud_config(config_file):
     with open(config_file) as fh:
         for line in fh:
             line = line.strip()
-            if line[0] != "#" and len(line) != 0:
+            if len(line) != 0 and line[0] != "#":
                 parameter, value = line.strip().split('=', 1)
                 conf[parameter] = value.strip()
 
