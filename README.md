@@ -74,6 +74,7 @@ You can find the documentation and instructions for all Confluent Cloud demos at
 | [Secret Protection](security/secret-protection/README.adoc) |  Y  |  Y  | Secret Protection feature encrypts secrets in configuration files <br><img src="https://cdn.confluent.io/wp-content/uploads/Secret_Protection_Feature.jpg" width="400">
 | [Replicator Security](replicator-security/README.md) | N | [Y](replicator-security/README.md) | Demos of various security configurations supported by Confluent Replicator and examples of how to implement them <br><img src="images/replicator-security.png" width="300">
 
+
 # Build Your Own
 
 As a next step, you may want to build your own custom demo or test environment.
