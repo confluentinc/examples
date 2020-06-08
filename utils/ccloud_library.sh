@@ -838,7 +838,7 @@ function ccloud::destroy_ccloud_stack() {
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
   if [[ $KSQLDB_ENDPOINT != "" ]]; then
-    KSQLDB=$(ccloud ksql app list | grep demo-ksql-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
+    KSQLDB=$(ccloud ksql app list | grep demo-ksqldb-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
     echo "KSQLDB: $KSQLDB"
     ccloud ksql app delete $KSQLDB
   fi
