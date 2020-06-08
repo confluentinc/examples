@@ -29,7 +29,7 @@ import ccloud_lib
 
 if __name__ == '__main__':
 
-    # Initialization
+    # Read arguments and configurations and initialize
     args = ccloud_lib.parse_args()
     config_file = args.config_file
     topic = args.topic
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # Create Consumer instance
     # 'auto.offset.reset=earliest' to start reading from the beginning of the
     #   topic if no committed offsets exist
-    c = Consumer({
+    consumer = Consumer({
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': conf['sasl.mechanisms'],
         'security.protocol': conf['security.protocol'],
@@ -49,13 +49,13 @@ if __name__ == '__main__':
     })
 
     # Subscribe to topic
-    c.subscribe([topic])
+    consumer.subscribe([topic])
 
     # Process messages
     total_count = 0
     try:
         while True:
-            msg = c.poll(1.0)
+            msg = consumer.poll(1.0)
             if msg is None:
                 # No message available within timeout.
                 # Initial message consumption may take up to
@@ -79,4 +79,4 @@ if __name__ == '__main__':
         pass
     finally:
         # Leave group and commit final offsets
-        c.close()
+        consumer.close()
