@@ -112,7 +112,7 @@ This example is similar to the previous example, except the key and value are fo
 Before using Confluent Cloud Schema Registry, check its [availability and limits](https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud).
 Note that your VPC must be able to connect to the Confluent Cloud Schema Registry public internet endpoint.
 
-These examples utilize the latest Serializer API provided by the `confluent-kafka` library.  The Serializer API replaces the legacy AvroProducer and AvroConsumer classes to provide a more flexible API including additional support for JSON, Protobuf, and Avro data formats.  See the latest [confluent-kafka documentation](https://docs.confluent.io/current/clients/confluent-kafka-python/#) for further details.
+These examples utilize the latest Serializer API provided by the `confluent-kafka` library.  The Serializer API replaces the legacy AvroProducer and AvroConsumer classes to provide a more flexible API including additional support for JSON, Protobuf, and Avro data formats.  See the latest [confluent-kafka documentation](https://docs.confluent.io/current/clients/confluent-kafka-python/) for further details.
 
 1. As described in the [Confluent Cloud quickstart](https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create an API key and secret to connect to it.
 
