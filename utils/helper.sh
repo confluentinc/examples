@@ -335,10 +335,10 @@ function get_cluster_id_connect () {
   return 0
 }
 
-function get_service_id_ksql () {
-  KSQL_SERVICE_ID=$(confluent cluster describe --url http://localhost:8088 | grep ksql-cluster | awk '{print $3;}')
-  if [[ -z "$KSQL_SERVICE_ID" ]]; then
-    echo "Failed to get KSQL service ID. Please troubleshoot and run again"
+function get_service_id_ksqldb () {
+  KSQLDB_SERVICE_ID=$(confluent cluster describe --url http://localhost:8088 | grep ksql-cluster | awk '{print $3;}')
+  if [[ -z "$KSQLDB_SERVICE_ID" ]]; then
+    echo "Failed to get ksqlDB service ID. Please troubleshoot and run again"
     exit 1
   fi
   return 0

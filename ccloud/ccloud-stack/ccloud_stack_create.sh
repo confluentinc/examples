@@ -16,17 +16,17 @@ ccloud::validate_logged_in_ccloud_cli || exit 1
 
 ccloud::prompt_continue_ccloud_demo || exit 1
 
-enable_ksql=false
-read -p "Do you also want to create a Confluent Cloud KSQL app (hourly charges may apply)? [y/n] " -n 1 -r
+enable_ksqldb=false
+read -p "Do you also want to create a Confluent Cloud ksqlDB app (hourly charges may apply)? [y/n] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-  enable_ksql=true
+  enable_ksqldb=true
 fi
 
 echo
 echo "Creating..."
-ccloud::create_ccloud_stack $enable_ksql || exit 1
+ccloud::create_ccloud_stack $enable_ksqldb || exit 1
 
 echo
 echo "Validating..."
@@ -36,13 +36,13 @@ ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 ../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 
-if $enable_ksql ; then
+if $enable_ksqldb ; then
   MAX_WAIT=720
-  echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud KSQL cluster to be UP"
-  retry $MAX_WAIT ccloud::validate_ccloud_ksql_endpoint_ready $KSQL_ENDPOINT || exit 1
+  echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be UP"
+  retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 fi
 
-ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE $enable_ksql || exit 1
+ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE $enable_ksqldb || exit 1
 
 echo
 echo "ACLs in this cluster:"
