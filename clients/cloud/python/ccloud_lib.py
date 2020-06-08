@@ -27,8 +27,7 @@ from confluent_kafka.admin import AdminClient, NewTopic
 from uuid import uuid4
 
 
-# Schema used for serializing Name class, passed in as the Kafka key
-schema_key = avro.loads("""
+name_schema = """
     {
         "namespace": "io.confluent.examples.clients.cloud",
         "name": "Name",
@@ -37,7 +36,7 @@ schema_key = avro.loads("""
             {"name": "name", "type": "string"}
         ]
     }
-""")
+"""
 
 class Name(object):
     """
@@ -53,18 +52,24 @@ class Name(object):
         # Do *not* include in the serialized object.
         self.id = uuid4()
 
+    @staticmethod
+    def dict_to_name(obj, ctx):
+        return Name(obj['name'])
+
+    @staticmethod
+    def name_to_dict(name, ctx):
+        return Name.to_dict(name)
+
     def to_dict(self):
         """
             The Avro Python library does not support code generation.
             For this reason we must provide a dict representation of our class for serialization.
         """
-        return {
-            "name": self.name
-        }
+        return dict(name=self.name)
 
 
 # Schema used for serializing Count class, passed in as the Kafka value
-schema_value = avro.loads("""
+count_schema = """
     {
         "namespace": "io.confluent.examples.clients.cloud",
         "name": "Count",
@@ -73,7 +78,8 @@ schema_value = avro.loads("""
             {"name": "count", "type": "int"}
         ]
     }
-""")
+"""
+
 
 class Count(object):
     """
@@ -89,14 +95,20 @@ class Count(object):
         # Do *not* include in the serialized object.
         self.id = uuid4()
 
+    @staticmethod
+    def dict_to_count(obj, ctx):
+        return Count(obj['count'])
+
+    @staticmethod
+    def count_to_dict(count, ctx):
+        return Count.to_dict(count)
+
     def to_dict(self):
         """
             The Avro Python library does not support code generation.
             For this reason we must provide a dict representation of our class for serialization.
         """
-        return {
-            "count": self.count
-        }
+        return dict(count=self.count)
 
 
 def parse_args():
@@ -127,7 +139,7 @@ def read_ccloud_config(config_file):
     with open(config_file) as fh:
         for line in fh:
             line = line.strip()
-            if line[0] != "#" and len(line) != 0:
+            if len(line) != 0 and line[0] != "#":
                 parameter, value = line.strip().split('=', 1)
                 conf[parameter] = value.strip()
 
