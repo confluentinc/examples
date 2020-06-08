@@ -12,6 +12,7 @@ check_running_cp ${CONFLUENT} || exit
 mvn clean compile
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
+confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:${CONFLUENT}
 confluent local start
 
 # Create the SQL table
