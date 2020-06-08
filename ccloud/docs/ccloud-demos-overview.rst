@@ -13,7 +13,7 @@ Caution
 =======
 
 All the following demos and examples use real |ccloud| resources.
-They create |ccloud| environments, clusters, topics, ACLs, service accounts, KSQL applications, and potentially other |ccloud| resources that are billable.
+They create |ccloud| environments, clusters, topics, ACLs, service accounts, ksqlDB applications, and potentially other |ccloud| resources that are billable.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and manually verify that all |ccloud| resources are destroyed after you are done.
 
 These demos are meant for development environments only.
@@ -43,7 +43,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create a new service account.
 -  Create a new Kafka cluster and associated credentials.
 -  Enable |sr-ccloud| and associated credentials.
--  Create a new KSQL app and associated credentials.
+-  Create a new ksqlDB app and associated credentials.
 -  Create ACLs with wildcard for the service account.
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
@@ -79,7 +79,7 @@ Cloud ETL
 ---------
 
 The :ref:`cloud ETL demo <cloud-etl>` showcases a cloud ETL solution leveraging all fully-managed services on |ccloud|.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| KSQL application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
+Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: ../../cloud-etl/docs/images/topology.png
 
@@ -116,7 +116,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create a new service account.
 -  Create a new Kafka cluster and associated credentials.
 -  Enable |sr-ccloud| and associated credentials.
--  Create a new KSQL app and associated credentials.
+-  Create a new ksqlDB app and associated credentials.
 -  Create ACLs with wildcard for the service account.
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
