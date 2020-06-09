@@ -2,9 +2,9 @@ The origin cluster in this case is a |ccloud| cluster, and |crep| admin client n
 
 .. sourcecode:: bash
 
-   src.kafka.bootstrap.servers=<bootstrap-servers-destination>
+   src.kafka.bootstrap.servers=<bootstrap-servers-origin>
    src.kafka.ssl.endpoint.identification.algorithm=https
    src.kafka.security.protocol=SASL_SSL
    src.kafka.sasl.mechanism=PLAIN
-   src.kafka.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";
+   src.kafka.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-origin>" password="<api-secret-origin>";
 
