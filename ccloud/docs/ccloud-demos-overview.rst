@@ -7,6 +7,13 @@
 
 This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
+===================
+|ccloud| Promo Code
+===================
+
+The first 20 users to sign up for |ccloud| and use promo code ``C50INTEG`` will receive an additional $50 free usage.
+It must be activated by December 31, 2021, and used within 90 days, and any unused promo value on the expiration date will be forfeited.
+
 
 =======
 Caution
