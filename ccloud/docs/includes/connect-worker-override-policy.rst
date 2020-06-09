@@ -2,4 +2,4 @@ Finally, configure the |kconnect| worker to allow overrides, because |crep| need
 
 .. sourcecode:: bash
 
-   connector.client.config.override.policy=all
+   connector.client.config.override.policy=All
