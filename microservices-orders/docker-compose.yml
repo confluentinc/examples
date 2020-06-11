@@ -270,7 +270,6 @@ services:
       - "5601:5601"
     environment:
       xpack.security.enabled: "false"
-      XPACK_SECURITY_ENABLED: "false"
       xpack.monitoring.enabled: "false"
       discovery.type: "single-node"
       elasticsearch.url: http://elasticsearch:9200
