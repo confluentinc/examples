@@ -844,7 +844,7 @@ EOF
 function ccloud::destroy_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
   
-	QUIET="${QUIET:-true}"
+  QUIET="${QUIET:-true}"
   [ -z $QUIET ] && 
     local REDIRECT_TO="/dev/stdout" ||
     local REDIRECT_TO="/dev/null"
