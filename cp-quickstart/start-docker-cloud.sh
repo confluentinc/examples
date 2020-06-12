@@ -6,6 +6,10 @@
 #########################################
 
 NAME=`basename "$0"`
+QUIET="${QUIET:-true}"
+[ -z $QUIET ] && 
+  REDIRECT_TO="/dev/stdout" ||
+  REDIRECT_TO="/dev/null"
 
 # Source library
 source ../utils/helper.sh
@@ -68,17 +72,17 @@ ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 printf "\n";print_process_start "====== Pre-creating topics"
 
 CMD="ccloud kafka topic create _confluent-monitoring"
-$CMD \
+$CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
 CMD="ccloud kafka topic create pageviews"
-$CMD \
+$CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3)) 
 
 CMD="ccloud kafka topic create users"
-$CMD \
+$CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 

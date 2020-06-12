@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# Source library 
-source ../utils/helper.sh
-source ../utils/ccloud_library.sh
-
 docker-compose down -v
 
 if [ -z "$1" ]; then
