@@ -29,6 +29,10 @@ It is for demo purposes only and should be used only on a non-production cluster
 * Local install of [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud-stacks) v1.7.0 or later
 * Confluent Cloud user credentials saved in `~/.netrc` (save with command `ccloud login --save`)
 
+## Confluent Cloud Promo Code
+
+The first 20 users to sign up for [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.cp-all-in-one_type.community_content.cp-all-in-one-cloud) and use promo code ``C50INTEG`` will receive an additional $50 free usage ([details](https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud)).
+
 ## Create
 
 To create the stack:
