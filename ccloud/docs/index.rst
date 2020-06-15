@@ -29,6 +29,8 @@ The major components of the demo are:
 .. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
+.. include:: includes/ccloud-promo-code.rst
+
 =======
 Caution
 =======
