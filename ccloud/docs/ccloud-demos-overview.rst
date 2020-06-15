@@ -17,9 +17,6 @@ All the following demos and examples use real |ccloud| resources.
 They create |ccloud| environments, clusters, topics, ACLs, service accounts, ksqlDB applications, and potentially other |ccloud| resources that are billable.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and manually verify that all |ccloud| resources are destroyed after you are done.
 
-These demos are meant for development environments only.
-Do not run any demo against your production |ccloud| cluster.
-
 
 =====
 Demos
