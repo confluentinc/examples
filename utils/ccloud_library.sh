@@ -803,10 +803,9 @@ function ccloud::create_ccloud_stack() {
   fi
   
   cat <<EOF > $CLIENT_CONFIG
-# ------------------------------
-# Confluent Cloud connection information for demo purposes only
-# Do not use in production
-# ------------------------------
+# --------------------------------------
+# Confluent Cloud connection information
+# --------------------------------------
 # ENVIRONMENT ID: ${ENVIRONMENT}
 # SERVICE ACCOUNT ID: ${SERVICE_ACCOUNT_ID}
 # KAFKA CLUSTER ID: ${CLUSTER}
@@ -818,7 +817,7 @@ EOF
 EOF
   fi
   cat <<EOF >> $CLIENT_CONFIG
-# ------------------------------
+# --------------------------------------
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL

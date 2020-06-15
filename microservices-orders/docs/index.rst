@@ -19,7 +19,7 @@ The blog post `Building a Microservices Ecosystem with Kafka Streams and ksqlDB 
 .. figure:: images/microservices-demo.png
     :alt: image
 
-Note: this is demo code, not a production system and certain elements are left for further work.
+Note: this is demo code, not a production system, and certain elements are left for further work.
 
 
 Microservices

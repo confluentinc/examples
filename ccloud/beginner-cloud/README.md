@@ -23,13 +23,7 @@ You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/in
 
 ### DISCLAIMER
 
-This demo is for reference purposes only and should be used to see a sample workflow using Confluent Cloud CLI
-
-If you choose to run it against your Confluent Cloud cluster, be aware that it:
-
-- creates and deletes topics, service accounts, API keys, and ACLs
-- is for demo purposes only
-- should be used only on a non-production cluster
+This example uses real resources in Confluent Cloud, and it creates and deletes topics, service accounts, API keys, and ACLs.
 
 ### Pre-requisites
 
@@ -82,7 +76,6 @@ Failed to create environment demo-script-env. Please troubleshoot and run again
 
 You may need to manually delete API keys and ACLs created in a previous demo run.
 But you could consider running the following script to delete the demo's topics, Kafka cluster, and environment.
-Use this script with extreme caution and only in non-production environments.
 
 ```bash
 ./cleanup.sh
