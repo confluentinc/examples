@@ -362,9 +362,9 @@ function ccloud::create_ksqldb_app() {
 
 function ccloud::create_acls_all_resources_full_access() {
   SERVICE_ACCOUNT_ID=$1
-  [ -z $QUIET ] && 
-    local REDIRECT_TO="/dev/stdout" ||
-    local REDIRECT_TO="/dev/null"
+  [[ $QUIET == "true" ]] && 
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
@@ -385,9 +385,9 @@ function ccloud::create_acls_all_resources_full_access() {
 function ccloud::delete_acls_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
 
-  [ -z $QUIET ] && 
-    local REDIRECT_TO="/dev/stdout" ||
-    local REDIRECT_TO="/dev/null"
+  [[ $QUIET == "true" ]] && 
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
@@ -845,9 +845,9 @@ function ccloud::destroy_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
   
   QUIET="${QUIET:-true}"
-  [ -z $QUIET ] && 
-    local REDIRECT_TO="/dev/stdout" ||
-    local REDIRECT_TO="/dev/null"
+  [[ $QUIET == "true" ]] && 
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
