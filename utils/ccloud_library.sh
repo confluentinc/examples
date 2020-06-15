@@ -4,7 +4,6 @@
 # ccloud_library.sh
 # --------------------------------------------------------------
 # This library of functions automates common tasks with Confluent Cloud https://confluent.cloud/ 
-# These are intended to be examples for demos and testing.
 #
 # Example usage in https://github.com/confluentinc/examples
 #
