@@ -29,7 +29,6 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-
 # --------------------------------------------------------------
 # Library
 # --------------------------------------------------------------
@@ -62,7 +61,6 @@ function ccloud::validate_ccloud_cli_installed() {
 }
 
 function ccloud::validate_ccloud_cli_v2() {
-
   ccloud::validate_ccloud_cli_installed || exit 1
 
   if [[ -z $(ccloud version | grep "Go") ]]; then
@@ -307,7 +305,7 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
 
-  OUTPUT=$(ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
+  OUTPUT=$(ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>/dev/null)
   CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
   ccloud kafka cluster use $CLUSTER
 
@@ -364,19 +362,22 @@ function ccloud::create_ksqldb_app() {
 
 function ccloud::create_acls_all_resources_full_access() {
   SERVICE_ACCOUNT_ID=$1
+  [[ $QUIET == "true" ]] && 
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*' &>"$REDIRECT_TO"
 
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*' &>"$REDIRECT_TO"
 
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*'
-  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*'
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*' &>"$REDIRECT_TO"
+  ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*' &>"$REDIRECT_TO"
 
   return 0
 }
@@ -384,15 +385,22 @@ function ccloud::create_acls_all_resources_full_access() {
 function ccloud::delete_acls_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
 
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*'
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*'
+  [[ $QUIET == "true" ]] && 
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*'
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*'
-  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*'
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*' &>"$REDIRECT_TO"
+
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*' &>"$REDIRECT_TO"
+
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*' &>"$REDIRECT_TO"
+  ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*' &>"$REDIRECT_TO"
 
   return 0
 }
@@ -729,6 +737,7 @@ function ccloud::set_kafka_cluster_use() {
 }
 
 function ccloud::create_ccloud_stack() {
+  QUIET="${QUIET:-true}"
   enable_ksqldb=$1
 
   if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
@@ -834,25 +843,30 @@ EOF
 
 function ccloud::destroy_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
+  
+  QUIET="${QUIET:-true}"
+  [[ $QUIET == "true" ]] && 
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
   if [[ $KSQLDB_ENDPOINT != "" ]]; then
     KSQLDB=$(ccloud ksql app list | grep demo-ksqldb-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
     echo "KSQLDB: $KSQLDB"
-    ccloud ksql app delete $KSQLDB
+    ccloud ksql app delete $KSQLDB &>"$REDIRECT_TO"
   fi
 
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
-  ccloud service-account delete $SERVICE_ACCOUNT_ID 
+  ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
   CLUSTER=$(ccloud kafka cluster list | grep demo-kafka-cluster-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
   echo "CLUSTER: $CLUSTER"
-  ccloud kafka cluster delete $CLUSTER
+  ccloud kafka cluster delete $CLUSTER &> "$REDIRECT_TO"
 
   ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
   echo "ENVIRONMENT: $ENVIRONMENT"
-  ccloud environment delete $ENVIRONMENT
+  ccloud environment delete $ENVIRONMENT &> "$REDIRECT_TO"
 
   CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   rm -f $CLIENT_CONFIG
