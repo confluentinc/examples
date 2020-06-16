@@ -21,7 +21,6 @@ The script uses the Confluent Cloud CLI to dynamically do the following in Confl
 
 This demo is learning purposes only.
 If you choose to run it against your Confluent Cloud cluster, be aware that it creates resources and incurs charges.
-It is for demo purposes only and should be used only on a non-production cluster.
 
 ## Pre-requisites
 
