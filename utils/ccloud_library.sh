@@ -4,7 +4,6 @@
 # ccloud_library.sh
 # --------------------------------------------------------------
 # This library of functions automates common tasks with Confluent Cloud https://confluent.cloud/ 
-# These are intended to be examples for demos and testing.
 #
 # Example usage in https://github.com/confluentinc/examples
 #
@@ -803,10 +802,9 @@ function ccloud::create_ccloud_stack() {
   fi
   
   cat <<EOF > $CLIENT_CONFIG
-# ------------------------------
-# Confluent Cloud connection information for demo purposes only
-# Do not use in production
-# ------------------------------
+# --------------------------------------
+# Confluent Cloud connection information
+# --------------------------------------
 # ENVIRONMENT ID: ${ENVIRONMENT}
 # SERVICE ACCOUNT ID: ${SERVICE_ACCOUNT_ID}
 # KAFKA CLUSTER ID: ${CLUSTER}
@@ -818,7 +816,7 @@ EOF
 EOF
   fi
   cat <<EOF >> $CLIENT_CONFIG
-# ------------------------------
+# --------------------------------------
 ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL

@@ -25,7 +25,7 @@ Caveats
    configurations would be required if you wanted to augment the demo to
    connect to your LDAP server.
 -  The |rbac| configurations and role bindings in this demo are not
-   comprehensive, they are only for development to get minimum |rbac|
+   comprehensive, they provide minimum |rbac|
    functionality set up across all the services in |cp|.
    Please refer to the :ref:`RBAC documentation <rbac-overview>`
    for comprehensive configuration and production guidance.
