@@ -41,7 +41,7 @@ are quite large and depending on your network connection may take
        cd examples/clickstream
        git checkout |release_post_branch|
 
-#. If you want to manually step through the Clickstream tutorial, which is advised for new users who want to gain familiarity with |cp|; in this case, skip ahead to the next section. Alternatively, you can run the full solution end-to-end with this script, which automates all the steps in the tutorial:
+#. If you want to manually step through the Clickstream tutorial, which is advised for new users who want to gain familiarity with |cp|, skip ahead to the next section. Alternatively, you can run the full solution end-to-end with this script, which automates all the steps in the tutorial:
 
    .. code:: bash
 
