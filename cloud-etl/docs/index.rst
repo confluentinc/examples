@@ -98,7 +98,7 @@ Prerequisites
 Cloud services
 --------------
 
--  `Confluent Cloud cluster <https://confluent.cloud>`__: for development only. Do not use a production cluster.
+-  `Confluent Cloud cluster <https://confluent.cloud>`__
 -  Access to AWS and (optional) GCP or Azure
 
 Local Tools
@@ -207,16 +207,15 @@ Run
 
    ::
 
-      # ------------------------------
-      # Confluent Cloud connection information for demo purposes only
-      # Do not use in production
-      # ------------------------------
+      # --------------------------------------
+      # Confluent Cloud connection information
+      # --------------------------------------
       # ENVIRONMENT ID: <ENVIRONMENT ID>
       # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
       # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
       # KSQLDB APP ID: <KSQLDB APP ID>
-      # ------------------------------
+      # --------------------------------------
       ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
