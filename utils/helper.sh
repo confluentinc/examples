@@ -275,25 +275,6 @@ function prep_sqltable_locations() {
   return 0
 }
 
-function prep_sqltable_customers() {
-  TABLE="customers"
-  TABLE_PATH=/usr/local/lib/table.$TABLE
-  cp ../utils/table.$TABLE $TABLE_PATH
-
-  DB=/usr/local/lib/microservices.db
-  echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
-  echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255), level VARCHAR(255));" | sqlite3 $DB
-  echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
-  #echo "pragma table_info($TABLE);" | sqlite3 $DB
-  #echo "select * from $TABLE;" | sqlite3 $DB
-
-  # View contents of file
-  #echo -e "\n======= Contents of $TABLE_PATH ======="
-  #cat $TABLE_PATH
-
-  return 0
-}
-
 function error_not_compatible_confluent_cli() {
   adoc_file=$1
 
