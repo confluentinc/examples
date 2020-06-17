@@ -40,6 +40,14 @@ function validate_version_confluent_cli_v2() {
   return 0
 }
 
+function check_sqlite3() {
+  if [[ $(type sqlite3 2>&1) =~ "not found" ]]; then
+    echo "'sqlite3' is not found. Install sqlite3 and try again."
+    return 1
+  fi
+
+  return 0
+}
 function check_python() {
   if [[ $(type python 2>&1) =~ "not found" ]]; then
     echo "'python' is not found. Install python and try again."

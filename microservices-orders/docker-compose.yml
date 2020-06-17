@@ -11,12 +11,10 @@
 # you can execute the `docker-compose config` command.  Take note that some demos provide additional 
 # environment variable values by exporting them in a script prior to running `docker-compose up`.
 ---
-version: '2'
+version: '3.0'
 services:
   zookeeper:
     image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
-    hostname: zookeeper
-    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -25,8 +23,6 @@ services:
 
   broker:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
-    hostname: broker
-    container_name: broker
     depends_on:
       - zookeeper
     ports:
@@ -51,8 +47,6 @@ services:
 
   schema-registry:
     image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
-    hostname: schema-registry
-    container_name: schema-registry
     depends_on:
       - zookeeper
       - broker
@@ -64,16 +58,12 @@ services:
 
   connect:
     image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
-    hostname: connect
-    container_name: connect
     depends_on:
       - zookeeper
       - broker
       - schema-registry
     ports:
       - "8083:8083"
-    volumes:
-      - mi4:/tmp/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker:9092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
@@ -106,16 +96,11 @@ services:
         echo "Installing connector plugins"
         confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:${CONFLUENT}
         confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:${CONFLUENT}
-        #
         echo "Launching Kafka Connect worker"
-        /etc/confluent/docker/run &
-        #
-        sleep infinity
+        /etc/confluent/docker/run
 
   control-center:
     image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
-    hostname: control-center
-    container_name: control-center
     depends_on:
       - zookeeper
       - broker
@@ -140,8 +125,6 @@ services:
 
   ksqldb-server:
     image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
-    hostname: ksqldb-server
-    container_name: ksqldb-server
     depends_on:
       - broker
       - connect
@@ -161,7 +144,6 @@ services:
 
   ksqldb-cli:
     image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
-    container_name: ksqldb-cli
     depends_on:
       - broker
       - connect
@@ -173,7 +155,6 @@ services:
 
   ksql-query-setup:
     image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
-    container_name: ksql-query-setup
     depends_on:
       - broker
       - connect
@@ -185,70 +166,72 @@ services:
     tty: true
     command: "/tmp/run-ksql.sh"
 
-  microservices-app:
-    image: ${REPOSITORY}/kafka-streams-examples:${CONFLUENT_DOCKER_TAG}
-    hostname: microservices-app
-    container_name: microservices-app
-    depends_on:
-      - broker
-      - schema-registry
-    ports:
-      - "18894:18894"
-    volumes:
-      - $PWD/services-start.sh:/tmp/services-start.sh
-      - $PWD/.env:/tmp/config.env
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:9092 1 30 && \
-                       echo Waiting for Confluent Schema Registry to be ready... && \
-                       cub sr-ready schema-registry 8081 40 && \
-                       echo Waiting a few seconds for topic creation to finish... && \
-                       sleep 5 && \
-                       /tmp/services-start.sh && \
-                       tail -f /dev/null'"
-    environment:
-      STREAMS_BOOTSTRAP_SERVERS: broker:9092
-      STREAMS_SCHEMA_REGISTRY_HOST: schema-registry
-      STREAMS_SCHEMA_REGISTRY_PORT: 8081
 
-  # This "container" is a workaround to pre-create topics
+  # This container bootstraps topics and connectors
   kafka-setup:
     image: ${REPOSITORY}/cp-kafka:${CONFLUENT_DOCKER_TAG}
-    hostname: kafka-setup
-    container_name: kafka-setup
     depends_on:
       - broker
       - schema-registry
+      - connect
     volumes:
-      - $PWD/connectors:/tmp/connectors
-      - $PWD/dashboard:/tmp/dashboard
-    command: "bash -c 'echo Waiting for Kafka to be ready... && \
-                       cub kafka-ready -b broker:9092 1 40 && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic orders && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic order-validations && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic warehouse-inventory && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic customers && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic payments && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic platinum && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic gold && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic silver && \
-                       kafka-topics --create --if-not-exists --zookeeper zookeeper:2181 --partitions 1 --replication-factor 1 --topic bronze && \
-                       echo Waiting 90 seconds for Connect to be ready... && \
-                       sleep 90 && \
-                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_elasticsearch_docker.config && \
-                       curl -i -X POST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/tmp/connectors/connector_jdbc_customers_docker.config && \
-                       echo Waiting 90 seconds for Elasticsearch and Kibana to be ready... && \
-                       sleep 90 && \
-                       /tmp/dashboard/docker-combined.sh'"
+      - $PWD/connectors:/opt/docker/connectors
+      - $PWD/dashboard:/opt/docker/dashboard
+      - $PWD/scripts:/opt/docker/scripts
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
       # We override the image's `command` anyways, hence this container will not start a broker.
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
+    command: 
+      - bash
+      - -c
+      - |
+        echo "Waiting for Kafka to be ready..."
+        cub kafka-ready -b broker:9092 1 40
+        echo "Kafka ready"
+        echo "Creating demo topics"
+        /opt/docker/scripts/create-topics.sh
+        echo "Waiting 90 seconds for Connect to be ready..."
+        sleep 90
+        mkdir -p /opt/docker/connectors/rendered-connectors
+        INPUT_FILE=/opt/docker/connectors/connector_jdbc_customers_template.config OUTPUT_FILE=/opt/docker/connectors/rendered-connectors/connector_jdbc_customers.config /opt/docker/scripts/render-connector-config.sh
+        INPUT_FILE=/opt/docker/connectors/connector_elasticsearch_template.config OUTPUT_FILE=/opt/docker/connectors/rendered-connectors/connector_elasticsearch.config /opt/docker/scripts/render-connector-config.sh
+        curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/opt/docker/connectors/rendered-connectors/connector_elasticsearch.config
+        curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/opt/docker/connectors/rendered-connectors/connector_jdbc_customers.config
+        echo ""
+        echo "Waiting 90 seconds for Elasticsearch and Kibana to be ready..."
+        sleep 90
+        /opt/docker/dashboard/docker-combined.sh
+  
+  microservices:
+    image: ${REPOSITORY}/kafka-streams-examples:${CONFLUENT_DOCKER_TAG}
+    depends_on:
+      - broker
+      - schema-registry
+      - kafka-setup
+    ports:
+      - "18894:18894"
+    volumes:
+      - $PWD/scripts:/opt/docker/scripts
+      - $PWD/.env:/opt/docker/config/config.env
+    command:
+      - bash
+      - -c
+      - |
+        echo "Waiting for Kafka to be ready..."
+        cub kafka-ready -b broker:9092 1 30
+        echo "Kafka ready"
+        echo "Waiting for Confluent Schema Registry to be ready..."
+        cub sr-ready schema-registry 8081 40
+        echo "Waiting for topic creation to finish..."
+        sleep 30
+        set -a
+        source /opt/docker/config/config.env
+        /opt/docker/scripts/run-services.sh
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
-    hostname: elasticsearch
-    container_name: elasticsearch
     depends_on:
       - connect
     ports:
@@ -261,9 +244,6 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.2
-    #image: kibana:5.5.2
-    hostname: kibana
-    container_name: kibana
     depends_on:
       - elasticsearch
     ports:
@@ -282,22 +262,17 @@ services:
       XPACK_MONITORING_ENABLED: "false"
       XPACK_REPORTING_ENABLED: "false"
       XPACK_SECURITY_ENABLED: "false"
-    command: [ "/bin/bash", "-c", "/usr/share/kibana/bin/kibana-plugin remove x-pack; /usr/local/bin/kibana-docker" ]
-
+    command: 
+      - bash
+      - -c
+      - |
+        /usr/share/kibana/bin/kibana-plugin remove x-pack
+        /usr/local/bin/kibana-docker
   
   sqlite:
     image: sqlite:latest
     build:
-      context: ../utils/
-      dockerfile: Dockerfile
-    hostname: sqlite
-    container_name: sqlite
+      context: ./db 
     stdin_open: true
     tty: true
-    volumes:
-      - $PWD/../utils/table.customers:/db/table.customers
-      - $PWD/../utils/customers.sql:/db/customers.sql
-      - mi4:/db/
 
-volumes:
-    mi4: {}

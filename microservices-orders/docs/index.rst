@@ -262,7 +262,7 @@ Running the fully working demo end-to-end provides context for each of the later
 Exercise 1: Persist events 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-An _event_ is simply a thing that happened or occurred.
+An `event` is simply a thing that happened or occurred.
 An event in a business is some fact that occurred, such as a sale, an invoice, a trade, a customer experience, etc., and it is the source of truth.
 In event-oriented architectures, events are first-class citizens that constantly push data into applications.
 Client applications can then react to these streams of events in real time and decide what to do next.
