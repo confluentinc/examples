@@ -64,7 +64,7 @@ Summary of services and the topics they consume from and produce to:
 +-------------------------------------+-----------------------------------+----------------------------------------+
 | EmailService                        | `orders`, `payments`, `customers` | `platinum`, `gold`, `silver`, `bronze` |
 +-------------------------------------+-----------------------------------+----------------------------------------+
-| OrdersService                       | -                                 | `orders`                               |
+| OrdersService                       | N/A                               | `orders`                               |
 +-------------------------------------+-----------------------------------+----------------------------------------+
 
 
@@ -93,9 +93,9 @@ For the end-to-end demo, the code that creates the order events via REST calls t
 +-------------------------------------+-----------------------------------+-----------------------+
 | Application (Datagen)               | Consumes From                     | Produces To           |
 +=====================================+===================================+=======================+
-| PostOrdersAndPayments               | -                                 | `payments`            |
+| PostOrdersAndPayments               | N/A                               | `payments`            |
 +-------------------------------------+-----------------------------------+-----------------------+
-| AddInventory                        | -                                 | `warehouse-inventory` |
+| AddInventory                        | N/A                               | `warehouse-inventory` |
 +-------------------------------------+-----------------------------------+-----------------------+
 
 
