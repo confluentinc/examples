@@ -27,9 +27,6 @@ export SCHEMA_REGISTRY_URL=http://localhost:8081
 export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
 export ELASTICSEARCH_URL=http://localhost:9200
 
-mkdir -p "$(pwd)"/db/data
-mkdir -p "$(pwd)"/connectors/rendered-connectors
-
 # Get random port number
 RESTPORT=$(jot -r 1  10000 65000)
 COUNT=0
