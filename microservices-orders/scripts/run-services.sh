@@ -7,6 +7,7 @@ SCHEMA_REGISTRY_URL=${SCHEMA_REGISTRY_URL:-http://schema-registry:8081}
 RESTPORT=${RESTPORT:-18894}
 JAR=${JAR:-"/usr/share/java/kafka-streams-examples/kafka-streams-examples-$CONFLUENT-standalone.jar"}
 PIDS=()
+echo "Starting microservices from $JAR"
 echo "Starting OrdersService"
 java -cp $JAR io.confluent.examples.streams.microservices.OrdersService $BOOTSTRAP_SERVER $SCHEMA_REGISTRY_URL localhost $RESTPORT &
 PIDS+=($!)
@@ -25,7 +26,9 @@ sleep 10
 
 echo "Posting Orders and Payments"
 java -cp $JAR io.confluent.examples.streams.microservices.PostOrdersAndPayments $RESTPORT $BOOTSTRAP_SERVER $SCHEMA_REGISTRY_URL &
-PIDS+=($1)
+PIDS+=($!)
 sleep 10
 
+echo "Microservice processes running under PIDS: ${PIDS[@]}"
+echo "${PIDS[@]}" > .microservices.pids
 wait $PIDS

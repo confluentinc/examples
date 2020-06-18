@@ -27,19 +27,6 @@ export SCHEMA_REGISTRY_URL=http://localhost:8081
 export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
 export ELASTICSEARCH_URL=http://localhost:9200
 
-# Get random port number
-RESTPORT=$(jot -r 1  10000 65000)
-COUNT=0
-while [[ $(netstat -ant | grep $RESTPORT) != "" ]]; do
-  RESTPORT=$(jot -r 1  10000 65000)
-  COUNT=$((COUNT+1))
-  if [[ $COUNT > 5 ]]; then
-    echo "Could not allocate a free rest port. Please troubleshoot"
-    exit 1
-  fi
-done
-echo "Port tcp:$RESTPORT looks free"
-
 echo "Creating demo topics"
 ./scripts/create-topics.sh
 
@@ -50,41 +37,35 @@ echo "Configuring Elasticsearch and Kibana"
 ./dashboard/set_elasticsearch_mapping.sh
 ./dashboard/configure_kibana_dashboard.sh
 
+echo ""
 echo "Submitting connectors"
 
 # Kafka Connect to source customers from sqlite3 database and produce to Kafka topic "customers"
-INPUT_FILE=./connectors/connector_jdbc_customers_template.config OUTPUT_FILE=./connectors/rendered-connectors/connector_jdbc_customers.config ./scripts/render-connector-config.sh
-confluent local config jdbc-customers -- -d ./connectors/rendered-connectors/connector_jdbc_customers.config
+INPUT_FILE=./connectors/connector_jdbc_customers_template.config 
+OUTPUT_FILE=./connectors/rendered-connectors/connector_jdbc_customers.config 
+source ./scripts/render-connector-config.sh
+confluent local config jdbc-customers -- -d $OUTPUT_FILE 2> /dev/null
 
 # Sink Connector -> Elasticsearch -> Kibana
-INPUT_FILE=./connectors/connector_elasticsearch_template.config OUTPUT_FILE=./connectors/rendered-connectors/connector_elasticsearch.config ./scripts/render-connector-config.sh
-confluent local config elasticsearch -- -d ./connectors/rendered-connectors/connector_elasticsearch.config
+INPUT_FILE=./connectors/connector_elasticsearch_template.config
+OUTPUT_FILE=./connectors/rendered-connectors/connector_elasticsearch.config
+source ./scripts/render-connector-config.sh
+confluent local config elasticsearch -- -d $OUTPUT_FILE 2> /dev/null
 
-echo "Starting OrdersService"
-(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.OrdersService -Dexec.args="$BOOTSTRAP_SERVER http://localhost:8081 localhost $RESTPORT" > /dev/null 2>&1 &)
-sleep 10
-if [[ $(netstat -ant | grep $RESTPORT) == "" ]]; then
-  echo "OrdersService not running on port $RESTPORT.  Please troubleshoot"
-  exit 1
-fi
-
-echo "Adding Inventory"
-COUNT_UNDERPANTS=25
-COUNT_JUMPERS=20
-(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.AddInventory -Dexec.args="$COUNT_UNDERPANTS $COUNT_JUMPERS" > /dev/null 2>&1 &)
-
-# Start microservices
-for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "ValidationsAggregatorService" "EmailService"; do
-    echo "Starting $SERVICE"
-    (cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.$SERVICE > /dev/null 2>&1 &)
+# Find an available local port to bind the REST service to
+FREE_PORT=$(jot -r 1  10000 65000)
+COUNT=0
+while [[ $(netstat -ant | grep "$FREE_PORT") != "" ]]; do
+  FREE_PORT=$(jot -r 1  10000 65000)
+  COUNT=$((COUNT+1))
+  if [[ $COUNT > 5 ]]; then
+    echo "Could not allocate a free network port. Please troubleshoot"
+    exit 1
+  fi
 done
-
-sleep 10
-
-echo -e "\nPosting Order Requests and Payments"
-(cd kafka-streams-examples && mvn exec:java -f pom.xml -Dexec.mainClass=io.confluent.examples.streams.microservices.PostOrdersAndPayments -Dexec.args="$RESTPORT" > /dev/null 2>&1 &)
-
-sleep 10
+echo "Port $FREE_PORT looks free for the Orders Service"
+echo "Running Microservices, logging info in .microservices.log and running pids in .microservices.pids"
+( RESTPORT=$FREE_PORT JAR=$(pwd)"/kafka-streams-examples/target/kafka-streams-examples-$CONFLUENT-standalone.jar" scripts/run-services.sh > .microservices.log 2>&1 & )
 
 # Create KSQL queries
 ksql http://localhost:8088 <<EOF
