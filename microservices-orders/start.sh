@@ -25,7 +25,7 @@ sleep 5
 export BOOTSTRAP_SERVER=localhost:9092
 export SCHEMA_REGISTRY_URL=http://localhost:8081
 export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
-export ELASTICSEARCH_URL=http://localhost:9300
+export ELASTICSEARCH_URL=http://localhost:9200
 
 mkdir -p "$(pwd)"/db/data
 mkdir -p "$(pwd)"/connectors/rendered-connectors
