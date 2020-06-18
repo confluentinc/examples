@@ -67,7 +67,9 @@ echo "Port $FREE_PORT looks free for the Orders Service"
 echo "Running Microservices, logging info in .microservices.log and running pids in .microservices.pids"
 ( RESTPORT=$FREE_PORT JAR=$(pwd)"/kafka-streams-examples/target/kafka-streams-examples-$CONFLUENT-standalone.jar" scripts/run-services.sh > .microservices.log 2>&1 & )
 
-# Create KSQL queries
+echo "Waiting for data population before starting ksqlDB applications"
+sleep 150
+# Create ksqlDB queries
 ksql http://localhost:8088 <<EOF
 run script 'statements.sql';
 exit ;
