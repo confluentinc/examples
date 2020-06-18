@@ -31,7 +31,7 @@ echo "Creating demo topics"
 ./scripts/create-topics.sh
 
 echo "Setting up sqlite DB"
-(cd db; ./setup-local-sql.sh)
+(cd db; sqlite3 data/microservices.db < ./customers.sql)
 
 echo "Configuring Elasticsearch and Kibana"
 ./dashboard/set_elasticsearch_mapping.sh

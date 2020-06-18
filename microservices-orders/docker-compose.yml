@@ -89,6 +89,8 @@ services:
       CONNECT_LOG4J_LOGGERS: org.apache.zookeeper=ERROR,org.I0Itec.zkclient=ERROR,org.reflections=ERROR
       CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
       CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
+    volumes:
+      - $PWD/db/data:/opt/docker/db/data
     command:
       - bash
       - -c
@@ -183,6 +185,9 @@ services:
       # We override the image's `command` anyways, hence this container will not start a broker.
       KAFKA_BROKER_ID: ignored
       KAFKA_ZOOKEEPER_CONNECT: ignored
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SQLITE_DB_PATH: /opt/docker/db/data/microservices.db
     command: 
       - bash
       - -c
