@@ -25,7 +25,6 @@ then
 fi
 
 echo
-echo "Creating..."
 ccloud::create_ccloud_stack $enable_ksqldb || exit 1
 
 echo
