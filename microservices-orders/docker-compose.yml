@@ -15,6 +15,7 @@ version: '3.0'
 services:
   zookeeper:
     image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
+    container_name: zookeeper
     ports:
       - "2181:2181"
     environment:
@@ -23,6 +24,7 @@ services:
 
   broker:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
+    container_name: broker
     depends_on:
       - zookeeper
     ports:
@@ -47,6 +49,7 @@ services:
 
   schema-registry:
     image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
+    container_name: schema-registry
     depends_on:
       - zookeeper
       - broker
@@ -58,6 +61,7 @@ services:
 
   connect:
     image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
+    container_name: connect
     depends_on:
       - zookeeper
       - broker
@@ -103,6 +107,7 @@ services:
 
   control-center:
     image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
+    container_name: control-center
     depends_on:
       - zookeeper
       - broker
@@ -127,6 +132,7 @@ services:
 
   ksqldb-server:
     image: ${REPOSITORY}/cp-ksqldb-server:${CONFLUENT_DOCKER_TAG}
+    container_name: ksqldb-server
     depends_on:
       - broker
       - connect
@@ -146,6 +152,7 @@ services:
 
   ksqldb-cli:
     image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
+    container_name: ksqldb-cli
     depends_on:
       - broker
       - connect
@@ -157,6 +164,7 @@ services:
 
   ksql-query-setup:
     image: ${REPOSITORY}/cp-ksqldb-cli:${CONFLUENT_DOCKER_TAG}
+    container_name: ksql-query-setup
     depends_on:
       - broker
       - connect
@@ -172,6 +180,7 @@ services:
   # This container bootstraps topics and connectors
   kafka-setup:
     image: ${REPOSITORY}/cp-kafka:${CONFLUENT_DOCKER_TAG}
+    container_name: kafka-setup
     depends_on:
       - broker
       - schema-registry
@@ -210,6 +219,7 @@ services:
   
   microservices:
     image: ${REPOSITORY}/kafka-streams-examples:${CONFLUENT_DOCKER_TAG}
+    container_name: microservices
     depends_on:
       - broker
       - schema-registry
@@ -236,6 +246,7 @@ services:
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.16
+    container_name: elasticsearch
     depends_on:
       - connect
     ports:
@@ -248,6 +259,7 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:5.5.2
+    container_name: kibana
     depends_on:
       - elasticsearch
     ports:
@@ -275,6 +287,7 @@ services:
   
   sqlite:
     image: sqlite:latest
+    container_name: sqlite
     build:
       context: ./db 
     stdin_open: true
