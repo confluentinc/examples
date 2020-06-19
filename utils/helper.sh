@@ -40,6 +40,14 @@ function validate_version_confluent_cli_v2() {
   return 0
 }
 
+function check_sqlite3() {
+  if [[ $(type sqlite3 2>&1) =~ "not found" ]]; then
+    echo "'sqlite3' is not found. Install sqlite3 and try again."
+    return 1
+  fi
+
+  return 0
+}
 function check_python() {
   if [[ $(type python 2>&1) =~ "not found" ]]; then
     echo "'python' is not found. Install python and try again."
@@ -256,25 +264,6 @@ function prep_sqltable_locations() {
   DB=/usr/local/lib/retail.db
   echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
   echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, name VARCHAR(255), sale INTEGER);" | sqlite3 $DB
-  echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
-  #echo "pragma table_info($TABLE);" | sqlite3 $DB
-  #echo "select * from $TABLE;" | sqlite3 $DB
-
-  # View contents of file
-  #echo -e "\n======= Contents of $TABLE_PATH ======="
-  #cat $TABLE_PATH
-
-  return 0
-}
-
-function prep_sqltable_customers() {
-  TABLE="customers"
-  TABLE_PATH=/usr/local/lib/table.$TABLE
-  cp ../utils/table.$TABLE $TABLE_PATH
-
-  DB=/usr/local/lib/microservices.db
-  echo "DROP TABLE IF EXISTS $TABLE;" | sqlite3 $DB
-  echo "CREATE TABLE $TABLE(id INTEGER KEY NOT NULL, firstName VARCHAR(255), lastName VARCHAR(255), email VARCHAR(255), address VARCHAR(255), level VARCHAR(255));" | sqlite3 $DB
   echo ".import $TABLE_PATH $TABLE" | sqlite3 $DB
   #echo "pragma table_info($TABLE);" | sqlite3 $DB
   #echo "select * from $TABLE;" | sqlite3 $DB

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DASHBOARD_PATH=${DASHBOARD_PATH:-/opt/docker/dashboard/kibana_dashboard_microservices.json}
+ELASTICSEARCH_URL=${ELASTICSEARCH_URL:-http://elasticsearch:9200}
+KIBANA_URL=${KIBANA_URL:-http://kibana:5601}
 HEADER="Content-Type: application/json"
 DATA=$( cat << EOF
 {
@@ -35,8 +38,8 @@ DATA=$( cat << EOF
 EOF
 );
 
-curl -XDELETE http://elasticsearch:9200/orders
-curl -XPUT -H "${HEADER}" --data "${DATA}" 'http://elasticsearch:9200/orders?pretty'
+curl -s -S -XDELETE "$ELASTICSEARCH_URL/orders"
+curl -s -S -XPUT -H "${HEADER}" --data "${DATA}" "$ELASTICSEARCH_URL/orders?pretty"
 
-curl -X PUT -H "kbn-version: 5.5.2" -d '{"title":"orders","notExpandable":true}' http://kibana:5601/es_admin/.kibana/index-pattern/orders/_create 
-curl -X POST -H 'kbn-xsrf:true' -H 'Content-type:application/json' -d @/tmp/dashboard/kibana_dashboard_microservices.json http://kibana:5601/api/kibana/dashboards/import
+curl -s -S -XPUT -H 'kbn-version: 5.5.2' -d '{"title":"orders","notExpandable":true}' $KIBANA_URL/es_admin/.kibana/index-pattern/orders/_create 
+curl -s -S -XPOST -H 'kbn-xsrf:true' -H 'Content-type:application/json' -d @"$DASHBOARD_PATH" $KIBANA_URL/api/kibana/dashboards/import
