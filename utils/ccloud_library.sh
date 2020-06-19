@@ -800,6 +800,10 @@ function ccloud::create_ccloud_stack() {
     mkdir -p stack-configs
     CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   fi
+
+  CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
+  CLOUD_API_SECRET=`echo $CLUSTER_CREDS | awk -F: '{print $2}'`
+  ccloud api-key use $CLOUD_API_KEY --resource ${CLUSTER}
   
   cat <<EOF > $CLIENT_CONFIG
 # --------------------------------------
@@ -821,7 +825,7 @@ ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="`echo $CLUSTER_CREDS | awk -F: '{print $1}'`" password\="`echo $CLUSTER_CREDS | awk -F: '{print $2}'`";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${CLOUD_API_KEY}" password\="${CLOUD_API_SECRET}";
 basic.auth.credentials.source=USER_INFO
 schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
 schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $2}'`

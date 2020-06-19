@@ -30,7 +30,7 @@ $DIR/../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 SERVICE_ACCOUNT_ID=$(ccloud::get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
 
-echo "Destroying..."
+echo
 ccloud::destroy_ccloud_stack $SERVICE_ACCOUNT_ID
 
 echo
