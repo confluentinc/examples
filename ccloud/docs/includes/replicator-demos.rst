@@ -1,5 +1,5 @@
-There are many demos and tutorials for running |crep| between |ak| clusters or |ccloud| clusters.
-Refer to the diagram below to select the scenario that you are looking for.
+In additional to documentation, there are demos and tutorials for running |crep| between |ak| clusters or |ccloud| clusters.
+Refer to the diagram below to determine the |crep| scenario that corresponds to your deployment.
 
 .. figure:: ../images/replicator-demos.png
 
