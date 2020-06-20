@@ -1,7 +1,7 @@
 .. _quickstart-demos-ccloud:
 
-On-Prem Kafka to Cloud
-======================
+On-premises Kafka to Confluent Cloud
+====================================
 
 This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.

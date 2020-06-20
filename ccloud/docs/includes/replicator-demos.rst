@@ -1,13 +1,12 @@
-- Here are additional tutorials and working examples of |crep| between |ak| clusters or |ccloud| clusters. Refer to the diagram below to determine the |crep| scenario that corresponds to your deployment.
+- Here are additional tutorials and working examples of |crep| between |ak| clusters or |ccloud| clusters for specific scenarios. Refer to the diagram below to determine the |crep| scenario that corresponds to your deployment.
 
   .. figure:: images/replicator-demos.png
 
-  1. |ak| on-prem to |ak| on-prem
+  1. |ak| on-premises to |ak| on-premises
 
      - :ref:`replicator` 
-     - :ref:`replicator_detail`
 
-  2. |ak| on-prem to |ccloud|
+  2. |ak| on-premises to |ccloud|
 
      - :ref:`quickstart-demos-ccloud`
      - :ref:`onprem-cloud-destination`
