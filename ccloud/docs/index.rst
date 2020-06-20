@@ -377,6 +377,6 @@ Stop Demo
 Additional Resources
 ====================
 
-To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
+- To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
 
 .. include:: includes/replicator-demos.rst
