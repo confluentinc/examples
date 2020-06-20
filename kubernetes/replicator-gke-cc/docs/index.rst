@@ -523,5 +523,3 @@ Suggested Reading
 -----------------
 
 - Blog post: `Conquering Hybrid Cloud with Replicated Event-Driven Architectures <https://www.confluent.io/blog/replicated-event-driven-architectures-for-hybrid-cloud-kafka/>`__
-
-.. include:: ../../../ccloud/docs/includes/replicator-demos.rst
