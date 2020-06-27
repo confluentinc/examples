@@ -25,7 +25,7 @@ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail
 echo -e "\n# Produce messages to $topic_name"
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "{\"count\":${i}}" ; done) | \
-   confluent local services produce $topic_name \
+   confluent local services kafka produce $topic_name \
                                        --cloud \
                                        --config $CONFIG_FILE \
                                        --value-format avro \
