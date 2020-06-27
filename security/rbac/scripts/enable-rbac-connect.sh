@@ -77,7 +77,7 @@ echo "confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFK
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
 
 echo -e "\n# Bring up Connect"
-confluent local start connect
+confluent local services connect start
 
 echo -e "Sleeping 30 seconds before getting the Connect cluster ID"
 sleep 30
@@ -139,13 +139,13 @@ confluent iam rolebinding create --principal User:$USER_CONNECTOR --role Develop
 
 echo -e "\n# Consume from topic $TOPIC2_AVRO from PLAINTEXT endpoint"
 cat << EOF
-confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
+confluent local services kafka consume $TOPIC2_AVRO --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
   --value-format avro \\
   --property basic.auth.credentials.source=USER_INFO \\
   --property schema.registry.basic.auth.user.info=$USER_CONNECTOR:${USER_CONNECTOR}1 \
   --property schema.registry.url=http://localhost:8081
 EOF
-confluent local consume $TOPIC2_AVRO -- --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \
+confluent local services kafka consume $TOPIC2_AVRO --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \
   --value-format avro \
   --property basic.auth.credentials.source=USER_INFO \
   --property schema.registry.basic.auth.user.info=$USER_CONNECTOR:${USER_CONNECTOR}1 \

@@ -7,8 +7,8 @@ check_env || exit 1
 check_mvn || exit 1
 check_jot || exit 1
 check_netstat || exit 1
-check_running_elasticsearch 5.6.16 || exit 1
-check_running_kibana || exit 1
+#check_running_elasticsearch 5.6.16 || exit 1
+#check_running_kibana || exit 1
 check_running_cp ${CONFLUENT} || exit 1
 check_sqlite3 || exit 1
 
@@ -18,8 +18,8 @@ get_and_compile_kafka_streams_examples || exit 1
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$CONFLUENT
 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:$CONFLUENT
-grep -qxF 'auto.offset.reset=earliest' $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties || echo 'auto.offset.reset=earliest' >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties 
-confluent local start
+append_once "auto.offset.reset=earliest" $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
+confluent local services start
 sleep 5
 
 export BOOTSTRAP_SERVER=localhost:9092
@@ -44,13 +44,13 @@ echo "Submitting connectors"
 INPUT_FILE=./connectors/connector_jdbc_customers_template.config 
 OUTPUT_FILE=./connectors/rendered-connectors/connector_jdbc_customers.config 
 source ./scripts/render-connector-config.sh
-confluent local config jdbc-customers -- -d $OUTPUT_FILE 2> /dev/null
+confluent local services connect connector config jdbc-customers --config $OUTPUT_FILE 2> /dev/null
 
 # Sink Connector -> Elasticsearch -> Kibana
 INPUT_FILE=./connectors/connector_elasticsearch_template.config
 OUTPUT_FILE=./connectors/rendered-connectors/connector_elasticsearch.config
 source ./scripts/render-connector-config.sh
-confluent local config elasticsearch -- -d $OUTPUT_FILE 2> /dev/null
+confluent local services connect connector config elasticsearch --config $OUTPUT_FILE 2> /dev/null
 
 # Find an available local port to bind the REST service to
 FREE_PORT=$(jot -r 1  10000 65000)

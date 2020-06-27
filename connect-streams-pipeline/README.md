@@ -39,14 +39,14 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 Detailed walk-thru of this example is available in the whitepaper [Kafka Serialization and Deserialization (SerDes) Examples](https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.connect-streams-pipeline)
 
-* Command line `confluent local produce` produces `String` keys and `String` values to a Kafka topic.
+* Command line `confluent local services kafka produce` produces `String` keys and `String` values to a Kafka topic.
 * [Client application](src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java) reads from the Kafka topic using `Serdes.String()` for both key and value.
 
 ![image](images/example_1.png)
 
 ### Notes
 
-[KAFKA-2526](https://issues.apache.org/jira/browse/KAFKA-2526): one cannot use the `--key-serializer` argument in the `confluent local produce` to serialize the key as a `Long`. As a result, in this example the key is serialized as a `String`. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify `--line-reader` argument in the `confluent local produce`.
+[KAFKA-2526](https://issues.apache.org/jira/browse/KAFKA-2526): one cannot use the `--key-serializer` argument in the `confluent local services kafka produce` to serialize the key as a `Long`. As a result, in this example the key is serialized as a `String`. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify `--line-reader` argument in the `confluent local services kafka produce`.
 
 ## Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 

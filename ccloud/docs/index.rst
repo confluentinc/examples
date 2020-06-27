@@ -351,7 +351,7 @@ Troubleshooting the demo
         ls `confluent local current | tail -1`
 
         # View log file per service, e.g. for the Kafka broker
-        confluent local log kafka
+        confluent local services kafka log
 
 
 =========

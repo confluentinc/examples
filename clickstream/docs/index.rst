@@ -124,7 +124,7 @@ Once you've confirmed all the Docker containers are running, create the source c
 
    .. code:: bash
 
-       docker-compose exec tools confluent local consume clickstream -- --bootstrap-server kafka:29092 --property print.key=true --max-messages 5
+       docker-compose exec tools confluent local services kafka consume clickstream --bootstrap-server kafka:29092 --property print.key=true --max-messages 5
 
    Your output should resemble: 
 
@@ -140,7 +140,7 @@ Once you've confirmed all the Docker containers are running, create the source c
 
    .. code:: bash
 
-       docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
+       docker-compose exec tools confluent local services kafka consume clickstream_codes --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
    Your output should resemble:
 
@@ -155,7 +155,7 @@ Once you've confirmed all the Docker containers are running, create the source c
 
    .. code:: bash
 
-       docker-compose exec tools confluent local consume clickstream_users -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
+       docker-compose exec tools confluent local services kafka consume clickstream_users --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
 
    Your output should resemble:
 
