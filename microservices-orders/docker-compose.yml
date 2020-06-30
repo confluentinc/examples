@@ -221,7 +221,7 @@ services:
         /opt/docker/dashboard/docker-combined.sh
   
   microservices:
-    image: ${REPOSITORY}/kafka-streams-examples:${CONFLUENT_DOCKER_TAG}
+    image: cnfldemos/kafka-streams-examples:5.5.1-DEVX-1881-PR346
     container_name: microservices
     depends_on:
       - broker
@@ -231,7 +231,12 @@ services:
       - "18894:18894"
     volumes:
       - $PWD/scripts:/opt/docker/scripts
+      - $PWD/logs:/opt/docker/logs
       - $PWD/.env:/opt/docker/config/config.env
+    environment:
+      LOG_DIR: /opt/docker/logs
+      # With Docker, we don't need to worry about cleaning up the subprocesses of the container
+      PIDS_FILE: /dev/null
     command:
       - bash
       - -c

@@ -39,7 +39,7 @@ The Orders Service also includes a blocking HTTP GET so that clients can read th
 
 There is a simple service that sends emails, and another that collates orders and makes them available in a search index using Elasticsearch. 
 
-Finally, ksqlDB is running with persistent queries to enrich streams and to also check for fraudulent behavior.
+Finally, |ksqldb| is running with persistent queries to enrich streams and to also check for fraudulent behavior.
 
 Here is a diagram of the microservices and the related Kafka topics.
 
@@ -76,7 +76,7 @@ It is build on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
-* ksqlDB: another variant of a fraud detection microservice
+* |ksqldb|: another variant of a fraud detection microservice
 
 +-------------------------------------+-----------------------+---------------------------+
 | Other Clients                       | Consumes From         | Produces To               |
@@ -121,11 +121,11 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
+1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally, in Docker, or with |ccloud|.
 
 Local:
 
-* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, ksqlDB and |sr-long| integration, and streams monitoring capabilities
+* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, |ksqldb| and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
@@ -138,9 +138,17 @@ Local:
 
 Docker:
 
-* Docker version 17.06.1-ce
-* Docker Compose version 1.14.0 with Docker Compose file format 2.1
+* Docker version >= 19.00.0
+* Docker Compose version >= 1.25.0 with Docker Compose file format 3
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+
+|ccloud|:
+
+* Docker version >= 19.00.0
+* Docker Compose version >= 1.25.0 with Docker Compose file format 3
+* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+* |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
+* |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
 
 2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
@@ -177,7 +185,7 @@ After you have successfully run the full solution, go through the execises in th
 * Exercise 4: Filtering and branching
 * Exercise 5: Stateful operations
 * Exercise 6: State stores
-* Exercise 7: Enrichment with ksqlDB
+* Exercise 7: Enrichment with |ksqldb| 
 
 For each exercise:
 
@@ -205,7 +213,15 @@ Running the fully working demo end-to-end provides context for each of the later
 
         docker-compose up -d --build
 
-#. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
+   * If you are running on |ccloud|, first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution (this starts a new |ccloud| based cluster using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
+
+
+     .. sourcecode:: bash
+
+        ccloud login --save
+        ./start-ccloud.sh
+
+#. After starting the demo with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
@@ -222,7 +238,13 @@ Running the fully working demo end-to-end provides context for each of the later
 
       ./read-topics-docker.sh
 
-#. The Kibana dashboard is populated by Elasticsearch.
+   * If you are running on |ccloud|, you can sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
+
+   .. sourcecode:: bash
+
+      source delta_configs/env.delta; CONFIG_FILE=/opt/docker/stack-configs/java-service-account-<service-account-id>.config ./read-topics-ccloud.sh
+
+#. Explore the data with Elasticsearch and Kibana
 
    .. figure:: images/elastic-search-kafka.png
        :alt: image
@@ -234,15 +256,32 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-#. Use |c3| to view Kafka data, write ksqlDB queries, manage Kafka connectors, and monitoring your applications:
+#. View and monitor the streaming applications.
 
-   * ksqlDB tab: view ksqlDB streams and tables, and to create ksqlDB queries. Otherwise, run the ksqlDB CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the ksqlDB Editor
-   * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
-   * Data Streams tab: view the throughput and latency performance of the microservices
+   * If you are running locally or with Docker, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
 
-   .. figure:: images/streams-monitoring.png
-       :alt: image
-       :width: 600px
+     * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
+     * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
+     * Data Streams tab: view the throughput and latency performance of the microservices
+
+     .. figure:: images/streams-monitoring.png
+         :alt: image
+         :width: 600px
+
+   * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application.
+
+    * Browse to: https://confluent.cloud/login
+    * View the Data flow screen to see how events flow through the various microservices
+     
+     .. figure:: images/data-flow.png
+        :alt: image
+        :width: 600px
+
+    * View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
+     
+     .. figure:: images/ksqldb-orders-flow.png
+        :alt: image
+        :width: 600px
 
 #. When you are done, make sure to stop the demo before proceeding to the exercises.
 
@@ -258,6 +297,11 @@ Running the fully working demo end-to-end provides context for each of the later
 
         docker-compose down
 
+   * If you are running on |ccloud| (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
+
+     .. sourcecode:: bash
+
+        ./stop-ccloud.sh stack-configs/java-service-account-12345.config
 
 Exercise 1: Persist events 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -622,30 +666,30 @@ Exercise 7: Enrichment with ksqlDB
 
 `Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against Apache Kafka.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
-ksqlDB is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
+|ksqldb| is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
 .. figure:: images/microservices-exercise-7.png
     :alt: image
     :width: 600px
 
-You can use ksqlDB to merge streams of data in real time by using a SQL-like `join` syntax.
+You can use |ksqldb| to merge streams of data in real time by using a SQL-like `join` syntax.
 A `ksqlDB join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
-The result of a ksqlDB join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
-ksqlDB also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
+The result of a |ksqldb| join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
+|ksqldb| also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
 You can use these to build stateful aggregates on streaming data. 
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
-If you are running on local install, then type `ksql` to get to the ksqlDB CLI prompt.
-If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the ksqlDB CLI prompt.
+If you are running on local install, then type `ksql` to get to the |ksqldb| CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the |ksqldb| CLI prompt.
 
-Assume you already have a ksqlDB stream of orders called `orders` and a ksqlDB table of customers called `customers_table`.
-From the ksqlDB CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
+Assume you already have a |ksqldb| stream of orders called `orders` and a |ksqldb| table of customers called `customers_table`.
+From the |ksqldb| CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
 Then create the following persistent queries:
 
-#. TODO 7.1: create a new ksqlDB stream that does a stream-table join between `orders` and `customers_table` based on customer id.
-#. TODO 7.2: create a new ksqlDB table that counts if a customer submits more than 2 orders in a 30 second time window.
+#. TODO 7.1: create a new |ksqldb| stream that does a stream-table join between `orders` and `customers_table` based on customer id.
+#. TODO 7.2: create a new |ksqldb| table that counts if a customer submits more than 2 orders in a 30 second time window.
 
 .. tip::
 
@@ -658,7 +702,7 @@ Then create the following persistent queries:
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
 
-The CLI parser will give immediate feedback whether your ksqlDB queries worked or not.
+The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
 
