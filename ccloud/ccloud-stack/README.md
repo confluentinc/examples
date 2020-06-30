@@ -86,7 +86,7 @@ Here are the variables and their default values:
 To destroy the stack, pass the client properties file auto-generated in the step above:
 
 ```bash
-./ccloud stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 ```
 
 # Additional Resources
