@@ -103,8 +103,8 @@ services:
       - -c
       - |
         echo "Installing connector plugins"
-        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:${CONFLUENT}
-        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:${CONFLUENT}
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+        confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run
 
