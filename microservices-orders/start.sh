@@ -14,9 +14,11 @@ check_sqlite3 || exit 1
 
 ./stop.sh
 
-[[ -z "$KAFKA_STREAMS_BRANCH" ]] || CONFLUENT_RELEASE_TAG_OR_BRANCH=$KAFKA_STREAMS_BRANCH
-
-get_and_compile_kafka_streams_examples || exit 1;
+if [ ! -z "$KAFKA_STREAMS_BRANCH" ]; then
+	CONFLUENT_RELEASE_TAG_OR_BRANCH=$KAFKA_STREAMS_BRANCH get_and_compile_kafka_streams_examples || exit 1;
+else
+	get_and_compile_kafka_streams_examples || exit 1;
+fi;
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
