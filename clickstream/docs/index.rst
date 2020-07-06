@@ -102,68 +102,98 @@ Once you've confirmed all the Docker containers are running, create the source c
 
         docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
 
+#.  Ensure the ksqlDB server is ready to receive requests by running the following until it succeeds:
+
+    .. code:: sql
+
+        show topics;
+
+    The output should look similar to:
+
+    ::
+
+         Kafka Topic | Partitions | Partition Replicas
+        -----------------------------------------------
+        -----------------------------------------------
+
+
 #.  Run the script :devx-examples:`create-connectors.sql|clickstream/ksql/ksql-clickstream-demo/demo/create-connectors.sql` that executes the ksqlDB statements to create three source connectors for generating mock data.
 
     .. code:: sql
 
         RUN SCRIPT '/scripts/create-connectors.sql';
 
-    The output will show either a blank message, or ``Executing statement``, similar to this: 
+    The output should look similar to:
 
     ::
 
+        CREATE SOURCE CONNECTOR datagen_clickstream_codes WITH (
+          'connector.class'          = 'io.confluent.kafka.connect.datagen.DatagenConnector',
+          'kafka.topic'              = 'clickstream_codes',
+          'quickstart'               = 'clickstream_codes',
+          'maxInterval'              = '20',
+          'interations'              = '100',
+          'format'                   = 'json',
+          'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter');
          Message
-        ---------
-         Executing statement
-        ---------
+        ---------------------------------------------
+         Created connector DATAGEN_CLICKSTREAM_CODES
+        ---------------------------------------------
+        [...]
 
-    After the ``RUN SCRIPT`` command completes, exit out of the ``ksqldb-cli`` with a ``CTRL+D`` command
-    
+#. Now the ``clickstream`` generator is running, simulating the stream of clicks. Sample the messages in the ``clickstream`` topic:
 
-#. Now the `clickstream` generator is running, simulating the stream of clicks. Sample these messages in ``clickstream``:
+   .. code:: sql
 
-   .. code:: bash
-
-       docker-compose exec tools confluent local consume clickstream -- --bootstrap-server kafka:29092 --property print.key=true --max-messages 5
+       print clickstream limit 3;
 
    Your output should resemble: 
 
    .. code:: bash
 
-      122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /images/logo-small.png HTTP/1.1","status":"200","bytes":"14096","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
-      122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /index.html HTTP/1.1","status":"407","bytes":"4196","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
-      122.245.174.122	{"ip":"122.245.174.122","userid":30,"remote_user":"-","time":"20/Mar/2020:02:05:52 +0000","_time":1584669952042,"request":"GET /site/login.html HTTP/1.1","status":"406","bytes":"4006","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
-      ...
+      Key format: HOPPING(JSON) or TUMBLING(JSON) or HOPPING(KAFKA_STRING) or TUMBLING(KAFKA_STRING) or KAFKA_STRING
+      Value format: JSON or KAFKA_STRING
+      rowtime: 2020/06/11 10:38:42.449 Z, key: 222.90.225.227, value: {"ip":"222.90.225.227","userid":12,"remote_user":"-","time":"1","_time":1,"request":"GET /images/logo-small.png HTTP/1.1","status":"302","bytes":"1289","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      rowtime: 2020/06/11 10:38:42.528 Z, key: 111.245.174.248, value: {"ip":"111.245.174.248","userid":30,"remote_user":"-","time":"11","_time":11,"request":"GET /site/login.html HTTP/1.1","status":"302","bytes":"14096","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      rowtime: 2020/06/11 10:38:42.705 Z, key: 122.152.45.245, value: {"ip":"122.152.45.245","userid":11,"remote_user":"-","time":"21","_time":21,"request":"GET /images/logo-small.png HTTP/1.1","status":"407","bytes":"4196","referrer":"-","agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36"}
+      Topic printing ceased
 
+#. The second data generator running is for the HTTP status codes. Sample the messages in the ``clickstream_codes`` topic:
 
-#. The second data generator running is for the HTTP status codes. Samples these messages in ``clickstream_codes``:
+   .. code:: sql
 
-   .. code:: bash
-
-       docker-compose exec tools confluent local consume clickstream_codes -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
-
-   Your output should resemble:
-
-   .. code:: bash
-
-       406	{"code":406,"definition":"Not acceptable"}
-       302	{"code":302,"definition":"Redirect"}
-       302	{"code":302,"definition":"Redirect"}
-
-#. The third data generator is for the user information. Samples these messages in ``clickstream_users``:
-
-
-   .. code:: bash
-
-       docker-compose exec tools confluent local consume clickstream_users -- --bootstrap-server kafka:29092 --from-beginning --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer --max-messages 3
+       print clickstream_codes limit 3;
 
    Your output should resemble:
 
    .. code:: bash
 
-       1	{"user_id":1,"username":"Ferd88","registered_at":1490759617459,"first_name":"Curran","last_name":"Vanyard","city":"Palo Alto","level":"Gold"}
-       2	{"user_id":2,"username":"bobk_43","registered_at":1457530469406,"first_name":"Antonio","last_name":"De Banke","city":"London","level":"Platinum"}
-       3	{"user_id":3,"username":"Ferd88","registered_at":1481373367271,"first_name":"Dimitri","last_name":"Jushcke","city":"Raleigh","level":"Silver"}
+      Key format: KAFKA_INT
+      Value format: JSON or KAFKA_STRING
+      rowtime: 2020/06/11 10:38:40.222 Z, key: 200, value: {"code":200,"definition":"Successful"}
+      rowtime: 2020/06/11 10:38:40.688 Z, key: 404, value: {"code":404,"definition":"Page not found"}
+      rowtime: 2020/06/11 10:38:41.006 Z, key: 200, value: {"code":200,"definition":"Successful"}
+      Topic printing ceased
+
+
+#. The third data generator is for the user information. Sample the messages in the ``clickstream_users`` topic:
+
+
+   .. code:: sql
+
+       print clickstream_users limit 3;
+
+   Your output should resemble:
+
+   .. code:: bash
+
+      Key format: KAFKA_INT
+      Value format: JSON or KAFKA_STRING
+      rowtime: 2020/06/11 10:38:40.815 Z, key: 1, value: {"user_id":1,"username":"Roberto_123","registered_at":1410180399070,"first_name":"Greta","last_name":"Garrity","city":"San Francisco","level":"Platinum"}
+      rowtime: 2020/06/11 10:38:41.001 Z, key: 2, value: {"user_id":2,"username":"akatz1022","registered_at":1410356353826,"first_name":"Ferd","last_name":"Pask","city":"London","level":"Gold"}
+      rowtime: 2020/06/11 10:38:41.214 Z, key: 3, value: {"user_id":3,"username":"akatz1022","registered_at":1483293331831,"first_name":"Oriana","last_name":"Romagosa","city":"London","level":"Platinum"}
+      Topic printing ceased
+
 
 
 #. Go to |c3| UI at http://localhost:9021 and view the three kafka-connect-datagen source connectors created with the ksqlDB CLI.
@@ -176,12 +206,6 @@ Once you've confirmed all the Docker containers are running, create the source c
 ---------------------------------
 Load the Streaming Data to ksqlDB
 ---------------------------------
-
-#.  Launch the ksqlDB CLI:
-
-    .. code:: bash
-
-        docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088
 
 #.  Load the :devx-examples:`statements.sql|clickstream/ksql/ksql-clickstream-demo/demo/statements.sql` file that runs the tutorial app.
 
@@ -197,10 +221,27 @@ Load the Streaming Data to ksqlDB
 
     ::
 
+         CREATE STREAM clickstream (
+                _time bigint,
+                time varchar,
+                ip varchar,
+                request varchar,
+                status int,
+                userid int,
+                bytes bigint,
+                agent varchar
+            ) with (
+                kafka_topic = 'clickstream',
+                value_format = 'json'
+            );
          Message
-        ---------
-         Executing statement
-        ---------
+        ----------------
+         Stream created
+        ----------------
+        [...]
+
+
+    After the ``RUN SCRIPT`` command completes, exit out of the ``ksqldb-cli`` with a ``CTRL+D`` command
 
 ---------------------------------------------
 Verify the data
@@ -252,7 +293,7 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
                 -> Connecting KSQL->Elastic->Grafana  click_user_sessions
                 -> Connecting: click_user_sessions
                         -> Adding Kafka Connect Elastic Source es_sink_CLICK_USER_SESSIONS
-                        ->Adding Grafana Source
+                        -> Adding Grafana Source
 
         [...]
 
@@ -267,12 +308,16 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
    ::
 
         Loading Grafana ClickStream Dashboard
-        {"id":1,"slug":"click-stream-analysis","status":"success","uid":"lUHTGDTmz","url":"/d/lUHTGDTmz/click-stream-analysis","version":4}
 
 
-#. Navigate to the Grafana dashboard (username/password is user/user) at http://localhost:3000
+#. Navigate to the [Grafana dashboard at http://localhost:3000](http://localhost:3000)
 
-#. In the |c3| UI at http://localhost:9021, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+    Enter the username and password as ``user`` and ``user``. Then navigate to the ``Clickstream Analysis Dashboard``.
+
+    .. image:: images/grafana-dashboard.png
+       :alt: Grafana Dashboard
+
+#. In the |c3| [UI at http://localhost:9021](http://localhost:9021), again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
 
    .. image:: images/c3_connectors.png
         :alt: Connectors
@@ -315,7 +360,7 @@ Now open your your browser using the URL output from the step where you loaded t
     **Important:** If you already have Grafana UI open, you may need to
     enter the specific clickstream URL output by the previous step
 
-    .. image:: images/grafana-success.png
+    .. image:: images/grafana-sessions.png
        :alt: Grafana UI success
 
 This dashboard demonstrates a series of streaming functionality where the title of each panel describes the type of stream
