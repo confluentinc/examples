@@ -449,9 +449,9 @@
                 "dsType": "elasticsearch",
                 "metrics": [
                   {
-                    "field": "select field",
+                    "field": "EVENTS",
                     "id": "1",
-                    "type": "count"
+                    "type": "max"
                   }
                 ],
                 "refId": "A",
