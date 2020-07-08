@@ -4,23 +4,28 @@ import static io.confluent.examples.streams.avro.microservices.OrderValidationRe
 import static io.confluent.examples.streams.avro.microservices.OrderValidationResult.PASS;
 import static io.confluent.examples.streams.avro.microservices.OrderValidationType.ORDER_DETAILS_CHECK;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.addShutdownHookAndBlock;
+import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.*;
 import static java.util.Collections.singletonList;
 
 import io.confluent.examples.streams.avro.microservices.Order;
 import io.confluent.examples.streams.avro.microservices.OrderState;
 import io.confluent.examples.streams.avro.microservices.OrderValidation;
 import io.confluent.examples.streams.avro.microservices.OrderValidationResult;
-import io.confluent.examples.streams.microservices.util.MicroserviceUtils;
+import io.confluent.examples.streams.microservices.domain.Schemas;
 import io.confluent.examples.streams.utils.MonitoringInterceptorUtils;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import org.apache.commons.cli.*;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -59,20 +64,22 @@ public class OrderDetailsService implements Service {
   private boolean eosEnabled = false;
 
   @Override
-  public void start(final String bootstrapServers, final String stateDir) {
-    executorService.execute(() -> startService(bootstrapServers));
+  public void start(final String bootstrapServers,
+                    final String stateDir,
+                    final Properties defaultConfig) {
+    executorService.execute(() -> startService(bootstrapServers, defaultConfig));
     running = true;
     log.info("Started Service " + getClass().getSimpleName());
   }
 
-  private void startService(final String bootstrapServers) {
-    startConsumer(bootstrapServers);
-    startProducer(bootstrapServers);
+  private void startService(final String bootstrapServers, final Properties defaultConfig) {
+    startConsumer(bootstrapServers, defaultConfig);
+    startProducer(bootstrapServers, defaultConfig);
 
     try {
       final Map<TopicPartition, OffsetAndMetadata> consumedOffsets = new HashMap<>();
-
-      // TODO 2.1: subscribe the local `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
+      
+			// TODO 2.1: subscribe the local `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
       // ...
 
       if (eosEnabled) {
@@ -131,8 +138,9 @@ public class OrderDetailsService implements Service {
     );
   }
 
-  private void startProducer(final String bootstrapServers) {
+  private void startProducer(final String bootstrapServers, final Properties defaultConfig) {
     final Properties producerConfig = new Properties();
+    producerConfig.putAll(defaultConfig);
     producerConfig.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     if (eosEnabled) {
       producerConfig.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, "OrderDetailsServiceInstance1");
@@ -148,8 +156,9 @@ public class OrderDetailsService implements Service {
         Topics.ORDER_VALIDATIONS.valueSerde().serializer());
   }
 
-  private void startConsumer(final String bootstrapServers) {
+  private void startConsumer(final String bootstrapServers, final Properties defaultConfig) {
     final Properties consumerConfig = new Properties();
+    consumerConfig.putAll(defaultConfig);
     consumerConfig.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
     consumerConfig.put(ConsumerConfig.GROUP_ID_CONFIG, CONSUMER_GROUP_ID);
     consumerConfig.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -183,9 +192,6 @@ public class OrderDetailsService implements Service {
   }
 
   private boolean isValid(final Order order) {
-    if (order.getCustomerId() == null) {
-      return false;
-    }
     if (order.getQuantity() < 0) {
       return false;
     }
@@ -200,8 +206,56 @@ public class OrderDetailsService implements Service {
   }
 
   public static void main(final String[] args) throws Exception {
+    final Options opts = new Options();
+    opts.addOption(Option.builder("b")
+            .longOpt("bootstrap-servers")
+            .hasArg()
+            .desc("Kafka cluster bootstrap server string (ex: broker:9092)")
+            .build());
+    opts.addOption(Option.builder("s")
+            .longOpt("schema-registry")
+            .hasArg()
+            .desc("Schema Registry URL")
+            .build());
+    opts.addOption(Option.builder("c")
+            .longOpt("config-file")
+            .hasArg()
+            .desc("Java properties file with configurations for Kafka Clients")
+            .build());
+    opts.addOption(Option.builder("t")
+            .longOpt("state-dir")
+            .hasArg()
+            .desc("The directory for state storage")
+            .build());
+    opts.addOption(Option.builder("h").longOpt("help").hasArg(false).desc("Show usage information").build());
+
+    final CommandLine cl = new DefaultParser().parse(opts, args);
+
+    if (cl.hasOption("h")) {
+      final HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("Order Details Service", opts);
+      return;
+    }
+    final Properties defaultConfig = Optional.ofNullable(cl.getOptionValue("config-file", null))
+            .map(path -> {
+              try {
+                return buildPropertiesFromConfigFile(path);
+              } catch (final IOException e) {
+                throw new RuntimeException(e);
+              }
+            })
+            .orElse(new Properties());
+
+    final String schemaRegistryUrl = cl.getOptionValue("schema-registry", DEFAULT_SCHEMA_REGISTRY_URL);
+    defaultConfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+    Schemas.configureSerdes(defaultConfig);
+
     final OrderDetailsService service = new OrderDetailsService();
-    service.start(MicroserviceUtils.parseArgsAndConfigure(args), "/tmp/kafka-streams");
+    service.start(
+            cl.getOptionValue("bootstrap-servers", DEFAULT_BOOTSTRAP_SERVERS),
+            cl.getOptionValue("state-dir", "/tmp/kafka-streams-examples"),
+            defaultConfig);
     addShutdownHookAndBlock(service);
   }
 }
+
