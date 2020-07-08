@@ -79,7 +79,7 @@ public class OrderDetailsService implements Service {
     try {
       final Map<TopicPartition, OffsetAndMetadata> consumedOffsets = new HashMap<>();
       
-			// TODO 2.1: subscribe the local `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
+      // TODO 2.1: subscribe the local `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
       // ...
 
       if (eosEnabled) {
