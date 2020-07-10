@@ -354,6 +354,7 @@ ksqlDB
    Your output should resemble:
 
    .. code:: bash
+
       [
         {
           "@type": "queries",
