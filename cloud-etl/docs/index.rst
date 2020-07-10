@@ -354,25 +354,40 @@ ksqlDB
    Your output should resemble:
 
    .. code:: bash
-
       [
         {
           "@type": "queries",
           "statementText": "SHOW QUERIES;",
           "queries": [
             {
+              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP EVENTSOURCEIP,\n  COUNT(*) COUNT\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;",
               "sinks": [
                 "COUNT_PER_SOURCE"
               ],
-              "id": "CTAS_COUNT_PER_SOURCE_210",
-              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"COUNT\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "sinkKafkaTopics": [
+                "COUNT_PER_SOURCE"
+              ],
+              "id": "CTAS_COUNT_PER_SOURCE_0",
+              "statusCount": {
+                "RUNNING": 1
+              },
+              "queryType": "PERSISTENT",
+              "state": "RUNNING"
             },
             {
+              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP ROWKEY,\n  AS_VALUE(EVENTLOGS.EVENTSOURCEIP) EVENTSOURCEIP,\n  SUM(EVENTLOGS.EVENTDURATION) SUM\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;",
               "sinks": [
                 "SUM_PER_SOURCE"
               ],
-              "id": "CTAS_SUM_PER_SOURCE_211",
-              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"SUM\"\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "sinkKafkaTopics": [
+                "SUM_PER_SOURCE"
+              ],
+              "id": "CTAS_SUM_PER_SOURCE_5",
+              "statusCount": {
+                "RUNNING": 1
+              },
+              "queryType": "PERSISTENT",
+              "state": "RUNNING"
             }
           ],
           "warnings": []
