@@ -206,9 +206,9 @@ In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET
 8. For schema evolution, you can [test schema compatibility](https://docs.confluent.io/current/schema-registry/develop/maven-plugin.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud#schema-registry-test-compatibility) between newer schema versions and older schema versions in Confluent Cloud Schema Registry. The [pom.xml](pom.xml) hardcodes the Schema Registry subject name to `test2-value`—change this if you did not use topic name `test2`. Then test local schema compatibility for [src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc](src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc), which should fail, and [src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc](src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc), which should pass.
 
    ```
-   # DataRecordAvro2a.avsc should fail compatibility test
+   # DataRecordAvro2a.avsc compatibility test: FAIL
    $ mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc"
 
-   # DataRecordAvro2b.avsc should pass compatibility test
+   # DataRecordAvro2b.avsc compatibility test: PASS
    $ mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc"
    ```
