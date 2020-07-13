@@ -184,9 +184,7 @@
                     <schemaRegistryUrls>
                         <param>${schemaRegistryUrl}</param>
                     </schemaRegistryUrls>
-                    <userInfoConfig>
-                        <param>${schemaRegistryBasicAuthUserInfo}</param>
-                    </userInfoConfig>
+                    <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
                     <subjects>
                         <test2-value>src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc</test2-value>
                     </subjects>

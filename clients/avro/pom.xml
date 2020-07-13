@@ -120,9 +120,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
               <schemaRegistryUrls>
                   <param>${schemaRegistryUrl}</param>
               </schemaRegistryUrls>
-              <userInfoConfig>
-                  <param>${schemaRegistryBasicAuthUserInfo}</param>
-              </userInfoConfig>
+              <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
               <subjects>
                   <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2a.avsc</transactions-value>
               </subjects>
