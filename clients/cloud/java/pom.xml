@@ -28,6 +28,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <avro.version>1.9.1</avro.version>
         <gson.version>2.2.4</gson.version>
+        <schemaRegistryUrl>http://localhost:8081</schemaRegistryUrl>
+        <schemaRegistryBasicAuthUserInfo></schemaRegistryBasicAuthUserInfo>
     </properties>
 
     <licenses>
@@ -166,10 +168,32 @@
                 </goals>
                 <configuration>
                   <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/cloud/</sourceDirectory>
+                  <includes>
+                    <include>DataRecordAvro.avsc</include>
+                  </includes>
                   <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                 </configuration>
               </execution>
             </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+                <version>${confluent.version}</version>
+                <configuration>
+                    <schemaRegistryUrls>
+                        <param>${schemaRegistryUrl}</param>
+                    </schemaRegistryUrls>
+                    <userInfoConfig>
+                        <param>${schemaRegistryBasicAuthUserInfo}</param>
+                    </userInfoConfig>
+                    <subjects>
+                        <test2-value>src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc</test2-value>
+                    </subjects>
+                </configuration>
+                <goals>
+                    <goal>test-compatibility</goal>
+                </goals>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
