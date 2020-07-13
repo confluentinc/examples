@@ -192,6 +192,8 @@ In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET
       -Dexec.args="$HOME/.confluent/java.config test2"
     ```
 
+## Schema Evolution with Confluent Cloud Schema Registry
+
 7. View the schema information registered in Confluent Cloud Schema Registry. In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET }}`, and `{{ SR_ENDPOINT }}`.
 
     ```
@@ -203,6 +205,7 @@ In the output below, substitute values for `{{ SR_API_KEY }}`, `{{ SR_API_SECRET
     $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
     {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
     ```
+
 8. For schema evolution, you can [test schema compatibility](https://docs.confluent.io/current/schema-registry/develop/maven-plugin.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud#schema-registry-test-compatibility) between newer schema versions and older schema versions in Confluent Cloud Schema Registry. The [pom.xml](pom.xml) hardcodes the Schema Registry subject name to `test2-value`—change this if you did not use topic name `test2`. Then test local schema compatibility for [src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc](src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc), which should fail, and [src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc](src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc), which should pass.
 
    ```
