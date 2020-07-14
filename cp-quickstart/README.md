@@ -47,6 +47,9 @@ For additional examples that showcase streaming applications within an event str
 
 * This demo also shows usage of the various data formats supported by Confluent Cloud, Schema Registry and ksqlDB.  The demo deploys a [ksqlDB application](docker-cloud-statements.sql) which builds streams and tables using Avro, Protobuf and JSON based formats.  The demo provides sample commands at the end of its startup showing how to consume Protobuf based data streams (e.g. `users` topic) and Avro based data streams (e.g. `pageviews` topic)
 
+* The first 20 users to sign up for [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) and use promo code ``C50INTEG`` will receive an additional $50 free usage ([details](https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
+
+
 ### Advanced usage
 
 You may explicitly set the cloud provider and region. For example:
