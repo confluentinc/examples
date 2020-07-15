@@ -108,8 +108,7 @@ All examples in this repo demonstrate the |kstreams| API methods ``count`` and `
 Notes
 ~~~~~
 
-- `KAFKA-5245 <https://issues.apache.org/jira/browse/KAFKA-5245>`__: one needs to provide the Serdes twice, (1) when calling ``StreamsBuilder#stream()`` and (2) when calling
-``KStream#groupByKey()``
+- `KAFKA-5245 <https://issues.apache.org/jira/browse/KAFKA-5245>`__: one needs to provide the Serdes twice, (1) when calling ``StreamsBuilder#stream()`` and (2) when calling ``KStream#groupByKey()``
 - `PR-531 <https://github.com/confluentinc/schema-registry/pull/531>`__: Confluent distribution provides packages for ``GenericAvroSerde`` and ``SpecificAvroSerde``
 - `KAFKA-2378 <https://issues.apache.org/jira/browse/KAFKA-2378>`__: adds APIs to be able to embed Kafka Connect into client applications
 
@@ -122,7 +121,7 @@ What Should I see?
 After you run ``./start.sh``:
 
 -  You should see each of the examples run end-to-end
--  If you are running Confluent Platform, open your browser and navigate to the Control Center web interface Management -> Kafka Connect tab at http://localhost:9021/management/connect to see the two deployed connectors
+-  If you are running |cp|, open your browser and navigate to the |c3| web interface Management -> Connect tab at http://localhost:9021/management/connect to see the two deployed connectors
 -  Beyond that, the real value of this demo is to see the provided configurations and client code
 
 Original Dataset
