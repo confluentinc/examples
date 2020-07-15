@@ -6,7 +6,7 @@ Pipelining with |kconnect-long|
 Overview
 --------
 
-This demo helps users build pipelines, moving data from one source to another.
+This demo shows users how to build pipelines with |ak-tm|.
 
 .. figure:: images/pipeline.jpg
 
@@ -43,7 +43,7 @@ The original data is a :devx-examples:`table of locations|utils/table.locations`
    3|Moscow|200
    1|Raleigh|700
 
-In produces records in a Kafka topic:
+In produces records to a Kafka topic:
 
 .. figure:: images/blog_stream.jpg
 
@@ -78,9 +78,9 @@ The output of ``sum`` is:
 Demo Prerequisites
 ------------------
 
--  `Confluent Platform 5.5 <https://www.confluent.io/download/>`__
--  Maven command ``mvn`` to compile Java code
--  By default the ``timeout`` command is available on most Linux distributions but not Mac OS. This ``timeout`` command is used by the bash scripts to terminate consumer processes after a period of time.  To install it on a Mac:
+- Download `Confluent Platform <https://www.confluent.io/download/>`__
+- Maven command ``mvn`` to compile Java code
+- By default the ``timeout`` command is available on most Linux distributions but not Mac OS. This ``timeout`` command is used by the bash scripts to terminate consumer processes after a period of time.  To install it on a Mac:
 
 .. code:: shell
 
@@ -114,22 +114,22 @@ Run the demo
 
      ./start.sh
 
-#. If you are running |cp|, open your browser and navigate to the |c3| web interface Management -> Connect tab at http://localhost:9021/management/connect to see the two deployed connectors
+#. If you are running |cp|, open your browser and navigate to the |c3| web interface Management -> Connect tab at http://localhost:9021/management/connect to see the data in the Kafka topics and the deployed connectors.
 
 
 Example 1: Kafka console producer -> Key:String and Value:String
 ----------------------------------------------------------------
 
--  Command line ``confluent local produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
--  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
+- Command line ``confluent local produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
+- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
 
 .. figure:: images/example_1.png
 
 Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 -----------------------------------------------------------------------------------------------
 
--  :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcjson-connector.properties` produces JSON values, and inserts the key using single message transformations, also known as ``SMTs``. This is helpful because by default JDBC source connector does not insert a key.
--  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for key and a
+- :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcjson-connector.properties` produces JSON values, and inserts the key using single message transformations, also known as ``SMTs``. This is helpful because by default JDBC source connector does not insert a key.
+- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for key and a
    custom JSON Serde for the value.
 - This example uses a few SMTs including one to cast the key to an ``int64``. The key uses the ``org.apache.kafka.connect.converters.LongConverter`` provided by `KAFKA-6913 <https://issues.apache.org/jira/browse/KAFKA-6913>`__.
 
@@ -156,8 +156,8 @@ Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:
 Example 5: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 ------------------------------------------------------------------------------------
 
--  :devx-examples:`Java client|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java` produces ``Long`` keys and ``SpecificAvro`` values to a Kafka topic.
--  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and
+- :devx-examples:`Java client|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java` produces ``Long`` keys and ``SpecificAvro`` values to a Kafka topic.
+- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and
    ``SpecificAvroSerde`` for the value.
 
 .. figure:: images/example_5.png
@@ -165,8 +165,8 @@ Example 5: Java client producer with SpecificAvro -> Key:Long and Value:Specific
 Example 6: JDBC source connector with Avro to ksqlDB -> Key:Long and Value:Avro
 -------------------------------------------------------------------------------
 
--  :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcavroksql-connector.properties` produces Avro values, and null keys, to a Kafka topic.
--  :devx-examples:`ksqlDB|connect-streams-pipeline/jdbcavro_statements.sql` reads from the Kafka topic and then uses ``PARTITION BY`` to create a new stream of messages with ``BIGINT`` keys.
+- :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcavroksql-connector.properties` produces Avro values, and null keys, to a Kafka topic.
+- :devx-examples:`ksqlDB|connect-streams-pipeline/jdbcavro_statements.sql` reads from the Kafka topic and then uses ``PARTITION BY`` to create a new stream of messages with ``BIGINT`` keys.
 
 .. figure:: images/example_6.png
 
