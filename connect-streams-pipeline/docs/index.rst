@@ -12,16 +12,21 @@ This demo shows users how to build pipelines with |ak-tm|.
 
 It showcases different ways to produce data to |ak-tm| topics, with and without |kconnect-long|, and various ways to serialize it for use by the |kstreams| API and ksqlDB.
 
-+====================================================+================================+==========+================+===================+
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 | Example                                            | Produce to Kafka Topic         | Key      | Value          | Stream Processing |
 +====================================================+================================+==========+================+===================+
 | Example 1: Confluent CLI Producer with String      | CLI                            | `String` | `String`       | Kafka Streams     |
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 | Example 2: JDBC source connector with JSON         | JDBC with SMT to add key       | `Long`   | `Json`         | Kafka Streams     |
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 | Example 3: JDBC source connector with SpecificAvro | JDBC with SMT to set namespace | null     | `SpecificAvro` | Kafka Streams     |
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 | Example 4: JDBC source connector with GenericAvro  | JDBC                           | null     | `GenericAvro`  | Kafka Streams     |
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 | Example 5: Java producer with SpecificAvro         | Producer                       | `Long`   | `SpecificAvro` | Kafka Streams     |
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 | Example 6: JDBC source connector with Avro         | JDBC                           | `Long`   | `Avro`         | ksqlDB            |
-+====================================================+================================+==========+================+===================+
++----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
 
 Detailed walk-thru of this demo is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blogpost `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
 
