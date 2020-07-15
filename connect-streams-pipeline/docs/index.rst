@@ -34,7 +34,7 @@ Example 1: Kafka console producer -> Key:String and Value:String
 ----------------------------------------------------------------
 
 -  Command line ``confluent local produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
--  `Client application <src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java>`__ reads from the Kafka topic using ``Serdes.String()`` for both key and value.
+-  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
 
 .. figure:: images/example_1.png
 
@@ -46,8 +46,8 @@ Notes
 Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 -----------------------------------------------------------------------------------------------
 
--  `Kafka Connect JDBC source connector <jdbcjson-connector.properties>`__ produces JSON values, and inserts the key using single message transformations, also known as ``SMTs``. This is helpful because by default JDBC source connector does not insert a key.
--  `Client application <src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java>`__ reads from the Kafka topic using ``Serdes.String()`` for key and a
+-  :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcjson-connector.properties` produces JSON values, and inserts the key using single message transformations, also known as ``SMTs``. This is helpful because by default JDBC source connector does not insert a key.
+-  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for key and a
    custom JSON Serde for the value.
 
 .. figure:: images/example_2.png
@@ -60,8 +60,8 @@ Notes
 Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
 ---------------------------------------------------------------------------------------------
 
--  `Kafka Connect JDBC source connector <jdbcspecificavro-connector.properties>`__ produces Avro values, and null ``String`` keys, to a Kafka topic.
--  `Client application <src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java>`__ reads from the Kafka topic using ``SpecificAvroSerde`` for the value and then the ``map`` function to convert the stream of messages to have ``Long`` keys and custom class values.
+-  :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcspecificavro-connector.properties` produces Avro values, and null ``String`` keys, to a Kafka topic.
+-  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java` reads from the Kafka topic using ``SpecificAvroSerde`` for the value and then the ``map`` function to convert the stream of messages to have ``Long`` keys and custom class values.
 
 .. figure:: images/example_3.png
 
@@ -73,8 +73,8 @@ Notes
 Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 -------------------------------------------------------------------------------------------
 
--  `Kafka Connect JDBC source connector <jdbcgenericavro-connector.properties>`__ produces Avro values, and null ``String`` keys, to a Kafka topic.
--  `Client application <src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java>`__ reads from the Kafka topic using ``GenericAvroSerde`` for the value and then the ``map`` function to convert the stream of messages to have ``Long`` keys and custom class values.
+-  :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcgenericavro-connector.properties` produces Avro values, and null ``String`` keys, to a Kafka topic.
+-  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java` reads from the Kafka topic using ``GenericAvroSerde`` for the value and then the ``map`` function to convert the stream of messages to have ``Long`` keys and custom class values.
 
 .. figure:: images/example_3.png
 
@@ -86,8 +86,8 @@ Notes
 Example 5: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 ------------------------------------------------------------------------------------
 
--  `Java client <src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java>`__ produces ``Long`` keys and ``SpecificAvro`` values to a Kafka topic.
--  `Client application <src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java>`__ reads from the Kafka topic using ``Serdes.Long()`` for key and
+-  :devx-examples:`Java client|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java` produces ``Long`` keys and ``SpecificAvro`` values to a Kafka topic.
+-  :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and
    ``SpecificAvroSerde`` for the value.
 
 .. figure:: images/example_5.png
@@ -95,8 +95,8 @@ Example 5: Java client producer with SpecificAvro -> Key:Long and Value:Specific
 Example 6: JDBC source connector with Avro to ksqlDB -> Key:Long and Value:Avro
 -------------------------------------------------------------------------------
 
--  `Kafka Connect JDBC source connector <jdbcavroksql-connector.properties>`__ produces Avro values, and null keys, to a Kafka topic.
--  `ksqlDB <jdbcavro_statements.sql>`__ reads from the Kafka topic and then uses ``PARTITION BY`` to create a new stream of messages with ``BIGINT`` keys.
+-  :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcavroksql-connector.properties` produces Avro values, and null keys, to a Kafka topic.
+-  :devx-examples:`ksqlDB|connect-streams-pipeline/jdbcavro_statements.sql` reads from the Kafka topic and then uses ``PARTITION BY`` to create a new stream of messages with ``BIGINT`` keys.
 
 .. figure:: images/example_6.png
 
@@ -128,7 +128,7 @@ After you run ``./start.sh``:
 Original Dataset
 ----------------
 
-`Dataset <../utils/table.locations>`__
+:devx-examples:`Dataset|utils/table.locations`
 
 ::
 
