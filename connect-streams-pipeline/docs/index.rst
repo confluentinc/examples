@@ -1,4 +1,4 @@
-.. _examples-connect-streams-pipeline:
+.. _demo-connect-streams-pipeline:
 
 Pipelining with |kconnect-long|
 ===============================
@@ -10,32 +10,34 @@ This demo shows users how to build pipelines with |ak-tm|.
 
 .. figure:: images/pipeline.jpg
 
-It showcases different ways to produce data to |ak-tm| topics, with and without |kconnect-long|, and various ways to serialize it for use by the |kstreams| API and ksqlDB.
+It showcases different ways to produce data to |ak-tm| topics, with and without |kconnect-long|, and various ways to serialize it for the |kstreams| API and ksqlDB.
 
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
-| Example                                            | Produce to Kafka Topic         | Key      | Value          | Stream Processing |
-+====================================================+================================+==========+================+===================+
-| Example 1: Confluent CLI Producer with String      | CLI                            | `String` | `String`       | Kafka Streams     |
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
-| Example 2: JDBC source connector with JSON         | JDBC with SMT to add key       | `Long`   | `Json`         | Kafka Streams     |
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
-| Example 3: JDBC source connector with SpecificAvro | JDBC with SMT to set namespace | null     | `SpecificAvro` | Kafka Streams     |
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
-| Example 4: JDBC source connector with GenericAvro  | JDBC                           | null     | `GenericAvro`  | Kafka Streams     |
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
-| Example 5: Java producer with SpecificAvro         | Producer                       | `Long`   | `SpecificAvro` | Kafka Streams     |
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
-| Example 6: JDBC source connector with Avro         | JDBC                           | `Long`   | `Avro`         | ksqlDB            |
-+----------------------------------------------------+--------------------------------+----------+----------------+-------------------+
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
+| Example                                 | Produce to Kafka Topic         | Key      | Value          | Stream Processing |
++=========================================+================================+==========+================+===================+
+| Confluent CLI Producer with String      | CLI                            | `String` | `String`       | Kafka Streams     |
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
+| JDBC source connector with JSON         | JDBC with SMT to add key       | `Long`   | `Json`         | Kafka Streams     |
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
+| JDBC source connector with SpecificAvro | JDBC with SMT to set namespace | null     | `SpecificAvro` | Kafka Streams     |
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
+| JDBC source connector with GenericAvro  | JDBC                           | null     | `GenericAvro`  | Kafka Streams     |
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
+| Java producer with SpecificAvro         | Producer                       | `Long`   | `SpecificAvro` | Kafka Streams     |
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
+| JDBC source connector with Avro         | JDBC                           | `Long`   | `Avro`         | ksqlDB            |
++-----------------------------------------+--------------------------------+----------+----------------+-------------------+
 
 Detailed walk-thru of this demo is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blogpost `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
 
 Description of Data
 -------------------
 
-The original data is a :devx-examples:`table of locations|utils/table.locations`.
+The original data is a :devx-examples:`table of locations|utils/table.locations` that resembles this.
 
 ::
+
+   id|name|sale
 
    1|Raleigh|300
    2|Dusseldorf|100
@@ -52,7 +54,7 @@ In produces records to a Kafka topic:
 
 .. figure:: images/blog_stream.jpg
 
-The actual client application uses the methods ``count`` and ``sum``.
+The actual client application uses the methods ``count`` and ``sum`` to process this data, grouped by each city.
 
 The output of ``count`` is:
 
@@ -122,6 +124,8 @@ Run the demo
 #. If you are running |cp|, open your browser and navigate to the |c3| web interface Management -> Connect tab at http://localhost:9021/management/connect to see the data in the Kafka topics and the deployed connectors.
 
 
+.. _connect-streams-pipeline-example-1:
+
 Example 1: Kafka console producer -> Key:String and Value:String
 ----------------------------------------------------------------
 
@@ -130,15 +134,18 @@ Example 1: Kafka console producer -> Key:String and Value:String
 
 .. figure:: images/example_1.png
 
+.. _connect-streams-pipeline-example-2:
+
 Example 2: JDBC source connector with Single Message Transformations -> Key:Long and Value:JSON
 -----------------------------------------------------------------------------------------------
 
 - :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcjson-connector.properties` produces JSON values, and inserts the key using single message transformations, also known as ``SMTs``. This is helpful because by default JDBC source connector does not insert a key.
-- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for key and a
-   custom JSON Serde for the value.
+- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for key and a custom JSON Serde for the value.
 - This example uses a few SMTs including one to cast the key to an ``int64``. The key uses the ``org.apache.kafka.connect.converters.LongConverter`` provided by `KAFKA-6913 <https://issues.apache.org/jira/browse/KAFKA-6913>`__.
 
 .. figure:: images/example_2.png
+
+.. _connect-streams-pipeline-example-3:
 
 Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
 ---------------------------------------------------------------------------------------------
@@ -149,6 +156,8 @@ Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value
 
 .. figure:: images/example_3.png
 
+.. _connect-streams-pipeline-example-4:
+
 Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:GenericAvro
 -------------------------------------------------------------------------------------------
 
@@ -158,14 +167,17 @@ Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:
 
 .. figure:: images/example_3.png
 
+.. _connect-streams-pipeline-example-5:
+
 Example 5: Java client producer with SpecificAvro -> Key:Long and Value:SpecificAvro
 ------------------------------------------------------------------------------------
 
 - :devx-examples:`Java client|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java` produces ``Long`` keys and ``SpecificAvro`` values to a Kafka topic.
-- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and
-   ``SpecificAvroSerde`` for the value.
+- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and ``SpecificAvroSerde`` for the value.
 
 .. figure:: images/example_5.png
+
+.. _connect-streams-pipeline-example-6:
 
 Example 6: JDBC source connector with Avro to ksqlDB -> Key:Long and Value:Avro
 -------------------------------------------------------------------------------
@@ -176,10 +188,11 @@ Example 6: JDBC source connector with Avro to ksqlDB -> Key:Long and Value:Avro
 .. figure:: images/example_6.png
 
 
-Notes
------
+Technical Notes
+---------------
 
 - `KAFKA-5245 <https://issues.apache.org/jira/browse/KAFKA-5245>`__: one needs to provide the Serdes twice, (1) when calling ``StreamsBuilder#stream()`` and (2) when calling ``KStream#groupByKey()``
 - `PR-531 <https://github.com/confluentinc/schema-registry/pull/531>`__: Confluent distribution provides packages for ``GenericAvroSerde`` and ``SpecificAvroSerde``
 - `KAFKA-2378 <https://issues.apache.org/jira/browse/KAFKA-2378>`__: adds APIs to be able to embed Kafka Connect into client applications
 - `KAFKA-2526 <https://issues.apache.org/jira/browse/KAFKA-2526>`__: one cannot use the ``--key-serializer`` argument in the ``confluent local produce`` to serialize the key as a ``Long``. As a result, in this example the key is serialized as a ``String``. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify ``--line-reader`` argument in the ``confluent local produce``.
+- `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__: allows the connector to set the namespace in the schema.
