@@ -144,7 +144,7 @@ Example 2: JDBC source connector with Single Message Transformations -> Key:Long
 .. include:: ../jdbcjson-connector.properties
 
 - This example uses a few SMTs including one to cast the key to an ``int64``. The key uses the ``org.apache.kafka.connect.converters.LongConverter`` provided by `KAFKA-6913 <https://issues.apache.org/jira/browse/KAFKA-6913>`__.
-- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for key and a custom JSON Serde for the value.
+- :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and a custom JSON Serde for the value.
 
 .. figure:: images/example_2.png
 
