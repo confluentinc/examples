@@ -57,7 +57,7 @@ You can find the documentation and instructions for all Confluent Cloud demos at
 | Demo                                       | Local | Docker | Description
 | ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
 | [Clients in Various Languages](clients/cloud/README.md)                 |   [Y](clients/cloud/README.md)   |   N    | Client applications, showcasing producers and consumers, in various programming languages <br><img src="clients/cloud/images/clients-all.png" width="450">
-| [Connect and Kafka Streams](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API <br><img src="connect-streams-pipeline/images/blog_connect_streams_diag.jpg" width="450">
+| [Connect and Kafka Streams](connect-streams-pipeline/README.md) |   [Y](connect-streams-pipeline/README.md)   |   N    | Demonstrate various ways, with and without Kafka Connect, to get data into Kafka topics and then loaded for use by the Kafka Streams API <br><img src="connect-streams-pipeline/docs/images/blog_connect_streams_diag.jpg" width="450">
 
 
 # Confluent Platform
