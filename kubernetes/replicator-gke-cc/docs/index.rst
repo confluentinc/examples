@@ -122,11 +122,11 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
 
 #.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
 
-#.  Log in to your |ccloud| cluster.
+#.  Log in to your |ccloud| cluster. The ``--save`` argument saves your Confluent Cloud user credentials to ``~/.netrc``.
 
     ::
 
-        ccloud login --url https://confluent.cloud
+        ccloud login --save
 
     Your output should resemble:
 
