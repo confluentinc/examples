@@ -87,11 +87,11 @@ Setup
 Run
 ---
 
-#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password.
+#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: shell
 
-      ccloud login --url https://confluent.cloud --save
+      ccloud login --save
 
 
 #. Start the entire demo by running a single command.  You have two choices: using Docker Compose or a |cp| local install. This will take several minutes to complete as it creates new resources in |ccloud|.
