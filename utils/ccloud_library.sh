@@ -299,11 +299,6 @@ function ccloud::create_and_use_environment() {
   return 0
 }
 
-################################################################
-# Sets the value of CLUSTER_ID if a cluster is found given the
-# input parameters, return code specifies if cluster found
-# or not
-################################################################
 function ccloud::find_cluster() {
   CLUSTER_NAME=$1
   CLUSTER_CLOUD=$2
