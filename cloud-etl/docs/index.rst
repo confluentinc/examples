@@ -104,7 +104,7 @@ Cloud services
 Local Tools
 -----------
 
--  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later, with Confluent Cloud user credentials saved in ``~/.netrc`` (save with command ``ccloud login --save``)
+-  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later, logged in with the ``--save`` argument which saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
@@ -179,7 +179,7 @@ Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a 
 Run
 ---
 
-#. Log in to |ccloud| with the command ``ccloud login --save``, and use your |ccloud| username and password. The ``--save`` argument saves your Confluent Cloud user credentials to ``~/.netrc``.
+#. Log in to |ccloud| with the command ``ccloud login --save``, and use your |ccloud| username and password. The ``--save`` argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: shell
 
