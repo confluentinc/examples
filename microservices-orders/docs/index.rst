@@ -150,7 +150,7 @@ Docker:
 * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
 * |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
 
-.. include:: ../ccloud/docs/includes/ccloud-promo-code.rst
+.. include:: ../../ccloud/docs/includes/ccloud-promo-code.rst
 
 2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
