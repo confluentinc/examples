@@ -32,7 +32,7 @@ export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
 export ELASTICSEARCH_URL=http://localhost:9200
 
 echo "Creating demo topics"
-./scripts/create-topics.sh
+./scripts/create-topics.sh topics.txt
 
 echo "Setting up sqlite DB"
 (cd db; sqlite3 data/microservices.db < ./customers.sql)
