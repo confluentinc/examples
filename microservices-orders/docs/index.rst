@@ -150,6 +150,8 @@ Docker:
 * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
 * |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
 
+.. include:: includes/ccloud-promo-code.rst
+
 2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
 .. sourcecode:: bash
@@ -268,20 +270,20 @@ Running the fully working demo end-to-end provides context for each of the later
          :alt: image
          :width: 600px
 
-   * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application.
+   * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application:
 
-    * Browse to: https://confluent.cloud/login
-    * View the Data flow screen to see how events flow through the various microservices
+     * Browse to: https://confluent.cloud/login
+     * View the Data flow screen to see how events flow through the various microservices
      
      .. figure:: images/data-flow.png
-        :alt: image
-        :width: 600px
+         :alt: image
+         :width: 600px
 
-    * View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
+     * View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
      
      .. figure:: images/ksqldb-orders-flow.png
-        :alt: image
-        :width: 600px
+         :alt: image
+         :width: 600px
 
 #. When you are done, make sure to stop the demo before proceeding to the exercises.
 
