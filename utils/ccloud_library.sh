@@ -328,7 +328,7 @@ function ccloud::enable_schema_registry() {
   SCHEMA_REGISTRY_CLOUD=$1
   SCHEMA_REGISTRY_GEO=$2
 
-  OUTPUT=$(ccloud schema-registry cluster enable --cloud aws --geo us -o json)
+  OUTPUT=$(ccloud schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json)
   SCHEMA_REGISTRY=$(echo "$OUTPUT" | jq -r ".id")
 
   echo $SCHEMA_REGISTRY
