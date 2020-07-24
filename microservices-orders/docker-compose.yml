@@ -210,15 +210,15 @@ services:
         echo "Kafka ready"
         echo "Creating demo topics"
         /opt/docker/scripts/create-topics.sh /opt/docker/topics/topics.txt
-        echo "Waiting 90 seconds for Connect to be ready..."
-        sleep 90
+        echo "Waiting 120 seconds for Connect to be ready..."
+        sleep 120 
         INPUT_FILE=/opt/docker/connectors/connector_jdbc_customers_template.config OUTPUT_FILE=/opt/docker/connectors/rendered-connectors/connector_jdbc_customers.config /opt/docker/scripts/render-connector-config.sh
         curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/opt/docker/connectors/rendered-connectors/connector_jdbc_customers.config
         INPUT_FILE=/opt/docker/connectors/connector_elasticsearch_template.config OUTPUT_FILE=/opt/docker/connectors/rendered-connectors/connector_elasticsearch.config /opt/docker/scripts/render-connector-config.sh
         curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/opt/docker/connectors/rendered-connectors/connector_elasticsearch.config
         echo ""
-        echo "Waiting 90 seconds for Elasticsearch and Kibana to be ready..."
-        sleep 90
+        echo "Waiting 120 seconds for Elasticsearch and Kibana to be ready..."
+        sleep 120 
         /opt/docker/dashboard/docker-combined.sh
   
   microservices:

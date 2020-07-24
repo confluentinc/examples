@@ -20,7 +20,8 @@ echo "Connecting to cluster @ $BOOTSTRAP_SERVERS and Schema Registry @ $SCHEMA_R
 echo "Starting OrdersService"
 java -cp $JAR io.confluent.examples.streams.microservices.OrdersService --bootstrap-servers $BOOTSTRAP_SERVERS --schema-registry $SCHEMA_REGISTRY_URL --port $RESTPORT $CONFIG_FILE_ARG $ADDITIONAL_ARGS >$LOG_DIR/OrdersService.log 2>&1 &
 PIDS+=($!)
-sleep 10
+echo "Giving OrdersService time to start"
+sleep 30
 
 echo "Adding Inventory"
 java -cp $JAR io.confluent.examples.streams.microservices.AddInventory --bootstrap-servers $BOOTSTRAP_SERVERS $CONFIG_FILE_ARG $ADDITIONAL_ARGS >$LOG_DIR/AddInventory.log 2>&1 &
@@ -31,7 +32,7 @@ for SERVICE in "InventoryService" "FraudService" "OrderDetailsService" "Validati
   java -cp $JAR io.confluent.examples.streams.microservices.$SERVICE --bootstrap-servers $BOOTSTRAP_SERVERS --schema-registry $SCHEMA_REGISTRY_URL $CONFIG_FILE_ARG $ADDITIONAL_ARGS >$LOG_DIR/$SERVICE.log 2>&1 &
   PIDS+=($!)
 done
-sleep 10
+sleep 20
 
 echo "Posting Orders and Payments"
 java -cp $JAR io.confluent.examples.streams.microservices.PostOrdersAndPayments --bootstrap-servers $BOOTSTRAP_SERVERS --schema-registry $SCHEMA_REGISTRY_URL --order-service-url "http://localhost:$RESTPORT" $CONFIG_FILE_ARG >$LOG_DIR/PostOrdersAndPayments.log 2>&1 &
