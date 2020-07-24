@@ -243,12 +243,12 @@ services:
       - -c
       - |
         echo "Waiting for Kafka to be ready..."
-        cub kafka-ready -b broker:9092 1 30
+        cub kafka-ready -b broker:9092 1 60
         echo "Kafka ready"
         echo "Waiting for Confluent Schema Registry to be ready..."
         cub sr-ready schema-registry 8081 40
         echo "Waiting for topic creation to finish..."
-        sleep 30
+        sleep 120
         set -a
         source /opt/docker/config/config.env
         /opt/docker/scripts/run-services.sh
