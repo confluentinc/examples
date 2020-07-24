@@ -62,7 +62,7 @@ function ccloud::validate_ccloud_cli_installed() {
 function ccloud::validate_ccloud_cli_v2() {
   ccloud::validate_ccloud_cli_installed || exit 1
 
-  if [[ -z $(ccloud version | grep "Go") ]]; then
+  if [[ -z $(ccloud version 2>&1 | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
     exit 1
   fi
