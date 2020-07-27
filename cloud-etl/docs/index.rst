@@ -104,7 +104,7 @@ Cloud services
 Local Tools
 -----------
 
--  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
+-  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
@@ -179,11 +179,11 @@ Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a 
 Run
 ---
 
-#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password.
+#. Log in to |ccloud| with the command ``ccloud login --save``, and use your |ccloud| username and password. The ``--save`` argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: shell
 
-      ccloud login --url https://confluent.cloud
+      ccloud login --save
 
 #. Run the demo. You must explicitly set the cloud provider and region for your |ccloud| cluster when you start the demo, and they must match the destination cloud storage provider and region. This will take several minutes to complete as it creates new resources in |ccloud| and other cloud providers.
 
@@ -361,18 +361,34 @@ ksqlDB
           "statementText": "SHOW QUERIES;",
           "queries": [
             {
+              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP EVENTSOURCEIP,\n  COUNT(*) COUNT\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;",
               "sinks": [
                 "COUNT_PER_SOURCE"
               ],
-              "id": "CTAS_COUNT_PER_SOURCE_210",
-              "queryString": "CREATE TABLE COUNT_PER_SOURCE WITH (KAFKA_TOPIC='COUNT_PER_SOURCE', PARTITIONS=6, REPLICAS=3) AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  COUNT(*) \"COUNT\"\nFROM EVENTLOGS EVENTLOGS\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "sinkKafkaTopics": [
+                "COUNT_PER_SOURCE"
+              ],
+              "id": "CTAS_COUNT_PER_SOURCE_0",
+              "statusCount": {
+                "RUNNING": 1
+              },
+              "queryType": "PERSISTENT",
+              "state": "RUNNING"
             },
             {
+              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP ROWKEY,\n  AS_VALUE(EVENTLOGS.EVENTSOURCEIP) EVENTSOURCEIP,\n  SUM(EVENTLOGS.EVENTDURATION) SUM\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;",
               "sinks": [
                 "SUM_PER_SOURCE"
               ],
-              "id": "CTAS_SUM_PER_SOURCE_211",
-              "queryString": "CREATE TABLE SUM_PER_SOURCE WITH (KAFKA_TOPIC='SUM_PER_SOURCE', PARTITIONS=6, REPLICAS=3, VALUE_FORMAT='AVRO') AS SELECT\n  EVENTLOGS.EVENTSOURCEIP \"EVENTSOURCEIP\",\n  SUM(EVENTLOGS.EVENTDURATION) \"SUM\"\nFROM EVENTLOGS EVENTLOGS\nWHERE (EVENTLOGS.RESULT = 'Pass')\nGROUP BY EVENTLOGS.EVENTSOURCEIP\nEMIT CHANGES;"
+              "sinkKafkaTopics": [
+                "SUM_PER_SOURCE"
+              ],
+              "id": "CTAS_SUM_PER_SOURCE_5",
+              "statusCount": {
+                "RUNNING": 1
+              },
+              "queryType": "PERSISTENT",
+              "state": "RUNNING"
             }
           ],
           "warnings": []

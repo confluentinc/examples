@@ -62,7 +62,7 @@ function ccloud::validate_ccloud_cli_installed() {
 function ccloud::validate_ccloud_cli_v2() {
   ccloud::validate_ccloud_cli_installed || exit 1
 
-  if [[ -z $(ccloud version | grep "Go") ]]; then
+  if [[ -z $(ccloud version 2>&1 | grep "Go") ]]; then
     echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
     exit 1
   fi
@@ -74,7 +74,7 @@ function ccloud::validate_logged_in_ccloud_cli() {
   ccloud::validate_ccloud_cli_v2 || exit 1
 
   if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must log in to run that command." ]]; then
-    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login [--save]' before running the demo."
+    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login --save' before running the demo. The '--save' argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local netrc file."
     exit 1
   fi
 
@@ -328,7 +328,7 @@ function ccloud::enable_schema_registry() {
   SCHEMA_REGISTRY_CLOUD=$1
   SCHEMA_REGISTRY_GEO=$2
 
-  OUTPUT=$(ccloud schema-registry cluster enable --cloud aws --geo us -o json)
+  OUTPUT=$(ccloud schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json)
   SCHEMA_REGISTRY=$(echo "$OUTPUT" | jq -r ".id")
 
   echo $SCHEMA_REGISTRY

@@ -12,8 +12,8 @@ check_timeout || exit 1
 
 mvn clean compile
 
-append_once "auto.offset.reset=earliest" $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
-confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:${CONFLUENT}
+echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
+confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
 confluent local services start
 
 # Create the SQL table
