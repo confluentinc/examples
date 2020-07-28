@@ -121,9 +121,28 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally, in Docker, or with |ccloud|.
+Make sure you have the following pre-requisites, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-Local:
+|ccloud|
+--------
+
+* Docker version >= 19.00.0
+* Docker Compose version >= 1.25.0 with Docker Compose file format 3
+* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+* |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
+* |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
+
+.. note:: The first 20 users to sign up for |ccloud| and use promo code ``C50INTEG`` will receive an additional $50 free usage (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer>`__).
+
+Docker
+------
+
+* Docker version >= 19.00.0
+* Docker Compose version >= 1.25.0 with Docker Compose file format 3
+* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+
+Local
+-----
 
 * `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, |ksqldb| and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
@@ -136,122 +155,98 @@ Local:
 
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
-Docker:
-
-* Docker version >= 19.00.0
-* Docker Compose version >= 1.25.0 with Docker Compose file format 3
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
-
-|ccloud|:
-
-* Docker version >= 19.00.0
-* Docker Compose version >= 1.25.0 with Docker Compose file format 3
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
-* |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
-* |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
-
-2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
-
-.. sourcecode:: bash
-
-   git clone https://github.com/confluentinc/examples
-
-3. Change directory to this project.
-
-.. sourcecode:: bash
-
-   cd examples/microservices-orders
-
-.. include:: ../../ccloud/docs/includes/ccloud-promo-code.rst
-
 ========
 Tutorial
 ========
 
-How to use the tutorial
-~~~~~~~~~~~~~~~~~~~~~~~
+Setup the Tutorial
+~~~~~~~~~~~~~~~~~~
 
-As a pre-requisite, follow the "Environment Setup" instructions.
+#. Follow the "Environment Setup" instructions.
 
-Then run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
-This provides context for each of the exercises in which you will develop pieces of the microservices.
+#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
-* Exercise 0: Run end-to-end demo
+.. codewithvars:: bash
 
-After you have successfully run the full solution, go through the execises in the tutorial to better understand the basic principles of streaming applications:
+   git clone https://github.com/confluentinc/examples
 
-* Exercise 1: Persist events 
-* Exercise 2: Event-driven applications
-* Exercise 3: Enriching streams with joins
-* Exercise 4: Filtering and branching
-* Exercise 5: Stateful operations
-* Exercise 6: State stores
-* Exercise 7: Enrichment with |ksqldb| 
+#. Navigate to the ``examples/microservices-orders`` directory and switch to the |cp| release branch:
 
-For each exercise:
+.. codewithvars:: bash
 
-#. Read the description to understand the focus area for the exercise
-#. Edit the file specified in each exercise and fill in the missing code
-#. Copy the file to the project, then compile the project and run the test for the service to ensure it works
+   cd examples/microservices-orders
+   git checkout |release_post_branch|
 
+#. Run the full end-to-end working solution to see a customer-representative deployment of a streaming application. This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
+
+   - Exercise 0: Run end-to-end demo
+
+#. After you have successfully run the full solution, go through the execises in the tutorial to better understand the basic principles of streaming applications:
+
+   - Exercise 1: Persist events 
+   - Exercise 2: Event-driven applications
+   - Exercise 3: Enriching streams with joins
+   - Exercise 4: Filtering and branching
+   - Exercise 5: Stateful operations
+   - Exercise 6: State stores
+   - Exercise 7: Enrichment with |ksqldb| 
+
+   For each exercise:
+
+   - Read the description to understand the focus area for the exercise
+   - Edit the file specified in each exercise and fill in the missing code
+   - Copy the file to the project, then compile the project and run the test for the service to ensure it works
 
 Exercise 0: Run end-to-end demo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Running the fully working demo end-to-end provides context for each of the later exercises.
 
-To run this demo end-to-end, you have one of three modes to choose from: 
+#. Ensure you've followed the appropriate prerequisites section above prior to starting.
 
-* |cp| locally
-* Docker 
-* |ccloud|
+#. Start the demo in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-Ensure you've followed the appropriate prerequisites section above prior to starting.
-
-#. Start the demo
-
-   * If you are running |cp| locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
-
-     .. sourcecode:: bash
-
-        ./start.sh
-
-   * If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
-
-     .. sourcecode:: bash
-
-        docker-compose up -d --build
-
-   * If you are running on |ccloud|, first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution (this starts a new |ccloud| environment and Kafka using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
-
+   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution (this starts a new |ccloud| environment and Kafka using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
 
      .. sourcecode:: bash
 
         ccloud login --save
         ./start-ccloud.sh
 
+   * Docker: then run the full solution (this also starts a local |cp| cluster in Docker containers).
+
+     .. sourcecode:: bash
+
+        docker-compose up -d --build
+
+   * Local: then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
+
+     .. sourcecode:: bash
+
+        ./start.sh
+
 #. After starting the demo with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
 
-   * If you are running locally, you can sample topic data by running:
+   * |ccloud|: sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
 
    .. sourcecode:: bash
 
-      ./read-topics.sh
+      source delta_configs/env.delta; CONFIG_FILE=/opt/docker/stack-configs/java-service-account-<service-account-id>.config ./read-topics-ccloud.sh
 
-   * If you are running Docker, you can sample topic data by running:
+   * Docker: sample topic data by running:
 
    .. sourcecode:: bash
 
       ./read-topics-docker.sh
 
-   * If you are running on |ccloud|, you can sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
+   * Local: sample topic data by running:
 
    .. sourcecode:: bash
 
-      source delta_configs/env.delta; CONFIG_FILE=/opt/docker/stack-configs/java-service-account-<service-account-id>.config ./read-topics-ccloud.sh
+      ./read-topics.sh
 
 #. Explore the data with Elasticsearch and Kibana
 
@@ -266,16 +261,6 @@ Ensure you've followed the appropriate prerequisites section above prior to star
        :width: 600px
 
 #. View and monitor the streaming applications.
-
-   * If you are running locally or with Docker, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
-
-     * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
-     * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
-     * Data Streams tab: view the throughput and latency performance of the microservices
-
-     .. figure:: images/streams-monitoring.png
-         :alt: image
-         :width: 600px
 
    * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application:
 
@@ -292,25 +277,37 @@ Ensure you've followed the appropriate prerequisites section above prior to star
          :alt: image
          :width: 600px
 
+   * If you are running with Docker or locally, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
+
+     * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
+     * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
+     * Data Streams tab: view the throughput and latency performance of the microservices
+
+     .. figure:: images/streams-monitoring.png
+         :alt: image
+         :width: 600px
+
+
 #. When you are done, make sure to stop the demo before proceeding to the exercises.
 
-   * If you are running |cp| locally:
+   * |ccloud|: (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
 
      .. sourcecode:: bash
 
-        ./stop.sh
+        ./stop-ccloud.sh stack-configs/java-service-account-12345.config
 
-   * If you are running Docker:
+   * Docker:
 
      .. sourcecode:: bash
 
         docker-compose down
 
-   * If you are running on |ccloud| (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
+   * Local:
 
      .. sourcecode:: bash
 
-        ./stop-ccloud.sh stack-configs/java-service-account-12345.config
+        ./stop.sh
+
 
 Exercise 1: Persist events 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
