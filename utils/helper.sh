@@ -30,10 +30,27 @@ function check_env() {
   return 0
 }
 
+function get_version_confluent_cli() {
+  confluent version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
+}
+
+function version_gt() {
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
+
 function validate_version_confluent_cli_v2() {
 
   if [[ -z $(confluent version | grep "Go") ]]; then
     echo "This demo requires the new Confluent CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  REQUIRED_CONFLUENT_CLI_VER=${1:-"0.265.0"}
+  CONFLUENT_CLI_VER=$(get_version_confluent_cli)
+
+  if version_gt $REQUIRED_CONFLUENT_CLI_VER $CONFLUENT_CLI_VER; then
+    echo "confluent version ${REQUIRED_CONFLUENT_CLI_VER} is required. Current reported version: ${CONFLUENT_CLI_VER}"
+    echo -e "Install the precise version with the command ->\n  curl -sL https://cnfl.io/cli | sh -s -- v0.265.0 && mv bin/confluent $CONFLUENT_HOME/bin/."
     exit 1
   fi
 
