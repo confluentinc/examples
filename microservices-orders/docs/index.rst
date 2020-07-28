@@ -166,22 +166,22 @@ Setup the Tutorial
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
-.. codewithvars:: bash
+   .. codewithvars:: bash
 
-   git clone https://github.com/confluentinc/examples
+      git clone https://github.com/confluentinc/examples
 
 #. Navigate to the ``examples/microservices-orders`` directory and switch to the |cp| release branch:
 
-.. codewithvars:: bash
+   .. codewithvars:: bash
 
-   cd examples/microservices-orders
-   git checkout |release_post_branch|
+      cd examples/microservices-orders
+      git checkout |release_post_branch|
 
 #. Run the full end-to-end working solution to see a customer-representative deployment of a streaming application. This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
 
    - Exercise 0: Run end-to-end demo
 
-#. After you have successfully run the full solution, go through the execises in the tutorial to better understand the basic principles of streaming applications:
+#. After you have successfully run the full solution, go through each of the execises in the tutorial to better understand the basic principles of streaming applications:
 
    - Exercise 1: Persist events 
    - Exercise 2: Event-driven applications
@@ -191,7 +191,7 @@ Setup the Tutorial
    - Exercise 6: State stores
    - Exercise 7: Enrichment with |ksqldb| 
 
-   For each exercise:
+#. For each of the above exercises:
 
    - Read the description to understand the focus area for the exercise
    - Edit the file specified in each exercise and fill in the missing code
