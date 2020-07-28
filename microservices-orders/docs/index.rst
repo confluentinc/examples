@@ -200,9 +200,17 @@ Exercise 0: Run end-to-end demo
 
 Running the fully working demo end-to-end provides context for each of the later exercises.
 
+To run this demo end-to-end, you have one of three modes to choose from: 
+
+* |cp| locally
+* Docker 
+* |ccloud|
+
+Ensure you've followed the appropriate prerequisites section above prior to starting.
+
 #. Start the demo
 
-   * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
+   * If you are running |cp| locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
 
      .. sourcecode:: bash
 
