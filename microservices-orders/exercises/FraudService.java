@@ -5,8 +5,14 @@ import io.confluent.examples.streams.avro.microservices.OrderState;
 import io.confluent.examples.streams.avro.microservices.OrderValidation;
 import io.confluent.examples.streams.avro.microservices.OrderValue;
 import io.confluent.examples.streams.microservices.domain.Schemas;
+
+import java.io.IOException;
+import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import org.apache.commons.cli.*;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -32,9 +38,7 @@ import static io.confluent.examples.streams.avro.microservices.OrderValidationRe
 import static io.confluent.examples.streams.avro.microservices.OrderValidationType.FRAUD_CHECK;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDER_VALIDATIONS;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.addShutdownHookAndBlock;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.baseStreamsConfig;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.parseArgsAndConfigure;
+import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.*;
 
 
 /**
@@ -52,8 +56,10 @@ public class FraudService implements Service {
   private KafkaStreams streams;
 
   @Override
-  public void start(final String bootstrapServers, final String stateDir) {
-    streams = processStreams(bootstrapServers, stateDir);
+  public void start(final String bootstrapServers,
+                    final String stateDir,
+                    final Properties defaultConfig) {
+    streams = processStreams(bootstrapServers, stateDir, defaultConfig);
     streams.cleanUp(); //don't do this in prod as it clears your state stores
     final CountDownLatch startLatch = new CountDownLatch(1);
     streams.setStateListener((newState, oldState) -> {
@@ -75,7 +81,9 @@ public class FraudService implements Service {
     log.info("Started Service " + getClass().getSimpleName());
   }
 
-  private KafkaStreams processStreams(final String bootstrapServers, final String stateDir) {
+  private KafkaStreams processStreams(final String bootstrapServers,
+                                      final String stateDir,
+                                      final Properties defaultConfig) {
 
     //Latch onto instances of the orders and inventory topics
     final StreamsBuilder builder = new StreamsBuilder();
@@ -124,7 +132,7 @@ public class FraudService implements Service {
     //as caching in Kafka Streams will conflate subsequent updates for the same key. Disabling caching ensures
     //we get a complete "changelog" from the aggregate(...) step above (i.e. every input event will have a
     //corresponding output event.
-    final Properties props = baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID);
+    final Properties props = baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID, defaultConfig);
     props.setProperty(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0");
 
     return new KafkaStreams(builder.build(), props);
@@ -135,8 +143,56 @@ public class FraudService implements Service {
   }
 
   public static void main(final String[] args) throws Exception {
+
+    final Options opts = new Options();
+    opts.addOption(Option.builder("b")
+            .longOpt("bootstrap-servers")
+            .hasArg()
+            .desc("Kafka cluster bootstrap server string (ex: broker:9092)")
+            .build());
+    opts.addOption(Option.builder("s")
+            .longOpt("schema-registry")
+            .hasArg()
+            .desc("Schema Registry URL")
+            .build());
+    opts.addOption(Option.builder("c")
+            .longOpt("config-file")
+            .hasArg()
+            .desc("Java properties file with configurations for Kafka Clients")
+            .build());
+    opts.addOption(Option.builder("t")
+            .longOpt("state-dir")
+            .hasArg()
+            .desc("The directory for state storage")
+            .build());
+    opts.addOption(Option.builder("h").longOpt("help").hasArg(false).desc("Show usage information").build());
+
+    final CommandLine cl = new DefaultParser().parse(opts, args);
+
+    if (cl.hasOption("h")) {
+      final HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("Fraud Service", opts);
+      return;
+    }
     final FraudService service = new FraudService();
-    service.start(parseArgsAndConfigure(args), "/tmp/kafka-streams");
+    final Properties defaultConfig = Optional.ofNullable(cl.getOptionValue("config-file", null))
+            .map(path -> {
+              try {
+                return buildPropertiesFromConfigFile(path);
+              } catch (final IOException e) {
+                throw new RuntimeException(e);
+              }
+            })
+            .orElse(new Properties());
+
+    final String schemaRegistryUrl = cl.getOptionValue("schema-registry", DEFAULT_SCHEMA_REGISTRY_URL);
+    defaultConfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+    Schemas.configureSerdes(defaultConfig);
+
+    service.start(
+            cl.getOptionValue("bootstrap-servers", DEFAULT_BOOTSTRAP_SERVERS),
+            cl.getOptionValue("state-dir", "/tmp/kafka-streams-examples"),
+            defaultConfig);
     addShutdownHookAndBlock(service);
   }
 
