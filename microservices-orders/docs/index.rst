@@ -214,7 +214,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
         docker-compose up -d --build
 
-   * If you are running on |ccloud|, first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution (this starts a new |ccloud| based cluster using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
+   * If you are running on |ccloud|, first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution (this starts a new |ccloud| environment and Kafka using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
 
 
      .. sourcecode:: bash
