@@ -4,18 +4,23 @@ import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.ORDERS_ENRICHED;
 import static io.confluent.examples.streams.microservices.domain.Schemas.Topics.PAYMENTS;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.addShutdownHookAndBlock;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.baseStreamsConfig;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.parseArgsAndConfigure;
+import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.*;
 
 import io.confluent.examples.streams.avro.microservices.Customer;
 import io.confluent.examples.streams.avro.microservices.Order;
 import io.confluent.examples.streams.avro.microservices.OrderEnriched;
 import io.confluent.examples.streams.avro.microservices.Payment;
 
+import io.confluent.examples.streams.microservices.domain.Schemas;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import org.apache.commons.cli.*;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import org.apache.kafka.streams.KafkaStreams.State;
@@ -48,8 +53,10 @@ public class EmailService implements Service {
   }
 
   @Override
-  public void start(final String bootstrapServers, final String stateDir) {
-    streams = processStreams(bootstrapServers, stateDir);
+  public void start(final String bootstrapServers,
+                    final String stateDir,
+                    final Properties defaultConfig) {
+    streams = processStreams(bootstrapServers, stateDir, defaultConfig);
     streams.cleanUp(); //don't do this in prod as it clears your state stores
     final CountDownLatch startLatch = new CountDownLatch(1);
     streams.setStateListener((newState, oldState) -> {
@@ -70,7 +77,9 @@ public class EmailService implements Service {
 
   }
 
-  private KafkaStreams processStreams(final String bootstrapServers, final String stateDir) {
+  private KafkaStreams processStreams(final String bootstrapServers,
+                                      final String stateDir,
+                                      final Properties defaultConfig) {
 
     final StreamsBuilder builder = new StreamsBuilder();
 
@@ -108,16 +117,65 @@ public class EmailService implements Service {
 
     //Send the order to a topic whose name is the value of customer level
     orders.join(customers, (orderId, order) -> order.getCustomerId(), (order, customer) -> new OrderEnriched (order.getId(), order.getCustomerId(), customer.getLevel()))
-
       // TODO 3.3: route an enriched order record to a topic that is dynamically determined from the value of the customerLevel field of the corresponding customer
       // ...
 
-    return new KafkaStreams(builder.build(), baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID));
+    return new KafkaStreams(builder.build(),
+            baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID, defaultConfig));
   }
 
   public static void main(final String[] args) throws Exception {
+    final Options opts = new Options();
+    opts.addOption(Option.builder("b")
+            .longOpt("bootstrap-servers")
+            .hasArg()
+            .desc("Kafka cluster bootstrap server string (ex: broker:9092)")
+            .build());
+    opts.addOption(Option.builder("s")
+            .longOpt("schema-registry")
+            .hasArg()
+            .desc("Schema Registry URL")
+            .build());
+    opts.addOption(Option.builder("c")
+            .longOpt("config-file")
+            .hasArg()
+            .desc("Java properties file with configurations for Kafka Clients")
+            .build());
+    opts.addOption(Option.builder("t")
+            .longOpt("state-dir")
+            .hasArg()
+            .desc("The directory for state storage")
+            .build());
+    opts.addOption(Option.builder("h").longOpt("help").hasArg(false).desc("Show usage information").build());
+
+    final CommandLine cl = new DefaultParser().parse(opts, args);
+
+    if (cl.hasOption("h")) {
+      final HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("Email Service", opts);
+      return;
+    }
     final EmailService service = new EmailService(new LoggingEmailer());
-    service.start(parseArgsAndConfigure(args), "/tmp/kafka-streams");
+
+    final Properties defaultConfig = Optional.ofNullable(cl.getOptionValue("config-file", null))
+            .map(path -> {
+              try {
+                return buildPropertiesFromConfigFile(path);
+              } catch (final IOException e) {
+                throw new RuntimeException(e);
+              }
+            })
+            .orElse(new Properties());
+
+
+    final String schemaRegistryUrl = cl.getOptionValue("schema-registry", DEFAULT_SCHEMA_REGISTRY_URL);
+    defaultConfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+    Schemas.configureSerdes(defaultConfig);
+
+    service.start(
+            cl.getOptionValue("bootstrap-servers", DEFAULT_BOOTSTRAP_SERVERS),
+            cl.getOptionValue("state-dir", "/tmp/kafka-streams-examples"),
+            defaultConfig);
     addShutdownHookAndBlock(service);
   }
 
@@ -143,8 +201,8 @@ public class EmailService implements Service {
 
   public static class EmailTuple {
 
-    public Order order;
-    public Payment payment;
+    final public Order order;
+    final public Payment payment;
     public Customer customer;
 
     public EmailTuple(final Order order, final Payment payment) {
