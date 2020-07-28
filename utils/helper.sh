@@ -49,8 +49,8 @@ function validate_version_confluent_cli_v2() {
   CONFLUENT_CLI_VER=$(get_version_confluent_cli)
 
   if version_gt $REQUIRED_CONFLUENT_CLI_VER $CONFLUENT_CLI_VER; then
-    echo "confluent version ${REQUIRED_CONFLUENT_CLI_VER} is required. Current reported version: ${CONFLUENT_CLI_VER}"
-    echo -e "Install the precise version with the command ->\n  curl -sL https://cnfl.io/cli | sh -s -- v0.265.0 && mv bin/confluent $CONFLUENT_HOME/bin/."
+    echo "ERROR: demos require Confluent CLI version ${REQUIRED_CONFLUENT_CLI_VER} which is bundled with ${CONFLUENT}. Current reported version: ${CONFLUENT_CLI_VER}"
+    echo -e "Install the required Confluent CLI version with the command ->\n  curl -sL https://cnfl.io/cli | sh -s -- v0.265.0 && mv bin/confluent $CONFLUENT_HOME/bin/."
     exit 1
   fi
 
