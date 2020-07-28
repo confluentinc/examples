@@ -97,4 +97,13 @@ printf "\n\n====== Configuring Kibana Dashboard\n"
 
 printf "\n\n====== Reading data from topics and ksqlDB\n"
 CONFIG_FILE=/opt/docker/$CONFIG_FILE ./read-topics-ccloud.sh
- 
+
+echo
+echo "To destroy the Confluent Cloud resources and stop the demo, run ->"
+echo "    ./stop-ccloud.sh $CONFIG_FILE"
+echo
+
+echo
+ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
+
