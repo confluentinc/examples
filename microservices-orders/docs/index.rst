@@ -72,7 +72,7 @@ End-to-end Streaming ETL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 This demo showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
-It is build on the |cp|, including:
+It is built on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
