@@ -30,10 +30,28 @@ function check_env() {
   return 0
 }
 
+function get_version_confluent_cli() {
+  confluent version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
+}
+
+function version_gt() {
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
+
 function validate_version_confluent_cli_v2() {
 
   if [[ -z $(confluent version | grep "Go") ]]; then
     echo "This demo requires the new Confluent CLI. Please update your version and try again."
+    exit 1
+  fi
+
+  MAX_CONFLUENT_CLI_VER=${1:-"1.7.0"}
+  CONFLUENT_CLI_VER=$(get_version_confluent_cli)
+
+  if version_gt $CONFLUENT_CLI_VER $MAX_CONFLUENT_CLI_VER ; then
+    echo "ERROR: Confluent Platform ${CONFLUENT} is compatible with Confluent CLI versions 0.265.0 through ${MAX_CONFLUENT_CLI_VER}, but current reported Confluent CLI version is ${CONFLUENT_CLI_VER}"
+    echo "Reference: https://docs.confluent.io/current/installation/versions-interoperability.html#confluent-cli"
+    echo -e "Install the required Confluent CLI version and try again."
     exit 1
   fi
 
