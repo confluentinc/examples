@@ -215,7 +215,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
 #. Start the demo in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution (this starts a new |ccloud| environment and Kafka using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
+   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
 
      .. sourcecode:: bash
 
