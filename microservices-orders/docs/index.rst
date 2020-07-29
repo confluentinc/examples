@@ -6,7 +6,16 @@
 Tutorial: Introduction to Streaming Application Development
 ===========================================================
 
-This self-paced tutorial provides exercises for developers to apply the basic principles of streaming applications.
+This self-paced tutorial provides exercises for developers to apply the basic principles of streaming applications:
+
+- Exercise 1: Persist events
+- Exercise 2: Event-driven applications
+- Exercise 3: Enriching streams with joins
+- Exercise 4: Filtering and branching
+- Exercise 5: Stateful operations
+- Exercise 6: State stores
+- Exercise 7: Enrichment with |ksqldb|
+
 
 ========
 Overview
@@ -181,7 +190,7 @@ Setup the Tutorial
 
    - Exercise 0: Run end-to-end demo
 
-#. After you have successfully run the full solution, go through each of the execises in the tutorial to better understand the basic principles of streaming applications:
+#. After you have successfully run the full solution, go through each of the execises 1-7 to better understand the basic principles of streaming applications:
 
    - Exercise 1: Persist events 
    - Exercise 2: Event-driven applications
