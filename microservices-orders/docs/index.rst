@@ -222,7 +222,7 @@ Running the fully working demo end-to-end provides context for each of the later
         ccloud login --save
         ./start-ccloud.sh
 
-   * Docker: then run the full solution (this also starts a local |cp| cluster in Docker containers).
+   * Docker: run the full solution using ``docker-compose`` (this also starts a local |cp| cluster in Docker containers).
 
      .. sourcecode:: bash
 
