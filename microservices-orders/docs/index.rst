@@ -6,7 +6,7 @@
 Tutorial: Introduction to Streaming Application Development
 ===========================================================
 
-This self-paced tutorial provides exercises for developers to apply the basic principles of streaming applications:
+This self-paced tutorial provides exercises for developers to learn the basic principles of service-based architectures and streaming application development:
 
 - Exercise 1: Persist events
 - Exercise 2: Event-driven applications
@@ -22,7 +22,7 @@ Overview
 ========
 
 The tutorial is based on a small microservices ecosystem, showcasing an order management workflow, such as one might find in retail and online shopping.
-It is built using Kafka Streams, whereby  business events that describe the order management workflow propagate through this ecosystem.  
+It is built using |ak-tm|, whereby business events that describe the order management workflow propagate through this ecosystem.
 The blog post `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ outlines the approach used.
 
 .. figure:: images/microservices-demo.png
@@ -117,7 +117,7 @@ Reading
 ~~~~~~~
 
 You will get a lot more out of this tutorial if you have first learned the concepts which are foundational for this tutorial.
-To learn how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems, we recommend:
+To learn how service-based architectures and stream processing platforms such as |ak-tm| can help you build business-critical systems, we recommend:
 
 * If you have lots of time: `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__, a book by Ben Stopford.
 * If you do not have lots of time: `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ or `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__.
@@ -445,7 +445,7 @@ These lookups can be performed at very large scale and with a low processing lat
 
     A stateful streaming service that joins two streams at runtime (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-A popular pattern is to make the information in the databases available in Kafka through so-called change data capture (CDC), together with Kafka’s Connect API to pull in the data from the database.
+A popular design pattern is to make the information in the databases available in Kafka through so-called change data capture (CDC), together with Kafka’s Connect API to pull in the data from the database.
 Once the data is in Kafka, client applications can perform very fast and efficient joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
 Read more on `an overview of distributed, real-time joins <https://www.confluent.io/blog/distributed-real-time-joins-and-aggregations-on-user-activity-events-using-kafka-streams/>`__ and `implementing joins in Kafka Streams <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
@@ -679,7 +679,7 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 7: Enrichment with ksqlDB
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against Apache Kafka.
+`Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against |ak-tm|.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
 |ksqldb| is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
