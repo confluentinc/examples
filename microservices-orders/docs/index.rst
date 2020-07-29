@@ -228,7 +228,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
         docker-compose up -d --build
 
-   * Local: then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
+   * Local: run the full solution using the provided script (this also starts a local |cp| cluster using Confluent CLI):
 
      .. sourcecode:: bash
 
