@@ -34,8 +34,7 @@ OUTPUT=$(
 expect <<END
   log_user 1
   spawn ccloud kafka topic produce $topic_name --value-format avro --schema schema.json
-  expect {
-    "Enter your Schema Registry API key: "
+  expect "Enter your Schema Registry API key: " {
     send "$SR_API_KEY\r";
     expect "Enter your Schema Registry API secret: "
     send "$SR_API_SECRET\r";
