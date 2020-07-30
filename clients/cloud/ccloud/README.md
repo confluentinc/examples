@@ -42,7 +42,7 @@ When you are done, press `<ctrl>-d`.
 2. Run the [Confluent Confluent CLI consumer](https://docs.confluent.io/current/cloud/cli/command-reference/kafka/topic/ccloud_kafka_topic_produce.html#ccloud-kafka-topic-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), reading messages from topic `test1`, passing in additional arguments:
 
 * `-b`: print all messages from the beginning of the topic
-* `-print-key`: print key and value (by default, it only prints value)
+* `--print-key`: print key and value (by default, it only prints value)
 
 ```bash
 $ ccloud kafka topic consume test1 -b --print-key
@@ -105,7 +105,7 @@ When you are done, press `<ctrl>-d`.
 
 * `-b`: print all messages from the beginning of the topic
 * `--value-format avro`: use Avro data format for the value part of the message
-* `-print-key`: print key and value (by default, it only prints value)
+* `--print-key`: print key and value (by default, it only prints value)
 
 ```bash
 $ ccloud kafka topic consume test2 -b --value-format avro --print-key
