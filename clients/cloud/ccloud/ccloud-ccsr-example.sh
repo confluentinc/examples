@@ -28,8 +28,8 @@ topic_name=test2
 echo -e "\n# Create topic $topic_name"
 ccloud kafka topic create $topic_name --if-not-exists
 
-# Run producer to set credentials to Confluent Cloud Schema Registry (bit of a hack)
-echo -e "\n# Set credentials to Confluent Cloud Schema Registry"
+# Run producer to set credentials to Confluent Cloud Schema Registry (first time)
+echo -e "\n# Set credentials to Confluent Cloud Schema Registry (first time)"
 OUTPUT=$(
 expect <<END
   log_user 1
@@ -38,6 +38,7 @@ expect <<END
     send "$SR_API_KEY\r";
     expect "Enter your Schema Registry API secret: "
     send "$SR_API_SECRET\r";
+    exp_continue
   }
   expect "Successfully registered schema with ID "
   set result $expect_out(buffer)
