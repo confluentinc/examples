@@ -48,11 +48,13 @@ echo "$OUTPUT"
 # Produce messages
 echo -e "\n# Produce messages to $topic_name"
 num_messages=10
-(for i in `seq 1 $num_messages`; do echo "{\"count\":${i}}" ; done) | \
+(for i in `seq 1 $num_messages`; do echo "alice,{\"count\":${i}}" ; done) | \
    ccloud kafka topic produce $topic_name \
             --value-format avro \
-            --schema schema.json
+            --schema schema.json \
+            --parse-key \
+            --delimiter ,
 
 # Consume messages
 echo -e "\n# Consume messages from $topic_name"
-timeout 10 ccloud kafka topic consume $topic_name -b --value-format avro
+timeout 10 ccloud kafka topic consume $topic_name -b --value-format avro --print-key

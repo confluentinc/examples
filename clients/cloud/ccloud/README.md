@@ -41,8 +41,8 @@ When you are done, press `<ctrl>-d`.
 
 2. Run the [Confluent Confluent CLI consumer](https://docs.confluent.io/current/cloud/cli/command-reference/kafka/topic/ccloud_kafka_topic_produce.html#ccloud-kafka-topic-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), reading messages from topic `test1`, passing in additional arguments:
 
-* `-print-key`: print key and value (by default, it only prints value)
 * `-b`: print all messages from the beginning of the topic
+* `-print-key`: print key and value (by default, it only prints value)
 
 ```bash
 $ ccloud kafka topic consume test1 -b --print-key
@@ -85,17 +85,18 @@ echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}
 
 * `--value-format avro`: use Avro data format for the value part of the message
 * `--schema`: the path to the schema file
+* `--parse-key --delimiter ,`: pass key and value, separated by a comma
 
 ```bash
-$ ccloud kafka topic produce test2 --value-format avro --schema schema.json
+$ ccloud kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
 ```
 
-Type a few messages, with just the record payload.
+Type a few messages, using a `,` as the separator between the message key and value:
 
 ```bash
-{"count":3}
-{"count":4}
-{"count":5}
+alice,{"count":3}
+alice,{"count":4}
+alice,{"count":5}
 ```
 
 When you are done, press `<ctrl>-d`.
@@ -104,17 +105,18 @@ When you are done, press `<ctrl>-d`.
 
 * `--value-format avro`: use Avro data format for the value part of the message
 * `-b`: print all messages from the beginning of the topic
+* `-print-key`: print key and value (by default, it only prints value)
 
 ```bash
-$ ccloud kafka topic consume test2 -b --value-format avro
+$ ccloud kafka topic consume test2 -b --value-format avro --print-key
 ```
 
 You should see the messages you typed in the previous step.
 
 ```bash
-{"count":3}
-{"count":4}
-{"count":5}
+alice	{"count":3}
+alice	{"count":4}
+alice	{"count":5}
 ```
 
 When you are done, press `<ctrl>-c`.
