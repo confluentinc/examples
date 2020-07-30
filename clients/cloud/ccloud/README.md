@@ -75,7 +75,7 @@ Note that your VPC must be able to connect to the Confluent Cloud Schema Registr
 $ ccloud kafka topic create test2
 ```
 
-3. Create a file that represents the schema of your message payload.
+3. Create a file that has the schema of your message payload.
 
 ```bash
 echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
