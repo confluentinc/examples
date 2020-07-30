@@ -17,7 +17,7 @@ ccloud::validate_logged_in_ccloud_cli \
   || exit 1
 
 if [[ -z "$SR_API_KEY" ]] || [[ -z "$SR_API_SECRET" ]] ; then
-  echo "ERROR: You must export SR_API_KEY and SR_API_SECRET before running this script"
+  echo "ERROR: The variables SR_API_KEY and SR_API_SECRET must be set before running this script ('export SR_API_KEY=<>', 'export SR_API_SECRET=<>')"
   exit 1
 fi
 
