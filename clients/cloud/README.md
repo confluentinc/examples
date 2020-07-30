@@ -20,6 +20,7 @@ Click on any language in the table below:
 | [![](images/kafkacat.jpg)](kafkacat/) | [![](images/dotnet.png)](csharp/)           | [![](images/c.png)](c/) |
 | [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [![](images/ksql-datagen.png)](ksql-datagen/) | [![](images/rust.png)](rust/) |
 | [![](images/kafka.png)](kafka-commands/) | [![](images/clojure.png)](clojure/) | [![](images/springboot.png)](java-springboot/) |
+| [![](images/ccloud.png)](ccloud/) | | |
 
 ## With Schema Registry
 
@@ -29,6 +30,7 @@ The following subset includes examples with Schema Registry and Avro data:
 |:---------------------------------:|:-----------------------------------------------:|:---------------------------------:|
 | [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/confluent-cli.png)](confluent-cli/) |
 | [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [![](images/ksql-datagen.png)](ksql-datagen/) | [![](images/kafka.png)](kafka-commands/) |
+| [![](images/ccloud.png)](ccloud/) | | |
 
 # Additional Resources
 
