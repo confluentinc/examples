@@ -37,7 +37,7 @@ alice,{"count":1}
 alice,{"count":2}
 ```
 
-When you are done, press `<ctrl>-d`.
+When you are done, press `<ctrl>-c`.
 
 2. Run the [Confluent Confluent CLI consumer](https://docs.confluent.io/current/cloud/cli/command-reference/kafka/topic/ccloud_kafka_topic_produce.html#ccloud-kafka-topic-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), reading messages from topic `test1`, passing in additional arguments:
 
@@ -99,7 +99,7 @@ alice,{"count":4}
 alice,{"count":5}
 ```
 
-When you are done, press `<ctrl>-d`.
+When you are done, press `<ctrl>-c`.
 
 5. Run the [Confluent Confluent CLI consumer](https://docs.confluent.io/current/cloud/cli/command-reference/kafka/topic/ccloud_kafka_topic_produce.html#ccloud-kafka-topic-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), reading messages from topic `test2`, passing in additional arguments:
 
