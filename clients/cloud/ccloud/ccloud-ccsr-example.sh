@@ -22,7 +22,7 @@ if [[ -z "$SR_API_KEY" ]] || [[ -z "$SR_API_SECRET" ]] ; then
 fi
 
 # Set topic name
-topic_name=test5
+topic_name=test2
 
 # Create topic in Confluent Cloud
 echo -e "\n# Create topic $topic_name"
