@@ -3,9 +3,6 @@
 source ../../../utils/helper.sh
 source ../../../utils/ccloud_library.sh 
 
-ccloud::validate_expect_installed \
-  && print_pass "expect installed" \
-  || exit 1
 check_timeout \
   && print_pass "timeout installed" \
   || exit 1
@@ -30,21 +27,7 @@ ccloud kafka topic create $topic_name --if-not-exists
 
 # Run producer to set credentials to Confluent Cloud Schema Registry (first time)
 echo -e "\n# Set credentials to Confluent Cloud Schema Registry (first time)"
-OUTPUT=$(
-expect <<END
-  log_user 1
-  spawn ccloud kafka topic produce $topic_name --value-format avro --schema schema.json
-  expect "Enter your Schema Registry API key: " {
-    send "$SR_API_KEY\r";
-    expect "Enter your Schema Registry API secret: "
-    send "$SR_API_SECRET\r";
-    exp_continue
-  }
-  expect "Successfully registered schema with ID "
-  set result $expect_out(buffer)
-END
-)
-echo "$OUTPUT"
+echo -e "${SR_API_KEY}\n${SR_API_SECRET}" | ccloud schema-registry subject list || exit 1
 
 # Produce messages
 echo -e "\n# Produce messages to $topic_name"

@@ -87,6 +87,8 @@ echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}
 * `--schema`: the path to the schema file
 * `--parse-key --delimiter ,`: pass key and value, separated by a comma
 
+Note: the first time you run this, you will need to provide user credentials for Confluent Cloud Schema Registry.
+
 ```bash
 $ ccloud kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
 ```
