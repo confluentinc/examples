@@ -90,7 +90,7 @@ echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}
 $ ccloud kafka topic produce test2 --value-format avro --schema schema.json
 ```
 
-Type a few messages, using a `,` as the separator between the message key and value:
+Type a few messages, with just the record payload.
 
 ```bash
 {"count":3}
@@ -102,7 +102,7 @@ When you are done, press `<ctrl>-d`.
 
 5. Run the [Confluent Confluent CLI consumer](https://docs.confluent.io/current/cloud/cli/command-reference/kafka/topic/ccloud_kafka_topic_produce.html#ccloud-kafka-topic-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud), reading messages from topic `test2`, passing in additional arguments:
 
-* `-print-key`: print key and value (by default, it only prints value)
+* `--value-format avro`: use Avro data format for the value part of the message
 * `-b`: print all messages from the beginning of the topic
 
 ```bash
