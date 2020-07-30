@@ -18,7 +18,7 @@ topic_name=test1
 
 # Create topic in Confluent Cloud
 echo -e "\n# Create topic $topic_name"
-ccloud kafka topic create $topic_name
+ccloud kafka topic create $topic_name --if-not-exists
 
 # Produce messages
 echo -e "\n# Produce messages to $topic_name"

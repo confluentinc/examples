@@ -26,7 +26,7 @@ topic_name=test2
 
 # Create topic in Confluent Cloud
 echo -e "\n# Create topic $topic_name"
-ccloud kafka topic create $topic_name || true
+ccloud kafka topic create $topic_name --if-not-exists
 
 # Run producer to set credentials to Confluent Cloud Schema Registry (bit of a hack)
 echo -e "\n# Set credentials to Confluent Cloud Schema Registry"
