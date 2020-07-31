@@ -15,6 +15,24 @@ Prerequisites
 .. include:: includes/client-example-prerequisites-generic.rst
 
 
+Setup
+=====
+
+#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
+
+   .. codewithvars:: bash
+
+     git clone https://github.com/confluentinc/examples
+     cd examples
+     git checkout |release|-post
+
+#. Change directory to the example for .NET.
+
+   .. sourcecode:: bash
+
+     cd clients/cloud/csharp/
+
+
 Example 1: Basic Produce & Consume
 ====================================
 
@@ -27,7 +45,13 @@ it processes each record.
 Produce Records
 ---------------
 
-Run the example application, passing in arguments for (a) whether to
+#. Build the client example application
+
+.. code:: shell
+
+   dotnet build
+
+#. Run the example application, passing in arguments for (a) whether to
 produce or consume (produce) (b) the topic name (c) the local file with
 configuration parameters to connect to your |ak| cluster and (d,
 Windows only) a local file with default trusted root CA certificates.
@@ -41,14 +65,11 @@ Windows only) a local file with default trusted root CA certificates.
 
 .. code:: shell
 
-   # Build the client example application
-   $ dotnet build
-
    # Run the producer (Windows)
-   $ dotnet run produce test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
+   dotnet run produce test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
 
    # Run the producer (other)
-   $ dotnet run produce test1 $HOME/.confluent/librdkafka.config
+   dotnet run produce test1 $HOME/.confluent/librdkafka.config
 
 You should see:
 
@@ -79,7 +100,7 @@ You should see:
 Consume Records
 ---------------
 
-Run the consumer, passing in arguments for (a) whether to produce or
+#. Run the consumer, passing in arguments for (a) whether to produce or
 consume (consume) (b) the same topic name as used above (c) the local
 file with configuration parameters to connect to your |ak| cluster and
 (d, Windows only) a local file with default trusted root CA
@@ -88,10 +109,10 @@ certificates. Verify that the consumer received all the messages:
 .. code:: shell
 
    # Run the consumer (Windows)
-   $ dotnet run consume test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
+   dotnet run consume test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
 
    # Run the consumer (other)
-   $ dotnet run consume test1 $HOME/.confluent/librdkafka.config
+   dotnet run consume test1 $HOME/.confluent/librdkafka.config
 
 You should see:
 
@@ -108,4 +129,4 @@ You should see:
    Consumed record with key alice and value {"count":8}, and updated total count to 36
    Consumed record with key alice and value {"count":9}, and updated total count to 45
 
-When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``<ctrl>-c``.
