@@ -129,4 +129,4 @@ Consume Records
 
 #. When you are done, press ``<ctrl>-c``.
 
-#. View the :devx-example:`consumer code|clients/cloud/csharp/Program.cs`.
+#. View the :devx-examples:`consumer code|clients/cloud/csharp/Program.cs`.
