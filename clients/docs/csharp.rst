@@ -5,7 +5,6 @@
 
 Produce messages to and consume messages from a |ak| cluster using the .NET Producer and Consumer.
 
-.. include:: includes/client-example-overview.rst
 
 Prerequisites
 =============
@@ -97,6 +96,9 @@ Produce Records
       Produced record to topic test1 partition [0] @ offset 9
       10 messages were produced to topic test1
 
+#. View the :devx-examples:`producer code|clients/cloud/csharp/Program.cs`.
+
+
 Consume Records
 ---------------
 
@@ -126,3 +128,5 @@ Consume Records
       Consumed record with key alice and value {"count":9}, and updated total count to 45
 
 #. When you are done, press ``<ctrl>-c``.
+
+#. View the :devx-example:`consumer code|clients/cloud/csharp/Program.cs`.
