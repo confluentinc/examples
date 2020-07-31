@@ -7,23 +7,23 @@ Produce messages to and consume messages from a |ak| cluster using the .NET Prod
 
 
 Prerequisites
-=============
+-------------
 
 Client
-------
+~~~~~~
 
 -  `.NET Core 2.1 <https://dotnet.microsoft.com/download>`__ or higher to run the demo application
 
 -  On Windows, default trusted root CA certificates - which are required for secure access to Confluent Cloud - are stored in the Windows Registry. The .NET library does not currently have the capability to access these certificates, so you will need to obtain them from somewhere else, for example use the cacert.pem file distributed with curl (`download cacert.pm <https://curl.haxx.se/ca/cacert.pem>`__).
 
 Kafka Cluster
--------------
+~~~~~~~~~~~~~
 
 .. include:: includes/client-example-prerequisites.rst
 
 
 Setup
-=====
+-----
 
 #. Clone the `confluentinc/examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -43,7 +43,7 @@ Setup
 
 
 Example 1: Basic Produce & Consume
-====================================
+----------------------------------
 
 In this example, the producer writes records to a topic in your |ak|
 cluster. Each record has a key representing a username (e.g. ``alice``)
@@ -52,7 +52,7 @@ consumer reads the same topic and keeps a rolling sum of the counts as
 it processes each record.
 
 Produce Records
----------------
+~~~~~~~~~~~~~~~
 
 #. Build the client example application
 
@@ -100,7 +100,7 @@ Produce Records
 
 
 Consume Records
----------------
+~~~~~~~~~~~~~~~
 
 #. Run the consumer, passing in arguments for (a) whether to produce or consume (consume) (b) the same topic name as used above (c) the local file with configuration parameters to connect to your |ak| cluster and (d, Windows only) a local file with default trusted root CA certificates. Verify that the consumer received all the messages:
 
