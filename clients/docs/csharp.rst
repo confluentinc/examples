@@ -1,7 +1,7 @@
 .. _client-examples-csharp:
 
-.NET Example
-============
+.NET
+====
 
 Produce messages to and consume messages from a |ak| cluster using the .NET Producer and Consumer.
 

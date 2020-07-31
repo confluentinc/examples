@@ -1,7 +1,7 @@
 .. _clients-all-examples:
 
-Examples for Various Clients
-============================
+Programming Languages and Examples
+==================================
 
 There are many other programming languages that provide |ak| client libraries as well.
 Refer to :devx-examples:`confluentinc/examples|clients/cloud/README.md` GitHub repository for client code written in the following programming languages and tools.
