@@ -948,7 +948,11 @@ EOF
 
 function ccloud::destroy_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
-  
+
+  ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
+  CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
+  CLIENT_CONFIG=${CLIENT_CONFIG:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
+
   QUIET="${QUIET:-true}"
   [[ $QUIET == "true" ]] && 
     local REDIRECT_TO="/dev/null" ||
@@ -965,15 +969,14 @@ function ccloud::destroy_ccloud_stack() {
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
-  CLUSTER=$(ccloud kafka cluster list | grep demo-kafka-cluster-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+  CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
   echo "CLUSTER: $CLUSTER"
   ccloud kafka cluster delete $CLUSTER &> "$REDIRECT_TO"
 
-  ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+  ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')
   echo "ENVIRONMENT: $ENVIRONMENT"
   ccloud environment delete $ENVIRONMENT &> "$REDIRECT_TO"
 
-  CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
   rm -f $CLIENT_CONFIG
 
   return 0
