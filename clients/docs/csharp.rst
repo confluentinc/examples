@@ -20,7 +20,7 @@ Client
 Kafka Cluster
 -------------
 
-.. include:: includes/client-example-prerequisites-generic.rst
+.. include:: includes/client-example-prerequisites.rst
 
 
 Setup
@@ -39,6 +39,8 @@ Setup
    .. sourcecode:: bash
 
       cd clients/cloud/csharp/
+
+.. include:: includes/client-example-create-file.rst
 
 
 Example 1: Basic Produce & Consume
