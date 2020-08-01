@@ -14,7 +14,7 @@ Prerequisites
 Client
 ~~~~~~
 
-- `.NET Core 2.1 <https://dotnet.microsoft.com/download>`__ or higher to run the example application
+- `.NET Core 2.1 <https://dotnet.microsoft.com/download>`__ or higher to run the client application
 
 - On Windows, default trusted root CA certificates are stored in the Windows Registry. These are required for secure access to Confluent Cloud. The .NET library does not currently have the capability to access these certificates, so you must obtain them from somewhere else, for example use the ``cacert.pem`` file distributed with curl (`download cacert.pm <https://curl.haxx.se/ca/cacert.pem>`__).
 
@@ -44,8 +44,8 @@ Setup
 #. .. include:: includes/client-example-create-file.rst
 
 
-Example 1: Basic Producer and Consumer
---------------------------------------
+Basic Producer and Consumer
+---------------------------
 
 In this example, the producer writes records to a topic in your |ak| cluster.
 Each record has a key representing a username (e.g. ``alice``) and a value of a count, formatted as json (e.g. ``{"count": 0}``).
