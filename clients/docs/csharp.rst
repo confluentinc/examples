@@ -62,7 +62,7 @@ Produce Records
 
 #. Run the example application, passing in arguments for:
  	
-   - (a) whether to produce or consume (produce) 
+   - (a) whether to produce or consume (produce)
    - (b) the topic name 
    - (c) the local file with configuration parameters to connect to your |ak| cluster 
    - (d) Windows only: a local file with default trusted root CA certificates.
@@ -107,7 +107,12 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run the consumer, passing in arguments for (a) whether to produce or consume (consume) (b) the same topic name as used above (c) the local file with configuration parameters to connect to your |ak| cluster and (d, Windows only) a local file with default trusted root CA certificates. Verify that the consumer received all the messages:
+#. Run the example application, passing in arguments for:
+
+   - (a) whether to produce or consume (consume)
+   - (b) the topic name: same topic name as used above
+   - (c) the local file with configuration parameters to connect to your |ak| cluster
+   - (d) Windows only: a local file with default trusted root CA certificates.
 
    .. code:: shell
 
@@ -117,7 +122,7 @@ Consume Records
       # Run the consumer (other)
       dotnet run consume test1 $HOME/.confluent/librdkafka.config
 
-   You should see:
+   Verify that the consumer received all the messages. You should see:
 
    ::
 
