@@ -42,8 +42,8 @@ Setup
 #. .. include:: includes/client-example-create-file.rst
 
 
-Example 1: Basic Produce & Consume
-----------------------------------
+Example 1: Basic Produce and Consume
+------------------------------------
 
 In this example, the producer writes records to a topic in your |ak|
 cluster. Each record has a key representing a username (e.g. ``alice``)
