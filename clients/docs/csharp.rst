@@ -39,7 +39,7 @@ Setup
 
       cd clients/cloud/csharp/
 
-.. include:: includes/client-example-create-file.rst
+#. .. include:: includes/client-example-create-file.rst
 
 
 Example 1: Basic Produce & Consume
