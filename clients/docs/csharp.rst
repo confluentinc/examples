@@ -62,10 +62,10 @@ Produce Records
 
 #. Run the example application, passing in arguments for:
  	
-   - (a) whether to produce or consume (produce)
-   - (b) the topic name 
-   - (c) the local file with configuration parameters to connect to your |ak| cluster 
-   - (d) Windows only: a local file with default trusted root CA certificates.
+   - whether to produce or consume (produce)
+   - the topic name
+   - the local file with configuration parameters to connect to your |ak| cluster
+   - Windows only: a local file with default trusted root CA certificates.
 
    .. code:: shell
 
@@ -109,10 +109,10 @@ Consume Records
 
 #. Run the example application, passing in arguments for:
 
-   - (a) whether to produce or consume (consume)
-   - (b) the topic name: same topic name as used above
-   - (c) the local file with configuration parameters to connect to your |ak| cluster
-   - (d) Windows only: a local file with default trusted root CA certificates.
+   - whether to produce or consume (consume)
+   - the topic name: same topic name as used above
+   - the local file with configuration parameters to connect to your |ak| cluster
+   - Windows only: a local file with default trusted root CA certificates.
 
    .. code:: shell
 
