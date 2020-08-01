@@ -1,6 +1,6 @@
 - You can use this tutorial with a |ak| cluster in any environment:
 
-  - in `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
+  - In `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
   - on your local host
   - to any other remote |ak| cluster
 
