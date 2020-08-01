@@ -14,7 +14,7 @@ Client
 
 -  `.NET Core 2.1 <https://dotnet.microsoft.com/download>`__ or higher to run the demo application
 
--  On Windows, default trusted root CA certificates - which are required for secure access to Confluent Cloud - are stored in the Windows Registry. The .NET library does not currently have the capability to access these certificates, so you will need to obtain them from somewhere else, for example use the cacert.pem file distributed with curl (`download cacert.pm <https://curl.haxx.se/ca/cacert.pem>`__).
+-  On Windows, default trusted root CA certificates are stored in the Windows Registry. These are required for secure access to Confluent Cloud. The .NET library does not currently have the capability to access these certificates, so you must obtain them from somewhere else, for example use the ``cacert.pem`` file distributed with curl (`download cacert.pm <https://curl.haxx.se/ca/cacert.pem>`__).
 
 Kafka Cluster
 ~~~~~~~~~~~~~
