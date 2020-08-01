@@ -60,7 +60,12 @@ Produce Records
 
        dotnet build
 
-#. Run the example application, passing in arguments for (a) whether to produce or consume (produce) (b) the topic name (c) the local file with configuration parameters to connect to your |ak| cluster and (d, Windows only) a local file with default trusted root CA certificates.
+#. Run the example application, passing in arguments for:
+ 	
+   - (a) whether to produce or consume (produce) 
+   - (b) the topic name 
+   - (c) the local file with configuration parameters to connect to your |ak| cluster 
+   - (d) Windows only: a local file with default trusted root CA certificates.
 
    .. code:: shell
 
