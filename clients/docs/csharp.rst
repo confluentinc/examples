@@ -3,7 +3,7 @@
 .NET
 ====
 
-Produce messages to and consume messages from a |ak| cluster using the .NET Producer and Consumer.
+In this tutorial, you will produce messages to and consume messages from an |ak-tm| cluster using the .NET Producer and Consumer.
 
 
 Prerequisites
