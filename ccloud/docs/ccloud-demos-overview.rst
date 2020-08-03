@@ -54,7 +54,7 @@ Client Code Examples
 If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to the :devx-examples:`client examples|clients/cloud/README.md`.
 It provides client examples written in various programming languages.
 
-.. figure:: ../clients/images/clients-all.png
+.. figure:: ../../clients/cloud/images/clients-all.png
 
 |ccloud| CLI
 ------------
