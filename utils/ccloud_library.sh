@@ -952,6 +952,7 @@ function ccloud::destroy_ccloud_stack() {
   ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLIENT_CONFIG=${CLIENT_CONFIG:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
+  KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
 
   QUIET="${QUIET:-true}"
   [[ $QUIET == "true" ]] && 
@@ -961,7 +962,7 @@ function ccloud::destroy_ccloud_stack() {
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
   if [[ $KSQLDB_ENDPOINT != "" ]]; then
-    KSQLDB=$(ccloud ksql app list | grep demo-ksqldb-$SERVICE_ACCOUNT_ID | awk '{print $1;}')
+    KSQLDB=$(ccloud ksql app list | grep $KSQLDB_NAME | awk '{print $1;}')
     echo "KSQLDB: $KSQLDB"
     ccloud ksql app delete $KSQLDB &>"$REDIRECT_TO"
   fi
