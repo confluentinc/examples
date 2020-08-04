@@ -92,7 +92,9 @@ Data streams into topics, in both the local cluster and the |ccloud| cluster. |c
 Microservices in the Cloud
 --------------------------
 
-The :ref:`microservices cloud demo <tutorial-microservices-orders>` showcases an order management workflow targeting |ccloud|. Microservices are deployed locally with Docker configured to utilize |ccloud| hosted services, including a |ak| cluster, |ksqldb|, and |sr-long|. |kconnect-long| is also deployed locally configured to |ccloud| and demonstrates a SQL source connector and Elasticsearch sink connector.
+The :ref:`microservices cloud demo <tutorial-microservices-orders>` showcases an order management workflow targeting |ccloud|.
+Microservices are deployed locally on Docker, and they are configured to use a |ak| cluster, |ksqldb|, and |sr-long| in |ccloud|.
+|kconnect-long| is also deployed locally on Docker, and it runs a SQL source connector to produce to |ccloud| and a Elasticsearch sink connector to consume from |ccloud|.
 
 .. figure:: ../../microservices-orders/docs/images/microservices-demo.png
 
