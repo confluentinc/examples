@@ -61,7 +61,7 @@ Add the ``ssl.ca.location`` property to the config dict object in
 ``producer.py`` and ``consumer.py``, and its value should correspond to
 the location of the appropriate CA certificates file on your host:
 
-.. code-block::text
+.. code-block:: text
 
    ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
 
@@ -200,9 +200,9 @@ Protobuf, and Avro data formats. See the latest `confluent-kafka documentation
 <https://docs.confluent.io/current/clients/confluent-kafka-python/>`__ for
 further details.
 
-#. As described in the :ref:`cloud-sr-config`
-   in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create
-   an API key and secret to connect to it.
+#. As described in the :ref:`cloud-sr-config` in the Confluent Cloud GUI, enable
+   Confluent Cloud Schema Registry and create an API key and secret to connect
+   to it.
 
 #. Verify your Confluent Cloud Schema Registry credentials work from your host.
    In the following example, substitute your values for ``{{ SR_API_KEY}}``,
@@ -305,10 +305,10 @@ further details.
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
 
 
-Run the Code in Docker
-======================
+Run the All the Code in Docker
+==============================
 
-You may also run all the previous code in Docker.
+You can also run all the previous code within Docker.
 
 #. Ensure you have created a local file with configuration parameters to
    connect to your Kafka cluster at ``$HOME/.confluent/librdkafka.config``.
