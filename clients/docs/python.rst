@@ -1,3 +1,5 @@
+.. _client-examples-python:
+
 Python
 ======
 
@@ -7,7 +9,7 @@ messages to and consumes messages from an |ak-tm| cluster.
 .. include:: includes/client-example-overview.rst
 
 Prerequisites
-=============
+-------------
 
 Client
 ~~~~~~
@@ -16,20 +18,20 @@ Client
    for Apache Kafka <https://github.com/confluentinc/confluent-kafka-python>`__
    installed.
 
-   -  You can use `Virtualenv <https://virtualenv.pypa.io/en/latest/>`__ and
-      run the following commands to create a virtual environment with the client
-      installed.
+-  You can use `Virtualenv <https://virtualenv.pypa.io/en/latest/>`__ and
+   run the following commands to create a virtual environment with the client
+   installed.
 
-      #. ``virtualenv ccloud-venv``
-      #. ``source ./ccloud-venv/bin/activate``
-      #. ``pip install -r requirements.txt``
+   .. code-block:: bash
 
-.. note::
+      virtualenv ccloud-venv
+      source ./ccloud-venv/bin/activate
+      pip install -r requirements.txt
 
-   The `requirements.txt <requirements.txt>`__ file specifies a version of the
-   ``confluent-kafka`` library >= 1.4.2 which is required for the latest
-   Serialization API demonstrated here. If you install the library manually or
-   globally, the same version requirements apply.
+- Check your ``confluent-kafka`` library version. The :devx-examples:`requirements.txt|clients/cloud/python/requirements.txt`
+  file specifies a version of the ``confluent-kafka`` library >= 1.4.2 which is
+  required for the latest Serialization API demonstrated here. If you install the
+  library manually or globally, the same version requirements apply.
 
 
 Configure SSL trust store
@@ -42,7 +44,6 @@ similar to the following:
 
 .. code-block:: bash
 
-   $ ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
    %3|1554125834.196|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
    %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
    %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
@@ -55,7 +56,7 @@ additional dependency:
 
 .. code-block:: bash
 
-   $ pip install certifi
+   pip install certifi
 
 Add the ``ssl.ca.location`` property to the config dict object in
 ``producer.py`` and ``consumer.py``, and its value should correspond to
@@ -70,7 +71,7 @@ CentOS
 
 .. code-block:: bash
 
-   $ sudo yum reinstall ca-certificates
+   sudo yum reinstall ca-certificates
 
 Add the ``ssl.ca.location`` property to the config dict object in
 ``producer.py`` and ``consumer.py``, and its value should correspond to
@@ -98,7 +99,7 @@ Setup
    <https://github.com/confluentinc/examples>`__ and check out the
    :litwithvars:`|release|-post` branch.
 
-   .. code-block:: bash
+   .. codewithvars:: bash
 
       git clone https://github.com/confluentinc/examples
       cd examples
@@ -114,7 +115,7 @@ Setup
 
 
 Basic Producer and Consumer
-===========================
+---------------------------
 
 In this example, the producer writes Kafka data to a topic in your Kafka
 cluster. Each record has a key representing a username (for example, ``alice``)
@@ -127,11 +128,14 @@ it processes each record.
    - the local file with configuration parameters to connect to your Kafka cluster
    - topic name
 
+   .. code-block:: bash
+
+      ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
+
    You should see:
 
    .. code-block:: bash
 
-       $ ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
        Producing record: alice      {"count": 0}
        Producing record: alice      {"count": 1}
        Producing record: alice      {"count": 2}
@@ -159,11 +163,14 @@ it processes each record.
    - the local file with configuration parameters to connect to your Kafka cluster.
    - the same topic name you used in step 1.
 
-#. Verify the consumer received all the messages. You should see:
+   .. code-block:: bash
+
+      ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
+
+   Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
-      $ ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
       ...
       Waiting for message or event/error in poll()
       Consumed record with key alice and value {"count": 0}, and updated total count to 0
@@ -181,17 +188,11 @@ it processes each record.
 
 
 Avro And Confluent Cloud Schema Registry
-========================================
+----------------------------------------
 
 This example is similar to the previous example, except the key and value are
-formatted as Avro and integrates with the Confluent Cloud Schema Registry.
-Before using Confluent Cloud Schema Registry, check its `availability and limits
-<https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__.
-
-.. note::
-
-   Your VPC must be able to connect to the Confluent Cloud Schema Registry
-   public internet endpoint.
+formatted as Avro and integrates with the |ccloud| |sr|.
+Before using |ccloud| |sr|, check its :ref:`availability and limits <cloud-limits>`.
 
 These examples use the latest Serializer API provided by the ``confluent-kafka``
 library. The Serializer API replaces the legacy AvroProducer and AvroConsumer
@@ -200,40 +201,19 @@ Protobuf, and Avro data formats. See the latest `confluent-kafka documentation
 <https://docs.confluent.io/current/clients/confluent-kafka-python/>`__ for
 further details.
 
-#. As described in the :ref:`cloud-sr-config` in the Confluent Cloud GUI, enable
-   Confluent Cloud Schema Registry and create an API key and secret to connect
-   to it.
+#. .. include:: includes/client-example-vpc.rst
 
-#. Verify your Confluent Cloud Schema Registry credentials work from your host.
-   In the following example, substitute your values for ``{{ SR_API_KEY}}``,
-   ``{{SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
+#. .. include:: includes/client-example-schema-registry-1.rst
 
-   .. code-block:: text
+#. .. include:: includes/client-example-schema-registry-2.rst
 
-      # View the list of registered subjects
-      $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
+#. .. include:: includes/schema-registry-librdkafka.rst
 
-      # Same as above, as a single bash command to parse the values out of  $HOME/.confluent/librdkafka.config
-      $ curl -u $(grep "^schema.registry.basic.auth.user.info"  $HOME/.confluent/librdkafka.config | cut -d'=' -f2) $(grep "^schema.registry.url"  $HOME/.confluent/librdkafka.config | cut -d'=' -f2)/subjects
-
-#. Add the following parameters to your local Confluent Cloud configuration
-   file. In the output below, substitute values for ``{{SR_API_KEY }}``, ``{{
-   SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
-
-   .. code-block:: text
-
-      $ cat $HOME/.confluent/librdkafka.config
-      ...
-      basic.auth.credentials.source=USER_INFO
-      schema.registry.basic.auth.user.info={{ SR_API_KEY }}:{{ SR_API_SECRET }}
-      schema.registry.url=https://{{ SR_ENDPOINT }}
-      ...
-
-#. Create the topic in Confluent Cloud.
+#. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
-       $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
+       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
 
 #. Run the Avro producer, passing in arguments for:
 
@@ -242,7 +222,12 @@ further details.
 
    .. code-block:: bash
 
-      $ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
+      ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
+
+   You should see:
+
+   .. code-block:: bash
+
       Producing Avro record: alice    0
       Producing Avro record: alice    1
       Producing Avro record: alice    2
@@ -271,11 +256,15 @@ further details.
      Kafka cluster
    - the same topic name you used in step 5
 
-#. Verify the consumer received all the messages. You should see:
+   .. code-block:: bash
+
+       ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
+
+   Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
-       $ ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
+       ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
        ...
        Waiting for message or event/error in poll()
        Consumed record with key alice and value 0,                       and updated total count to 0
@@ -290,23 +279,23 @@ further details.
        Consumed record with key alice and value 9,                       and updated total count to 45
        ...
 
-#. View the schema information registered in Confluent Cloud Schema
+#. View the schema information registered in |ccloud| Schema
    Registry. In the output below, substitute values for ``{{ SR_API_KEY }}``,
    ``{{ SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
    .. code-block:: text
 
       # View the list of registered subjects
-      $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
+      curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
       ["test2-value"]
 
       # View the schema information for subject `test2-value`
-      $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
+      curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
 
 
 Run the All the Code in Docker
-==============================
+------------------------------
 
 You can also run all the previous code within Docker.
 
@@ -317,13 +306,13 @@ You can also run all the previous code within Docker.
 
    .. code-block:: bash
 
-      $ docker build -t cloud-demo-python .
+      docker build -t cloud-demo-python .
 
 #. Run the Docker image using the following command:
 
    .. code-block:: bash
 
-      $ docker run -v $HOME/.confluent/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python bash
+      docker run -v $HOME/.confluent/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python bash
 
 #. Run the Python applications from within the container shell. See earlier
    sections for more details.
