@@ -12,7 +12,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  A functioning python environment with the `Confluent Python Client
+-  A functioning Python environment with the `Confluent Python Client
    for Apache Kafka <https://github.com/confluentinc/confluent-kafka-python>`__
    installed.
 
@@ -36,9 +36,9 @@ Configure SSL trust store
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Depending on your operating system or Linux distro you may need to take extra
-steps to set up the SSL CA root certificates. If your systems does not have the
-SSL CA root certificates properly set up, here is an example of an error message
-you may see.
+steps to set up the SSL CA root certificates. If your system doesn't have the
+SSL CA root certificates properly set up, you may receive an error message
+similar to the following:
 
 .. code-block:: bash
 
@@ -81,8 +81,9 @@ the location of the appropriate CA certificates file on your host:
 
    ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
 
-For more information see the librdkafka docs on which this python producer is
-built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
+For more information, see the `librdkafka
+<https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka>`__
+documentation on which this Python producer is built.
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -97,7 +98,7 @@ Setup
    <https://github.com/confluentinc/examples>`__ and check out the
    :litwithvars:`|release|-post` branch.
 
-   .. codewithvars:: bash
+   .. code-block:: bash
 
       git clone https://github.com/confluentinc/examples
       cd examples
@@ -105,7 +106,7 @@ Setup
 
 #. Change directory to the example for Python.
 
-   .. sourcecode:: bash
+   .. code-block:: bash
 
       cd clients/cloud/python/
 
@@ -113,17 +114,20 @@ Setup
 
 
 Basic Producer and Consumer
-============================
+===========================
 
 In this example, the producer writes Kafka data to a topic in your Kafka
-cluster. Each record has a key representing a username (e.g. ``alice``)
-and a value of a count, formatted as json (e.g. ``{"count": 0}``). The
+cluster. Each record has a key representing a username (for example, ``alice``)
+and a value of a count, formatted as json (for example, ``{"count": 0}``). The
 consumer reads the same topic and keeps a rolling sum of the counts as
 it processes each record.
 
-#. Run the producer, passing in arguments for (a) the local file with
-   configuration parameters to connect to your Kafka cluster and (b) the
-   topic name:
+#. Run the producer, passing in arguments for:
+
+   - the local file with configuration parameters to connect to your Kafka cluster
+   - topic name
+
+   You should see:
 
    .. code-block:: bash
 
@@ -150,12 +154,12 @@ it processes each record.
        Produced record to topic test1 partition [0] @ offset 9
        10 messages were produced to topic test1!
 
-#. Run the consumer, passing in arguments for the following:
+#. Run the consumer, passing in arguments for:
 
-   - The local file with configuration parameters to connect to your Kafka cluster.
-   - The same topic name you used in step 1.
+   - the local file with configuration parameters to connect to your Kafka cluster.
+   - the same topic name you used in step 1.
 
-#. Verify the consumer received all the messages as shown in the following example:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -204,7 +208,7 @@ further details.
    In the following example, substitute your values for ``{{ SR_API_KEY}}``,
    ``{{SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
-   .. code-block:: shell
+   .. code-block:: text
 
       # View the list of registered subjects
       $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
@@ -216,7 +220,7 @@ further details.
    file. In the output below, substitute values for ``{{SR_API_KEY }}``, ``{{
    SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
-   .. code-block:: shell
+   .. code-block:: text
 
       $ cat $HOME/.confluent/librdkafka.config
       ...
@@ -231,10 +235,10 @@ further details.
 
        $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
 
-#. Run the Avro producer, passing in arguments for the following:
+#. Run the Avro producer, passing in arguments for:
 
-   - The local file with configuration parameters to connect to your Kafka cluster.
-   - The same topic name you used in step 1.
+   - the local file with configuration parameters to connect to your Kafka cluster
+   - the topic name
 
    .. code-block:: bash
 
@@ -261,12 +265,13 @@ further details.
       Produced record to topic test2 partition [0] @ offset 9
       10 messages were produced to topic test2!
 
-#. Run the Avro consumer, passing in arguments for the following:
+#. Run the Avro consumer, passing in arguments for:
 
-   - The local file with configuration parameters to connect to your
+   - the local file with configuration parameters to connect to your
      Kafka cluster
-   - The same topic name as used above. Verify that the consumer received all
-     the messages:
+   - the same topic name you used in step 5
+
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -289,7 +294,7 @@ further details.
    Registry. In the output below, substitute values for ``{{ SR_API_KEY }}``,
    ``{{ SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
-   .. code-block:: shell
+   .. code-block:: text
 
       # View the list of registered subjects
       $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
@@ -320,8 +325,8 @@ You may also run all the previous code in Docker.
 
       $ docker run -v $HOME/.confluent/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python bash
 
-#. Run the Python applications from within the container shell using the following command (see earlier
-   sections for more details):
+#. Run the Python applications from within the container shell. See earlier
+   sections for more details.
 
    .. code-block:: bash
 
