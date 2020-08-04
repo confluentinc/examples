@@ -22,7 +22,7 @@ These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and
 * :devx-examples:`Kotlin|clients/cloud/kotlin/README.md`
 * :devx-examples:`KSQL Datagen|clients/cloud/ksql-datagen/README.md`
 * :devx-examples:`Node.js|clients/cloud/nodejs/README.md`
-* :devx-examples:`Python|clients/cloud/python/README.md`
+* :ref:`Python <client-examples-python>`
 * :devx-examples:`Ruby|clients/cloud/ruby/README.md`
 * :devx-examples:`Rust|clients/cloud/rust/README.md`
 * :devx-examples:`Scala|clients/cloud/scala/README.md`
@@ -36,3 +36,4 @@ These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and
       :hidden:
 
       csharp
+      python
