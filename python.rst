@@ -1,24 +1,28 @@
-Overview
-========
+Python
+======
 
-Produce messages to and consume messages from a Kafka cluster using `Confluent
-Python Client for Apache Kafka
-<https://github.com/confluentinc/confluent-kafka-python>`__.
+In this tutorial, you will run a Python client application that produces
+messages to and consumes messages from an |ak-tm| cluster.
+
+.. include:: includes/client-example-overview.rst
 
 Prerequisites
 =============
+
+Client
+~~~~~~
 
 -  A functioning python environment with the `Confluent Python Client
    for Apache Kafka <https://github.com/confluentinc/confluent-kafka-python>`__
    installed.
 
-   -  You can use `Virtualenv <https://virtualenv.pypa.io/en/latest/>`__ with
-      the following steps to create a virtual environment with the client
+   -  You can use `Virtualenv <https://virtualenv.pypa.io/en/latest/>`__ and
+      run the following commands to create a virtual environment with the client
       installed.
 
-      -  ``virtualenv ccloud-venv``
-      -  ``source ./ccloud-venv/bin/activate``
-      -  ``pip install -r requirements.txt``
+      #. ``virtualenv ccloud-venv``
+      #. ``source ./ccloud-venv/bin/activate``
+      #. ``pip install -r requirements.txt``
 
 .. note::
 
@@ -27,29 +31,9 @@ Prerequisites
    Serialization API demonstrated here. If you install the library manually or
    globally, the same version requirements apply.
 
--  Create a local file (for example, at ``$HOME/.confluent/librdkafka.config``)
-   with configuration parameters to connect to your Kafka cluster, which can be
-   on your local host, `Confluent Cloud
-   <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed instructions
-   <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to create the file.
-
--  If you are running on Confluent Cloud, you must have access to a
-   `Confluent Cloud
-   <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-   cluster
-
-   -  The first 20 users to sign up for `Confluent
-      Cloud
-      <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-      and use the promo code ``C50INTEG`` will receive an additional $50 free
-      usage (`details
-      <https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__).
-
 
 Configure SSL trust store
--------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Depending on your operating system or Linux distro you may need to take extra
 steps to set up the SSL CA root certificates. If your systems does not have the
@@ -64,9 +48,9 @@ you may see.
    %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
 
 macOS
-~~~~~
+"""""
 
-On newer versions of macOS (for example, 10.15), it may be required to add an
+On newer versions of macOS (for example, 10.15), you may need to add an
 additional dependency:
 
 .. code-block:: bash
@@ -82,7 +66,7 @@ the location of the appropriate CA certificates file on your host:
    ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
 
 CentOS
-~~~~~~
+""""""
 
 .. code-block:: bash
 
@@ -93,15 +77,43 @@ Add the ``ssl.ca.location`` property to the config dict object in
 the location of the appropriate CA certificates file on your host:
 
 
-.. code-block:: bash
+.. code-block:: text
 
    ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
 
 For more information see the librdkafka docs on which this python producer is
 built: https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka
 
-Example 1: Basic Produce & Consume
-==================================
+Kafka Cluster
+~~~~~~~~~~~~~
+
+.. include:: includes/client-example-prerequisites.rst
+
+
+Setup
+-----
+
+#. Clone the `confluentinc/examples GitHub repository
+   <https://github.com/confluentinc/examples>`__ and check out the
+   :litwithvars:`|release|-post` branch.
+
+   .. codewithvars:: bash
+
+      git clone https://github.com/confluentinc/examples
+      cd examples
+      git checkout |release|-post
+
+#. Change directory to the example for Python.
+
+   .. sourcecode:: bash
+
+      cd clients/cloud/python/
+
+#. .. include:: includes/client-example-create-file.rst
+
+
+Basic Producer and Consumer
+============================
 
 In this example, the producer writes Kafka data to a topic in your Kafka
 cluster. Each record has a key representing a username (e.g. ``alice``)
@@ -138,9 +150,12 @@ it processes each record.
        Produced record to topic test1 partition [0] @ offset 9
        10 messages were produced to topic test1!
 
-#. Run the consumer, passing in arguments for (a) the local file with
-   configuration parameters to connect to your Kafka cluster and (b) the same
-   topic name as used above. Verify that the consumer received all the messages:
+#. Run the consumer, passing in arguments for the following:
+
+   - The local file with configuration parameters to connect to your Kafka cluster.
+   - The same topic name you used in step 1.
+
+#. Verify the consumer received all the messages as shown in the following example:
 
    .. code-block:: bash
 
@@ -161,8 +176,8 @@ it processes each record.
       ...
 
 
-Example 2: Avro And Confluent Cloud Schema Registry
-===================================================
+Avro And Confluent Cloud Schema Registry
+========================================
 
 This example is similar to the previous example, except the key and value are
 formatted as Avro and integrates with the Confluent Cloud Schema Registry.
@@ -181,14 +196,13 @@ Protobuf, and Avro data formats. See the latest `confluent-kafka documentation
 <https://docs.confluent.io/current/clients/confluent-kafka-python/>`__ for
 further details.
 
-#. As described in the `Confluent Cloud
-   quickstart <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry
-   and create an API key and secret to connect to it.
+#. As described in the :ref:`cloud-sr-config`
+   in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry and create
+   an API key and secret to connect to it.
 
 #. Verify your Confluent Cloud Schema Registry credentials work from your host.
-   In the output below, substitute your values for ``{{ SR_API_KEY}}``, ``{{
-   SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
+   In the following example, substitute your values for ``{{ SR_API_KEY}}``,
+   ``{{SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
    .. code-block:: shell
 
@@ -198,10 +212,9 @@ further details.
       # Same as above, as a single bash command to parse the values out of  $HOME/.confluent/librdkafka.config
       $ curl -u $(grep "^schema.registry.basic.auth.user.info"  $HOME/.confluent/librdkafka.config | cut -d'=' -f2) $(grep "^schema.registry.url"  $HOME/.confluent/librdkafka.config | cut -d'=' -f2)/subjects
 
-#. Add the following parameters to your local Confluent Cloud
-   configuration file. In the output below, substitute values for
-   ``{{ SR_API_KEY }}``, ``{{ SR_API_SECRET }}``, and
-   ``{{ SR_ENDPOINT }}``.
+#. Add the following parameters to your local Confluent Cloud configuration
+   file. In the output below, substitute values for ``{{SR_API_KEY }}``, ``{{
+   SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
    .. code-block:: shell
 
@@ -218,41 +231,42 @@ further details.
 
        $ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
 
-#. Run the Avro producer, passing in arguments for (a) the local file
-   with configuration parameters to connect to your Kafka cluster and
-   (b) the topic name:
+#. Run the Avro producer, passing in arguments for the following:
 
-.. code-block:: bash
+   - The local file with configuration parameters to connect to your Kafka cluster.
+   - The same topic name you used in step 1.
 
-   $ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
-   Producing Avro record: alice    0
-   Producing Avro record: alice    1
-   Producing Avro record: alice    2
-   Producing Avro record: alice    3
-   Producing Avro record: alice    4
-   Producing Avro record: alice    5
-   Producing Avro record: alice    6
-   Producing Avro record: alice    7
-   Producing Avro record: alice    8
-   Producing Avro record: alice    9
-   Produced record to topic test2 partition [0] @ offset 0
-   Produced record to topic test2 partition [0] @ offset 1
-   Produced record to topic test2 partition [0] @ offset 2
-   Produced record to topic test2 partition [0] @ offset 3
-   Produced record to topic test2 partition [0] @ offset 4
-   Produced record to topic test2 partition [0] @ offset 5
-   Produced record to topic test2 partition [0] @ offset 6
-   Produced record to topic test2 partition [0] @ offset 7
-   Produced record to topic test2 partition [0] @ offset 8
-   Produced record to topic test2 partition [0] @ offset 9
-   10 messages were produced to topic test2!
+   .. code-block:: bash
 
-#. Run the Avro consumer, passing in arguments for the following items:
+      $ ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
+      Producing Avro record: alice    0
+      Producing Avro record: alice    1
+      Producing Avro record: alice    2
+      Producing Avro record: alice    3
+      Producing Avro record: alice    4
+      Producing Avro record: alice    5
+      Producing Avro record: alice    6
+      Producing Avro record: alice    7
+      Producing Avro record: alice    8
+      Producing Avro record: alice    9
+      Produced record to topic test2 partition [0] @ offset 0
+      Produced record to topic test2 partition [0] @ offset 1
+      Produced record to topic test2 partition [0] @ offset 2
+      Produced record to topic test2 partition [0] @ offset 3
+      Produced record to topic test2 partition [0] @ offset 4
+      Produced record to topic test2 partition [0] @ offset 5
+      Produced record to topic test2 partition [0] @ offset 6
+      Produced record to topic test2 partition [0] @ offset 7
+      Produced record to topic test2 partition [0] @ offset 8
+      Produced record to topic test2 partition [0] @ offset 9
+      10 messages were produced to topic test2!
 
-   a. The local file with configuration parameters to connect to your
-      Kafka cluster
-   b. The same topic name as used above. Verify that the consumer received all
-      the messages:
+#. Run the Avro consumer, passing in arguments for the following:
+
+   - The local file with configuration parameters to connect to your
+     Kafka cluster
+   - The same topic name as used above. Verify that the consumer received all
+     the messages:
 
    .. code-block:: bash
 
@@ -275,7 +289,7 @@ further details.
    Registry. In the output below, substitute values for ``{{ SR_API_KEY }}``,
    ``{{ SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
-   ::
+   .. code-block:: shell
 
       # View the list of registered subjects
       $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
@@ -285,10 +299,11 @@ further details.
       $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
 
-Example 3: Run All the Above in Docker
-======================================
 
-You also may run all the above code from within Docker.
+Run the Code in Docker
+======================
+
+You may also run all the previous code in Docker.
 
 #. Ensure you have created a local file with configuration parameters to
    connect to your Kafka cluster at ``$HOME/.confluent/librdkafka.config``.
@@ -305,7 +320,7 @@ You also may run all the above code from within Docker.
 
       $ docker run -v $HOME/.confluent/librdkafka.config:/root/.confluent/librdkafka.config -it --rm cloud-demo-python bash
 
-#. Run the python applications from within the container shell using the following command (see earlier
+#. Run the Python applications from within the container shell using the following command (see earlier
    sections for more details):
 
    .. code-block:: bash
