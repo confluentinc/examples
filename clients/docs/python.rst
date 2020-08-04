@@ -163,13 +163,11 @@ it processes each record.
    - the local file with configuration parameters to connect to your Kafka cluster.
    - the same topic name you used in step 1.
 
-   Verify the consumer received all the messages.
-
    .. code-block:: bash
 
       ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
 
-   You should see:
+   Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -258,13 +256,11 @@ further details.
      Kafka cluster
    - the same topic name you used in step 5
 
-   Verify the consumer received all the messages.
-
    .. code-block:: bash
 
        ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
 
-   You should see:
+   Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
