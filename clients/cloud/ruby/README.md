@@ -22,7 +22,7 @@ The consumer reads the same topic and keeps a rolling sum of the counts as it pr
 
 1. Run the producer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the topic name:
     ```bash
-    $ ruby producer.rb -f $HOME/.confluent/librdkafa.config --topic test1
+    $ ruby producer.rb -f $HOME/.confluent/librdkafka.config --topic test1
     Created topic test1
     Producing record: alice	{"count":0}
     Producing record: alice	{"count":1}
@@ -39,7 +39,7 @@ The consumer reads the same topic and keeps a rolling sum of the counts as it pr
 
 2. Run the consumer, passing in arguments for (a) the local file with configuration parameters to connect to your Kafka cluster and (b) the same topic name as used above. Verify that the consumer received all the messages:
     ```bash
-    $ ruby consumer.rb -f $HOME/.confluent/librdkafa.config --topic test1
+    $ ruby consumer.rb -f $HOME/.confluent/librdkafka.config --topic test1
     Consuming messages from test1
     Consumed record with key alice and value {"count":0}, and updated total count 0
     Consumed record with key alice and value {"count":1}, and updated total count 1
