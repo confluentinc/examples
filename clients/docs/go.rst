@@ -15,24 +15,8 @@ Client
 ~~~~~~
 
 -  A functioning Go environment with the `Confluent Golang Client
-   for Apache Kafka <https://github.com/confluentinc/confluent-kafka-python>`__
+   for Apache Kafka <https://github.com/confluentinc/confluent-kafka-go>`__
    installed.
-
--  You can use `Virtualenv <https://virtualenv.pypa.io/en/latest/>`__ and
-   run the following commands to create a virtual environment with the client
-   installed.
-
-   .. code-block:: bash
-
-      virtualenv ccloud-venv
-      source ./ccloud-venv/bin/activate
-      pip install -r requirements.txt
-
-- Check your ``confluent-kafka`` library version. The
-  :devx-examples:`requirements.txt|clients/cloud/go/requirements.txt` file
-  specifies a version of the ``confluent-kafka`` library >= 1.4.2 which is
-  required for the latest Serialization API demonstrated here. If you install
-  the library manually or globally, the same version requirements apply.
 
 
 Kafka Cluster
@@ -72,6 +56,10 @@ and a value of a count, in JSON format (for example, ``{"Count": 0}``). The
 consumer reads the same topic and keeps a rolling sum of the counts as it
 processes each record.
 
+
+Produce Records
+~~~~~~~~~~~~~~~
+
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
@@ -80,7 +68,6 @@ processes each record.
    .. code-block:: bash
 
       go build producer.go
-      ./producer -f $HOME/.confluent/librdkafka.config -t test1
 
    You should see:
 
@@ -108,6 +95,13 @@ processes each record.
       Successfully produced record to topic test1 partition [0] @ offset 9
       10 messages were produced to topic test1!
 
+
+#. View the :devx-examples:`producer code|clients/cloud/go/producer.go`.
+
+
+Consume Records
+~~~~~~~~~~~~~~~
+
 #. Run the consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka
@@ -119,7 +113,6 @@ processes each record.
    .. code-block:: bash
 
       go build consumer.go
-      ./consumer -f $HOME/.confluent/librdkafka.config -t test1
 
    .. code-block:: bash
 
@@ -135,3 +128,6 @@ processes each record.
       Consumed record with key alice and value {"Count":8}, and updated total count to 36
       Consumed record with key alice and value {"Count":9}, and updated total count to 45
       ...
+
+
+#. View the :devx-examples:`consumer code|clients/cloud/go/consumer.go`.
