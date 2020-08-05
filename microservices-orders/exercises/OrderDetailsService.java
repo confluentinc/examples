@@ -192,6 +192,10 @@ public class OrderDetailsService implements Service {
   }
 
   private boolean isValid(final Order order) {
+    final Long customerId = order.getCustomerId();
+    if (customerId == null) {
+      return false;
+    }
     if (order.getQuantity() < 0) {
       return false;
     }
