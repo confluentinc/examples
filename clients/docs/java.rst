@@ -3,7 +3,7 @@
 Java
 ====
 
-In this tutorial, you will run a Golang client application that produces
+In this tutorial, you will run a Java client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
@@ -202,6 +202,9 @@ its |ccloud| |sr|.
 #. .. include:: includes/schema-registry-librdkafka.rst
 
 
+Producer
+~~~~~~~~
+
 #. Run the Avro producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
@@ -217,6 +220,10 @@ its |ccloud| |sr|.
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
+
+Consume
+~~~~~~~~
+
 #. Run the Avro consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
@@ -231,12 +238,13 @@ its |ccloud| |sr|.
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
-#. Run the Avro Kafka Streams application, passing in arguments for (a)
-   the local file with configuration parameters to connect to your Kafka
-   cluster and (b) the same topic name as used above. Verify that the
-   application received all the messages:
+#. Run the Avro Kafka Streams application, passing in arguments for:
 
-   ::
+   -  the local file with configuration parameters to connect to your Kafka
+      cluster
+   -  the same topic name you used in step 1
+
+   .. code:-block: text
 
       # Compile the Java code
       $ mvn clean package
@@ -245,15 +253,19 @@ its |ccloud| |sr|.
       $ mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsAvroExample" \
         -Dexec.args="$HOME/.confluent/java.config test2"
 
+   Verify that the application received all the messages:
+
+.. Putting a comment here for example output to be updated here.
+
 Schema Evolution with Confluent Cloud Schema Registry
 -----------------------------------------------------
 
-7. View the schema information registered in Confluent Cloud Schema
+#. View the schema information registered in |ccloud| |sr|
    Registry. In the output below, substitute values for
    ``{{ SR_API_KEY }}``, ``{{ SR_API_SECRET }}``, and
    ``{{ SR_ENDPOINT }}``.
 
-   ::
+   .. code:-block: text
 
       # View the list of registered subjects
       $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
@@ -263,7 +275,7 @@ Schema Evolution with Confluent Cloud Schema Registry
       $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
 
-8. For schema evolution, you can `test schema
+#. For schema evolution, you can `test schema
    compatibility <https://docs.confluent.io/current/schema-registry/develop/maven-plugin.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud#schema-registry-test-compatibility>`__
    between newer schema versions and older schema versions in Confluent
    Cloud Schema Registry. The `pom.xml <pom.xml>`__ hardcodes the Schema
