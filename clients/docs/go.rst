@@ -14,7 +14,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  A functioning Python environment with the `Confluent Golang Client
+-  A functioning Go environment with the `Confluent Golang Client
    for Apache Kafka <https://github.com/confluentinc/confluent-kafka-python>`__
    installed.
 
