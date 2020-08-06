@@ -107,12 +107,13 @@ Consume Records
    - the local file with configuration parameters to connect to your Kafka
      cluster
    - the same topic name used in step 1
-
-#. Verify the consumer received all the messages. You should see:
-
+   
    .. code-block:: bash
 
-      go build consumer.go
+       go build consumer.go
+       
+
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
