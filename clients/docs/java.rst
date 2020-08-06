@@ -141,7 +141,11 @@ Consume Records
       Consumed record with key alice and value {"count":8}, and updated total count to 36
       Consumed record with key alice and value {"count":9}, and updated total count to 45
 
-#. When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``Ctrl-C``.
+
+
+Kafka Streams
+-------------
 
 #. Run the Kafka Streams application, passing in arguments for:
 
@@ -186,7 +190,7 @@ You should see:
       [Running count]: alice, 45
       ...
 
-#. When you are done, press ``<ctrl>-c``.
+#. When you are done, press ```Ctrl-C``.
 
 #. View the :devx-examples:`consumer
    code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerExample.java`.
@@ -251,14 +255,14 @@ Consume Avro Records
    code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerAvroExample.java`.
 
 
-Kafka Streams
-~~~~~~~~~~~~~
+Avro Kafka Streams
+------------------
 
 #. Run the Avro Kafka Streams application, passing in arguments for:
 
    -  the local file with configuration parameters to connect to your Kafka
       cluster
-   -  the same topic name you used in step 1
+   -  the same topic name you used earlier
 
    .. code:-block:: text
 
