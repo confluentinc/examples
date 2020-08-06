@@ -109,6 +109,7 @@ Produce Records
       Message delivered to test1 [0] at offset 9 in 22.81ms: { "count": 10 }
       10/10 messages delivered
 
+#. View the :devx-examples:`producer code|clients/cloud/c/producer.c`.
 
 Consume Records
 ~~~~~~~~~~~~~~~
@@ -151,3 +152,5 @@ Consume Records
       User alice sum 55
 
 #. Press ``Ctrl-C`` to exit.
+
+#. View the :devx-examples:`consumer code|clients/cloud/c/consumer.c`.

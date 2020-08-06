@@ -104,8 +104,7 @@ Produce Records
       10 messages were produced to topic test1
       ...
 
-#. View the :devx-examples:`producer
-   code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ProducerExample.java`.
+#. View the :devx-examples:`producer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ProducerExample.java`.
 
 
 Consume Records
@@ -143,9 +142,11 @@ Consume Records
 
 #. When you are done, press ``Ctrl-C``.
 
+#. View the :devx-examples:`consumer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerExample.java`.
+
 
 Kafka Streams
--------------
+~~~~~~~~~~~~~
 
 #. Run the Kafka Streams application, passing in arguments for:
 
@@ -192,8 +193,7 @@ Kafka Streams
 
 #. When you are done, press ``Ctrl-C``.
 
-#. View the :devx-examples:`consumer
-   code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerExample.java`.
+#. View the :devx-examples:`Kafka Streams code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/StreamsExample.java`.
 
 
 Avro and Confluent Cloud Schema Registry
@@ -230,8 +230,7 @@ Produce Avro Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
-#. View the :devx-examples:`producer Avro
-   code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ProducerAvroExample.java`.
+#. View the :devx-examples:`producer Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ProducerAvroExample.java`.
 
 
 Consume Avro Records
@@ -251,12 +250,11 @@ Consume Avro Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
-#. View the :devx-examples:`consumer Avro
-   code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerAvroExample.java`.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerAvroExample.java`.
 
 
 Avro Kafka Streams
-------------------
+~~~~~~~~~~~~~~~~~~
 
 #. Run the Avro Kafka Streams application, passing in arguments for:
 
