@@ -153,7 +153,7 @@ Kafka Streams
      cluster
    - the same topic name you used earlier.
 
-   .. code:-block:: text
+   .. code-block:: text
 
       # Compile the Java code
       mvn clean package
@@ -164,7 +164,7 @@ Kafka Streams
 
    You should see:
 
-   .. code:-block:: bash
+   .. code-block:: bash
 
       ...
       [Consumed record]: alice, 0
@@ -190,7 +190,7 @@ Kafka Streams
       [Running count]: alice, 45
       ...
 
-#. When you are done, press ```Ctrl-C``.
+#. When you are done, press ``Ctrl-C``.
 
 #. View the :devx-examples:`consumer
    code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ConsumerExample.java`.
@@ -220,7 +220,7 @@ Produce Avro Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name
 
-   .. code:-block:: text
+   .. code-block:: text
 
       # Compile the Java code
       mvn clean package
@@ -242,7 +242,7 @@ Consume Avro Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name
 
-   .. code:-block:: text
+   .. code-block:: text
 
       # Compile the Java code
       mvn clean package
@@ -264,7 +264,7 @@ Avro Kafka Streams
       cluster
    -  the same topic name you used earlier
 
-   .. code:-block:: text
+   .. code-block:: text
 
       # Compile the Java code
       mvn clean package
@@ -284,7 +284,7 @@ Schema Evolution with Confluent Cloud Schema Registry
    substitute values for  ``{{ SR_API_KEY }}``, ``{{ SR_API_SECRET }}``, and
    ``{{ SR_ENDPOINT }}``.
 
-   .. code:-block:: text
+   .. code-block:: text
 
       # View the list of registered subjects
       curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
@@ -308,7 +308,7 @@ Schema Evolution with Confluent Cloud Schema Registry
    <src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc>`__,
    which should pass.
 
-   .. code:-block:: text
+   .. code-block:: text
 
       # DataRecordAvro2a.avsc compatibility test: FAIL
       mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc"
