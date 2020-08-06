@@ -7,7 +7,7 @@ There are many other programming languages that provide |ak| client libraries as
 Refer to :devx-examples:`confluentinc/examples|clients/cloud/README.md` GitHub repository for client code written in the following programming languages and tools.
 These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and for the subset of languages that support it, there are additional examples using Avro and |sr-long|.
 
-* :ref:`Java <client-examples-c>`
+* :ref:`C <client-examples-c>`
 * :devx-examples:`Clojure|clients/cloud/clojure/README.md`
 * :devx-examples:`Confluent CLI|clients/cloud/confluent-cli/README.md`
 * :devx-examples:`Confluent Cloud CLI|clients/cloud/ccloud/README.md`
