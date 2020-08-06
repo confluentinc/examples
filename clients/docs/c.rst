@@ -39,8 +39,8 @@ Setup
 -----
 
 #. Clone the `confluentinc/examples GitHub repository
-<https://github.com/confluentinc/examples>`__ and check out the
-:litwithvars:`|release|-post` branch.
+   <https://github.com/confluentinc/examples>`__ and check out the
+   :litwithvars:`|release|-post` branch.
 
    .. codewithvars:: bash
 
