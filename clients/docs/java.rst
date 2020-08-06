@@ -162,7 +162,7 @@ Kafka Streams
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-You should see:
+   You should see:
 
    .. code:-block:: bash
 
