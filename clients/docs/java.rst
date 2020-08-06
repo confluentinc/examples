@@ -30,8 +30,8 @@ Setup
 -----
 
 #. Clone the `confluentinc/examples GitHub repository
-<https://github.com/confluentinc/examples>`__ and check out the
-:litwithvars:`|release|-post` branch.
+  <https://github.com/confluentinc/examples>`__ and check out the
+  :litwithvars:`|release|-post` branch.
 
    .. codewithvars:: bash
 
@@ -114,7 +114,7 @@ Consume Records
 #. Run the consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
-   - the same topic name you used in step 1.
+   - the same topic name you used earlier.
 
    .. code-block:: text
 
