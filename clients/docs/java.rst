@@ -114,7 +114,7 @@ Consume Records
 #. Run the consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
-   - the topic name you used earlier.
+   - the topic name you used earlier
 
    .. code-block:: text
 
