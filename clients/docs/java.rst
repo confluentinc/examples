@@ -271,8 +271,7 @@ Avro Kafka Streams
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
-#. View the :devx-examples:`Kafka Streams Avro
-   code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/StreamsAvroExample.java`.
+#. View the :devx-examples:`Kafka Streams Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/StreamsAvroExample.java`.
 
 
 Schema Evolution with Confluent Cloud Schema Registry
