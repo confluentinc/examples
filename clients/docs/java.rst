@@ -45,7 +45,7 @@ Setup
 
       cd clients/cloud/java/
 
-#. .. include:: includes/client-example-create-file.rst
+#. .. include:: includes/client-example-create-file-java.rst
 
 
 Basic Producer and Consumer
