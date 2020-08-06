@@ -80,7 +80,7 @@ Produce Records
 
       ./producer test1 $HOME/.confluent/librdkafka.config
 
-#. Verify the producer received all the messages. You should see:
+#. Verify the producer sent all the messages. You should see:
 
    .. code-block:: bash
 
