@@ -76,7 +76,7 @@ Produce Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-#. Verify that the consumer received all the messages. You should see:
+#. Verify that the producer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -125,7 +125,7 @@ Consume Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-#. Verify that the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -158,7 +158,7 @@ Consume Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-#. Verify the consumer received all the messages. You should see:
+You should see:
 
    .. code:-block:: bash
 

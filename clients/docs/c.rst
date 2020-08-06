@@ -1,14 +1,23 @@
-Overview
-========
+.. _client-examples-c:
 
-Produce messages to and consume messages from a Kafka cluster using the
-C client `librdkafka <https://github.com/edenhill/librdkafka>`__.
+C
+===
+
+
+In this tutorial, you will run a C client application that produces messages to
+and consumes messages from an |ak-tm| cluster.
+
+.. include:: includes/client-example-overview.rst
+
 
 Prerequisites
-=============
+-------------
+
+Client
+~~~~~~
 
 -  `librdkafka <https://github.com/edenhill/librdkafka>`__ installed on
-   your machine, see `installation
+   your machine. See the `librdkafka installation
    instructions <https://github.com/edenhill/librdkafka/blob/master/README.md#instructions>`__.
 
 -  Create a local file (e.g. at ``$HOME/.confluent/librdkafka.config``)
@@ -19,45 +28,57 @@ Prerequisites
    instructions <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
    to properly create this file.
 
--  If you are running on Confluent Cloud, you must have access to a
-   `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-   cluster
 
-   -  The first 20 users to sign up for `Confluent
-      Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-      and use promo code ``C50INTEG`` will receive an additional $50
-      free usage
-      (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__).
+Kafka Cluster
+~~~~~~~~~~~~~
 
-Build the example applications
-==============================
+.. include:: includes/client-example-prerequisites.rst
 
-From this directory, simply run make to build the ``producer`` and
-``consumer`` applications.
 
-.. code:: bash
+Setup
+-----
 
-   $ make
-   cc   consumer.c common.c json.c -o consumer -lrdkafka -lm
-   cc   producer.c common.c json.c -o producer -lrdkafka -lm
+#. Clone the `confluentinc/examples GitHub repository
+<https://github.com/confluentinc/examples>`__ and check out the
+:litwithvars:`|release|-post` branch.
 
-Example 1: Hello World!
-=======================
+   .. codewithvars:: bash
 
-In this example, the producer writes JSON data to a topic in your Kafka
-cluster. Each record has a key representing a username (e.g. ``alice``)
-and a value of a count, formatted as json (e.g. ``{"count": 0}``). The
-consumer reads the same topic and keeps a rolling sum of the counts as
-it processes each record.
+      git clone https://github.com/confluentinc/examples
+      cd examples
+      git checkout |release|-post
 
-1. Run the producer, passing in arguments for (a) the topic name, and
-   (b) the local file with configuration parameters to connect to your
-   Kafka cluster:
+#. Change directory to the example for C.
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ ./producer test1 $HOME/.confluent/librdkafka.config
+      cd clients/cloud/c/
+
+#. .. include:: includes/client-example-create-file.rst
+
+
+Basic Producer and Consumer
+----------------------------
+
+In this example, the producer writes JSON data to a topic in your Kafka cluster.
+Each record has a key representing a username (for example, ``alice``) and a
+value of a count, in JSON format (for example, ``{"count": 0}``). The consumer
+reads the same topic and keeps a rolling sum of the counts as it processes each
+record.
+
+#. Run the producer, passing in arguments for:
+
+   - the local file with configuration parameters to connect to your Kafka
+     cluster
+   - the topic name
+
+.. code-block:: bash
+
+   ./producer test1 $HOME/.confluent/librdkafka.config
+
+#. Verify that the producer received all the messages. You should see:
+
+
    Creating topic test1
    Topic test1 successfully created
    Producing message #0 to test1: alice={ "count": 1 }
@@ -88,9 +109,9 @@ it processes each record.
    connect to your Kafka cluster. Verify that the consumer received all
    the messages, then press Ctrl-C to exit.
 
-.. code:: bash
+.. code-block:: bash
 
-   $ ./consumer test1 $HOME/.confluent/librdkafka.config
+   ./consumer test1 $HOME/.confluent/librdkafka.config
    Subscribing to test1, waiting for assignment and messages...
    Press Ctrl-C to exit.
    Received message on test1 [0] at offset 0: { "count": 1 }
