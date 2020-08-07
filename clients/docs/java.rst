@@ -64,7 +64,7 @@ Produce Records
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
-
+   - the topic name
 
 #. Compile the Java code.
 
@@ -74,7 +74,7 @@ Produce Records
 
 #. Run the producer.
 
-   .. code-block:: text
+   .. code-block:: bash
 
       # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
@@ -82,7 +82,7 @@ Produce Records
 
 #. Verify that the producer received all the messages. You should see:
 
-   .. code-block:: text
+   .. code-block:: bash
 
       ...
       Producing record: alice {"count":0}
@@ -127,14 +127,14 @@ Consume Records
 
 #. Run the consumer.
 
-   .. code-block:: text
+   .. code-block:: bash
 
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
 #. Verify the consumer received all the messages. You should see:
 
-   .. code-block:: text
+   .. code-block:: bash
 
       ...
       Consumed record with key alice and value {"count":0}, and updated total count to 0
@@ -170,14 +170,14 @@ Kafka Streams
 
 #. Run the Kafka streams application.
 
-   .. code-block:: text
+   .. code-block:: bash
 
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
    You should see:
 
-   .. code-block:: text
+   .. code-block:: bash
 
       ...
       [Consumed record]: alice, 0
@@ -240,7 +240,7 @@ Produce Avro Records
 
 #. Run the Avro producer.
 
-   .. code-block:: text
+   .. code-block:: bash
 
       # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
@@ -319,14 +319,12 @@ Schema Evolution with Confluent Cloud Schema Registry
    compatibility
    <https://docs.confluent.io/current/schema-registry/develop/maven-plugin.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud#schema-registry-test-compatibility>`__
    between newer schema versions and older schema versions in |ccloud| |sr|. The
-   `pom.xml <pom.xml>`__ hardcodes the Schema Registry subject name to
-   ``test2-value``—change this if you didn't use topic name ``test2``. Then
-   test local schema compatibility for
-   `src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc
-   <src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc>`__,
+   :devx-examples:`pom.xml|clients/cloud/java/pom.xml` hardcodes the Schema
+   Registry subject name to ``test2-value``—change this if you didn't use topic
+   name ``test2``. Then test local schema compatibility for
+   :devx-example:`DataRecordAvro2a.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc`,
    which should fail, and
-   `src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc
-   <src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc>`__,
+   :devx-example:`DataRecordAvro2b.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc`,
    which should pass.
 
    .. code-block:: text
@@ -337,5 +335,3 @@ Schema Evolution with Confluent Cloud Schema Registry
       # DataRecordAvro2b.avsc compatibility test: PASS
       mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc"
 
-#. View the :devx-examples:`Kafka Streams
-   code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/StreamsExample.java`.
