@@ -322,7 +322,7 @@ Schema Evolution with Confluent Cloud Schema Registry
    :devx-examples:`pom.xml|clients/cloud/java/pom.xml` hardcodes the Schema
    Registry subject name to ``test2-value``—change this if you didn't use topic
    name ``test2``. Then test local schema compatibility for
-   :devx-example:`DataRecordAvro2a.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc`,
+   :devx-examples:`DataRecordAvro2a.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc`,
    which should fail, and
    :devx-example:`DataRecordAvro2b.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc`,
    which should pass.
@@ -334,4 +334,3 @@ Schema Evolution with Confluent Cloud Schema Registry
 
       # DataRecordAvro2b.avsc compatibility test: PASS
       mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc"
-
