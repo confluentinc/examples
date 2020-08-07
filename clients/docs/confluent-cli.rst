@@ -1,15 +1,17 @@
+.. _client-examples-confluent-cli:
+
 Confluent CLI
 --------------
 
-In this tutorial, you will run a Conlfuent Cloud CLI client application that produces
+In this tutorial, you will run a Confluent Cloud CLI client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
 .. note::
 
-   The Confluent CLI is meant for development purposes only and is
-   not suitable for a production environment.
+   The Confluent CLI is meant for development purposes only and isn't suitable
+   for a production environment.
 
 Prerequisites
 -------------

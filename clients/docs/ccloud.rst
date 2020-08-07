@@ -1,73 +1,91 @@
+.. _client-examples-ccloud:
+
 Confluent Cloud CLI
 -------------------
 
-In this tutorial, you will run a Conlfuent Cloud CLI client application that produces
+In this tutorial, you will run a Confluent Cloud CLI client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
 
-Prerequisites
--------------
+Client
+~~~~~~
 
 -  Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
 
--  You must have access to a `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-   cluster
+Kafka Cluster
+~~~~~~~~~~~~~
 
-   -  The first 20 users to sign up for `Confluent
-      Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-      and use promo code ``C50INTEG`` will receive an additional $50
-      free usage
-      (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__).
+.. include:: includes/client-example-prerequisites.rst
 
-Example 1: Hello World!
-=======================
 
-In this example, the producer writes Kafka data to a topic in your Kafka
-cluster. Each record has a key representing a username (e.g. ``alice``)
-and a value of a count, formatted as json (e.g. ``{"count": 0}``). The
-consumer reads the same topic.
+Setup
+-----
 
-1. Create the topic in Confluent Cloud
+#. Clone the `confluentinc/examples GitHub repository
+   <https://github.com/confluentinc/examples>`__ and check out the
+   :litwithvars:`|release|-post` branch.
 
-.. code:: bash
+   .. codewithvars:: bash
 
-   $ ccloud kafka topic create test1
+      git clone https://github.com/confluentinc/examples
+      cd examples
+      git checkout |release|-post
 
-2. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`, writing messages to topic
-   ``test1``, passing in additional arguments:
+#. Change directory to the example for Confluent Cloud CLI.
 
--  ``--parse-key --delimiter ,``: pass key and value, separated by a
-   comma
+   .. code-block:: bash
 
-.. code:: bash
+      cd clients/cloud/confluent-cli/
+
+#. .. include:: includes/client-example-create-file.rst
+
+
+Basic Producer and Consumer
+----------------------------
+
+.. include:: includes/producer-consumer-description.rst
+
+
+Produce Records
+~~~~~~~~~~~~~~~
+
+#. Create the topic in Confluent Cloud.
+
+   .. code:: bash
+
+      ccloud kafka topic create test1
+
+#. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`,
+   writing messages to topic ``test1``, passing in additional arguments:
+
+   -  ``--parse-key --delimiter ,``: pass key and value, separated by a comma
+
+   .. code:: bash
 
    $ ccloud kafka topic produce test1 --parse-key --delimiter ,
 
-Type a few messages, using a ``,`` as the separator between the message
-key and value:
+#. Type a few messages, using a ``,`` as the separator between the message key
+   and value:
 
-.. code:: bash
+   .. code-block:: bash
 
-   alice,{"count":0}
-   alice,{"count":1}
-   alice,{"count":2}
+      alice,{"count":0}
+      alice,{"count":1}
+      alice,{"count":2}
 
-When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``<ctrl>-c``.
 
-2. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`,
-   reading messages from topic ``test1``, passing in additional
-   arguments:
+#. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`,
+   reading messages from topic ``test1``, passing in the following arguments:
 
--  ``-b``: print all messages from the beginning of the topic
--  ``--print-key``: print key and value (by default, it only prints
-   value)
+   -  ``-b``: print all messages from the beginning of the topic -
+   - ``--print-key``: print key and value (by default, it only prints value)
 
-.. code:: bash
+   .. code:: bash
 
-   $ ccloud kafka topic consume test1 -b --print-key
+      ccloud kafka topic consume test1 -b --print-key
 
 You should see the messages you typed in the previous step.
 
@@ -77,13 +95,13 @@ You should see the messages you typed in the previous step.
    alice   {"count":1}
    alice   {"count":2}
 
-When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``CTRL-C``.
 
-3. To demo the above commands, you may also run the provided script
-   `ccloud-example.sh <ccloud-example.sh>`__.
+#. View the :devx-examples:`producer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-example.sh`.
 
-Example 2: Avro And Confluent Cloud Schema Registry
-===================================================
+
+Avro And Confluent Cloud Schema Registry
+----------------------------------------
 
 This example is similar to the previous example, except the value is
 formatted as Avro and integrates with the Confluent Cloud Schema
