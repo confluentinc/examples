@@ -1,5 +1,5 @@
 
-Create a local file (for example, at ``$HOME/.confluent/librdkafka.config``) with
+Create a local file (for example, at ``$HOME/.confluent/java.config``) with
 configuration parameters to connect to your |ak| cluster, which can be in
 `Confluent Cloud
 <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
