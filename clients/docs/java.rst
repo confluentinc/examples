@@ -51,11 +51,7 @@ Setup
 Basic Producer and Consumer and Kafka Streams
 ---------------------------------------------
 
-In this example, the producer writes Kafka data to a topic in your Kafka
-cluster. Each record has a key representing a username (for example, ``alice``)
-and a value of a count, in JSON format (for example, ``{"Count": 0}``). The
-consumer reads the same topic and keeps a rolling sum of the counts as it
-processes each record.
+.. include:: includes/producer-consumer-description.rst
 
 
 Produce Records
@@ -74,13 +70,12 @@ Produce Records
 
    .. code-block:: bash
 
-      # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
 #. Verify that the producer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       Producing record: alice {"count":0}
@@ -124,7 +119,7 @@ Consume Records
 
 #. Verify the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       Consumed record with key alice and value {"count":0}, and updated total count to 0
@@ -159,7 +154,7 @@ Kafka Streams
 
    You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       [Consumed record]: alice, 0
@@ -216,7 +211,6 @@ Produce Avro Records
 
    .. code-block:: bash
 
-      # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
