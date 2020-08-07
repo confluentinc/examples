@@ -12,6 +12,7 @@ These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and
 * :devx-examples:`Confluent CLI|clients/cloud/confluent-cli/README.md`
 * :devx-examples:`Confluent Cloud CLI|clients/cloud/ccloud/README.md`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
+* :ref:`Go <client-examples-go>`
 * :devx-examples:`Go|clients/cloud/go/README.md`
 * :devx-examples:`Groovy|clients/cloud/groovy/README.md`
 * :ref:`Java <client-examples-java>`
@@ -37,5 +38,6 @@ These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and
 
       c
       csharp
+      go
       java
       python
