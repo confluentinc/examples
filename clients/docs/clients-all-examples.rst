@@ -38,6 +38,6 @@ These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and
 
       c
       csharp
+      go
       java
       python
-      go
