@@ -173,7 +173,7 @@ Consume Records
 
       ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
 
-   Verify the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -266,7 +266,7 @@ Consume Avro Records
 
        ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
 
-   Verify the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -284,6 +284,7 @@ Consume Avro Records
        Consumed record with key alice and value 8,                       and updated total count to 36
        Consumed record with key alice and value 9,                       and updated total count to 45
        ...
+
 
 |ccloud| |sr|
 ~~~~~~~~~~~~~
