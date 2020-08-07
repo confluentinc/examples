@@ -47,9 +47,8 @@ Setup
 Basic Producer and Consumer
 ---------------------------
 
-In this example, the producer writes records to a topic in your |ak| cluster.
-Each record has a key representing a username (e.g. ``alice``) and a value of a count, formatted as json (e.g. ``{"count": 0}``).
-The consumer reads the same topic and keeps a rolling sum of the counts as it processes each record.
+.. include:: includes/producer-consumer-description.rst
+
 
 Produce Records
 ~~~~~~~~~~~~~~~

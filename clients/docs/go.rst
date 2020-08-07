@@ -50,11 +50,10 @@ Setup
 Basic Producer and Consumer
 ---------------------------
 
-In this example, the producer writes Kafka data to a topic in your Kafka
-cluster. Each record has a key representing a username (for example, ``alice``)
-and a value of a count, in JSON format (for example, ``{"Count": 0}``). The
-consumer reads the same topic and keeps a rolling sum of the counts as it
-processes each record.
+In this example, the producer application writes |ak| data to a topic in your |ak| cluster.
+If the topic does not already exist in your |ak| cluster, the producer application will use the Kafka Admin Client API to create the topic.
+Each record written to |ak| has a key representing a username (for example, `alice`) and a value of a count, formatted as json (for example, `{"Count": 0}`).
+The consumer application reads the same |ak| topic and keeps a rolling sum of the count as it processes each record.
 
 
 Produce Records
@@ -77,7 +76,7 @@ Produce Records
 
 #. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       Preparing to produce record: alice   {"Count": 0}
       Preparing to produce record: alice   {"Count": 1}
@@ -126,7 +125,7 @@ Consume Records
 
 #. Verify the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       Consumed record with key alice and value {"Count":0}, and updated total count to 0
