@@ -123,6 +123,9 @@ and a value of a count, formatted as json (for example, ``{"count": 0}``). The
 consumer reads the same topic and keeps a rolling sum of the counts as
 it processes each record.
 
+Produce Records
+~~~~~~~~~~~~~~~
+
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
@@ -158,6 +161,9 @@ it processes each record.
        Produced record to topic test1 partition [0] @ offset 9
        10 messages were produced to topic test1!
 
+Consume Records
+~~~~~~~~~~~~~~~
+
 #. Run the consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster.
@@ -167,7 +173,7 @@ it processes each record.
 
       ./consumer.py -f $HOME/.confluent/librdkafka.config -t test1
 
-   Verify the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -209,11 +215,8 @@ further details.
 
 #. .. include:: includes/schema-registry-librdkafka.rst
 
-#. Create the topic in |ccloud|.
-
-   .. code-block:: bash
-
-       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server"  $HOME/.confluent/librdkafka.config | tail -1` --command-config  $HOME/.confluent/librdkafka.config --topic test2 --create --replication-factor 3 --partitions 6
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Run the Avro producer, passing in arguments for:
 
@@ -250,6 +253,9 @@ further details.
       Produced record to topic test2 partition [0] @ offset 9
       10 messages were produced to topic test2!
 
+Consume Avro Records
+~~~~~~~~~~~~~~~~~~~~
+
 #. Run the Avro consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your
@@ -260,7 +266,7 @@ further details.
 
        ./consumer_ccsr.py -f $HOME/.confluent/librdkafka.config -t test2
 
-   Verify the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: bash
 
@@ -278,6 +284,10 @@ further details.
        Consumed record with key alice and value 8,                       and updated total count to 36
        Consumed record with key alice and value 9,                       and updated total count to 45
        ...
+
+
+|ccloud| |sr|
+~~~~~~~~~~~~~
 
 #. View the schema information registered in |ccloud| Schema
    Registry. In the output below, substitute values for ``{{ SR_API_KEY }}``,
