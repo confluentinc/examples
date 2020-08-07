@@ -48,8 +48,8 @@ Setup
 #. .. include:: includes/client-example-create-file-java.rst
 
 
-Basic Producer and Consumer
----------------------------
+Basic Producer and Consumer and Kafka Streams
+---------------------------------------------
 
 In this example, the producer writes Kafka data to a topic in your Kafka
 cluster. Each record has a key representing a username (for example, ``alice``)
@@ -64,21 +64,25 @@ Produce Records
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
-   - topic name
+
+
+#. Compile the Java code.
+
+   .. code-block:: bash
+
+       mvn clean package
+
+#. Run the producer.
 
    .. code-block:: text
 
-      # Compile the Java code
-      mvn clean package
-
-      # Run the producer
-          # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
+      # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
 #. Verify that the producer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       Producing record: alice {"count":0}
@@ -115,18 +119,22 @@ Consume Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name you used earlier
 
+#. Compile the Java code.
+
+   .. code-block:: bash
+
+       mvn clean package
+
+#. Run the consumer.
+
    .. code-block:: text
 
-      # Compile the Java code
-      mvn clean package
-
-      # Run the consumer
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
 #. Verify the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       Consumed record with key alice and value {"count":0}, and updated total count to 0
@@ -201,7 +209,7 @@ Avro and Confluent Cloud Schema Registry
 
 This example is similar to the previous example, except the value is formatted
 as Avro and integrates with the |ccloud| |sr|. Before using |ccloud| |sr|, check
-its |ccloud| |sr|.
+its :ref:`availability and limits <cloud-limits>`.
 
 #. .. include:: includes/client-example-vpc.rst
 

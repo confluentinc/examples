@@ -70,6 +70,20 @@ record.
 Produce Records
 ~~~~~~~~~~~~~~~
 
+#. Build the example ``producer`` and ``consumer`` applications.
+
+   .. code-block:: bash
+
+      make
+
+   You should see:
+
+   .. code-block:: bash
+
+      cc   consumer.c common.c json.c -o consumer -lrdkafka -lm
+      cc   producer.c common.c json.c -o producer -lrdkafka -lm
+
+
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka
@@ -82,7 +96,7 @@ Produce Records
 
 #. Verify the producer sent all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       Creating topic test1
       Topic test1 successfully created
@@ -116,9 +130,9 @@ Consume Records
 
 #. Run the consumer, passing in arguments for:
 
+   - the topic name you used earlier
    - the local file with configuration parameters to connect to your Kafka
      cluster.
-   - the topic name you used earlier
 
    .. code-block:: bash
 
@@ -126,7 +140,7 @@ Consume Records
 
 #. Verify the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       Subscribing to test1, waiting for assignment and messages...
       Press Ctrl-C to exit.
