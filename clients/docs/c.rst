@@ -60,11 +60,7 @@ Setup
 Basic Producer and Consumer
 ----------------------------
 
-In this example, the producer writes JSON data to a topic in your Kafka cluster.
-Each record has a key representing a username (for example, ``alice``) and a
-value of a count, in JSON format (for example, ``{"count": 0}``). The consumer
-reads the same topic and keeps a rolling sum of the counts as it processes each
-record.
+.. include:: includes/producer-consumer-description.rst 
 
 
 Produce Records
