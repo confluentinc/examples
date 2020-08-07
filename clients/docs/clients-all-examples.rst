@@ -7,14 +7,14 @@ There are many other programming languages that provide |ak| client libraries as
 Refer to :devx-examples:`confluentinc/examples|clients/cloud/README.md` GitHub repository for client code written in the following programming languages and tools.
 These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and for the subset of languages that support it, there are additional examples using Avro and |sr-long|.
 
-* :devx-examples:`C|clients/cloud/c/README.md`
+* :ref:`C <client-examples-c>`
 * :devx-examples:`Clojure|clients/cloud/clojure/README.md`
 * :devx-examples:`Confluent CLI|clients/cloud/confluent-cli/README.md`
 * :devx-examples:`Confluent Cloud CLI|clients/cloud/ccloud/README.md`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
 * :devx-examples:`Go|clients/cloud/go/README.md`
 * :devx-examples:`Groovy|clients/cloud/groovy/README.md`
-* :devx-examples:`Java|clients/cloud/java/README.md`
+* :ref:`Java <client-examples-java>`
 * :devx-examples:`Java Spring Boot|clients/cloud/java-springboot/README.md`
 * :devx-examples:`Apache Kafka commands|clients/cloud/kafka-commands/README.md`
 * :devx-examples:`Kafka Connect datagen|clients/cloud/kafka-connect-datagen/README.md`
@@ -35,5 +35,7 @@ These "Hello, World!" examples produce to and consume from |ak-tm| clusters, and
       :maxdepth: 1
       :hidden:
 
+      c
       csharp
+      java
       python
