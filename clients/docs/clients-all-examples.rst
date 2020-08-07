@@ -13,7 +13,6 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :devx-examples:`Confluent Cloud CLI|clients/cloud/ccloud/README.md`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
 * :ref:`Go <client-examples-go>`
-* :devx-examples:`Go|clients/cloud/go/README.md`
 * :devx-examples:`Groovy|clients/cloud/groovy/README.md`
 * :ref:`Java <client-examples-java>`
 * :devx-examples:`Java Spring Boot|clients/cloud/java-springboot/README.md`
