@@ -1,7 +1,7 @@
 .. _client-examples-c:
 
 C
-===
+=
 
 
 In this tutorial, you will run a C client application that produces messages to
