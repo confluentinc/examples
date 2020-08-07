@@ -324,7 +324,7 @@ Schema Evolution with Confluent Cloud Schema Registry
    name ``test2``. Then test local schema compatibility for
    :devx-examples:`DataRecordAvro2a.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc`,
    which should fail, and
-   :devx-example:`DataRecordAvro2b.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc`,
+   :devx-examples:`DataRecordAvro2b.avsc|clients/cloud/java/src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc`,
    which should pass.
 
    .. code-block:: text
