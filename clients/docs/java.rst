@@ -61,18 +61,16 @@ processes each record.
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Run the producer, passing in arguments for:
-
-   - the local file with configuration parameters to connect to your Kafka cluster
-   - the topic name
-
 #. Compile the Java code.
 
    .. code-block:: bash
 
        mvn clean package
 
-#. Run the producer.
+#. Run the producer, passing in arguments for:
+
+   - the local file with configuration parameters to connect to your Kafka cluster
+   - the topic name
 
    .. code-block:: bash
 
@@ -119,14 +117,6 @@ Consume Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name you used earlier
 
-#. Compile the Java code.
-
-   .. code-block:: bash
-
-       mvn clean package
-
-#. Run the consumer.
-
    .. code-block:: bash
 
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" \
@@ -161,14 +151,6 @@ Kafka Streams
    - the local file with configuration parameters to connect to your Kafka
      cluster
    - the topic name you used earlier
-
-#. Compile the Java code.
-
-   .. code-block:: bash
-
-       mvn clean package
-
-#. Run the Kafka streams application.
 
    .. code-block:: bash
 
@@ -232,14 +214,6 @@ Produce Avro Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name
 
-#. Compile the Java code.
-
-   .. code-block:: bash
-
-       mvn clean package
-
-#. Run the Avro producer.
-
    .. code-block:: bash
 
       # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
@@ -257,14 +231,6 @@ Consume Avro Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name
 
-#. Compile the Java code.
-
-   .. code-block:: bash
-
-       mvn clean package
-
-#. Run the Avro consumer.
-
    .. code-block:: bash
 
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
@@ -281,14 +247,6 @@ Avro Kafka Streams
    -  the local file with configuration parameters to connect to your Kafka
       cluster
    -  the same topic name you used earlier
-
-#. Compile the Java code.
-
-   .. code-block:: bash
-
-       mvn clean package
-
-#. Run the Avro Kafka streams application.
 
    .. code-block:: bash
 
