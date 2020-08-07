@@ -60,6 +60,12 @@ processes each record.
 Produce Records
 ~~~~~~~~~~~~~~~
 
+#. Build the producer application.
+
+   .. code-block:: bash
+
+      go build producer.go
+
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
@@ -67,9 +73,9 @@ Produce Records
 
    .. code-block:: bash
 
-      go build producer.go
+      ./producer -f $HOME/.confluent/librdkafka.config -t test1
 
-   You should see:
+#. You should see:
 
    .. code-block:: bash
 
@@ -102,6 +108,12 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
+#. Build the producer application.
+
+   .. code-block:: bash
+
+      go build consumer.go
+
 #. Run the consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka
@@ -110,8 +122,7 @@ Consume Records
    
    .. code-block:: bash
 
-       go build consumer.go
-       
+      ./consumer -f $HOME/.confluent/librdkafka.config -t test1
 
 #. Verify the consumer received all the messages. You should see:
 
@@ -129,6 +140,5 @@ Consume Records
       Consumed record with key alice and value {"Count":8}, and updated total count to 36
       Consumed record with key alice and value {"Count":9}, and updated total count to 45
       ...
-
 
 #. View the :devx-examples:`consumer code|clients/cloud/go/consumer.go`.
