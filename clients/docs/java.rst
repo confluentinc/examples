@@ -162,18 +162,22 @@ Kafka Streams
      cluster
    - the topic name you used earlier
 
+#. Compile the Java code.
+
+   .. code-block:: bash
+
+       mvn clean package
+
+#. Run the Kafka streams application.
+
    .. code-block:: text
 
-      # Compile the Java code
-      mvn clean package
-
-      # Run the Kafka streams application
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
    You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ...
       [Consumed record]: alice, 0
@@ -215,7 +219,7 @@ its :ref:`availability and limits <cloud-limits>`.
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 
-#. .. include:: includes/client-example-schema-registry-2.rst
+#. .. include:: includes/client-example-schema-registry-2-java.rst
 
 #. .. include:: includes/schema-registry-java.rst
 
@@ -228,13 +232,17 @@ Produce Avro Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name
 
+#. Compile the Java code.
+
+   .. code-block:: bash
+
+       mvn clean package
+
+#. Run the Avro producer.
+
    .. code-block:: text
 
-      # Compile the Java code
-      mvn clean package
-
-      # Run the Avro producer
-        # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
+      # If the topic does not already exist, the code will use the Kafka Admin Client API to create the topic
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
@@ -249,12 +257,16 @@ Consume Avro Records
    - the local file with configuration parameters to connect to your Kafka cluster
    - the topic name
 
-   .. code-block:: text
+#. Compile the Java code.
 
-      # Compile the Java code
-      mvn clean package
+   .. code-block:: bash
 
-      # Run the Avro consumer
+       mvn clean package
+
+#. Run the Avro consumer.
+
+   .. code-block:: bash
+
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
@@ -270,12 +282,16 @@ Avro Kafka Streams
       cluster
    -  the same topic name you used earlier
 
-   .. code-block:: text
+#. Compile the Java code.
 
-      # Compile the Java code
-      mvn clean package
+   .. code-block:: bash
 
-      # Run the Avro Kafka streams application
+       mvn clean package
+
+#. Run the Avro Kafka streams application.
+
+   .. code-block:: bash
+
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsAvroExample" \
       -Dexec.args="$HOME/.confluent/java.config test2"
 
