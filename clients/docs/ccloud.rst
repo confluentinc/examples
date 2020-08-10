@@ -148,6 +148,9 @@ Produce Avro Records
 
       echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
 
+.. should the user verify anything after running the following
+   command or is there specific output they should see after running the command?
+
 #. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`
    writing messages to topic ``test2``, passing in arguments for:
 
@@ -159,8 +162,6 @@ Produce Avro Records
    .. code-block:: bash
 
       ccloud kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
-
-.. should the user verify anything after running the previous command or is there specific output they should see after running the command
 
       .. note::
 
