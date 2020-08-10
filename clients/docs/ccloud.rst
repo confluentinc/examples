@@ -51,6 +51,8 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
+.. Should steps 1 through 3 below be under this  "Produce Records" section or before it?
+
 #. Create the topic in Confluent Cloud.
 
    .. code:: bash
@@ -62,9 +64,11 @@ Produce Records
 
    -  ``--parse-key --delimiter ,``: pass key and value, separated by a comma
 
-   .. code:: bash
+   .. code-block:: bash
 
-   $ ccloud kafka topic produce test1 --parse-key --delimiter ,
+      ccloud kafka topic produce test1 --parse-key --delimiter ,
+
+.. Is there any output the user should verfiy when running the previous command or expected output they should see?
 
 #. Type a few messages, using a ``,`` as the separator between the message key
    and value:
@@ -77,6 +81,15 @@ Produce Records
 
 #. When you are done, press ``<ctrl>-c``.
 
+.. is this the follwoing link the correct source code link? I only saw two .sh files in the ccloud directory, but we have
+   basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
+
+#. View the :devx-examples:`producer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-example.sh`.
+
+
+Consume Records
+~~~~~~~~~~~~~~~
+
 #. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`,
    reading messages from topic ``test1``, passing in the following arguments:
 
@@ -87,17 +100,20 @@ Produce Records
 
       ccloud kafka topic consume test1 -b --print-key
 
-You should see the messages you typed in the previous step.
+   You should see the messages you typed in the previous step.
 
-.. code:: bash
+   .. code:: bash
 
-   alice   {"count":0}
-   alice   {"count":1}
-   alice   {"count":2}
+       alice   {"count":0}
+       alice   {"count":1}
+       alice   {"count":2}
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`producer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-example.sh`.
+.. Not sure the correct source code link. I only saw two .sh files in the ccloud directory, but we have
+   basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
+
+#. View the :devx-examples:`consumer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-example.sh`.
 
 
 Avro And Confluent Cloud Schema Registry
@@ -106,91 +122,114 @@ Avro And Confluent Cloud Schema Registry
 .. include:: includes/client-example-schema-registry-3.rst
 
 
-Note that your VPC must be able to connect to the Confluent Cloud Schema
-Registry public internet endpoint.
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
-1. As described in the `Confluent Cloud
+.. Should steps 1 through 3 below be under this  "Produce Avro Records" section or before it?
+
+#. As described in the `Confluent Cloud
    quickstart <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
    in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry
    and create an API key and secret to connect to it.
 
-2. Create the topic in Confluent Cloud
+#. Create the topic in Confluent Cloud.
 
-.. code:: bash
+   .. code-block:: bash
 
-   $ ccloud kafka topic create test2
+      ccloud kafka topic create test2
 
-3. Create a file that has the schema of your message payload.
+#. Create a file that has the schema of your message payload.
 
-.. code:: bash
+   .. code-block:: bash
 
-   echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
+      echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
 
-4. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`
-   writing messages to topic ``test2``, passing in additional arguments:
+#. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`
+   writing messages to topic ``test2``, passing in arguments for:
 
--  ``--value-format avro``: use Avro data format for the value part of
-   the message
--  ``--schema``: the path to the schema file
--  ``--parse-key --delimiter ,``: pass key and value, separated by a
-   comma
+   -  ``--value-format avro``: use Avro data format for the value part of the
+      message
+   -  ``--schema``: the path to the schema file
+   -  ``--parse-key --delimiter ,``: pass key and value, separated by a comma
 
-Note: the first time you run this, you will need to provide user
-credentials for Confluent Cloud Schema Registry.
+   .. code-block:: bash
 
-.. code:: bash
+      ccloud kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
 
-   $ ccloud kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
+.. should the user verify anything after running the previous command or is there specific output they should see after running the command
 
-Type a few messages, using a ``,`` as the separator between the message
-key and value:
+      .. note::
 
-.. code:: bash
+          The first time you run this command, you must provide user
+          credentials for Confluent Cloud Schema Registry.
 
-   alice,{"count":3}
-   alice,{"count":4}
-   alice,{"count":5}
+.. Is there a page where we can direct users to for help in providing their credentials for Confluent Cloud Schema Registry?
 
-When you are done, press ``<ctrl>-c``.
+#. Type a few messages, using a ``,`` as the separator between the message key and value:
 
-5. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`
-   reading messages from topic ``test2``, passing in additional
-   arguments:
+   .. code-block:: bash
 
--  ``-b``: print all messages from the beginning of the topic
--  ``--value-format avro``: use Avro data format for the value part of
-   the message
--  ``--print-key``: print key and value (by default, it only prints
-   value)
+      alice,{"count":3}
+      alice,{"count":4}
+      alice,{"count":5}
 
-.. code:: bash
+#. When you are done, press ``<ctrl>-c``.
 
-   $ ccloud kafka topic consume test2 -b --value-format avro --print-key
+.. Not sure the correct source code link. I only saw two .sh files in the ccloud directory, but we have
+   basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
 
-You should see the messages you typed in the previous step.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-ccsr-example.sh`.
 
-.. code:: bash
 
-   alice   {"count":3}
-   alice   {"count":4}
-   alice   {"count":5}
+Consume Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
-When you are done, press ``<ctrl>-c``.
+#. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`
+   reading messages from topic ``test2``, passing in arguments for:
 
-6. To demo the above commands, you may also run the provided script
-   `ccloud-ccsr-example.sh <ccloud-ccsr-example.sh>`__.
+   -  ``-b``: print all messages from the beginning of the topic
+   -  ``--value-format avro``: use Avro data format for the value part of the
+      message
+   -  ``--print-key``: print key and value (by default, it only prints value)
 
-7. View the schema information registered in Confluent Cloud Schema
-   Registry. In the output below, substitute values for
-   ``{{ SR_API_KEY }}``, ``{{ SR_API_SECRET }}``, and
-   ``{{ SR_ENDPOINT }}``.
+   .. code-block:: bash
 
-   ::
+      ccloud kafka topic consume test2 -b --value-format avro --print-key
+
+.. which step is being referred to in "previous step."
+
+   You should see the messages you typed in the previous step.
+
+   .. code-block:: bash
+
+       alice   {"count":3}
+       alice   {"count":4}
+       alice   {"count":5}
+
+#. When you are done, press ``<ctrl>-c``.
+
+.. Not sure the correct source code link. I only saw two .sh files in the ccloud directory, but we have
+   basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
+
+#. View the :devx-examples:`producer Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-ccsr-example.sh`.
+
+
+Schema Evolution with Confluent Cloud Schema Registry
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. View the schema information registered in Confluent Cloud Schema Registry. In
+   the output below, substitute values for ``{{ SR_API_KEY }}``,
+   ``{{ SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
+
+   .. code-block:text
 
       # View the list of registered subjects
-      $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
+      curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
       ["test2-value"]
 
       # View the schema information for subject `test2-value`
-      $ curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
+      curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"myrecord\",\"fields\":[{\"name\":\"count\",\"type\":\"int\"}]}"}
+
+.. this was originally step, but I sectioned it off into a section much like is done in the Java file. In the Java file, there is step #2
+   about testing schema compatibility, do we need to add that here?

@@ -100,13 +100,12 @@ When you are done, press ``<ctrl>-c``.
 3. To demo the above commands, you may also run the provided script
    `confluent-cli-example.sh <confluent-cli-example.sh>`__.
 
+
 Avro And Confluent Cloud Schema Registry
 ----------------------------------------
 
 .. include:: includes/client-example-schema-registry-3.rst
 
-Note that your VPC must be able to connect to the Confluent Cloud Schema
-Registry public internet endpoint.
 
 1. As described in the `Confluent Cloud
    quickstart <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
