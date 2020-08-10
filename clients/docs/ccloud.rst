@@ -9,6 +9,9 @@ messages to and consumes messages from an |ak-tm| cluster.
 .. include:: includes/client-example-overview.rst
 
 
+Prerequisites
+-------------
+
 Client
 ~~~~~~
 
@@ -37,7 +40,7 @@ Setup
 
    .. code-block:: bash
 
-      cd clients/cloud/confluent-cli/
+      cd clients/cloud/ccloud/
 
 #. .. include:: includes/client-example-create-file.rst
 
@@ -79,13 +82,10 @@ Produce Records
       alice,{"count":1}
       alice,{"count":2}
 
-#. When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``Ctrl-C``.
 
-.. is this the follwoing link the correct source code link? I only saw two .sh files in the ccloud directory, but we have
+.. Is there a source code link for this one? I only saw two .sh files in the ccloud directory, but we have
    basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
-
-#. View the :devx-examples:`producer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-example.sh`.
-
 
 Consume Records
 ~~~~~~~~~~~~~~~
@@ -173,12 +173,10 @@ Produce Avro Records
       alice,{"count":4}
       alice,{"count":5}
 
-#. When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``Ctrl-C``.
 
-.. Not sure the correct source code link. I only saw two .sh files in the ccloud directory, but we have
+.. Not sure the correct source code link for this one. I only saw two .sh files in the ccloud directory, but we have
    basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
-
-#. View the :devx-examples:`consumer Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-ccsr-example.sh`.
 
 
 Consume Avro Records
@@ -196,20 +194,19 @@ Consume Avro Records
 
       ccloud kafka topic consume test2 -b --value-format avro --print-key
 
-.. which step is being referred to in "previous step."
 
-   You should see the messages you typed in the previous step.
+You should see the messages you typed in the previous step.
+.. "previous step" is referring to step 3 in the "Produce Records" section?
 
-   .. code-block:: bash
+.. code-block:: bash
 
        alice   {"count":3}
        alice   {"count":4}
        alice   {"count":5}
 
-#. When you are done, press ``<ctrl>-c``.
+#. When you are done, press ``Ctrl-C``.
 
-.. Not sure the correct source code link. I only saw two .sh files in the ccloud directory, but we have
-   basic consumer/producer and then Avro consumer/producer. So assuming we'll need 4 source code links in total for this page?
+.. Is the correct source code link?
 
 #. View the :devx-examples:`producer Avro code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/ccloud/ccloud-ccsr-example.sh`.
 
@@ -221,7 +218,7 @@ Schema Evolution with Confluent Cloud Schema Registry
    the output below, substitute values for ``{{ SR_API_KEY }}``,
    ``{{ SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
 
-   .. code-block:text
+   .. code-block:: text
 
       # View the list of registered subjects
       curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
