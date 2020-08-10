@@ -124,7 +124,7 @@ Consume Records
 You should see the messages you typed in the previous step.
 .. Is "previous step" is referring to step 3 in the "Produce Records" section?
 
-.. code:: bash
+.. code-block:: bash
 
    alice   {"count":0}
    alice   {"count":1}
@@ -249,7 +249,7 @@ Consume Records
 
 You should see the messages you typed in the previous step.
 
-.. code:: bash
+.. code-block:: bash
 
    {"count":0}
    {"count":1}

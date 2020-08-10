@@ -58,7 +58,7 @@ Produce Records
 
 #. Create the topic in Confluent Cloud.
 
-   .. code:: bash
+   .. code-block:: bash
 
       ccloud kafka topic create test1
 
@@ -96,13 +96,13 @@ Consume Records
    -  ``-b``: print all messages from the beginning of the topic -
    - ``--print-key``: print key and value (by default, it only prints value)
 
-   .. code:: bash
+   .. code-block:: bash
 
       ccloud kafka topic consume test1 -b --print-key
 
    You should see the messages you typed in the previous step.
 
-   .. code:: bash
+   .. code:-block: bash
 
        alice   {"count":0}
        alice   {"count":1}
