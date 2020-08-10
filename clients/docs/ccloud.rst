@@ -103,11 +103,9 @@ You should see the messages you typed in the previous step.
 Avro And Confluent Cloud Schema Registry
 ----------------------------------------
 
-This example is similar to the previous example, except the value is
-formatted as Avro and integrates with the Confluent Cloud Schema
-Registry. Before using Confluent Cloud Schema Registry, check its
-`availability and
-limits <https://docs.confluent.io/current/cloud/limits.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__.
+.. include:: includes/client-example-schema-registry-3.rst
+
+
 Note that your VPC must be able to connect to the Confluent Cloud Schema
 Registry public internet endpoint.
 

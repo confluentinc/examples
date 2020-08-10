@@ -188,9 +188,7 @@ Kafka Streams
 Avro and Confluent Cloud Schema Registry
 -----------------------------------------
 
-This example is similar to the previous example, except the value is formatted
-as Avro and integrates with the |ccloud| |sr|. Before using |ccloud| |sr|, check
-its :ref:`availability and limits <cloud-limits>`.
+.. include:: includes/client-example-schema-registry-3.rst
 
 #. .. include:: includes/client-example-vpc.rst
 
