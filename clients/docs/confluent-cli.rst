@@ -3,7 +3,7 @@
 Confluent CLI
 --------------
 
-In this tutorial, you will run a Confluent Cloud CLI client application that produces
+In this tutorial, you will run a Confluent CLI client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
@@ -21,7 +21,7 @@ Client
 
 -  `Confluent Platform
    5.5 <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   which includes the Confluent CLI
+   which includes the Confluent CLI.
 
 -  Create a local file (e.g. at ``$HOME/.confluent/java.config``) with
    configuration parameters to connect to your Kafka cluster, which can
@@ -71,7 +71,7 @@ Produce Records
 
 .. Should steps 1 below be under this  "Produce Records" section or before it?
 
-#. Create the topic in Confluent Cloud
+#. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
@@ -81,7 +81,7 @@ Produce Records
    producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
    writing messages to topic ``test1``, passing in arguments for:
 
-   -  ``--cloud``: write messages to the Confluent Cloud cluster specified in
+   -  ``--cloud``: write messages to the |ccloud| cluster specified in
       ``$HOME/.confluent/java.config``
    -  ``--property parse.key=true --property key.separator=,``: pass key and
       value, separated by a comma
@@ -111,7 +111,7 @@ Consume Records
    <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
    reading messages from topic ``test1``, passing in additional arguments:
 
-   -  ``--cloud``: read messages from the Confluent Cloud cluster specified in
+   -  ``--cloud``: read messages from the |ccloud| cluster specified in
       ``$HOME/.confluent/java.config``
    -  ``--property print.key=true``: print key and value (by default, it only
       prints value)
@@ -145,12 +145,12 @@ Avro And Confluent Cloud Schema Registry
 
 #. As described in the `Confluent Cloud
    quickstart <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry
+   in the |ccloud| GUI, enable |ccloud| |sr|
    and create an API key and secret to connect to it.
 
-#. Verify your Confluent Cloud Schema Registry credentials work from
-   your host. In the output below, substitute your values for
-   ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
+#. Verify your |ccloud| |sr| credentials work from your host. In the output
+   below, substitute your values for ``<SR API KEY>``, ``<SR API SECRET>``, and
+   ``<SR ENDPOINT>``.
 
    .. code-block:: text
 
@@ -160,7 +160,7 @@ Avro And Confluent Cloud Schema Registry
       # Same as above, as a single bash command to parse the values out of $HOME/.confluent/java.config
       curl -u $(grep "^schema.registry.basic.auth.user.info" $HOME/.confluent/java.config | cut -d'=' -f2) $(grep "^schema.registry.url" $HOME/.confluent/java.config | cut -d'=' -f2)/subjects
 
-#. View your local Confluent Cloud configuration file (``$HOME/.confluent/java.config``):
+#. View your local |ccloud| configuration file (``$HOME/.confluent/java.config``):
 
    .. code-block:: bash
 
@@ -178,7 +178,7 @@ Avro And Confluent Cloud Schema Registry
       schema.registry.url=https://<SR ENDPOINT>
       ...
 
-#. Create the topic in Confluent Cloud.
+#. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
@@ -195,8 +195,8 @@ Produce Records
    -  ``--value-format avro``: use Avro data format for the value part of the
       message
    -  ``--property value.schema``: define the schema
-   -  ``--property schema.registry.url``: connect to the Confluent Cloud Schema
-      Registry endpoint http://
+   -  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
+      http://
 
 .. In the above list item it says "endpoint http://"
    Is there something missing ?
@@ -206,7 +206,7 @@ Produce Records
 
    .. important::
 
-      The additional Schema Registry parameters are required to be passed
+      The additional |sr| parameters are required to be passed
       in as properties instead of a properties file due to
       https://github.com/confluentinc/schema-registry/issues/1052.
 
@@ -230,24 +230,27 @@ Consume Records
 ~~~~~~~~~~~~~~~
 
 #. Run the `Confluent CLI
-   consumer <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   reading messages from topic ``test``, passing in additional
-   arguments. The additional Schema Registry parameters are required to
-   be passed in as properties instead of a properties file due to
+   consumer
+   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
+   reading messages from topic ``test``, passing in additional arguments. The
+   additional |sr| parameters are required to be passed in as properties instead
+   of a properties file due to
    https://github.com/confluentinc/schema-registry/issues/1052.
 
 -  ``--value-format avro``: use Avro data format for the value part of
    the message
--  ``--property schema.registry.url``: connect to the Confluent Cloud
-   Schema Registry endpoint http://
+-  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
+   http://
 -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
--  ``--property schema.registry.basic.auth.user.info``: :
+-  ``--property schema.registry.basic.auth.user.info``
 
 .. code-block:: bash
 
     confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 
 You should see the messages you typed in the previous step.
+
+.. "previous step" same as other comment like this one
 
 .. code-block:: bash
 

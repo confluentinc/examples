@@ -3,8 +3,8 @@
 Confluent Cloud CLI
 -------------------
 
-In this tutorial, you will run a Confluent Cloud CLI client application that produces
-messages to and consumes messages from an |ak-tm| cluster.
+In this tutorial, you will run a Confluent Cloud CLI client application that
+produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
@@ -90,7 +90,10 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`,
+.. The below step orginally said "Confluent Confluent CLI Consumer" originally
+   I changed it to Confluent Cloud CLI consumer as I think that is what was meant?
+
+#. Run the :ref:`Confluent Cloud CLI consumer <ccloud_kafka_topic_consume>`,
    reading messages from topic ``test1``, passing in the following arguments:
 
    -  ``-b``: print all messages from the beginning of the topic -
@@ -128,9 +131,10 @@ Produce Avro Records
 .. Should steps 1 through 3 below be under this  "Produce Avro Records" section or before it?
 
 #. As described in the `Confluent Cloud
-   quickstart <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   in the Confluent Cloud GUI, enable Confluent Cloud Schema Registry
-   and create an API key and secret to connect to it.
+   quickstart
+   <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
+   in the Confluent Cloud GUI, enable |ccloud| |sr| and create an API key and
+   secret to connect to it.
 
 #. Create the topic in Confluent Cloud.
 
@@ -160,8 +164,8 @@ Produce Avro Records
 
       .. note::
 
-          The first time you run this command, you must provide user
-          credentials for Confluent Cloud Schema Registry.
+          The first time you run this command, you must provide user credentials
+          for |ccloud| |sr|.
 
 .. Is there a page where we can direct users to for help in providing their credentials for Confluent Cloud Schema Registry?
 
@@ -214,9 +218,9 @@ You should see the messages you typed in the previous step.
 Schema Evolution with Confluent Cloud Schema Registry
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. View the schema information registered in Confluent Cloud Schema Registry. In
-   the output below, substitute values for ``{{ SR_API_KEY }}``,
-   ``{{ SR_API_SECRET }}``, and ``{{ SR_ENDPOINT }}``.
+#. View the schema information registered in |ccloud| |sr|. In the output below,
+   substitute values for ``{{ SR_API_KEY }}``, ``{{SR_API_SECRET }}``, and
+   ``{{SR_ENDPOINT }}``.
 
    .. code-block:: text
 

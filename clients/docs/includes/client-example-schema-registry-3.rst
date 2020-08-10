@@ -4,5 +4,5 @@ its :ref:`availability and limits <cloud-limits>`.
 
 .. note::
 
-   Your VPC must be able to connect to the Confluent Cloud Schema
-   Registry public internet endpoint.
+   Your VPC must be able to connect to the |ccloud| |sr| public internet
+   endpoint.
