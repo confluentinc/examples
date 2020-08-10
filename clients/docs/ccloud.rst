@@ -56,7 +56,7 @@ Produce Records
 
 .. Should steps 1 through 3 below be under this  "Produce Records" section or before it?
 
-#. Create the topic in Confluent Cloud.
+#. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
@@ -133,10 +133,10 @@ Produce Avro Records
 #. As described in the `Confluent Cloud
    quickstart
    <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   in the Confluent Cloud GUI, enable |ccloud| |sr| and create an API key and
+   in the |ccloud| GUI, enable |ccloud| |sr| and create an API key and
    secret to connect to it.
 
-#. Create the topic in Confluent Cloud.
+#. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
