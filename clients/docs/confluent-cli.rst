@@ -198,9 +198,6 @@ Produce Records
    -  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
       http://
 
-.. In the above list item it says "endpoint http://"
-   Is there something missing ?
-
    -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
    -  ``--property schema.registry.basic.auth.user.info``
 
@@ -213,6 +210,9 @@ Produce Records
    .. code-block:: bash
 
       confluent local produce test2 -- --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+
+.. In one the above list items it says "endpoint http://"
+   Is there something missing ?
 
 #. At the ``>`` prompt, type the following messages:
 
