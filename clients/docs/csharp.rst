@@ -27,13 +27,7 @@ Kafka Cluster
 Setup
 -----
 
-#. Clone the `confluentinc/examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
-
-   .. codewithvars:: bash
-
-      git clone https://github.com/confluentinc/examples
-      cd examples
-      git checkout |release|-post
+#. .. include:: includes/clients-checkout.rst
 
 #. Change directory to the example for .NET.
 
@@ -74,7 +68,7 @@ Produce Records
       # Run the producer (other)
       dotnet run produce test1 $HOME/.confluent/librdkafka.config
 
-   You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code:: shell
 
@@ -121,7 +115,7 @@ Consume Records
       # Run the consumer (other)
       dotnet run consume test1 $HOME/.confluent/librdkafka.config
 
-   Verify that the consumer received all the messages. You should see:
+#. Verify that the consumer sent all the messages. You should see:
 
    ::
 

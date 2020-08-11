@@ -38,15 +38,7 @@ Kafka Cluster
 Setup
 -----
 
-#. Clone the `confluentinc/examples GitHub repository
-   <https://github.com/confluentinc/examples>`__ and check out the
-   :litwithvars:`|release|-post` branch.
-
-   .. codewithvars:: bash
-
-      git clone https://github.com/confluentinc/examples
-      cd examples
-      git checkout |release|-post
+#. .. include:: includes/clients-checkout.rst
 
 #. Change directory to the example for C.
 
@@ -72,7 +64,7 @@ Produce Records
 
       make
 
-   You should see:
+#. You should see:
 
    .. code-block:: bash
 
