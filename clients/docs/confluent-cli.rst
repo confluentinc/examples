@@ -3,7 +3,7 @@
 Confluent CLI
 =============
 
-In this tutorial, you will run a Confluent CLI client application that produces
+In this tutorial, you will use the |confluent-cli| to
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
@@ -63,27 +63,27 @@ Produce Records
 
 #. Create the topic in |ccloud|.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test1 --create --replication-factor 3 --partitions 6
 
 #. Run the `Confluent CLI
-   producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
+   producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html>`__,
    writing messages to topic ``test1``, passing in arguments for:
 
-   -  ``--cloud``: write messages to the |ccloud| cluster specified in
-      ``$HOME/.confluent/java.config``
+   -  ``--cloud``: write messages to a |ccloud| cluster
+   -  ``--config``: file with |ccloud| connection info
    -  ``--property parse.key=true --property key.separator=,``: pass key and
       value, separated by a comma
 
-   .. code-block:: bash
+   .. code-block:: text
 
-      confluent local produce test1 -- --cloud --property parse.key=true --property key.separator=,
+      confluent local produce test1 -- --cloud --config $HOME/.confluent/java.config --property parse.key=true --property key.separator=,
 
 #. At the ``>`` prompt, type a few messages, using a ``,`` as the separator
    between the message key and value:
 
-   .. code-block:: bash
+   .. code-block:: text
 
        alice,{"count":0}
        alice,{"count":1}
@@ -99,22 +99,22 @@ Consume Records
 
 #. Run the `Confluent CLI
    consumer
-   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
+   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html>`__,
    reading messages from topic ``test1``, passing in additional arguments:
 
-   -  ``--cloud``: read messages from the |ccloud| cluster specified in
-      ``$HOME/.confluent/java.config``
+   -  ``--cloud``: write messages to a |ccloud| cluster
+   -  ``--config``: file with |ccloud| connection info
    -  ``--property print.key=true``: print key and value (by default, it only
       prints value)
    -  ``--from-beginning``: print all messages from the beginning of the topic
 
    .. code-block:: bash
 
-      confluent local consume test1 -- --cloud --property print.key=true --from-beginning
+      confluent local consume test1 -- --cloud --config $HOME/.confluent/java.config --property print.key=true --from-beginning
 
-   You should see the messages you typed in the previous section:
+#. Verify that the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       alice   {"count":0}
       alice   {"count":1}
@@ -171,7 +171,7 @@ Produce Records
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test2 --create --replication-factor 3 --partitions 6
 
 #. Run the `Confluent CLI
-   producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
+   producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html>`__,
    writing messages to topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the
@@ -190,7 +190,7 @@ Produce Records
 
    .. code-block:: bash
 
-      confluent local produce test2 -- --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+      confluent local produce test2 -- --cloud --config $HOME/.confluent/java.config --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 
 #. At the ``>`` prompt, type the following messages:
 
@@ -210,8 +210,8 @@ Consume Avro Records
 
 #. Run the `Confluent CLI
    consumer
-   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   reading messages from topic ``test``, passing in arguments for:
+   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html>`__,
+   reading messages from topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the
       message
@@ -228,11 +228,11 @@ Consume Avro Records
 
    .. code-block:: bash
 
-      confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+      confluent local consume test2 -- --cloud --config $HOME/.confluent/java.config --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 
-   You should see the messages you typed in the previous section:
+#. Verify that the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
       {"count":0}
       {"count":1}
@@ -241,4 +241,3 @@ Consume Avro Records
 #. When you are done, press ``Ctrl-C``.
 
 #. View the :devx-examples:`consumer Avro code|clients/cloud/confluent-cli/confluent-cli-ccsr-example.sh`.
-

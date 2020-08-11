@@ -65,7 +65,7 @@ Produce Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-#. Verify that the producer received all the messages. You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code-block:: text
 
@@ -133,7 +133,7 @@ Consume Records
 Kafka Streams
 ~~~~~~~~~~~~~
 
-#. Run the Kafka Streams application, passing in arguments for:
+#. Run the |kstreams| application, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka
      cluster
@@ -144,7 +144,7 @@ Kafka Streams
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-   You should see:
+#. Verify that the |kstreams| application processed all the messages. You should see:
 
    .. code-block:: text
 
@@ -226,7 +226,7 @@ Consume Avro Records
 Avro Kafka Streams
 ~~~~~~~~~~~~~~~~~~
 
-#. Run the Avro Kafka Streams application, passing in arguments for:
+#. Run the Avro |kstreams| application, passing in arguments for:
 
    -  the local file with configuration parameters to connect to your Kafka
       cluster
