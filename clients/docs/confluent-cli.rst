@@ -1,7 +1,7 @@
 .. _client-examples-confluent-cli:
 
 Confluent CLI
---------------
+=============
 
 In this tutorial, you will run a Confluent CLI client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
