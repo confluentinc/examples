@@ -49,7 +49,7 @@ Setup
 
       cd clients/cloud/confluent-cli/
 
-#. .. include:: includes/client-example-create-file.rst
+#. .. include:: includes/client-example-create-file-java.rst
 
 
 Basic Producer and Consumer
@@ -60,8 +60,6 @@ Basic Producer and Consumer
 
 Produce Records
 ~~~~~~~~~~~~~~~
-
-.. Should steps 1 below be under this  "Produce Records" section or before it?
 
 #. Create the topic in |ccloud|.
 
@@ -93,7 +91,8 @@ Produce Records
 
 #. When you are done, press ``Ctrl-D``.
 
-.. source code for producer?
+#. View the :devx-examples:`producer code|clients/cloud/confluent-cli/confluent-cli-example.sh`.
+
 
 Consume Records
 ~~~~~~~~~~~~~~~
@@ -113,8 +112,7 @@ Consume Records
 
       confluent local consume test1 -- --cloud --property print.key=true --from-beginning
 
-You should see the messages you typed in the previous step.
-.. Is "previous step" is referring to step 3 in the "Produce Records" section?
+You should see the messages you typed in the previous section:
 
 .. code-block:: bash
 
@@ -122,9 +120,9 @@ You should see the messages you typed in the previous step.
    alice   {"count":1}
    alice   {"count":2}
 
-When you are done, press ``Ctrl-C``.
+#. When you are done, press ``Ctrl-C``.
 
-#. View the :devx-examples:`consumer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/confluent-cli/confluent-cli-example.sh`.
+#. View the :devx-examples:`consumer code|clients/cloud/confluent-cli/confluent-cli-example.sh`.
 
 
 Avro And Confluent Cloud Schema Registry
@@ -132,13 +130,9 @@ Avro And Confluent Cloud Schema Registry
 
 .. include:: includes/client-example-schema-registry-3.rst
 
-.. Do we want to create a separate section, for steps 1 through 5, leave them as is
-   or put them under the "Produce Records" section?
 
-#. As described in the `Confluent Cloud
-   quickstart <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   in the |ccloud| GUI, enable |ccloud| |sr|
-   and create an API key and secret to connect to it.
+Produce Records
+~~~~~~~~~~~~~~~
 
 #. Verify your |ccloud| |sr| credentials work from your host. In the output
    below, substitute your values for ``<SR API KEY>``, ``<SR API SECRET>``, and
@@ -176,10 +170,6 @@ Avro And Confluent Cloud Schema Registry
 
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test2 --create --replication-factor 3 --partitions 6
 
-
-Produce Records
-~~~~~~~~~~~~~~~
-
 #. Run the `Confluent CLI
    producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html#cli-confluent-produce?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
    writing messages to topic ``test2``, passing in arguments for:
@@ -188,10 +178,9 @@ Produce Records
       message
    -  ``--property value.schema``: define the schema
    -  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
-      http://
-
+      ``http://<SR ENDPOINT>``
    -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
-   -  ``--property schema.registry.basic.auth.user.info``
+   -  ``--property schema.registry.basic.auth.user.info``: ``<SR API KEY>:<SR API SECRET>``
 
    .. important::
 
@@ -203,9 +192,6 @@ Produce Records
 
       confluent local produce test2 -- --cloud --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 
-.. In one the above list items it says "endpoint http://"
-   Is there something missing ?
-
 #. At the ``>`` prompt, type the following messages:
 
    .. code-block:: bash
@@ -216,10 +202,11 @@ Produce Records
 
 #. When you are done, press ``Ctrl-D``.
 
-.. source code for Avro producer?
+#. View the :devx-examples:`producer Avro code|clients/cloud/confluent-cli/confluent-cli-ccsr-example.sh`.
 
-Consume Records
-~~~~~~~~~~~~~~~
+
+Consume Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Run the `Confluent CLI
    consumer
@@ -232,17 +219,15 @@ Consume Records
 -  ``--value-format avro``: use Avro data format for the value part of
    the message
 -  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
-   http://
+   ``http://<SR ENDPOINT>``
 -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
--  ``--property schema.registry.basic.auth.user.info``
+-  ``--property schema.registry.basic.auth.user.info``: ``<SR API KEY>:<SR API SECRET>``
 
 .. code-block:: bash
 
     confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 
-You should see the messages you typed in the previous step.
-
-.. "previous step" same as other comment like this one
+You should see the messages you typed in the previous section:
 
 .. code-block:: bash
 
@@ -252,5 +237,5 @@ You should see the messages you typed in the previous step.
 
 #. When you are done, press ``Ctrl-C``.
 
-#. View the :devx-examples:`consumer code|clients/cloud/java/src/main/java/io/confluent/examples/clients/cloud/confluent-cli/confluent-cli-ccsr-example.sh`.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/confluent-cli/confluent-cli-ccsr-example.sh`.
 
