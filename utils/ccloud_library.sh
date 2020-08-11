@@ -305,8 +305,7 @@ function ccloud::find_cluster() {
   CLUSTER_REGION=$3
 
   local FOUND_CLUSTER=$(ccloud kafka cluster list -o json | jq -c -r '.[] | select((.name == "'"$CLUSTER_NAME"'") and (.provider == "'"$CLUSTER_CLOUD"'") and (.region == "'"$CLUSTER_REGION"'"))')
-  local FOUND_COUNT=$(echo "$FOUND_CLUSTER" | xargs | wc -l | xargs)
-  [[ $FOUND_COUNT -eq 1 ]] && {
+  [[ ! -z $FOUND_CLUSTER ]] && {
       echo "$FOUND_CLUSTER" | jq -r .id
       return 0 
     } || {
