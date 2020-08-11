@@ -68,7 +68,7 @@ Produce Records
       # Run the producer (other)
       dotnet run produce test1 $HOME/.confluent/librdkafka.config
 
-   You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code:: shell
 
@@ -115,7 +115,7 @@ Consume Records
       # Run the consumer (other)
       dotnet run consume test1 $HOME/.confluent/librdkafka.config
 
-   Verify that the consumer received all the messages. You should see:
+#. Verify that the consumer sent all the messages. You should see:
 
    ::
 

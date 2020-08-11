@@ -64,7 +64,7 @@ Produce Records
 
       make
 
-   You should see:
+#. You should see:
 
    .. code-block:: bash
 

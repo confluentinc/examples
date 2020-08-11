@@ -124,7 +124,7 @@ Produce Records
 
       ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
 
-   You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code-block:: bash
 
@@ -216,7 +216,7 @@ Produce Avro Records
 
       ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
 
-   You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code-block:: bash
 
