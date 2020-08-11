@@ -9,8 +9,8 @@ For the subset of languages that support it, the code examples also demonstrate 
 
 * :ref:`C <client-examples-c>`
 * :devx-examples:`Clojure|clients/cloud/clojure/README.md`
-* :devx-examples:`Confluent CLI|clients/cloud/confluent-cli/README.md`
-* :devx-examples:`Confluent Cloud CLI|clients/cloud/ccloud/README.md`
+* :ref:`Confluent CLI <client-examples-confluent-cli>`
+* :ref:`Confluent Cloud CLI <client-examples-ccloud>`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
 * :ref:`Go <client-examples-go>`
 * :devx-examples:`Groovy|clients/cloud/groovy/README.adoc`
@@ -36,6 +36,8 @@ For the subset of languages that support it, the code examples also demonstrate 
       :hidden:
 
       c
+      confluent-cli
+      ccloud
       csharp
       go
       java
