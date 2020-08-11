@@ -94,7 +94,7 @@ Consume Records
 
 #. Verify that the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
        alice   {"count":0}
        alice   {"count":1}
@@ -176,7 +176,7 @@ Consume Avro Records
 
 #. Verify that the consumer received all the messages. You should see:
 
-   .. code-block:: bash
+   .. code-block:: text
 
        alice   {"count":3}
        alice   {"count":4}
