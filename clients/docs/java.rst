@@ -29,15 +29,7 @@ Kafka Cluster
 Setup
 -----
 
-#. Clone the `confluentinc/examples GitHub repository
-   <https://github.com/confluentinc/examples>`__ and check out the
-   :litwithvars:`|release|-post` branch.
-
-   .. codewithvars:: bash
-
-      git clone https://github.com/confluentinc/examples
-      cd examples
-      git checkout |release|-post
+#. .. include:: includes/clients-checkout.rst
 
 #. Change directory to the example for Java.
 
@@ -73,7 +65,7 @@ Produce Records
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-#. Verify that the producer received all the messages. You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code-block:: text
 
@@ -141,7 +133,7 @@ Consume Records
 Kafka Streams
 ~~~~~~~~~~~~~
 
-#. Run the Kafka Streams application, passing in arguments for:
+#. Run the |kstreams| application, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka
      cluster
@@ -152,7 +144,7 @@ Kafka Streams
       mvn exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.StreamsExample" \
       -Dexec.args="$HOME/.confluent/java.config test1"
 
-   You should see:
+#. Verify that the |kstreams| application processed all the messages. You should see:
 
    .. code-block:: text
 
@@ -188,9 +180,7 @@ Kafka Streams
 Avro and Confluent Cloud Schema Registry
 -----------------------------------------
 
-This example is similar to the previous example, except the value is formatted
-as Avro and integrates with the |ccloud| |sr|. Before using |ccloud| |sr|, check
-its :ref:`availability and limits <cloud-limits>`.
+.. include:: includes/client-example-schema-registry-3.rst
 
 #. .. include:: includes/client-example-vpc.rst
 
@@ -236,7 +226,7 @@ Consume Avro Records
 Avro Kafka Streams
 ~~~~~~~~~~~~~~~~~~
 
-#. Run the Avro Kafka Streams application, passing in arguments for:
+#. Run the Avro |kstreams| application, passing in arguments for:
 
    -  the local file with configuration parameters to connect to your Kafka
       cluster

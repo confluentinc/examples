@@ -95,15 +95,7 @@ Kafka Cluster
 Setup
 -----
 
-#. Clone the `confluentinc/examples GitHub repository
-   <https://github.com/confluentinc/examples>`__ and check out the
-   :litwithvars:`|release|-post` branch.
-
-   .. codewithvars:: bash
-
-      git clone https://github.com/confluentinc/examples
-      cd examples
-      git checkout |release|-post
+#. .. include:: includes/clients-checkout.rst
 
 #. Change directory to the example for Python.
 
@@ -132,7 +124,7 @@ Produce Records
 
       ./producer.py -f $HOME/.confluent/librdkafka.config -t test1
 
-   You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code-block:: bash
 
@@ -224,7 +216,7 @@ Produce Avro Records
 
       ./producer_ccsr.py -f  $HOME/.confluent/librdkafka.config -t test2
 
-   You should see:
+#. Verify that the producer sent all the messages. You should see:
 
    .. code-block:: bash
 
