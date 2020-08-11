@@ -112,13 +112,13 @@ Consume Records
 
       confluent local consume test1 -- --cloud --property print.key=true --from-beginning
 
-You should see the messages you typed in the previous section:
+   You should see the messages you typed in the previous section:
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   alice   {"count":0}
-   alice   {"count":1}
-   alice   {"count":2}
+      alice   {"count":0}
+      alice   {"count":1}
+      alice   {"count":2}
 
 #. When you are done, press ``Ctrl-C``.
 
@@ -184,8 +184,8 @@ Produce Records
 
    .. important::
 
-      The additional |sr| parameters are required to be passed
-      in as properties instead of a properties file due to
+      You must pass in the additional |sr| parameters as properties instead of a
+      properties file due to
       https://github.com/confluentinc/schema-registry/issues/1052.
 
    .. code-block:: bash
@@ -211,29 +211,32 @@ Consume Avro Records
 #. Run the `Confluent CLI
    consumer
    <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html#cli-confluent-consume?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   reading messages from topic ``test``, passing in additional arguments. The
-   additional |sr| parameters are required to be passed in as properties instead
-   of a properties file due to
-   https://github.com/confluentinc/schema-registry/issues/1052.
+   reading messages from topic ``test``, passing in arguments for:
 
--  ``--value-format avro``: use Avro data format for the value part of
-   the message
--  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
-   ``http://<SR ENDPOINT>``
--  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
--  ``--property schema.registry.basic.auth.user.info``: ``<SR API KEY>:<SR API SECRET>``
+   -  ``--value-format avro``: use Avro data format for the value part of the
+      message
+   -  ``--property schema.registry.url``: connect to the |ccloud| |sr| endpoint
+      ``http://<SR ENDPOINT>``
+   -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
+   -  ``--property schema.registry.basic.auth.user.info``: ``<SR API KEY>:<SR API SECRET>``
 
-.. code-block:: bash
+   .. important::
 
-    confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+      You must pass in the additional |sr| parameters as properties instead of a
+      properties file due to
+      https://github.com/confluentinc/schema-registry/issues/1052.
 
-You should see the messages you typed in the previous section:
+   .. code-block:: bash
 
-.. code-block:: bash
+      confluent local consume test2 -- --cloud --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 
-   {"count":0}
-   {"count":1}
-   {"count":2}
+   You should see the messages you typed in the previous section:
+
+   .. code-block:: bash
+
+      {"count":0}
+      {"count":1}
+      {"count":2}
 
 #. When you are done, press ``Ctrl-C``.
 

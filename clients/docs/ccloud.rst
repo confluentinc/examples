@@ -55,7 +55,7 @@ Produce Records
       ccloud kafka topic create test1
 
 #. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`,
-   writing messages to topic ``test1``, passing in additional arguments:
+   writing messages to topic ``test1``, passing in arguments for:
 
    -  ``--parse-key --delimiter ,``: pass key and value, separated by a comma
 
@@ -81,7 +81,7 @@ Consume Records
 ~~~~~~~~~~~~~~~
 
 #. Run the :ref:`Confluent Cloud CLI consumer <ccloud_kafka_topic_consume>`,
-   reading messages from topic ``test1``, passing in the following arguments:
+   reading messages from topic ``test1``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic -
    - ``--print-key``: print key and value (by default, it only prints value)
@@ -174,9 +174,9 @@ Consume Avro Records
       ccloud kafka topic consume test2 -b --value-format avro --print-key
 
 
-You should see the messages you typed in the previous section:
+   You should see the messages you typed in the previous section:
 
-.. code-block:: bash
+   .. code-block:: bash
 
        alice   {"count":3}
        alice   {"count":4}
