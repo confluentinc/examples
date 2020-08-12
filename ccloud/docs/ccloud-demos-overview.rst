@@ -112,8 +112,8 @@ Upon running this demo, you will have a GKE-based |cp| deployment with simulated
 Build Your Own Cloud Demo
 =========================
 
-Fully Managed Stack in |ccloud|
--------------------------------
+ccloud-stack
+------------
 
 The :ref:`ccloud-stack` utility creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
