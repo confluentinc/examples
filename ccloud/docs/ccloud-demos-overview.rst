@@ -128,7 +128,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create ACLs with wildcard for the service account.
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
-.. figure:: images/cloud-stack.png
+.. figure:: images/ccloud-stack-resources.png
 
 
 Auto-generate Configurations to connect to |ccloud|
