@@ -1,7 +1,7 @@
 .. _ccloud-stack:
 
-Fully Managed Stack in Confluent Cloud
-======================================
+ccloud-stack
+============
 
 ========
 Overview
@@ -119,6 +119,7 @@ Destroy a ccloud-stack
       ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 
 
+===================
 Automated Workflows
 ===================
 
@@ -150,6 +151,7 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
       ccloud::destroy_ccloud_stack
 
 
+====================
 Additional Resources
 ====================
 
