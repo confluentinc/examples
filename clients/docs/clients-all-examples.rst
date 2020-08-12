@@ -42,4 +42,3 @@ For the subset of languages that support it, the code examples also demonstrate 
       go
       java
       python
-      ../../ccloud/docs/ccloud-stack
