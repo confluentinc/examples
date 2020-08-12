@@ -45,7 +45,7 @@ echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role D
 confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-confluent local start kafka-rest
+confluent local services kafka-rest start
 
 ##################################################
 # REST Proxy client functions

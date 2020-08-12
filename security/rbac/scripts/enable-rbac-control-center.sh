@@ -40,7 +40,7 @@ echo "confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role Sy
 confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Control Center"
-confluent local start control-center
+confluent local services control-center start
 
 echo "Sleeping 10 seconds"
 sleep 10

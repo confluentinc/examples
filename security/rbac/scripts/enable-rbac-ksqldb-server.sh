@@ -52,7 +52,7 @@ echo "confluent iam rolebinding create --principal User:$USER_ADMIN_KSQLDB --rol
 confluent iam rolebinding create --principal User:$USER_ADMIN_KSQLDB --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up KSQL server"
-confluent local start ksql-server
+confluent local services ksql-server start
 
 echo "Sleeping 10 seconds"
 sleep 10

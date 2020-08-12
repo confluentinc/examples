@@ -60,7 +60,7 @@ confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONN
 printf "\n"
 
 echo ====== Starting local ZooKeeper, Kafka Broker, Schema Registry, Connect
-confluent local start zookeeper
+confluent local services zookeeper start
 sleep 2
 
 # Start local Kafka with Confluent Metrics Reporter configured for Confluent Cloud
@@ -74,7 +74,7 @@ echo $! > $CONFLUENT_CURRENT/kafka/kafka.pid
 echo "Waiting 30s for the local Kafka broker to be UP"
 sleep 30
 
-confluent local start connect
+confluent local services connect start
 printf "\n"
 
 echo ====== Set current Confluent Cloud 

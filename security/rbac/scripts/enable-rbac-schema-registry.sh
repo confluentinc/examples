@@ -57,7 +57,7 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --
 confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Schema Registry"
-confluent local start schema-registry
+confluent local services schema-registry start
 
 echo -e "Sleeping 10 seconds before getting the Schema Registry cluster ID"
 sleep 10
