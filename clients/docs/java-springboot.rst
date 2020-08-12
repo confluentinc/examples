@@ -37,9 +37,6 @@ Setup
 #. .. include:: includes/client-example-create-file-java.rst
 
 
-Basic Producer and Consumer
----------------------------
-
 .. admonition:: Confluent Cloud config example
 
    .. code-block:: text
@@ -131,6 +128,7 @@ Produce and Consume Records
 
 #. When you are done, press ``kbd:[CTRL + C]``.
 
+#. View the :devx-examples:`producer|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
 
 Kafka Streams
 -------------
@@ -174,4 +172,4 @@ also a rolling sum of the counts as it processes each record.
 
 #. When you are done, press ``kbd:[CTRL + C]``.
 
-#.
+#. View the :devx-examples:`Kafka Streams code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/streams/SpringbootStreamsApplication.java`
