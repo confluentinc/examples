@@ -92,14 +92,11 @@ Produce Records
         10 messages were produced to topic test1
         ...
 
+#. View the :devx-examples:`consumer code|clients/cloud/groovy/src/main/groovy/io/confluent/examples/clients/cloud/ConsumerExample.groovy`.
+
+
 Consume Records
 ~~~~~~~~~~~~~~~
-
-#.  Build the client examples:
-
-    .. code-block:: text
-
-       ./gradlew clean build
 
 #. Run the consumer, passing in arguments for:
 
@@ -130,15 +127,11 @@ Consume Records
 
 #. When you are done, press ``CTRL-C``.
 
+#. View the :devx-examples:`consumer code|clients/cloud/groovy/src/main/groovy/io/confluent/examples/clients/cloud/ConsumerExample.groovy`.
+
 
 Kafka Streams
 ~~~~~~~~~~~~~~
-
-#. Build the client examples
-
-   .. code-block:: text
-
-      ./gradlew clean build
 
 #. Run the |kstreams| application, passing in arguments for:
 
@@ -179,4 +172,6 @@ Kafka Streams
         [Running count]: alice, 45
         ...
 
-   #. When you are done, press ``CTRL-C``.
+#. When you are done, press ``CTRL-C``.
+
+#. View the :devx-examples:`Kafka Streams code|clients/cloud/groovy/src/main/groovy/io/confluent/examples/clients/cloud/StreamsExample.groovy`.
