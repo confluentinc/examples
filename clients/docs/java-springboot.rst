@@ -36,7 +36,6 @@ Setup
 
 #. .. include:: includes/client-example-create-file-java.rst
 
-
 .. admonition:: Confluent Cloud config example
 
    .. code-block:: text
