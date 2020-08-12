@@ -69,7 +69,7 @@ Setup
 Create a ccloud-stack
 ---------------------
 
-#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, then create the stack with the following command.
+#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, then create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`.
 
    .. code:: bash
 
@@ -113,17 +113,42 @@ Create a ccloud-stack
 Destroy a ccloud-stack
 ----------------------
 
-#. To destroy a ``cloud-stack`` created in the previous step, and pass the client properties file auto-generated in the step above.
+#. To destroy a ``cloud-stack`` created in the previous step, call the bash script :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh` and pass in the client properties file auto-generated in the step above.
 
    .. code:: bash
 
       ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 
-Source Code
-===========
 
-To see what is happening under the hood when you create or destroy a ``ccloud-stack``, view the source code in the :devx-examples:`ccloud_library|utils/ccloud_library.sh`.
-Look for the function ``ccloud::create_ccloud_stack()`` and ``ccloud::destroy_ccloud_stack()``.
+Automated Workflows
+===================
+
+If you don't want to create and destroy a ``ccloud-stack`` using the provided bash scripts :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh` and :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh`, you may pull in the :devx-examples:`ccloud_library|utils/ccloud_library.sh` and call the functions ``ccloud::create_ccloud_stack()`` and ``ccloud::destroy_ccloud_stack()`` directly.
+
+#. Get the :devx-examples:`ccloud_library|utils/ccloud_library.sh`:
+
+   .. code:: bash
+
+      wget -O ccloud_library.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/ccloud_library.sh
+
+#. Source the library
+
+   .. code:: bash
+
+      source ./ccloud_library.sh
+
+#. Run the functions directly. To create the ``cloud-stack``:
+
+   .. code:: bash
+
+      CLUSTER_CLOUD=aws
+      CLUSTER_REGION=us-west-2 
+      ccloud::create_ccloud_stack
+
+
+   To destroy the ``ccloud-stack``:
+
+      ccloud::destroy_ccloud_stack
 
 
 Additional Resources
