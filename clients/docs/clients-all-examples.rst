@@ -13,13 +13,13 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Confluent Cloud CLI <client-examples-ccloud>`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
 * :ref:`Go <client-examples-go>`
-* :devx-examples:`Groovy|clients/cloud/groovy/README.adoc`
+* :ref:`Groovy <client-examples-groovy>`
 * :ref:`Java <client-examples-java>`
-* :devx-examples:`Java Spring Boot|clients/cloud/java-springboot/README.adoc`
+* :ref:`Java Spring Boot <client-examples-java-springboot>`
 * :devx-examples:`Apache Kafka commands|clients/cloud/kafka-commands/README.md`
 * :devx-examples:`Kafka Connect datagen|clients/cloud/kafka-connect-datagen/README.md`
 * :devx-examples:`kafkacat|clients/cloud/kafkacat/README.md`
-* :devx-examples:`Kotlin|clients/cloud/kotlin/README.adoc`
+* :ref:`Kotlin <client-examples-kotlin>`
 * :devx-examples:`KSQL Datagen|clients/cloud/ksql-datagen/README.md`
 * :devx-examples:`Node.js|clients/cloud/nodejs/README.md`
 * :ref:`Python <client-examples-python>`
@@ -40,5 +40,8 @@ For the subset of languages that support it, the code examples also demonstrate 
       ccloud
       csharp
       go
+      groovy
+      java-springboot
       java
+      kotlin
       python

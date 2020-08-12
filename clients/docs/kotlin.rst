@@ -32,7 +32,7 @@ Setup
 
    .. code-block:: bash
 
-      cd clients/cloud/java/
+      cd clients/cloud/kotlin/
 
 #. .. include:: includes/client-example-create-file-java.rst
 
@@ -56,7 +56,7 @@ Produce Records
    - the local file with configuration parameters to connect to your Kafka Cluster
    - the topic name
 
-   .. code-block:: text
+   .. code-block:: bash
 
       ./gradlew runApp -PmainClass="io.confluent.examples.clients.cloud.ProducerExample" \
      -PconfigPath="$HOME/.confluent/java.config" \
@@ -172,4 +172,3 @@ Kafka Streams
 #. When you are done, press ``CTRL-C``.
 
 #. View the :devx-examples:`Kafka Streams code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/StreamsExample.kt`.
-

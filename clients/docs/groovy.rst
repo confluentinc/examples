@@ -33,7 +33,7 @@ Setup
 
    .. code-block:: bash
 
-      cd clients/cloud/java/
+      cd clients/cloud/groovy/
 
 #. .. include:: includes/client-example-create-file-java.rst
 

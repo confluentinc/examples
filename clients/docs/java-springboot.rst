@@ -32,7 +32,7 @@ Setup
 
    .. code-block:: bash
 
-      cd clients/cloud/java/
+      cd clients/cloud/java-springboot/
 
 #. .. include:: includes/client-example-create-file-java.rst
 
