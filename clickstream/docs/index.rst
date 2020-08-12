@@ -147,7 +147,7 @@ Once you've confirmed all the Docker containers are running, create the source c
 
        print clickstream limit 3;
 
-   Your output should resemble: 
+   Your output should resemble:
 
    .. code:: bash
 

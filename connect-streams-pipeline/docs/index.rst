@@ -129,7 +129,7 @@ Run the demo
 Example 1: Kafka console producer -> Key:String and Value:String
 ----------------------------------------------------------------
 
-- Command line ``confluent local produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
+- Command line ``confluent local services kafka produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
 
 .. figure:: images/example_1.png
@@ -206,5 +206,5 @@ Technical Notes
 - `KAFKA-5245 <https://issues.apache.org/jira/browse/KAFKA-5245>`__: one needs to provide the Serdes twice, (1) when calling ``StreamsBuilder#stream()`` and (2) when calling ``KStream#groupByKey()``
 - `PR-531 <https://github.com/confluentinc/schema-registry/pull/531>`__: Confluent distribution provides packages for ``GenericAvroSerde`` and ``SpecificAvroSerde``
 - `KAFKA-2378 <https://issues.apache.org/jira/browse/KAFKA-2378>`__: adds APIs to be able to embed Kafka Connect into client applications
-- `KAFKA-2526 <https://issues.apache.org/jira/browse/KAFKA-2526>`__: one cannot use the ``--key-serializer`` argument in the ``confluent local produce`` to serialize the key as a ``Long``. As a result, in this example the key is serialized as a ``String``. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify ``--line-reader`` argument in the ``confluent local produce``.
+- `KAFKA-2526 <https://issues.apache.org/jira/browse/KAFKA-2526>`__: one cannot use the ``--key-serializer`` argument in ``confluent local services kafka produce`` to serialize the key as a ``Long``. As a result, in this example the key is serialized as a ``String``. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify ``--line-reader`` argument in ``confluent local services kafka produce``.
 - `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__: allows the connector to set the namespace in the schema.

@@ -128,7 +128,7 @@ Run Kafka and start the modified connect worker with the encrypted value of `con
 [source,bash]
 ----
 # Start ZooKeeper and a Kafka broker
-$ confluent local start kafka
+$ confluent local services kafka start
 
 # Run the modified connect worker
 $ connect-distributed connect-avro-distributed.properties > connect.stdout 2>&1 &
