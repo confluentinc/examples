@@ -37,7 +37,7 @@ login_mds $MDS
 # Get the Kafka cluster id
 get_cluster_id_kafka
 
-confluent local start kafka-rest
+confluent local services kafka-rest start
 
 ##################################################
 # REST Proxy client functions
