@@ -1,26 +1,44 @@
-Produce messages to and consume messages from a Kafka cluster using the
-Kotlin version of Java Producer and Consumer, and Kafka Streams API.
+.. _client-examples-kotlin:
+
+Kotlin
+======
+
+In this tutorial, you will run a Kotlin client application that produces
+messages to and consumes messages from an |ak-tm| cluster.
+
+.. include:: includes/client-example-overview.rst
 
 Prerequisites
-=============
+--------------
 
--  Java 1.8 or higher to run the demo application
+Client
+~~~~~~
 
--  Create a local file (e.g. at ``$HOME/.confluent/java.config``) with
-   configuration parameters to connect to your Kafka cluster, which can
-   be on your local host, `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed
-   instructions <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to properly create this file.
+-  Java 1.8 or higher to run the demo application.
 
--  If you are running on Confluent Cloud, you must have access to a
-   `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-   cluster
 
-Example 1: Hello World!
-=======================
+Kafka Cluster
+~~~~~~~~~~~~~
+
+.. include:: includes/client-example-prerequisites.rst
+
+
+Setup
+-----
+
+#. .. include:: includes/clients-checkout.rst
+
+#. Change directory to the example for Kotlin.
+
+   .. code-block:: bash
+
+      cd clients/cloud/java/
+
+#. .. include:: includes/client-example-create-file-java.rst
+
+
+Basic Producer and Consumer
+---------------------------
 
 In this example, the producer writes Kafka data to a topic in your Kafka
 cluster. Each record has a key representing a username (e.g. ``alice``)

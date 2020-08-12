@@ -1,24 +1,43 @@
-Produce messages to and consume messages from `Confluent
-Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-using the Spring Boot using Java API.
+.. _client-examples-java-springboot:
+
+Java Spring Boot
+================
+
+In this tutorial, you will run a Java Spring Boot client application that
+produces messages to and consumes messages from an |ak-tm| cluster.
+
+.. include:: includes/client-example-overview.rst
 
 Prerequisites
-=============
+--------------
 
--  Java 1.8
+Client
+~~~~~~
 
--  Create a local file (e.g. at ``$HOME/.ccloud/java.config``) with
-   configuration parameters to connect to your Kafka cluster, which can
-   be on your local host, `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed
-   instructions <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to properly create this file.
+-  Java 1.8.
 
--  If you are running on Confluent Cloud, you must have access to a
-   `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-   cluster.
+
+Kafka Cluster
+~~~~~~~~~~~~~
+
+.. include:: includes/client-example-prerequisites.rst
+
+
+Setup
+-----
+
+#. .. include:: includes/clients-checkout.rst
+
+#. Change directory to the example for Java Spring Boot.
+
+   .. code-block:: bash
+
+      cd clients/cloud/java/
+
+#. .. include:: includes/client-example-create-file-java.rst
+
+Basic Producer and Consumer
+---------------------------
 
 **Confluent Cloud config file example.**
 
@@ -31,8 +50,17 @@ schema.registry.url=<SR ENDPOINT>
 basic.auth.credentials.source=USER_INFO
 schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD></programlisting>
 
-Example 1: Producing and Consuming Avro messages
-================================================
+
+Avro And Confluent Cloud Schema Registry
+----------------------------------------
+
+.. include:: includes/client-example-schema-registry-3.rst
+
+#. .. include:: includes/client-example-vpc.rst
+
+#. .. include:: includes/client-example-schema-registry-1.rst
+
+
 
 This example is uses values that formatted as Avro and integrates with
 the Confluent Cloud Schema Registry. Before using Confluent Cloud Schema
