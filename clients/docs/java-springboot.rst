@@ -139,37 +139,37 @@ also a rolling sum of the counts as it processes each record.
 
 #. Run the |kstreams| application:
 
-  .. code-block:: text
+   .. code-block:: text
 
-     ./startStreams.sh
+      ./startStreams.sh
 
-  You should see:
+   You should see:
 
-  .. code-block:: text
+   .. code-block:: text
 
-      ...
-      [Consumed record]: alice, 0
-      [Consumed record]: alice, 1
-      [Consumed record]: alice, 2
-      [Consumed record]: alice, 3
-      [Consumed record]: alice, 4
-      [Consumed record]: alice, 5
-      [Consumed record]: alice, 6
-      [Consumed record]: alice, 7
-      [Consumed record]: alice, 8
-      [Consumed record]: alice, 9
-      ...
-      [Running count]: alice, 0
-      [Running count]: alice, 1
-      [Running count]: alice, 3
-      [Running count]: alice, 6
-      [Running count]: alice, 10
-      [Running count]: alice, 15
-      [Running count]: alice, 21
-      [Running count]: alice, 28
-      [Running count]: alice, 36
-      [Running count]: alice, 45
-      ...
+         ...
+         [Consumed record]: alice, 0
+         [Consumed record]: alice, 1
+         [Consumed record]: alice, 2
+         [Consumed record]: alice, 3
+         [Consumed record]: alice, 4
+         [Consumed record]: alice, 5
+         [Consumed record]: alice, 6
+         [Consumed record]: alice, 7
+         [Consumed record]: alice, 8
+         [Consumed record]: alice, 9
+         ...
+         [Running count]: alice, 0
+         [Running count]: alice, 1
+         [Running count]: alice, 3
+         [Running count]: alice, 6
+         [Running count]: alice, 10
+         [Running count]: alice, 15
+         [Running count]: alice, 21
+         [Running count]: alice, 28
+         [Running count]: alice, 36
+         [Running count]: alice, 45
+         ...
 
 #. When you are done, press ``kbd:[CTRL-C]``.
 
