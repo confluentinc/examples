@@ -147,7 +147,7 @@ echo -e "\n# KSQL CLI: create a new table and select * from that table, before a
 echo "ksql -u $USER_KSQLDB -p ${USER_KSQLDB}1 http://localhost:8088"
 echo
 ksql -u $USER_KSQLDB -p ${USER_KSQLDB}1 http://localhost:8088 <<EOF
-CREATE TABLE table1 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
+CREATE TABLE table1 (id varchar PRIMARY key, keyinvalue varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited');
 SELECT * FROM table1 EMIT CHANGES LIMIT 1;
 exit ;
 EOF
@@ -165,7 +165,7 @@ echo "ksql -u $USER_KSQLDB -p ${USER_KSQLDB}1 http://localhost:8088"
 echo
 ksql -u $USER_KSQLDB -p ${USER_KSQLDB}1 http://localhost:8088 <<EOF
 SET 'auto.offset.reset'='earliest';
-CREATE TABLE table2 (id varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited', key='id');
+CREATE TABLE table2 (id varchar PRIMARY key, keyinvalue varchar) WITH (kafka_topic='$TOPIC1', value_format='delimited');
 SELECT * FROM table2 EMIT CHANGES LIMIT 3;
 exit ;
 EOF

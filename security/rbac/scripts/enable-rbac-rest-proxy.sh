@@ -30,12 +30,20 @@ login_mds $MDS
 
 ##################################################
 # Administrative Functions
+# - Grant principal User:$USER_CLIENT_RP the DeveloperRead role to Topic:$LICENSE_TOPIC
+# - Grant principal User:$USER_CLIENT_RP the DeveloperWrite role to Topic:$LICENSE_TOPIC
 # - Start REST Proxy
 # - No additional role bindings are required because REST Proxy just does impersonation
 ##################################################
 
 # Get the Kafka cluster id
 get_cluster_id_kafka
+
+echo -e "\n# Grant principal User:$USER_CLIENT_RP the DeveloperRead and DeveloperWrite roles to Topic:$LICENSE_TOPIC"
+echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 confluent local start kafka-rest
 

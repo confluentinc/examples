@@ -11,8 +11,7 @@ ksql.service.id=rbac-ksql
 ksql.security.extension.class=io.confluent.ksql.security.KsqlConfluentSecurityExtension
 
 # Enable KSQL Basic+Bearer authentication
-rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
-websocket.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+ksql.authentication.plugin.class=io.confluent.ksql.security.VertxBearerOrBasicAuthenticationPlugin
 public.key.path=/tmp/tokenPublicKey.pem
 
 # Metadata URL and access credentials
