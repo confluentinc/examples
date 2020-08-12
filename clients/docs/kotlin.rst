@@ -45,7 +45,7 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~~
 
-#. Build the client examples
+#. Build the client examples:
 
    .. code-block:: text
 
@@ -123,7 +123,7 @@ Consume Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`producer code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/ProducerExample.kt`.
+#. View the :devx-examples:`consumer code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/ProducerExample.kt`.
 
 
 Kafka Streams

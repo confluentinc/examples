@@ -47,7 +47,7 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~~
 
-#. Build the client examples
+#. Build the client examples:
 
    .. code-block:: text
 
