@@ -32,7 +32,7 @@ The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated v
 Fully Managed Stack in |ccloud|
 -------------------------------
 
-The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
+The :ref:`ccloud-stack` utility creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
@@ -114,7 +114,7 @@ Build Your Own Cloud Demo
 Fully Managed Stack in |ccloud|
 -------------------------------
 
-The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
+The :ref:`ccloud-stack` utility creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
@@ -196,7 +196,7 @@ Or perhaps you want to build a |ak| demo in |ccloud| and run the |crest| client 
 
 You can build any demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in a few easy steps.
 
-#. Create a :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
+#. Create a :ref:`ccloud-stack` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
 
    .. sourcecode:: bash
 
