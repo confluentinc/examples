@@ -91,7 +91,9 @@ Produce and Consume Records
 
    This command will build jar and executes ``spring-kafka`` powered producer
    and consumer. The consumer reads the same topic and prints data to the
-   console. You should see:
+   console.
+
+   You should see:
 
    .. code-block:: text
 
@@ -125,7 +127,7 @@ Produce and Consume Records
          2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 8}
          2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 9}
 
-#. When you are done, press ``kbd:[CTRL + C]``.
+#. When you are done, press ``kbd:[CTRL-C]``.
 
 #. View the :devx-examples:`producer|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
 
@@ -169,6 +171,6 @@ also a rolling sum of the counts as it processes each record.
       [Running count]: alice, 45
       ...
 
-#. When you are done, press ``kbd:[CTRL + C]``.
+#. When you are done, press ``kbd:[CTRL-C]``.
 
 #. View the :devx-examples:`Kafka Streams code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/streams/SpringbootStreamsApplication.java`

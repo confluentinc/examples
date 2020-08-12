@@ -90,6 +90,8 @@ Produce Records
         10 messages were produced to topic test1
         ...
 
+#. View the :devx-examples:`producer code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/ProducerExample.kt`.
+
 
 Consume Records
 ~~~~~~~~~~~~~~~
@@ -123,7 +125,7 @@ Consume Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`consumer code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/ProducerExample.kt`.
+#. View the :devx-examples:`consumer code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/ConsumerExample.kt`.
 
 
 Kafka Streams
