@@ -7,12 +7,9 @@ ccloud-stack
 Overview
 ========
 
-If already have provisioned a |ccloud| cluster and created a service account and requisite ACLs to allow services to write data—awesome!
-But if you would appreciate an assist, a very quick way to spin all this up is to use the ``ccloud-stack`` utility available in GitHub.
-
 This ``ccloud-stack`` utility creates a stack of fully managed services in |ccloud|.
 It is a quick way to create fully managed resources in |ccloud|, which you can then use for learning and building other demos. 
-The script uses |ccloud| CLI under the hood to dynamically do the following in |ccloud| :
+The utility uses |ccloud| CLI under the hood to dynamically do the following in |ccloud| :
 
 -  Create a new environment
 -  Create a new service account
@@ -25,6 +22,8 @@ The script uses |ccloud| CLI under the hood to dynamically do the following in |
 
 In addition to creating these resources, ``ccloud-stack`` also generates a local configuration file with connection information to all of the above services.
 This file is particularly useful because it contains connection information to your |ccloud| instance, and any downstream application or |ak| client can use it, or you can use it for other demos or automation workflows.
+
+.. include:: includes/ccloud-promo-code.rst
 
 =======
 Caution
@@ -40,8 +39,6 @@ Prerequisites
 - Create a user account in `Confluent Cloud <https://confluent.cloud/>`__
 - Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
 - ``jq`` tool
-
-.. include:: includes/ccloud-promo-code.rst
 
 =====
 Usage
@@ -74,13 +71,13 @@ Create a ccloud-stack
 
       ./ccloud_stack_create.sh
 
-#. Alternatively, if you want to explicitly create resources in another cloud provider or region, use the |ccloud| CLI to view the available cloud providers and regions:
+#. Alternatively, if you want to create resources in another cloud provider or region, use the |ccloud| CLI to view the available cloud providers and regions:
 
    .. code:: bash
 
       ccloud kafka region list
 
-   Then create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``.
+   Then create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown below.
 
    .. code:: bash
 
@@ -137,7 +134,7 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
       source ./ccloud_library.sh
 
-#. Run the functions directly. To create the ``cloud-stack``:
+#. Run the bash functions directly from the command line. To create the ``cloud-stack``:
 
    .. code:: bash
 
@@ -147,6 +144,8 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
 
    To destroy the ``ccloud-stack``:
+
+   .. code:: bash
 
       ccloud::destroy_ccloud_stack
 

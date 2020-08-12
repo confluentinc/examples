@@ -29,8 +29,8 @@ The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated v
 
 .. figure:: ../../cp-quickstart/images/quickstart.png
 
-Fully Managed Stack in |ccloud|
--------------------------------
+ccloud-stack
+------------
 
 The :ref:`ccloud-stack` utility creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
@@ -45,7 +45,8 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create ACLs with wildcard for the service account.
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
-.. figure:: images/cloud-stack.png
+.. figure:: images/ccloud-stack-resources.png
+
 
 
 Client Code Examples
