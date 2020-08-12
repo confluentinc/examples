@@ -54,7 +54,7 @@ Client Code Examples
 If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to the :devx-examples:`client examples|clients/cloud/README.md`.
 It provides client examples written in various programming languages.
 
-.. figure:: ../clients/images/clients-all.png
+.. figure:: ../../clients/cloud/images/clients-all.png
 
 |ccloud| CLI
 ------------
@@ -88,6 +88,15 @@ The :ref:`hybrid cloud demo <quickstart-demos-ccloud>` and playbook showcase a h
 Data streams into topics, in both the local cluster and the |ccloud| cluster. |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
 .. figure:: images/services-in-cloud.jpg
+
+Microservices in the Cloud
+--------------------------
+
+The :ref:`microservices cloud demo <tutorial-microservices-orders>` showcases an order management workflow targeting |ccloud|.
+Microservices are deployed locally on Docker, and they are configured to use a |ak| cluster, |ksqldb|, and |sr-long| in |ccloud|.
+|kconnect-long| is also deployed locally on Docker, and it runs a SQL source connector to produce to |ccloud| and a Elasticsearch sink connector to consume from |ccloud|.
+
+.. figure:: ../../microservices-orders/docs/images/microservices-demo.png
 
 Confluent Operator with Cloud
 -----------------------------

@@ -73,7 +73,7 @@ Or use the ksqlDB query editor in Control Center to inspect the topic:
 
 [source,bash]
 ----
-PRINT "play-events";
+PRINT 'play-events';
 ----
 
 image::images/topic_ksql_play_events.png[play-events-ksql]
@@ -84,7 +84,7 @@ At this time, you cannot inspect data in the topic `song-feed` using the topic i
 
 [source,bash]
 ----
-PRINT "song-feed" FROM BEGINNING;
+PRINT 'song-feed' FROM BEGINNING;
 ----
 
 So the source data looks as follows
@@ -138,13 +138,15 @@ Now this persistent query will show in the queries list.
 
 Next let's work on the `song-feed` topic, which effectively represents a table of songs.
 
-The original Kafka topic has a key of type `Long`, which maps to ksqlDB's `BIGINT` sql type, and the ID field stores a copy of the key. To register the topic `song-feed`, from the ksqlDB query editor:
+The original Kafka topic has a key of type `Long`, which maps to ksqlDB's `BIGINT` sql type.
+While ksqlDB can retrieve the list of columns in the value automatically, the key column must currently be specified.
+To register the topic `song-feed`, from the ksqlDB query editor:
  
 * Create a `TABLE` from the original Kafka topic `song-feed`:
 
 [source,bash]
 ----
-CREATE TABLE ksql_song (ROWKEY BIGINT KEY) WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO', KEY='ID');
+CREATE TABLE ksql_song (SONG_ID BIGINT PRIMARY KEY) WITH (KAFKA_TOPIC='song-feed', VALUE_FORMAT='AVRO');
 ----
 
 * View the contents of this table and confirm that the entries in this ksqlDB table have a `ROWKEY` that matches the String ID of the song.
@@ -173,10 +175,8 @@ Enrich the stream of play events with song metadata using a Stream-Table `JOIN`.
 
 [source,bash]
 ----
-CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION, 1 AS KEYCOL FROM ksql_playevents_min_duration plays LEFT JOIN ksql_song songs ON plays.SONG_ID = songs.ID;
+CREATE STREAM ksql_songplays AS SELECT plays.SONG_ID AS ID, ALBUM, ARTIST, NAME, GENRE, DURATION FROM ksql_playevents_min_duration plays LEFT JOIN ksql_song songs ON plays.SONG_ID = songs.SONG_ID;
 ----
-
-Notice the addition of a clause `1 AS KEYCOL.` For every row, this creates a new field `KEYCOL` that has a value of 1. `KEYCOL` can be later used in other derived streams and tables to do aggregations on a global basis.
 
 === Create Top Music Charts
 
@@ -184,14 +184,18 @@ Now you can create a top music chart for all time to see which songs get played 
 
 [source,bash]
 ----
-CREATE TABLE ksql_songplaycounts AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays GROUP BY ID, NAME, GENRE, KEYCOL;
+CREATE TABLE ksql_songplaycounts WITH (PARTITIONS=1) AS SELECT ID AS K1, NAME AS K2, GENRE AS K3, AS_VALUE(ID) AS ID, AS_VALUE(NAME) AS NAME, AS_VALUE(GENRE) AS GENRE, COUNT(*) AS COUNT FROM ksql_songplays GROUP BY ID, NAME, GENRE;
 ----
+
+The columns used in the GROUP BY clause will become key columns in the created table. As we need the aggregate columns in the value we first alias the key columns so their names won't clash, then copy the key columns into the value using AS_VALUE.
+
+Notice, we also set the partition count to 1. This is so that later our aggregations are done on a global basis.
 
 While the all-time greatest hits are cool, it would also be good to see stats for just the last 30 seconds. Create another query, adding in a `WINDOW` clause, which gives counts of play events for all songs, in 30-second intervals.
 
 [source,bash]
 ----
-CREATE TABLE ksql_songplaycounts30 AS SELECT ID, NAME, GENRE, KEYCOL, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 seconds) GROUP BY ID, NAME, GENRE, KEYCOL;
+CREATE TABLE ksql_songplaycounts30 WITH (PARTITIONS=1) AS SELECT ID AS K1, NAME AS K2, GENRE AS K3, AS_VALUE(ID) AS ID, AS_VALUE(NAME) AS NAME, AS_VALUE(GENRE) AS GENRE, COUNT(*) AS COUNT FROM ksql_songplays WINDOW TUMBLING (size 30 second) GROUP BY ID, NAME, GENRE;
 ----
 
 == Here is what you built

@@ -6,14 +6,23 @@
 Tutorial: Introduction to Streaming Application Development
 ===========================================================
 
-This self-paced tutorial provides exercises for developers to apply the basic principles of streaming applications.
+This self-paced tutorial provides exercises for developers to learn the basic principles of service-based architectures and streaming application development:
+
+- Exercise 1: Persist events
+- Exercise 2: Event-driven applications
+- Exercise 3: Enriching streams with joins
+- Exercise 4: Filtering and branching
+- Exercise 5: Stateful operations
+- Exercise 6: State stores
+- Exercise 7: Enrichment with |ksqldb|
+
 
 ========
 Overview
 ========
 
 The tutorial is based on a small microservices ecosystem, showcasing an order management workflow, such as one might find in retail and online shopping.
-It is built using Kafka Streams, whereby  business events that describe the order management workflow propagate through this ecosystem.  
+It is built using |ak-tm|, whereby business events that describe the order management workflow propagate through this ecosystem.
 The blog post `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ outlines the approach used.
 
 .. figure:: images/microservices-demo.png
@@ -39,7 +48,7 @@ The Orders Service also includes a blocking HTTP GET so that clients can read th
 
 There is a simple service that sends emails, and another that collates orders and makes them available in a search index using Elasticsearch. 
 
-Finally, ksqlDB is running with persistent queries to enrich streams and to also check for fraudulent behavior.
+Finally, |ksqldb| is running with persistent queries to enrich streams and to also check for fraudulent behavior.
 
 Here is a diagram of the microservices and the related Kafka topics.
 
@@ -72,11 +81,11 @@ End-to-end Streaming ETL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 This demo showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
-It is build on the |cp|, including:
+It is built on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
-* ksqlDB: another variant of a fraud detection microservice
+* |ksqldb|: another variant of a fraud detection microservice
 
 +-------------------------------------+-----------------------+---------------------------+
 | Other Clients                       | Consumes From         | Produces To               |
@@ -108,7 +117,7 @@ Reading
 ~~~~~~~
 
 You will get a lot more out of this tutorial if you have first learned the concepts which are foundational for this tutorial.
-To learn how service-based architectures and stream processing tools such as Apache Kafka® can help you build business-critical systems, we recommend:
+To learn how service-based architectures and stream processing platforms such as |ak-tm| can help you build business-critical systems, we recommend:
 
 * If you have lots of time: `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__, a book by Ben Stopford.
 * If you do not have lots of time: `Building a Microservices Ecosystem with Kafka Streams and ksqlDB <https://www.confluent.io/blog/building-a-microservices-ecosystem-with-kafka-streams-and-ksql/>`__ or `Build Services on a Backbone of Events <https://www.confluent.io/blog/build-services-backbone-events/>`__.
@@ -121,11 +130,30 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-1. Make sure you have the following pre-requisites, depending on whether you are running |cp| locally or in Docker
+Make sure you have the following pre-requisites, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-Local:
+|ccloud|
+--------
 
-* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, ksqlDB and |sr-long| integration, and streams monitoring capabilities
+* Docker version >= 19.00.0
+* Docker Compose version >= 1.25.0 with Docker Compose file format 3
+* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+* |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
+* |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
+
+.. note:: The first 20 users to sign up for |ccloud| and use promo code ``C50INTEG`` will receive an additional $50 free usage (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer>`__).
+
+Docker
+------
+
+* Docker version >= 19.00.0
+* Docker Compose version >= 1.25.0 with Docker Compose file format 3
+* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+
+Local
+-----
+
+* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, |ksqldb| and |sr-long| integration, and streams monitoring capabilities
 * Java 1.8 to run the demo application
 * Maven to compile the demo application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
@@ -136,93 +164,100 @@ Local:
 
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
-Docker:
-
-* Docker version 17.06.1-ce
-* Docker Compose version 1.14.0 with Docker Compose file format 2.1
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
-
-2. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
-
-.. sourcecode:: bash
-
-   git clone https://github.com/confluentinc/examples
-
-3. Change directory to this project.
-
-.. sourcecode:: bash
-
-   cd examples/microservices-orders
-
-
 ========
 Tutorial
 ========
 
-How to use the tutorial
-~~~~~~~~~~~~~~~~~~~~~~~
+Setup the Tutorial
+~~~~~~~~~~~~~~~~~~
 
-As a pre-requisite, follow the "Environment Setup" instructions.
+#. Follow the "Environment Setup" instructions.
 
-Then run the full end-to-end working solution, which requires no code development, to see a customer-representative deployment of a streaming application..
-This provides context for each of the exercises in which you will develop pieces of the microservices.
+#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
 
-* Exercise 0: Run end-to-end demo
+   .. codewithvars:: bash
 
-After you have successfully run the full solution, go through the execises in the tutorial to better understand the basic principles of streaming applications:
+      git clone https://github.com/confluentinc/examples
 
-* Exercise 1: Persist events 
-* Exercise 2: Event-driven applications
-* Exercise 3: Enriching streams with joins
-* Exercise 4: Filtering and branching
-* Exercise 5: Stateful operations
-* Exercise 6: State stores
-* Exercise 7: Enrichment with ksqlDB
+#. Navigate to the ``examples/microservices-orders`` directory and switch to the |cp| release branch:
 
-For each exercise:
+   .. codewithvars:: bash
 
-#. Read the description to understand the focus area for the exercise
-#. Edit the file specified in each exercise and fill in the missing code
-#. Copy the file to the project, then compile the project and run the test for the service to ensure it works
+      cd examples/microservices-orders
+      git checkout |release_post_branch|
 
+#. Run the full end-to-end working solution to see a customer-representative deployment of a streaming application. This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
+
+   - Exercise 0: Run end-to-end demo
+
+#. After you have successfully run the full solution, go through each of the execises 1-7 to better understand the basic principles of streaming applications:
+
+   - Exercise 1: Persist events 
+   - Exercise 2: Event-driven applications
+   - Exercise 3: Enriching streams with joins
+   - Exercise 4: Filtering and branching
+   - Exercise 5: Stateful operations
+   - Exercise 6: State stores
+   - Exercise 7: Enrichment with |ksqldb| 
+
+#. For each of the above exercises:
+
+   - Read the description to understand the focus area for the exercise
+   - Edit the file specified in each exercise and fill in the missing code
+   - Copy the file to the project, then compile the project and run the test for the service to ensure it works
 
 Exercise 0: Run end-to-end demo
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Running the fully working demo end-to-end provides context for each of the later exercises.
 
-#. Start the demo
+#. Ensure you've followed the appropriate prerequisites section above prior to starting.
 
-   * If you are have |cp| downloaded locally, then run the full solution (this also starts a local |cp| cluster using Confluent CLI):
+#. Start the demo in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
+
+   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :devx-examples:`ccloud stack library|ccloud/ccloud-stack/README.md` of this repository).
 
      .. sourcecode:: bash
 
-        ./start.sh
+        ccloud login --save
+        ./start-ccloud.sh
 
-   * If you are running Docker, then run the full solution (this also starts a local |cp| cluster in Docker containers).
+   * Docker: run the full solution using ``docker-compose`` (this also starts a local |cp| cluster in Docker containers).
 
      .. sourcecode:: bash
 
         docker-compose up -d --build
 
-#. After starting the demo with one of the above two commands, the microservices applications will be running and Kafka topics will have data in them.
+   * Local: run the full solution using the provided script (this also starts a local |cp| cluster using Confluent CLI):
+
+     .. sourcecode:: bash
+
+        ./start.sh
+
+#. After starting the demo with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
 
-   * If you are running locally, you can sample topic data by running:
+   * |ccloud|: sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
 
    .. sourcecode:: bash
 
-      ./read-topics.sh
+      source delta_configs/env.delta; CONFIG_FILE=/opt/docker/stack-configs/java-service-account-<service-account-id>.config ./read-topics-ccloud.sh
 
-   * If you are running Docker, you can sample topic data by running:
+   * Docker: sample topic data by running:
 
    .. sourcecode:: bash
 
       ./read-topics-docker.sh
 
-#. The Kibana dashboard is populated by Elasticsearch.
+   * Local: sample topic data by running:
+
+   .. sourcecode:: bash
+
+      ./read-topics.sh
+
+#. Explore the data with Elasticsearch and Kibana
 
    .. figure:: images/elastic-search-kafka.png
        :alt: image
@@ -234,29 +269,53 @@ Running the fully working demo end-to-end provides context for each of the later
        :alt: image
        :width: 600px
 
-#. Use |c3| to view Kafka data, write ksqlDB queries, manage Kafka connectors, and monitoring your applications:
+#. View and monitor the streaming applications.
 
-   * ksqlDB tab: view ksqlDB streams and tables, and to create ksqlDB queries. Otherwise, run the ksqlDB CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the ksqlDB Editor
-   * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
-   * Data Streams tab: view the throughput and latency performance of the microservices
+   * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application:
 
-   .. figure:: images/streams-monitoring.png
-       :alt: image
-       :width: 600px
+     * Browse to: https://confluent.cloud/login
+     * View the Data flow screen to see how events flow through the various microservices
+     
+     .. figure:: images/data-flow.png
+         :alt: image
+         :width: 600px
+
+     * View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
+     
+     .. figure:: images/ksqldb-orders-flow.png
+         :alt: image
+         :width: 600px
+
+   * If you are running with Docker or locally, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
+
+     * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
+     * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
+     * Data Streams tab: view the throughput and latency performance of the microservices
+
+     .. figure:: images/streams-monitoring.png
+         :alt: image
+         :width: 600px
+
 
 #. When you are done, make sure to stop the demo before proceeding to the exercises.
 
-   * If you are running |cp| locally:
+   * |ccloud|: (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
 
      .. sourcecode:: bash
 
-        ./stop.sh
+        ./stop-ccloud.sh stack-configs/java-service-account-12345.config
 
-   * If you are running Docker:
+   * Docker:
 
      .. sourcecode:: bash
 
         docker-compose down
+
+   * Local:
+
+     .. sourcecode:: bash
+
+        ./stop.sh
 
 
 Exercise 1: Persist events 
@@ -386,7 +445,7 @@ These lookups can be performed at very large scale and with a low processing lat
 
     A stateful streaming service that joins two streams at runtime (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
-A popular pattern is to make the information in the databases available in Kafka through so-called change data capture (CDC), together with Kafka’s Connect API to pull in the data from the database.
+A popular design pattern is to make the information in the databases available in Kafka through so-called change data capture (CDC), together with Kafka’s Connect API to pull in the data from the database.
 Once the data is in Kafka, client applications can perform very fast and efficient joins of such tables and streams, rather than requiring the application to make a query to a remote database over the network for each record.
 Read more on `an overview of distributed, real-time joins <https://www.confluent.io/blog/distributed-real-time-joins-and-aggregations-on-user-activity-events-using-kafka-streams/>`__ and `implementing joins in Kafka Streams <https://docs.confluent.io/current/streams/developer-guide/dsl-api.html#streams-developer-guide-dsl-joins>`__.
 
@@ -620,32 +679,32 @@ To test your code, save off the project's working solution, copy your version of
 Exercise 7: Enrichment with ksqlDB
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-`Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against Apache Kafka.
+`Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against |ak-tm|.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
-ksqlDB is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
+|ksqldb| is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
 .. figure:: images/microservices-exercise-7.png
     :alt: image
     :width: 600px
 
-You can use ksqlDB to merge streams of data in real time by using a SQL-like `join` syntax.
+You can use |ksqldb| to merge streams of data in real time by using a SQL-like `join` syntax.
 A `ksqlDB join <https://docs.confluent.io/current/ksql/docs/developer-guide/join-streams-and-tables.html>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
-The result of a ksqlDB join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
-ksqlDB also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
+The result of a |ksqldb| join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
+|ksqldb| also supports several `aggregate functions <https://docs.confluent.io/current/ksql/docs/developer-guide/aggregate-streaming-data.html>`__, like `COUNT` and `SUM`.
 You can use these to build stateful aggregates on streaming data. 
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
-If you are running on local install, then type `ksql` to get to the ksqlDB CLI prompt.
-If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the ksqlDB CLI prompt.
+If you are running on local install, then type `ksql` to get to the |ksqldb| CLI prompt.
+If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the |ksqldb| CLI prompt.
 
-Assume you already have a ksqlDB stream of orders called `orders` and a ksqlDB table of customers called `customers_table`.
-From the ksqlDB CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
+Assume you already have a |ksqldb| stream of orders called `orders` and a |ksqldb| table of customers called `customers_table`.
+From the |ksqldb| CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
 Then create the following persistent queries:
 
-#. TODO 7.1: create a new ksqlDB stream that does a stream-table join between `orders` and `customers_table` based on customer id.
-#. TODO 7.2: create a new ksqlDB table that counts if a customer submits more than 2 orders in a 30 second time window.
+#. TODO 7.1: create a new |ksqldb| stream that does a stream-table join between `orders` and `customers_table` based on customer id.
+#. TODO 7.2: create a new |ksqldb| table that counts if a customer submits more than 2 orders in a 30 second time window.
 
 .. tip::
 
@@ -658,7 +717,7 @@ Then create the following persistent queries:
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
 
-The CLI parser will give immediate feedback whether your ksqlDB queries worked or not.
+The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
 

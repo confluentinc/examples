@@ -1,8 +1,14 @@
 package io.confluent.examples.streams.microservices;
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import io.confluent.examples.streams.microservices.domain.Schemas;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import org.apache.commons.cli.*;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KafkaStreams.State;
@@ -33,8 +39,7 @@ import io.confluent.examples.streams.microservices.util.MicroserviceUtils;
 import static io.confluent.examples.streams.avro.microservices.OrderValidationResult.FAIL;
 import static io.confluent.examples.streams.avro.microservices.OrderValidationResult.PASS;
 import static io.confluent.examples.streams.avro.microservices.OrderValidationType.INVENTORY_CHECK;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.addShutdownHookAndBlock;
-import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.parseArgsAndConfigure;
+import static io.confluent.examples.streams.microservices.util.MicroserviceUtils.*;
 
 /**
  * This service validates incoming orders to ensure there is sufficient stock to
@@ -54,8 +59,10 @@ public class InventoryService implements Service {
   private KafkaStreams streams;
 
   @Override
-  public void start(final String bootstrapServers, final String stateDir) {
-    streams = processStreams(bootstrapServers, stateDir);
+  public void start(final String bootstrapServers,
+                    final String stateDir,
+                    final Properties defaultConfig) {
+    streams = processStreams(bootstrapServers, stateDir, defaultConfig);
     streams.cleanUp(); //don't do this in prod as it clears your state stores
     final CountDownLatch startLatch = new CountDownLatch(1);
     streams.setStateListener((newState, oldState) -> {
@@ -83,7 +90,9 @@ public class InventoryService implements Service {
     }
   }
 
-  private KafkaStreams processStreams(final String bootstrapServers, final String stateDir) {
+  private KafkaStreams processStreams(final String bootstrapServers,
+                                      final String stateDir,
+                                      final Properties defaultConfig) {
 
     //Latch onto instances of the orders and inventory topics
     final StreamsBuilder builder = new StreamsBuilder();
@@ -91,12 +100,12 @@ public class InventoryService implements Service {
       .stream(Topics.ORDERS.name(),
         Consumed.with(Topics.ORDERS.keySerde(), Topics.ORDERS.valueSerde()));
     final KTable<Product, Integer> warehouseInventory = builder
-      .table(Topics.WAREHOUSE_INVENTORY.name(), Consumed
-        .with(Topics.WAREHOUSE_INVENTORY.keySerde(), Topics.WAREHOUSE_INVENTORY.valueSerde()));
+      .table(Topics.WAREHOUSE_INVENTORY.name(),
+        Consumed.with(Topics.WAREHOUSE_INVENTORY.keySerde(), Topics.WAREHOUSE_INVENTORY.valueSerde()));
 
     //Create a store to reserve inventory whilst the order is processed.
     //This will be prepopulated from Kafka before the service starts processing
-    final StoreBuilder reservedStock = Stores
+    final StoreBuilder<KeyValueStore<Product, Long>> reservedStock = Stores
 
       // TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
       // 1. the key Serde is derived from the topic specified by `WAREHOUSE_INVENTORY`
@@ -120,7 +129,7 @@ public class InventoryService implements Service {
         Topics.ORDER_VALIDATIONS.valueSerde()));
 
     return new KafkaStreams(builder.build(),
-      MicroserviceUtils.baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID));
+      MicroserviceUtils.baseStreamsConfig(bootstrapServers, stateDir, SERVICE_APP_ID, defaultConfig));
   }
 
   private static class InventoryValidator implements
@@ -172,8 +181,56 @@ public class InventoryService implements Service {
   }
 
   public static void main(final String[] args) throws Exception {
+    final Options opts = new Options();
+    opts.addOption(Option.builder("b")
+            .longOpt("bootstrap-servers")
+            .hasArg()
+            .desc("Kafka cluster bootstrap server string (ex: broker:9092)")
+            .build());
+    opts.addOption(Option.builder("s")
+            .longOpt("schema-registry")
+            .hasArg()
+            .desc("Schema Registry URL")
+            .build());
+    opts.addOption(Option.builder("c")
+            .longOpt("config-file")
+            .hasArg()
+            .desc("Java properties file with configurations for Kafka Clients")
+            .build());
+    opts.addOption(Option.builder("t")
+            .longOpt("state-dir")
+            .hasArg()
+            .desc("The directory for state storage")
+            .build());
+    opts.addOption(Option.builder("h").longOpt("help").hasArg(false).desc("Show usage information").build());
+
+    final CommandLine cl = new DefaultParser().parse(opts, args);
+
+    if (cl.hasOption("h")) {
+      final HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("Inventory Service", opts);
+      return;
+    }
+
+    final Properties defaultConfig = Optional.ofNullable(cl.getOptionValue("config-file", null))
+            .map(path -> {
+              try {
+                return buildPropertiesFromConfigFile(path);
+              } catch (final IOException e) {
+                throw new RuntimeException(e);
+              }
+            })
+            .orElse(new Properties());
+
+    final String schemaRegistryUrl = cl.getOptionValue("schema-registry", DEFAULT_SCHEMA_REGISTRY_URL);
+    defaultConfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+    Schemas.configureSerdes(defaultConfig);
+
     final InventoryService service = new InventoryService();
-    service.start(parseArgsAndConfigure(args), "/tmp/kafka-streams");
+    service.start(
+            cl.getOptionValue("bootstrap-servers", DEFAULT_BOOTSTRAP_SERVERS),
+            cl.getOptionValue("state-dir", "/tmp/kafka-streams-examples"),
+            defaultConfig);
     addShutdownHookAndBlock(service);
   }
 }

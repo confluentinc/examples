@@ -161,7 +161,7 @@ services:
       - connect
       - ksqldb-server
     volumes:
-      - $PWD/statements.sql:/tmp/statements.sql
+      - ${PWD}/statements.sql:/tmp/statements.sql
     entrypoint: /bin/sh
     tty: true
 
@@ -173,8 +173,8 @@ services:
       - connect
       - ksqldb-server
     volumes:
-      - $PWD/run-ksql.sh:/tmp/run-ksql.sh
-      - $PWD/statements.sql:/tmp/statements.sql
+      - ${PWD}/run-ksql.sh:/tmp/run-ksql.sh
+      - ${PWD}/statements.sql:/tmp/statements.sql
     entrypoint: /bin/sh
     tty: true
     command: "/tmp/run-ksql.sh"
@@ -189,9 +189,10 @@ services:
       - schema-registry
       - connect
     volumes:
-      - $PWD/connectors:/opt/docker/connectors
-      - $PWD/dashboard:/opt/docker/dashboard
-      - $PWD/scripts:/opt/docker/scripts
+      - ${PWD}/connectors:/opt/docker/connectors
+      - ${PWD}/dashboard:/opt/docker/dashboard
+      - ${PWD}/scripts:/opt/docker/scripts
+      - ${PWD}/topics.txt:/opt/docker/topics/topics.txt
     environment:
       # The following settings are listed here only to satisfy the image's requirements.
       # We override the image's `command` anyways, hence this container will not start a broker.
@@ -208,20 +209,20 @@ services:
         cub kafka-ready -b broker:9092 1 40
         echo "Kafka ready"
         echo "Creating demo topics"
-        /opt/docker/scripts/create-topics.sh
-        echo "Waiting 90 seconds for Connect to be ready..."
-        sleep 90
+        /opt/docker/scripts/create-topics.sh /opt/docker/topics/topics.txt
+        echo "Waiting 120 seconds for Connect to be ready..."
+        sleep 120 
         INPUT_FILE=/opt/docker/connectors/connector_jdbc_customers_template.config OUTPUT_FILE=/opt/docker/connectors/rendered-connectors/connector_jdbc_customers.config /opt/docker/scripts/render-connector-config.sh
         curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/opt/docker/connectors/rendered-connectors/connector_jdbc_customers.config
         INPUT_FILE=/opt/docker/connectors/connector_elasticsearch_template.config OUTPUT_FILE=/opt/docker/connectors/rendered-connectors/connector_elasticsearch.config /opt/docker/scripts/render-connector-config.sh
         curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://connect:8083/connectors/ -d @/opt/docker/connectors/rendered-connectors/connector_elasticsearch.config
         echo ""
-        echo "Waiting 90 seconds for Elasticsearch and Kibana to be ready..."
-        sleep 90
+        echo "Waiting 120 seconds for Elasticsearch and Kibana to be ready..."
+        sleep 120 
         /opt/docker/dashboard/docker-combined.sh
   
   microservices:
-    image: ${REPOSITORY}/kafka-streams-examples:${CONFLUENT_DOCKER_TAG}
+    image: cnfldemos/kafka-streams-examples:5.5.1-DEVX-1881-PR346
     container_name: microservices
     depends_on:
       - broker
@@ -230,19 +231,24 @@ services:
     ports:
       - "18894:18894"
     volumes:
-      - $PWD/scripts:/opt/docker/scripts
-      - $PWD/.env:/opt/docker/config/config.env
+      - ${PWD}/scripts:/opt/docker/scripts
+      - ${PWD}/logs:/opt/docker/logs
+      - ${PWD}/.env:/opt/docker/config/config.env
+    environment:
+      LOG_DIR: /opt/docker/logs
+      # With Docker, we don't need to worry about cleaning up the subprocesses of the container
+      PIDS_FILE: /dev/null
     command:
       - bash
       - -c
       - |
         echo "Waiting for Kafka to be ready..."
-        cub kafka-ready -b broker:9092 1 30
+        cub kafka-ready -b broker:9092 1 60
         echo "Kafka ready"
         echo "Waiting for Confluent Schema Registry to be ready..."
         cub sr-ready schema-registry 8081 40
         echo "Waiting for topic creation to finish..."
-        sleep 30
+        sleep 120
         set -a
         source /opt/docker/config/config.env
         /opt/docker/scripts/run-services.sh

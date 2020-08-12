@@ -14,7 +14,11 @@ check_sqlite3 || exit 1
 
 ./stop.sh
 
-get_and_compile_kafka_streams_examples || exit 1
+if [ ! -z "$KAFKA_STREAMS_BRANCH" ]; then
+	CONFLUENT_RELEASE_TAG_OR_BRANCH=$KAFKA_STREAMS_BRANCH get_and_compile_kafka_streams_examples || exit 1;
+else
+	get_and_compile_kafka_streams_examples || exit 1;
+fi;
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
@@ -22,13 +26,13 @@ grep -qxF 'auto.offset.reset=earliest' $CONFLUENT_HOME/etc/ksqldb/ksql-server.pr
 confluent local services start
 sleep 5
 
-export BOOTSTRAP_SERVER=localhost:9092
+export BOOTSTRAP_SERVERS=localhost:9092
 export SCHEMA_REGISTRY_URL=http://localhost:8081
 export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
 export ELASTICSEARCH_URL=http://localhost:9200
 
 echo "Creating demo topics"
-./scripts/create-topics.sh
+./scripts/create-topics.sh topics.txt
 
 echo "Setting up sqlite DB"
 (cd db; sqlite3 data/microservices.db < ./customers.sql)
@@ -64,8 +68,8 @@ while [[ $(netstat -ant | grep "$FREE_PORT") != "" ]]; do
   fi
 done
 echo "Port $FREE_PORT looks free for the Orders Service"
-echo "Running Microservices, logging info in .microservices.log and running pids in .microservices.pids"
-( RESTPORT=$FREE_PORT JAR=$(pwd)"/kafka-streams-examples/target/kafka-streams-examples-$CONFLUENT-standalone.jar" scripts/run-services.sh > .microservices.log 2>&1 & )
+echo "Running Microservices"
+( RESTPORT=$FREE_PORT JAR=$(pwd)"/kafka-streams-examples/target/kafka-streams-examples-$CONFLUENT-standalone.jar" scripts/run-services.sh > logs/run-services.log 2>&1 & )
 
 echo "Waiting for data population before starting ksqlDB applications"
 sleep 150

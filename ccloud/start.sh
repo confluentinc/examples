@@ -7,6 +7,9 @@ source ../utils/ccloud_library.sh
 NAME=`basename "$0"`
 
 echo ====== Verifying prerequisites
+validate_version_confluent_cli_v2 \
+  && print_pass "confluent CLI version ok" \
+  || exit 1
 check_env \
   && print_pass "Confluent Platform installed" \
   || exit 1
@@ -61,7 +64,7 @@ confluent local services zookeeper start
 sleep 2
 
 # Start local Kafka with Confluent Metrics Reporter configured for Confluent Cloud
-CONFLUENT_CURRENT=`confluent local current | tail -1`
+CONFLUENT_CURRENT=`confluent local current 2>&1 | tail -1`
 mkdir -p $CONFLUENT_CURRENT/kafka
 KAFKA_CONFIG=$CONFLUENT_CURRENT/kafka/server.properties
 cp $CONFLUENT_HOME/etc/kafka/server.properties $KAFKA_CONFIG
