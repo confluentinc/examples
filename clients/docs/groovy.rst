@@ -92,7 +92,7 @@ Produce Records
         10 messages were produced to topic test1
         ...
 
-#. View the :devx-examples:`consumer code|clients/cloud/groovy/src/main/groovy/io/confluent/examples/clients/cloud/ConsumerExample.groovy`.
+#. View the :devx-examples:`producer code|clients/cloud/groovy/src/main/groovy/io/confluent/examples/clients/cloud/ProducerExample.groovy`.
 
 
 Consume Records
@@ -101,7 +101,7 @@ Consume Records
 #. Run the consumer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
-   - the same topic name as used earlier.
+   - the same topic name you used earlier.
 
    .. code-block:: bash
 
@@ -136,7 +136,7 @@ Kafka Streams
 #. Run the |kstreams| application, passing in arguments for:
 
    - the local file with configuration parameters to connect to your Kafka cluster
-   - the same topic name as used above.
+   - the same topic name you used earlier
 
    .. code-block:: bash
 
