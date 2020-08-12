@@ -129,7 +129,7 @@ Run the demo
 Example 1: Kafka console producer -> Key:String and Value:String
 ----------------------------------------------------------------
 
-- Command line ``confluent local produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
+- Command line ``confluent local services kafka produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
 
 .. figure:: images/example_1.png

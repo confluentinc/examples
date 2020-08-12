@@ -78,7 +78,7 @@ Produce Records
 
    .. code-block:: text
 
-      confluent local produce test1 -- --cloud --config $HOME/.confluent/java.config --property parse.key=true --property key.separator=,
+      confluent local services kafka produce test1 --cloud --config $HOME/.confluent/java.config --property parse.key=true --property key.separator=,
 
 #. At the ``>`` prompt, type a few messages, using a ``,`` as the separator
    between the message key and value:
@@ -110,7 +110,7 @@ Consume Records
 
    .. code-block:: bash
 
-      confluent local consume test1 -- --cloud --config $HOME/.confluent/java.config --property print.key=true --from-beginning
+      confluent local services kafka consume test1 --cloud --config $HOME/.confluent/java.config --property print.key=true --from-beginning
 
 #. Verify that the consumer received all the messages. You should see:
 
@@ -190,7 +190,7 @@ Produce Records
 
    .. code-block:: bash
 
-      confluent local produce test2 -- --cloud --config $HOME/.confluent/java.config --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
+      confluent local services kafka produce test2 --cloud --config $HOME/.confluent/java.config --value-format avro --property value.schema='{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>'
 
 #. At the ``>`` prompt, type the following messages:
 
@@ -228,7 +228,7 @@ Consume Avro Records
 
    .. code-block:: bash
 
-      confluent local consume test2 -- --cloud --config $HOME/.confluent/java.config --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
+      confluent local services kafka consume test2 --cloud --config $HOME/.confluent/java.config --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 
 #. Verify that the consumer received all the messages. You should see:
 
