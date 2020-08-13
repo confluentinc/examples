@@ -1,4 +1,4 @@
-This example has been validated in the following environment:
+This example has been validated with the following operating system and software versions:
 
 - macOS 10.15.3
 - Java 11.0.6 2020-01-14 LTS
