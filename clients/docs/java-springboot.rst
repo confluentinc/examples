@@ -49,8 +49,9 @@ Avro and Confluent Cloud Schema Registry
 
 This Spring Boot application has the following two components:
 
-  - :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java`
-  - :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`
+- :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java`
+
+- :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`
 
 
 Both components will be initialized during the Spring Boot application startup.
@@ -115,7 +116,7 @@ Produce and Consume Records
          2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 8}
          2020-02-13 14:41:58.249  INFO 44191 --- [ntainer#0-0-C-1] i.c.e.c.c.springboot.ConsumerExample     : received alice {"count": 9}
 
-#. When you are done, press ``kbd:[CTRL-C]``.
+#. When you are done, press ``CTRL-C``.
 
 #. View the :devx-examples:`producer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
 
