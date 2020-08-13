@@ -44,7 +44,7 @@ Avro and Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 
-#. .. include:: includes/client-example-schema-registry-2.rst
+#. .. include:: includes/client-example-schema-registry-2-springboot.rst
 
 
 This Spring Boot application has the following two components:
