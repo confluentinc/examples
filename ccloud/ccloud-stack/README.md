@@ -20,4 +20,4 @@ The script uses the Confluent Cloud CLI to dynamically do the following in Confl
 
 You can find the documentation and instructions for running `ccloud-stack`` at [https://docs.confluent.io/current/tutorials/examples/ccloud/docs/ccloud-stack.html](https://docs.confluent.io/current/tutorials/examples/ccloud/docs/ccloud-stack.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)
 
-![image](docs/images/ccloud-stack.png)
+![image](../docs/images/ccloud-stack-resources.png)
