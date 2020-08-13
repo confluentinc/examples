@@ -10,7 +10,7 @@ messages to and consumes messages from an |ak-tm| cluster.
 
 
 Prerequisites
---------------
+-------------
 
 Client
 ~~~~~~
@@ -45,7 +45,7 @@ Basic Producer and Consumer
 
 
 Produce Records
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 #. Build the client examples:
 
