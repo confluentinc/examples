@@ -20,14 +20,6 @@ Client
    your machine. See the `librdkafka installation
    instructions <https://github.com/edenhill/librdkafka/blob/master/README.md#instructions>`__.
 
--  Create a local file (for example, at ``$HOME/.confluent/librdkafka.config``)
-   with configuration parameters to connect to your Kafka cluster, which can be
-   on your local host, `Confluent Cloud
-   <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed instructions
-   <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to properly create this file.
-
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -46,7 +38,7 @@ Setup
 
       cd clients/cloud/c/
 
-#. .. include:: includes/client-example-create-file.rst
+#. .. include:: includes/client-example-create-file-librdkafka.rst
 
 
 Basic Producer and Consumer

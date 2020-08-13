@@ -23,14 +23,6 @@ Client
    5.5 <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
    which includes the Confluent CLI.
 
--  Create a local file (e.g. at ``$HOME/.confluent/java.config``) with
-   configuration parameters to connect to your Kafka cluster, which can
-   be on your local host, `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed
-   instructions <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to properly create this file.
-
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -128,11 +120,19 @@ Consume Records
 Avro And Confluent Cloud Schema Registry
 ----------------------------------------
 
-.. include:: includes/client-example-schema-registry-3.rst
+.. include:: includes/schema-registry-scenario-explain.rst
+
+#. .. include:: includes/client-example-schema-registry-1.rst
+
+#. .. include:: includes/client-example-vpc.rst
+
+#. .. include:: includes/schema-registry-java.rst
+
+#. .. include:: includes/client-example-schema-registry-2-java.rst
 
 
-Produce Records
-~~~~~~~~~~~~~~~
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Verify your |ccloud| |sr| credentials work from your host. In the output
    below, substitute your values for ``<SR API KEY>``, ``<SR API SECRET>``, and
