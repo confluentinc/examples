@@ -29,10 +29,10 @@ The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated v
 
 .. figure:: ../../cp-quickstart/images/quickstart.png
 
-Fully Managed Stack in |ccloud|
--------------------------------
+ccloud-stack Utility
+--------------------
 
-The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
+The :ref:`ccloud-stack` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
@@ -45,7 +45,8 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create ACLs with wildcard for the service account.
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
-.. figure:: images/cloud-stack.png
+.. figure:: images/ccloud-stack-resources.png
+
 
 
 Client Code Examples
@@ -111,10 +112,10 @@ Upon running this demo, you will have a GKE-based |cp| deployment with simulated
 Build Your Own Cloud Demo
 =========================
 
-Fully Managed Stack in |ccloud|
--------------------------------
+ccloud-stack Utility
+--------------------
 
-The :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` creates a stack of fully managed services in |ccloud|.
+The :ref:`ccloud-stack` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
@@ -127,7 +128,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 -  Create ACLs with wildcard for the service account.
 -  Generate a local configuration file with all above connection information, useful for other demos/automation.
 
-.. figure:: images/cloud-stack.png
+.. figure:: images/ccloud-stack-resources.png
 
 
 Auto-generate Configurations to connect to |ccloud|
@@ -196,7 +197,7 @@ Or perhaps you want to build a |ak| demo in |ccloud| and run the |crest| client 
 
 You can build any demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in a few easy steps.
 
-#. Create a :devx-examples:`ccloud stack|ccloud/ccloud-stack/README.md` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
+#. Create a :ref:`ccloud-stack <ccloud-stack>` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
 
    .. sourcecode:: bash
 
@@ -237,3 +238,17 @@ Additional Resources
 
 -  For a practical guide to configuring, monitoring, and optimizing your |ak| client applications, see the `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf>`__ whitepaper.
 -  Learn how to use |crep-full| to copy Kafka data to |ccloud|, in different configurations that allow |kconnect-long| to be backed to |ccloud| or to your origin Kafka cluster. See :ref:`replicator-to-cloud-configurations` for more information.
+
+
+.. toctree::
+    :maxdepth: 1
+    :hidden:
+
+    ../../ccloud/docs/ccloud-stack
+    ../../clients/docs/clients-all-examples
+    ../../ccloud/docs/index
+    ../../cloud-etl/docs/index
+    ../../microservices-orders/docs/index
+    ../../kubernetes/replicator-gke-cc/docs/index
+    ../../ccloud/docs/replicator-to-cloud-configuration-types
+
