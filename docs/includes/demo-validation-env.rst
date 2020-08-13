@@ -8,4 +8,4 @@ This example has been validated with the following operating system and software
 - (Docker examples) Docker version 19.03.8
 - (Docker examples) Docker Compose docker-compose version 1.25.4
 
-Note for Windows users: even though |cp| is not supported on Windows (see :ref:`interoperability-versions), the example may still work if you replace the symlink ``.env`` with the contens of :devx-examples:`config.env|utils/config.env`.
+Note for Windows users: even though |cp| is not supported on Windows (see :ref:`interoperability-versions`), the example may still work if you replace the symlink ``.env`` with the contens of :devx-examples:`config.env|utils/config.env`.
