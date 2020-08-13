@@ -41,7 +41,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       csharp
       go
       groovy
-      java-springboot
       java
+      java-springboot
       kotlin
       python
