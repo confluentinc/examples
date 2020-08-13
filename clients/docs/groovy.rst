@@ -62,7 +62,7 @@ Produce Records
 
          ./gradlew runApp -PmainClass="io.confluent.examples.clients.cloud.ProducerExample" \
        -PconfigPath="$HOME/.confluent/java.config" \
-       -Ptopic="test1"
+          -Ptopic="test1"
 
    You should see:
 
