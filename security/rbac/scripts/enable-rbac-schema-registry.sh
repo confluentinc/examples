@@ -32,6 +32,8 @@ login_mds $MDS
 # Administrative Functions
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo
+# - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the DeveloperRead role to Topic:$LICENSE_TOPIC
+# - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the DeveloperWrite role to Topic:$LICENSE_TOPIC
 # - Start Schema Registry
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the SecurityAdmin role to the Schema Registry cluster
 # - List the role bindings for User:$USER_ADMIN_SCHEMA_REGISTRY
@@ -47,6 +49,12 @@ confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo"
 echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster-id $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the DeveloperRead and DeveloperWrite roles to Topic:$LICENSE_TOPIC"
+echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent iam rolebinding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Schema Registry"
 confluent local services schema-registry start
