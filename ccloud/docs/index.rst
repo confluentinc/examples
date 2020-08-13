@@ -49,10 +49,6 @@ Prerequisites
 
 #. `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
 
-#. Create a local file (for example, at ``$HOME/.cloud/config``) with configuration parameters to connect to your |ccloud| instance.  Starting with the template below, customize the file with your connection information.  Substitute your values for ``{{ BROKER_ENDPOINT }}``, ``{{ CLUSTER_API_KEY }}``, and ``{{ CLUSTER_API_SECRET }}`` (see :ref:`cloud-config-client` for instructions on how to create or find those values).
-
-.. literalinclude:: ../../clients/docs/includes/configs/cloud/java-sr.config 
-
 #. .. include:: ../../docs/includes/demo-validation-env.rst
 
 
