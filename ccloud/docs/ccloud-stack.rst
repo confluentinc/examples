@@ -1,6 +1,6 @@
 .. _ccloud-stack:
 
-ccloud-stack utility for |ccloud|
+ccloud-stack Utility for |ccloud|
 =================================
 
 ========
