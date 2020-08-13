@@ -46,7 +46,7 @@ Setup
 
       cd clients/cloud/c/
 
-#. .. include:: includes/client-example-create-file.rst
+#. .. include:: includes/client-example-create-file-librdkafka.rst
 
 
 Basic Producer and Consumer
