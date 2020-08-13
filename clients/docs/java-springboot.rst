@@ -9,7 +9,7 @@ produces messages to and consumes messages from an |ak-tm| cluster.
 .. include:: includes/client-example-overview.rst
 
 Prerequisites
---------------
+-------------
 
 Client
 ~~~~~~
@@ -36,24 +36,11 @@ Setup
 
 #. .. include:: includes/client-example-create-file-java.rst
 
-.. admonition:: Confluent Cloud config example
-
-   .. code-block:: text
-
-      cat $HOME/.ccloud/java.config bootstrap.servers=<BROKER ENDPOINT>
-      ssl.endpoint.identification.algorithm=https security.protocol=SASL_SSL
-      sasl.mechanism=PLAIN
-      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule
-      required username\=“<API KEY>” password\=“<API SECRET>”;
-      schema.registry.url=<SR ENDPOINT>
-      basic.auth.credentials.source=USER_INFO
-      schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD></programlisting>
-
 
 Avro Producer and Consumer
----------------------------
+--------------------------
 
-.. include:: includes/client-example-schema-registry-3.rst
+.. include:: includes/producer-consumer-description.rst
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 
@@ -62,8 +49,9 @@ Avro Producer and Consumer
 
 This Spring Boot application has the following two components:
 
-  - Producer (``ProducerExample.java``)
-  - Consumer (``ConsumerExample.java``)
+  - :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java`
+  - :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`
+
 
 Both components will be initialized during the Spring Boot application startup.
 The producer writes Kafka data to a topic in your Kafka cluster. Each record has
@@ -129,7 +117,7 @@ Produce and Consume Records
 
 #. When you are done, press ``kbd:[CTRL-C]``.
 
-#. View the :devx-examples:`producer|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
+#. View the :devx-examples:`producer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
 
 Kafka Streams
 -------------
@@ -171,6 +159,6 @@ also a rolling sum of the counts as it processes each record.
          [Running count]: alice, 45
          ...
 
-#. When you are done, press ``kbd:[CTRL-C]``.
+#. When you are done, press ``CTRL-C``.
 
 #. View the :devx-examples:`Kafka Streams code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/streams/SpringbootStreamsApplication.java`

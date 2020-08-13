@@ -9,7 +9,7 @@ messages to and consumes messages from an |ak-tm| cluster.
 .. include:: includes/client-example-overview.rst
 
 Prerequisites
---------------
+-------------
 
 Client
 ~~~~~~
@@ -43,7 +43,7 @@ Basic Producer and Consumer
 .. include:: includes/producer-consumer-description.rst
 
 Produce Records
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 #. Build the client examples:
 
@@ -129,7 +129,7 @@ Consume Records
 
 
 Kafka Streams
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 #. Run the |kstreams| application, passing in arguments for:
 
