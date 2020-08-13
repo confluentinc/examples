@@ -294,8 +294,8 @@ General Rolebinding Syntax
 #. Resource types include: Cluster, Group, Subject, Connector, TransactionalId, Topic.
 
 
-Listing a Users roles
-~~~~~~~~~~~~~~~~~~~~~
+Listing Roles for a User
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 General listing syntax:
 
