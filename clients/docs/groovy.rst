@@ -131,7 +131,7 @@ Consume Records
 
 
 Kafka Streams
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 #. Run the |kstreams| application, passing in arguments for:
 
