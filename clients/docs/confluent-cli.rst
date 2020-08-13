@@ -23,14 +23,6 @@ Client
    5.5 <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
    which includes the Confluent CLI.
 
--  Create a local file (e.g. at ``$HOME/.confluent/java.config``) with
-   configuration parameters to connect to your Kafka cluster, which can
-   be on your local host, `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed
-   instructions <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to properly create this file.
-
 
 Kafka Cluster
 ~~~~~~~~~~~~~
