@@ -50,7 +50,7 @@ Setup
       schema.registry.basic.auth.user.info=<SR_KEY:SR_PASSWORD></programlisting>
 
 
-Avro Producer and Consumer
+Avro and Confluent Cloud Schema Registry
 ---------------------------
 
 .. include:: includes/client-example-schema-registry-3.rst
