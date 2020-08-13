@@ -33,12 +33,7 @@ Caveats
 Prerequisites
 -------------
 
-* Download `Confluent Platform <https://www.confluent.io/download/>`__ |release| tarball: without modified properties files or else the demo may not work.
-
-* jq tool must be installed on your machine.
-
-* .. include:: ../../../docs/includes/demo-validation-env.rst 
-
+.. include:: ../../../docs/includes/demo-validation-env.rst 
 
 
 Run the demo
