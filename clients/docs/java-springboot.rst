@@ -37,8 +37,8 @@ Setup
 #. .. include:: includes/client-example-create-file-java.rst
 
 
-Avro Producer and Consumer
---------------------------
+Avro and Confluent Cloud Schema Registry
+----------------------------------------
 
 .. include:: includes/producer-consumer-description.rst
 
