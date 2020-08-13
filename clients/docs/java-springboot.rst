@@ -34,7 +34,7 @@ Setup
 
       cd clients/cloud/java-springboot/
 
-#. .. include:: includes/client-example-create-file-java.rst
+#. .. include:: includes/client-example-create-file-springboot.rst
 
 
 Avro and Confluent Cloud Schema Registry
