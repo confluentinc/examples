@@ -19,7 +19,7 @@ The ``scripts`` directory provides examples of the operations that you must perf
 Prerequisites
 =============
 
-.. include:: ../../../docs/includes/demo-validation-env.rst
+.. include:: ../../docs/includes/demo-validation-env.rst
 
 ============
 Run the Demo
