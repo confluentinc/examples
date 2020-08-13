@@ -200,7 +200,7 @@ further details.
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 
-#. .. include:: includes/client-example-schema-registry-2.rst
+#. .. include:: includes/client-example-schema-registry-2-librdkafka.rst
 
 #. .. include:: includes/schema-registry-librdkafka.rst
 

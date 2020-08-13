@@ -1,5 +1,6 @@
+
 Create a local file (for example, at ``$HOME/.confluent/java.config``) with configuration parameters to connect to your |ak| cluster.
-You can use one of the templates below and customize the file with connection information to your |ak| cluster, substitute the parameters with real values (:ref:`Here <cloud-config-client>` is how to create or find those values):
+Starting with one of the templates below, customize the file with connection information to your cluster, substituting the parameters in ``{{ }}`` with real values (see :ref:`cloud-config-client` for instructions on how to create or find those values).
 
 - Template configuration file for |ccloud|
 
@@ -8,4 +9,3 @@ You can use one of the templates below and customize the file with connection in
 - Template configuration file for local host
 
   .. literalinclude:: includes/configs/local/java.config
-
