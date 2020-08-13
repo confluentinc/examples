@@ -52,7 +52,7 @@ Prerequisites
 
 #. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).  By default, the demo looks for this configuration file at ``~/.ccloud/config``.
 
-#. ../../docs/includes/demo-validation-env.rst
+#. .. include:: ../../docs/includes/demo-validation-env.rst
 
 
 ========
