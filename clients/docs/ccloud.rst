@@ -28,7 +28,7 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for |confluent-cli|.
+#. Change directory to the example for |ccloud| CLI.
 
    .. code-block:: bash
 
