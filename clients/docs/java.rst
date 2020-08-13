@@ -180,7 +180,7 @@ Kafka Streams
 Avro and Confluent Cloud Schema Registry
 -----------------------------------------
 
-.. include:: includes/client-example-schema-registry-3.rst
+.. include:: includes/schema-registry-scenario-explain.rst
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 

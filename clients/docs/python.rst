@@ -185,7 +185,7 @@ Consume Records
 Avro And Confluent Cloud Schema Registry
 ----------------------------------------
 
-.. include:: includes/client-example-schema-registry-3.rst
+.. include:: includes/schema-registry-scenario-explain.rst
 
 These examples use the latest Serializer API provided by the ``confluent-kafka``
 library. The Serializer API replaces the legacy AvroProducer and AvroConsumer
