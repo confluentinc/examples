@@ -122,9 +122,17 @@ Avro And Confluent Cloud Schema Registry
 
 .. include:: includes/client-example-schema-registry-3.rst
 
+#. .. include:: includes/client-example-schema-registry-1.rst
 
-Produce Records
-~~~~~~~~~~~~~~~
+#. .. include:: includes/client-example-vpc.rst
+
+#. .. include:: includes/schema-registry-java.rst
+
+#. .. include:: includes/client-example-schema-registry-2-java.rst
+
+
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Verify your |ccloud| |sr| credentials work from your host. In the output
    below, substitute your values for ``<SR API KEY>``, ``<SR API SECRET>``, and

@@ -185,9 +185,7 @@ Consume Records
 Avro And Confluent Cloud Schema Registry
 ----------------------------------------
 
-This example is similar to the previous example, except the key and value are
-formatted as Avro and integrates with the |ccloud| |sr|.
-Before using |ccloud| |sr|, check its :ref:`availability and limits <cloud-limits>`.
+.. include:: includes/client-example-schema-registry-3.rst
 
 These examples use the latest Serializer API provided by the ``confluent-kafka``
 library. The Serializer API replaces the legacy AvroProducer and AvroConsumer
@@ -196,13 +194,13 @@ Protobuf, and Avro data formats. See the latest `confluent-kafka documentation
 <https://docs.confluent.io/current/clients/confluent-kafka-python/>`__ for
 further details.
 
-#. .. include:: includes/client-example-vpc.rst
-
 #. .. include:: includes/client-example-schema-registry-1.rst
 
-#. .. include:: includes/client-example-schema-registry-2-librdkafka.rst
+#. .. include:: includes/client-example-vpc.rst
 
 #. .. include:: includes/schema-registry-librdkafka.rst
+
+#. .. include:: includes/client-example-schema-registry-2-librdkafka.rst
 
 Produce Avro Records
 ~~~~~~~~~~~~~~~~~~~~

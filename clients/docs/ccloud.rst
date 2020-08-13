@@ -110,9 +110,9 @@ Avro And Confluent Cloud Schema Registry
 
 .. include:: includes/client-example-schema-registry-3.rst
 
-#. .. include:: includes/client-example-vpc.rst
-
 #. .. include:: includes/client-example-schema-registry-1.rst
+
+#. .. include:: includes/client-example-vpc.rst
 
 
 Produce Avro Records
