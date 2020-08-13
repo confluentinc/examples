@@ -60,9 +60,9 @@ Produce Records
 
    .. code-block:: text
 
-         ./gradlew runApp -PmainClass="io.confluent.examples.clients.cloud.ProducerExample" \
-       -PconfigPath="$HOME/.confluent/java.config" \
-       -Ptopic="test1"
+       ./gradlew runApp -PmainClass="io.confluent.examples.clients.cloud.ProducerExample" \
+          -PconfigPath="$HOME/.confluent/java.config" \
+          -Ptopic="test1"
 
    You should see:
 
