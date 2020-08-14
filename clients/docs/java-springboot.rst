@@ -51,6 +51,9 @@ Avro and Confluent Cloud Schema Registry
 #. .. include:: includes/client-example-schema-registry-2-springboot.rst
 
 
+Produce and Consume Records
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 This Spring Boot application has the following two components: :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java` that are initialized during the Spring Boot application startup.
 The producer writes Kafka data to a topic in your |ak| cluster. Each record has
 a String key representing a username (for example, ``alice``) and a value of a
@@ -65,9 +68,6 @@ count, formatted as Avro object:
         {"name": "count", "type": "long"}
     ]
    }
-
-Produce and Consume Records
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the producer and consumer with the following command. It builds the jar and executes ``spring-kafka`` powered producer and consumer.
 

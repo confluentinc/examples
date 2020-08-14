@@ -56,7 +56,7 @@ Produce Records
 
       make
 
-#. You should see:
+#. Verify the build worked. You should see:
 
    .. code-block:: bash
 

@@ -64,7 +64,7 @@ Produce Records
           -PconfigPath="$HOME/.confluent/java.config" \
           -Ptopic="test1"
 
-   You should see:
+#. Verify the producer sent all the messages. You should see:
 
    .. code-block:: text
 
