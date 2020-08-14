@@ -6,7 +6,7 @@
     "kafka.topic" : "pageviews",
     "output.data.format" : "AVRO",
     "quickstart" : "PAGEVIEWS",
-    "max.interval": 500,
-    "iterations": 1000000000,
+    "max.interval": "500",
+    "iterations": "1000000000",
     "tasks.max" : "1"
 }

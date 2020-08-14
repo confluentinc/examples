@@ -85,10 +85,8 @@ $CMD &>"$REDIRECT_TO" \
 print_pass "Topics created"
  
 printf "\n";print_process_start "====== Create fully-managed Datagen Source Connectors to produce sample data."
-ccloud kafka topic create pageviews
 ccloud::create_connector connectors/ccloud-datagen-pageviews.json || exit 1
 ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
-ccloud kafka topic create users
 ccloud::create_connector connectors/ccloud-datagen-users.json || exit 1
 ccloud::wait_for_connector_up connectors/ccloud-datagen-users.json 240 || exit 1
 printf "\nSleeping 30 seconds to give the Datagen Source Connectors a chance to start producing messages\n"

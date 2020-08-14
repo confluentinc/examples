@@ -6,7 +6,7 @@
     "kafka.topic" : "users",
     "output.data.format" : "PROTOBUF",
     "quickstart" : "USERS",
-    "max.interval": 2000,
-    "iterations": 1000000000,
+    "max.interval": "2000",
+    "iterations": "1000000000",
     "tasks.max" : "1"
 }
