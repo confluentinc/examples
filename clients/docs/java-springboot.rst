@@ -14,7 +14,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  Java 1.8.
+-  Java 1.8 or higher to run the demo application.
 
 
 Kafka Cluster
@@ -44,18 +44,15 @@ Avro and Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 
+#. .. include:: includes/client-example-vpc.rst
+
+#. .. include:: includes/schema-registry-springboot.rst
+
 #. .. include:: includes/client-example-schema-registry-2-springboot.rst
 
 
-This Spring Boot application has the following two components:
-
-- :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java`
-
-- :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`
-
-
-Both components will be initialized during the Spring Boot application startup.
-The producer writes Kafka data to a topic in your Kafka cluster. Each record has
+This Spring Boot application has the following two components: :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java` that are initialized during the Spring Boot application startup.
+The producer writes Kafka data to a topic in your |ak| cluster. Each record has
 a String key representing a username (for example, ``alice``) and a value of a
 count, formatted as Avro object:
 
@@ -72,17 +69,13 @@ count, formatted as Avro object:
 Produce and Consume Records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the producer and consumer:
+#. Run the producer and consumer with the following command. It builds the jar and executes ``spring-kafka`` powered producer and consumer.
 
    .. code-block:: text
 
       ./startProducerConsumer.sh
 
-   This command will build jar and executes ``spring-kafka`` powered producer
-   and consumer. The consumer reads the same topic and prints data to the
-   console.
-
-   You should see:
+#. Verify the producer sent all the messages. You should see:
 
    .. code-block:: text
 
@@ -118,13 +111,12 @@ Produce and Consume Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`producer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
+#. View the :devx-examples:`producer code|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`consumer code|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java`.
 
 Kafka Streams
--------------
+~~~~~~~~~~~~~
 
-The |kstreams| API reads the same topic and does a stateful sum aggregation,
-also a rolling sum of the counts as it processes each record.
+The |kstreams| API reads from the same topic and does a rolling count and stateful sum aggregation as it processes each record.
 
 #. Run the |kstreams| application:
 
@@ -132,7 +124,7 @@ also a rolling sum of the counts as it processes each record.
 
       ./startStreams.sh
 
-   You should see:
+#. Verify that you see the output:
 
    .. code-block:: text
 
@@ -162,4 +154,4 @@ also a rolling sum of the counts as it processes each record.
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`Kafka Streams code|clients/cloud/java-springboot/src/main/java-springboot/io/confluent/examples/clients/cloud/springboot/streams/SpringbootStreamsApplication.java`
+#. View the :devx-examples:`Kafka Streams code|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/streams/SpringbootStreamsApplication.java`.
