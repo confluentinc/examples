@@ -66,7 +66,7 @@ Produce Records
 
       ./producer -f $HOME/.confluent/librdkafka.config -t test1
 
-#. You should see:
+#. Verify the producer sent all the messages. You should see:
 
    .. code-block:: text
 
