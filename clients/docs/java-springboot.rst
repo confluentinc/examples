@@ -57,17 +57,9 @@ Produce and Consume Records
 This Spring Boot application has the following two components: :devx-examples:`Producer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ProducerExample.java` and :devx-examples:`Consumer|clients/cloud/java-springboot/src/main/java/io/confluent/examples/clients/cloud/springboot/kafka/ConsumerExample.java` that are initialized during the Spring Boot application startup.
 The producer writes Kafka data to a topic in your |ak| cluster. Each record has
 a String key representing a username (for example, ``alice``) and a value of a
-count, formatted as Avro object:
+count, formatted with the Avro schema :devx-examples:`DataRecordAvro.avsc|clients/cloud/java-springboot/src/main/avro/DataRecordAvro.avsc`
 
-.. code-block:: text
-
-   {"namespace": "io.confluent.examples.clients.cloud",
-    "type": "record",
-    "name": "DataRecordAvro",
-    "fields": [
-        {"name": "count", "type": "long"}
-    ]
-   }
+.. literalinclude:: ../cloud/java-springboot/src/main/avro/DataRecordAvro.avsc
 
 #. Run the producer and consumer with the following command. It builds the jar and executes ``spring-kafka`` powered producer and consumer.
 
