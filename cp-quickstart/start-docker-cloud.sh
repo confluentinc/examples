@@ -101,11 +101,14 @@ retry $MAX_WAIT check_connect_up connect || exit 1
 sleep 2 # give connect an exta moment to fully mature
 print_pass "Kafka Connect has started"
  
-printf "\n";print_process_start "====== Starting kafka-connect-datagen connectors to produce sample data."
-printf "\tSee https://www.confluent.io/hub/confluentinc/kafka-connect-datagen for more information\n"
-source ./connectors/submit_datagen_pageviews_config_cloud.sh
-source ./connectors/submit_datagen_users_config_cloud.sh 
-printf "\nSleeping 30 seconds to give kafka-connect-datagen a chance to start producing messages\n"
+printf "\n";print_process_start "====== Create fully-managed Datagen Source Connectors to produce sample data."
+ccloud kafka topic create pageviews
+ccloud::create_connector connectors/ccloud-datagen-pageviews.json || exit 1
+ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
+ccloud kafka topic create users
+ccloud::create_connector connectors/ccloud-datagen-users.json || exit 1
+ccloud::wait_for_connector_up connectors/ccloud-datagen-users.json 240 || exit 1
+printf "\nSleeping 30 seconds to give the Datagen Source Connectors a chance to start producing messages\n"
 sleep 30
 
 printf "\n====== Setting up ksqlDB\n"
