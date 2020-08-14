@@ -67,11 +67,6 @@ ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 printf "\n";print_process_start "====== Pre-creating topics"
 
-CMD="ccloud kafka topic create _confluent-monitoring"
-$CMD &>"$REDIRECT_TO" \
-  && print_code_pass -c "$CMD" \
-  || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
-
 CMD="ccloud kafka topic create pageviews"
 $CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
@@ -141,9 +136,10 @@ printf "\nLocal client configuration file written to $CONFIG_FILE\n\n"
 
 printf "====== Verify\n"
 
-printf "\nView the Avro formatted data in the pageviews topic:\n\t";print_code "ccloud kafka topic consume pageviews --value-format avro --print-key"
-printf "\nView the Protobuf formatted data in the users topic:\n\t";print_code "ccloud kafka topic consume users --value-format protobuf --print-key"
+printf "\nView messages in the topic 'pageviews' (Avro):\n\t";print_code "ccloud kafka topic consume pageviews --value-format avro --print-key"
+printf "\nView messages in the topic 'users' (Protobuf):\n\t";print_code "ccloud kafka topic consume users --value-format protobuf --print-key"
+printf "\nView messages in the topic backing the ksqlDB stream 'accomplished_female_readers' (JSON Schema):\n\t";print_code "ccloud kafka topic list | grep ACCOMPLISHED_FEMALE_READERS | xargs -I {} ccloud kafka topic consume {} --value-format jsonschema --print-key"
 
-printf "\nConfluent Cloud ksqlDB and the fully managed Datagen Source Connectors are running and accruing charges. To destroy this demo, run and verify ->\n"
-printf "\t./stop-cloud.sh $CONFIG_FILE\n"
+printf "\nConfluent Cloud ksqlDB and the fully managed Datagen Source Connectors are running and accruing charges. To destroy this demo and its Confluent Cloud resources->\n"
+printf "\t./stop-cloud.sh $CONFIG_FILE\n\n"
 
