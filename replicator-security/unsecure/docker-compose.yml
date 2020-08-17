@@ -13,7 +13,7 @@
 ---
 version: "2.2"
 services:
-srcZookeeper:
+  srcZookeeper:
     image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     restart: always
     hostname: srcZookeeper
