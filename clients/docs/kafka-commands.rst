@@ -48,7 +48,7 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Create the topic in Confluent Cloud
+#. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
@@ -177,6 +177,7 @@ Produce Avro Records
 #. When you are done, press ``CTRL-D``.
 
 #. View the :devx-examples:`producer Avro code|clients/cloud/kafka-commands/kafka-commands-ccsr.sh`.
+
 
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~

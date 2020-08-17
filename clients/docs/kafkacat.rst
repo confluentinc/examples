@@ -16,10 +16,9 @@ Client
 ~~~~~~
 
 -  `kafkacat <https://github.com/edenhill/kafkacat>`__ installed on your
-   machine. You must
-   `build <https://github.com/edenhill/kafkacat#build>`__ ``kafkacat``
-   from the latest master branch to get the ``-F`` functionality that
-   makes it easy to pass in the configuration to your Confluent Cloud
+   machine. You must `build <https://github.com/edenhill/kafkacat#build>`__
+   ``kafkacat`` from the latest master branch to get the ``-F`` functionality
+   that makes it easy to pass in the configuration to your |ccloud|
    configuration file.
 
 
@@ -61,7 +60,7 @@ Produce Records
 #. Run ``kafkacat``, writing messages to topic ``test1``, passing in arguments for:
 
    -  ``-F $HOME/.confluent/java.config``: configuration file for
-      connecting to the Confluent Cloud cluster
+      connecting to the |ccloud| cluster
    -  ``-K ,``: pass key and value, separated by a comma
 
    .. code-block:: bash

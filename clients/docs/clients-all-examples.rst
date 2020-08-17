@@ -16,9 +16,9 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Groovy <client-examples-groovy>`
 * :ref:`Java <client-examples-java>`
 * :ref:`Java Spring Boot <client-examples-java-springboot>`
-* :ref:`Apache Kafka commands <kafka-commands>`
-* :ref:`Kafka Connect Datagen <kafka-connect-datagen>`
-* :ref:`kafkacat <kafkacat>`
+* :ref:`Apache Kafka commands <client-examples-kafka-commands>`
+* :ref:`Kafka Connect Datagen <client-examples-kafka-connect-datagen>`
+* :ref:`kafkacat <client-examples-kafkacat>`
 * :ref:`Kotlin <client-examples-kotlin>`
 * :devx-examples:`KSQL Datagen|clients/cloud/ksql-datagen/README.md`
 * :devx-examples:`Node.js|clients/cloud/nodejs/README.md`

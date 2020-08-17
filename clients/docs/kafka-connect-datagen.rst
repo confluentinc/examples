@@ -3,7 +3,7 @@
 Kakfa Connect Datagen
 =====================
 
-In this tutorial, you will run a kafkacat client application that produces
+In this tutorial, you will run a Kafka Connect Datagen application that produces
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
@@ -37,11 +37,11 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for kafkacat.
+#. Change directory to the example for Kafka Connect Datagen.
 
    .. code-block:: bash
 
-      cd clients/cloud/kafkacat/
+      cd clients/cloud/kafka-connect-datagen/
 
 #. .. include:: includes/client-example-create-file-java.rst
 
@@ -119,7 +119,7 @@ Basic Producer and Consumer
 
 
 Consume Records
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 #. Consume from topic ``test1`` by doing the following:
 
@@ -144,7 +144,6 @@ Consume Records
 #. When you are done, press ``CTRL-C``.
 
 #. View the :devx-examples:`consumer code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
-
 
 
 Avro And Confluent Cloud Schema Registry
@@ -236,7 +235,7 @@ Produce Records
       connect    | [2019-05-30 14:43:41,167] INFO Added plugin 'io.confluent.kafka.connect.datagen.DatagenConnector' (org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader)
       connect    | [2019-05-30 14:43:42,614] INFO Added aliases 'DatagenConnector' and 'Datagen' to plugin 'io.confluent.kafka.connect.datagen.DatagenConnector' (org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader)
 
-#. Submit the kafka-connect-datagen connector.
+#. Submit the ``kafka-connect-datagen`` connector.
 
    .. code:: bash
 
