@@ -1,12 +1,13 @@
 .. _client-examples-kafka-commands:
 
-Kafka Commands
-==============
+Apache Kafka Commands
+=====================
 
-In this tutorial, you will run Apache bin commands that produce messages to and
+In this tutorial, you will run Apache Kafka commands that produce messages to and
 consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
+
 
 Prerequisites
 -------------
@@ -29,11 +30,11 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for Kotlin.
+#. Change directory to the example for Apache Kafka commands.
 
    .. code-block:: bash
 
-      cd clients/cloud/kotlin/
+      cd clients/cloud/kafka-commands/
 
 #. .. include:: includes/client-example-create-file-java.rst
 
@@ -42,6 +43,7 @@ Basic Producer and Consumer
 ---------------------------
 
 .. include:: includes/producer-consumer-description.rst
+
 
 Produce Records
 ~~~~~~~~~~~~~~~

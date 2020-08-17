@@ -16,9 +16,9 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Groovy <client-examples-groovy>`
 * :ref:`Java <client-examples-java>`
 * :ref:`Java Spring Boot <client-examples-java-springboot>`
-* :devx-examples:`Apache Kafka commands|clients/cloud/kafka-commands/README.md`
-* :devx-examples:`Kafka Connect datagen|clients/cloud/kafka-connect-datagen/README.md`
-* :devx-examples:`kafkacat|clients/cloud/kafkacat/README.md`
+* :ref:`Apache Kafka commands <kafka-commands>`
+* :ref:`Kafka Connect Datagen <kafka-connect-datagen>`
+* :ref:`kafkacat <kafkacat>`
 * :ref:`Kotlin <client-examples-kotlin>`
 * :devx-examples:`KSQL Datagen|clients/cloud/ksql-datagen/README.md`
 * :devx-examples:`Node.js|clients/cloud/nodejs/README.md`
@@ -43,5 +43,8 @@ For the subset of languages that support it, the code examples also demonstrate 
       groovy
       java
       java-springboot
+      kafka-commands
+      kakfa-connect-datagen
+      kafkacat
       kotlin
       python
