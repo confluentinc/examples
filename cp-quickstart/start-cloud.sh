@@ -38,10 +38,6 @@ printf "\nFor your reference the demo will highlight some commands in "; print_c
 
 printf "\n====== Starting\n\n"
 
-wget -q -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml \
-  && print_pass "retrieved docker-compose.yml from https://github.com/confluentinc/cp-all-in-one/blob/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml" \
-  || exit_with_error -c $? -n "$NAME" -m "could not obtain cp-all-in-one docker-compose.yml" -l $(($LINENO -2))
-
 printf "\n====== Creating new Confluent Cloud stack using the ccloud::create_ccloud_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/ccloud_library.sh"
 ccloud::create_ccloud_stack true  \
 	&& print_code_pass -c "cccloud::create_ccloud_stack true"
@@ -71,11 +67,6 @@ ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 printf "\n";print_process_start "====== Pre-creating topics"
 
-CMD="ccloud kafka topic create _confluent-monitoring"
-$CMD &>"$REDIRECT_TO" \
-  && print_code_pass -c "$CMD" \
-  || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
-
 CMD="ccloud kafka topic create pageviews"
 $CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
@@ -88,24 +79,12 @@ $CMD &>"$REDIRECT_TO" \
 
 print_pass "Topics created"
  
-printf "\n====== Starting local connect cluster in Docker to generate simulated data\n"
-docker-compose up -d connect \
-  && print_code_pass -c "docker-compose up -d connect" \
-  || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -2))
-
-# Verify Kafka Connect worker has started
-MAX_WAIT=120
-printf "\n"
-print_process_start "Waiting up to $MAX_WAIT seconds for Kafka Connect to start"
-retry $MAX_WAIT check_connect_up connect || exit 1
-sleep 2 # give connect an exta moment to fully mature
-print_pass "Kafka Connect has started"
- 
-printf "\n";print_process_start "====== Starting kafka-connect-datagen connectors to produce sample data."
-printf "\tSee https://www.confluent.io/hub/confluentinc/kafka-connect-datagen for more information\n"
-source ./connectors/submit_datagen_pageviews_config_cloud.sh
-source ./connectors/submit_datagen_users_config_cloud.sh 
-printf "\nSleeping 30 seconds to give kafka-connect-datagen a chance to start producing messages\n"
+printf "\n";print_process_start "====== Create fully-managed Datagen Source Connectors to produce sample data."
+ccloud::create_connector connectors/ccloud-datagen-pageviews.json || exit 1
+ccloud::create_connector connectors/ccloud-datagen-users.json || exit 1
+ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
+ccloud::wait_for_connector_up connectors/ccloud-datagen-users.json 240 || exit 1
+printf "\nSleeping 30 seconds to give the Datagen Source Connectors a chance to start producing messages\n"
 sleep 30
 
 printf "\n====== Setting up ksqlDB\n"
@@ -122,10 +101,11 @@ $CMD \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
+echo -e "\nSleeping 60 seconds\n"
 sleep 60
 printf "\nSubmitting KSQL queries via curl to the ksqlDB REST endpoint\n"
 printf "\tSee https://docs.ksqldb.io/en/latest/developer-guide/api/ for more information\n"
-while read ksqlCmd; do # from docker-cloud-statements.sql
+while read ksqlCmd; do # from statements-cloud.sql
 	response=$(curl -w "\n%{http_code}" -X POST $KSQLDB_ENDPOINT/ksql \
 	       -H "Content-Type: application/vnd.ksql.v1+json; charset=utf-8" \
 	       -u $KSQLDB_BASIC_AUTH_USER_INFO \
@@ -149,19 +129,17 @@ EOF
 	  fi
 	}
 sleep 3;
-done < docker-cloud-statements.sql
-printf "\nksqlDB ready\n"
+done < statements-cloud.sql
+printf "\nConfluent Cloud ksqlDB ready\n"
 
 printf "\nLocal client configuration file written to $CONFIG_FILE\n\n"
 
 printf "====== Verify\n"
 
-printf "\nHere are some sample commands you can run to view data streaming in Avro and Protobuf format with the Kafka console commands.\n"
+printf "\nView messages in the topic 'pageviews' (Avro):\n\t";print_code "ccloud kafka topic consume pageviews --value-format avro --print-key"
+printf "\nView messages in the topic 'users' (Protobuf):\n\t";print_code "ccloud kafka topic consume users --value-format protobuf --print-key"
+printf "\nView messages in the topic backing the ksqlDB stream 'accomplished_female_readers' (JSON Schema):\n\t";print_code "ccloud kafka topic list | grep ACCOMPLISHED_FEMALE_READERS | xargs -I {} ccloud kafka topic consume {} --value-format jsonschema --print-key"
 
-printf "\nTo view the Protobuf formatted data in the users topic:\n\t";print_code "docker run -it --rm --mount type=bind,source="$(pwd)"/delta_configs/ak-tools-ccloud.delta,target=/opt/docker/ak-tools-ccloud.delta cnfldemos/cp-server-connect-datagen:$KAFKA_CONNECT_DATAGEN_DOCKER_TAG kafka-protobuf-console-consumer --consumer.config /opt/docker/ak-tools-ccloud.delta --bootstrap-server $BOOTSTRAP_SERVERS --property schema.registry.url=$SCHEMA_REGISTRY_URL --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property basic.auth.credentials.source=USER_INFO --topic users"
-
-printf "\nTo view the Avro formatted data in the pageviews topic:\n\t";print_code "docker run -it --rm --mount type=bind,source="$(pwd)"/delta_configs/ak-tools-ccloud.delta,target=/opt/docker/ak-tools-ccloud.delta cnfldemos/cp-server-connect-datagen:$KAFKA_CONNECT_DATAGEN_DOCKER_TAG kafka-avro-console-consumer --consumer.config /opt/docker/ak-tools-ccloud.delta --bootstrap-server $BOOTSTRAP_SERVERS --property schema.registry.url=$SCHEMA_REGISTRY_URL --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property basic.auth.credentials.source=USER_INFO --topic pageviews"
-
-printf "\nConfluent Cloud KSQL is running and accruing charges. To destroy this demo, run and verify ->\n"
-printf "\t./stop-docker-cloud.sh $CONFIG_FILE\n"
+printf "\nConfluent Cloud ksqlDB and the fully managed Datagen Source Connectors are running and accruing charges. To destroy this demo and its Confluent Cloud resources->\n"
+printf "\t./stop-cloud.sh $CONFIG_FILE\n\n"
 
