@@ -33,11 +33,7 @@ Caveats
 Prerequisites
 -------------
 
-* Download `Confluent Platform <https://www.confluent.io/download/>`__ |release| tarball: without modified properties files or else the demo may not work.
-
-* This demo has been validated with the tarball download of |cp|, running macOS version 10.15.3, bash version 3.2.57 .  This demo may not work with deb/rpm installs.
-
-* jq tool must be installed on your machine.
+.. include:: ../../../docs/includes/demo-validation-env.rst 
 
 
 Run the demo

@@ -1,0 +1,12 @@
+{
+    "name" : "datagen_ccloud_users",
+    "connector.class": "DatagenSource",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret" : "$CLOUD_SECRET",
+    "kafka.topic" : "users",
+    "output.data.format" : "PROTOBUF",
+    "quickstart" : "USERS",
+    "max.interval": "2000",
+    "iterations": "1000000000",
+    "tasks.max" : "1"
+}
