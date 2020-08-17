@@ -232,12 +232,13 @@ Produce Records
    You should see:
 
    .. code-block:: text
+
       connect    | [2019-05-30 14:43:41,167] INFO Added plugin 'io.confluent.kafka.connect.datagen.DatagenConnector' (org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader)
       connect    | [2019-05-30 14:43:42,614] INFO Added aliases 'DatagenConnector' and 'Datagen' to plugin 'io.confluent.kafka.connect.datagen.DatagenConnector' (org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader)
 
 #. Submit the ``kafka-connect-datagen`` connector.
 
-   .. code:: bash
+   .. code-block:: bash
 
       ./submit_datagen_orders_config_avro.sh
 
@@ -276,10 +277,10 @@ Consume Avro Records
 ~~~~~~~~~~~~~
 
 #. View the schema information registered in |ccloud| Schema Registry. In the
-  following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``,
-  and ``<SR ENDPOINT>``.
+   following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``,
+   and ``<SR ENDPOINT>``.
 
-  .. code-block:: text
+   .. code-block:: text
 
       # View the list of registered subjects
       curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
