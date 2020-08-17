@@ -51,7 +51,6 @@ Basic Producer and Consumer
 
 .. include:: includes/producer-consumer-description.rst
 
-
 #. Create the topic in |ccloud|.
 
    .. code-block:: bash
@@ -276,16 +275,16 @@ Consume Avro Records
 |ccloud| |sr|
 ~~~~~~~~~~~~~
 
-#. View the schema information registered in |ccloud| Schema Registry. In the
-   following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``,
-   and ``<SR ENDPOINT>``.
+View the schema information registered in |ccloud| Schema Registry. In the
+following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``,
+and ``<SR ENDPOINT>``.
 
-   .. code-block:: text
+.. code-block:: text
 
-      # View the list of registered subjects
-      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
-      ["test2-value"]
+   # View the list of registered subjects
+   curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+   ["test2-value"]
 
-      # View the schema information for subject `test2-value`
-      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
-      {"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema\",\"namespace\":\"io.confluent.ksql.avro_schemas\",\"fields\":[{\"name\":\"ordertime\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"orderid\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"itemid\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderunits\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"address\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema_address\",\"fields\":[{\"name\":\"city\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"state\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"zipcode\",\"type\":[\"null\",\"long\"],\"default\":null}]}],\"default\":null}]}"}
+   # View the schema information for subject `test2-value`
+   curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+   {"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema\",\"namespace\":\"io.confluent.ksql.avro_schemas\",\"fields\":[{\"name\":\"ordertime\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"orderid\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"itemid\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderunits\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"address\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema_address\",\"fields\":[{\"name\":\"city\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"state\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"zipcode\",\"type\":[\"null\",\"long\"],\"default\":null}]}],\"default\":null}]}"}

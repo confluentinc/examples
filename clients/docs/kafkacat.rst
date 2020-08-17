@@ -81,8 +81,8 @@ Produce Records
 #. View the :devx-examples:`producer code|clients/cloud/kafkacat/kafkacat-example.sh`.
 
 
-Consumer Records
-~~~~~~~~~~~~~~~~
+Consume Records
+~~~~~~~~~~~~~~~
 
 #. Run ``kafkacat`` again, reading messages from topic ``test``, passing
    in arguments for:
@@ -92,29 +92,29 @@ Consumer Records
    -  ``-K ,``: pass key and value, separated by a comma
    -  ``-e``: exit successfully when last message received
 
-  .. code-block:: bash
+   .. code-block:: bash
 
       kafkacat -F $HOME/.confluent/java.config -K , -C -t test1 -e
 
-  You should see the messages you typed earlier.
+   You should see the messages you typed earlier.
 
-  .. code-block:: bash
+   .. code-block:: bash
 
-      % Reading configuration from file $HOME/.confluent/java.config
-      % Reached end of topic test1 [3] at offset 0
-      alice,{"count":0}
-      alice,{"count":1}
-      alice,{"count":2}
-      % Reached end of topic test1 [7] at offset 0
-      % Reached end of topic test1 [4] at offset 0
-      % Reached end of topic test1 [6] at offset 0
-      % Reached end of topic test1 [5] at offset 0
-      % Reached end of topic test1 [1] at offset 0
-      % Reached end of topic test1 [2] at offset 0
-      % Reached end of topic test1 [9] at offset 0
-      % Reached end of topic test1 [10] at offset 0
-      % Reached end of topic test1 [0] at offset 0
-      % Reached end of topic test1 [8] at offset 0
-      % Reached end of topic test1 [11] at offset 3: exiting
+         % Reading configuration from file $HOME/.confluent/java.config
+         % Reached end of topic test1 [3] at offset 0
+         alice,{"count":0}
+         alice,{"count":1}
+         alice,{"count":2}
+         % Reached end of topic test1 [7] at offset 0
+         % Reached end of topic test1 [4] at offset 0
+         % Reached end of topic test1 [6] at offset 0
+         % Reached end of topic test1 [5] at offset 0
+         % Reached end of topic test1 [1] at offset 0
+         % Reached end of topic test1 [2] at offset 0
+         % Reached end of topic test1 [9] at offset 0
+         % Reached end of topic test1 [10] at offset 0
+         % Reached end of topic test1 [0] at offset 0
+         % Reached end of topic test1 [8] at offset 0
+         % Reached end of topic test1 [11] at offset 3: exiting
 
 #. View the :devx-examples:`consumer code|clients/cloud/kafkacat/kafkacat-example.sh`.
