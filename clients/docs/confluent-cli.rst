@@ -19,9 +19,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  `Confluent Platform
-   5.5 <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   which includes the Confluent CLI.
+- `Download <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__ |cp| |release|, which includes the |confluent-cli|.
 
 
 Kafka Cluster

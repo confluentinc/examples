@@ -39,13 +39,11 @@ For additional examples that showcase streaming applications within an event str
 
 ## Confluent Cloud
 
-* This quickstart for Confluent Cloud is similar to those above for Confluent Platform, but leverages Confluent Cloud ksqlDB (version 0.10.0) and Confluent Cloud Schema Registry. After logging into the `ccloud` CLI, run the command below and open your browser navigating to https://confluent.cloud. Be aware the demo creates real cloud resources and incurs charges.  This is for demonstration purposes and should only be used for development environments.
+* This quickstart for Confluent Cloud is similar to those above for Confluent Platform, but leverages 100% Confluent Cloud services, including a [ksqlDB application](statements-cloud.sql) which builds streams and tables using Avro, Protobuf and JSON based formats. After logging into the `ccloud` CLI, run the command below and open your browser navigating to https://confluent.cloud. Note: the demo creates real cloud resources and incurs charges.
 
 ```bash
-./start-docker-cloud.sh
+./start-cloud.sh
 ```
-
-* This demo also shows usage of the various data formats supported by Confluent Cloud, Schema Registry and ksqlDB.  The demo deploys a [ksqlDB application](docker-cloud-statements.sql) which builds streams and tables using Avro, Protobuf and JSON based formats.  The demo provides sample commands at the end of its startup showing how to consume Protobuf based data streams (e.g. `users` topic) and Avro based data streams (e.g. `pageviews` topic)
 
 * The first 20 users to sign up for [Confluent Cloud](https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud) and use promo code ``C50INTEG`` will receive an additional $50 free usage ([details](https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud)).
 
@@ -55,7 +53,7 @@ For additional examples that showcase streaming applications within an event str
 You may explicitly set the cloud provider and region. For example:
 
 ```bash
-CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start-docker-cloud.sh
+CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./start-cloud.sh
 ```
 
 Here are the variables and their default values:
