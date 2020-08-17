@@ -12,7 +12,7 @@ See the `documentation <https://docs.confluent.io/current/connect/managing/exten
 As an example, see how the `Kafka Connect Datagen connector <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__, which generates mock events, can be pulled from |c-hub| and bundled into a Docker image using this `Dockerfile <https://github.com/confluentinc/kafka-connect-datagen/blob/master/Dockerfile-confluenthub>`__.
 Once you build the custom Docker image, Kubernetes will need to pull this image from a Docker Registry to create the Pods.
 
-. note:: It is not recommended to use volumes to place the desired jars onto the Connect image because it is less self-sufficient, less portable, and harder to match up versions between the base image and jars.
+.. note:: It is not recommended to use volumes to place the desired jars onto the Connect image because it is less self-sufficient, less portable, and harder to match up versions between the base image and jars.
 
 For more advanced use cases where you want to use a custom connector instead of a pre-packaged one available at |c-hub|, you may create a Docker image with a custom connector from a `local archive <https://docs.confluent.io/current/connect/managing/confluent-hub/command-reference/confluent-hub-install.html#confluent-hub-client-install>`__.
 The demonstration uses this more advanced workflow.
