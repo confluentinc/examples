@@ -39,7 +39,7 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: srcKafka1
     container_name: srcKafka1
-    cpus: 0.3
+    cpus: 0.5
     depends_on:
       - srcZookeeper
     ports:
@@ -59,13 +59,13 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: destKafka1
     container_name: destKafka1
-    cpus: 0.3
+    cpus: 0.5
     depends_on:
       - destZookeeper
     ports:
       - "11091:11091"
     volumes:
-      - $PWD/scripts/security:/etc/kafka/secrets
+      - $PWD/../scripts/security:/etc/kafka/secrets
     environment:
       KAFKA_ZOOKEEPER_CONNECT: "destZookeeper:2281"
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SSL:SSL
@@ -93,7 +93,7 @@ services:
       - destKafka1
     volumes:
       - mi3:/usr/share/replicator/kafka-connect-replicator/
-      - $PWD/scripts/security:/etc/kafka/secrets
+      - $PWD/../scripts/security:/etc/kafka/secrets
     environment:
       CONNECT_BOOTSTRAP_SERVERS: "destKafka1:11091"
       CONNECT_REST_PORT: 8083
@@ -136,12 +136,12 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: srcKafkaClient
     container_name: srcKafkaClient
-    cpus: 0.1
+    cpus: 0.2
     depends_on:
       - srcKafka1
     volumes:
-      - $PWD/scripts/security:/etc/kafka/secrets
-      - $PWD/testData:/etc/kafka/testData
+      - $PWD/../scripts/security:/etc/kafka/secrets
+      - $PWD/../testData:/etc/kafka/testData
     command: "bash -c -a 'echo Waiting for Kafka to be ready... && \
                        /etc/confluent/docker/configure && \
                        cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
@@ -157,13 +157,13 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: destKafkaClient
     container_name: destKafkaClient
-    cpus: 0.1
+    cpus: 0.2
     depends_on:
       - destKafka1
       - connect
     volumes:
-      - $PWD/scripts:/etc/kafka/scripts
-      - $PWD/scripts/security:/etc/kafka/secrets
+      - $PWD/../scripts:/etc/kafka/scripts
+      - $PWD/../scripts/security:/etc/kafka/secrets
     command: "bash -c -a 'echo Waiting for Kafka to be ready... && \
                        /etc/confluent/docker/configure && \
                        cub kafka-ready -b destKafka1:11091 1 60 --config /etc/kafka/kafka.properties && \
