@@ -44,7 +44,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       java
       java-springboot
       kafka-commands
-      kakfa-connect-datagen
+      kafka-connect-datagen
       kafkacat
       kotlin
       python
