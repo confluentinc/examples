@@ -19,13 +19,7 @@ The ``scripts`` directory provides examples of the operations that you must perf
 Prerequisites
 =============
 
-**Demo validated with:**
-
--  |cp| |version|
--  Docker 19.03.2
--  Docker-compose 1.24.1
--  Java version 1.8.0_162
--  MacOS 10.12
+.. include:: ../../docs/includes/demo-validation-env.rst
 
 ============
 Run the Demo
