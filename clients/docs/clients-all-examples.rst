@@ -35,6 +35,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       :maxdepth: 1
       :hidden:
 
+      kafka-commands
       c
       confluent-cli
       ccloud
@@ -43,7 +44,6 @@ For the subset of languages that support it, the code examples also demonstrate 
       groovy
       java
       java-springboot
-      kafka-commands
       kafka-connect-datagen
       kafkacat
       kotlin
