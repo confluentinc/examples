@@ -3,15 +3,10 @@
 Kafka Connect Datagen
 =====================
 
-In this tutorial, you will run a |kconnect-long| Datagen application that
+In this tutorial, you will run a |kconnect-long| Datagen source connector that
 produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
-
-.. note::
-
-   You should use |kconnect-long| Datagen for development purposes only.
-   |kconnect-long| Datagen isn't suitable for a production environment.
 
 Prerequisites
 -------------
@@ -79,8 +74,7 @@ Basic Producer and Consumer
 
       Creating connect ... done
 
-#. Wait for about 60 seconds until |kconnect| is ready, and confirm the Kafka
-   Connect Datagen connector plugin is available by running the following commands:
+#. Wait for about 60 seconds, and then verify |kconnect| is ready by running the following command:
 
    .. code-block:: bash
 
@@ -92,7 +86,7 @@ Basic Producer and Consumer
 
       connect    | [2019-05-30 14:43:53,799] INFO Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder)
 
-   Next, run the following command:
+#. Verify the |kconnect| Datagen connector plugin is available by running the following command:
 
    .. code-block:: bash
 
@@ -111,7 +105,7 @@ Basic Producer and Consumer
 
       ./submit_datagen_orders_config.sh
 
-#. View the :devx-examples:`producer code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
+#. View the :devx-examples:`datagen code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
 
 
 Consume Records
@@ -190,9 +184,7 @@ Produce Records
 
       Creating connect ... done
 
-#. Wait for about 60 seconds until |kconnect| is ready, and confirm the
-   |kconnect-long| Datagen connector plugin is available by running the
-   following commands:
+#. Wait for about 60 seconds, and then verify |kconnect| is ready by running the following command:
 
    .. code-block:: bash
 
@@ -204,7 +196,7 @@ Produce Records
 
       connect    | [2019-05-30 14:43:53,799] INFO Finished starting connectors and tasks (org.apache.kafka.connect.runtime.distributed.DistributedHerder)
 
-   Run the following command:
+#. Verify the |kconnect| Datagen connector plugin is available by running the following command:
 
    .. code-block:: bash
 
@@ -217,13 +209,14 @@ Produce Records
       connect    | [2019-05-30 14:43:41,167] INFO Added plugin 'io.confluent.kafka.connect.datagen.DatagenConnector' (org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader)
       connect    | [2019-05-30 14:43:42,614] INFO Added aliases 'DatagenConnector' and 'Datagen' to plugin 'io.confluent.kafka.connect.datagen.DatagenConnector' (org.apache.kafka.connect.runtime.isolation.DelegatingClassLoader)
 
+
 #. Submit the ``kafka-connect-datagen`` connector.
 
    .. code-block:: bash
 
       ./submit_datagen_orders_config_avro.sh
 
-#. View the :devx-examples:`producer code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`datagen code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
 Consume Avro Records
@@ -251,22 +244,36 @@ Consume Avro Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`producer code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`consumer code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
 Confluent Cloud Schema Registry
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-View the schema information registered in |sr-ccloud|. In the following output,
+#. View the schema subjects registered in |sr-ccloud|. In the following output,
 substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR
 ENDPOINT>``.
 
-.. code-block:: text
+   .. code-block:: text
 
-   # View the list of registered subjects
-   curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
-   ["test2-value"]
+      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
 
-   # View the schema information for subject `test2-value`
-   curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
-   {"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema\",\"namespace\":\"io.confluent.ksql.avro_schemas\",\"fields\":[{\"name\":\"ordertime\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"orderid\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"itemid\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderunits\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"address\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema_address\",\"fields\":[{\"name\":\"city\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"state\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"zipcode\",\"type\":[\"null\",\"long\"],\"default\":null}]}],\"default\":null}]}"}
+#. Verify that the subject ``test2-value`` exists.
+
+   .. code-block:: text
+
+      ["test2-value"]
+
+#. View the schema information for subject `test2-value`. In the following output,
+substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR
+ENDPOINT>``.
+
+   .. code-block:: text
+
+      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+
+#. Verify the schema information for subject ``test2-value``.
+
+   .. code-block:: text
+
+      {"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema\",\"namespace\":\"io.confluent.ksql.avro_schemas\",\"fields\":[{\"name\":\"ordertime\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"orderid\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"itemid\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderunits\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"address\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema_address\",\"fields\":[{\"name\":\"city\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"state\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"zipcode\",\"type\":[\"null\",\"long\"],\"default\":null}]}],\"default\":null}]}"}
