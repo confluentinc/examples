@@ -17,7 +17,7 @@ Client
 
 -  `kafkacat <https://github.com/edenhill/kafkacat>`__ installed on your
    machine. You must `build <https://github.com/edenhill/kafkacat#build>`__
-   ``kafkacat`` from the latest master branch to get the ``-F`` functionality
+   |kcat| from the latest master branch to get the ``-F`` functionality
    that makes it easy to pass in the configuration to your |ccloud|
    configuration file.
 
@@ -33,7 +33,7 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for kafkacat.
+#. Change directory to the example for |kcat|.
 
    .. code-block:: bash
 
@@ -57,7 +57,7 @@ Produce Records
 
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test1 --create --replication-factor 3 --partitions 6
 
-#. Run ``kafkacat``, writing messages to topic ``test1``, passing in arguments for:
+#. Run |kcat|, writing messages to topic ``test1``, passing in arguments for:
 
    -  ``-F $HOME/.confluent/java.config``: configuration file for
       connecting to the |ccloud| cluster
@@ -84,7 +84,7 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run ``kafkacat`` again, reading messages from topic ``test``, passing
+#. Run |kcat| again, reading messages from topic ``test``, passing
    in arguments for:
 
    -  ``-F $HOME/.confluent/java.config``: configuration file for
