@@ -131,8 +131,8 @@ Produce Avro Records
    topic ``test2``, passing in arguments for:
 
    -  ``--property value.schema``: define the schema
-   -  ``--property schema.registry.url``: connect to the Confluent Cloud
-      Schema Registry endpoint ``https://<SR ENDPOINT>``
+   -  ``--property schema.registry.url``: connect to the |sr-ccloud| endpoint
+      ``https://<SR ENDPOINT>``
    -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
    -  ``--property schema.registry.basic.auth.user.info``:
       ``<SR API KEY>:<SR API SECRET>``
