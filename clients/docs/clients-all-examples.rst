@@ -7,6 +7,7 @@ There are many programming languages that provide |ak| client libraries.
 The following "Hello, World!" examples are written in various languages to demonstrate how to produce to and consume from an |ak-tm| cluster, which can be in `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__, on your local host, or any other |ak| cluster.
 For the subset of languages that support it, the code examples also demonstrate how to use Avro and |sr-long|.
 
+* :ref:`Apache Kafka commands <client-examples-kafka-commands>`
 * :ref:`C <client-examples-c>`
 * :devx-examples:`Clojure|clients/cloud/clojure/README.md`
 * :ref:`Confluent CLI <client-examples-confluent-cli>`
@@ -16,9 +17,8 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Groovy <client-examples-groovy>`
 * :ref:`Java <client-examples-java>`
 * :ref:`Java Spring Boot <client-examples-java-springboot>`
-* :devx-examples:`Apache Kafka commands|clients/cloud/kafka-commands/README.md`
-* :devx-examples:`Kafka Connect datagen|clients/cloud/kafka-connect-datagen/README.md`
-* :devx-examples:`kafkacat|clients/cloud/kafkacat/README.md`
+* :ref:`Kafka Connect Datagen <client-examples-kafka-connect-datagen>`
+* :ref:`kafkacat <client-examples-kafkacat>`
 * :ref:`Kotlin <client-examples-kotlin>`
 * :devx-examples:`KSQL Datagen|clients/cloud/ksql-datagen/README.md`
 * :devx-examples:`Node.js|clients/cloud/nodejs/README.md`
@@ -35,6 +35,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       :maxdepth: 1
       :hidden:
 
+      kafka-commands
       c
       confluent-cli
       ccloud
@@ -43,5 +44,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       groovy
       java
       java-springboot
+      kafka-connect-datagen
+      kafkacat
       kotlin
       python
