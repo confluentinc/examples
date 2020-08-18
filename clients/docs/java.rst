@@ -243,18 +243,28 @@ Avro Kafka Streams
 Schema Evolution with Confluent Cloud Schema Registry
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. View the schema information registered in |ccloud| |sr|. In the output below,
-   substitute values for  ``{{ SR_API_KEY }}``, ``{{ SR_API_SECRET }}``, and
-   ``{{ SR_ENDPOINT }}``.
+#. View the schema subjects registered in |sr-ccloud|. In the following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
 
    .. code-block:: text
 
-      # View the list of registered subjects
-      curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects
+      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+
+#. Verify that the subject ``test2-value`` exists.
+
+   .. code-block:: text
+
       ["test2-value"]
 
-      # View the schema information for subject `test2-value`
-      curl -u {{ SR_API_KEY }}:{{ SR_API_SECRET }} https://{{ SR_ENDPOINT }}/subjects/test2-value/versions/1
+#. View the schema information for subject `test2-value`. In the following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
+
+   .. code-block:: text
+
+      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+
+#. Verify the schema information for subject ``test2-value``.
+
+   .. code-block:: text
+
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
 
 #. For schema evolution, you can `test schema
