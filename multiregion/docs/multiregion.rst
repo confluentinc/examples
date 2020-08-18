@@ -1,10 +1,7 @@
-.. figure:: ../images/confluent-logo-300-2.png
-   :alt: image
+|Confluent logo|
 
-   image
-
-|mrrep|
-=======
+Multi-Region Clusters
+=====================
 
 This demo showcases |cp|’s |mrrep| capability built directly into |cs| starting
 with release 5.4. For more information, see the following pages:
@@ -28,10 +25,8 @@ This demo has the following architecture:
 - Three regions: ``west``, ``central``, and ``east``
 - The naming convention of the brokers are ``broker-[region]-[broker_id]``.
 
-.. figure:: images/multi-region-base-v2.png
-   :alt: image
+|Multi-region Architecture|
 
-   image
 
 Configurations
 --------------
@@ -84,17 +79,16 @@ topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer does not wait
 
-.. does the producer copy data from the leader?
+.. The producer copies data from the leader?
 
 on observers to get back an acknowledgement. By default, observers don't
 participate in the ISR list and can't become the leader if the current leader
 fails, but if a user manually changes leader assignment then they can
 participate in the ISR list.
 
-.. figure:: images/Follower_Fetching.png
-   :alt: image
 
-   image
+|Follower_Fetching|
+
 
 Run the Demo
 ------------
@@ -148,10 +142,7 @@ Inject latency and packet loss
 This demo injects latency between the regions and packet loss to simulate the
 WAN link. The demo uses `Pumba <https://github.com/alexei-led/pumba>`__.
 
-.. figure:: images/multi-region-latencies-v2.png
-   :alt: image
-
-   image
+|Multi-region latencies|
 
 #. Run the Dockerized Pumba scripts:
 
@@ -237,10 +228,7 @@ Create Topics
 The followimg playbook highlights client performance differences among the
 topics depending on the relative location of clients and brokers.
 
-.. figure:: images/multi-region-topic-replicas-v2.png
-   :alt: image
-
-   image
+|Multi-region topic replicas|
 
 #. Verify topic replica placement:
 
@@ -682,3 +670,24 @@ This sections contains methods for troubleshooting.
 #. If Pumba is overloading the Docker inter-container network, tweak the Pumba settings in
    `scripts/latency_docker.sh <scripts/latency_docker.sh>`__ and re-test
    in your environment.
+
+
+.. |Confluent logo|
+   figure:: ../images/confluent-logo-300-2.png
+   :alt: Confluent logo
+
+.. |Multi-region Architecture|
+   figure:: images/multi-region-base-v2.png
+   :alt: Multi-region Architecture
+
+.. |Follower_Fetching|
+   figure:: images/Follower_Fetching.png
+   :alt: Follower fetching
+
+.. |Multi-region latencies|
+   figure:: images/multi-region-latencies-v2.png
+   :alt: Multi-region latencies
+
+.. |Multi-region topic replicas|
+   figure:: images/multi-region-topic-replicas-v2.png
+   :alt: Multi-region topic replicas
