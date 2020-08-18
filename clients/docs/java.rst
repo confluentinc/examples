@@ -243,9 +243,7 @@ Avro Kafka Streams
 Schema Evolution with Confluent Cloud Schema Registry
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. View the schema subjects registered in |sr-ccloud|. In the following output,
-substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR
-ENDPOINT>``.
+#. View the schema subjects registered in |sr-ccloud|. In the following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
 
    .. code-block:: text
 
@@ -257,9 +255,7 @@ ENDPOINT>``.
 
       ["test2-value"]
 
-#. View the schema information for subject `test2-value`. In the following output,
-substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR
-ENDPOINT>``.
+#. View the schema information for subject `test2-value`. In the following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
 
    .. code-block:: text
 
