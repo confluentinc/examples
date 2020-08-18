@@ -3,7 +3,7 @@
 Apache Kafka Commands
 =====================
 
-In this tutorial, you will run Apache Kafka commands that produce messages to and
+In this tutorial, you will run |ak-tm| commands that produce messages to and
 consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
@@ -28,7 +28,7 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for Apache Kafka commands.
+#. Change directory to the example for |ak-tm| commands.
 
    .. code-block:: bash
 
@@ -105,7 +105,7 @@ Consume Records
 
 
 Avro and Confluent Cloud Schema Registry
------------------------------------------
+----------------------------------------
 
 .. include:: includes/schema-registry-scenario-explain.rst
 
@@ -167,13 +167,12 @@ Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
 #. Run the ``kafka-avro-console-consumer`` command, reading messages
-   from topic ``test``, passing in arguments for: The additional
-   Schema Registry parameters are required to be passed in as properties
-   instead of a properties file due to
-   https://github.com/confluentinc/schema-registry/issues/1052.
+   from topic ``test``, passing in arguments for: The additional |sr| parameters
+   are required to be passed in as properties instead of a properties file due
+   to https://github.com/confluentinc/schema-registry/issues/1052.
 
-   -  ``--property schema.registry.url``: connect to the |ccloud|
-      Schema Registry endpoint ``https://<SR ENDPOINT>``
+   -  ``--property schema.registry.url``: connect to the |sr-ccloud| endpoint
+      ``https://<SR ENDPOINT>``
    -  ``--property basic.auth.credentials.source``: specify ``USER_INFO``
    -  ``--property schema.registry.basic.auth.user.info``:
       ``<SR API KEY>:<SR API SECRET>``

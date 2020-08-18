@@ -3,7 +3,7 @@
 kafkacat
 ========
 
-In this tutorial, you will run a kafkacat client application that produces
+In this tutorial, you will run a |kcat| client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
@@ -88,7 +88,7 @@ Consume Records
    in arguments for:
 
    -  ``-F $HOME/.confluent/java.config``: configuration file for
-      connecting to the Confluent Cloud cluster
+      connecting to the |ccloud| cluster
    -  ``-K ,``: pass key and value, separated by a comma
    -  ``-e``: exit successfully when last message received
 

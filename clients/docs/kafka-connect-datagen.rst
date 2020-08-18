@@ -1,17 +1,17 @@
 .. _client-examples-kafka-connect-datagen:
 
-Kakfa Connect Datagen
+Kafka Connect Datagen
 =====================
 
-In this tutorial, you will run a Kafka Connect Datagen application that produces
-messages to and consumes messages from an |ak-tm| cluster.
+In this tutorial, you will run a |kconnect-long| Datagen application that
+produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
 .. note::
 
-   You should use Kafka Connect Datagen for development purposes only.
-   Kafka Connect Datagen isn't suitable for a production environment.
+   You should use |kconnect-long| Datagen for development purposes only.
+   |kconnect-long| Datagen isn't suitable for a production environment.
 
 Prerequisites
 -------------
@@ -34,7 +34,7 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for Kafka Connect Datagen.
+#. Change directory to the example for |kconnect-long| Datagen.
 
    .. code-block:: bash
 
@@ -79,7 +79,7 @@ Basic Producer and Consumer
 
       Creating connect ... done
 
-#. Wait for about 60 seconds until Connect is ready, and confirm the Kafka
+#. Wait for about 60 seconds until |kconnect| is ready, and confirm the Kafka
    Connect Datagen connector plugin is available by running the following commands:
 
    .. code-block:: bash
@@ -142,7 +142,7 @@ Consume Records
 #. View the :devx-examples:`consumer code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
 
 
-Avro And Confluent Cloud Schema Registry
+Avro and Confluent Cloud Schema Registry
 ----------------------------------------
 
 .. include:: includes/schema-registry-scenario-explain.rst
@@ -190,8 +190,9 @@ Produce Records
 
       Creating connect ... done
 
-#. Wait for about 60 seconds until Connect is ready, and confirm the Kafka
-   Connect Datagen connector plugin is available by running the following commands:
+#. Wait for about 60 seconds until |kconnect| is ready, and confirm the
+   |kconnect-long| Datagen connector plugin is available by running the
+   following commands:
 
    .. code-block:: bash
 
@@ -253,12 +254,12 @@ Consume Avro Records
 #. View the :devx-examples:`producer code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
-|ccloud| |sr|
-~~~~~~~~~~~~~
+Confluent Cloud Schema Registry
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-View the schema information registered in |ccloud| Schema Registry. In the
-following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``,
-and ``<SR ENDPOINT>``.
+View the schema information registered in |sr-ccloud|. In the following output,
+substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR
+ENDPOINT>``.
 
 .. code-block:: text
 
