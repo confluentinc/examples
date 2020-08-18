@@ -1,0 +1,684 @@
+.. figure:: ../images/confluent-logo-300-2.png
+   :alt: image
+
+   image
+
+|mrrep|
+=======
+
+This demo showcases |cp|’s |mrrep| capability built directly into |cs| starting
+with release 5.4. For more information, see the following pages:
+
+-  `Blog post: Built-In Multi-Region Replication with Confluent Platform
+   5.4-preview <https://www.confluent.io/blog/multi-region-data-replication?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multiregion>`__
+-  `Confluent Platform
+   documentation <https://docs.confluent.io/current/multi-dc-deployments/multi-region.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.multiregion>`__
+
+.. note::
+
+    There is a `different demo <../multi-datacenter/README.md>`__ for a
+    multi-datacenter design with two instances of Confluent Replicator copying
+    data bidirectionally between the datacenters.
+
+Multi-region Architecture
+-------------------------
+
+This demo has the following architecture:
+
+- Three regions: ``west``, ``central``, and ``east``
+- The naming convention of the brokers are ``broker-[region]-[broker_id]``.
+
+.. figure:: images/multi-region-base-v2.png
+   :alt: image
+
+   image
+
+Configurations
+--------------
+
+You can find full broker configurations in the `docker-compose.yml
+<docker-compose.yml>`__ file. Here are some relevant configuration parameters
+that are used by |mrrep|.
+
+Broker
+~~~~~~
+
+-  ``broker.rack``: identifies the location of the broker. For the demo,
+   it represents a region, either ``east`` or ``west``
+-  ``replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector``:
+   allows clients to read from followers (in contrast, clients are
+   typically only allowed to read from leaders)
+-  ``confluent.log.placement.constraints``: sets the default replica
+   placement constraint configuration for newly created topics.
+
+Client
+~~~~~~
+
+-  ``client.rack``: identifies the location of the client. For the demo,
+   it represents a region, either ``east`` or ``west``
+
+Topic
+~~~~~
+
+-  ``--replica-placement <path-to-replica-placement-policy-json>``: at
+   topic creation, this defines the replica placement policy for a given
+   topic
+
+Concepts
+--------
+
+*Replicas* are brokers assigned to a topic-partition, and they can be a
+*Leader*, *Follower*, or *Observer*. A *Leader* is the broker/replica
+accepting producer messages. A *Follower* is a broker/replica that can
+join an ISR list and participate in the calculation of the high
+watermark (used by the leader when acknowledging messages back to the
+producer).
+
+An *ISR* list (in-sync replicas) includes brokers that have a given
+topic-partition. The data is copied from the leader to every member of
+the ISR before the producer gets an acknowledgement. The followers in an
+ISR can become the leader if the current leader fails.
+
+An *Observer* is a broker/replica that also has a copy of data for a given
+topic-partition, and consumers are allowed to read from them even though the
+*Observer* isn't the leader–this is known as “Follower Fetching”. However, the
+data is copied asynchronously from the leader such that a producer does not wait
+
+.. does the producer copy data from the leader?
+
+on observers to get back an acknowledgement. By default, observers don't
+participate in the ISR list and can't become the leader if the current leader
+fails, but if a user manually changes leader assignment then they can
+participate in the ISR list.
+
+.. figure:: images/Follower_Fetching.png
+   :alt: image
+
+   image
+
+Run the Demo
+------------
+
+Install the demo
+~~~~~~~~~~~~~~~~
+
+To install this demo, complete the following steps:
+
+#. Clone the `confluentinc/examples GitHub repo
+   <https://github.com/confluentinc/examples>`__ by running the following command:
+
+   .. code-block:: text
+
+      git clone https://github.com/confluentinc/examples
+
+#. Go to the directory with the |mrrep| by running the following command:
+
+   .. code-block:: text
+
+      cd examples/multiregion
+
+Start Docker Compose
+~~~~~~~~~~~~~~~~~~~~~
+
+Start Docker Compose by running the following command:
+
+.. code-block:: bash
+
+   docker-compose up -d
+
+You should see the following Docker containers with
+``docker-compose ps``:
+
+.. code-block:: text
+
+         Name                   Command            State                            Ports
+   ----------------------------------------------------------------------------------------------------------------
+   broker-east-3       /etc/confluent/docker/run   Up      0.0.0.0:8093->8093/tcp, 9092/tcp, 0.0.0.0:9093->9093/tcp
+   broker-east-4       /etc/confluent/docker/run   Up      0.0.0.0:8094->8094/tcp, 9092/tcp, 0.0.0.0:9094->9094/tcp
+   broker-west-1       /etc/confluent/docker/run   Up      0.0.0.0:8091->8091/tcp, 0.0.0.0:9091->9091/tcp, 9092/tcp
+   broker-west-2       /etc/confluent/docker/run   Up      0.0.0.0:8092->8092/tcp, 0.0.0.0:9092->9092/tcp
+   zookeeper-central   /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2182->2182/tcp, 2888/tcp, 3888/tcp
+   zookeeper-east      /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2183->2183/tcp, 2888/tcp, 3888/tcp
+   zookeeper-west      /etc/confluent/docker/run   Up      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
+
+
+Inject latency and packet loss
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This demo injects latency between the regions and packet loss to simulate the
+WAN link. The demo uses `Pumba <https://github.com/alexei-led/pumba>`__.
+
+.. figure:: images/multi-region-latencies-v2.png
+   :alt: image
+
+   image
+
+#. Run the Dockerized Pumba scripts:
+
+   .. code-block:: bash
+
+      ./scripts/latency_docker.sh
+
+   You should see the following Docker containers with ``docker container ls
+   --filter "name=pumba"``:
+
+   .. code-block:: text
+
+      CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS               NAMES
+      652fcf244c4d        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-loss-east-west
+      5590c230aef1        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-loss-west-east
+      e60c3a0210e7        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-high-latency-west-east
+      d3c1faf97ba5        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-medium-latency-central
+
+#. View the IP addresses in the demo:
+
+   .. code-block:: text
+
+      docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+
+
+Create Topics
+~~~~~~~~~~~~~
+
+#. Create three Kafka topics by running the following script:
+
+   .. code-block:: bash
+
+      ./scripts/create-topics.sh
+
+   The script creates each topic with a different replica placement policy that
+   specifies a set of matching constraints (for example, ``count`` and ``rack``
+   for ``replicas`` and ``observers``). The replica placement policy file is
+   defined with the argument ``--replica-placement
+   <path-to-replica-placement-policy-json>`` mentioned earlier (these files are
+   in the `config <config/>`__ directory). Each placement also has an associated
+   minimum ``count`` that allows users to guarantee a certain spread of replicas
+   throughout the cluster.
+
+   .. list-table::
+      :widths: 15 15 20 20 10 20
+      :header-rows: 1
+
+      * - Topic name
+        - Leader
+        - Followers (sync replicas)
+        - Observers (async replicas)
+        - ISR list
+        - Use default placement contraints
+
+      * - single-region
+        - 1x west
+        - 1x west
+        - n/a
+        - {1,2}
+        - no
+
+      * - multi-region-sync
+        - 1x west
+        - 1x west, 2x east
+        - n/a
+        - {1,2,3,4}
+        - no
+
+      * - multi-region-async
+        - 1x west
+        - 1x west
+        - 2x east
+        - {1,2}
+        - no
+
+      * - multi-region-default
+        - 1x west
+        - 1x west
+        - 2x east
+        - {1,2}
+        - yes
+
+The followimg playbook highlights client performance differences among the
+topics depending on the relative location of clients and brokers.
+
+.. figure:: images/multi-region-topic-replicas-v2.png
+   :alt: image
+
+   image
+
+#. Verify topic replica placement:
+
+   .. code-block:: bash
+
+      ./scripts/describe-topics.sh
+
+   You should see output similar to the following:
+
+   .. code-block:: text
+
+         ==> Describe topic single-region
+
+         Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+            Topic: single-region    Partition: 0    Leader: 2   Replicas: 2,1   Isr: 2,1    Offline:
+
+         ==> Describe topic multi-region-sync
+
+         Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+            Topic: multi-region-sync    Partition: 0    Leader: 1   Replicas: 1,2,3,4   Isr: 1,2,3,4    Offline:
+
+         ==> Describe topic multi-region-async
+
+         Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+            Topic: multi-region-async   Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
+
+         ==> Describe topic multi-region-default
+
+         Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+            Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
+
+
+Observations
+""""""""""""
+
+The ``multi-region-async`` and ``multi-region-default`` topics have replicas
+across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
+4 are observers.
+
+
+Producer and Consumer Testing
+-----------------------------
+
+This section tests the differences in replication policies on producers and in follower fetching in the consumers.
+
+
+Producer Testing
+~~~~~~~~~~~~~~~~
+
+#. Run the producer perf test:
+
+   .. code-block:: bash
+
+      ./scripts/run-producer.sh
+
+   You should see output similar to the following:
+
+   .. code-block:: text
+
+      ==> Produce: Single-region Replication (topic: single-region)
+      5000 records sent, 240.453977 records/sec (1.15 MB/sec), 10766.48 ms avg latency, 17045.00 ms max latency, 11668 ms 50th, 16596 ms 95th, 16941 ms 99th, 17036 ms 99.9th.
+
+      ==> Produce: Multi-region Sync Replication (topic: multi-region-sync)
+      100 records sent, 2.145923 records/sec (0.01 MB/sec), 34018.18 ms avg latency, 45705.00 ms max latency, 34772 ms 50th, 44815 ms 95th, 45705 ms 99th, 45705 ms 99.9th.
+
+      ==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async)
+      5000 records sent, 228.258388 records/sec (1.09 MB/sec), 11296.69 ms avg latency, 18325.00 ms max latency, 11866 ms 50th, 17937 ms 95th, 18238 ms 99th, 18316 ms 99.9th.
+
+Observations
+""""""""""""
+
+-  In the first and third cases, the ``single-region`` and
+   ``multi-region-async`` topics have nearly the same throughput performance
+   (for examples, ``1.15 MB/sec`` and ``1.09 MB/sec``, respectively, in the
+   previous example), because only the replicas in the ``west`` region need
+   to acknowledge.
+-  In the second case for the ``multi-region-sync`` topic, due to the poor
+   network bandwidth between the ``east`` and ``west`` regions and
+   to an ISR made up of brokers in both regions, it took a big
+   throughput hit (for example, ``0.01 MB/sec`` in the previous example). This is
+   because the producer is waiting for an ``ack`` from all members of
+   the ISR before continuing, including those in ``west`` and ``east``.
+-  The observers in the third case for topic ``multi-region-async``
+   didn’t affect the overall producer throughput because the ``west``
+   region is sending an ``ack`` back to the producer after it has been
+   replicated twice in the ``west`` region, and it is not waiting for
+   the async copy to the ``east`` region.
+-  This example doesn’t produce to ``multi-region-default`` as the
+   behavior should be the same as ``multi-region-async`` since the
+   configuration is the same.
+
+Consumer Testing
+~~~~~~~~~~~~~~~~
+
+#. Run the consumer perf test where the consumer is in ``east``:
+
+   .. code-block:: bash
+
+      ./scripts/run-consumer.sh
+
+   You should see output similar to the following:
+
+   .. code-block:: text
+
+         ==> Consume from east: Multi-region Async Replication reading from Leader in west (topic: multi-region-async)
+
+         start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
+         2019-09-25 17:10:27:266, 2019-09-25 17:10:53:683, 23.8419, 0.9025, 5000, 189.2721, 1569431435702, -1569431409285, -0.0000, -0.0000
+
+
+         ==> Consume from east: Multi-region Async Replication reading from Observer in east (topic: multi-region-async)
+
+         start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
+         2019-09-25 17:10:56:844, 2019-09-25 17:11:02:902, 23.8419, 3.9356, 5000, 825.3549, 1569431461383, -1569431455325, -0.0000, -0.0000
+
+Observations
+""""""""""""
+
+-  In the first case, the consumer running in ``east`` reads from the
+   leader in ``west``, and so it is negatively impacted by the low
+   bandwidth between ``east`` and ``west``. Its throughput is lower
+   (for example, ``0.9025`` MB.sec in the above example).
+-  In the second case, the consumer running in ``east`` reads from the
+   follower that is also in ``east``. Its throughput is higher
+   (for example, ``3.9356`` MB.sec in the above example).
+-  This example doesn’t consume from ``multi-region-default`` as the
+   behavior should be the same as ``multi-region-async`` since the
+   configuration is the same.
+
+Monitoring Observers
+~~~~~~~~~~~~~~~~~~~~
+
+
+Notice that the ``multi-region-async`` topic has a JMX metric, ``ReplicasCount``
+that includes observers, whereas ``InSyncReplicasCount`` excludes observers.
+
+.. what do you think about the following sentence, seems like it could use some tweaking and shortening?
+
+The new JMX metric ``CaughtUpReplicasCount``
+(``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=([-.\w]+),partition=([0-9]+)``)
+across all brokers in the cluster reflects whether all the replicas, including
+observers, are caught up with the leader such that their log end offset is at
+least at the high watermark.
+
+.. What is the user doing by executing the command below; feels like there should be an explicit step here
+   like "Run the following command to do X"  ?
+
+.. code-block:: bash
+
+   ./scripts/jmx_metrics.sh
+
+You should see output similar to the following:
+
+.. code-block:: text
+
+   ==> Monitor ReplicasCount
+
+   single-region: 2
+   multi-region-sync: 4
+   multi-region-async: 4
+   multi-region-default: 4
+
+
+   ==> Monitor InSyncReplicasCount
+
+   single-region: 2
+   multi-region-sync: 4
+   multi-region-async: 2
+   multi-region-default: 2
+
+
+   ==> Monitor CaughtUpReplicasCount
+
+   single-region: 2
+   multi-region-sync: 4
+   multi-region-async: 4
+   multi-region-default: 4
+
+
+Failover and Failback
+~~~~~~~~~~~~~~~~~~~~~
+.. This section "does or describes, etc..."?
+
+
+Fail region west
+""""""""""""""""
+
+.. What is the user doing by executing the command below; feels like there should be an explicit step here
+   like "Run the following command to do X"  ?
+
+.. code-block:: bash
+
+   docker-compose stop broker-west-1 broker-west-2 zookeeper-west
+
+Verify the new topic replica placement:
+
+.. code-block:: bash
+
+   ./scripts/describe-topics.sh
+
+You should see output similar to the following:
+
+.. code-block:: text
+
+   ==> Describe topic single-region
+
+   Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+       Topic: single-region    Partition: 0    Leader: none    Replicas: 2,1   Isr: 1  Offline: 2,1
+
+   ==> Describe topic multi-region-sync
+
+   Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+       Topic: multi-region-sync    Partition: 0    Leader: 3   Replicas: 1,2,3,4   Isr: 3,4    Offline: 1,2
+
+   ==> Describe topic multi-region-async
+
+   Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+       Topic: multi-region-async   Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
+
+   ==> Describe topic multi-region-default
+
+   Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+       Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
+
+Observations
+""""""""""""
+-  In the first case, the topic ``single-region`` has no leader, because
+   it had only two replicas in the ISR, both of which were in the
+   ``west`` region and are now down.
+-  In the second case, the topic ``multi-region-sync`` automatically
+   elected a new leader in ``east`` (for example, replica 3 in the above
+   output). Clients can failover to those replicas in the east region.
+-  In the last two cases, the topics ``multi-region-async`` and
+   ``multi-region-default`` also have no leader, because they had only
+   two replicas in the ISR, both of which were in the ``west`` region
+   and are now down. The observers in the ``east`` region are not
+   eligible to become leaders automatically because they were not in the
+   ISR.
+
+
+Failover observers
+~~~~~~~~~~~~~~~~~~
+
+To explicitly fail over the observers in the ``multi-region-async`` and
+``multi-region-default`` topics to the ``east`` region, complete the following steps:
+
+#. Trigger leader election:
+
+   .. note::
+
+      ``unclean`` leader election may result in data loss.
+
+   .. code-block:: bash
+
+      docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
+
+      docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-default --partition 0
+
+#. Describe the topics again.
+
+   .. code-block:: bash
+
+      ./scripts/describe-topics.sh
+
+   You should see output similar to the following:
+
+   .. code-block:: text
+
+      ...
+      ==> Describe topic multi-region-async
+
+      Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
+
+      ==> Describe topic multi-region-default
+
+      Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         Topic: multi-region-default Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
+
+
+Observations for the ``multi-region-async`` and ``multi-region-default`` topics
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+-  They have leaders again (for example, replica 3 in the previous output)
+-  The observers are now in the ISR list (for example, replicas 3,4 in the above
+   output)
+
+Permanent Failover
+~~~~~~~~~~~~~~~~~~
+
+At this point in the example, if the brokers in the ``west`` region come
+back online, then by default the leaders for the topics
+``multi-region-async`` and ``multi-region-default`` will automatically
+be elected back to a replica in ``west`` (i.e., replica 1 or 2). This
+may be desirable in some circumstances, but if you don’t want them to
+automatically failback, change the topic placement constraints
+configuration and replica assignment.
+
+In the next step, change the topic placement constraints configuration
+and replica assignment for ``multi-region-default``.
+
+.. code-block:: bash
+   ./scripts/permanent-fallback.sh
+
+Describe the topics again.
+
+.. code-block:: bash
+   ./scripts/describe-topics.sh
+
+You should see output similar to the following:
+
+.. code-block:: text
+      ...
+      ==> Describe topic multi-region-default
+
+      Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
+         Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline: 2,1    Observers: 2,1
+      ...
+
+Observations for topic ``multi-region-default``:
+
+-  Replicas 2 and 1, which were previously sync replicas, are now
+   observers and are still offline
+-  Replicas 3 and 4, which were previously observers, are now sync
+   replicas.
+
+Failback region west
+~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: bash
+
+   docker-compose start broker-west-1 broker-west-2 zookeeper-west
+
+Wait for 5 minutes, which is the default duration for
+``leader.imbalance.check.interval.seconds``, until the leadership
+election restores the preferred replicas. (You can also trigger it with
+``docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type PREFERRED --all-topic-partitions``).
+
+Verify the new topic replica placement is restored.
+
+.. code-block:: bash
+
+   ./scripts/describe-topics.sh
+
+You should see output similar to the following:
+
+
+.. code-block:: text
+
+   Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+       Topic: single-region    Partition: 0    Leader: 2   Replicas: 2,1   Isr: 1,2    Offline: 
+
+   ==> Describe topic multi-region-sync
+
+   Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+       Topic: multi-region-sync    Partition: 0    Leader: 1   Replicas: 1,2,3,4   Isr: 3,4,2,1    Offline: 
+
+   ==> Describe topic multi-region-async
+
+   Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+       Topic: multi-region-async   Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
+
+   ==> Describe topic multi-region-default
+
+   Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
+       Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline:    Observers: 2,1
+
+Observations
+"""""""""""""
+
+-  All topics have leaders again, in particular ``single-region`` which
+   lost its leader when the west region failed
+
+-  The leaders for ``multi-region-sync`` and ``multi-region-async`` are
+   restored to the west region. If they are not, then wait a full 5
+   minutes (duration of ``leader.imbalance.check.interval.seconds``)
+
+-  The leader for ``multi-region-default`` stayed in the east region
+   because we performed a permanent failover
+
+.. note::
+
+   On failback from a failover to observers, any data that wasn't replicated to
+   observers will be lost because logs are truncated before catching up and
+   joining the ISR.
+
+Run end-to-end demo
+~~~~~~~~~~~~~~~~~~~
+
+You can run all the earlier steps with the following automated script:
+
+.. code-block:: bash
+
+   ./scripts/start.sh
+
+Stop demo
+~~~~~~~~~
+
+To stop the demo and all Docker containers, run the following command:
+
+.. code-block:: bash
+
+   ./scripts/stop.sh
+
+
+Troubleshooting
+~~~~~~~~~~~~~~~
+
+This sections contains methods for troubleshooting.
+
+#. If containers fail to ping each other (for example, failures seen in running
+   ``./scripts/validate_connectivity.sh``), complete the following steps:
+
+   a. Stop the demo.
+
+      .. code-block:: bash
+
+         ./scripts/stop.sh
+
+   b. Clean up the Docker environment.
+
+      .. code-block:: bash
+
+         for c in $(docker container ls -q --filter "name=pumba"); do docker container stop "$c" && docker container rm "$c"; done
+   docker-compose down -v --remove-orphans
+
+         # More aggressive cleanup
+         docker volume prune
+
+   c. Restart the demo.
+
+      .. code-block:: bash
+
+           ./scripts/start.sh
+
+   If the containers still fail to ping each other, restart Docker and run again.
+
+
+#. If Pumba is overloading the Docker inter-container network, tweak the Pumba settings in
+   `scripts/latency_docker.sh <scripts/latency_docker.sh>`__ and re-test
+   in your environment.
