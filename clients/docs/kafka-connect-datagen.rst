@@ -21,10 +21,7 @@ Client
 
 -  Docker
 
--  `Confluent Platform
-   5.5 <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   which includes |confluent-cli|
-
+-  `Download <https://www.confluent.io/download/>`__ |cp| |release|
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -154,25 +151,9 @@ Avro And Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-vpc.rst
 
+#. .. include:: includes/schema-registry-java.rst
+
 #. .. include:: includes/client-example-schema-registry-2-java.rst
-
-#. View your local |ccloud| configuration file (``$HOME/.confluent/java.config``).
-
-   .. code-block:: bash
-
-      cat $HOME/.confluent/java.config
-
-#. In the configuration file, add the following parameters and substitute
-   values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>`` as
-   shown in the following example:
-
-   .. code-block:: text
-
-      ...
-      basic.auth.credentials.source=USER_INFO
-      schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-      schema.registry.url=https://<SR ENDPOINT>
-      ...
 
 
 Produce Records

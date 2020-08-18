@@ -15,9 +15,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  `Confluent Platform
-   5.5 <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-
+-  `Download <https://www.confluent.io/download/>`__ |cp| |release|
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -113,35 +111,21 @@ Avro and Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-schema-registry-1.rst
 
+#. .. include:: includes/client-example-vpc.rst
+
+#. .. include:: includes/schema-registry-java.rst
+
 #. .. include:: includes/client-example-schema-registry-2-java.rst
 
-#. View your local |ccloud| configuration file (``$HOME/.confluent/java.config``).
 
-   .. code-block:: bash
-
-      cat $HOME/.confluent/java.config
-
-#. In the configuration file, add the following parameters and substitute
-   values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>`` as
-   shown in the following example:
-
-   .. code-block:: text
-
-      ...
-      basic.auth.credentials.source=USER_INFO
-      schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
-      schema.registry.url=https://<SR ENDPOINT>
-      ...
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Create the topic in |ccloud|.
 
    .. code-block:: bash
 
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test2 --create --replication-factor 3 --partitions 6
-
-
-Produce Avro Records
-~~~~~~~~~~~~~~~~~~~~
 
 #. Run the ``kafka-avro-console-producer`` command, writing messages to
    topic ``test2``, passing in arguments for:
