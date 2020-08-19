@@ -1,6 +1,6 @@
 |Confluent logo|
 
-Multi-Region Clusters
+Multi-region Clusters
 =====================
 
 This demo showcases |cp|’s |mrrep| capability built directly into |cs| starting
@@ -14,7 +14,7 @@ with release 5.4. For more information, see the following pages:
 .. note::
 
     There is a `different demo <../multi-datacenter/README.md>`__ for a
-    multi-datacenter design with two instances of Confluent Replicator copying
+    multi-datacenter design with two instances of |crep-full| copying
     data bidirectionally between the datacenters.
 
 Multi-region Architecture
@@ -23,7 +23,7 @@ Multi-region Architecture
 This demo has the following architecture:
 
 - Three regions: ``west``, ``central``, and ``east``
-- The naming convention of the brokers are ``broker-[region]-[broker_id]``.
+- The naming convention of the brokers are ``broker-[region]-[broker_id]``
 
 |Multi-region Architecture|
 
@@ -168,7 +168,7 @@ WAN link. The demo uses `Pumba <https://github.com/alexei-led/pumba>`__.
 Create Topics
 ~~~~~~~~~~~~~
 
-#. Create three Kafka topics by running the following script:
+#. Create three |ak| topics by running the following script:
 
    .. code-block:: bash
 
@@ -411,47 +411,46 @@ least at the high watermark.
 Failover and Failback
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. This section "does or describes, etc..."?
-
-
 Fail region west
 ^^^^^^^^^^^^^^^^
 
-.. The user is simulating a failure in the “west” region, by stopping the Docker containers that correspond to that region
+To simulate a failure in the ``west`` region, complete the following steps:
 
-.. code-block:: bash
+#. Run the following command to stop the Docker containers corresponding to the ``west`` region:
 
-   docker-compose stop broker-west-1 broker-west-2 zookeeper-west
+   .. code-block:: bash
 
-Verify the new topic replica placement:
+      docker-compose stop broker-west-1 broker-west-2 zookeeper-west
 
-.. code-block:: bash
+#. Verify the new topic replica placement:
 
-   ./scripts/describe-topics.sh
+   .. code-block:: bash
 
-You should see output similar to the following:
+      ./scripts/describe-topics.sh
 
-.. code-block:: text
+   You should see output similar to the following:
 
-   ==> Describe topic single-region
+      .. code-block:: text
 
-   Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
-       Topic: single-region    Partition: 0    Leader: none    Replicas: 2,1   Isr: 1  Offline: 2,1
+      ==> Describe topic single-region
 
-   ==> Describe topic multi-region-sync
+      Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+         Topic: single-region    Partition: 0    Leader: none    Replicas: 2,1   Isr: 1  Offline: 2,1
 
-   Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
-       Topic: multi-region-sync    Partition: 0    Leader: 3   Replicas: 1,2,3,4   Isr: 3,4    Offline: 1,2
+      ==> Describe topic multi-region-sync
 
-   ==> Describe topic multi-region-async
+      Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+         Topic: multi-region-sync    Partition: 0    Leader: 3   Replicas: 1,2,3,4   Isr: 3,4    Offline: 1,2
 
-   Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-       Topic: multi-region-async   Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
+      ==> Describe topic multi-region-async
 
-   ==> Describe topic multi-region-default
+      Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         Topic: multi-region-async   Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
-   Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
-       Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
+      ==> Describe topic multi-region-default
+
+      Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
 Observations
 ^^^^^^^^^^^^
@@ -705,7 +704,7 @@ If Pumba is overloading the Docker inter-container network, complete the followi
    :alt: Multi-region Architecture
 
 .. |Follower_Fetching|
-   images:: images/Follower_Fetching.png
+   image:: images/Follower_Fetching.png
    :alt: Follower fetching
 
 .. |Multi-region latencies|
