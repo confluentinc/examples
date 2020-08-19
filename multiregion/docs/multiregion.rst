@@ -23,10 +23,10 @@ with release 5.4. For more information, see the following pages:
 Multi-region Architecture
 -------------------------
 
-This demo has the following architecture:
+This demo includes the following architecture:
 
 - Three regions: ``west``, ``central``, and ``east``
-- The naming convention of the brokers are ``broker-[region]-[broker_id]``
+- Broker naming convention: ``broker-[region]-[broker_id]``
 
 |Multi-region Architecture|
 
@@ -428,7 +428,7 @@ Fail region west
 
    You should see output similar to the following:
 
-      .. code-block:: text
+   .. code-block:: text
 
       ==> Describe topic single-region
 
