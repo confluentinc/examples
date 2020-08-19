@@ -108,6 +108,7 @@ To install this demo, complete the following steps:
 
       cd examples/multiregion
 
+
 Start Docker Compose
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -294,6 +295,7 @@ Producer Testing
       ==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async)
       5000 records sent, 228.258388 records/sec (1.09 MB/sec), 11296.69 ms avg latency, 18325.00 ms max latency, 11866 ms 50th, 17937 ms 95th, 18238 ms 99th, 18316 ms 99.9th.
 
+
 Observations
 ^^^^^^^^^^^^
 
@@ -319,6 +321,7 @@ Observations
 -  This example doesn’t produce to ``multi-region-default`` as the
    behavior should be the same as ``multi-region-async`` since the
    configuration is the same.
+
 
 Consumer Testing
 ~~~~~~~~~~~~~~~~
@@ -354,7 +357,7 @@ Observations
 
 -  In the second scenario, the consumer running in ``east`` reads from the
    follower that is also in ``east``–the throughput of the consumner is higher in
-   this case (for example, ``3.9356`` MB.sec in the above example).
+   this case (for example, ``3.9356`` MBps in the previous example).
 
 -  This example doesn’t consume from ``multi-region-default`` as the
    behavior should be the same as ``multi-region-async`` since the
@@ -363,8 +366,8 @@ Observations
 Monitoring Observers
 ~~~~~~~~~~~~~~~~~~~~
 
-The ``multi-region-async`` topic has a JMX metric, ``ReplicasCount``,
-that includes observers, whereas ``InSyncReplicasCount`` excludes observers.
+The ``multi-region-async`` topic has a JMX metric, ``ReplicasCount``, that
+includes observers, whereas ``InSyncReplicasCount`` excludes observers.
 
 The new JMX metric ``CaughtUpReplicasCount``
 (``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=([-.\w]+),partition=([0-9]+)``)
@@ -455,20 +458,19 @@ To simulate a failure in the ``west`` region, complete the following steps:
 Observations
 ^^^^^^^^^^^^
 
--  In the first scenario, the topic ``single-region`` has no leader, because
-   it had only two replicas in the ISR, both of which were in the
-   ``west`` region and are now down.
+-  In the first scenario, the ``single-region`` topic has no leader, because
+   it had only two replicas in the ISR, both of which were in the ``west``
+   region and are now down.
 
--  In the second scenario, the topic ``multi-region-sync`` automatically
+-  In the second scenario, the ``multi-region-sync`` topic automatically
    elected a new leader in ``east`` (for example, replica 3 in the previous
    output). Clients can failover to those replicas in the ``east`` region.
 
 -  In the last two scenarios, the ``multi-region-async`` and
    ``multi-region-default`` topics have no leader, because they had only
-   two replicas in the ISR, both of which were in the ``west`` region
-   and are now down. The observers in the ``east`` region are not
-   eligible to become leaders automatically because they were not in the
-   ISR.
+   two replicas in the ISR, both of which were in the ``west`` region and are
+   now down. The observers in the ``east`` region are not eligible to become
+   leaders automatically because they weren't in the ISR.
 
 
 Failover observers
@@ -612,22 +614,22 @@ This section includes the steps to bring the ``west`` region back online.
 Observations
 ^^^^^^^^^^^^
 
--  All topics have leaders again, in particular ``single-region`` which
-   lost its leader when the ``west`` region failed
+-  All topics have leaders again, in particular ``single-region`` which lost its
+   leader when the ``west`` region failed.
 
--  The leaders for ``multi-region-sync`` and ``multi-region-async`` are
-   restored to the ``west`` region. If they are not, then wait a full 5
-   minutes (duration of ``leader.imbalance.check.interval.seconds``)
+-  The leaders for ``multi-region-sync`` and ``multi-region-async`` are restored
+   to the ``west`` region. If they are not, then wait a full 5 minutes (duration
+   of ``leader.imbalance.check.interval.seconds``).
 
 -  The leader for ``multi-region-default`` stayed in the ``east`` region
-   because Confluent performed a permanent failover
-
+   because Confluent performed a permanent failover.
 
 .. note::
 
    On failback from a failover to observers, any data that wasn't replicated to
    observers will be lost because logs are truncated before catching up and
    joining the ISR.
+
 
 Run end-to-end demo
 ~~~~~~~~~~~~~~~~~~~
@@ -696,7 +698,7 @@ If Pumba is overloading the Docker inter-container network, complete the followi
 
 
 .. |Confluent logo|
-   image:: ../images/confluent-logo-300-2.png
+   image:: examples/images/confluent-logo-300-2.png
    :alt: Confluent logo
 
 .. |Multi-region Architecture|
