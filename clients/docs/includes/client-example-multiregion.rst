@@ -1,0 +1,1 @@
+.. include:: /tutorials/examples/multiregion/docs/multiregion.rst
