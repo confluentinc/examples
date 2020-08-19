@@ -77,10 +77,7 @@ ISR can become the leader if the current leader fails.
 An *Observer* is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
-data is copied asynchronously from the leader such that a producer does not wait
-
-.. The producer copies data from the leader?
-
+data is copied asynchronously from the leader such that a producer doesn't wait
 on observers to get back an acknowledgement. By default, observers don't
 participate in the ISR list and can't become the leader if the current leader
 fails, but if a user manually changes leader assignment then they can
@@ -571,7 +568,7 @@ Observations for topic ``multi-region-default``
 Failback region west
 ~~~~~~~~~~~~~~~~~~~~
 
-This section includes the steps to bring the ``west``region back online.
+This section includes the steps to bring the ``west`` region back online.
 
 #. Run the following command:
 
@@ -626,7 +623,6 @@ Observations
 -  The leader for ``multi-region-default`` stayed in the ``east`` region
    because Confluent performed a permanent failover
 
-.. in the above bullet it said "we" performed so I replaced it with Confluent
 
 .. note::
 
