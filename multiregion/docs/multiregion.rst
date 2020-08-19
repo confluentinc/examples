@@ -702,7 +702,7 @@ If Pumba is overloading the Docker inter-container network, complete the followi
    :alt: Confluent logo
 
 .. |Multi-region Architecture|
-   image:: /tutorials/examples/multiregion/docs/images/images/multi-region-base-v2.png
+   image:: /tutorials/examples/multiregion/docs/images/multi-region-base-v2.png
    :alt: Multi-region Architecture
 
 .. |Follower_Fetching|
