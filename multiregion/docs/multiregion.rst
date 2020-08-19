@@ -96,8 +96,6 @@ Run the Demo
 Install the demo
 ~~~~~~~~~~~~~~~~
 
-To install this demo, complete the following steps:
-
 #. Clone the `confluentinc/examples GitHub repo
    <https://github.com/confluentinc/examples>`__ by running the following command:
 
@@ -115,14 +113,13 @@ To install this demo, complete the following steps:
 Start Docker Compose
 ~~~~~~~~~~~~~~~~~~~~~
 
-Start Docker Compose by running the following command:
+Run the following command:
 
 .. code-block:: bash
 
    docker-compose up -d
 
-You should see the following Docker containers with
-``docker-compose ps``:
+You should see the following Docker containers with ``docker-compose ps``:
 
 .. code-block:: text
 
@@ -141,7 +138,7 @@ Inject latency and packet loss
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This demo injects latency between the regions and packet loss to simulate the
-WAN link. The demo uses `Pumba <https://github.com/alexei-led/pumba>`__.
+WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
 
 |Multi-region latencies|
 
@@ -226,10 +223,10 @@ Create Topics
         - {1,2}
         - yes
 
-The followimg playbook highlights client performance differences among the
-topics depending on the relative location of clients and brokers.
+   The followimg playbook highlights client performance differences among the
+   topics depending on the relative location of clients and brokers.
 
-|Multi-region topic replicas|
+   |Multi-region topic replicas|
 
 #. Verify topic replica placement:
 
@@ -273,21 +270,18 @@ across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
 Producer and Consumer Testing
 -----------------------------
 
-This section tests the differences in replication policies on producers and in follower fetching in the consumers.
-
-
 Producer Testing
 ~~~~~~~~~~~~~~~~
 
-#. Run the producer perf test:
+Run the producer perf test:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      ./scripts/run-producer.sh
+   ./scripts/run-producer.sh
 
-   You should see output similar to the following:
+You should see output similar to the following:
 
-   .. code-block:: text
+.. code-block:: text
 
       ==> Produce: Single-region Replication (topic: single-region)
       5000 records sent, 240.453977 records/sec (1.15 MB/sec), 10766.48 ms avg latency, 17045.00 ms max latency, 11668 ms 50th, 16596 ms 95th, 16941 ms 99th, 17036 ms 99.9th.
@@ -329,15 +323,15 @@ Observations
 Consumer Testing
 ~~~~~~~~~~~~~~~~
 
-#. Run the consumer perf test where the consumer is in ``east``:
+Run the consumer perf test where the consumer is in ``east``:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      ./scripts/run-consumer.sh
+   ./scripts/run-consumer.sh
 
-   You should see output similar to the following:
+You should see output similar to the following:
 
-   .. code-block:: text
+.. code-block:: text
 
          ==> Consume from east: Multi-region Async Replication reading from Leader in west (topic: multi-region-async)
 
@@ -378,17 +372,17 @@ across all brokers in the cluster reflects whether all the replicas, including
 observers, are caught up with the leader such that their log end offset is at
 least at the high watermark.
 
-#. Run the following script to get the JMX metrics for ``ReplicasCount``,
-   ``InSyncReplicasCount``, and ``CaughtUpReplicasCount`` from each of the
-   brokers:
+Run the following script to get the JMX metrics for ``ReplicasCount``,
+``InSyncReplicasCount``, and ``CaughtUpReplicasCount`` from each of the
+brokers:
 
-   .. code-block:: bash
+.. code-block:: bash
 
       ./scripts/jmx_metrics.sh
 
-   You should see output similar to the following:
+You should see output similar to the following:
 
-   .. code-block:: text
+.. code-block:: text
 
       ==> Monitor ReplicasCount
 
@@ -419,8 +413,6 @@ Failover and Failback
 
 Fail region west
 ^^^^^^^^^^^^^^^^
-
-To simulate a failure in the ``west`` region, complete the following steps:
 
 #. Run the following command to stop the Docker containers corresponding to the ``west`` region:
 
@@ -572,9 +564,7 @@ Observations for topic ``multi-region-default``
 Failback region west
 ~~~~~~~~~~~~~~~~~~~~
 
-This section includes the steps to bring the ``west`` region back online.
-
-#. Run the following command:
+#. Run the following command to bring the ``west`` region back online:
 
    .. code-block:: bash
 
@@ -655,9 +645,6 @@ To stop the demo and all Docker containers, run the following command:
 
 Troubleshooting
 ~~~~~~~~~~~~~~~
-
-This section contains steps to take for troubleshooting.
-
 
 Containers fail to ping each other
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
