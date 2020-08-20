@@ -78,16 +78,17 @@ Produce Records
 
    .. code-block:: text
 
-      Producing record alice  {"count":0}
-      Producing record alice  {"count":1}
-      Producing record alice  {"count":2}
-      Producing record alice  {"count":3}
-      Producing record alice  {"count":4}
-      Producing record alice  {"count":5}
-      Producing record alice  {"count":6}
-      Producing record alice  {"count":7}
-      Producing record alice  {"count":8}
-      Producing record alice  {"count":9}
+      Created topic test1
+      Producing record alice	{"count":0}
+      Producing record alice	{"count":1}
+      Producing record alice	{"count":2}
+      Producing record alice	{"count":3}
+      Producing record alice	{"count":4}
+      Producing record alice	{"count":5}
+      Producing record alice	{"count":6}
+      Producing record alice	{"count":7}
+      Producing record alice	{"count":8}
+      Producing record alice	{"count":9}
       Successfully produced record to topic "test1" partition 0 {"count":0}
       Successfully produced record to topic "test1" partition 0 {"count":1}
       Successfully produced record to topic "test1" partition 0 {"count":2}
@@ -118,6 +119,7 @@ Consume Records
 
    .. code-block:: text
 
+      Consuming messages from test1
       Consumed record with key alice and value {"count":0} of partition 0 @ offset 0. Updated total count to 1
       Consumed record with key alice and value {"count":1} of partition 0 @ offset 1. Updated total count to 2
       Consumed record with key alice and value {"count":2} of partition 0 @ offset 2. Updated total count to 3
