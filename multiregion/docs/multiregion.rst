@@ -359,8 +359,8 @@ Monitoring
 ----------
 
 In |cs| there are a few JMX metrics you should monitor for determining the
-health and state of a topic partition. A subset of JMX metrics are described
-below but for a full description of the relevant JMX metrics, see
+health and state of a topic partition. The tutorial describes the following JMX
+metrics. For a description of other relevant JMX metrics, see
 :ref:`mrr_metrics`.
 
 - ``ReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=ReplicasCount,topic=<topic-name>,partition=<partition-id>``. It reports the
