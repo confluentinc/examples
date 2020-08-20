@@ -100,7 +100,7 @@ Produce Records
       Successfully produced record to topic "test1" partition 0 {"count":8}
       Successfully produced record to topic "test1" partition 0 {"count":9}
 
-#. View the :devx-examples:`producer code|clients/cloud/nodejs/consumer.js`.
+#. View the :devx-examples:`producer code|clients/cloud/nodejs/producer.js`.
 
 
 Consume Records
