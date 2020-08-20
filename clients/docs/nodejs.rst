@@ -67,7 +67,7 @@ Produce Records
 #. Run the producer, passing in arguments for:
 
    - the local file with configuration parameters to connect to your |ak|
-      cluster
+     cluster
    - the topic name
 
    .. code-block:: bash
