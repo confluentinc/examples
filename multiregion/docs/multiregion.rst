@@ -23,8 +23,9 @@ Here are some relevant configuration parameters:
 Broker
 ~~~~~~
 
-You can find full broker configurations in the :devx-examples:`docker-compose.yml file|multiregion/docker-compose.yml`.
-The most important configuration parameters include:
+You can find full broker configurations in the
+:devx-examples:`docker-compose.yml file|multiregion/docker-compose.yml`. The
+most important configuration parameters include:
 
 -  ``broker.rack``: identifies the location of the broker. For the demo,
    it represents a region, either ``east`` or ``west``
@@ -93,7 +94,10 @@ Download and run the tutorial
 
       cd multiregion
 
-#. If you want to manually step through this tutorial, which is advised for new users who want to gain familiarity with |mrrep|, skip ahead to the next section. Alternatively, you can run the full tutorial end-to-end with this script, which automates all the steps in the tutorial:
+#. If you want to manually step through this tutorial, which is advised for new
+   users who want to gain familiarity with |mrrep|, skip ahead to the next section.
+   Alternatively, you can run the full tutorial end-to-end with the following
+   script, which automates all the steps in the tutorial:
 
    .. code:: bash
 
@@ -137,7 +141,7 @@ WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
 
       ./scripts/latency_docker.sh
 
-#. Verify that you see the following Docker containers with the following command:
+#. Verify you see the following Docker containers by running the following command:
 
    .. code-block:: bash
 
@@ -167,14 +171,13 @@ This tutorial demonstrates the principles of |mrrep| through various topics.
 
 |Multi-region topic replicas|
 
-Each topic has a replica placement policy that
-specifies a set of matching constraints (for example, ``count`` and ``rack``
-for ``replicas`` and ``observers``). The replica placement policy file is
-defined with the argument ``--replica-placement
-<path-to-replica-placement-policy-json>`` mentioned earlier (these files are
-in the `config <config/>`__ directory). Each placement also has an associated
-minimum ``count`` that allows users to guarantee a certain spread of replicas
-throughout the cluster.
+Each topic has a replica placement policy that specifies a set of matching
+constraints (for example, ``count`` and ``rack`` for ``replicas`` and
+``observers``). The replica placement policy file is defined with the argument
+``--replica-placement <path-to-replica-placement-policy-json>`` mentioned
+earlier (these files are in the `config <config/>`__ directory). Each placement
+also has an associated minimum ``count`` that allows users to guarantee a
+certain spread of replicas throughout the cluster.
 
 This tutorial creates the following topics:
 
@@ -291,21 +294,21 @@ Producer
    - In the first and third cases, the ``single-region`` and
      ``multi-region-async`` topics have nearly the same throughput performance
      (for examples, ``1.15 MB/sec`` and ``1.09 MB/sec``, respectively, in the
-     previous example), because only the replicas in the ``west`` region need
-     to acknowledge.
+     previous example), because only the replicas in the ``west`` region need to
+     acknowledge.
 
    - In the second case for the ``multi-region-sync`` topic, due to the poor
-     network bandwidth between the ``east`` and ``west`` regions and
-     to an ISR made up of brokers in both regions, it took a big
-     throughput hit (for example, ``0.01 MB/sec`` in the previous example). This is
-     because the producer is waiting for an ``ack`` from all members of
-     the ISR before continuing, including those in ``west`` and ``east``.
+     network bandwidth between the ``east`` and ``west`` regions and to an ISR
+     made up of brokers in both regions, it took a big throughput hit (for
+     example, ``0.01 MB/sec`` in the previous example). This is because the
+     producer is waiting for an ``ack`` from all members of the ISR before
+     continuing, including those in ``west`` and ``east``.
 
    - The observers in the third case for topic ``multi-region-async``
-     didn’t affect the overall producer throughput because the ``west``
-     region is sending an ``ack`` back to the producer after it has been
-     replicated twice in the ``west`` region, and it is not waiting for
-     the async copy to the ``east`` region.
+     didn’t affect the overall producer throughput because the ``west`` region
+     is sending an ``ack`` back to the producer after it has been replicated
+     twice in the ``west`` region, and it is not waiting for the async copy to
+     the ``east`` region.
 
    - This example doesn’t produce to ``multi-region-default`` as the
      behavior should be the same as ``multi-region-async`` since the
@@ -339,13 +342,13 @@ Consumer
 #. Observe the following:
 
    - In the first scenario, the consumer running in ``east`` reads from the
-     leader in ``west`` and is impacted by the low bandwidth between ``east`` and
-     ``west``–the throughput of the throughput is lower in this case (for
+     leader in ``west`` and is impacted by the low bandwidth between ``east``
+     and ``west``–the throughput of the throughput is lower in this case (for
      example, ``0.9025`` MB per sec in the previous example).
 
    - In the second scenario, the consumer running in ``east`` reads from the
-     follower that is also in ``east``–the throughput of the consumner is higher in
-     this case (for example, ``3.9356`` MBps in the previous example).
+     follower that is also in ``east``–the throughput of the consumner is higher
+     in this case (for example, ``3.9356`` MBps in the previous example).
 
    - This example doesn’t consume from ``multi-region-default`` as the
      behavior should be the same as ``multi-region-async`` since the
@@ -355,8 +358,10 @@ Consumer
 Monitoring
 ----------
 
-In |cs| there are a few JMX metrics that should be monitored for determining the health and state of a topic partition.
-A subset of JMX metrics are described below but for a full description of the relevant JMX metrics, see :ref:`mrr_metrics`.
+In |cs| there are a few JMX metrics you should monitor for determining the
+health and state of a topic partition. A subset of JMX metrics are described
+below but for a full description of the relevant JMX metrics, see
+:ref:`mrr_metrics`.
 
 - ``ReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=ReplicasCount,topic=<topic-name>,partition=<partition-id>``. It reports the
   number of replicas (sync replicas and observers) assigned to the topic partition.
@@ -366,9 +371,10 @@ A subset of JMX metrics are described below but for a full description of the re
   It reports the number of replicas that are consider caught up to the topic partition leader. Note that this may be greater than the size of the ISR as observers may be caught up but are not part of ISR.
 
 
-#. Run the script :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the JMX metrics for ``ReplicasCount``,
-   ``InSyncReplicasCount``, and ``CaughtUpReplicasCount`` from each of the
-   brokers:
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, and
+   ``CaughtUpReplicasCount`` from each of the brokers:
 
    .. code-block:: bash
 
@@ -457,9 +463,9 @@ In this section, you will simulate a region failure by bringing down the ``west`
      output). Clients can failover to those replicas in the ``east`` region.
 
    - In the last two scenarios, the ``multi-region-async`` and
-     ``multi-region-default`` topics have no leader, because they had only
-     two replicas in the ISR, both of which were in the ``west`` region and are
-     now down. The observers in the ``east`` region are not eligible to become
+     ``multi-region-default`` topics have no leader, because they had only two
+     replicas in the ISR, both of which were in the ``west`` region and are now
+     down. The observers in the ``east`` region are not eligible to become
      leaders automatically because they weren't in the ISR.
 
 
@@ -467,7 +473,8 @@ Failover Observers
 ~~~~~~~~~~~~~~~~~~
 
 To explicitly fail over the observers in the ``multi-region-async`` and
-``multi-region-default`` topics to the ``east`` region, complete the following steps:
+``multi-region-default`` topics to the ``east`` region, complete the following
+steps:
 
 #. Trigger leader election:
 
@@ -515,14 +522,17 @@ Permanent Failover
 
 At this point in the example, if the brokers in the ``west`` region come back
 online, the leaders for the  ``multi-region-async`` and ``multi-region-default``
-topics will automatically be elected back to a replica in ``west``–that is, replica 1 or 2.
-This may be desirable in some circumstances, but if you don’t want the leaders to
-automatically failback to the ``west`` region, change the topic placement constraints
-configuration and replica assignment by completing the following steps:
+topics will automatically be elected back to a replica in ``west``–that is,
+replica 1 or 2. This may be desirable in some circumstances, but if you don’t
+want the leaders to automatically failback to the ``west`` region, change the
+topic placement constraints configuration and replica assignment by completing
+the following steps:
 
 #. Change the topic placement constraints configuration and replica assignment
-   for ``multi-region-default``, by running the script :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
-   This script uses ``kafka-configs`` and ``confluent-rebalancer`` command line tools.
+   for ``multi-region-default``, by running the script
+   :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
+   This script uses ``kafka-configs`` and ``confluent-rebalancer`` command line
+   tools.
 
    .. code-block:: bash
 
@@ -571,7 +581,8 @@ Now you will bring region ``west`` back online.
    ``docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server
    broker-east-4:19094 --election-type PREFERRED --all-topic-partitions``.
 
-#. Verify the new topic replica placement is restored with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
+#. Verify the new topic replica placement is restored with the script
+   :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
    .. code-block:: bash
 
@@ -634,8 +645,10 @@ Troubleshooting
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If containers fail to ping each other (for example, failures seen when running
-the script :devx-examples:`validate_connectivity.sh|multiregion/scripts/validate_connectivity.sh`), complete the following steps:
+If containers fail to ping each other (for example, failures you may see when
+running the script
+:devx-examples:`validate_connectivity.sh|multiregion/scripts/validate_connectivity.sh`),
+complete the following steps:
 
 #. Stop the demo.
 
