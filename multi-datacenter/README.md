@@ -5,7 +5,7 @@
 This demo deploys an active-active multi-datacenter design, with two instances of Confluent Replicator copying data bidirectionally between the datacenters.
 Confluent Replicator (version 5.0.1 and higher) prevents cyclic repetition of data between the datacenters by using provenance information in the message headers.
 
-NOTE: There is a [different demo](../multiregion/README.md) for multi-region replication with follower fetching, observers, and replica placement.
+NOTE: There is a [different demo](../multiregion/README.md) for Multi-Region Clusters (MRC) with follower fetching, observers, and replica placement.
 
 ## Documentation
 
