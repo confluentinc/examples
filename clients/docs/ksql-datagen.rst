@@ -6,12 +6,13 @@ KSQL Datagen
 In this tutorial, you will run a KSQL Datagen client application that
 produces messages to and consumes messages from an |ak-tm| cluster.
 
-.. include:: includes/client-example-overview.rst
-
 .. note::
 
-    Use KSQL Datagen for development purposes only. It isn't suitable for a
-    production environment.
+    You should use KSQL Datagen for development purposes only. It isn't suitable
+    for a production environment.
+
+.. include:: includes/client-example-overview.rst
+
 
 
 Prerequisites
@@ -78,7 +79,7 @@ Produce Records
 
        docker-compose up -d
 
-#. View the :devx-examples:`datagen code|clients/cloud/ksql-datagen/start-docker.sh`
+#. View the :devx-examples:`datagen code|clients/cloud/ksql-datagen/start-docker.sh`.
 
 
 Consume Records
