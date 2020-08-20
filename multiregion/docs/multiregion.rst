@@ -6,7 +6,7 @@ Tutorial: Multi-Region Clusters
 Overview
 --------
 
-This tutorial describes the |mrrep| capability built directly into |cs|.
+This tutorial describes the |mrrep| capability that is built directly into |cs|.
 The scenario for this tutorial is as follows:
 
 - Three regions: ``west``, ``central``, and ``east``
@@ -50,19 +50,19 @@ Topic
 Concepts
 --------
 
-*Replicas* are brokers assigned to a topic-partition, and they can be a
+``Replicas`` are brokers assigned to a topic-partition, and they can be a
 *Leader*, *Follower*, or *Observer*. A *Leader* is the broker/replica
 accepting producer messages. A *Follower* is a broker/replica that can
 join an ISR list and participate in the calculation of the high
 watermark (used by the leader when acknowledging messages back to the
 producer).
 
-An *ISR* list (in-sync replicas) includes brokers that have a given
+An ``ISR`` list (in-sync replicas) includes brokers that have a given
 topic-partition. The data is copied from the leader to every member of
 the ISR before the producer gets an acknowledgement. The followers in an
 ISR can become the leader if the current leader fails.
 
-An *Observer* is a broker/replica that also has a copy of data for a given
+An ``Observer`` is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer doesn't wait
@@ -75,11 +75,8 @@ participate in the ISR list.
 |Follower_Fetching|
 
 
-Run the Demo
-------------
-
-Setup
-~~~~~
+Download and run the tutorial
+-----------------------------
 
 #. Clone the `confluentinc/examples GitHub repo
    <https://github.com/confluentinc/examples>`__ by running the following command:
@@ -102,8 +99,8 @@ Setup
 
        ./scripts/start.sh
 
-Start the Demo
-~~~~~~~~~~~~~~
+Startup
+-------
 
 #. Run the following command:
 
@@ -127,7 +124,7 @@ Start the Demo
 
 
 Inject latency and packet loss
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 This demo injects latency between the regions and packet loss to simulate the
 WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
@@ -166,65 +163,65 @@ WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
 Replica Placement
 -----------------
 
-The tutorial highlights client performance differences among the
-topics depending on the relative location of clients and brokers.
+This tutorial demonstrates the principles of |mrrep| through various topics.
 
 |Multi-region topic replicas|
 
+Each topic has a replica placement policy that
+specifies a set of matching constraints (for example, ``count`` and ``rack``
+for ``replicas`` and ``observers``). The replica placement policy file is
+defined with the argument ``--replica-placement
+<path-to-replica-placement-policy-json>`` mentioned earlier (these files are
+in the `config <config/>`__ directory). Each placement also has an associated
+minimum ``count`` that allows users to guarantee a certain spread of replicas
+throughout the cluster.
 
-#. Create three |ak| topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`
+This tutorial creates the following topics:
+
+.. list-table::
+   :widths: 20 15 20 20 10 15
+   :header-rows: 1
+
+   * - Topic name
+     - Leader
+     - Followers (sync replicas)
+     - Observers (async replicas)
+     - ISR list
+     - Use default placement contraints
+
+   * - single-region
+     - 1x west
+     - 1x west
+     - n/a
+     - {1,2}
+     - no
+
+   * - multi-region-sync
+     - 1x west
+     - 1x west, 2x east
+     - n/a
+     - {1,2,3,4}
+     - no
+
+   * - multi-region-async
+     - 1x west
+     - 1x west
+     - 2x east
+     - {1,2}
+     - no
+
+   * - multi-region-default
+     - 1x west
+     - 1x west
+     - 2x east
+     - {1,2}
+     - yes
+
+#. Create the |ak| topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`
 
    .. code-block:: bash
 
       ./scripts/create-topics.sh
-
-   The script creates each topic with a different replica placement policy that
-   specifies a set of matching constraints (for example, ``count`` and ``rack``
-   for ``replicas`` and ``observers``). The replica placement policy file is
-   defined with the argument ``--replica-placement
-   <path-to-replica-placement-policy-json>`` mentioned earlier (these files are
-   in the `config <config/>`__ directory). Each placement also has an associated
-   minimum ``count`` that allows users to guarantee a certain spread of replicas
-   throughout the cluster.
-
-   .. list-table::
-      :widths: 15 15 20 20 10 20
-      :header-rows: 1
-
-      * - Topic name
-        - Leader
-        - Followers (sync replicas)
-        - Observers (async replicas)
-        - ISR list
-        - Use default placement contraints
-
-      * - single-region
-        - 1x west
-        - 1x west
-        - n/a
-        - {1,2}
-        - no
-
-      * - multi-region-sync
-        - 1x west
-        - 1x west, 2x east
-        - n/a
-        - {1,2,3,4}
-        - no
-
-      * - multi-region-async
-        - 1x west
-        - 1x west
-        - 2x east
-        - {1,2}
-        - no
-
-      * - multi-region-default
-        - 1x west
-        - 1x west
-        - 2x east
-        - {1,2}
-        - yes
 
 #. View the topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
@@ -257,19 +254,18 @@ topics depending on the relative location of clients and brokers.
             Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. The ``multi-region-async`` and ``multi-region-default`` topics have replicas
-   across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
-   4 are observers.
+   - The ``multi-region-async`` and ``multi-region-default`` topics have replicas
+     across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
+     4 are observers.
 
 
-Producer and Consumer Testing
------------------------------
+Client Performance
+------------------
 
-Producer Testing
-~~~~~~~~~~~~~~~~
+Producer
+~~~~~~~~
 
 #. Run the producer perf test script :devx-examples:`run-producer.sh|multiregion/scripts/run-producer.sh`:
 
@@ -290,35 +286,34 @@ Producer Testing
       ==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async)
       5000 records sent, 228.258388 records/sec (1.09 MB/sec), 11296.69 ms avg latency, 18325.00 ms max latency, 11866 ms 50th, 17937 ms 95th, 18238 ms 99th, 18316 ms 99.9th.
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. In the first and third cases, the ``single-region`` and
-   ``multi-region-async`` topics have nearly the same throughput performance
-   (for examples, ``1.15 MB/sec`` and ``1.09 MB/sec``, respectively, in the
-   previous example), because only the replicas in the ``west`` region need
-   to acknowledge.
+   - In the first and third cases, the ``single-region`` and
+     ``multi-region-async`` topics have nearly the same throughput performance
+     (for examples, ``1.15 MB/sec`` and ``1.09 MB/sec``, respectively, in the
+     previous example), because only the replicas in the ``west`` region need
+     to acknowledge.
 
-#. In the second case for the ``multi-region-sync`` topic, due to the poor
-   network bandwidth between the ``east`` and ``west`` regions and
-   to an ISR made up of brokers in both regions, it took a big
-   throughput hit (for example, ``0.01 MB/sec`` in the previous example). This is
-   because the producer is waiting for an ``ack`` from all members of
-   the ISR before continuing, including those in ``west`` and ``east``.
+   - In the second case for the ``multi-region-sync`` topic, due to the poor
+     network bandwidth between the ``east`` and ``west`` regions and
+     to an ISR made up of brokers in both regions, it took a big
+     throughput hit (for example, ``0.01 MB/sec`` in the previous example). This is
+     because the producer is waiting for an ``ack`` from all members of
+     the ISR before continuing, including those in ``west`` and ``east``.
 
-#. The observers in the third case for topic ``multi-region-async``
-   didn’t affect the overall producer throughput because the ``west``
-   region is sending an ``ack`` back to the producer after it has been
-   replicated twice in the ``west`` region, and it is not waiting for
-   the async copy to the ``east`` region.
+   - The observers in the third case for topic ``multi-region-async``
+     didn’t affect the overall producer throughput because the ``west``
+     region is sending an ``ack`` back to the producer after it has been
+     replicated twice in the ``west`` region, and it is not waiting for
+     the async copy to the ``east`` region.
 
-#. This example doesn’t produce to ``multi-region-default`` as the
-   behavior should be the same as ``multi-region-async`` since the
-   configuration is the same.
+   - This example doesn’t produce to ``multi-region-default`` as the
+     behavior should be the same as ``multi-region-async`` since the
+     configuration is the same.
 
 
-Consumer Testing
-~~~~~~~~~~~~~~~~
+Consumer
+~~~~~~~~
 
 #. Run the consumer perf test script :devx-examples:`run-consumer.sh|multiregion/scripts/run-consumer.sh`, where the consumer is in ``east``:
 
@@ -341,25 +336,24 @@ Consumer Testing
          start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
          2019-09-25 17:10:56:844, 2019-09-25 17:11:02:902, 23.8419, 3.9356, 5000, 825.3549, 1569431461383, -1569431455325, -0.0000, -0.0000
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. In the first scenario, the consumer running in ``east`` reads from the
-   leader in ``west`` and is impacted by the low bandwidth between ``east`` and
-   ``west``–the throughput of the throughput is lower in this case (for
-   example, ``0.9025`` MB per sec in the previous example).
+   - In the first scenario, the consumer running in ``east`` reads from the
+     leader in ``west`` and is impacted by the low bandwidth between ``east`` and
+     ``west``–the throughput of the throughput is lower in this case (for
+     example, ``0.9025`` MB per sec in the previous example).
 
-#. In the second scenario, the consumer running in ``east`` reads from the
-   follower that is also in ``east``–the throughput of the consumner is higher in
-   this case (for example, ``3.9356`` MBps in the previous example).
+   - In the second scenario, the consumer running in ``east`` reads from the
+     follower that is also in ``east``–the throughput of the consumner is higher in
+     this case (for example, ``3.9356`` MBps in the previous example).
 
-#. This example doesn’t consume from ``multi-region-default`` as the
-   behavior should be the same as ``multi-region-async`` since the
-   configuration is the same.
+   - This example doesn’t consume from ``multi-region-default`` as the
+     behavior should be the same as ``multi-region-async`` since the
+     configuration is the same.
 
 
-Monitoring Observers
---------------------
+Monitoring
+----------
 
 In |cs| there are a few JMX metrics that should be monitored for determining the health and state of a topic partition.
 A subset of JMX metrics are described below but for a full description of the relevant JMX metrics, see :ref:`mrr_metrics`.
@@ -452,22 +446,21 @@ In this section, you will simulate a region failure by bringing down the ``west`
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. In the first scenario, the ``single-region`` topic has no leader, because
-   it had only two replicas in the ISR, both of which were in the ``west``
-   region and are now down.
+   - In the first scenario, the ``single-region`` topic has no leader, because
+     it had only two replicas in the ISR, both of which were in the ``west``
+     region and are now down.
 
-#.  In the second scenario, the ``multi-region-sync`` topic automatically
-   elected a new leader in ``east`` (for example, replica 3 in the previous
-   output). Clients can failover to those replicas in the ``east`` region.
+   - In the second scenario, the ``multi-region-sync`` topic automatically
+     elected a new leader in ``east`` (for example, replica 3 in the previous
+     output). Clients can failover to those replicas in the ``east`` region.
 
-#.  In the last two scenarios, the ``multi-region-async`` and
-   ``multi-region-default`` topics have no leader, because they had only
-   two replicas in the ISR, both of which were in the ``west`` region and are
-   now down. The observers in the ``east`` region are not eligible to become
-   leaders automatically because they weren't in the ISR.
+   - In the last two scenarios, the ``multi-region-async`` and
+     ``multi-region-default`` topics have no leader, because they had only
+     two replicas in the ISR, both of which were in the ``west`` region and are
+     now down. The observers in the ``east`` region are not eligible to become
+     leaders automatically because they weren't in the ISR.
 
 
 Failover Observers
@@ -510,13 +503,11 @@ To explicitly fail over the observers in the ``multi-region-async`` and
          Topic: multi-region-default Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
 
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the previous output)
+   - The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the previous output)
 
-#. The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the previous
-   output)
+   - The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the previous output)
 
 
 Permanent Failover
@@ -553,14 +544,13 @@ assignment by completing the following steps:
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline: 2,1    Observers: 2,1
       ...
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. For topic ``multi-region-default``, replicas 2 and 1, which were previously sync replicas, are now
-   observers and are still offline
+   - For topic ``multi-region-default``, replicas 2 and 1, which were previously sync replicas, are now
+     observers and are still offline
 
-#. For topic ``multi-region-default``, replicas 3 and 4, which were previously observers, are now sync
-   replicas.
+   - For topic ``multi-region-default``, replicas 3 and 4, which were previously observers, are now sync
+     replicas.
 
 
 Failback
@@ -608,18 +598,17 @@ Now you will bring region ``west`` back online.
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline:    Observers: 2,1
 
-Observations
-^^^^^^^^^^^^
+#. Observe the following:
 
-#. All topics have leaders again, in particular ``single-region`` which lost its
-   leader when the ``west`` region failed.
+   - All topics have leaders again, in particular ``single-region`` which lost its
+     leader when the ``west`` region failed.
 
-#. The leaders for ``multi-region-sync`` and ``multi-region-async`` are restored
-   to the ``west`` region. If they are not, then wait a full 5 minutes (duration
-   of ``leader.imbalance.check.interval.seconds``).
+   - The leaders for ``multi-region-sync`` and ``multi-region-async`` are restored
+     to the ``west`` region. If they are not, then wait a full 5 minutes (duration
+     of ``leader.imbalance.check.interval.seconds``).
 
-#. The leader for ``multi-region-default`` stayed in the ``east`` region
-   because Confluent performed a permanent failover.
+   - The leader for ``multi-region-default`` stayed in the ``east`` region
+     because Confluent performed a permanent failover.
 
 .. note::
 
@@ -628,10 +617,10 @@ Observations
    joining the ISR.
 
 
-Stop the Demo
--------------
+Stop the Tutorial
+-----------------
 
-#. To stop the demo and all Docker containers, run the following command:
+#. To stop the demo environment and all Docker containers, run the following command:
 
    .. code-block:: bash
 
@@ -677,7 +666,7 @@ Pumba is overloading the Docker inter-container network
 
 If Pumba is overloading the Docker inter-container network, complete the following steps:
 
-#. Tweak the Pumba settings in :devx-examples:`latench_docker.sh|multiregion/scripts/latench_docker.sh`.
+#. Tweak the Pumba settings in :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh`.
 
 #. Re-test in your environment.
 
