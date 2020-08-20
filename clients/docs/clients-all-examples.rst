@@ -20,10 +20,10 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Kafka Connect Datagen <client-examples-kafka-connect-datagen>`
 * :ref:`kafkacat <client-examples-kafkacat>`
 * :ref:`Kotlin <client-examples-kotlin>`
-* :devx-examples:`KSQL Datagen|clients/cloud/ksql-datagen/README.md`
-* :devx-examples:`Node.js|clients/cloud/nodejs/README.md`
+* :ref:`KSQL Datagen <client-examples-ksql-datagen>`
+* :ref:`Node.js <client-examples-nodejs>`
 * :ref:`Python <client-examples-python>`
-* :devx-examples:`Ruby|clients/cloud/ruby/README.md`
+* :ref:`Ruby <client-examples-ruby>`
 * :devx-examples:`Rust|clients/cloud/rust/README.md`
 * :devx-examples:`Scala|clients/cloud/scala/README.md`
 
@@ -47,4 +47,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       kafka-connect-datagen
       kafkacat
       kotlin
+      ksql-datagen
+      nodejs
       python
+      ruby
