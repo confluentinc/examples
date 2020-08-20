@@ -31,7 +31,7 @@ Client
 
       Users of macOS 10.13 (High Sierra) and later should read `node-rdkafka’s
       additional configuration instructions related to OpenSSL
-      <https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave>`__\
+      <https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave>`__
       before running ``npm install``.
 
 
@@ -64,15 +64,15 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#.. Run the producer, passing in arguments for:
+#. Run the producer, passing in arguments for:
 
-    - the local file with configuration parameters to connect to your |ak|
+   - the local file with configuration parameters to connect to your |ak|
       cluster
-    - the topic name
+   - the topic name
 
    .. code-block:: bash
 
-      node producer.js -f $HOME/.confluent/librdkafka.config -t test1
+       node producer.js -f $HOME/.confluent/librdkafka.config -t test1
 
 #. Verify the producer sent all the messages. You should see:
 

@@ -113,4 +113,4 @@ Consume Records
       Consumed record with key alice and value {"count":9}, and updated total count 45
       ...
 
-#. View the :devx-examples:`producer code|clients/cloud/ruby/consumer.rb`.
+#. View the :devx-examples:`consumer code|clients/cloud/ruby/consumer.rb`.
