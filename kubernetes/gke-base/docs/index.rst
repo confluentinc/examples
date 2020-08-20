@@ -116,7 +116,7 @@ The |cp| Helm Charts deliver a reasonable base configuration for most deployment
 
 The following is an example section of the demo's ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` for further details.
 
-.. include:: ../../docs/includes/base-demo/hihlight-service-configs.rst
+.. include:: ../../docs/includes/base-demo/highlight-service-configs.rst
 
 Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile-impl` for the full commands.
 
