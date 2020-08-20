@@ -44,5 +44,4 @@ For the subset of languages that support it, the code examples also demonstrate 
       java
       java-springboot
       kotlin
-      ../../multiregion/docs/multiregion
       python
