@@ -1,6 +1,6 @@
 .. _quickstart-demos-operator-replicator-gke-cc:
 
-.. |cluster-settings| image:: images/cluster-settings.png
+.. |cluster-settings| image:: ../../docs/images/cluster-settings.png
    :align: middle
    :width: 80%
 
@@ -30,7 +30,7 @@ The major components of this demo are:
   * |c3|
   * One instance of `kafka-connect-datagen <https://github.com/confluentinc/kafka-connect-datagen>`__ to produce mock stock trading data
 
-.. figure:: images/operator-demo-phase-2.png
+.. figure:: ../../docs/images/operator-demo-phase-2.png
     :alt: operator
 
 Demo Prerequisites
@@ -317,7 +317,7 @@ The ``replicator-gke-cc-demo`` cluster is the |ccloud| cluster and the ``control
 
 Next click on the ``controlcenter.cluster`` and then ``Consumers``, and then ``replicator``.  This will give you a view of the |crep-full| consumer group as it replicates the ``stock-trades`` topics to |ccloud|.
 
-.. figure:: images/replicator-consumer.png
+.. figure:: ../../docs/images/replicator-consumer.png
     :alt: c3-replicator-consumer
 
 This |c3-short| screen highlights the consumer group lag for the ``replicator`` consumer group.  In the above screenshot, |c3-short| is telling us that the ``replicator`` consumer's total lag across all topics and partitions is 27 messages.  As |crep| processes messages, it's consumer group lag will fluctuate and the chart on this screen will indicate the current value as well as maximum amount of lag over time.
