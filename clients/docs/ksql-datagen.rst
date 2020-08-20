@@ -1,16 +1,16 @@
 .. _client-examples-ksql-datagen:
 
-ksql-datagen
+KSQL Datagen
 ============
 
-In this tutorial, you will run a ``ksql-datagen`` client application that
+In this tutorial, you will run a KSQL Datagen client application that
 produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
 .. note::
 
-    Use ``ksql-datagen`` for development purposes only. It isn't suitable for a
+    Use KSQL Datagen for development purposes only. It isn't suitable for a
     production environment.
 
 
@@ -35,7 +35,7 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for ``ksql-datagen``.
+#. Change directory to the example for KSQL Datagen.
 
    .. code-block:: bash
 
