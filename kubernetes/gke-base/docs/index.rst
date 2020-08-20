@@ -126,11 +126,11 @@ Remaining configuration details are specificied in individual ``helm`` commands.
 
 .. _examples-operator-base-client-configurations:
 
-.. include:: ../../docs/includes/base-demo/hihlight-client-configs.rst
+.. include:: ../../docs/includes/base-demo/highlight-client-configs.rst
 
 .. _examples-operator-gke-base-connector-deployments:
 
-.. include:: ../../docs/includes/base-demo/hihlight-connector-deployments.rst
+.. include:: ../../docs/includes/base-demo/highlight-connector-deployments.rst
 
 .. _examples-operator-gke-base-tear-down:
 
