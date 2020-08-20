@@ -515,13 +515,14 @@ Permanent Failover
 
 At this point in the example, if the brokers in the ``west`` region come back
 online, the leaders for the  ``multi-region-async`` and ``multi-region-default``
-topics will be elected back to a replica in ``west``–that is, replica 1 or 2.
-This may be desirable in some circumstances, but if you don’t want an automated
-failback, change the topic placement constraints configuration and replica
-assignment by completing the following steps:
+topics will automatically be elected back to a replica in ``west``–that is, replica 1 or 2.
+This may be desirable in some circumstances, but if you don’t want the leaders to
+automatically failback to the ``west`` region, change the topic placement constraints
+configuration and replica assignment by completing the following steps:
 
 #. Change the topic placement constraints configuration and replica assignment
    for ``multi-region-default``, by running the script :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
+   This script uses ``kafka-configs`` and ``confluent-rebalancer`` command line tools.
 
    .. code-block:: bash
 
@@ -608,7 +609,7 @@ Now you will bring region ``west`` back online.
      of ``leader.imbalance.check.interval.seconds``).
 
    - The leader for ``multi-region-default`` stayed in the ``east`` region
-     because Confluent performed a permanent failover.
+     because you performed a permanent failover.
 
 .. note::
 
