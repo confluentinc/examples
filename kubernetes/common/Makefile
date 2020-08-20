@@ -271,6 +271,53 @@ destroy-client-console:
 	@$(call echo_stdout_footer_pass,client-console destroyed)
 #################################
 
+
+###### REPLICATOR MANAGEMENT ######
+deploy-replicator: #_ Deploys Replicator into the configured k8s cluster
+	@$(call echo_stdout_header,Deploy Replicator)
+	@echo "helm upgrade --install --namespace $(KUBECTL_NAMESPACE) --set replicator.enabled=true $(HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator $(OPERATOR_PATH)helm/confluent-operator"
+	@helm upgrade --install --namespace $(KUBECTL_NAMESPACE) --set replicator.enabled=true $(HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator $(OPERATOR_PATH)helm/confluent-operator
+	@$(call echo_stdout_footer_pass,Replicator deployed)
+
+wait-for-replicator: #_ Waits until the Replicator rollout is complete
+	@$(call echo_stdout_header,Wait for Replicator)
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts replicator 
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/replicator
+	@$(call echo_stdout_footer_pass,Replicator ready)
+
+destroy-replicator: #_ Purge the Replicator package 
+	@$(call echo_stdout_header,Purge the Replicator package)
+	-helm delete replicator --namespace $(KUBECTL_NAMESPACE)
+	@$(call echo_stdout_footer_pass,Replicator purged)
+
+wait-for-replicator-destruction: #_ Waits until the Replicator cluster is destroyed
+	@$(call echo_stdout_header,Ensure Replicator destroyed)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) wait --timeout=60s --for=delete statefulset/replicator
+	@$(call echo_stdout_footer_pass,Replicator gone)
+#################################
+
+##### DEMO HELM CHART #####
+deploy-replicator-demo-helm: #_ Deploys the helm chart for some custom items for this demo
+	@$(call echo_stdout_header,Deploy Replicator Deploy Job)
+	@echo "helm upgrade --install --namespace $(KUBECTL_NAMESPACE) $(HELM_COMMON_FLAGS) --set global.sasl.plain.username=[redacted] --set global.sasl.plain.password=[redacted] replicator-cc $(COMMON_MKFILE_DIR)helm/replicator-cc"
+	@helm upgrade --install --namespace $(KUBECTL_NAMESPACE) $(HELM_COMMON_FLAGS) --set global.sasl.plain.username=$(CCLOUD_API_KEY) --set global.sasl.plain.password=$(CCLOUD_API_SECRET) replicator-cc $(COMMON_MKFILE_DIR)helm/replicator-cc
+	@$(call echo_stdout_footer_pass,Replicator Deploy Job deployed)
+
+destroy-demo-helm: #_ Destroys the deploy job and configuration for Replicator
+	@$(call echo_stdout_header,destory Deploy stock trades datagen connector)
+	-helm delete replicator-cc --namespace $(KUBECTL_NAMESPACE)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete configmap/stock-trades-datagen-connector
+	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
+#################################
+
+##### Update client console with destination cluster secrets #####
+deploy-client-console: #_ Deploys the client console for CLI access inside k8s
+	@$(call echo_stdout_header,Update client-console)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pods/client-console
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(COMMON_MKFILE_DIR)cfg/client-console-pod-replicator.yaml
+	@$(call echo_stdout_footer_pass,client-console deployed)
+##################################################################
+
 run-base-demo: base-demo-validate
 	@make --no-print-directory deploy-operator
 	@make --no-print-directory wait-for-operator
@@ -308,4 +355,20 @@ destroy-base-demo: base-demo-validate
 	@make --no-print-directory wait-for-zookeeper-destruction
 	@make --no-print-directory destroy-operator
 	@make --no-print-directory wait-for-operator-destruction
+
+
+run-replicator-demo:
+	@make --no-print-directory run-base-demo SKIP_CLICKS=true SKIP_CLIENT_CONSOLE=true
+	@make --no-print-directory deploy-stock-trades-connector
+	@make --no-print-directory deploy-replicator
+	@make --no-print-directory wait-for-replicator
+	@make --no-print-directory deploy-replicator-demo-helm
+	@make --no-print-directory deploy-client-console
+
+destroy-replicator-demo:
+	@make --no-print-directory destroy-replicator
+	@make --no-print-directory wait-for-replicator-destruction
+	@make --no-print-directory destroy-demo-helm
+	@make --no-print-directory destroy-stock-trades-connector
+	@make --no-print-directory destroy-base-demo
 
