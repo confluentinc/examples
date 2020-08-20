@@ -1,6 +1,5 @@
 .. _client-examples-multiregion:
 
-
 Tutorial: Multi-Region Clusters
 ===============================
 
@@ -362,11 +361,16 @@ Observations
 Monitoring Observers
 --------------------
 
-There are a few JMX metrics you can monitor:
+In |cs| there are a few JMX metrics that should be monitored for determining the health and state of a topic partition.
+A subset of JMX metrics are described below but for a full description of the relevant JMX metrics, see :ref:`mrr_metrics`.
 
-- ``ReplicasCount``: replicas, including observers
-- ``InSyncReplicasCount``: replicas, excluduing observers
-- ``CaughtUpReplicasCount`` (``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=([-.\w]+),partition=([0-9]+)``): new for |mrrep|, across all brokers in the cluster reflects whether all the replicas, including observers, are caught up with the leader such that their log end offset is at least at the high watermark.
+- ``ReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=ReplicasCount,topic=<topic-name>,partition=<partition-id>``. It reports the
+  number of replicas (sync replicas and observers) assigned to the topic partition.
+- ``InSyncReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=InSyncReplicasCount,topic=<topic-name>,partition=<partition-id>``.
+  It reports the number of replicas in the ISR.
+- ``CaughtUpReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=<topic-name>,partition=<partition-id>``.
+  It reports the number of replicas that are consider caught up to the topic partition leader. Note that this may be greater than the size of the ISR as observers may be caught up but are not part of ISR.
+
 
 #. Run the script :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the JMX metrics for ``ReplicasCount``,
    ``InSyncReplicasCount``, and ``CaughtUpReplicasCount`` from each of the
