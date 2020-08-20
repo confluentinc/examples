@@ -260,11 +260,6 @@ destroy-client-secrets:
 #################################
 
 ########## CLIENT CONSOLE #######
-deploy-client-console:
-	@$(call echo_stdout_header,Deploy client-console)
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(COMMON_MKFILE_DIR)cfg/client-console-pod-base.yaml
-	@$(call echo_stdout_footer_pass,client-console deployed)
-
 destroy-client-console:
 	@$(call echo_stdout_header,Delete client-console)
 	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pod client-console 
@@ -310,14 +305,6 @@ destroy-demo-helm: #_ Destroys the deploy job and configuration for Replicator
 	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
 #################################
 
-##### Update client console with destination cluster secrets #####
-deploy-client-console: #_ Deploys the client console for CLI access inside k8s
-	@$(call echo_stdout_header,Update client-console)
-	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pods/client-console
-	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(COMMON_MKFILE_DIR)cfg/client-console-pod-replicator.yaml
-	@$(call echo_stdout_footer_pass,client-console deployed)
-##################################################################
-
 run-base-demo: base-demo-validate
 	@make --no-print-directory deploy-operator
 	@make --no-print-directory wait-for-operator
@@ -326,9 +313,6 @@ run-base-demo: base-demo-validate
 	@make --no-print-directory deploy-kafka
 	@make --no-print-directory wait-for-kafka
 	@make --no-print-directory deploy-client-secrets
-ifeq ($(strip $(SKIP_CLIENT_CONSOLE)),)
-	@make --no-print-directory deploy-client-console
-endif
 	@make --no-print-directory deploy-schemaregistry
 	@make --no-print-directory wait-for-schemaregistry
 	@make --no-print-directory deploy-connect
@@ -356,14 +340,12 @@ destroy-base-demo: base-demo-validate
 	@make --no-print-directory destroy-operator
 	@make --no-print-directory wait-for-operator-destruction
 
-
 run-replicator-demo:
 	@make --no-print-directory run-base-demo SKIP_CLICKS=true SKIP_CLIENT_CONSOLE=true
 	@make --no-print-directory deploy-stock-trades-connector
 	@make --no-print-directory deploy-replicator
 	@make --no-print-directory wait-for-replicator
 	@make --no-print-directory deploy-replicator-demo-helm
-	@make --no-print-directory deploy-client-console
 
 destroy-replicator-demo:
 	@make --no-print-directory destroy-replicator

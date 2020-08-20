@@ -22,8 +22,17 @@ ADDITIONAL_HELM_FLAGS := -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/values.yaml -f $(
 
 include $(THIS_MKFILE_DIR)../gke-base/Makefile-impl
 
+##### Update client console with destination cluster secrets #####
+replicator-gke-cc-deploy-client-console: #_ Deploys the client console for CLI access inside k8s
+	@$(call echo_stdout_header,Update client-console)
+	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) delete pods/client-console
+	kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) apply -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/client-console-pod.yaml
+	@$(call echo_stdout_footer_pass,client-console deployed)
+##################################################################
+
 replicator-gke-cc-demo:
 	@make --no-print-directory run-replicator-demo
+	@make --no-print-directory replicator-gke-cc-deploy-client-console
 	@echo
 	@$(call echo_pass,Replicator GKE->CC Demo running)
 

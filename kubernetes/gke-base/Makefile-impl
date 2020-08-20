@@ -47,12 +47,20 @@ gke-destroy-cluster: gke-check-dependencies ## Destroys the GKE cluster built fr
 	gcloud --quiet container clusters delete $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE)
 	@$(call echo_stdout_footer_pass,GKE Cluster Deleted)
 
+gke-base-deploy-client-console:
+	@$(call echo_stdout_header,Deploy client-console)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(GKE_BASE_MKFILE_DIR)cfg/client-console-pod.yaml
+	@$(call echo_stdout_footer_pass,client-console deployed)
+
 gke-base-validate: gke-check-dependencies init
 	@echo
 	@$(call echo_pass,gke-base demo validation complete)
 
 gke-base-demo: gke-base-validate
 	@make --no-print-directory run-base-demo
+ifeq ($(strip $(SKIP_CLIENT_CONSOLE)),)
+	@make --no-print-directory gke-base-deploy-client-console
+endif
 	@echo
 	@$(call echo_pass,GKE Base Demo running)
 
