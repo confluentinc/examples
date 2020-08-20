@@ -25,8 +25,8 @@ include $(THIS_MKFILE_DIR)../gke-base/Makefile-impl
 ##### Update client console with destination cluster secrets #####
 replicator-gke-cc-deploy-client-console: #_ Deploys the client console for CLI access inside k8s
 	@$(call echo_stdout_header,Update client-console)
-	-kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) delete pods/client-console
-	kubectl --context $(GKE_BASE_KUBECTL_CONTEXT) -n $(GKE_BASE_KUBECTL_NAMESPACE) apply -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/client-console-pod.yaml
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pods/client-console
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(REPLICATOR_GKE_CC_MKFILE_DIR)cfg/client-console-pod.yaml
 	@$(call echo_stdout_footer_pass,client-console deployed)
 ##################################################################
 
