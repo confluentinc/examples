@@ -1,4 +1,4 @@
-.. _client-examples-multiregion:
+.. _mrc-tutorial:
 
 Tutorial: Multi-Region Clusters
 ===============================
