@@ -1,6 +1,6 @@
 .. _quickstart-demos-operator-replicator-gke-cc:
 
-.. |cluster-settings| image:: ../../docs/images/cluster-settings.png
+.. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
    :width: 80%
 
