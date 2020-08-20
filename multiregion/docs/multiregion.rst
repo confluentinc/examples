@@ -135,7 +135,7 @@ WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
 
 |Multi-region latencies|
 
-#. Run the Dockerized Pumba scripts:
+#. Run the Dockerized Pumba script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh`:
 
    .. code-block:: bash
 
@@ -173,7 +173,7 @@ topics depending on the relative location of clients and brokers.
 |Multi-region topic replicas|
 
 
-#. Create three |ak| topics by running the following script:
+#. Create three |ak| topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`
 
    .. code-block:: bash
 
@@ -227,7 +227,7 @@ topics depending on the relative location of clients and brokers.
         - {1,2}
         - yes
 
-#. View the topic replica placement:
+#. View the topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
    .. code-block:: bash
 
@@ -272,7 +272,7 @@ Producer and Consumer Testing
 Producer Testing
 ~~~~~~~~~~~~~~~~
 
-#. Run the producer perf test:
+#. Run the producer perf test script :devx-examples:`run-producer.sh|multiregion/scripts/run-producer.sh`:
 
    .. code-block:: bash
 
@@ -321,7 +321,7 @@ Observations
 Consumer Testing
 ~~~~~~~~~~~~~~~~
 
-#. Run the consumer perf test where the consumer is in ``east``:
+#. Run the consumer perf test script :devx-examples:`run-consumer.sh|multiregion/scripts/run-consumer.sh`, where the consumer is in ``east``:
 
    .. code-block:: bash
 
@@ -368,7 +368,7 @@ There are a few JMX metrics you can monitor:
 - ``InSyncReplicasCount``: replicas, excluduing observers
 - ``CaughtUpReplicasCount`` (``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=([-.\w]+),partition=([0-9]+)``): new for |mrrep|, across all brokers in the cluster reflects whether all the replicas, including observers, are caught up with the leader such that their log end offset is at least at the high watermark.
 
-#. Run the following script to get the JMX metrics for ``ReplicasCount``,
+#. Run the script :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the JMX metrics for ``ReplicasCount``,
    ``InSyncReplicasCount``, and ``CaughtUpReplicasCount`` from each of the
    brokers:
 
@@ -418,7 +418,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
       docker-compose stop broker-west-1 broker-west-2 zookeeper-west
 
-#. Verify the new topic replica placement:
+#. Verify the new topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
    .. code-block:: bash
 
@@ -484,7 +484,7 @@ To explicitly fail over the observers in the ``multi-region-async`` and
 
       docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-default --partition 0
 
-#. Describe the topics again.
+#. Describe the topics again with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
    .. code-block:: bash
 
@@ -526,13 +526,13 @@ failback, change the topic placement constraints configuration and replica
 assignment by completing the following steps:
 
 #. Change the topic placement constraints configuration and replica assignment
-   for ``multi-region-default``.
+   for ``multi-region-default``, by running the script :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
 
    .. code-block:: bash
 
       ./scripts/permanent-fallback.sh
 
-#. Describe the topics again.
+#. Describe the topics again with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
    .. code-block:: bash
 
@@ -576,7 +576,7 @@ Now you will bring region ``west`` back online.
    ``docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server
    broker-east-4:19094 --election-type PREFERRED --all-topic-partitions``.
 
-#. Verify the new topic replica placement is restored.
+#. Verify the new topic replica placement is restored with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
    .. code-block:: bash
 
@@ -640,8 +640,8 @@ Troubleshooting
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If containers fail to ping each other (for example, failures seen in running
-``./scripts/validate_connectivity.sh``), complete the following steps:
+If containers fail to ping each other (for example, failures seen when running
+the script :devx-examples:`validate_connectivity.sh|multiregion/scripts/validate_connectivity.sh`), complete the following steps:
 
 #. Stop the demo.
 
@@ -673,7 +673,7 @@ Pumba is overloading the Docker inter-container network
 
 If Pumba is overloading the Docker inter-container network, complete the following steps:
 
-#. Tweak the Pumba settings in `scripts/latency_docker.sh <scripts/latency_docker.sh>`__.
+#. Tweak the Pumba settings in :devx-examples:`latench_docker.sh|multiregion/scripts/latench_docker.sh`.
 
 #. Re-test in your environment.
 
