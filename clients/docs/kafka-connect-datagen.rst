@@ -43,6 +43,10 @@ Basic Producer and Consumer
 
 .. include:: includes/producer-consumer-description.rst
 
+
+Produce Records
+~~~~~~~~~~~~~~~
+
 #. Create the topic in |ccloud|.
 
    .. code-block:: bash
@@ -150,8 +154,8 @@ Avro and Confluent Cloud Schema Registry
 #. .. include:: includes/client-example-schema-registry-2-java.rst
 
 
-Produce Records
-~~~~~~~~~~~~~~~
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Create the topic in |ccloud|.
 
