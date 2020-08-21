@@ -8,8 +8,8 @@ Overview
 
 This tutorial describes the |mrrep| capability that is built directly into |cs|.
 
-|mrrep| allows customers to run a single |ak-tm| cluster across multiple datacenters.
-Often referred to as a stretch cluster, |mrrep| replicates data between datacenters across regional availability zones.
+|mrrep| allow customers to run a single |ak-tm| cluster across multiple datacenters.
+Often referred to as a stretch cluster, |mrrep| replicate data between datacenters across regional availability zones.
 You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
 It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
@@ -523,7 +523,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
      ``multi-region-default`` topics have no leader, because they had only two
      replicas in the ISR, both of which were in the ``west`` region and are now
      down. The observers in the ``east`` region are not eligible to become
-     leaders automatically because they weren't in the ISR.
+     leaders automatically because they were not in the ISR.
 
 
 Failover Observers
@@ -533,11 +533,7 @@ To explicitly fail over the observers in the ``multi-region-async`` and
 ``multi-region-default`` topics to the ``east`` region, complete the following
 steps:
 
-#. Trigger leader election:
-
-   .. note::
-
-      ``unclean`` leader election may result in data loss.
+#. Trigger unclean leader election (note: ``unclean`` leader election may result in data loss):
 
    .. code-block:: bash
 
