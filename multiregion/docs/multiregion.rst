@@ -198,12 +198,12 @@ Each topic has a replica placement policy that specifies a set of matching
 constraints (for example, ``count`` and ``rack`` for ``replicas`` and
 ``observers``). The replica placement policy file is defined with the argument
 ``--replica-placement <path-to-replica-placement-policy-json>`` mentioned
-earlier (these files are in the `config <config/>`__ directory). Each placement
-also has an associated minimum ``count`` that allows users to guarantee a
+earlier (these files are in the :devx-examples:`config|multiregion/config/` directory). Each placement
+also has an associated minimum ``count`` that guarantees a
 certain spread of replicas throughout the cluster.
 
 In this tutorial, you will create the following topics.
-You could create all the topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`, but we will show you how to create each topic with appropriate arguments.
+You could create all the topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`, but we will step through each topic creation to demonstrate the required arguments.
 
 
 .. list-table::
@@ -361,8 +361,8 @@ Producer
      twice in the ``west`` region, and it is not waiting for the async copy to
      the ``east`` region.
 
-   - This example doesn’t produce to ``multi-region-default`` as the
-     behavior should be the same as ``multi-region-async`` since the
+   - This example doesn’t produce to ``multi-region-default`` because the
+     behavior is the same as ``multi-region-async`` since the
      configuration is the same.
 
 
