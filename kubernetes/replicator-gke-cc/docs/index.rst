@@ -4,7 +4,7 @@
 .. |k8s-service-name| replace:: GKE
 .. |operator-demo-prefix| replace:: gke
 .. |kubectl-context-pattern| replace:: gke_project-name_us-central1-a_cp-examples-operator-jdoe
-.. |k8s-service-docs-url| replace:: https://cloud.google.com/kubernetes-engine/
+.. |k8s-service-docs-link| replace:: Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`
 .. |operator-base-demo-link| replace:: https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html
 
 .. |cluster-settings| image:: images/cluster-settings.png
