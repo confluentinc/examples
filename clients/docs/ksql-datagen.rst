@@ -201,11 +201,7 @@ Confluent Cloud Schema Registry
 
       ["test2-value"]
 
-<<<<<<< HEAD
 #. View the schema information for subject ``test2-value``. In the following
-=======
-#. View the schema information for subject `test2-value`. In the following
->>>>>>> 196ac8a3e19f4eeaa264d51105cab3b31e78b97d
    output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
 
    .. code-block:: text
