@@ -8,7 +8,7 @@ Now open a web-browser to http://localhost:12345, and you should see |c3| with 2
 .. figure:: images/c3-dual-clusters.png
     :alt: c3
 
-The ``replicator-|operator-demo-prefix|-cc-demo`` cluster is the |ccloud| cluster and the ``controlcenter.cluster`` is the |k8s-service-name| based |co-long| managed cluster.  At this time, detailed monitoring of |ccloud| clusters is not possible from on-premises |c3|.  You will notice that the ``replicator-|operator-demo-prefix|-cc-demo`` cluster does not list the number of Brokers as the `Confluent Cloud managed Kafka service is serverless <https://www.confluent.io/blog/kafka-made-serverless-with-confluent-cloud>`__ and the concept of brokers is abstracted away.
+The `replicator-|operator-demo-prefix|-cc-demo` cluster is the |ccloud| cluster and the ``controlcenter.cluster`` is the |k8s-service-name| based |co-long| managed cluster.  At this time, detailed monitoring of |ccloud| clusters is not possible from on-premises |c3|.  You will notice that the `replicator-|operator-demo-prefix|-cc-demo` cluster does not list the number of Brokers as the `Confluent Cloud managed Kafka service is serverless <https://www.confluent.io/blog/kafka-made-serverless-with-confluent-cloud>`__ and the concept of brokers is abstracted away.
 
 Next click on the ``controlcenter.cluster`` and then ``Consumers``, and then ``replicator``.  This will give you a view of the |crep-full| consumer group as it replicates the ``stock-trades`` topics to |ccloud|.
 
