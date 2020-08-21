@@ -36,8 +36,7 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 Prerequisites
 =============
 
-- Create a user account in `Confluent Cloud <https://confluent.cloud/>`__
-- Read this blog post about `using Confluent Cloud to manage data pipelines that use both on-premise and cloud deployments <https://www.confluent.io/blog/multi-cloud-integration-across-distributed-systems-with-kafka-connect/>`__. 
+- Create a user account in `Confluent Cloud <https://confluent.cloud/>`__ 
 - Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
 - ``jq`` tool
 
@@ -156,5 +155,5 @@ Additional Resources
 ====================
 
 -  Refer to `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud>`__ whitepaper for a practical guide to configuring, monitoring, and optimizing your Kafka client applications when using Confluent Cloud.
-
+- Read this blog post about `using Confluent Cloud to manage data pipelines that use both on-premise and cloud deployments <https://www.confluent.io/blog/multi-cloud-integration-across-distributed-systems-with-kafka-connect/>`__.
 -  For sample usage of ``ccloud-stack``, see :ref:`ccloud-demos-overview` .
