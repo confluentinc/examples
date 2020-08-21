@@ -4,6 +4,9 @@
 .. |k8s-service-name-long| replace:: Google Kubernetes Engine
 .. |k8s-service-name| replace:: GKE
 
+|cp| on |k8s-service-name-long|
+======================================
+
 .. include:: ../../docs/includes/base-demo/overview.rst
 
 Demo Prerequisites
