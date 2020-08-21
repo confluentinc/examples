@@ -4,7 +4,9 @@ To run the automated demo (estimated running time, 8 minutes):
 
     make demo
 
-The demo will deploy |cp| leverging |co-long|.   As the various components are deployed, the demonstration will echo the various commands as executing them so you can observe the process.  For example, the deployment message for |ak| will look similar to::
+The demo will deploy |cp| leverging |co-long|.   As the various components are deployed, the demonstration will echo the various commands as executing them so you can observe the process.  For example, the deployment message for |ak| will look similar to:
+
+.. codewithvars:: bash
 
     +++++++++++++ deploy kafka
     helm upgrade --install --namespace operator --wait --timeout=500 -f examples/kubernetes/|operator-demo-prefix|-base/cfg/values.yaml --set global.provider.region=us-central1 --set global.provider.kubernetes.deployment.zones={us-central1-a} -f examples/kubernetes/replicator-|operator-demo-prefix|-cc/cfg/values.yaml -f examples/kubernetes/replicator-|operator-demo-prefix|-cc/cfg/my-values.yaml  --set kafka.replicas=3 --set kafka.enabled=true kafka examples/kubernetes/common/cp/operator/20190912-v0.65.1/helm/confluent-operator
