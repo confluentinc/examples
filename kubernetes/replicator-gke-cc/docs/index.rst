@@ -4,8 +4,6 @@
 .. |k8s-service-name| replace:: GKE
 .. |operator-demo-prefix| replace:: gke
 .. |kubectl-context-pattern| replace:: gke_project-name_us-central1-a_cp-examples-operator-jdoe
-.. |k8s-service-docs-link| replace:: Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`
-.. |operator-base-demo-link| replace:: https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html
 
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
@@ -13,6 +11,13 @@
 
 |k8s-service-name-long| to |ccloud| with |crep-full|
 =====================================================
+
+Overview
+--------
+
+This example features a deployment of `Confluent Platform <https://www.confluent.io/product/confluent-platform/>`__ on |k8s-service-docs-link|__ leveraging `Confluent Operator <https://docs.confluent.io/current/installation/operator/index.html>`__ and `Confluent Replicator <https://docs.confluent.io/current/connect/kafka-connect-replicator/index.html>`__, highlighting a data replication strategy to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__.  Upon running this demo, you will have a |k8s-service-name| based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source |k8s-service-name| cluster.  
+
+If you'd like a primer on running |co-long| in |k8s-service-name| with lower resource requirements, see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
 
 .. include:: ../../docs/includes/replicator-cc-demo/overview.rst
 
