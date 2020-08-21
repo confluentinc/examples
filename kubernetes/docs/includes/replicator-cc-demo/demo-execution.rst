@@ -29,6 +29,9 @@ The demo will deploy |cp| leverging |co-long|.   As the various components are d
     statefulset rolling update complete 3 pods at revision kafka-775f97f98b...
     ✔  ++++++++++ Kafka ready
 
-The last output message you should see is::
+The last output message you should see is:
+
+
+.. codewithvars:: bash
 
     ✔ Replicator |k8s-service-name|->CC Demo running
