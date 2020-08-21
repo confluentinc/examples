@@ -110,7 +110,7 @@ The output of the previous command should be a name with the combination of your
 Demo Execution
 ++++++++++++++
 
-.. include:: ../../docs/includes/replicator-cc-demo/ccloud-setup.rst
+.. include:: ../../docs/includes/replicator-cc-demo/demo-execution.rst
 
 Validate
 ~~~~~~~~
