@@ -7,16 +7,57 @@ Overview
 --------
 
 This tutorial describes the |mrrep| capability that is built directly into |cs|.
+
+|mrrep| allows customers to run a single |ak-tm| cluster across multiple datacenters.
+Often referred to as a stretch cluster, |mrrep| replicates data between datacenters across regional availability zones.
+You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
+It provides good durability guarantees and makes disaster recovery (DR) much easier.
+
+Benefits:
+
+- Supports hybrid deployments of synchronous and asynchronous replication between datacenters
+- Consumers can leverage data locality for reading |ak| data, which means better performance and lower cost
+- In event of a disaster in a datacenter, ordering of |ak| messages is preserved
+- In event of a disaster in a datacenter, consumer offsets are preserved so consumers can continue reading where they left off
+- Can achieve RTO=0 and RPO=0
+
+Concepts
+--------
+
+``Replicas`` are brokers assigned to a topic-partition, and they can be a
+*Leader*, *Follower*, or *Observer*. A *Leader* is the broker/replica
+accepting producer messages. A *Follower* is a broker/replica that can
+join an ISR list and participate in the calculation of the high
+watermark (used by the leader when acknowledging messages back to the
+producer).
+
+An ``ISR`` list (in-sync replicas) includes brokers that have a given
+topic-partition. The data is copied from the leader to every member of
+the ISR before the producer gets an acknowledgement. The followers in an
+ISR can become the leader if the current leader fails.
+
+An ``Observer`` is a broker/replica that also has a copy of data for a given
+topic-partition, and consumers are allowed to read from them even though the
+*Observer* isn't the leader–this is known as “Follower Fetching”. However, the
+data is copied asynchronously from the leader such that a producer doesn't wait
+on observers to get back an acknowledgement. By default, observers don't
+participate in the ISR list and can't become the leader if the current leader
+fails, but if a user manually changes leader assignment then they can
+participate in the ISR list.
+
+|Follower_Fetching|
+
+
+
+Configuration
+--------------
+
 The scenario for this tutorial is as follows:
 
 - Three regions: ``west``, ``central``, and ``east``
 - Broker naming convention: ``broker-[region]-[broker_id]``
 
 |Multi-region Architecture|
-
-
-Configuration
---------------
 
 Here are some relevant configuration parameters:
 
@@ -47,34 +88,6 @@ Topic
 -  ``--replica-placement <path-to-replica-placement-policy-json>``: at
    topic creation, this argument defines the replica placement policy for a given
    topic
-
-Concepts
---------
-
-``Replicas`` are brokers assigned to a topic-partition, and they can be a
-*Leader*, *Follower*, or *Observer*. A *Leader* is the broker/replica
-accepting producer messages. A *Follower* is a broker/replica that can
-join an ISR list and participate in the calculation of the high
-watermark (used by the leader when acknowledging messages back to the
-producer).
-
-An ``ISR`` list (in-sync replicas) includes brokers that have a given
-topic-partition. The data is copied from the leader to every member of
-the ISR before the producer gets an acknowledgement. The followers in an
-ISR can become the leader if the current leader fails.
-
-An ``Observer`` is a broker/replica that also has a copy of data for a given
-topic-partition, and consumers are allowed to read from them even though the
-*Observer* isn't the leader–this is known as “Follower Fetching”. However, the
-data is copied asynchronously from the leader such that a producer doesn't wait
-on observers to get back an acknowledgement. By default, observers don't
-participate in the ISR list and can't become the leader if the current leader
-fails, but if a user manually changes leader assignment then they can
-participate in the ISR list.
-
-
-|Follower_Fetching|
-
 
 Download and run the tutorial
 -----------------------------
@@ -179,7 +192,9 @@ earlier (these files are in the `config <config/>`__ directory). Each placement
 also has an associated minimum ``count`` that allows users to guarantee a
 certain spread of replicas throughout the cluster.
 
-This tutorial creates the following topics:
+In this tutorial, you will create the following topics.
+You could create all the topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`, but we will show you how to create each topic with appropriate arguments.
+
 
 .. list-table::
    :widths: 20 15 20 20 10 15
@@ -220,11 +235,37 @@ This tutorial creates the following topics:
      - {1,2}
      - yes
 
-#. Create the |ak| topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`
+#. Create the |ak| topic ``single-region``.
 
-   .. code-block:: bash
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 5-10
 
-      ./scripts/create-topics.sh
+   Here is the topic's replica placement policy :devx-examples:`placement-single-region.json|multiregion/config/placement-single-region.json`:
+
+   .. literalinclude:: ../config/placement-single-region.json
+
+#. Create the |ak| topic ``multi-region-sync``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 14-19
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-sync.json|multiregion/config/placement-multi-region-sync.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-sync.json
+
+#. Create the |ak| topic ``multi-region-async``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 23-28
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-async.json|multiregion/config/placement-multi-region-async.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-async.json
+
+#. Create the |ak| topic ``multi-region-default``. Note that the ``--replica-placement`` argument is not used in order to demonstrate the default placement constraints.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 34-38
 
 #. View the topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
@@ -370,6 +411,12 @@ metrics. For a description of other relevant JMX metrics, see
 - ``CaughtUpReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=<topic-name>,partition=<partition-id>``.
   It reports the number of replicas that are consider caught up to the topic partition leader. Note that this may be greater than the size of the ISR as observers may be caught up but are not part of ISR.
 
+There is a script you can run to collect the JMX metrics from the command line, but the general form is:
+
+.. code-block:: bash
+
+    docker-compose exec broker-west-1 kafka-run-class kafka.tools.JmxTool --jmx-url service:jmx:rmi:///jndi/rmi://localhost:8091/jmxrmi --object-name kafka.cluster:type=Partition,name=<METRIC>,topic=<TOPIC>,partition=0 --one-time true
+
 
 #. Run the script
    :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
@@ -410,6 +457,22 @@ metrics. For a description of other relevant JMX metrics, see
 
 Failover and Failback
 ---------------------
+
+Running |ak| applications with |mrrep| can result in a significant reduction of client side responsibilities.
+Instead, durability guarantees are driven by replica placement and ``min.insync.replicas``.
+Replicas should be placed across regions in such a way that meets the required RTO and RPO.
+In the event of a failure of one region, you can achieve no manual intervention if the following conditions are met:
+
+#. Design: the number of followers _in each region should be sufficient to meet ``min.insync.replicas``. For example, if ``min.insync.replicas=3``, then ``west`` should have 3 replicas and ``east`` should have 3 replicas.
+#. At the time of a region failure: there are no under-replicated partitions
+
+When one region goes offline, this is what happens automatically:
+
+#. New leaders are elected in the other region
+#. No manual intervention of the client application
+
+The outcome is no manual intervention, applications proceed without interruption, and RTO=0 and RPO=0.
+
 
 Fail Region
 ~~~~~~~~~~~
@@ -528,15 +591,21 @@ want the leaders to automatically failback to the ``west`` region, change the
 topic placement constraints configuration and replica assignment by completing
 the following steps:
 
-#. Change the topic placement constraints configuration and replica assignment
+#. For the topic ``multi-region-default``, view a modified replica placement policy :devx-examples:`placement-multi-region-default-reverse.json|multiregion/config/placement-multi-region-default-reverse.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-default-reverse.json
+
+#. Change the replica placement constraints configuration and replica assignment
    for ``multi-region-default``, by running the script
    :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
-   This script uses ``kafka-configs`` and ``confluent-rebalancer`` command line
-   tools.
 
    .. code-block:: bash
 
       ./scripts/permanent-fallback.sh
+
+   The script uses ``kafka-configs`` to change the replica placement policy and then it runs ``confluent-rebalancer`` to move the replicas.
+
+   .. literalinclude:: ../scripts/permanent-fallback.sh
 
 #. Describe the topics again with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
