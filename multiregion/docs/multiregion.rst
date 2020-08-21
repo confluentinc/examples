@@ -17,9 +17,10 @@ Benefits:
 
 - Supports hybrid deployments of synchronous and asynchronous replication between datacenters
 - Consumers can leverage data locality for reading |ak| data, which means better performance and lower cost
-- In event of a disaster in a datacenter, ordering of |ak| messages is preserved
-- In event of a disaster in a datacenter, consumer offsets are preserved so consumers can continue reading where they left off
-- Can achieve RTO=0 and RPO=0
+- Ordering of |ak| messages is preserved across datacenters
+- Consumer offsets are preserved
+- In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter, and applications proceed without interruption. This achieves RTO=0 and RPO=0
+
 
 Concepts
 --------
@@ -81,6 +82,15 @@ Client
 
 -  ``client.rack``: identifies the location of the client. For the demo,
    it represents a region, either ``east`` or ``west``
+-  ``replication.factor``: at the topic level, replication factor is mutually
+   exclusive to replica placement constraints, so for |kstreams| applications,
+   set ``replication.factor=-1`` to let replica placement constraints take
+   precedence
+-  ``min.insync.replicas``: durability guarantees are driven by replica
+   placement and ``min.insync.replicas``. The number of followers
+   `in each region` should be sufficient to meet ``min.insync.replicas``,
+   for example, if ``min.insync.replicas=3``, then ``west`` should have 3
+   replicas and ``east`` should have 3 replicas.
 
 Topic
 ~~~~~
@@ -457,22 +467,6 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
 Failover and Failback
 ---------------------
-
-Running |ak| applications with |mrrep| can result in a significant reduction of client side responsibilities.
-Instead, durability guarantees are driven by replica placement and ``min.insync.replicas``.
-Replicas should be placed across regions in such a way that meets the required RTO and RPO.
-In the event of a failure of one region, you can achieve no manual intervention if the following conditions are met:
-
-#. Design: the number of followers _in each region should be sufficient to meet ``min.insync.replicas``. For example, if ``min.insync.replicas=3``, then ``west`` should have 3 replicas and ``east`` should have 3 replicas.
-#. At the time of a region failure: there are no under-replicated partitions
-
-When one region goes offline, this is what happens automatically:
-
-#. New leaders are elected in the other region
-#. No manual intervention of the client application
-
-The outcome is no manual intervention, applications proceed without interruption, and RTO=0 and RPO=0.
-
 
 Fail Region
 ~~~~~~~~~~~
