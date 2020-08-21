@@ -37,6 +37,7 @@ Prerequisites
 =============
 
 - Create a user account in `Confluent Cloud <https://confluent.cloud/>`__
+- Read this blog post about `using Confluent Cloud to manage data pipelines that use both on-premise and cloud deployments <https://www.confluent.io/blog/multi-cloud-integration-across-distributed-systems-with-kafka-connect/>`__. 
 - Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
 - ``jq`` tool
 
