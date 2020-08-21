@@ -8,8 +8,8 @@ produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. note::
 
-    You should use KSQL Datagen for development purposes only. It isn't suitable
-    for a production environment.
+    Use KSQL Datagen for development purposes only. It isn't suitable for a
+    production environment.
 
 .. include:: includes/client-example-overview.rst
 
@@ -201,7 +201,7 @@ Confluent Cloud Schema Registry
 
       ["test2-value"]
 
-#. View the schema information for subject `test2-value`. In the following
+#. View the schema information for subject ``test2-value``. In the following
    output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
 
    .. code-block:: text
