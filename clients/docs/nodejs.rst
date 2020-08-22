@@ -18,22 +18,12 @@ Client
 -  `Node.js <https://nodejs.org/>`__ version 8.6 or higher installed on
    your local machine.
 
+-  Users of macOS 10.13 (High Sierra) and later should read `node-rdkafka’s
+   additional configuration instructions related to OpenSSL
+   <https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave>`__
+   before running ``npm install``.
+
 -  `OpenSSL <https://www.openssl.org>`__ version 1.0.2.
-
--  npm dependencies installed on your local machine.
-
-   .. code-block:: bash
-
-      cd clients/nodejs
-      npm install
-
-   .. note::
-
-      Users of macOS 10.13 (High Sierra) and later should read `node-rdkafka’s
-      additional configuration instructions related to OpenSSL
-      <https://github.com/Blizzard/node-rdkafka/blob/56c31c4e81f2a042666160338ad65dc4f8f2d87e/README.md#mac-os-high-sierra--mojave>`__
-      before running ``npm install``.
-
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -63,6 +53,12 @@ Basic Producer and Consumer
 
 Produce Records
 ~~~~~~~~~~~~~~~
+
+#. Install npm dependencies.
+
+   .. code-block:: bash
+
+      npm install
 
 #. Run the producer, passing in arguments for:
 

@@ -109,7 +109,7 @@ Produce Records
 
       ./submit_datagen_orders_config.sh
 
-#. View the :devx-examples:`datagen code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
+#. View the :devx-examples:`kafka-connect-datagen code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
 
 
 Consume Records
@@ -220,7 +220,7 @@ Produce Avro Records
 
       ./submit_datagen_orders_config_avro.sh
 
-#. View the :devx-examples:`datagen code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`kafka-connect-datagen Avro code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
 Consume Avro Records
@@ -248,7 +248,7 @@ Consume Avro Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`consumer code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
 Confluent Cloud Schema Registry
