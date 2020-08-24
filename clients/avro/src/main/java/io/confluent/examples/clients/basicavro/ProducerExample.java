@@ -9,21 +9,36 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import org.apache.kafka.common.errors.SerializationException;
 
 import java.util.Properties;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 public class ProducerExample {
 
     private static final String TOPIC = "transactions";
 
-    @SuppressWarnings("InfiniteLoopStatement")
-    public static void main(final String[] args) {
+    public static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
+    public static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
+    public static final String DEFAULT_SCHEMA_REGISTRY_BASIC_AUTH = "";
 
-        final Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+    @SuppressWarnings("InfiniteLoopStatement")
+    public static void main(final String[] args) throws IOException {
+
+        Properties props = new Properties();
+
+        if (args.length > 0) {
+          props = loadConfig(args[0]);
+        } else {
+          props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, DEFAULT_BOOTSTRAP_SERVERS);
+          props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, DEFAULT_SCHEMA_REGISTRY_URL);
+        }
+
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
-        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
 
         try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
 
@@ -46,5 +61,15 @@ public class ProducerExample {
 
     }
 
-}
+    public static Properties loadConfig(final String configFile) throws IOException {
+      if (!Files.exists(Paths.get(configFile))) {
+        throw new IOException(configFile + " not found.");
+      }
+      final Properties cfg = new Properties();
+      try (InputStream inputStream = new FileInputStream(configFile)) {
+        cfg.load(inputStream);
+      }
+      return cfg;
+    }
 
+}
