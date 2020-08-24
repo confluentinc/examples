@@ -150,6 +150,9 @@ Produce Records
        Produced record to topic test1 partition [0] @ offset 9
        10 messages were produced to topic test1!
 
+#. View the :devx-examples:`producer code|clients/cloud/python/producer.py`.
+
+
 Consume Records
 ~~~~~~~~~~~~~~~
 
@@ -181,6 +184,7 @@ Consume Records
       Waiting for message or event/error in poll()
       ...
 
+#. View the :devx-examples:`consumer code|clients/cloud/python/consumer.py`.
 
 Avro And Confluent Cloud Schema Registry
 ----------------------------------------
@@ -240,6 +244,8 @@ Produce Avro Records
       Produced record to topic test2 partition [0] @ offset 9
       10 messages were produced to topic test2!
 
+#. View the :devx-examples:`producer Avro code|clients/cloud/python/producer_ccsr.py`.
+
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -272,6 +278,7 @@ Consume Avro Records
        Consumed record with key alice and value 9,                       and updated total count to 45
        ...
 
+#. View the :devx-examples:`consumer Avro code|clients/cloud/python/consumer_ccsr.py`.
 
 |ccloud| |sr|
 ~~~~~~~~~~~~~
@@ -309,6 +316,10 @@ You can also run all the previous code within Docker.
 
 #. Ensure you have created a local file with configuration parameters to
    connect to your Kafka cluster at ``$HOME/.confluent/librdkafka.config``.
+
+#. View the :devx-examples:`Dockerfile|clients/cloud/python/Dockerfile` that builds a custom Docker image.
+
+   .. literalinclude:: ../cloud/python/Dockerfile
 
 #. Build the Docker image using the following command:
 
