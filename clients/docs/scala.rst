@@ -39,6 +39,7 @@ Basic Producer and Consumer
 
 .. include:: includes/producer-consumer-description.rst
 
+
 Consume Records
 ~~~~~~~~~~~~~~~
 
@@ -48,7 +49,7 @@ Consume Records
 
       cd examples/clients/cloud/scala
 
-#. Build the client example:
+#. Build the client examples:
 
    .. code-block:: bash
 
@@ -58,7 +59,7 @@ Consume Records
 
    .. code-block:: bash
 
-      sbt “runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config testtopic”
+      sbt “runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config test1”
 
    You should see:
 
@@ -70,15 +71,13 @@ Consume Records
          ....
          <snipped>
 
+#. View the :devx-examples:`consumer code|clients/cloud/scala/src/main/scala/io/confluent/examples/clients/scala/Consumer.scala`.
+
 
 Kafka Streams
 ~~~~~~~~~~~~~
 
 #. In a new window, run the Streams app:
-
-   .. code-block:: bash
-
-      sbt “runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config testtopic”
 
    .. code-block:: bash
 
@@ -94,7 +93,7 @@ Kafka Streams
 
    .. code-block:: bash
 
-      sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.confluent/java.config  testtopic"
+      sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.confluent/java.config  test1"
 
 #. View the :devx-examples:`Kafka Streams code|clients/cloud/scala/src/main/scala/io/confluent/examples/clients/scala/Streams.scala`.
 
@@ -106,43 +105,43 @@ Produce Records
 
    .. code-block:: bash
 
-      sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config testtopic"
+      sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config test1"
 
 #. Verify you see the following output:
 
    .. code-block:: text
 
          <snipped>
-         Produced record at testtopic-0@120
-         Produced record at testtopic-0@121
-         Produced record at testtopic-0@122
-         Produced record at testtopic-0@123
-         Produced record at testtopic-0@124
-         Produced record at testtopic-0@125
-         Produced record at testtopic-0@126
-         Produced record at testtopic-0@127
-         Produced record at testtopic-0@128
-         Produced record at testtopic-0@129
-         Wrote ten records to testtopic
+         Produced record at test1-0@120
+         Produced record at test1-0@121
+         Produced record at test1-0@122
+         Produced record at test1-0@123
+         Produced record at test1-0@124
+         Produced record at test1-0@125
+         Produced record at test1-0@126
+         Produced record at test1-0@127
+         Produced record at test1-0@128
+         Produced record at test1-0@129
+         Wrote ten records to test1
          [success] Total time: 6 s, completed 10-Dec-2018 16:50:13
 
-  In the consumer window, you should see the following output:
+   In the consumer window, you should see the following output:
 
-  .. code-block:: text
+   .. code-block:: text
 
-      <snipped>
-      Polling
-      Consumed record with key alice and value {"count":1}, and updated total count to 1
-      Consumed record with key alice and value {"count":2}, and updated total count to 3
-      Consumed record with key alice and value {"count":3}, and updated total count to 6
-      Consumed record with key alice and value {"count":4}, and updated total count to 10
-      Consumed record with key alice and value {"count":5}, and updated total count to 15
-      Consumed record with key alice and value {"count":6}, and updated total count to 21
-      Consumed record with key alice and value {"count":7}, and updated total count to 28
-      Consumed record with key alice and value {"count":8}, and updated total count to 36
-      Consumed record with key alice and value {"count":9}, and updated total count to 45
-      Consumed record with key alice and value {"count":10}, and updated total count to 55
-      Polling
+         <snipped>
+         Polling
+         Consumed record with key alice and value {"count":1}, and updated total count to 1
+         Consumed record with key alice and value {"count":2}, and updated total count to 3
+         Consumed record with key alice and value {"count":3}, and updated total count to 6
+         Consumed record with key alice and value {"count":4}, and updated total count to 10
+         Consumed record with key alice and value {"count":5}, and updated total count to 15
+         Consumed record with key alice and value {"count":6}, and updated total count to 21
+         Consumed record with key alice and value {"count":7}, and updated total count to 28
+         Consumed record with key alice and value {"count":8}, and updated total count to 36
+         Consumed record with key alice and value {"count":9}, and updated total count to 45
+         Consumed record with key alice and value {"count":10}, and updated total count to 55
+         Polling
 
 
    In the Streams window you should see:

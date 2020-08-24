@@ -58,7 +58,7 @@ Produce Records
 
 #. Run the producer, passing in arguments for:
 
-   -  the local file with configuration parameters to connect to your Kafka cluster
+   -  the local file with configuration parameters to connect to your |ak| cluster
    -  the topic name
 
    .. code-block:: bash
@@ -98,7 +98,7 @@ Consume Records
 
 #. Run the consumer, passing in arguments for:
 
-   - the local file with configuration parameters to connect to your Kafka cluster
+   - the local file with configuration parameters to connect to your |ak| cluster
    - the topic name you used earlier
 
    .. code-block:: bash
