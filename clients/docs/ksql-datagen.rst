@@ -79,7 +79,7 @@ Produce Records
 
        docker-compose up -d
 
-#. View the :devx-examples:`datagen code|clients/cloud/ksql-datagen/start-docker.sh`.
+#. View the :devx-examples:`ksql-datagen code|clients/cloud/ksql-datagen/start-docker.sh`.
 
 
 Consume Records
@@ -152,7 +152,7 @@ Produce Avro Records
 
        docker-compose up -d
 
-#. View the :devx-examples:`datagen code|clients/cloud/ksql-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`ksql-datagen Avro code|clients/cloud/ksql-datagen/start-docker-avro.sh`.
 
 
 Consume Avro Records
@@ -181,7 +181,7 @@ Consume Avro Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`consumer code|clients/cloud/ksql-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/ksql-datagen/start-docker-avro.sh`.
 
 
 Confluent Cloud Schema Registry

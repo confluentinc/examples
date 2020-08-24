@@ -18,14 +18,6 @@ Client
 -  `Bundler <https://bundler.io/>`__ installed on your machine. Install
    using ``gem install bundler``.
 
--  Install gems:
-
-   .. code-block:: bash
-
-       cd clients/ruby
-       bundle install
-
-
 Kafka Cluster
 ~~~~~~~~~~~~~
 
@@ -54,6 +46,12 @@ Basic Producer and Consumer
 
 Produce Records
 ~~~~~~~~~~~~~~~
+
+#. Install gems:
+
+   .. code-block:: bash
+
+       bundle install
 
 #. Run the producer, passing in arguments for:
 
