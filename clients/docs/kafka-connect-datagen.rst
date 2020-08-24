@@ -43,6 +43,10 @@ Basic Producer and Consumer
 
 .. include:: includes/producer-consumer-description.rst
 
+
+Produce Records
+~~~~~~~~~~~~~~~
+
 #. Create the topic in |ccloud|.
 
    .. code-block:: bash
@@ -105,7 +109,7 @@ Basic Producer and Consumer
 
       ./submit_datagen_orders_config.sh
 
-#. View the :devx-examples:`datagen code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
+#. View the :devx-examples:`kafka-connect-datagen code|clients/cloud/kafka-connect-datagen/start-docker.sh`.
 
 
 Consume Records
@@ -150,8 +154,8 @@ Avro and Confluent Cloud Schema Registry
 #. .. include:: includes/client-example-schema-registry-2-java.rst
 
 
-Produce Records
-~~~~~~~~~~~~~~~
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
 
 #. Create the topic in |ccloud|.
 
@@ -216,7 +220,7 @@ Produce Records
 
       ./submit_datagen_orders_config_avro.sh
 
-#. View the :devx-examples:`datagen code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`kafka-connect-datagen Avro code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
 Consume Avro Records
@@ -244,7 +248,7 @@ Consume Avro Records
 
 #. When you are done, press ``CTRL-C``.
 
-#. View the :devx-examples:`consumer code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/kafka-connect-datagen/start-docker-avro.sh`.
 
 
 Confluent Cloud Schema Registry
