@@ -21,13 +21,15 @@ public class ProducerExample {
 
     public static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
     public static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
-    public static final String DEFAULT_SCHEMA_REGISTRY_BASIC_AUTH = "";
 
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) throws IOException {
 
         Properties props = new Properties();
 
+        // Load properties from a local configuration file to connect to your Kafka cluster and Schema Registry
+        // which can be on your local host, Confluent Cloud, or any other cluster.
+        // If no file is provided, assume services are on localhost
         if (args.length > 0) {
           props = loadConfig(args[0]);
         } else {
