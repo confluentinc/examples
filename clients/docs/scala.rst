@@ -1,49 +1,68 @@
-Scala Producer and Consumer for Confluent Cloud
-===============================================
+.. _client-examples-scala:
 
-Produce messages to and consume messages from a Kafka cluster using the
-Scala Producer and Consumer, and Kafka Streams API.
+Scala
+======
 
-For more information, please see the `application development
-documentation <https://docs.confluent.io/current/api-javadoc.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
+In this tutorial, you will run a Scala client application that produces messages
+to and consumes messages from an |ak-tm| cluster. For more information, please
+see the `application development documentation
+<https://docs.confluent.io/current/api-javadoc.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
+
+.. include:: includes/client-example-overview.rst
+
 
 Prerequisites
-=============
+-------------
 
--  Create a local file (e.g. at ``$HOME/.confluent/java.config``) with
-   configuration parameters to connect to your Kafka cluster, which can
-   be on your local host, `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__,
-   or any other cluster. Follow `these detailed
-   instructions <https://github.com/confluentinc/configuration-templates/tree/master/README.md>`__
-   to properly create this file.
+Kafka Cluster
+~~~~~~~~~~~~~
 
--  If you are running on Confluent Cloud, you must have access to a
-   `Confluent
-   Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-   cluster
+.. include:: includes/client-example-prerequisites.rst
 
-   -  The first 20 users to sign up for `Confluent
-      Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
-      and use promo code ``C50INTEG`` will receive an additional $50
-      free usage
-      (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__).
 
-Quickstart
-==========
+Setup
+-----
 
-1. Now we can turn our attention to the client examples in this
-   directory.
+#. .. include:: includes/clients-checkout.rst
 
-   1. First run the example consumer \```shell $ cd
-      examples/clients/cloud/scala # Build the client examples $ sbt
-      clean compile
+#. Change directory to the example for Scala.
 
-      # Run the consumer $ sbt “runMain
-      io.confluent.examples.clients.scala.Consumer
-      $HOME/.confluent/java.config testtopic” \``\` You should see
+   .. code-block:: bash
 
-      ::
+      cd clients/cloud/scala/
+
+#. .. include:: includes/client-example-create-file-java.rst
+
+
+Basic Producer and Consumer
+---------------------------
+
+.. include:: includes/producer-consumer-description.rst
+
+Consume Records
+~~~~~~~~~~~~~~~
+
+#. Run the example consumer:
+
+   .. code-block:: bash
+
+      cd examples/clients/cloud/scala
+
+#. Build the client example:
+
+   .. code-block:: bash
+
+      sbt clean compile
+
+#. Run the consumer:
+
+   .. code-block:: bash
+
+      sbt “runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config testtopic”
+
+   You should see:
+
+   .. code-block:: text
 
          <snipped>
 
@@ -51,28 +70,47 @@ Quickstart
          ....
          <snipped>
 
-   2. Next, in a new window, run the Streams app: \```shell $ cd
-      examples/clients/cloud/scala # Build the client examples $ sbt
-      clean compile
 
-      ::
+Kafka Streams
+~~~~~~~~~~~~~
 
-          # Run the consumer
-          $ sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.confluent/java.config  testtopic"
+#. In a new window, run the Streams app:
 
-      \``\`
+   .. code-block:: bash
 
-   3. Then, in a new window run the Kafka producer application to write
-      records to the Kafka cluster, you should see these appear in the
-      consumer window.
+      sbt “runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config testtopic”
 
-      .. code:: shell
+   .. code-block:: bash
 
-         $ sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config testtopic"
+       cd examples/clients/cloud/scala
 
-      You should see
+#. Build the client examples:
 
-      ::
+   .. code-block:: bash
+
+      sbt clean compile
+
+#. Run the consumer:
+
+   .. code-block:: bash
+
+      sbt "runMain io.confluent.examples.clients.scala.Streams $HOME/.confluent/java.config  testtopic"
+
+#. View the :devx-examples:`Kafka Streams code|clients/cloud/scala/src/main/scala/io/confluent/examples/clients/scala/Streams.scala`.
+
+
+Produce Records
+~~~~~~~~~~~~~~~
+
+#. In new a window, run the |ak| producer application to write records to the |ak| cluster:
+
+   .. code-block:: bash
+
+      sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config testtopic"
+
+#. Verify you see the following output:
+
+   .. code-block:: text
 
          <snipped>
          Produced record at testtopic-0@120
@@ -88,45 +126,50 @@ Quickstart
          Wrote ten records to testtopic
          [success] Total time: 6 s, completed 10-Dec-2018 16:50:13
 
-      In the consumer window you should see: \``\` Polling Consumed
-      record with key alice and value {“count”:1}, and updated total
-      count to 1 Consumed record with key alice and value {“count”:2},
-      and updated total count to 3 Consumed record with key alice and
-      value {“count”:3}, and updated total count to 6 Consumed record
-      with key alice and value {“count”:4}, and updated total count to
-      10 Consumed record with key alice and value {“count”:5}, and
-      updated total count to 15 Consumed record with key alice and value
-      {“count”:6}, and updated total count to 21 Consumed record with
-      key alice and value {“count”:7}, and updated total count to 28
-      Consumed record with key alice and value {“count”:8}, and updated
-      total count to 36 Consumed record with key alice and value
-      {“count”:9}, and updated total count to 45 Consumed record with
-      key alice and value {“count”:10}, and updated total count to 55
+  In the consumer window, you should see the following output:
+
+  .. code-block:: text
+
+      <snipped>
+      Polling
+      Consumed record with key alice and value {"count":1}, and updated total count to 1
+      Consumed record with key alice and value {"count":2}, and updated total count to 3
+      Consumed record with key alice and value {"count":3}, and updated total count to 6
+      Consumed record with key alice and value {"count":4}, and updated total count to 10
+      Consumed record with key alice and value {"count":5}, and updated total count to 15
+      Consumed record with key alice and value {"count":6}, and updated total count to 21
+      Consumed record with key alice and value {"count":7}, and updated total count to 28
+      Consumed record with key alice and value {"count":8}, and updated total count to 36
+      Consumed record with key alice and value {"count":9}, and updated total count to 45
+      Consumed record with key alice and value {"count":10}, and updated total count to 55
       Polling
 
-::
 
-           In the Streams window you should see:
-           ```
-           [Consumed record]: alice, 1
-           [Consumed record]: alice, 2
-           [Consumed record]: alice, 3
-           [Consumed record]: alice, 4
-           [Consumed record]: alice, 5
-           [Consumed record]: alice, 6
-           [Consumed record]: alice, 7
-           [Consumed record]: alice, 8
-           [Consumed record]: alice, 9
-           [Consumed record]: alice, 10
-           [Running count]: alice, 1
-           [Running count]: alice, 3
-           [Running count]: alice, 6
-           [Running count]: alice, 10
-           [Running count]: alice, 15
-           [Running count]: alice, 21
-           [Running count]: alice, 28
-           [Running count]: alice, 36
-           [Running count]: alice, 45
-           [Running count]: alice, 55
+   In the Streams window you should see:
 
-Hit Ctrl+C in both windows to stop the Consumer and Streams
+   .. code-block:: text
+
+        [Consumed record]: alice, 1
+        [Consumed record]: alice, 2
+        [Consumed record]: alice, 3
+        [Consumed record]: alice, 4
+        [Consumed record]: alice, 5
+        [Consumed record]: alice, 6
+        [Consumed record]: alice, 7
+        [Consumed record]: alice, 8
+        [Consumed record]: alice, 9
+        [Consumed record]: alice, 10
+        [Running count]: alice, 1
+        [Running count]: alice, 3
+        [Running count]: alice, 6
+        [Running count]: alice, 10
+        [Running count]: alice, 15
+        [Running count]: alice, 21
+        [Running count]: alice, 28
+        [Running count]: alice, 36
+        [Running count]: alice, 45
+        [Running count]: alice, 55
+
+#. When you are done, press ``CTRL-C`` in both windows to stop the Consumer and Streams.
+
+#. View the :devx-examples:`producer code|clients/cloud/scala/src/main/scala/io/confluent/examples/clients/scala/Producer.scala`.

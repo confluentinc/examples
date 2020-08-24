@@ -30,11 +30,11 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for Ruby.
+#. Change directory to the example for Rust.
 
    .. code-block:: bash
 
-      cd clients/cloud/ruby/
+      cd clients/cloud/rust/
 
 #. .. include:: includes/client-example-create-file-librdkafka.rst
 

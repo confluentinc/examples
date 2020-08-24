@@ -24,8 +24,8 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Node.js <client-examples-nodejs>`
 * :ref:`Python <client-examples-python>`
 * :ref:`Ruby <client-examples-ruby>`
-* :devx-examples:`Rust|clients/cloud/rust/README.md`
-* :devx-examples:`Scala|clients/cloud/scala/README.md`
+* :ref:`Rust <client-examples-rust>`
+* :ref:`Scala <client-examples-scala>`
 
 .. figure:: ../cloud/images/clients-all.png
    :width: 600px
@@ -51,3 +51,5 @@ For the subset of languages that support it, the code examples also demonstrate 
       nodejs
       python
       ruby
+      rust
+      scala
