@@ -4,9 +4,7 @@ Scala
 ======
 
 In this tutorial, you will run a Scala client application that produces messages
-to and consumes messages from an |ak-tm| cluster. For more information, please
-see the `application development documentation
-<https://docs.confluent.io/current/api-javadoc.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__
+to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
