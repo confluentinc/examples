@@ -25,16 +25,18 @@ public class ConsumerExample {
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) throws IOException {
 
-        if (args.length != 1) {
-          System.out.println("Please provide command line arguments for configPath");
-          System.exit(1);
+        Properties props = new Properties();
+        if (args.length < 1) {
+          // Backwards compatibility, assume localhost
+          props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+          props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
+        } else {
+          // Load properties from a local configuration file
+          // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
+          // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
+          // Follow these detailed instructions to properly create this file: https://github.com/confluentinc/configuration-templates/tree/master/README.md
+          props = loadConfig(args[0]);
         }
-
-        // Load properties from a local configuration file
-        // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
-        // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
-        // Follow these detailed instructions to properly create this file: https://github.com/confluentinc/configuration-templates/tree/master/README.md
-        final Properties props = loadConfig(args[0]);
 
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-payments");
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
