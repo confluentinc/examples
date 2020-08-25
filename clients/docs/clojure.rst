@@ -63,31 +63,30 @@ Produce Records
 
    You should see:
 
-
    .. code-block:: text
 
-      …
-      Producing record: alice     {"count":0}
-      Producing record: alice     {"count":1}
-      Producing record: alice     {"count":2}
-      Producing record: alice     {"count":3}
-      Producing record: alice     {"count":4}
-      Produced record to topic test1 partiton [0] @ offest 0
-      Produced record to topic test1 partiton [0] @ offest 1
-      Produced record to topic test1 partiton [0] @ offest 2
-      Produced record to topic test1 partiton [0] @ offest 3
-      Produced record to topic test1 partiton [0] @ offest 4
-      Producing record: alice     {"count":5}
-      Producing record: alice     {"count":6}
-      Producing record: alice     {"count":7}
-      Producing record: alice     {"count":8}
-      Producing record: alice     {"count":9}
-      Produced record to topic test1 partiton [0] @ offest 5
-      Produced record to topic test1 partiton [0] @ offest 6
-      Produced record to topic test1 partiton [0] @ offest 7
-      Produced record to topic test1 partiton [0] @ offest 8
-      Produced record to topic test1 partiton [0] @ offest 9
-      10 messages were produced to topic test1!
+         …
+         Producing record: alice     {"count":0}
+         Producing record: alice     {"count":1}
+         Producing record: alice     {"count":2}
+         Producing record: alice     {"count":3}
+         Producing record: alice     {"count":4}
+         Produced record to topic test1 partiton [0] @ offest 0
+         Produced record to topic test1 partiton [0] @ offest 1
+         Produced record to topic test1 partiton [0] @ offest 2
+         Produced record to topic test1 partiton [0] @ offest 3
+         Produced record to topic test1 partiton [0] @ offest 4
+         Producing record: alice     {"count":5}
+         Producing record: alice     {"count":6}
+         Producing record: alice     {"count":7}
+         Producing record: alice     {"count":8}
+         Producing record: alice     {"count":9}
+         Produced record to topic test1 partiton [0] @ offest 5
+         Produced record to topic test1 partiton [0] @ offest 6
+         Produced record to topic test1 partiton [0] @ offest 7
+         Produced record to topic test1 partiton [0] @ offest 8
+         Produced record to topic test1 partiton [0] @ offest 9
+         10 messages were produced to topic test1!
 
 
 Consume Records
@@ -100,7 +99,7 @@ Consume Records
 
    .. code-block:: bash
 
-    lein consumer $HOME/.confluent/java.config test1
+      lein consumer $HOME/.confluent/java.config test1
 
 #. Verify the consumer received all the messages. You should see:
 
