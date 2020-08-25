@@ -43,12 +43,6 @@ Basic Producer and Consumer
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run the example consumer:
-
-   .. code-block:: bash
-
-      cd examples/clients/cloud/scala
-
 #. Build the client examples:
 
    .. code-block:: bash
@@ -89,7 +83,7 @@ Kafka Streams
 
       sbt clean compile
 
-#. Run the consumer:
+#. Run the streams app:
 
    .. code-block:: bash
 
@@ -144,7 +138,7 @@ Produce Records
          Polling
 
 
-   In the Streams window you should see:
+#. In the streams app, verify you see the following output:
 
    .. code-block:: text
 

@@ -53,8 +53,13 @@ Produce Records
    .. code-block:: bash
 
       cargo build
+
+   You should see:
+
+   .. code-block:: text
+
        Compiling rust_kafka_client_example v0.1.0 (/path/to/repo/examples/clients/cloud/rust)
-        Finished dev [unoptimized + debuginfo] target(s) in 2.85s
+       Finished dev [unoptimized + debuginfo] target(s) in 2.85s
 
 #. Run the producer, passing in arguments for:
 
