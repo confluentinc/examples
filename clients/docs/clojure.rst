@@ -89,6 +89,8 @@ Produce Records
          10 messages were produced to topic test1!
 
 
+#. View the :devx-examples:`producer code|clients/cloud/clojure/src/io/confluent/examples/clients/clj/producer.clj`
+
 Consume Records
 ~~~~~~~~~~~~~~~
 
@@ -119,3 +121,5 @@ Consume Records
       Consumed record with key alice and value {"count":9}, and updated total count to 45
       Waiting for message in KafkaConsumer.poll
       …
+
+#. View the :devx-examples:`consumer code|clients/cloud/clojure/src/io/confluent/examples/clients/clj/consumer.clj`

@@ -9,7 +9,7 @@ For the subset of languages that support it, the code examples also demonstrate 
 
 * :ref:`Apache Kafka commands <client-examples-kafka-commands>`
 * :ref:`C <client-examples-c>`
-* :devx-examples:`Clojure|clients/cloud/clojure/README.md`
+* :ref:`Clojure <client-examples-clojure>`
 * :ref:`Confluent CLI <client-examples-confluent-cli>`
 * :ref:`Confluent Cloud CLI <client-examples-ccloud>`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
@@ -37,6 +37,7 @@ For the subset of languages that support it, the code examples also demonstrate 
 
       kafka-commands
       c
+      clojure
       confluent-cli
       ccloud
       csharp
