@@ -99,7 +99,7 @@ Produce Records
 
       sbt "runMain io.confluent.examples.clients.scala.Producer $HOME/.confluent/java.config test1"
 
-#. Verify you see the following output:
+   You see the following output:
 
    .. code-block:: text
 
@@ -117,7 +117,7 @@ Produce Records
          Wrote ten records to test1
          [success] Total time: 6 s, completed 10-Dec-2018 16:50:13
 
-   In the consumer window, you should see the following output:
+#. In the consumer window, verify you see the following output:
 
    .. code-block:: text
 
