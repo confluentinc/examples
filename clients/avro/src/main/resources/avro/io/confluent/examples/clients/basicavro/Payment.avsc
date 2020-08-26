@@ -1,4 +1,5 @@
-{"namespace": "io.confluent.examples.clients.basicavro",
+{
+ "namespace": "io.confluent.examples.clients.basicavro",
  "type": "record",
  "name": "Payment",
  "fields": [

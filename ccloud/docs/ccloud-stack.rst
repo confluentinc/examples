@@ -40,6 +40,9 @@ Prerequisites
 - Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
 - ``jq`` tool
 
+
+.. _ccloud-stack-usage:
+
 =====
 Usage
 =====
