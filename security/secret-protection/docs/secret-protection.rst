@@ -36,14 +36,14 @@ Workflow
 
 The most common use case is to encrypt passwords. Confluent has a `Security
 tutorial <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__
-that shows you how to enable security features on Confluent Platform, but the
-tutorial has extra steps to generate the keys and certificates and add the TLS
-configurations. To minimize the number of steps, in here you will encrypt a
-basic configuration parameter, but the steps are exactly the same.
+that shows you how to enable security features on |cp| , but the tutorial has
+extra steps to generate the keys and certificates and add TLS configurations. To
+minimize the number of steps, here you will encrypt a basic configuration
+parameter.
 
 
 Generating the master encryption key based on a passphrase
-----------------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #. Select a master encryption key passphrase.
 
@@ -99,7 +99,7 @@ Generating the master encryption key based on a passphrase
 
 
 Encrypting the value of a configuration parameter
--------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Use a configuration parameter available in a configuration file example that
 ships with Confluent Platform.
@@ -158,7 +158,7 @@ complete the following steps:
 
 
 Decrypting the value of a configuration parameter
---------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can also decrypt the value of a configuration parameter into a file by
 completing the following steps:
@@ -183,7 +183,7 @@ completing the following steps:
 
 
 Updating the value of the configuration parameter
---------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 You may need to update secrets on a regular basis to ensure the secrets don't
 get stale. The configuration parameter ``config.storage.topic`` was originally
@@ -217,19 +217,19 @@ You should see:
 
 
 Trust but verify
-----------------
+^^^^^^^^^^^^^^^^
 
-That’s cool! But does it work? Try it out yourself. Run Kafka and start the
+That’s cool! But does it work? Try it out yourself. Run |ak| and start the
 modified connect worker with the encrypted value of
 ``config.storage.topic=newTopicName`` by completing the following steps:
 
-#. Start ZooKeeper and a Kafka broker
+#. Start |zk| and a |ak| broker
 
    .. code-block:: bash
 
       confluent local start kafka
 
-#. Run the modified connect worker:
+#. Run the modified |kconnect| worker:
 
    .. code-block:: bash
 
@@ -248,19 +248,18 @@ modified connect worker with the encrypted value of
       newTopicName   <<<<<<<
 
 Going to production
--------------------
+^^^^^^^^^^^^^^^^^^^
 
 So far you've learned how to create the master encryption key and encrypt
 secrets in the configuration files. Confluent recommends you operationalize the
 workflow by augmenting your orchestration tooling to distribute everything you
 need for secret protection to work to the destination hosts. These hosts may
-include Kafka brokers, Connect workers, Confluent Schema Registry instances,
-ksqlDB servers, Confluent Control Center, and more–any service using password
-encryption. The CLI is flexible to accommodate whatever secret distribution
-model you prefer. You can either perform the secret generation and configuration
-modification on each destination host directly, or do it all on a single host
-and then distribute the encrypted secrets to the destination hosts. Here are
-four required tasks:
+include |ak| brokers,|kconnect| workers, |sr-long| instances, |ksql-cloud|
+servers, |c3|, and more–any service using password encryption. The CLI is
+flexible to accommodate whatever secret distribution model you prefer. You can
+either perform the secret generation and configuration modification on each
+destination host directly, or do it all on a single host and then distribute the
+encrypted secrets to the destination hosts. Here are four required tasks:
 
 #. Export the master encryption key into the environment on every host
    that will have a configuration file with secret protection.

@@ -120,7 +120,7 @@ Additional Resources
    Confluent Cloud
    <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud>`__
    whitepaper for a guide to configuring, monitoring, and optimizing
-   your |ak|| client applications when using |ccloud|.
+   your |ak| client applications when using |ccloud|.
 
 -  See other `Confluent Cloud demos <../README.md>`__.
 
