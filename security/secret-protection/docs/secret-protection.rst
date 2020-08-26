@@ -1,220 +1,286 @@
-Introduction
-============
 
-Confluent’s Secret Protection feature encrypts secrets in configuration
-files. Instead of storing passwords or other sensitive data as
-cleartext, Secret Protection encrypts it within the configuration file
-itself.
+.. _secret-protection-tutorial:
 
-How to Use This Tutorial
-------------------------
+Tuturial: Secret Protection
+===========================
 
-You may either step through this tutorial manually, or run the
+.. toctree::
+   :hidden:
+   :glob:
+
+   /secret-protection/*
+
+
+Overview
+--------
+
+Confluent’s Secret Protection feature encrypts secrets in configuration files.
+Instead of storing passwords or other sensitive data as cleartext, Secret
+Protection encrypts the data within a configuration file itself. For this
+tutorial, you can either step through it, or choose to run the
 `automated demo <demo-secret-protection.sh>`__.
 
-Setup
-=====
 
-Before you start:
+Prerequisites
+~~~~~~~~~~~~~
 
-1. Download `Confluent Platform
-   5.4 <https://www.confluent.io/download/>`__ or higher
+#. Download `Confluent Platform 5.4 <https://www.confluent.io/download/>`__ or greater
 
-2. Get the new `Confluent
-   CLI <https://docs.confluent.io/current/cli/installing.html>`__
-   (v0.128.0 or above)
+#. Get the new `Confluent
+   CLI <https://docs.confluent.io/current/cli/installing.html>`__ (v0.128.0 or
+   greater)
+
 
 Workflow
-========
+~~~~~~~~
 
-In the most common use case, you would want to encrypt passwords. We
-have a `Security
+The most common use case is to encrypt passwords. Confluent has a `Security
 tutorial <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__
-that provides an example of how to enable security features on Confluent
-Platform, but that takes extra steps to generate the keys and
-certificates and add the TLS configurations. Therefore, instead of
-encrypting a password, we will encrypt a basic configuration parameter,
-but the steps are exactly the same.
+that shows you how to enable security features on Confluent Platform, but the
+tutorial has extra steps to generate the keys and certificates and add the TLS
+configurations. To minimize the number of steps, in here you will encrypt a
+basic configuration parameter, but the steps are exactly the same.
 
-Generate the master encryption key based on a passphrase
---------------------------------------------------------
 
-First choose your master encryption key passphrase, a phrase that is
-much longer than a typical password and is easily remembered as a string
-of words, and enter this passphrase into a file to be passed into the
-CLI, to avoid logging history showing the passphrase. Then choose the
-location of where the secrets file will reside on your local host (not
-where the Confluent Platform services run). The secrets file will
-contain encrypted secrets for the master encryption key, data encryption
-key, and configuration parameters, along with their metadata such as
-which cipher was used for encryption. Now you are ready to generate the
-master encryption key:
+Generating the master encryption key based on a passphrase
+----------------------------------------------------------
 
-::
+#. Select a master encryption key passphrase.
 
-   # passphrase: /path/to/passphrase.txt
-   # local-secrets-file: /path/to/secrets.txt
-   $ confluent secret master-key generate --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
+   .. tip::
 
-   Save the master key. It cannot be retrieved later.
-   +------------+----------------------------------------------+
-   | Master Key | Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao= |
-   +------------+----------------------------------------------+
+        Your passphrase should be longer than the usual password. Choose a
+        phrase you can remember as a string of words.
 
-As the output indicates, the master encryption key cannot be retrieved
-later so save it somewhere. Export this key into the environment on the
-local host, as well as every host that will have a configuration file
-with secret protection:
+#. Enter the passphrase into a file to be passed into the CLI, to avoid logging
+   history showing the passphrase.
 
-::
+#. Choose the location where the secrets file will reside on your local host.
 
-   $ export CONFLUENT_SECURITY_MASTER_KEY=Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao=
+   .. note::
 
-To protect this environment variable in a production host, you can set
-the master encryption key at the process level instead of the global
-machine level. For example, you could set it in the systemd overrides
-for executed processes, restricting the environment directives file to
-root-only access.
+       The location shouldn't be where the Confluent Platform services run.
 
-Encrypt the value of a configuration parameter
-----------------------------------------------
+   The secrets file will contain encrypted secrets for the master encryption
+   key, data encryption key, and configuration parameters, along with their
+   metadata such as which cipher was used for encryption.
 
-Let’s use a configuration parameter available in a configuration file
-example that ships with Confluent Platform. We will encrypt the
-parameter ``config.storage.topic`` in
-``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``.
+#. Generate the master encryption key by running the following command:
 
-First make a backup of this file, because the CLI currently does
-in-place modification on the original file. Then choose the exact path
-for where the secrets file will reside on the remote hosts where the
-Confluent Platform services run. Now you are ready to encrypt this
-field:
+   .. code-block:: text
 
-::
+      # passphrase: /path/to/passphrase.txt
+      # local-secrets-file: /path/to/secrets.txt
+      confluent secret master-key generate --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
 
-   # Value before encryption
-   $ grep "config\.storage\.topic" connect-avro-distributed.properties
-   config.storage.topic=connect-configs
+   You should see:
 
-   # Encrypt it
-   # remote-secrets-file: /path/to/secrets-remote.txt
-   confluent secret file encrypt --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config config.storage.topic
+   .. code-block:: text
 
-   # Value after encryption
-   $ grep "config\.storage\.topic" connect-avro-distributed.properties
-   config.storage.topic = ${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}
+      Save the master key. It cannot be retrieved later.
+      +------------+----------------------------------------------+
+      | Master Key | Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao= |
+      +------------+----------------------------------------------+
 
-As you can see, the configuration parameter ``config.storage.topic``
-setting was changed from ``connect-configs`` to
-``${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}``.
-This is a tuple that directs the service to use to look up the encrypted
-value of the file/parameter pair
-``connect-avro-distributed.properties/config.storage.topic`` from the
-secrets file ``/path/to/secrets-remote.txt``.
+#. Save the master key somewhere.
 
-View the contents of the local secrets file ``/path/to/secrets.txt``,
-which now contains the encrypted secret for this file/parameter pair
-along with the metadata, e.g. which cipher was used for encryption:
+#. Export the key into the environment on the local host and every host
+   that will have a configuration file with secret protection by running the
+   following command:
 
-::
+   .. code-block:: text
 
-   $ cat /path/to/secrets.txt
-   ...
-   connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CUpHh5lRDfIfqaL49V3iGw==,iv:vPBmPkctA+yYGVQuOFmQJw==,type:str]
+      export CONFLUENT_SECURITY_MASTER_KEY=Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao=
 
-You can also decrypt the value into a file:
+   To protect the previous environment variable in a production host, you can set
+   the master encryption key at the process level instead of the global machine
+   level. For example, you could set it in the systemd overrides for executed
+   processes, restricting the environment directives file to root-only access.
 
-::
 
-   $ confluent secret file decrypt --local-secrets-file /path/to/secrets.txt --config-file connect-avro-distributed.properties --output-file decrypted.txt
-   $ cat decrypted.txt
-   config.storage.topic = connect-configs
+Encrypting the value of a configuration parameter
+-------------------------------------------------
 
-Update the value of the configuration parameter
------------------------------------------------
+Use a configuration parameter available in a configuration file example that
+ships with Confluent Platform.
 
-You may have a requirement to update secrets on a regular basis, to help
-them from getting stale. The configuration parameter
-``config.storage.topic`` was originally set to ``connect-configs``. If
-you need to change the value in the future, you can update it directly
-using the CLI. In the CLI below, pass in a file
-``/path/to/updated-config-and-value`` that has written
-``config.storage.topic=newTopicName``, to avoid logging history showing
-the new value.
+To encrypt the parameter ``config.storage.topic`` in
+``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``,
+complete the following steps:
 
-::
+#. Make a backup of this file, because the CLI currently does in-place
+   modification on the original file.
 
-   $ confluent secret file update --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config @/path/to/updated-config-and-value
+#. Select the exact path where the secrets file will reside on the remote hosts
+   where the Confluent Platform services run.
 
-The configuration file ``connect-avro-distributed.properties`` does not
-change because it’s just a pointer to the secrets file. However the
-secrets file has a new value for the encrypted value for this
-file/parameter pair:
+#. Encrypt the field:
 
-::
+   .. code-block:: text
 
-   $ cat /path/to/secrets.txt
+         # remote-secrets-file: /path/to/secrets-remote.txt
+         confluent secret file encrypt --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config config.storage.topic
+
+   .. code-block:: text
+
+         # Value before encryption
+         grep "config\.storage\.topic" connect-avro-distributed.properties
+         config.storage.topic=connect-configs
+
+
+         # Value after encryption
+         grep "config\.storage\.topic" connect-avro-distributed.properties
+         config.storage.topic = ${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}
+
+
+   As you can see, the configuration parameter ``config.storage.topic`` setting
+   was changed from ``connect-configs`` to
+   ``${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}``.
+   This is a tuple that directs the service to use to look up the encrypted
+   value of the file/parameter pair
+   ``connect-avro-distributed.properties/config.storage.topic`` from the secrets
+   file ``/path/to/secrets-remote.txt``.
+
+#. View the contents of the local secrets file ``/path/to/secrets.txt``, which
+   should contain the encrypted secret for this file/parameter pair along with
+   the metadata (for example, which cipher was used for encryption):
+
+   .. code-block:: bash
+
+      cat /path/to/secrets.txt
+
+   You should see:
+
+   .. code-block:: text
+
+      ...
+      connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CUpHh5lRDfIfqaL49V3iGw==,iv:vPBmPkctA+yYGVQuOFmQJw==,type:str]
+
+
+Decrypting the value of a configuration parameter
+--------------------------------------------------
+
+You can also decrypt the value of a configuration parameter into a file by
+completing the following steps:
+
+#. Run the following command to decrypt the value into a file:
+
+   .. code-block:: bash
+
+      confluent secret file decrypt --local-secrets-file /path/to/secrets.txt --config-file connect-avro-distributed.properties --output-file decrypted.txt
+
+#. View the file:
+
+   .. code-block:: bash
+
+      cat decrypted.txt
+
+#. Verify you see:
+
+   .. code-block:: bash
+
+        config.storage.topic = connect-configs
+
+
+Updating the value of the configuration parameter
+--------------------------------------------------
+
+You may need to update secrets on a regular basis to ensure the secrets don't
+get stale. The configuration parameter ``config.storage.topic`` was originally
+set to ``connect-configs``. If you must change this value in the future, you can
+update it using the CLI.
+
+In the following CLI, pass in a file ``/path/to/updated-config-and-value`` that
+has written ``config.storage.topic=newTopicName`` to avoid logging history
+showing the new value.
+
+.. code-block:: bash
+
+      confluent secret file update --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config @/path/to/updated-config-and-value
+
+The configuration file ``connect-avro-distributed.properties`` doesn't change
+because it’s just a pointer to the secrets filem But the secrets file has a new
+value for the encrypted value for this file/parameter pair:
+
+.. code-block:: bash
+
+   cat /path/to/secrets.txt
    ...
    connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CblF3k1ieNkFJzlJ51qAAA==,iv:dnZwEAm1rpLyf48pvy/T6w==,type:str]
+
 
 Trust but verify
 ----------------
 
-That’s cool, but does it work? Try it out yourself. Run Kafka and start
-the modified connect worker with the encrypted value of
-``config.storage.topic=newTopicName``
+That’s cool! But does it work? Try it out yourself. Run Kafka and start the
+modified connect worker with the encrypted value of
+``config.storage.topic=newTopicName`` by completing the following steps:
 
-::
 
-   # Start ZooKeeper and a Kafka broker
-   $ confluent local start kafka
+#. Start ZooKeeper and a Kafka broker
 
-   # Run the modified connect worker
-   $ connect-distributed connect-avro-distributed.properties > connect.stdout 2>&1 &
+   .. code-block:: bash
 
-   # List the topics
-   $ kafka-topics --bootstrap-server localhost:9092 --list
-   __confluent.support.metrics
-   __consumer_offsets
-   _confluent-metrics
-   connect-offsets
-   connect-statuses
-   newTopicName   <<<<<<<
+      confluent local start kafka
+
+#. Run the modified connect worker:
+
+   .. code-block:: bash
+
+      connect-distributed connect-avro-distributed.properties > connect.stdout 2>&1 &
+
+#. List the topics:
+
+   .. code-block:: text
+
+      kafka-topics --bootstrap-server localhost:9092 --list
+      __confluent.support.metrics
+      __consumer_offsets
+      _confluent-metrics
+      connect-offsets
+      connect-statuses
+      newTopicName   <<<<<<<
 
 Going to production
 -------------------
 
-So far we have covered how to create the master encryption key and
-encrypt secrets in the configuration files. We recommend that you
-operationalize this workflow by augmenting your orchestration tooling to
-distribute everything that you need for secret protection to work to the
-destination hosts. These hosts may include Kafka brokers, Connect
-workers, Confluent Schema Registry instances, ksqlDB servers, Confluent
-Control Center, etc., any service using password encryption. The CLI is
-flexible to accommodate whatever secret distribution model you prefer:
-you can either do the secret generation and configuration modification
-on each destination host directly, or do it all a single host and then
-distribute the encrypted secrets to the destination hosts. There are
+So far you've learned how to create the master encryption key and encrypt
+secrets in the configuration files. Confluent recommends you operationalize the
+workflow by augmenting your orchestration tooling to distribute everything you
+need for secret protection to work to the destination hosts. These hosts may
+include Kafka brokers, Connect workers, Confluent Schema Registry instances,
+ksqlDB servers, Confluent Control Center, and more–any service using password
+encryption. The CLI is flexible to accommodate whatever secret distribution
+model you prefer. You can either perform the secret generation and configuration
+modification on each destination host directly, or do it all on a single host
+and then distribute the encrypted secrets to the destination hosts. Here are
 four required tasks:
 
-1. Export the master encryption key into the environment on every host
+#. Export the master encryption key into the environment on every host
    that will have a configuration file with secret protection.
 
-2. Distribute the secrets file: copy the secrets file
-   ``/path/to/secrets.txt`` from the local host on which you have been
-   working to ``/path/to/secrets-remote.txt`` on the destination hosts.
+#. Distribute the secrets file: copy the secrets file ``/path/to/secrets.txt``
+   from the local host on which you have been working to
+   ``/path/to/secrets-remote.txt`` on the destination hosts.
 
-3. Propagate the necessary configuration file changes: update the
-   configuration file on all hosts so that the configuration parameter
-   now has the tuple for secrets.
+#. Propagate the necessary configuration file changes: update the
+   configuration file on all hosts so that the configuration parameter now has
+   the tuple for secrets.
 
-4. Restart the services if they were already running.
+#. Restart the services if they were already running.
 
-You may also have a requirement to rotate the master encryption key or
-data encryption key on a regular basis. You can do either of these with
-the CLI, and the example below is for rotating just the data encryption
-key.
+You may also have a requirement to rotate the master encryption key or data
+encryption key on a regular basis. You can do either of these with the CLI. To
+rotate only the data encryption key, run the following command:
 
-::
+.. code-block:: bash
 
-   $ confluent secret file rotate --data-key --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
+   confluent secret file rotate --data-key --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
+
+
+.. toctree::
+    :maxdepth: 1
+    :titlesonly:
+    :hidden:
+
+    ../tutorials/examples/multiregion/docs/multiregion
