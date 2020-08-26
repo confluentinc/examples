@@ -54,4 +54,4 @@ For the subset of languages that support it, the code examples also demonstrate 
       ruby
       rust
       scala
-       ../../security/secret-protection/docs/secret-protection
+      ../../security/secret-protection/docs/secret-protection
