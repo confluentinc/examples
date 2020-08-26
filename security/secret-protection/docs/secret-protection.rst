@@ -4,13 +4,6 @@
 Tuturial: Secret Protection
 ===========================
 
-.. toctree::
-   :hidden:
-   :glob:
-
-   /secret-protection
-
-
 Overview
 --------
 
