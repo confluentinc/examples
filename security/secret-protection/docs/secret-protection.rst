@@ -199,12 +199,19 @@ showing the new value.
       confluent secret file update --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config @/path/to/updated-config-and-value
 
 The configuration file ``connect-avro-distributed.properties`` doesn't change
-because it’s just a pointer to the secrets filem But the secrets file has a new
-value for the encrypted value for this file/parameter pair:
+because it’s a pointer to the secrets file, but the secrets file has a new value
+for the encrypted value for this file/parameter pair.
+
+When running the following command:
 
 .. code-block:: bash
 
    cat /path/to/secrets.txt
+
+You should see:
+
+.. code-block:: bash
+
    ...
    connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CblF3k1ieNkFJzlJ51qAAA==,iv:dnZwEAm1rpLyf48pvy/T6w==,type:str]
 
@@ -215,7 +222,6 @@ Trust but verify
 That’s cool! But does it work? Try it out yourself. Run Kafka and start the
 modified connect worker with the encrypted value of
 ``config.storage.topic=newTopicName`` by completing the following steps:
-
 
 #. Start ZooKeeper and a Kafka broker
 
@@ -277,10 +283,3 @@ rotate only the data encryption key, run the following command:
 
    confluent secret file rotate --data-key --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
 
-
-.. toctree::
-    :maxdepth: 1
-    :titlesonly:
-    :hidden:
-
-    ../tutorials/examples/multiregion/docs/multiregion
