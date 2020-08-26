@@ -21,11 +21,12 @@ import java.io.InputStream;
 public class ConsumerExample {
 
     private static final String TOPIC = "transactions";
+    private static final Properties props = new Properties();
+    private static String configFile;
 
     @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) throws IOException {
 
-        Properties props = new Properties();
         if (args.length < 1) {
           // Backwards compatibility, assume localhost
           props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -35,7 +36,14 @@ public class ConsumerExample {
           // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
           // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
           // Documentation at https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html
-          props = loadConfig(args[0]);
+          configFile = args[0];
+          if (!Files.exists(Paths.get(configFile))) {
+            throw new IOException(configFile + " not found.");
+          } else {
+            try (InputStream inputStream = new FileInputStream(configFile)) {
+              props.load(inputStream);
+            }
+          }
         }
 
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "test-payments");
@@ -61,14 +69,4 @@ public class ConsumerExample {
         }
     }
 
-    public static Properties loadConfig(final String configFile) throws IOException {
-      if (!Files.exists(Paths.get(configFile))) {
-        throw new IOException(configFile + " not found.");
-      }
-      final Properties cfg = new Properties();
-      try (InputStream inputStream = new FileInputStream(configFile)) {
-        cfg.load(inputStream);
-      }
-      return cfg;
-    }
 }
