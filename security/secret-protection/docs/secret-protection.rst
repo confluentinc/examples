@@ -8,7 +8,7 @@ Tuturial: Secret Protection
    :hidden:
    :glob:
 
-   /secret-protection/*
+   /secret-protection
 
 
 Overview
