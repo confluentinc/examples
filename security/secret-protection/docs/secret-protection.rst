@@ -7,11 +7,14 @@ Tuturial: Secret Protection
 Overview
 --------
 
-Confluent’s Secret Protection feature encrypts secrets in configuration files.
-Instead of storing passwords or other sensitive data as cleartext, Secret
-Protection encrypts the data within a configuration file itself. For this
-tutorial, you can either step through it, or choose to run the
-`automated demo <demo-secret-protection.sh>`__.
+Confluent’s **Secret Protection** feature encrypts secrets in configuration
+files. Instead of storing passwords or other sensitive data as cleartext,
+**Secret Protection** encrypts the data within a configuration file itself.
+
+.. note::
+
+     You can either step through this tutorial, or run the `automated
+     demo <demo-secret-protection.sh>`__.
 
 
 Prerequisites
@@ -27,12 +30,12 @@ Prerequisites
 Workflow
 ~~~~~~~~
 
-The most common use case is to encrypt passwords. Confluent has a `Security
+In the most common use case you would want to encrypt passwords. Confluent's `Security
 tutorial <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__
-that shows you how to enable security features on |cp| , but the tutorial has
-extra steps to generate the keys and certificates and add TLS configurations. To
-minimize the number of steps, here you will encrypt a basic configuration
-parameter.
+shows you how to enable security features on the |cp|, but it includes
+extra steps to generate keys and certificates, and add TLS configurations. In
+this tutorial, instead of encypting a password, you will encrypt a basic configuration
+parameter, which is essentially the same steps.
 
 
 Generating the master encryption key based on a passphrase
@@ -56,7 +59,7 @@ Generating the master encryption key based on a passphrase
 
    The secrets file will contain encrypted secrets for the master encryption
    key, data encryption key, and configuration parameters, along with their
-   metadata such as which cipher was used for encryption.
+   metadata, such as which cipher was used for encryption.
 
 #. Generate the master encryption key by running the following command:
 
@@ -75,7 +78,7 @@ Generating the master encryption key based on a passphrase
       | Master Key | Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao= |
       +------------+----------------------------------------------+
 
-#. Save the master key somewhere.
+#. Save the master key somewhere safe on your computer.
 
 #. Export the key into the environment on the local host and every host
    that will have a configuration file with secret protection by running the
@@ -87,15 +90,15 @@ Generating the master encryption key based on a passphrase
 
    To protect the previous environment variable in a production host, you can set
    the master encryption key at the process level instead of the global machine
-   level. For example, you could set it in the systemd overrides for executed
+   level. For example, you could set it in the ``systemd`` overrides for executed
    processes, restricting the environment directives file to root-only access.
 
 
 Encrypting the value of a configuration parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use a configuration parameter available in a configuration file example that
-ships with Confluent Platform.
+Use a configuration parameter available in the configuration file example that
+ships with |cp|.
 
 To encrypt the parameter ``config.storage.topic`` in
 ``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``,
@@ -105,7 +108,7 @@ complete the following steps:
    modification on the original file.
 
 #. Select the exact path where the secrets file will reside on the remote hosts
-   where the Confluent Platform services run.
+   where the |cp| services run.
 
 #. Encrypt the field:
 
@@ -168,7 +171,7 @@ completing the following steps:
 
       cat decrypted.txt
 
-#. Verify you see:
+#. Verify you see the following output:
 
    .. code-block:: bash
 

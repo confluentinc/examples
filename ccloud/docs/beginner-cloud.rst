@@ -55,9 +55,12 @@ and use promo code ``C50INTEG`` will receive an additional $50 free usage
 Run the demo
 ------------
 
-|disclaimer|
+.. container-status:: message
 
-To run the demo script, execute the following command:
+     This example uses real resources in |ccloud|, and it creates and
+     deletes topics, service accounts, API keys, and ACLs.
+
+To run this demo, execute the following command:
 
 .. code-block:: bash
 
@@ -126,6 +129,3 @@ Additional Resources
 -  See other `Confluent Cloud demos <../README.md>`__.
 
 
-.. |disclaimer| replace::
-
-   *This example uses real resources in |ccloud|, and it creates and deletes topics, service accounts, API keys, and ACLs.*
