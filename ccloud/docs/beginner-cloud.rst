@@ -42,6 +42,7 @@ Prerequisites
 -  ``mvn`` installed on your host
 -  ``jq`` installed on your host
 
+
 Confluent Cloud Promo Code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -62,6 +63,7 @@ To run the demo script, execute the following command:
 .. code-block:: bash
 
       ./start.sh
+
 
 Advanced demo usage
 ~~~~~~~~~~~~~~~~~~~
