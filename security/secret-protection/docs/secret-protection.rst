@@ -220,7 +220,7 @@ That’s cool! But does it work? Try it out yourself. Run |ak| and start the
 modified connect worker with the encrypted value of
 ``config.storage.topic=newTopicName`` by completing the following steps:
 
-#. Start |zk| and a |ak| broker
+#. Start |zk| and a |ak| broker:
 
    .. code-block:: bash
 
