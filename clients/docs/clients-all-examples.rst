@@ -35,8 +35,8 @@ For the subset of languages that support it, the code examples also demonstrate 
       :maxdepth: 1
       :hidden:
 
-      ../../ccloud/docs/beginner-cloud
       kafka-commands
+      ../../ccloud/docs/beginner-cloud
       c
       clojure
       confluent-cli
