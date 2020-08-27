@@ -42,7 +42,6 @@ Prerequisites
 -  ``mvn`` installed on your host
 -  ``jq`` installed on your host
 
-
 Confluent Cloud Promo Code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
