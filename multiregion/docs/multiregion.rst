@@ -7,46 +7,20 @@ Overview
 --------
 
 This tutorial describes the |mrrep| capability that is built directly into |cs|.
-The scenario for this tutorial is as follows:
 
-- Three regions: ``west``, ``central``, and ``east``
-- Broker naming convention: ``broker-[region]-[broker_id]``
+|mrrep| allow customers to run a single |ak-tm| cluster across multiple datacenters.
+Often referred to as a stretch cluster, |mrrep| replicate data between datacenters across regional availability zones.
+You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
+It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
-|Multi-region Architecture|
+Benefits:
 
+- Supports hybrid deployments of synchronous and asynchronous replication between datacenters
+- Consumers can leverage data locality for reading |ak| data, which means better performance and lower cost
+- Ordering of |ak| messages is preserved across datacenters
+- Consumer offsets are preserved
+- In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter for the topics configured for synchronous replication, and applications proceed without interruption, achieving RTO=0 and RPO=0 for those topics.
 
-Configuration
---------------
-
-Here are some relevant configuration parameters:
-
-Broker
-~~~~~~
-
-You can find full broker configurations in the
-:devx-examples:`docker-compose.yml file|multiregion/docker-compose.yml`. The
-most important configuration parameters include:
-
--  ``broker.rack``: identifies the location of the broker. For the demo,
-   it represents a region, either ``east`` or ``west``
--  ``replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector``:
-   allows clients to read from followers (in contrast, clients are
-   typically only allowed to read from leaders)
--  ``confluent.log.placement.constraints``: sets the default replica
-   placement constraint configuration for newly created topics.
-
-Client
-~~~~~~
-
--  ``client.rack``: identifies the location of the client. For the demo,
-   it represents a region, either ``east`` or ``west``
-
-Topic
-~~~~~
-
--  ``--replica-placement <path-to-replica-placement-policy-json>``: at
-   topic creation, this argument defines the replica placement policy for a given
-   topic
 
 Concepts
 --------
@@ -72,9 +46,58 @@ participate in the ISR list and can't become the leader if the current leader
 fails, but if a user manually changes leader assignment then they can
 participate in the ISR list.
 
-
 |Follower_Fetching|
 
+
+
+Configuration
+--------------
+
+The scenario for this tutorial is as follows:
+
+- Three regions: ``west``, ``central``, and ``east``
+- Broker naming convention: ``broker-[region]-[broker_id]``
+
+|Multi-region Architecture|
+
+Here are some relevant configuration parameters:
+
+Broker
+~~~~~~
+
+You can find full broker configurations in the
+:devx-examples:`docker-compose.yml file|multiregion/docker-compose.yml`. The
+most important configuration parameters include:
+
+-  ``broker.rack``: identifies the location of the broker. For the demo,
+   it represents a region, either ``east`` or ``west``
+-  ``replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector``:
+   allows clients to read from followers (in contrast, clients are
+   typically only allowed to read from leaders)
+-  ``confluent.log.placement.constraints``: sets the default replica
+   placement constraint configuration for newly created topics.
+
+Client
+~~~~~~
+
+-  ``client.rack``: identifies the location of the client. For the demo,
+   it represents a region, either ``east`` or ``west``
+-  ``replication.factor``: at the topic level, replication factor is mutually
+   exclusive to replica placement constraints, so for |kstreams| applications,
+   set ``replication.factor=-1`` to let replica placement constraints take
+   precedence
+-  ``min.insync.replicas``: durability guarantees are driven by replica
+   placement and ``min.insync.replicas``. The number of followers
+   `in each region` should be sufficient to meet ``min.insync.replicas``,
+   for example, if ``min.insync.replicas=3``, then ``west`` should have 3
+   replicas and ``east`` should have 3 replicas.
+
+Topic
+~~~~~
+
+-  ``--replica-placement <path-to-replica-placement-policy-json>``: at
+   topic creation, this argument defines the replica placement policy for a given
+   topic
 
 Download and run the tutorial
 -----------------------------
@@ -175,11 +198,13 @@ Each topic has a replica placement policy that specifies a set of matching
 constraints (for example, ``count`` and ``rack`` for ``replicas`` and
 ``observers``). The replica placement policy file is defined with the argument
 ``--replica-placement <path-to-replica-placement-policy-json>`` mentioned
-earlier (these files are in the `config <config/>`__ directory). Each placement
-also has an associated minimum ``count`` that allows users to guarantee a
+earlier (these files are in the :devx-examples:`config|multiregion/config/` directory). Each placement
+also has an associated minimum ``count`` that guarantees a
 certain spread of replicas throughout the cluster.
 
-This tutorial creates the following topics:
+In this tutorial, you will create the following topics.
+You could create all the topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`, but we will step through each topic creation to demonstrate the required arguments.
+
 
 .. list-table::
    :widths: 20 15 20 20 10 15
@@ -220,11 +245,37 @@ This tutorial creates the following topics:
      - {1,2}
      - yes
 
-#. Create the |ak| topics by running the script :devx-examples:`create-topics.sh|multiregion/scripts/create-topics.sh`
+#. Create the |ak| topic ``single-region``.
 
-   .. code-block:: bash
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 5-10
 
-      ./scripts/create-topics.sh
+   Here is the topic's replica placement policy :devx-examples:`placement-single-region.json|multiregion/config/placement-single-region.json`:
+
+   .. literalinclude:: ../config/placement-single-region.json
+
+#. Create the |ak| topic ``multi-region-sync``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 14-19
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-sync.json|multiregion/config/placement-multi-region-sync.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-sync.json
+
+#. Create the |ak| topic ``multi-region-async``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 23-28
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-async.json|multiregion/config/placement-multi-region-async.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-async.json
+
+#. Create the |ak| topic ``multi-region-default``. Note that the ``--replica-placement`` argument is not used in order to demonstrate the default placement constraints.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 34-38
 
 #. View the topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
@@ -310,8 +361,8 @@ Producer
      twice in the ``west`` region, and it is not waiting for the async copy to
      the ``east`` region.
 
-   - This example doesn’t produce to ``multi-region-default`` as the
-     behavior should be the same as ``multi-region-async`` since the
+   - This example doesn’t produce to ``multi-region-default`` because the
+     behavior is the same as ``multi-region-async`` since the
      configuration is the same.
 
 
@@ -369,6 +420,12 @@ metrics. For a description of other relevant JMX metrics, see
   It reports the number of replicas in the ISR.
 - ``CaughtUpReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=<topic-name>,partition=<partition-id>``.
   It reports the number of replicas that are consider caught up to the topic partition leader. Note that this may be greater than the size of the ISR as observers may be caught up but are not part of ISR.
+
+There is a script you can run to collect the JMX metrics from the command line, but the general form is:
+
+.. code-block:: bash
+
+    docker-compose exec broker-west-1 kafka-run-class kafka.tools.JmxTool --jmx-url service:jmx:rmi:///jndi/rmi://localhost:8091/jmxrmi --object-name kafka.cluster:type=Partition,name=<METRIC>,topic=<TOPIC>,partition=0 --one-time true
 
 
 #. Run the script
@@ -466,7 +523,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
      ``multi-region-default`` topics have no leader, because they had only two
      replicas in the ISR, both of which were in the ``west`` region and are now
      down. The observers in the ``east`` region are not eligible to become
-     leaders automatically because they weren't in the ISR.
+     leaders automatically because they were not in the ISR.
 
 
 Failover Observers
@@ -476,11 +533,7 @@ To explicitly fail over the observers in the ``multi-region-async`` and
 ``multi-region-default`` topics to the ``east`` region, complete the following
 steps:
 
-#. Trigger leader election:
-
-   .. note::
-
-      ``unclean`` leader election may result in data loss.
+#. Trigger unclean leader election (note: ``unclean`` leader election may result in data loss):
 
    .. code-block:: bash
 
@@ -528,15 +581,21 @@ want the leaders to automatically failback to the ``west`` region, change the
 topic placement constraints configuration and replica assignment by completing
 the following steps:
 
-#. Change the topic placement constraints configuration and replica assignment
+#. For the topic ``multi-region-default``, view a modified replica placement policy :devx-examples:`placement-multi-region-default-reverse.json|multiregion/config/placement-multi-region-default-reverse.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-default-reverse.json
+
+#. Change the replica placement constraints configuration and replica assignment
    for ``multi-region-default``, by running the script
    :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
-   This script uses ``kafka-configs`` and ``confluent-rebalancer`` command line
-   tools.
 
    .. code-block:: bash
 
       ./scripts/permanent-fallback.sh
+
+   The script uses ``kafka-configs`` to change the replica placement policy and then it runs ``confluent-rebalancer`` to move the replicas.
+
+   .. literalinclude:: ../scripts/permanent-fallback.sh
 
 #. Describe the topics again with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
