@@ -28,18 +28,19 @@ Prerequisites
 
 
 Workflow
-~~~~~~~~
+--------
 
-In the most common use case you would want to encrypt passwords. Confluent's `Security
-tutorial <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__
-shows you how to enable security features on the |cp|, but it includes
-extra steps to generate keys and certificates, and add TLS configurations. In
-this tutorial, instead of encypting a password, you will encrypt a basic configuration
-parameter, which is essentially the same steps.
+In the most common use case, you would want to encrypt passwords. Confluent's
+`Security tutorial
+<https://docs.confluent.io/current/tutorials/security_tutorial.html>`__ shows
+you how to enable security features on the |cp|, but requires you to take extra
+steps in generating keys and certificates, and adding TLS configurations. In
+this tutorial instead, you'll encrypt a basic configuration parameter, which are
+the same steps.
 
 
 Generating the master encryption key based on a passphrase
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Select a master encryption key passphrase.
 
@@ -95,7 +96,7 @@ Generating the master encryption key based on a passphrase
 
 
 Encrypting the value of a configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Use a configuration parameter available in the configuration file example that
 ships with |cp|.
@@ -154,7 +155,7 @@ complete the following steps:
 
 
 Decrypting the value of a configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can also decrypt the value of a configuration parameter into a file by
 completing the following steps:
@@ -171,7 +172,7 @@ completing the following steps:
 
       cat decrypted.txt
 
-#. Verify you see the following output:
+   You should see the following output:
 
    .. code-block:: bash
 
@@ -179,7 +180,7 @@ completing the following steps:
 
 
 Updating the value of the configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You may need to update secrets on a regular basis to ensure the secrets don't
 get stale. The configuration parameter ``config.storage.topic`` was originally
@@ -213,7 +214,7 @@ You should see:
 
 
 Trust but verify
-^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~
 
 That’s cool! But does it work? Try it out yourself. Run |ak| and start the
 modified connect worker with the encrypted value of
@@ -244,7 +245,7 @@ modified connect worker with the encrypted value of
       newTopicName   <<<<<<<
 
 Going to production
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
 
 So far you've learned how to create the master encryption key and encrypt
 secrets in the configuration files. Confluent recommends you operationalize the
