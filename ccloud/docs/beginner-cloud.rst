@@ -55,7 +55,7 @@ and use promo code ``C50INTEG`` will receive an additional $50 free usage
 Run the demo
 ------------
 
-.. admonition:: Disclaimer
+.. note::
 
    This example uses real resources in Confluent Cloud, and it creates and deletes
    topics, service accounts, API keys, and ACLs.
