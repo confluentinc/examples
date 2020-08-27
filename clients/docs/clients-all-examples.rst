@@ -36,6 +36,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       :hidden:
 
       kafka-commands
+      ../../ccloud/docs/beginner-cloud
       c
       clojure
       confluent-cli
@@ -54,3 +55,4 @@ For the subset of languages that support it, the code examples also demonstrate 
       ruby
       rust
       scala
+      ../../security/secret-protection/docs/secret-protection
