@@ -19,7 +19,7 @@ Benefits:
 - Consumers can leverage data locality for reading |ak| data, which means better performance and lower cost
 - Ordering of |ak| messages is preserved across datacenters
 - Consumer offsets are preserved
-- In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter, and applications proceed without interruption. This achieves RTO=0 and RPO=0
+- In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter for the topics configured for synchronous replication, and applications proceed without interruption, achieving RTO=0 and RPO=0 for those topics.
 
 
 Concepts
