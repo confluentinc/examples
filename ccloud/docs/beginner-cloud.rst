@@ -126,6 +126,6 @@ Additional Resources
    whitepaper for a guide to configuring, monitoring, and optimizing
    your |ak| client applications when using |ccloud|.
 
--  See other `Confluent Cloud demos <../README.md>`__.
+- See other :ref:`ccloud-demos-overview`.
 
 
