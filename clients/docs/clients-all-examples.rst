@@ -36,6 +36,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       :hidden:
 
       kafka-commands
+      ../../ccloud/docs/beginner-cloud
       c
       clojure
       confluent-cli

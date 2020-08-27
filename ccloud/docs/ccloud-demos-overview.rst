@@ -244,7 +244,6 @@ Additional Resources
     :maxdepth: 1
     :hidden:
 
-    ../../ccloud/docs/beginner-cloud
     ../../ccloud/docs/ccloud-stack
     ../../clients/docs/clients-all-examples
     ../../ccloud/docs/index
