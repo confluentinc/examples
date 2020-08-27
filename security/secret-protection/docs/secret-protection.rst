@@ -56,7 +56,7 @@ Generating the master encryption key based on a passphrase
 
    .. note::
 
-       The location shouldn't be where the Confluent Platform services run.
+       The location shouldn't be where the |cp| services run.
 
    The secrets file will contain encrypted secrets for the master encryption
    key, data encryption key, and configuration parameters, along with their

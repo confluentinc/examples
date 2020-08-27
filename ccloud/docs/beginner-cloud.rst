@@ -57,7 +57,7 @@ Run the demo
 
 .. note::
 
-   This example uses real resources in Confluent Cloud, and it creates and deletes
+   This example uses real resources in |ccloud|, and it creates and deletes
    topics, service accounts, API keys, and ACLs.
 
 To run this demo, execute the following command:
