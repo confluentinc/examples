@@ -55,10 +55,10 @@ and use promo code ``C50INTEG`` will receive an additional $50 free usage
 Run the demo
 ------------
 
-.. container::
+.. container:: message-status
 
-     This example uses real resources in |ccloud|, and it creates and
-     deletes topics, service accounts, API keys, and ACLs.
+   This example uses real resources in |ccloud|, and it creates and deletes
+   topics, service accounts, API keys, and ACLs.
 
 To run this demo, execute the following command:
 
