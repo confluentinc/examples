@@ -15,11 +15,11 @@ It provides good durability guarantees and makes disaster recovery (DR) much eas
 
 Benefits:
 
-- Supports hybrid deployments of synchronous and asynchronous replication between datacenters
+- Supports multi-site deployments of synchronous and asynchronous replication between datacenters
 - Consumers can leverage data locality for reading |ak| data, which means better performance and lower cost
 - Ordering of |ak| messages is preserved across datacenters
 - Consumer offsets are preserved
-- In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter for the topics configured for synchronous replication, and applications proceed without interruption, achieving RTO=0 and RPO=0 for those topics.
+- In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter for the topics configured for synchronous replication, and applications proceed without interruption, achieving very low RTOs and RPO=0 for those topics.
 
 
 Concepts
