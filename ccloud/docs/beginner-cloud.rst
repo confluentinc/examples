@@ -640,7 +640,11 @@ Run Connect and kafka-connect-datagen connector with permissions
 
       curl --silent http://localhost:8083/connectors/datagen-demo-topic-3/status
 
-{"name":"datagen-demo-topic-3","connector":{"state":"RUNNING","worker_id":"connect:8083"},"tasks":[{"id":0,"state":"RUNNING","worker_id":"connect:8083"}],"type":"source"}
+   .. code-block:: text
+
+      {"name":"datagen-demo-topic-3","connector":
+      {"state":"RUNNING","worker_id":"connect:8083"},"tasks":
+      [{"id":0,"state":"RUNNING","worker_id":"connect:8083"}],"type":"source"}
 
 #. Create ACLs for the consumer using a wildcard by running the following
    commands:
