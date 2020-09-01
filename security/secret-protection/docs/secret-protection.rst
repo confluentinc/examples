@@ -7,9 +7,9 @@ Tuturial: Secret Protection
 Overview
 --------
 
-Confluent’s **Secret Protection** feature encrypts secrets in configuration
+Confluent’s Secret Protection feature encrypts secrets in configuration
 files. Instead of storing passwords or other sensitive data as cleartext,
-**Secret Protection** encrypts the data within a configuration file itself.
+Secret Protection encrypts the data within a configuration file itself.
 
 .. note::
 
@@ -20,7 +20,7 @@ files. Instead of storing passwords or other sensitive data as cleartext,
 Prerequisites
 ~~~~~~~~~~~~~
 
-#. Download `Confluent Platform 5.4 <https://www.confluent.io/download/>`__ or greater
+#. `Download <https://www.confluent.io/download/>`__ |cp| |release|
 
 #. Get the new `Confluent
    CLI <https://docs.confluent.io/current/cli/installing.html>`__ (v0.128.0 or
@@ -33,7 +33,7 @@ Workflow
 In the most common use case, you would want to encrypt passwords. Confluent's
 `Security tutorial
 <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__ shows
-you how to enable security features on the |cp|, but requires you to take extra
+you how to enable security features on the |cp|, but that requires you to take extra
 steps in generating keys and certificates, and adding TLS configurations. In
 this tutorial instead, you'll encrypt a basic configuration parameter, which are
 the same steps.
