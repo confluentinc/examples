@@ -11,6 +11,14 @@ Overview
 passwords and API tokens. Instead of storing passwords or other sensitive data
 as cleartext, you can encrypt the data within a configuration file itself.
 
+For example, consider this configuration file with these original parameters:
+
+.. figure:: images/secret-original.png
+
+After encrypting some of these fields, the configuration file would now be viewed as shown below:
+
+.. figure:: images/secret-encrypted.png
+
 
 Prerequisites
 ~~~~~~~~~~~~~
@@ -20,14 +28,6 @@ Prerequisites
 
 Setup
 -----
-
-In the most common use case, you would want to encrypt passwords. Confluent's
-`Security tutorial
-<https://docs.confluent.io/current/tutorials/security_tutorial.html>`__ shows
-you how to enable security features on the |cp|, but that requires you to take
-extra steps in generating keys and certificates, and adding TLS configurations.
-In this tutorial instead, you'll encrypt a basic configuration parameter, which
-are the same steps.
 
 #. Clone the Confluent examples repository.
 
@@ -64,8 +64,8 @@ Generating the master encryption key based on a passphrase
    words.
 
 #. Write the passphrase into a local file (e.g. ``/path/to/passphrase.txt``)
-   which will be passed into the CLI, to avoid logging history showing the
-   passphrase.
+   which will be passed into the CLI. Writing to a file avoids logging history
+   showing the passphrase.
    
 #. Choose the location where the secrets file will reside on your local host.
    The location shouldn't be where the |cp| services run. The secrets file will
@@ -154,7 +154,7 @@ complete the following steps:
 
       config.storage.topic = ${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}
 
-   As you can see, the configuration parameter ``config.storage.topic`` setting
+#. Validate that the configuration parameter ``config.storage.topic`` setting
    was changed from ``connect-configs`` to
    ``${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}``.
    This is a tuple that directs the service to use to look up the encrypted
@@ -163,7 +163,7 @@ complete the following steps:
    file ``/path/to/secrets-remote.txt``.
 
 #. View the contents of the local secrets file ``/path/to/secrets.txt``, which
-   should contain the encrypted secret for this file/parameter pair along with
+   should contain the encrypted secret for this file or parameter pair along with
    the metadata (for example, which cipher was used for encryption):
 
    .. code-block:: bash
@@ -235,10 +235,10 @@ update it using the CLI.
       connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CblF3k1ieNkFJzlJ51qAAA==,iv:dnZwEAm1rpLyf48pvy/T6w==,type:str]
 
 
-Trust but verify
-~~~~~~~~~~~~~~~~
+Verify on |ak| cluster
+~~~~~~~~~~~~~~~~~~~~~~
 
-That’s cool! But does it work? Try it out yourself. Run |ak| and start the
+Run |ak| and start the
 modified connect worker with the encrypted value of
 ``config.storage.topic=newTopicName`` by completing the following steps:
 
@@ -273,7 +273,7 @@ So far you've learned how to create the master encryption key and encrypt
 secrets in the configuration files. Confluent recommends you operationalize the
 workflow by augmenting your orchestration tooling to distribute everything you
 need for secret protection to work to the destination hosts. These hosts may
-include |ak| brokers,|kconnect| workers, |sr-long| instances, |ksql-cloud|
+include |ak| brokers, |kconnect| workers, |sr-long| instances, |ksql-cloud|
 servers, |c3|, and more–any service using password encryption. The CLI is
 flexible to accommodate whatever secret distribution model you prefer. You can
 either perform the secret generation and configuration modification on each
