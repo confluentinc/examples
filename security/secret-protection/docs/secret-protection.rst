@@ -7,14 +7,9 @@ Tutorial: Secret Protection
 Overview
 --------
 
-Confluent’s Secret Protection feature encrypts secrets in configuration
-files. Instead of storing passwords or other sensitive data as cleartext,
-Secret Protection encrypts the data within a configuration file itself.
-
-.. note::
-
-     You can either step through this tutorial, or run the :devx-examples:`automated
-     demo|security/secret-protection/demo-secret-protection.sh`.
+|cp| secrets allow you to store and manage sensitive information, such as
+passwords and API tokens. Instead of storing passwords or other sensitive data
+as cleartext, you can encrypt the data within a configuration file itself.
 
 
 Prerequisites
@@ -22,45 +17,61 @@ Prerequisites
 
 #. `Download <https://www.confluent.io/download/>`__ |cp| |release|
 
-#. Get the new `Confluent
-   CLI <https://docs.confluent.io/current/cli/installing.html>`__ (v0.128.0 or
-   greater)
 
-
-Workflow
---------
+Setup
+-----
 
 In the most common use case, you would want to encrypt passwords. Confluent's
 `Security tutorial
 <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__ shows
-you how to enable security features on the |cp|, but that requires you to take extra
-steps in generating keys and certificates, and adding TLS configurations. In
-this tutorial instead, you'll encrypt a basic configuration parameter, which are
-the same steps.
+you how to enable security features on the |cp|, but that requires you to take
+extra steps in generating keys and certificates, and adding TLS configurations.
+In this tutorial instead, you'll encrypt a basic configuration parameter, which
+are the same steps.
 
+#. Clone the Confluent examples repository.
+
+   .. code:: bash
+
+       git clone https://github.com/confluentinc/examples.git
+
+#. Navigate to the ``examples/security/secret-protection`` directory and switch
+   to the |cp| release branch:
+
+   .. codewithvars:: bash
+
+       cd examples/security/secret-protection
+       git checkout |release_post_branch|
+
+#. If you want to manually step through the tutorial, which is advised for new
+   users who want to gain familiarity with secrets, skip ahead to the next
+   section. Alternatively, you can run the full solution end-to-end with
+   :devx-examples:`this automated
+   script|security/secret-protection/demo-secret-protection.sh`.
+
+   .. code:: bash
+
+       ./demo-secret-protection.sh
+
+Run Tutorial
+------------
 
 Generating the master encryption key based on a passphrase
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Select a master encryption key passphrase.
+#. Decide on a master encryption key passphrase.  Your passphrase should be
+   longer than the usual password. Choose a phrase you can remember as a string of
+   words.
 
-   .. tip::
-
-        Your passphrase should be longer than the usual password. Choose a
-        phrase you can remember as a string of words.
-
-#. Enter the passphrase into a file to be passed into the CLI, to avoid logging
-   history showing the passphrase.
-
+#. Write the passphrase into a local file (e.g. ``/path/to/passphrase.txt``)
+   which will be passed into the CLI, to avoid logging history showing the
+   passphrase.
+   
 #. Choose the location where the secrets file will reside on your local host.
-
-   .. note::
-
-       The location shouldn't be where the |cp| services run.
-
-   The secrets file will contain encrypted secrets for the master encryption
-   key, data encryption key, and configuration parameters, along with their
-   metadata, such as which cipher was used for encryption.
+   The location shouldn't be where the |cp| services run. The secrets file will
+   contain encrypted secrets for the master encryption key, data encryption key,
+   and configuration parameters, along with their metadata, such as which cipher
+   was used for encryption.
 
 #. Generate the master encryption key by running the following command:
 
@@ -82,15 +93,14 @@ Generating the master encryption key based on a passphrase
 
 #. Save the master key somewhere safe on your computer.
 
-#. Export the key into the environment on the local host and every host
-   that will have a configuration file with secret protection by running the
-   following command:
+#. Export the key into the environment on the local host and every other host
+   that will have a configuration file with secret protection. For example:
 
    .. code-block:: text
 
       export CONFLUENT_SECURITY_MASTER_KEY=Nf1IL2bmqRdEz2DO//gX2C+4PjF5j8hGXYSu9Na9bao=
 
-   To protect the previous environment variable in a production host, you can set
+#. (Optional) To protect the previous environment variable in a production host, you can set
    the master encryption key at the process level instead of the global machine
    level. For example, you could set it in the ``systemd`` overrides for executed
    processes, restricting the environment directives file to root-only access.
@@ -99,18 +109,31 @@ Generating the master encryption key based on a passphrase
 Encrypting the value of a configuration parameter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Use a configuration parameter available in the configuration file example that
+In this section, you will encrypt a configuration parameter available in the configuration file example that
 ships with |cp|.
 
 To encrypt the parameter ``config.storage.topic`` in
 ``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``,
 complete the following steps:
 
-#. Make a backup of this file, because the CLI currently does in-place
-   modification on the original file.
+#. Make a backup of the file
+   ``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``,
+   because the CLI currently does in-place modification on the original file.
 
 #. Select the exact path where the secrets file will reside on the remote hosts
-   where the |cp| services run.
+   where the |cp| services run, e.g. ``/path/to/secrets-remote.txt``.
+
+#. View the value before encryption.
+
+   .. code-block:: bash
+
+      grep "config\.storage\.topic" connect-avro-distributed.properties
+
+   Your output should resemble:
+
+   .. code-block:: text
+
+      config.storage.topic=connect-configs
 
 #. Encrypt the field:
 
@@ -119,17 +142,17 @@ complete the following steps:
          # remote-secrets-file: /path/to/secrets-remote.txt
          confluent secret file encrypt --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config config.storage.topic
 
+#. View the value after encryption.
+
+   .. code-block:: bash
+
+      grep "config\.storage\.topic" connect-avro-distributed.properties
+
+   Your output should resemble:
+
    .. code-block:: text
 
-         # Value before encryption
-         grep "config\.storage\.topic" connect-avro-distributed.properties
-         config.storage.topic=connect-configs
-
-
-         # Value after encryption
-         grep "config\.storage\.topic" connect-avro-distributed.properties
-         config.storage.topic = ${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}
-
+      config.storage.topic = ${securepass:/path/to/secrets-remote.txt:connect-avro-distributed.properties/config.storage.topic}
 
    As you can see, the configuration parameter ``config.storage.topic`` setting
    was changed from ``connect-configs`` to
@@ -177,7 +200,7 @@ completing the following steps:
 
    .. code-block:: bash
 
-        config.storage.topic = connect-configs
+      config.storage.topic = connect-configs
 
 
 Updating the value of the configuration parameter
@@ -188,30 +211,28 @@ get stale. The configuration parameter ``config.storage.topic`` was originally
 set to ``connect-configs``. If you must change this value in the future, you can
 update it using the CLI.
 
-In the following CLI, pass in a file ``/path/to/updated-config-and-value`` that
-has written ``config.storage.topic=newTopicName`` to avoid logging history
-showing the new value.
+#. In the following CLI, pass in a file ``/path/to/updated-config-and-value`` that
+   has written ``config.storage.topic=newTopicName`` to avoid logging history
+   showing the new value.
 
-.. code-block:: bash
+   .. code-block:: bash
 
       confluent secret file update --local-secrets-file /path/to/secrets.txt --remote-secrets-file /path/to/secrets-remote.txt --config-file connect-avro-distributed.properties --config @/path/to/updated-config-and-value
 
-The configuration file ``connect-avro-distributed.properties`` doesn't change
-because it’s a pointer to the secrets file, but the secrets file has a new value
-for the encrypted value for this file/parameter pair.
+#. The configuration file ``connect-avro-distributed.properties`` doesn't change
+   because it’s a pointer to the secrets file, but the secrets file has a new value
+   for the encrypted value for this file/parameter pair.  When running the following command:
 
-When running the following command:
+   .. code-block:: bash
 
-.. code-block:: bash
+      cat /path/to/secrets.txt
 
-   cat /path/to/secrets.txt
+   You should see:
 
-You should see:
+   .. code-block:: bash
 
-.. code-block:: bash
-
-   ...
-   connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CblF3k1ieNkFJzlJ51qAAA==,iv:dnZwEAm1rpLyf48pvy/T6w==,type:str]
+      ...
+      connect-avro-distributed.properties/config.storage.topic = ENC[AES/CBC/PKCS5Padding,data:CblF3k1ieNkFJzlJ51qAAA==,iv:dnZwEAm1rpLyf48pvy/T6w==,type:str]
 
 
 Trust but verify
