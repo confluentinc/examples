@@ -1,7 +1,7 @@
 
 .. _secret-protection-tutorial:
 
-Tuturial: Secret Protection
+Tutorial: Secret Protection
 ===========================
 
 Overview
@@ -68,6 +68,7 @@ Generating the master encryption key based on a passphrase
 
       # passphrase: /path/to/passphrase.txt
       # local-secrets-file: /path/to/secrets.txt
+
       confluent secret master-key generate --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
 
    You should see:
@@ -273,7 +274,7 @@ encrypted secrets to the destination hosts. Here are four required tasks:
 
 You may also have a requirement to rotate the master encryption key or data
 encryption key on a regular basis. You can do either of these with the CLI. To
-rotate only the data encryption key, run the following command:
+rotate the data encryption key only, run the following command:
 
 .. code-block:: bash
 
