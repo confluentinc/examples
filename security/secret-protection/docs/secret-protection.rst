@@ -1,16 +1,15 @@
 
 .. _secret-protection-tutorial:
 
-Tuturial: Secret Protection
+Tutorial: Secret Protection
 ===========================
 
 Overview
 --------
 
-|cp| secrets allow you to store and manage sensitive information, such as passwords
-and API tokens. 
-Instead of storing passwords or other sensitive data as cleartext,
-you can encrypt the data within a configuration file itself.
+|cp| secrets allow you to store and manage sensitive information, such as
+passwords and API tokens. Instead of storing passwords or other sensitive data
+as cleartext, you can encrypt the data within a configuration file itself.
 
 
 Prerequisites
@@ -25,10 +24,10 @@ Setup
 In the most common use case, you would want to encrypt passwords. Confluent's
 `Security tutorial
 <https://docs.confluent.io/current/tutorials/security_tutorial.html>`__ shows
-you how to enable security features on the |cp|, but that requires you to take extra
-steps in generating keys and certificates, and adding TLS configurations. In
-this tutorial instead, you'll encrypt a basic configuration parameter, which are
-the same steps.
+you how to enable security features on the |cp|, but that requires you to take
+extra steps in generating keys and certificates, and adding TLS configurations.
+In this tutorial instead, you'll encrypt a basic configuration parameter, which
+are the same steps.
 
 #. Clone the Confluent examples repository.
 
@@ -36,17 +35,19 @@ the same steps.
 
        git clone https://github.com/confluentinc/examples.git
 
-#. Navigate to the ``examples/security/secret-protection`` directory and switch to the |cp| release branch:
+#. Navigate to the ``examples/security/secret-protection`` directory and switch
+   to the |cp| release branch:
 
    .. codewithvars:: bash
 
        cd examples/security/secret-protection
        git checkout |release_post_branch|
 
-#. If you want to manually step through the tutorial, which is advised for new users
-who want to gain familiarity with secrets, skip ahead to the next section.
-Alternatively, you can run the full solution end-to-end with :devx-examples:`this automated
-script|security/secret-protection/demo-secret-protection.sh`.
+#. If you want to manually step through the tutorial, which is advised for new
+   users who want to gain familiarity with secrets, skip ahead to the next
+   section. Alternatively, you can run the full solution end-to-end with
+   :devx-examples:`this automated
+   script|security/secret-protection/demo-secret-protection.sh`.
 
    .. code:: bash
 
@@ -58,11 +59,14 @@ Run Tutorial
 Generating the master encryption key based on a passphrase
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Decide on a master encryption key passphrase.  Your passphrase should be longer than the usual password. Choose a phrase you can remember as a string of words.
+#. Decide on a master encryption key passphrase.  Your passphrase should be
+   longer than the usual password. Choose a phrase you can remember as a string of
+   words.
 
-#. Write the passphrase into a local file (e.g. ``/path/to/passphrase.txt``) which will be passed into the CLI, to avoid logging
-   history showing the passphrase.
-
+#. Write the passphrase into a local file (e.g. ``/path/to/passphrase.txt``)
+   which will be passed into the CLI, to avoid logging history showing the
+   passphrase.
+   
 #. Choose the location where the secrets file will reside on your local host.
    The location shouldn't be where the |cp| services run. The secrets file will
    contain encrypted secrets for the master encryption key, data encryption key,
@@ -75,6 +79,7 @@ Generating the master encryption key based on a passphrase
 
       # passphrase: /path/to/passphrase.txt
       # local-secrets-file: /path/to/secrets.txt
+      
       confluent secret master-key generate --local-secrets-file /path/to/secrets.txt --passphrase @/path/to/passphrase.txt
 
    You should see:
@@ -111,8 +116,9 @@ To encrypt the parameter ``config.storage.topic`` in
 ``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``,
 complete the following steps:
 
-#. Make a backup of the file ``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``, because the CLI currently does in-place
-   modification on the original file.
+#. Make a backup of the file
+   ``$CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties``,
+   because the CLI currently does in-place modification on the original file.
 
 #. Select the exact path where the secrets file will reside on the remote hosts
    where the |cp| services run, e.g. ``/path/to/secrets-remote.txt``.
