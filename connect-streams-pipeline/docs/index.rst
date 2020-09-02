@@ -132,7 +132,7 @@ Example 1: Kafka console producer -> Key:String and Value:String
 - Command line ``confluent local produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
 
-.. figure:: images/example_1.png
+.. figure:: images/example_1.jpg
 
 .. _connect-streams-pipeline-example-2:
 
@@ -146,7 +146,7 @@ Example 2: JDBC source connector with Single Message Transformations -> Key:Long
 
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcjson/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and a custom JSON Serde for the value.
 
-.. figure:: images/example_2.png
+.. figure:: images/example_2.jpg
 
 .. _connect-streams-pipeline-example-3:
 
@@ -160,7 +160,7 @@ Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value
 
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcspecificavro/StreamsIngest.java` reads from the Kafka topic using ``SpecificAvroSerde`` for the value and then the ``map`` function to convert the stream of messages to have ``Long`` keys and custom class values.
 
-.. figure:: images/example_3.png
+.. figure:: images/example_3.jpg
 
 .. _connect-streams-pipeline-example-4:
 
@@ -174,7 +174,7 @@ Example 4: JDBC source connector with GenericAvro -> Key:String(null) and Value:
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/jdbcgenericavro/StreamsIngest.java` reads from the Kafka topic using ``GenericAvroSerde`` for the value and then the ``map`` function to convert the stream of messages to have ``Long`` keys and custom class values.
 - This example currently uses ``GenericAvroSerde`` and not ``SpecificAvroSerde`` for a specific reason. JDBC source connector currently doesn’t set a namespace when it generates a schema name for the data it is producing to Kafka. For ``SpecificAvroSerde``, the lack of namespace is a problem when trying to match reader and writer schema because Avro uses the writer schema name and namespace to create a classname and tries to load this class, but without a namespace, the class will not be found.
 
-.. figure:: images/example_3.png
+.. figure:: images/example_3.jpg
 
 .. _connect-streams-pipeline-example-5:
 
@@ -184,7 +184,7 @@ Example 5: Java client producer with SpecificAvro -> Key:Long and Value:Specific
 - :devx-examples:`Java client|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/Driver.java` produces ``Long`` keys and ``SpecificAvro`` values to a Kafka topic.
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/javaproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.Long()`` for key and ``SpecificAvroSerde`` for the value.
 
-.. figure:: images/example_5.png
+.. figure:: images/example_5.jpg
 
 .. _connect-streams-pipeline-example-6:
 
@@ -197,7 +197,7 @@ Example 6: JDBC source connector with Avro to ksqlDB -> Key:Long and Value:Avro
 
 - :devx-examples:`ksqlDB|connect-streams-pipeline/jdbcavro_statements.sql` reads from the Kafka topic and then uses ``PARTITION BY`` to create a new stream of messages with ``BIGINT`` keys.
 
-.. figure:: images/example_6.png
+.. figure:: images/example_6.jpg
 
 
 Technical Notes
