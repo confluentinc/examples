@@ -11,8 +11,9 @@ This tutorial will show you how to use the `Confluent Cloud CLI
 <https://docs.confluent.io/current/cloud/cli/install.html>`__ to interact with
 your `Confluent Cloud <https://confluent.cloud/login>`__ cluster.
 
-After running `start.sh <start.sh>`__, you can complete the following workflow
-in about 8 minutes using the |ccloud| CLI:
+With `start.sh <start.sh>`__, a fully scripted demo that shows you how to interact
+with |ccloud|, you can complete the following workflow in about 8
+minutes using the |ccloud| CLI:
 
 -  `Create a new environment and specify it as the default`_
 -  `Create a new Kafka cluster and specify it as the default`_
@@ -63,9 +64,6 @@ Run the demo
 
    This example uses real resources in |ccloud|, and it creates and deletes
    topics, service accounts, API keys, and ACLs.
-
-`start.sh <start.sh>`__ is a fully scripted demo that shows you how to interact
-with |ccloud|.
 
 To run the demo, execute the following command:
 
