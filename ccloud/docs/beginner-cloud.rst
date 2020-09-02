@@ -7,25 +7,44 @@ Tuturial: |ccloud| CLI
 Overview
 --------
 
-This tuturial will show you how to use the `Confluent Cloud CLI
-<https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__
-to interact with your `Confluent Cloud
-<https://confluent.cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__
-cluster.
+This tutorial will show you how to use the `Confluent Cloud CLI
+<https://docs.confluent.io/current/cloud/cli/install.html>`__ to interact with
+your `Confluent Cloud <https://confluent.cloud/login>`__ cluster.
+
+After running `start.sh <start.sh>`__, you can complete the following workflow
+in about 8 minutes using the |ccloud| CLI:
+
+-  `Create a new environment and specify it as the default`_
+-  `Create a new Kafka cluster and specify it as the default`_
+-  `Create a user key/secret pair and specify it as the default`_
+-  `Produce and consume with Confluent Cloud CLI`_
+-  `Create a service account key/secret pair`_
+-  `Run a Java producer before and after ACLs`_
+-  `Run a Java producer to showcase a prefixed ACL`_
+-  `Run Connect and kafka-connect-datagen connector with permissions`_
+-  `Run a Java consumer to showcase a Wildcard ACL`_
+-  `Delete the API key, service account, Kafka topics, Kafka cluster, environment,
+   and the log files`_
 
 
 Prerequisites
 ~~~~~~~~~~~~~~
 
--  Access to a |ccloud| cluster
--  Local install  `Confluent Cloud
-   CLI <https://docs.cofonfluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__
-   v1.7.0 or later
+-  Local install  `Confluent Cloud CLI <https://docs.confluent.io/current/cloud/cli/install.html>`__ v1.7.0 or later
+
+.. You'll need to Follow the steps under the "Tools and client configuration" section in Confluent Cloud user interface
+to install the Confluent Cloud CLI https://confluent.cloud/environments/env-nx63k/clusters/lkc-zjpm0/integrations/cli
+
+-  Access to a `Confluent Cloud cluster <https://confluent.cloud/login>`__
+
+.. maybe a add a caveat that says (follow the steps in the Confluent Cloud user interface to create a cluster if you haven't already created one)
+
 -  |ccloud| user credentials saved in ``~/.netrc`` (save with command ``ccloud login --save``)
--  Docker and Docker Compose for the local |kconnect| worker
+-  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
+   <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
 -  ``timeout`` installed on your host
--  ``mvn`` installed on your host
--  ``jq`` installed on your host
+-  `mvn <https://maven.apache.org/install.html>`__ installed on your host
+-  `jq <https://stedolan.github.io/jq/>`__ installed on your host
 
 Confluent Cloud Promo Code
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,6 +59,11 @@ and use promo code ``C50INTEG`` will receive an additional $50 free usage
 Run the demo
 ------------
 
+.. note::
+
+   This example uses real resources in |ccloud|, and it creates and deletes
+   topics, service accounts, API keys, and ACLs.
+
 `start.sh <start.sh>`__ is a fully scripted demo that shows you how to interact
 with |ccloud|.
 
@@ -49,25 +73,7 @@ To run the demo, execute the following command:
 
       ./start.sh
 
-After running the previous command, you can complete the following workflow
-in about 8 minutes using the |ccloud| CLI:
-
-.. note::
-
-   This example uses real resources in |ccloud|, and it creates and deletes
-   topics, service accounts, API keys, and ACLs.
-
--  `Create a new environment and specify it as the default`_
--  `Create a new Kafka cluster and specify it as the default`_
--  `Create a user key/secret pair and specify it as the default`_
--  `Produce and consume with Confluent Cloud CLI`_
--  `Create a service account key/secret pair`_
--  `Run a Java producer: before and after ACLs`_
--  `Run a Java producer: showcase a Prefix ACL`_
--  `Run |kconnect| and kafka-connect-datagen connector with permissions`_
--  `Run a Java consumer: showcase a Wildcard ACL`_
--  `Delete the API key, service account, Kafka topics, Kafka cluster, environment,
-   and the log files`_
+Now, you can complete the following workflow using the |ccloud| CLI.
 
 
 Create a new environment and specify it as the default
@@ -80,7 +86,7 @@ Create a new environment and specify it as the default
 
       ccloud environment create demo-script-env -o json
 
-   The output is in JSON format:
+#. Verify the output resembles:
 
    .. code-block:: text
 
@@ -97,7 +103,8 @@ Create a new environment and specify it as the default
 
        ccloud environment use env-5qz2q
 
-   You should see the following message: ``Now using "env-5qz2q" as the default (active) environment.``
+   You should see the following message: ``Now using "env-5qz2q" as the default
+   (active) environment.``
 
 
 Create a new Kafka cluster and specify it as the default
@@ -153,7 +160,7 @@ Create a user key/secret pair and specify it as the default
 
       cloud api-key create --description "Demo credentials" --resource lkc-x6m01 -o json
 
-   The output is in JSON format:
+#. Verify the output resembles:
 
    .. code-block:: text
 
@@ -194,7 +201,7 @@ Produce records
 
    a. Implement the following logic:
 
-      .. code-block:: text
+      .. code-block: bash
 
          (for i in `seq 1 10`; do echo "${i}" ; done) | \ timeout 10s
 
@@ -255,6 +262,7 @@ Create a service account key/secret pair
 
       ccloud service-account create demo-app-3288 --description demo-app-3288 -o json
 
+#. Verify the output resembles:
 
    .. code-block:: text
 
@@ -416,10 +424,10 @@ Run a Java producer before and after configuring ACLs
 
    You should see a ``Created topic "demo-topic-2"`` message.
 
-.. shouldn't the following say "prefixed ACL" instead of "prefix ACL"
 
-Run a Java producer to showcase a prefix ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Run a Java producer to showcase a prefixed ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create ACLs for the producer using a prefix:
 
@@ -427,8 +435,6 @@ Run a Java producer to showcase a prefix ACL
 
       ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic --prefix
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic --prefix
-
-.. shouldn't the above say "--prefixed" instead of "--prefix"
 
 #. Verify you see the following output:
 
@@ -610,26 +616,26 @@ Run Connect and kafka-connect-datagen connector with permissions
 #. Post the configuration for the kafka-connect-datagen connector that produces
    pageviews data to |ccloud| topic ``demo-topic-3``:
 
-   .. code-block:: bash
-
-      curl --silent --output /dev/null -X POST -H "Content-Type: application/json" --data
-
    .. code-block:: text
 
-      "{
-      "name": "datagen-demo-topic-3",
-      "config": {
-         "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-         "kafka.topic": "demo-topic-3",
-         "quickstart": "pageviews",
-         "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-         "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-         "value.converter.schemas.enable": "false",
-         "max.interval": 5000,
-         "iterations": 1000,
-         "tasks.max": "1"
-      }
-      }" http://localhost:8083/connectors
+         DATA=$( cat << EOF
+         {
+            "name": "$CONNECTOR",
+            "config": {
+              "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
+              "kafka.topic": "$TOPIC3",
+              "quickstart": "pageviews",
+              "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+              "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+              "value.converter.schemas.enable": "false",
+              "max.interval": 5000,
+              "iterations": 1000,
+              "tasks.max": "1"
+            }
+         }
+         EOF
+         )
+         curl --silent --output /dev/null -X POST -H "Content-Type: application/json" --data "${DATA}" http://localhost:8083/connectors
 
 
 #. Wait 20 seconds for kafka-connect-datagen to start producing messages.
@@ -638,13 +644,29 @@ Run Connect and kafka-connect-datagen connector with permissions
 
    .. code-block:: bash
 
-      curl --silent http://localhost:8083/connectors/datagen-demo-topic-3/status
+      curl --silent http://localhost:8083/connectors/datagen-demo-topic-3/status | jq -r '.'
 
    .. code-block:: text
 
-      {"name":"datagen-demo-topic-3","connector":
-      {"state":"RUNNING","worker_id":"connect:8083"},"tasks":
-      [{"id":0,"state":"RUNNING","worker_id":"connect:8083"}],"type":"source"}
+      {
+         "name": "datagen-demo-topic-3",
+         "connector": {
+           "state": "RUNNING",
+           "worker_id": "connect:8083"
+         },
+         "tasks": [
+           {
+             "id": 0,
+             "state": "RUNNING",
+             "worker_id": "connect:8083"
+           }
+         ],
+         "type": "source"
+      }
+
+
+Run a Java consumer to showcase a Wildcard ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create ACLs for the consumer using a wildcard by running the following
    commands:
@@ -684,17 +706,14 @@ Run Connect and kafka-connect-datagen connector with permissions
          User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
 
 
-Run a Java consumer to showcase a Wildcard ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 #. Run the Java consumer from ``demo-topic-3 (populated by kafka-connect-datagen)``:
 
    .. code-block:: bash
 
       mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="/tmp/client.config demo-topic-3" -Dlog4j.configuration=file:log4j.properties > /tmp/log.4 2>&1
 
-#. Verify you see the ``Consumed record with`` message in the logs as
-   shown in the following example:
+#. Verify you see the ``Consumed record with`` message in the log file
+   ``/tmp/log.4`` as shown in the following example:
 
    .. code-block:: text
 

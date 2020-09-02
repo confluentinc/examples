@@ -13,8 +13,8 @@ Secret Protection encrypts the data within a configuration file itself.
 
 .. note::
 
-     You can either step through this tutorial, or run the `automated
-     demo <demo-secret-protection.sh>`__.
+     You can either step through this tutorial, or run the :devx-examples:`automated
+     demo|security/secret-protection/demo-secret-protection.sh`.
 
 
 Prerequisites
