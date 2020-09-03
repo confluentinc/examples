@@ -11,14 +11,6 @@ Overview
 passwords and API tokens. Instead of storing passwords or other sensitive data
 as cleartext, you can encrypt the data within a configuration file itself.
 
-For example, consider this configuration file with these original parameters:
-
-.. figure:: images/secret-original.png
-
-After encrypting some of these fields, the configuration file would now be viewed as shown below:
-
-.. figure:: images/secret-encrypted.png
-
 
 Prerequisites
 ~~~~~~~~~~~~~
