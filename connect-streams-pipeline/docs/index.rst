@@ -87,16 +87,7 @@ Demo Prerequisites
 
 - Download `Confluent Platform <https://www.confluent.io/download/>`__
 - Maven command ``mvn`` to compile Java code
-- By default the ``timeout`` command is available on most Linux distributions but not Mac OS. This ``timeout`` command is used by the bash scripts to terminate consumer processes after a period of time.  To install it on a Mac:
-
-.. code:: shell
-
-   # Install coreutils
-   brew install coreutils
-
-   # Add a "gnubin" directory to your PATH
-   PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-
+- .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
 Run the demo
 ------------
