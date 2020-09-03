@@ -110,7 +110,7 @@ Local Tools
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
 -  ``jq``
 -  ``curl``
--  ``timeout``
+-  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 -  ``python``
 -  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 

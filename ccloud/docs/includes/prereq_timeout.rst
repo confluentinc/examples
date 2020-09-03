@@ -1,0 +1,1 @@
+``timeout``: used by the bash scripts to terminate a consumer process after a certain period of time. ``timeout`` is available on most Linux distributions but not on macOS. macOS users should view the `installation instructions for macOS <https://gist.github.com/dasgoll/7b1a796d6e42cb66508bc504bb518f82>`__.
