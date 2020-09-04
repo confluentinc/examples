@@ -219,11 +219,10 @@ Produce records
 
       ccloud kafka topic create demo-topic-1
 
-#. Produce 10 messages to topic ``demo-topic-1`` by completing the following steps:
+#. Produce 10 messages to topic ``demo-topic-1`` by running the following
+   commands:
 
-   a. Run the following commands:
-
-      .. code-block: bash
+   .. code-block: bash
 
          (for i in `seq 1 10`; do echo "${i}" ; done) | \ timeout 10s
 
@@ -365,11 +364,7 @@ Run the Java producer before and after configuring the ACLs
       ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
 
-<<<<<<< HEAD
 #. Verify your output resembles:
-=======
-#. Verify you see the following output:
->>>>>>> 5f0b6002cbb181f85a2b7e4676d0e31553bb20a5
 
    .. code-block:: text
 
