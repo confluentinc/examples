@@ -44,7 +44,7 @@ Prerequisites
 -  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
    <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
 
--  .. include:: ../../clients/docs/includes/prereq_timeout.rst
+-  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
 -  `mvn <https://maven.apache.org/install.html>`__ installed on your host
 
