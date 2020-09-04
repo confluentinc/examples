@@ -245,6 +245,7 @@ Additional Resources
     :hidden:
 
     ../../ccloud/docs/ccloud-stack
+    ../../ccloud/docs/beginner-cloud
     ../../clients/docs/clients-all-examples
     ../../ccloud/docs/index
     ../../cloud-etl/docs/index
