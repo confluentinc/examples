@@ -87,7 +87,7 @@ To run this demo, complete the following steps:
 
          ./start.sh
 
-The demo will commence in carrying out the following workflow.
+The demo will carry out the following workflow.
 
 Create a new Confluent Cloud environment and specify it as the default
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -164,12 +164,11 @@ Create a new Confluent Cloud cluster and specify it as the default
 
       ccloud kafka cluster use lkc-x6m01
 
-#. Verify you see a message similar to:
+   You should see a message similar to:
 
    .. code-block:: text
 
-       Set Kafka cluster "lkc-x6m01" as the active cluster for environment
-       "env-5qz2".
+       Set Kafka cluster "lkc-x6m01" as the active cluster for environment "env-5qz2".
 
 
 Create a new API key/secret pair for user and specify it as the default
@@ -296,6 +295,8 @@ Create a new service account with an API key/secret pair
 
       ccloud api-key create --service-account 104349 --resource lkc-x6m01 -o json
 
+#. Verify your output resembles:
+
    .. code-block:: text
 
       {
@@ -310,31 +311,31 @@ Create a new service account with an API key/secret pair
       cat /tmp/client.config
 
 #. Update  ``/tmp/client.config``  with |ccloud| connection information using
-   the newly created API key and secret::
+   the newly created API key and secret:
 
    .. code-block:: text
 
-         ssl.endpoint.identification.algorithm=https
-         sasl.mechanism=PLAIN
-         security.protocol=SASL_SSL
-         bootstrap.servers=pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
-         sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="ESN5FSNDHOFFSUEV" password\="nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB";
+       ssl.endpoint.identification.algorithm=https
+       sasl.mechanism=PLAIN
+       security.protocol=SASL_SSL
+       bootstrap.servers=pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
+       sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="ESN5FSNDHOFFSUEV" password\="nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB";
 
    You should wait 90 seconds for the |ccloud| cluster to be ready and for the
    service account credentials to propagate.
 
-#. By default, no ACLs are configured. To confirm, run the following command:
+#. By default, no ACLs are configured. To verify, run the following command:
 
    .. code-block:: bash
 
       ccloud kafka acl list --service-account 104349
 
-   You should see the following output:
+   Your should see the following output:
 
    .. code-block:: text
 
-            ServiceAccountId | Permission | Operation | Resource | Name | Type
-          +------------------+------------+-----------+----------+------+------+
+        ServiceAccountId | Permission | Operation | Resource | Name | Type
+      +------------------+------------+-----------+----------+------+------+
 
 Run a Java producer before and after configuring the ACLs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -380,7 +381,7 @@ Run a Java producer before and after configuring the ACLs
 
       ccloud kafka acl list --service-account 104349
 
-#. Verify your output resembles:
+   Your output should resemble:
 
    .. code-block:: text
 
@@ -471,7 +472,7 @@ Run a Java producer to show a prefixed ACL
 
       ccloud kafka acl list --service-account 104349
 
-#. Verify your output resembles:
+   Your output should resemble:
 
    .. code-block:: text
 
@@ -559,7 +560,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic '*'
 
-#. Verify your output resembles:
+#. Verify your output reesmbles:
 
    .. code-block:: text
 
@@ -591,7 +592,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
        ccloud kafka acl create --allow --service-account 104349 --operation READ --consumer-group connect
 
-#. Verify your output resembles:
+   Your output should resemble:
 
    .. code-block:: text
 
@@ -605,7 +606,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
       ccloud kafka acl list --service-account 104349
 
-#. Verify your output resembles:
+   Your output should resemble:
 
    .. code-block:: text
 
@@ -671,7 +672,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
       curl --silent http://localhost:8083/connectors/datagen-demo-topic-3/status | jq -r '.'
 
-#. Verify your output resembles:
+   Your output should resemble:
 
    .. code-block:: text
 
@@ -722,7 +723,7 @@ Run a Java consumer to show a Wildcard ACL
 
       ccloud kafka acl list --service-account 104349
 
-#. Verify your output resembles:
+   Your output should resemble:
 
    .. code-block:: text
 
