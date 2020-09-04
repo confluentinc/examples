@@ -126,7 +126,7 @@ Create a new Confluent Cloud cluster and specify it as the default
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ccloud| cluster
-   ``demo-kafka-cluster``(It may take up to 5 minutes for the |ak| cluster to be
+   ``demo-kafka-cluster`` (It may take up to 5 minutes for the |ak| cluster to be
    ready.):
 
    .. code-block:: bash
@@ -157,7 +157,7 @@ Create a new Confluent Cloud cluster and specify it as the default
       | ApiEndpoint  | https://pkac-ldgj1.us-west-2.aws.confluent.cloud        |
       +--------------+---------------------------------------------------------+
 
-#. Specify ``lkc-x6m01`` as the active |ak|| cluster by running the following
+#. Specify ``lkc-x6m01`` as the active |ak| cluster by running the following
    command:
 
    .. code-block:: bash
