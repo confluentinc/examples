@@ -15,15 +15,15 @@ With :devx-examples:`start.sh|ccloud/beginner-cloud/start.sh`, a fully scripted
 demo that shows you how to interact with |ccloud|, you can complete the
 following workflow in about 8 minutes using the |ccloud| CLI:
 
--  `Create a new environment and specify it as the default`_
--  `Create a new Kafka cluster and specify it as the default`_
--  `Create a user key/secret pair and specify it as the default`_
--  `Produce and consume with Confluent Cloud CLI`_
--  `Create a service account key/secret pair`_
--  `Run a Java producer before and after ACLs`_
--  `Run a Java producer to showcase a prefixed ACL`_
+-  `Create a new Confluent Cloud environment and specify it as the default`_
+-  `Create a new Confluent Cloud cluster and specify it as the default`_
+-  `Create a new API key/secret pair for user and specify it as the default`_
+-  `Produce and consume records with Confluent Cloud CLI`_
+-  `Create a new service account with an API key/secret pair`_
+-  `Run a Java producer before and after configuring the ACLs`_
+-  `Run a Java producer to show a prefixed ACL`_
 -  `Run Connect and kafka-connect-datagen connector with permissions`_
--  `Run a Java consumer to showcase a Wildcard ACL`_
+-  `Run a Java consumer to show a Wildcard ACL`_
 -  `Delete the API key, service account, Kafka topics, Kafka cluster, environment,
    and the log files`_
 
@@ -336,10 +336,10 @@ Create a new service account with an API key/secret pair
             ServiceAccountId | Permission | Operation | Resource | Name | Type
           +------------------+------------+-----------+----------+------+------+
 
-Run the Java producer before and after configuring the ACLs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run a Java producer before and after configuring the ACLs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the Java producer to ``demo-topic-1`` before configuring ACLs (expected
+#. Run a Java producer to ``demo-topic-1`` before configuring ACLs (expected
    to fail):
 
    .. code-block:: bash
@@ -692,8 +692,8 @@ Run Connect and kafka-connect-datagen connector with permissions
       }
 
 
-Run a Java consumer to showcase a Wildcard ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run a Java consumer to show a Wildcard ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create ACLs for the consumer using a wildcard by running the following
    commands:
