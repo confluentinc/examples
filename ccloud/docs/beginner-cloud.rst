@@ -365,7 +365,11 @@ Run the Java producer before and after configuring the ACLs
       ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
 
+<<<<<<< HEAD
 #. Verify your output resembles:
+=======
+#. Verify you see the following output:
+>>>>>>> 5f0b6002cbb181f85a2b7e4676d0e31553bb20a5
 
    .. code-block:: text
 
