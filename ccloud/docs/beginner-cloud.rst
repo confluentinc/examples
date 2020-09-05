@@ -11,9 +11,9 @@ This tutorial shows you how to use the `Confluent Cloud CLI
 your `Confluent Cloud <https://confluent.cloud/login>`__ cluster.
 Following the workflow in this tutorial, you complete the following steps:
 
--  `Create a new Confluent Cloud environment and specify it as the default`_
--  `Create a new Confluent Cloud cluster and specify it as the default`_
--  `Create a new API key/secret pair for user and specify it as the default`_
+-  `Create a new Confluent Cloud environment`_
+-  `Create a new Confluent Cloud cluster`_
+-  `Create a new API key/secret pair for user`_
 -  `Produce and consume records with Confluent Cloud CLI`_
 -  `Create a new service account with an API key/secret pair`_
 -  `Run a Java producer without ACLs`_
@@ -83,8 +83,8 @@ To run this tutorial, complete the following steps:
          ./start.sh
 
 
-Create a new Confluent Cloud environment and specify it as the default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new Confluent Cloud environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ccloud| environment
    ``demo-script-env``:
@@ -122,8 +122,8 @@ Create a new Confluent Cloud environment and specify it as the default
       Now using "env-5qz2q" as the default (active) environment.
 
 
-Create a new Confluent Cloud cluster and specify it as the default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new Confluent Cloud cluster
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ccloud| cluster
    ``demo-kafka-cluster``. It may take up to 5 minutes for the |ak| cluster to be
@@ -171,8 +171,8 @@ Create a new Confluent Cloud cluster and specify it as the default
        Set Kafka cluster "lkc-x6m01" as the active cluster for environment "env-5qz2".
 
 
-Create a new API key/secret pair for user and specify it as the default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new API key/secret pair for user
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a user API key/secret pair for your |ak| cluster ``lkc-x6m01``.
 
@@ -207,9 +207,6 @@ Create a new API key/secret pair for user and specify it as the default
 Produce and consume records with Confluent Cloud CLI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Produce records
-^^^^^^^^^^^^^^^
-
 #. Run the following command to create a new |ak| topic ``demo-topic-1``:
 
    .. code-block:: bash
@@ -239,9 +236,6 @@ Produce records
       8
       9
       10
-
-Consume records
-^^^^^^^^^^^^^^^
 
 #. Run the following command to consume messages from topic ``demo-topic-1``. The flag ``-b`` allows the consumer to read from the beginning of the topic.
 
@@ -792,7 +786,7 @@ Run a Java consumer with a Wildcard ACL
 
 
 Clean up your Confluent Cloud resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
 
 #. Run the following command to delete the service account:
 
@@ -884,9 +878,9 @@ demo-script-env``):
 
 In this case, run the following script to delete the demo’s topics, |ak| cluster, and environment.
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      ./cleanup.sh
+   ./cleanup.sh
 
 
 Advanced usage
