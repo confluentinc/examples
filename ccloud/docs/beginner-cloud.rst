@@ -318,7 +318,7 @@ Run a Java producer without ACLs
 
 #. By default, no ACLs are configured for the service account, which means the
    service account has no access to any |ccloud| resources. Run the following command
-   to verify no ACLs are configured.
+   to verify no ACLs are configured:
 
    .. code-block:: bash
 
