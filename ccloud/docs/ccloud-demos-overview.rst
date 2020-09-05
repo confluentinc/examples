@@ -74,6 +74,9 @@ It steps through the following workflow:
 -  Run a Java consumer: showcase a Wildcard ACL.
 -  Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files.
 
+.. figure:: ../../clients/cloud/images/confluent-cli.png
+
+
 Cloud ETL
 ---------
 

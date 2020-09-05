@@ -792,7 +792,7 @@ Run a Java consumer to show a Wildcard ACL
 
 
 Clean up your |ccloud| resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to delete the service account:
 
