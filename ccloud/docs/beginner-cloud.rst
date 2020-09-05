@@ -441,7 +441,7 @@ Run a Java producer with a prefixed ACL
    You should see a ``Created topic "demo-topic-2"`` message.
 
 #. Run the following command to create ACLs for the producer using a prefixed ACL
-   which matches any topic that start with the prefix ``demo-topic``:
+   which matches any topic that starts with the prefix ``demo-topic``:
 
    .. code-block:: bash
 
