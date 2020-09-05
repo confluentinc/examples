@@ -65,7 +65,7 @@ To run this tutorial, complete the following steps:
 
 #. Clone the Confluent examples repository.
 
-   .. code:: bash
+   .. code-block:: bash
 
        git clone https://github.com/confluentinc/examples.git
 
