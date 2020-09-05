@@ -1,5 +1,4 @@
-
-.. _beginner-cloud:
+.. _ccloud-cli-tutorial:
 
 Tutorial: |ccloud| CLI
 =======================

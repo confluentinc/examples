@@ -60,7 +60,7 @@ It provides client examples written in various programming languages.
 |ccloud| CLI
 ------------
 
-The :devx-examples:`Confluent Cloud CLI demo|ccloud/beginner-cloud/README.md` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
+The :ref:`ccloud-cli-tutorial` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
 It steps through the following workflow:
 
 -  Create a new environment and specify it as the default.
