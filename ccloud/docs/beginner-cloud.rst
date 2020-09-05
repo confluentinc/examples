@@ -16,12 +16,12 @@ Following the workflow in this tutorial, you complete the following steps:
 -  `Create a new API key/secret pair for user and specify it as the default`_
 -  `Produce and consume records with Confluent Cloud CLI`_
 -  `Create a new service account with an API key/secret pair`_
--  `Run a Java producer before and after configuring the ACLs`_
--  `Run a Java producer to show a prefixed ACL`_
--  `Run Connect and kafka-connect-datagen connector with permissions`_
--  `Run a Java consumer to show a Wildcard ACL`_
--  `Delete the API key, service account, Kafka topics, Kafka cluster, environment,
-   and the log files`_
+-  `Run a Java producer without ACLs`_
+-  `Run a Java producer with ACLs`_
+-  `Run a Java producer with a prefixed ACL`_
+-  `Run kafka-connect-datagen connector with wildcard ACLs`_
+-  `Run a Java consumer with a Wildcard ACL`_
+-  `Clean up your |ccloud| resources`_
 
 
 Prerequisites
@@ -694,8 +694,8 @@ Run kafka-connect-datagen connector with wildcard ACLs
       }
 
 
-Run a Java consumer to show a Wildcard ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run a Java consumer with a Wildcard ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create ACLs for the consumer using a wildcard by running the following
    commands:
@@ -889,8 +889,8 @@ In this case, run the following script to delete the demo’s topics, |ak| clust
       ./cleanup.sh
 
 
-Advanced demo usage
-~~~~~~~~~~~~~~~~~~~
+Advanced usage
+--------------
 
 The demo script provides variables that allow you to alter the default |ak|
 cluster name, cloud provider, and region. For example:
