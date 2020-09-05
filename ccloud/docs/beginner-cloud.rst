@@ -259,7 +259,7 @@ Produce and consume records with Confluent Cloud CLI
       6
       8
 
-#. Press ``<ctrl-c>`` to stop the consumer.
+#. Press ``CTRL-C`` to stop the consumer.
 
 
 Create a new service account with an API key/secret pair
