@@ -619,7 +619,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
       source delta_configs/env.delta
 
 #. Run the following :devx-examples:`docker-compose.yml file|ccloud/beginner-cloud/docker-compose.yml`
-   which is a |kconnect| container with the kafka-connect-datagen plugin:
+   which is a |kconnect| container with the`kafka-connect-datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ plugin:
 
    .. code-block:: bash
 
