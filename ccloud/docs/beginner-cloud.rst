@@ -65,7 +65,7 @@ To run this tutorial, complete the following steps:
 
 #. Clone the Confluent examples repository.
 
-   .. code:: bash
+   .. code-block:: bash
 
        git clone https://github.com/confluentinc/examples.git
 
@@ -259,7 +259,7 @@ Produce and consume records with Confluent Cloud CLI
       6
       8
 
-#. Press ``<ctrl-c>`` to stop the consumer.
+#. Press ``CTRL-C`` to stop the consumer.
 
 
 Create a new service account with an API key/secret pair
@@ -318,7 +318,7 @@ Run a Java producer without ACLs
 
 #. By default, no ACLs are configured for the service account, which means the
    service account has no access to any |ccloud| resources. Run the following command
-   to verify no ACLs are configured.
+   to verify no ACLs are configured:
 
    .. code-block:: bash
 
