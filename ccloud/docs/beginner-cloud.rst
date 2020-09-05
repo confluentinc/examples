@@ -21,7 +21,7 @@ Following the workflow in this tutorial, you complete the following steps:
 -  `Run a Java producer with a prefixed ACL`_
 -  `Run kafka-connect-datagen connector with wildcard ACLs`_
 -  `Run a Java consumer with a Wildcard ACL`_
--  `Clean up your |ccloud| resources`_
+-  `Clean up your Confluent Cloud resources`_
 
 
 Prerequisites
@@ -791,8 +791,8 @@ Run a Java consumer with a Wildcard ACL
    You should see a ``Deleted ACLs.`` message after running each of the previous commands.
 
 
-Clean up your |ccloud| resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Clean up your Confluent Cloud resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to delete the service account:
 
