@@ -272,7 +272,7 @@ Consume records
 Create a new service account with an API key/secret pair
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the following commmand to create a new service account:
+#. Run the following command to create a new service account:
 
    .. code-block:: bash
 
@@ -544,7 +544,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
       ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic '*'
 
-#. Verify your output reesmbles:
+#. Verify your output resembles:
 
    .. code-block:: text
 
@@ -560,7 +560,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic '*'
 
-#. Verify your output reesmbles:
+#. Verify your output resembles:
 
    .. code-block:: text
 
@@ -938,7 +938,7 @@ Additional Resources
 -  See the `Best Practices for Developing Kafka Applications on
    Confluent Cloud
    <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud>`__
-   whitepaper for a guide to configuring, monitoring, and optimizing
+   white paper for a guide to configuring, monitoring, and optimizing
    your |ak| client applications when using |ccloud|.
 
 - See other :ref:`ccloud-demos-overview`.
