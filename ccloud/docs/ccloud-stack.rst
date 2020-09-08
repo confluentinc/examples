@@ -113,7 +113,9 @@ Destroy a ccloud-stack
 Advanced Options
 ================
 
-#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. To create resources in another cloud provider or region other than the default, use the |ccloud| CLI to view the available cloud providers and regions:
+By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. To create resources in another cloud provider or region other than the default, complete the following steps:
+
+#.  View the available cloud providers and regions using the |ccloud| CLI:
 
    .. code-block:: bash
 
