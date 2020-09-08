@@ -300,7 +300,7 @@ source delta_configs/env.delta
 echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
 echo "docker-compose up -d"
 docker-compose up -d
-MAX_WAIT=60
+MAX_WAIT=180
 echo "Waiting up to $MAX_WAIT seconds for Docker container for connect to be up"
 retry $MAX_WAIT check_connect_up connect-cloud || exit 1
 sleep 5
