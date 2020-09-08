@@ -24,8 +24,6 @@ The following applications or libraries are required to be installed and availab
 | ``GCP sdk core`` | ``2020.03.24`` |                                                         |
 +------------------+----------------+---------------------------------------------------------+
 
-.. include:: ../../docs/includes/helm-requirement-note.rst
-
 Running the Demo
 ----------------
 
