@@ -121,7 +121,7 @@ Advanced Options
 
    Then create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown below.
 
-   .. code:: bash
+   .. code-block:: bash
 
       CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
 
