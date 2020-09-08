@@ -127,7 +127,7 @@ Advanced Options
 
 #. By default, a new `ccloud-stack`` creates a new environment. To reuse an existing environment, create the ``ccloud-stack`` and override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown below.
 
-   .. code:: bash
+   .. code-block:: bash
 
       ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
