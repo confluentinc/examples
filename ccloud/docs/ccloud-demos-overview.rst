@@ -60,7 +60,7 @@ It provides client examples written in various programming languages.
 |ccloud| CLI
 ------------
 
-The :devx-examples:`Confluent Cloud CLI demo|ccloud/beginner-cloud/README.md` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
+The :ref:`ccloud-cli-tutorial` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
 It steps through the following workflow:
 
 -  Create a new environment and specify it as the default.
@@ -73,6 +73,9 @@ It steps through the following workflow:
 -  Run Connect and kafka-connect-datagen connector with permissions.
 -  Run a Java consumer: showcase a Wildcard ACL.
 -  Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files.
+
+.. figure:: ../../clients/cloud/images/confluent-cli.png
+
 
 Cloud ETL
 ---------
@@ -245,6 +248,7 @@ Additional Resources
     :hidden:
 
     ../../ccloud/docs/ccloud-stack
+    ../../ccloud/docs/beginner-cloud
     ../../clients/docs/clients-all-examples
     ../../ccloud/docs/index
     ../../cloud-etl/docs/index
