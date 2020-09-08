@@ -563,7 +563,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
          User:104349      | ALLOW      | WRITE     | TOPIC    | *    | LITERAL
 
 
-#. Run the following command to allow user ``104349`` to read from
+#. Run the following command to allow service account ID ``104349`` to read from
    any topic.
 
    .. code-block:: bash
@@ -578,7 +578,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
        +------------------+------------+-----------+----------+------+---------+
          User:104349      | ALLOW      | READ      | TOPIC    | *    | LITERAL
 
-#. Run the following command to allow user ``104349`` to have a consumer group
+#. Run the following command to allow service account ID ``104349`` to have a consumer group
    called ``connect``.
 
    .. code-block:: bash
