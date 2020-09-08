@@ -19,8 +19,7 @@ The demonstration uses this more advanced workflow.
 We use the `Kafka Connect Datagen connector <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ to generate mock events, and this `Dockerfile <https://github.com/confluentinc/kafka-connect-datagen/blob/master/Dockerfile-local>`__ builds the Docker image with a local archive of the Kafka Connect Datagen connector compiled from source code (versus pulling directly from |c-hub|).
 We publish this image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__, but in your environment, publish to your own Docker Hub repo.
 
-Your Operator Helm values will need to be updated to pull the custom Connect Docker image for your Pods.
-This demo accomplishes this by overriding the ``connect`` image to instead use the one published to Docker Hub, see `value.yaml <https://github.com/confluentinc/examples/blob/5.3.1-post/kubernetes/gke-base/cfg/values.yaml#L53>`__:
+Your Operator Helm values will need to be updated to pull the custom Connect Docker image for your Pods. You can accomplish this by overriding the ``connect`` image to instead use the one published to Docker Hub in the demo's value.yaml configuration file.
 
 ::
 
