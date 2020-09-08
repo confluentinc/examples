@@ -68,25 +68,13 @@ Setup
 Create a ccloud-stack
 ---------------------
 
-#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, then create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`.
+#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, then create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`. (For additional options when configuring your ``ccloud-stack``, see :ref:`ccloud-stack-options`. 
 
    .. code:: bash
 
       ./ccloud_stack_create.sh
 
-#. Alternatively, if you want to create resources in another cloud provider or region, use the |ccloud| CLI to view the available cloud providers and regions:
-
-   .. code:: bash
-
-      ccloud kafka region list
-
-   Then create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown below.
-
-   .. code:: bash
-
-      CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
-
-#. In addition to creating all the resources in |ccloud| with associated service account and ACLs, it also generates a local configuration file with all above connection information, useful for other demos/automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
+#. In addition to creating all the resources in |ccloud| with associated service account and ACLs, running ``ccloud-stack`` also generates a local configuration file with all above connection information, useful for other demos/automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
 
    .. code-block:: text
 
@@ -117,6 +105,31 @@ Destroy a ccloud-stack
    .. code:: bash
 
       ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+
+
+.. _ccloud-stack-options:
+
+================
+Advanced Options
+================
+
+#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. To create resources in another cloud provider or region other than the default, use the |ccloud| CLI to view the available cloud providers and regions:
+
+   .. code:: bash
+
+      ccloud kafka region list
+
+   Then create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown below.
+
+   .. code:: bash
+
+      CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
+
+#. By default, a new `ccloud-stack`` creates a new environment. To reuse an existing environment, create the ``ccloud-stack`` and override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown below.
+
+   .. code:: bash
+
+      ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
 
 ===================
