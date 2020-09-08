@@ -63,7 +63,7 @@ Run the tutorial
 
 To run this tutorial, complete the following steps:
 
-#. Clone the Confluent examples repository.
+#. Clone the Confluent examples repository:
 
    .. code-block:: bash
 
@@ -176,7 +176,7 @@ Create a new Confluent Cloud cluster
 Create a new API key/secret pair for user
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the following command to create a user API key/secret pair for your |ak| cluster ``lkc-x6m01``.
+#. Run the following command to create a user API key/secret pair for your |ak| cluster ``lkc-x6m01``:
 
    .. code-block:: bash
 
@@ -243,7 +243,8 @@ Produce and consume records with Confluent Cloud CLI
       9
       10
 
-#. Run the following command to consume messages from topic ``demo-topic-1``. The flag ``-b`` allows the consumer to read from the beginning of the topic.
+#. Run the following command to consume messages from topic ``demo-topic-1``.
+   The flag ``-b`` allows the consumer to read from the beginning of the topic.
 
    .. code-block:: bash
 
@@ -560,7 +561,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
 
 
 #. Run the following command to allow service account ID ``104349`` to write to
-   any topic.
+   any topic:
 
    .. code-block:: bash
 
@@ -576,7 +577,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
 
 
 #. Run the following command to allow service account ID ``104349`` to read from
-   any topic.
+   any topic:
 
    .. code-block:: bash
 
@@ -591,7 +592,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
          User:104349      | ALLOW      | READ      | TOPIC    | *    | LITERAL
 
 #. Run the following command to allow service account ID ``104349`` to have a consumer group
-   called ``connect``.
+   called ``connect``:
 
    .. code-block:: bash
 
@@ -743,7 +744,7 @@ Run a Java consumer with a Wildcard ACL
          User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
 
 
-#. Run the Java consumer from ``demo-topic-3`` which is populated by kafka-connect-datagen.
+#. Run the Java consumer from ``demo-topic-3`` which is populated by kafka-connect-datagen:
 
    .. code-block:: bash
 
@@ -888,7 +889,7 @@ demo-script-env``):
 
       Failed to create environment demo-script-env. Please troubleshoot and run again
 
-In this case, run the following script to delete the demo’s topics, |ak| cluster, and environment.
+In this case, run the following script to delete the demo’s topics, |ak| cluster, and environment:
 
 .. code-block:: bash
 
