@@ -68,7 +68,7 @@ Setup
 Create a ccloud-stack
 ---------------------
 
-#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, then create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`. (For additional options when configuring your ``ccloud-stack``, see :ref:`ccloud-stack-options`. 
+#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, then create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`. For additional options when configuring your ``ccloud-stack``, see :ref:`ccloud-stack-options`.
 
    .. code:: bash
 
