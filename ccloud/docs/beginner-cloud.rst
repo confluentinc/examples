@@ -1,5 +1,4 @@
-
-.. _beginner-cloud:
+.. _ccloud-cli-tutorial:
 
 Tutorial: |ccloud| CLI
 =======================
@@ -7,39 +6,37 @@ Tutorial: |ccloud| CLI
 Overview
 --------
 
-This tutorial will show you how to use the `Confluent Cloud CLI
+This tutorial shows you how to use the `Confluent Cloud CLI
 <https://docs.confluent.io/current/cloud/cli/install.html>`__ to interact with
 your `Confluent Cloud <https://confluent.cloud/login>`__ cluster.
+It uses real resources in |ccloud|, and it creates and deletes topics, service
+accounts, credentials, and ACLs.
+Following the workflow in this tutorial, you accomplish the following steps:
 
-With :devx-examples:`start.sh|ccloud/beginner-cloud/start.sh`, a fully scripted
-demo that shows you how to interact with |ccloud|, you can complete the
-following workflow in about 8 minutes using the |ccloud| CLI:
-
--  `Create a new Confluent Cloud environment and specify it as the default`_
--  `Create a new Confluent Cloud cluster and specify it as the default`_
--  `Create a new API key/secret pair for user and specify it as the default`_
+-  `Create a new Confluent Cloud environment`_
+-  `Create a new Confluent Cloud cluster`_
+-  `Create a new API key/secret pair for user`_
 -  `Produce and consume records with Confluent Cloud CLI`_
 -  `Create a new service account with an API key/secret pair`_
--  `Run a Java producer before and after configuring the ACLs`_
--  `Run a Java producer to show a prefixed ACL`_
--  `Run Connect and kafka-connect-datagen connector with permissions`_
--  `Run a Java consumer to show a Wildcard ACL`_
--  `Delete the API key, service account, Kafka topics, Kafka cluster, environment,
-   and the log files`_
+-  `Run a Java producer without ACLs`_
+-  `Run a Java producer with ACLs`_
+-  `Run a Java producer with a prefixed ACL`_
+-  `Run kafka-connect-datagen connector with wildcard ACLs`_
+-  `Run a Java consumer with a Wildcard ACL`_
+-  `Clean up your Confluent Cloud resources`_
 
 
 Prerequisites
 ~~~~~~~~~~~~~~
 
--  Access to a |ccloud| cluster. See `Create a Cluster in Confluent Cloud
-   <https://docs.confluent.io/current/cloud/clusters/create-cluster.html>`__
-
--  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.7.0 or later)
+-  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
 -  |ccloud| user credentials saved in ``~/.netrc``. (Use ``ccloud login --save``
    when logging in to the |ccloud| CLI. The ``--save`` flag will save your login
    credentials to the ``~/.netrc`` file.)
+
+-  Local `install of Confluent Cloud CLI
+   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.7.0 or later)
 
 -  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
    <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
@@ -61,36 +58,33 @@ and use promo code ``C50INTEG`` will receive an additional $50 free usage
 <https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__).
 
 
-Run the demo
-------------
+Run the tutorial
+----------------
 
-.. note::
+To run this tutorial, complete the following steps:
 
-   - This example uses real resources in |ccloud|, and it creates and deletes
-     topics, service accounts, API keys, and ACLs.
-
-   - The values for certain variables, including your API key, |ak|
-     cluster, and environment will be unique and may not match the output
-     exactly.
-
-To run this demo, complete the following steps:
-
-#. Change directory to the ``.sh`` file for |ccloud| CLI.
+#. Clone the Confluent examples repository.
 
    .. code-block:: bash
 
-      cd examples/ccloud/beginner-cloud/
+       git clone https://github.com/confluentinc/examples.git
 
-#. Run the following command to start the demo:
+#. Navigate to the ``examples/ccloud/beginner-cloud/`` directory and switch to the |cp| release branch:
+
+   .. codewithvars:: bash
+
+       cd examples/ccloud/beginner-cloud/
+       git checkout |release_post_branch|
+
+#. If you want to manually step through the tutorial, which is advised for new users who want to gain familiarity with |ccloud| CLI, skip ahead to the next section. Alternatively, you can run the full tutorial end-to-end with the :devx-examples:`start.sh script|ccloud/beginner-cloud/start.sh`, which automates all the steps in the tutorial:
 
    .. code-block:: bash
 
          ./start.sh
 
-The demo will carry out the following workflow.
 
-Create a new Confluent Cloud environment and specify it as the default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new Confluent Cloud environment
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ccloud| environment
    ``demo-script-env``:
@@ -108,6 +102,10 @@ Create a new Confluent Cloud environment and specify it as the default
         "name": "demo-script-env"
       }
 
+   The value of the environment ID, in this case ``env-5qz2q``, may differ in your output.
+   In this tutorial, the values for certain variables, including your environment ID,
+   |ak| cluster ID, API key, will be unique and will not match the output shown.
+
 #. Specify ``env-5qz2q`` as the active environment by running the following
    command:
 
@@ -115,19 +113,19 @@ Create a new Confluent Cloud environment and specify it as the default
 
        ccloud environment use env-5qz2q
 
-   You should see output similar to:
+#. Verify your output resembles:
 
    .. code-block:: text
 
       Now using "env-5qz2q" as the default (active) environment.
 
 
-Create a new Confluent Cloud cluster and specify it as the default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new Confluent Cloud cluster
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ccloud| cluster
-   ``demo-kafka-cluster`` (It may take up to 5 minutes for the |ak| cluster to be
-   ready.):
+   ``demo-kafka-cluster``. It takes up to 5 minutes for the |ak| cluster to be
+   ready.
 
    .. code-block:: bash
 
@@ -138,7 +136,7 @@ Create a new Confluent Cloud cluster and specify it as the default
       You may choose any provider or region from the list generated by running
       ``ccloud kafka region list``.
 
-#. Verify your output resembles:
+#. Verify your output resembles.
 
    .. code-block:: text
 
@@ -157,6 +155,10 @@ Create a new Confluent Cloud cluster and specify it as the default
       | ApiEndpoint  | https://pkac-ldgj1.us-west-2.aws.confluent.cloud        |
       +--------------+---------------------------------------------------------+
 
+   The value of the |ak| cluster ID, in this case ``lkc-x6m01``,
+   and |ak| cluster endpoint, in this case ``pkc-4kgmg.us-west-2.aws.confluent.cloud:9092``,
+   may differ in your output.
+
 #. Specify ``lkc-x6m01`` as the active |ak| cluster by running the following
    command:
 
@@ -164,17 +166,17 @@ Create a new Confluent Cloud cluster and specify it as the default
 
       ccloud kafka cluster use lkc-x6m01
 
-   You should see a message similar to:
+#. Verify your output resembles:
 
    .. code-block:: text
 
        Set Kafka cluster "lkc-x6m01" as the active cluster for environment "env-5qz2".
 
 
-Create a new API key/secret pair for user and specify it as the default
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Create a new API key/secret pair for user
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the following command to create a user API key/secret pair:
+#. Run the following command to create a user API key/secret pair for your |ak| cluster ``lkc-x6m01``.
 
    .. code-block:: bash
 
@@ -189,13 +191,17 @@ Create a new API key/secret pair for user and specify it as the default
          "secret": "fjcDDyr0Nm84zZr77ku/AQqCKQOOmb35Ql68HQnb60VuU+xLKiu/n2UNQ0WYXp/D"
       }
 
-#. Associate the API key ``QX7X4VA4DFJTTOIA`` to the |ak| cluster ``lkc-x6m01``:
+   The value of the API key, in this case ``QX7X4VA4DFJTTOIA``, and API secret,
+   in this case ``fjcDDyr0Nm84zZr77ku/AQqCKQOOmb35Ql68HQnb60VuU+xLKiu/n2UNQ0WYXp/D``
+   may differ in your output.
+
+#. Specify the API key ``QX7X4VA4DFJTTOIA`` for the |ak| cluster ``lkc-x6m01``:
 
    .. code-block:: bash
 
       ccloud api-key use QX7X4VA4DFJTTOIA --resource lkc-x6m01
 
-   You should see a message similar to:
+   Your output should resemble:
 
    .. code-block:: text
 
@@ -206,9 +212,6 @@ Create a new API key/secret pair for user and specify it as the default
 
 Produce and consume records with Confluent Cloud CLI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Produce records
-^^^^^^^^^^^^^^^
 
 #. Run the following command to create a new |ak| topic ``demo-topic-1``:
 
@@ -221,9 +224,8 @@ Produce records
 
    .. code-block:: bash
 
-         (for i in `seq 1 10`; do echo "${i}" ; done) | \ timeout 10s
-
-         ccloud kafka topic produce demo-topic-1
+         (for i in `seq 1 10`; do echo "${i}" ; done) | \
+           ccloud kafka topic produce demo-topic-1
 
 #. Verify your output resembles:
 
@@ -241,16 +243,11 @@ Produce records
       9
       10
 
-Consume records
-^^^^^^^^^^^^^^^
-
-#. Run the following command to consume messages from topic ``demo-topic-1``:
+#. Run the following command to consume messages from topic ``demo-topic-1``. The flag ``-b`` allows the consumer to read from the beginning of the topic.
 
    .. code-block:: bash
 
       ccloud kafka topic consume demo-topic-1 -b
-
-   where ``-b`` allows you to consume from the beginning of the topic.
 
 #. Verify your output resembles:
 
@@ -267,6 +264,8 @@ Consume records
       1
       6
       8
+
+#. Press ``CTRL-C`` to stop the consumer.
 
 
 Create a new service account with an API key/secret pair
@@ -288,8 +287,10 @@ Create a new service account with an API key/secret pair
          "description": "demo-app-3288"
       }
 
-#. Create an API key and secret for the service account ``104349`` by running
-   the following command:
+   The value of the service account ID, in this case ``104349``, may differ in your output.
+
+#. Create an API key and secret for the service account ``104349`` for the |ak| cluster ``lkc-x6m01``
+   by running the following command:
 
    .. code-block:: bash
 
@@ -304,14 +305,13 @@ Create a new service account with an API key/secret pair
         "secret": "nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB"
       }
 
-#. Create a local configuration file ``/tmp/client.config``:
+   The value of the service account's API key, in this case ``ESN5FSNDHOFFSUEV``,
+   and API secret, in this case ``nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB``,
+   may differ in your output.
 
-   .. code-block:: text
-
-      cat /tmp/client.config
-
-#. Update  ``/tmp/client.config``  with |ccloud| connection information using
-   the newly created API key and secret:
+#. Create a local configuration file ``/tmp/client.config`` with |ccloud|
+   connection information using the newly created |ak| cluster and the
+   API key and secret for the service account:
 
    .. code-block:: text
 
@@ -321,27 +321,31 @@ Create a new service account with an API key/secret pair
        bootstrap.servers=pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
        sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="ESN5FSNDHOFFSUEV" password\="nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB";
 
-   You should wait 90 seconds for the |ccloud| cluster to be ready and for the
+#. Wait about 90 seconds for the |ccloud| cluster to be ready and for the
    service account credentials to propagate.
 
-#. By default, no ACLs are configured. To verify, run the following command:
+
+Run a Java producer without ACLs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. By default, no ACLs are configured for the service account, which means the
+   service account has no access to any |ccloud| resources. Run the following command
+   to verify no ACLs are configured:
 
    .. code-block:: bash
 
       ccloud kafka acl list --service-account 104349
 
-   Your should see the following output:
+   Your output should resemble:
 
    .. code-block:: text
 
         ServiceAccountId | Permission | Operation | Resource | Name | Type
       +------------------+------------+-----------+----------+------+------+
 
-Run a Java producer before and after configuring the ACLs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 #. Run a Java producer to ``demo-topic-1`` before configuring ACLs (expected
-   to fail):
+   to fail). Note that you pass in an argument to ``/tmp/client.config`` which
+   has the |ccloud| connection information:
 
    .. code-block:: bash
 
@@ -353,8 +357,10 @@ Run a Java producer before and after configuring the ACLs
 
    .. code-block:: text
 
-       PASS: Producer failed
        [ERROR] Failed to execute goal org.codehaus.mojo:exec-maven-plugin:1.2.1:java (default-cli) on project clients-example: An exception occured while executing the Java class. null: InvocationTargetException: java.util.concurrent.ExecutionException: org.apache.kafka.common.errors.TopicAuthorizationException: Authorization failed. -> [Help 1]
+
+Run a Java producer with ACLs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following commands to create ACLs for the service account:
 
@@ -381,7 +387,7 @@ Run a Java producer before and after configuring the ACLs
 
       ccloud kafka acl list --service-account 104349
 
-   Your output should resemble:
+   Your output should resemble below. Observe that the ACL Type is ``LITERAL``.
 
    .. code-block:: text
 
@@ -390,7 +396,7 @@ Run a Java producer before and after configuring the ACLs
          User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic-1 | LITERAL
          User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic-1 | LITERAL
 
-#. Run the Java producer to ``demo-topic-1`` after configuring the ACLs:
+#. Run the Java producer to ``demo-topic-1`` after configuring the ACLs (expected to pass):
 
    .. code-block:: bash
 
@@ -401,7 +407,6 @@ Run a Java producer before and after configuring the ACLs
 
    .. code-block:: text
 
-         PASS
          [2020-08-29 13:52:10,836] WARN The configuration 'sasl.jaas.config' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
          [2020-08-29 13:52:10,837] WARN The configuration 'ssl.endpoint.identification.algorithm' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
          Producing record: alice	{"count":0}
@@ -433,11 +438,11 @@ Run a Java producer before and after configuring the ACLs
       ccloud kafka acl delete --allow --service-account 104349 --operation CREATE --topic demo-topic-1
       ccloud kafka acl delete --allow --service-account 104349 --operation WRITE --topic demo-topic-1
 
-   You should see two ``Deleted ACLs.`` messages.
+   Verify you see two ``Deleted ACLs.`` messages.
 
 
-Run a Java producer to show a prefixed ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run a Java producer with a prefixed ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create a new |ak| topic ``demo-topic-2``:
 
@@ -445,9 +450,10 @@ Run a Java producer to show a prefixed ACL
 
       ccloud kafka topic create demo-topic-2
 
-   You should see a ``Created topic "demo-topic-2"`` message.
+   Verify you see the ``Created topic "demo-topic-2"`` message.
 
-#. Run the following command to create ACLs for the producer using a prefix:
+#. Run the following command to create ACLs for the producer using a prefixed ACL
+   which matches any topic that starts with the prefix ``demo-topic``:
 
    .. code-block:: bash
 
@@ -472,7 +478,7 @@ Run a Java producer to show a prefixed ACL
 
       ccloud kafka acl list --service-account 104349
 
-   Your output should resemble:
+   Your output should resemble below. Observe that the ACL Type is ``PREFIXED``.
 
    .. code-block:: text
 
@@ -481,7 +487,8 @@ Run a Java producer to show a prefixed ACL
          User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic | PREFIXED
          User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic | PREFIXED
 
-#. Run the Java producer to ``demo-topic-2`` to prefix the ACLs:
+#. Run the Java producer to ``demo-topic-2``, which should match the newly
+   created prefixed ACLs.
 
    .. code-block:: bash
 
@@ -492,7 +499,6 @@ Run a Java producer to show a prefixed ACL
 
    .. code-block:: text
 
-      PASS
       [2020-08-29 13:52:39,012] WARN The configuration 'sasl.jaas.config' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
       [2020-08-29 13:52:39,013] WARN The configuration 'ssl.endpoint.identification.algorithm' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
       Producing record: alice	{"count":0}
@@ -527,8 +533,8 @@ Run a Java producer to show a prefixed ACL
    You should see two ``Deleted ACLs.`` messages.
 
 
-Run Connect and kafka-connect-datagen connector with permissions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run kafka-connect-datagen connector with wildcard ACLs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create a new |ak| topic ``demo-topic-3``:
 
@@ -538,7 +544,7 @@ Run Connect and kafka-connect-datagen connector with permissions
 
    You should see a ``Created topic "demo-topic-3"`` message.
 
-#. Run the following command to create an ACL for Connect:
+#. Run the following command to create an ACL that allows creation of any topic:
 
    .. code-block:: bash
 
@@ -553,8 +559,8 @@ Run Connect and kafka-connect-datagen connector with permissions
          User:104349      | ALLOW      | CREATE    | TOPIC    | *    | LITERAL
 
 
-#. Run the following command to allow user ``104349`` to write to any topic
-   in the ACL you created previously:
+#. Run the following command to allow service account ID ``104349`` to write to
+   any topic.
 
    .. code-block:: bash
 
@@ -569,8 +575,8 @@ Run Connect and kafka-connect-datagen connector with permissions
          User:104349      | ALLOW      | WRITE     | TOPIC    | *    | LITERAL
 
 
-#. Run the following command to allow user ``104349`` to have a consumer group
-   called ``connect``.
+#. Run the following command to allow service account ID ``104349`` to read from
+   any topic.
 
    .. code-block:: bash
 
@@ -584,9 +590,8 @@ Run Connect and kafka-connect-datagen connector with permissions
        +------------------+------------+-----------+----------+------+---------+
          User:104349      | ALLOW      | READ      | TOPIC    | *    | LITERAL
 
-
-#. Run the following command to allow user ``104349`` to read from any topic
-   in the ACL:
+#. Run the following command to allow service account ID ``104349`` to have a consumer group
+   called ``connect``.
 
    .. code-block:: bash
 
@@ -625,18 +630,19 @@ Run Connect and kafka-connect-datagen connector with permissions
       ../../ccloud/ccloud-generate-cp-configs.sh /tmp/client.config &>/dev/null
       source delta_configs/env.delta
 
-#. Run a |kconnect| container with the kafka-connect-datagen plugin:
+#. Run the following :devx-examples:`docker-compose.yml file|ccloud/beginner-cloud/docker-compose.yml`
+   which is a |kconnect| container with the`kafka-connect-datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ plugin:
 
    .. code-block:: bash
 
       docker-compose up -d
 
-   You should see the following output:
+   Your output should resemble:
 
    .. code-block:: text
 
       Creating connect-cloud ... done
-      Waiting up to 60 seconds for Docker container for connect to be up
+      Waiting up to 180 seconds for Docker container for connect to be up
       ............
 
 #. Post the configuration for the kafka-connect-datagen connector that produces
@@ -646,10 +652,10 @@ Run Connect and kafka-connect-datagen connector with permissions
 
          DATA=$( cat << EOF
          {
-            "name": "$CONNECTOR",
+            "name": "datagen-demo-topic-3",
             "config": {
               "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-              "kafka.topic": "$TOPIC3",
+              "kafka.topic": "demo-topic-3",
               "quickstart": "pageviews",
               "key.converter": "org.apache.kafka.connect.storage.StringConverter",
               "value.converter": "org.apache.kafka.connect.json.JsonConverter",
@@ -661,10 +667,11 @@ Run Connect and kafka-connect-datagen connector with permissions
          }
          EOF
          )
+
          curl --silent --output /dev/null -X POST -H "Content-Type: application/json" --data "${DATA}" http://localhost:8083/connectors
 
 
-   You should wait 20 seconds for kafka-connect-datagen to start producing messages.
+#. Wait about 20 seconds for kafka-connect-datagen to start producing messages.
 
 #. Run the following command to verify connector is running:
 
@@ -693,8 +700,8 @@ Run Connect and kafka-connect-datagen connector with permissions
       }
 
 
-Run a Java consumer to show a Wildcard ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Run a Java consumer with a Wildcard ACL
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create ACLs for the consumer using a wildcard by running the following
    commands:
@@ -736,7 +743,7 @@ Run a Java consumer to show a Wildcard ACL
          User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
 
 
-#. Run the Java consumer from ``demo-topic-3 (populated by kafka-connect-datagen)``:
+#. Run the Java consumer from ``demo-topic-3`` which is populated by kafka-connect-datagen.
 
    .. code-block:: bash
 
@@ -747,7 +754,6 @@ Run a Java consumer to show a Wildcard ACL
 
    .. code-block:: text
 
-      PASS
       Consumed record with key 1 and value {"viewtime":1,"userid":"User_6","pageid":"Page_82"}
       Consumed record with key 71 and value {"viewtime":71,"userid":"User_6","pageid":"Page_11"}
       Consumed record with key 51 and value {"viewtime":51,"userid":"User_7","pageid":"Page_24"}
@@ -755,16 +761,6 @@ Run a Java consumer to show a Wildcard ACL
       Consumed record with key 81 and value {"viewtime":81,"userid":"User_5","pageid":"Page_25"}
       Consumed record with key 41 and value {"viewtime":41,"userid":"User_2","pageid":"Page_88"}
       Consumed record with key 91 and value {"viewtime":91,"userid":"User_2","pageid":"Page_74"}
-      Consumed record with key 101 and value {"viewtime":101,"userid":"User_8","pageid":"Page_11"}
-      Consumed record with key 111 and value {"viewtime":111,"userid":"User_1","pageid":"Page_34"}
-      Consumed record with key 11 and value {"viewtime":11,"userid":"User_3","pageid":"Page_75"}
-      Consumed record with key 21 and value {"viewtime":21,"userid":"User_8","pageid":"Page_81"}
-      Consumed record with key 61 and value {"viewtime":61,"userid":"User_9","pageid":"Page_65"}
-      Consumed record with key 121 and value {"viewtime":121,"userid":"User_3","pageid":"Page_51"}
-      Consumed record with key 131 and value {"viewtime":131,"userid":"User_1","pageid":"Page_83"}
-      Consumed record with key 141 and value {"viewtime":141,"userid":"User_8","pageid":"Page_77"}
-      Consumed record with key 151 and value {"viewtime":151,"userid":"User_6","pageid":"Page_58"}
-      Consumed record with key 161 and value {"viewtime":161,"userid":"User_2","pageid":"Page_15"}
 
 #. Delete the ACLs by running the following command:
 
@@ -801,10 +797,10 @@ Run a Java consumer to show a Wildcard ACL
    You should see a ``Deleted ACLs.`` message after running each of the previous commands.
 
 
-Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Clean up your Confluent Cloud resources
+---------------------------------------
 
-#. Run the following command to delete the service-account:
+#. Run the following command to delete the service account:
 
    .. code-block:: bash
 
@@ -836,7 +832,7 @@ Delete the API key, service account, Kafka topics, Kafka cluster, environment, a
 
       You should see: ``Deleted topic "demo-topic-3"``.
 
-   d. Delete ``connect-configs``:
+   d. Delete ``connect-configs``, one of the 3 topics created by the |kconnect| worker:
 
       .. code-block:: bash
 
@@ -844,7 +840,7 @@ Delete the API key, service account, Kafka topics, Kafka cluster, environment, a
 
       You should see: ``Deleted topic "connect-configs"``.
 
-   e. Delete ``connect-offsets``:
+   e. Delete ``connect-offsets``, one of the 3 topics created by the |kconnect| worker:
 
       .. code-block:: bash
 
@@ -852,7 +848,7 @@ Delete the API key, service account, Kafka topics, Kafka cluster, environment, a
 
       You should see: ``Deleted topic "connect-offsets"``.
 
-   f. Delete ``connect-status``:
+   f. Delete ``connect-status``, one of the 3 topics created by the |kconnect| worker:
 
       .. code-block:: bash
 
@@ -881,9 +877,26 @@ Delete the API key, service account, Kafka topics, Kafka cluster, environment, a
 
    You should see: ``Deleted environment "env-5qz2q"``.
 
+If you run a demo that ends prematurely, you may receive the following error
+message when trying to run the demo again (``ccloud environment create
+demo-script-env``):
 
-Advanced demo usage
-~~~~~~~~~~~~~~~~~~~
+.. code-block:: text
+
+      Error: 1 error occurred:
+         * error creating account: Account name is already in use
+
+      Failed to create environment demo-script-env. Please troubleshoot and run again
+
+In this case, run the following script to delete the demo’s topics, |ak| cluster, and environment.
+
+.. code-block:: bash
+
+   ./cleanup.sh
+
+
+Advanced usage
+--------------
 
 The demo script provides variables that allow you to alter the default |ak|
 cluster name, cloud provider, and region. For example:
@@ -907,30 +920,6 @@ Here are the variables and their default values:
    * - ``CLUSTER_REGION``
      - us-west-2
 
-Demo Cleanup
-~~~~~~~~~~~~
-
-If you run a demo that ends prematurely, you may receive the following error
-message when trying to run the demo again (``ccloud environment create
-demo-script-env``):
-
-.. code-block:: text
-
-      Error: 1 error occurred:
-         * error creating account: Account name is already in use
-
-      Failed to create environment demo-script-env. Please troubleshoot and run again
-
-To perform demo cleanup, complete the following steps:
-
-#. Delete the API keys and ACLs created in a previous demo run.
-
-#. Run the following script to delete the demo’s topics, |ak| cluster, and environment.
-
-   .. code-block:: bash
-
-      ./cleanup.sh
-
 
 Additional Resources
 ---------------------
@@ -942,5 +931,3 @@ Additional Resources
    your |ak| client applications when using |ccloud|.
 
 - See other :ref:`ccloud-demos-overview`.
-
-
