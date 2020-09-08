@@ -91,5 +91,3 @@ Now open a web-browser to http://localhost:12345, and you should see |c3| with y
 .. figure:: ../../docs/images/clicks-inspection.png
     :alt: c3
 
-.. figure:: ../../docs/images/clicks-schema.png
-    :alt: c3-schema
