@@ -127,8 +127,7 @@ By default, the ``cloud-stack`` utility creates resources in the cloud provider 
 
       CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
 
-#. By default, a new `ccloud-stack`` creates a new environment. To reuse an existing environment, create the ``ccloud-stack`` and override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown below.
-
+By default, a new ``ccloud-stack`` creates a new environment. To reuse an existing environment, create the ``ccloud-stack`` and override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the following example:```
    .. code-block:: bash
 
       ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
