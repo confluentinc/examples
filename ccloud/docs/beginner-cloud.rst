@@ -9,6 +9,8 @@ Overview
 This tutorial shows you how to use the `Confluent Cloud CLI
 <https://docs.confluent.io/current/cloud/cli/install.html>`__ to interact with
 your `Confluent Cloud <https://confluent.cloud/login>`__ cluster.
+It uses real resources in |ccloud|, and it creates and deletes topics, service
+accounts, credentials, and ACLs.
 Following the workflow in this tutorial, you accomplish the following steps:
 
 -  `Create a new Confluent Cloud environment`_
@@ -27,9 +29,7 @@ Following the workflow in this tutorial, you accomplish the following steps:
 Prerequisites
 ~~~~~~~~~~~~~~
 
--  Access to `Confluent Cloud <https://confluent.cloud/login>`__. Note that this
-   tutorial uses real resources in |ccloud|, and it creates and deletes
-   topics, service accounts, API keys, and ACLs.
+-  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
 -  |ccloud| user credentials saved in ``~/.netrc``. (Use ``ccloud login --save``
    when logging in to the |ccloud| CLI. The ``--save`` flag will save your login
