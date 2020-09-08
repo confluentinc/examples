@@ -9,7 +9,7 @@ The demo will deploy |cp| leverging |co-long|.   As the various components are d
 .. codewithvars:: bash
 
     +++++++++++++ deploy kafka
-    helm upgrade --install --namespace operator --wait --timeout=500 -f examples/kubernetes/|operator-demo-prefix|-base/cfg/values.yaml --set global.provider.region=us-central1 --set global.provider.kubernetes.deployment.zones={us-central1-a} -f examples/kubernetes/replicator-|operator-demo-prefix|-cc/cfg/values.yaml -f examples/kubernetes/replicator-|operator-demo-prefix|-cc/cfg/my-values.yaml  --set kafka.replicas=3 --set kafka.enabled=true kafka examples/kubernetes/common/cp/operator/20190912-v0.65.1/helm/confluent-operator
+    helm upgrade --install --namespace operator --wait --timeout=500 -f examples/kubernetes/gke-base/cfg/values.yaml --set global.provider.region=us-central1 --set global.provider.kubernetes.deployment.zones={us-central1-a} -f examples/kubernetes/replicator-gke-cc/cfg/values.yaml -f examples/kubernetes/replicator-gke-cc/cfg/my-values.yaml  --set kafka.replicas=3 --set kafka.enabled=true kafka examples/kubernetes/common/cp/operator/20190912-v0.65.1/helm/confluent-operator
     Release "kafka" does not exist. Installing it now.
     NAME:   kafka
     LAST DEPLOYED: Mon Oct 28 11:42:07 2019
