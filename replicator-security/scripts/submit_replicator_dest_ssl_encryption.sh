@@ -10,11 +10,7 @@ DATA=$( cat << EOF
     "key.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "value.converter": "io.confluent.connect.replicator.util.ByteArrayConverter",
     "src.kafka.bootstrap.servers": "srcKafka1:10091",
-    "dest.kafka.bootstrap.servers": "destKafka1:11091",
     "tasks.max": "1",
-    "dest.kafka.ssl.truststore.location":"/etc/kafka/secrets/kafka.connect.truststore.jks",
-    "dest.kafka.ssl.truststore.password":"confluent",
-    "dest.kafka.security.protocol":"SSL",
     "confluent.topic.replication.factor": "1"
   }
 }
