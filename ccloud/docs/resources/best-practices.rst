@@ -1,5 +1,5 @@
 
-.. _best-practices-ccloud:
+.. _ccloud-best-practices:
 
 Best Practices for Developing Apache Kafka® Applications on Confluent Cloud
 ===========================================================================
@@ -8,33 +8,32 @@ Confluent recommends the following best practices for developing, tuning, and
 monitoring Apache Kafka® applications on |ccloud|:
 
 
- -  Getting up and running with the `Confluent Cloud Quick Start
-    <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#cloud-quickstart>`__.
+-  Getting up and running with the `Confluent Cloud Quick Start
+   <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#cloud-quickstart>`__.
 
- -  Configuring your developed `Kafka client application
-    <https://docs.confluent.io/current/clients/index.html>`__ to produce to and
-    consume from an Apache Kafka® cluster in |ccloud|. See
-    :ref:`clients-all-examples` for client examples written in specific
-    programming languages and tools.
+-  Configuring your developed `Kafka client application
+   <https://docs.confluent.io/current/clients/index.html>`__ to produce to and
+   consume from an Apache Kafka® cluster in |ccloud|.
 
--   `Managing schemas in Confluent Cloud using the Confluent Cloud Schema
-    Registry
-    <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html#cloud-sr-config>`__
+   See :ref:`clients-all-examples` for client examples written in specific
+   programming languages and tools.
 
--   `Securing your Confluent deployment <https://docs.confluent.io/current/security/index.html>`__
+-  `Managing schemas using the Confluent Cloud Schema Registry
+   <https://docs.confluent.io/current/quickstart/cloud-quickstart/schema-registry.html#cloud-sr-config>`__
 
--   `Managing your topics in Confluent Cloud
+-  `Securing your Confluent deployment <https://docs.confluent.io/current/security/index.html>`__
+
+-  `Managing your topics in Confluent Cloud
     <https://docs.confluent.io/current/cloud/using/topics/manage.html#cloud-topics-manageAuthorizing>`__
 
-.. including this white paper link https://www.confluent.io/blog/secure-kafka-deployment-best-practices/?_ga=2.90877722.144961861.1599581510-578335341.1598309891
+.. white paper link https://www.confluent.io/blog/secure-kafka-deployment-best-practices/?_ga=2.90877722.144961861.1599581510-578335341.1598309891
 
--   `Using Confluent Replicator for a multi-cluster deployment
+-  `Using Confluent Replicator for a multi-cluster deployment
     <https://docs.confluent.io/current/cloud/migrate-topics-on-cloud-clusters.html>`__
 
--   :ref:`Monitoring and measuring performance of your deployment <best-practices-ccloud-monitoring>`
+-  :ref:`Monitoring and measuring the performance of your deployment <ccloud-monitoring>`
 
--   :ref:`Optimizing and tuning your client application for throughput, latency,
-     durability, and availability <best-practices-ccloud-optimizing>`
+-  :ref:`Optimizing and tuning your client application <ccloud-optimizing>`
 
 
 These best practices are generally applicable to a Kafka client application
