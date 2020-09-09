@@ -9,10 +9,6 @@ Use the prefix ``dest.`` to set these configuration parameters.
    # New user topics that |crep-full| creates must have replication factor set to 3 for |ccloud| 
    dest.topic.replication.factor=3
 
-   # Connection information to Confluent Cloud
-   # Remaining configuration is inherited from the Connect worker's 'producer.' configuration
-   dest.kafka.bootstrap.servers=<bootstrap-servers-destination>
-
 If your deployment has |c3| end-to-end streams monitoring setup to gather data in |ccloud|, then you also need to setup the Confluent Monitoring Interceptors to send data to your |ccloud| cluster, which also requires appropriate connection information set for the embedded consumer with the prefix ``src.consumer``.
 
 .. sourcecode:: bash
