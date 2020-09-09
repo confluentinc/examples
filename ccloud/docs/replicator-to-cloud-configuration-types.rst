@@ -87,7 +87,7 @@ Configure |crep|
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
-.. include:: includes/replicator-to-destination-ccloud.rst
+.. include:: includes/replicator-connect-worker-to-destination.rst
 
 Configure ACLs
 ^^^^^^^^^^^^^^
@@ -116,7 +116,7 @@ Configure |crep|
 
 .. include:: includes/replicator-from-origin-ccloud.rst
 
-.. include:: includes/replicator-to-destination-ccloud.rst
+.. include:: includes/replicator-connect-worker-to-destination.rst
 
 Configure ACLs
 ^^^^^^^^^^^^^^
@@ -158,7 +158,7 @@ Configure |crep|
 
 .. include:: includes/replicator-from-origin-onprem.rst
 
-.. include:: includes/replicator-to-destination-ccloud.rst
+.. include:: includes/replicator-connect-worker-to-origin.rst
 
 .. include:: includes/replicator-overrides.rst
 
@@ -191,7 +191,7 @@ Configure |crep|
 
 .. include:: includes/replicator-from-origin-ccloud.rst
 
-.. include:: includes/replicator-to-destination-ccloud.rst
+.. include:: includes/replicator-connect-worker-to-origin.rst
 
 .. include:: includes/replicator-overrides.rst
 
