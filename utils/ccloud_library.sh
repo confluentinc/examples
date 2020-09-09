@@ -847,6 +847,11 @@ function ccloud::set_kafka_cluster_use() {
   return 0
 }
 
+
+#
+# ccloud-stack documentation:
+# https://docs.confluent.io/current/tutorials/examples/ccloud/docs/ccloud-stack.html
+#
 function ccloud::create_ccloud_stack() {
   QUIET="${QUIET:-true}"
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-1}
