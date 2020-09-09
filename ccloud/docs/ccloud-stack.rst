@@ -124,7 +124,7 @@ By default, the ``cloud-stack`` utility creates resources in the cloud provider 
 
       ccloud kafka region list
 
-#. Create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown below.
+#. Create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown in the following example:
 
    .. code-block:: bash
 
