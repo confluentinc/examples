@@ -33,7 +33,7 @@ Benchmarking
 
 Benchmark testing is important because there is no one-size-fits-all
 recommendation for the configuration parameters needed to develop |ak|
-applications to Confluent Cloud. Proper configuration always depends on the use
+applications to |ccloud|. Proper configuration always depends on the use
 case, other features you have enabled, the data profile, and more. Confluent
 recommends you run benchmark tests if you plan to tune |ak| clients beyond the
 defaults. Regardless of your service goals, you should understand what the
@@ -125,12 +125,6 @@ the settings of some of your |ak| client configuration parameters and benchmark
 in your own environment. Confluent strongly recommends you :ref:`benchmark
 <ccloud-benchmarking>` your application before going into production.
 
-This section will help you identify your service goals, configure your |ak|
-deployment to optimize for them, and ensure you achieve them through
-monitoring.
-
-|image3|
-
 To identify your service goals, you should decide which service goals you want
 to optimize. For example, there are four goals that often involve trade-offs
 with one another:
@@ -166,47 +160,49 @@ with your team for the following two reasons:
    time.
 
 -  You must identify the service goals you want to optimize so you
-   can tune your |ak| configuration parameters to achieve them.
-
-   You must understand what your users expect from the system to ensure you are
-   optimizing |ak| to meet their needs. For example:
+   can tune your |ak| configuration parameters to achieve them, and you must
+   understand what your users expect from the system to ensure you are
+   optimizing |ak| to meet their needs. You should take time to answer the
+   following questions:
 
    -  Do you want to optimize for *high throughput*, which is the rate that
       data is moved from producers to brokers or brokers to consumers?
 
       Some use cases have millions of writes per second. Because of |ak|’s
-       design, writing large volumes of data into it isn't a hard thing to do.
-       It’s faster than trying to push volumes of data through a traditional
-       database or key-value store, and it can be done with modest hardware.
+      design, writing large volumes of data into it isn't a hard thing to do.
+      It’s faster than trying to push volumes of data through a traditional
+      database or key-value store, and it can be done with modest hardware.
 
    -  Do you want to optimize for *low latency*, which is the time elapsed
       moving messages end to end (from producers to brokers to consumers)?
 
-      One example of a low-latency use case is a chat application, where
-      the recipient of a message needs to get the message with as little
-      latency as possible. Other examples include interactive websites
-      where users follow posts from friends in their network, or real-time
-      stream processing for the Internet of Things (IoT).
+      *Use case*: A chat application, where the recipient of a message needs to
+      get the message with as little latency as possible. Other examples include
+      interactive websites where users follow posts from friends in their
+      network, or real-time stream processing for the Internet of Things (IoT).
 
    -  Do you want to optimize for *high durability*, which guarantees that
       committed messages will not be lost?
 
-      One example use case for high durability is an event streaming
-      microservices pipeline using |ak| as the event store. Another is for
-      integration between an event streaming source and some permanent storage
-      (for examples, Amazon S3) for mission-critical business content.
+      *Use case*: An event streaming microservices pipeline using |ak| as the
+      event store. Another is for integration between an event streaming source
+      and some permanent storage (for examples, Amazon S3) for mission-critical
+      business content.
 
    -  Do you want to optimize for *high availability*, which minimizes
-      downtime in case of unexpected failures? |ak| is a distributed
-      system, and it is designed to tolerate failures. In use cases
-      demanding high availability, it’s important to configure |ak| such
-      that it will recover from failures as quickly as possible.
+      downtime in case of unexpected failures?
+
+      |ak| is a distributed system, and it is designed to tolerate failures. In
+      use cases demanding high availability, it’s important to configure |ak|
+      such that it will recover from failures as quickly as possible.
+
+.. do we have use case examples for question 1 and question 4 for consistency
 
 Optimizing for your Service Goals
 ---------------------------------
 
-This section includes information that will help you optimize for your service
-goals.
+This section includes information that will help you configure your |ak|
+deployment to optimize for your service goals.
 
 .. warning::
 
@@ -223,15 +219,13 @@ goals.
 Optimizing for Throughput
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-|image5|
-
 To optimize for throughput, the producers and consumers must move as much data
 as they can within a given amount of time. For high throughput, you should try
 to maximize the rate at which the data moves. The data rate should be as fast
 as possible.
 
 Increasing the number of partitions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***********************************
 
 A topic partition is the unit of parallelism in |ak|, and you can
 send messages to different partitions in parallel by producers, written in
@@ -251,7 +245,7 @@ partitions. This will prevent overloading certain topic partitions relative to
 others.
 
 Batching messages
-^^^^^^^^^^^^^^^^^
+*****************
 
 With batching strategy of |ak| producers, you can batch messages going to the
 same partition, which means they collect multiple messages to send together in a
@@ -269,7 +263,7 @@ sent as soon as they are ready to send.
 
 
 Enabling compression using the ``compression.type`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************************************************
 
 To optimize for throughput, you can also enable compression, which means a lot
 of bits can be sent as fewer bits. Enable compression by configuring the
@@ -302,7 +296,7 @@ destination topic.
 
 
 Setting the ``acks`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*******************************
 
 When a producer sends a message to |ccloud|, the message is sent to the leader
 broker for the target partition. Then the producer awaits a response from the
@@ -322,8 +316,8 @@ tolerate lower durability, because the producer doesn't have to wait until the
 message is replicated to other brokers.
 
 
-Adjusting memory allocation with the ``buffer.memory`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Adjusting memory allocation using the ``buffer.memory`` parameter
+******************************************************************
 
 |ak| producers automatically allocate memory for the Java client to store unsent
 messages. If that memory limit is reached, then the producer will block on
@@ -331,7 +325,7 @@ additional sends until memory frees up or until ``max.block.ms`` time passes.
 You can adjust how much memory is allocated with the configuration parameter
 ``buffer.memory``. If you don’t have a lot of partitions, you may not need to
 adjust this at all. However, if you have a lot of partitions, you can tune
-``buffer.memory``—while also taking into account the message size, linger time,
+``buffer.memory``–while also taking into account the message size, linger time,
 and partition count—to maintain pipelines across more partitions. This in turn
 enables better use of the bandwidth across more brokers.
 
@@ -360,9 +354,10 @@ simultaneously. The upper limit on this parallelization is the number of
 partitions in the topic.
 
 Summary of Configurations for Optimizing Throughput
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+****************************************************
 
-Producer:
+Producer
+^^^^^^^^
 
 -  ``batch.size``: increase to 100000–200000 (default 16384)
 
@@ -375,16 +370,16 @@ Producer:
 -  ``buffer.memory``: increase if there are a lot of partitions (default
    33554432)
 
-Consumer:
+Consumer
+^^^^^^^^
 
 -  ``fetch.min.bytes``: increase to ~100000 (default 1)
+
 
 .. _optimizing-for-throughput:
 
 Optimizing for Latency
 ~~~~~~~~~~~~~~~~~~~~~~~
-
-|image6|
 
 Many of the |ak| configuration parameters discussed in the
 :ref:`optimizing-for-throughput` section have default settings that optimize for
@@ -394,7 +389,7 @@ how they work.
 
 
 Increasing the number of partitions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***********************************
 
 The `Confluent guidelines
 <https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster>`__
@@ -408,7 +403,7 @@ considered committed. No message can be consumed until it is committed, so this
 can ultimately increase end-to-end latency.
 
 Batching messages
-^^^^^^^^^^^^^^^^^
+*****************
 
 Producers automatically batch messages, which means they collect messages to
 send together. The less time that is given waiting for those batches to fill,
@@ -421,7 +416,7 @@ passed to the producer faster than it can send them).
 
 
 Enabling compression
-^^^^^^^^^^^^^^^^^^^^
+********************
 
 Consider whether you need to enable compression. Enabling compression typically
 requires more CPU cycles to do the compression, but it reduces network bandwidth
@@ -433,7 +428,7 @@ as well.
 
 
 Setting the ``acks`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+******************************
 
 You can tune the number of acknowledgments the producer requires the leader
 broker in the |ccloud| cluster to have received before considering a request
@@ -450,7 +445,7 @@ but then messages can potentially be lost without the producer even knowing.
 
 
 Configuring the ``fetch.min.bytes`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*********************************************
 
 Similar to the batching concept on the producers, you can tune consumers for
 lower latency by adjusting how much data it gets from each fetch from the leader
@@ -465,7 +460,7 @@ lets you reason through the size of the fetch request–that is,
 
 
 Setting the ``topology.optimization`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+***********************************************
 
 If you have a `Kafka event streaming application
 <https://docs.confluent.io/current/streams/index.html>`__ or are using `ksqlDB
@@ -495,10 +490,10 @@ of reshuffled streams that are stored and piped via repartition topics.
 
 
 Summary of Configurations for Optimizing Latency
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+************************************************
 
 Producer
-^^^^^^^^^
+^^^^^^^^
 
 -  ``linger.ms=0`` (default 0)
 
@@ -510,7 +505,6 @@ Consumer
 ^^^^^^^^
 
 -  ``fetch.min.bytes=1`` (default 1)
-
 
 Streams
 ^^^^^^^
@@ -525,14 +519,12 @@ Streams
 Optimizing for Durability
 ~~~~~~~~~~~~~~~~~~~~~~~~-
 
-|image7|
-
 Durability is all about reducing the chance for a message to get lost. |ccloud|
 enforces a replication factor of ``3`` to ensure data durability.
 
 
 Setting the ``acks`` configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+********************************************
 
 Producers can control the durability of messages written to |ak| through the
 ``acks`` configuration parameter. This parameter was discussed in the context of
@@ -547,7 +539,7 @@ waits for acknowledgments from replicas before responding to the producer.
 
 
 Configuring producers for idempotency
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+*************************************
 
 Producers can also increase durability by trying to resend messages if any sends
 fail to ensure that data isn't lost. The producer automatically tries to resend
@@ -583,8 +575,8 @@ sends, so when configuring the producer for idempotency, the application
 developer needs to catch the fatal error and handle it appropriately.
 
 
-Setting the ``max.in.flight.requests.per.connection`` configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Setting the ``max.in.flight.requests.per.connection`` parameter
+***************************************************************
 
 If you don't configure the producer for idempotency but your business
 requirements call for it, you must address the potential for message
@@ -663,7 +655,7 @@ event streaming applications by setting the configuration parameter
 
 
 Summary of Configurations for Optimizing Durability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+***************************************************
 
 Producer
 ^^^^^^^^
@@ -701,14 +693,12 @@ Streams
 Optimizing for Availability
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-|image8|
-
 To optimize for high availability, you should tune your |ak| application to
 recover as quickly as possible from failure scenarios.
 
 
 Configuring the ``session.timeout.ms`` parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+************************************************
 
 When a producer sets ``acks=all`` (or ``acks=-1``), the configuration parameter
 ``min.insync.replicas`` specifies the minimum number of replicas that must
@@ -743,8 +733,8 @@ reducing the maximum size of batches returned with the configuration parameter
 detect and recover from a consumer failure, relatively speaking, incidents of
 failed clients are less likely than network issues.
 
-Setting the num.standby.replicas configuration parameter
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Setting the ``num.standby.replicas`` parameter
+**********************************************
 
 Finally, when rebalancing workloads by moving tasks between event streaming
 application instances, you can reduce the time it takes to restore task
@@ -767,7 +757,7 @@ most recent snapshot accordingly:
    applying a smaller portion of the changelog.
 
 Summary of Configurations for Optimizing Availability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*****************************************************
 
 Consumer
 ^^^^^^^^^
@@ -781,17 +771,3 @@ Streams
 
 -  Streams applications have embedded producers and consumers, so also
    check those configuration recommendations
-
-
-
-.. |Multi-region Architecture|
-   image:: images/multi-region-base-v2.png
-   :alt: Multi-region Architecture
-
-.. |image3| image:: images/optimizing-ak/service-goals.jpg
-.. |image4| image:: images/optimizing-ak/goals-all.jpg
-.. |image5| image:: images/optimizing-ak/goals-throughput.jpg
-.. |image6| image:: images/optimizing-ak/goals-latency.jpg
-.. |image7| image:: images/optimizing-ak/goals-durability.jpg
-.. |image8| image:: images/optimizing-ak/goals-availability.jpg
-.. |image9| image:: images/ak-ccloud/cloud-icon.png
