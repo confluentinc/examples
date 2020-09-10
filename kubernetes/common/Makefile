@@ -61,7 +61,7 @@ ensure-namespace:
 	-kubectl --context $(KUBECTL_CONTEXT) apply -f $(COMMON_MKFILE_DIR)cfg/operator-namespace.json
 	@$(call echo_stdout_footer_pass,namespace ready)
 
-base-demo-validate:
+base-demo-validate: init
 	@echo
 	@make --no-print-directory ensure-namespace
 
