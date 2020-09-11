@@ -92,14 +92,13 @@ Confluent recommends you complete the following steps:
 
 
 .. This following paragraph seems like it should start a new section with a new heading?
-This would of course change the levels of the following section headings as they would be under this new heading
+.. This would of course change the levels of the following section headings as they would be under this new heading
 
 The following sections describe how different configuration parameters impact
 your application performance and how you can tune them accordingly.
 
 ..  Are we speaking about what users should do or the section here in the
-paragraph below? These are not complete sentences and sound more like bullet
-points:
+.. paragraph below? These are not complete sentences and sound more like bullet points:
 
 Focus on those configuration parameters, and avoid the temptation to discover
 and change other parameters from their default values without understanding
@@ -108,7 +107,7 @@ run a test, observe the results, tune again, and so on, until you identify
 settings that work for your throughput and latency requirements. `Refer to this
 blog post
 <https://www.confluent.io/blog/apache-kafka-supports-200k-partitions-per-cluster>`__
-when considering partition count in your benchmark tests."
+when considering partition count in your benchmark tests.
 
 
 Determining your Service Goals
