@@ -223,7 +223,7 @@ as they can within a given amount of time. For high throughput, you should try
 to maximize the rate at which the data moves. The data rate should be as fast
 as possible.
 
-Increasing the number of partitions
+Increasing the Number of Partitions
 ***********************************
 
 A topic partition is the unit of parallelism in |ak|, and you can
@@ -243,7 +243,7 @@ assignments so messages are distributed as evenly as possible across topic
 partitions. This will prevent overloading certain topic partitions relative to
 others.
 
-Batching messages
+Batching Messages
 *****************
 
 With batching strategy of |ak| producers, you can batch messages going to the
@@ -261,7 +261,7 @@ delay allows the producer to wait for the batch to reach the configured
 sent as soon as they are ready to send.
 
 
-Enabling compression using the ``compression.type`` parameter
+Enabling Compression using the ``compression.type`` Parameter
 *************************************************************
 
 To optimize for throughput, you can also enable compression, which means a lot
@@ -294,7 +294,7 @@ destination topic.
    impact; therefore, keep the compression codecs the same if possible
 
 
-Setting the ``acks`` parameter
+Setting the ``acks`` Parameter
 *******************************
 
 When a producer sends a message to |ccloud|, the message is sent to the leader
@@ -315,7 +315,7 @@ tolerate lower durability, because the producer doesn't have to wait until the
 message is replicated to other brokers.
 
 
-Adjusting memory allocation using the ``buffer.memory`` parameter
+Adjusting Memory Allocation using the ``buffer.memory`` Parameter
 ******************************************************************
 
 |ak| producers automatically allocate memory for the Java client to store unsent
@@ -329,7 +329,7 @@ and partition count—to maintain pipelines across more partitions. This in turn
 enables better use of the bandwidth across more brokers.
 
 
-Configuring the ``fetch.min.bytes`` parameter
+Configuring the ``fetch.min.bytes`` Parameter
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Another way to optimize for throughput is adjust how much data consumers receive
@@ -375,7 +375,7 @@ Consumer
 -  ``fetch.min.bytes``: increase to ~100000 (default 1)
 
 
-.. _optimizing-for-throughput:
+.. _optimizing-for-latency:
 
 Optimizing for Latency
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -387,7 +387,7 @@ parameters. This section includes a review of the key parameters to understand
 how they work.
 
 
-Increasing the number of partitions
+Increasing the Number of Partitions
 ***********************************
 
 The `Confluent guidelines
@@ -401,7 +401,7 @@ between each pair of brokers and consequently take longer for messages to be
 considered committed. No message can be consumed until it is committed, so this
 can ultimately increase end-to-end latency.
 
-Batching messages
+Batching Messages
 *****************
 
 Producers automatically batch messages, which means they collect messages to
@@ -414,7 +414,7 @@ in batches—but sometimes a batch may have only one message (unless messages ar
 passed to the producer faster than it can send them).
 
 
-Enabling compression
+Enabling Compression
 ********************
 
 Consider whether you need to enable compression. Enabling compression typically
@@ -426,7 +426,7 @@ the CPU cycles, although a good compression codec may potentially reduce latency
 as well.
 
 
-Setting the ``acks`` parameter
+Setting the ``acks`` Parameter
 ******************************
 
 You can tune the number of acknowledgments the producer requires the leader
@@ -443,7 +443,7 @@ producer will not wait for a response for a producer request from the broker,
 but then messages can potentially be lost without the producer even knowing.
 
 
-Configuring the ``fetch.min.bytes`` parameter
+Configuring the ``fetch.min.bytes`` Parameter
 *********************************************
 
 Similar to the batching concept on the producers, you can tune consumers for
@@ -458,7 +458,7 @@ lets you reason through the size of the fetch request–that is,
 ``fetch.max.wait.ms``.
 
 
-Setting the ``topology.optimization`` parameter
+Setting the ``topology.optimization`` Parameter
 ***********************************************
 
 If you have a `Kafka event streaming application
@@ -522,8 +522,8 @@ Durability is all about reducing the chance for a message to get lost. |ccloud|
 enforces a replication factor of ``3`` to ensure data durability.
 
 
-Setting the ``acks`` configuration parameter
-********************************************
+Setting the ``acks`` Parameter
+******************************
 
 Producers can control the durability of messages written to |ak| through the
 ``acks`` configuration parameter. This parameter was discussed in the context of
@@ -537,7 +537,7 @@ alive. The trade-off is tolerating a higher latency because the leader broker
 waits for acknowledgments from replicas before responding to the producer.
 
 
-Configuring producers for idempotency
+Configuring Producers for Idempotency
 *************************************
 
 Producers can also increase durability by trying to resend messages if any sends
@@ -574,7 +574,7 @@ sends, so when configuring the producer for idempotency, the application
 developer needs to catch the fatal error and handle it appropriately.
 
 
-Setting the ``max.in.flight.requests.per.connection`` parameter
+Setting the ``max.in.flight.requests.per.connection`` Parameter
 ***************************************************************
 
 If you don't configure the producer for idempotency but your business
@@ -696,7 +696,7 @@ To optimize for high availability, you should tune your |ak| application to
 recover as quickly as possible from failure scenarios.
 
 
-Configuring the ``session.timeout.ms`` parameter
+Configuring the ``session.timeout.ms`` Parameter
 ************************************************
 
 When a producer sets ``acks=all`` (or ``acks=-1``), the configuration parameter
@@ -732,7 +732,7 @@ reducing the maximum size of batches returned with the configuration parameter
 detect and recover from a consumer failure, relatively speaking, incidents of
 failed clients are less likely than network issues.
 
-Setting the ``num.standby.replicas`` parameter
+Setting the ``num.standby.replicas`` Parameter
 **********************************************
 
 Finally, when rebalancing workloads by moving tasks between event streaming
