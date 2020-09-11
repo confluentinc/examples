@@ -18,12 +18,10 @@ services:
     hostname: zookeeper
     container_name: zookeeper
     ports:
-      - '32181:32181'
+      - '2181:2181'
     environment:
-      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    extra_hosts:
-      - "moby:127.0.0.1"
 
   kafka:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
@@ -36,7 +34,7 @@ services:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:32181
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
@@ -47,7 +45,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:32181
+      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
@@ -65,7 +63,7 @@ services:
       - '8081:8081'
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:32181
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
     extra_hosts:
       - "moby:127.0.0.1"
 
@@ -170,7 +168,7 @@ services:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:32181'
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_KSQL_MUSIC_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_MUSIC_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
