@@ -45,59 +45,61 @@ if needed):
 
 -  Max retained bytes per hour over two hours for a given cluster
 
+
 The following are examples of metrics at each level:
 
-.. tabs::
+Topic level
+~~~~~~~~~~~~
 
-   .. tab:: Topic level
+Here is the number of bytes produced per minute for a topic called ``test-topic``:
 
-      Here is the number of bytes produced per minute for a topic called ``test-topic``:
+.. code-block:: text
 
-      .. code-block:: text
+    {
+        "data": [
+            {
+                "timestamp": "2019-12-19T16:01:00Z",
+                "metric.label.topic": "test-topic",
+                "value": 203.0
+            },
+            {
+                "timestamp": "2019-12-19T16:02:00Z",
+                "metric.label.topic": "test-topic",
+                "value": 157.0
+            },
+            {
+                "timestamp": "2019-12-19T16:03:00Z",
+                "metric.label.topic": "test-topic",
+                "value": 371.0
+            },
+            {
+                "timestamp": "2019-12-19T16:04:00Z",
+                "metric.label.topic": "test-topic",
+                "value": 288.0
+            }
+        ]
+    }
 
-         {
-            "data": [
-                  {
-                     "timestamp": "2019-12-19T16:01:00Z",
-                     "metric.label.topic": "test-topic",
-                     "value": 203.0
-                  },
-                  {
-                     "timestamp": "2019-12-19T16:02:00Z",
-                     "metric.label.topic": "test-topic",
-                     "value": 157.0
-                  },
-                  {
-                     "timestamp": "2019-12-19T16:03:00Z",
-                     "metric.label.topic": "test-topic",
-                     "value": 371.0
-                  },
-                  {
-                     "timestamp": "2019-12-19T16:04:00Z",
-                     "metric.label.topic": "test-topic",
-                     "value": 288.0
-                  }
-            ]
-         }
 
-   .. tab:: Cluster level
+Cluster level
+~~~~~~~~~~~~~~
 
-      Here is the max retained bytes per hour over two hours for a |ccloud| cluster:
+Here is the max retained bytes per hour over two hours for a |ccloud| cluster:
 
-      .. code-block:: text
+.. code-block:: text
 
-         {
-            "data": [
-               {
-                     "timestamp": "2019-12-19T16:00:00Z",
-                     "value": 507350.0
-               },
-               {
-                     "timestamp": "2019-12-19T17:00:00Z",
-                     "value": 507350.0
-               }
-            ]
-         }
+    {
+        "data": [
+            {
+                "timestamp": "2019-12-19T16:00:00Z",
+                "value": 507350.0
+            },
+            {
+                "timestamp": "2019-12-19T17:00:00Z",
+                "value": 507350.0
+            }
+        ]
+    }
 
 You can retrieve the metrics easily over the internet using HTTPS, capturing
 them at regular intervals to get a time series and an operational view of
