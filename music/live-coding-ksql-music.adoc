@@ -9,7 +9,7 @@ v1.00, 4 Sept 2018
 
 This demo uses a mock music application to showcase Apache Kafka Streams API and ksqlDB.
 
-image::images/ksql-music-demo-overview.jpg
+image::images/ksql-music-demo-overview.jpg[Diagram]
 
 == Documentation
 
