@@ -56,7 +56,7 @@ ELASTICSEARCH_URL=http://elasticsearch:9200
 source ./scripts/render-connector-config.sh
 curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json http://localhost:8083/connectors/ -d @$OUTPUT_FILE
 
-printf "\n====== Validting and setting up ksqlDB App\n"
+printf "\n====== Validating and setting up ksqlDB App\n"
 
 MAX_WAIT_KSQLDB=$MAX_WAIT
 printf "\n====== Waiting up to $MAX_WAIT_KSQLDB for ksqlDB to be ready\n"
