@@ -222,7 +222,7 @@ services:
         /opt/docker/dashboard/docker-combined.sh
   
   microservices:
-    image: cnfldemos/kafka-streams-examples:5.5.1-DEVX-1881-PR346
+    image: ${REPOSITORY}/kafka-streams-examples:${CONFLUENT_DOCKER_TAG}
     container_name: microservices
     depends_on:
       - broker
