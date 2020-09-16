@@ -9,8 +9,8 @@
 
 .. include:: ../../docs/includes/base-demo/overview.rst
 
-Demo Prerequisites
--------------------
+Prerequisites
+-------------
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
 +------------------+----------------+---------------------------------------------------------+
@@ -24,8 +24,8 @@ The following applications or libraries are required to be installed and availab
 | ``GCP sdk core`` | ``2020.03.24`` |                                                         |
 +------------------+----------------+---------------------------------------------------------+
 
-Running the Demo
-----------------
+Running the Example
+-------------------
 
 .. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
 
@@ -113,9 +113,9 @@ Highlights
 Service Configurations
 ``````````````````````
 
-The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this demo we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
+The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this example we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
 
-The following is an example section of the demo's ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` for further details.
+The following is an example section of the ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` for further details.
 
 .. include:: ../../docs/includes/base-demo/highlight-service-configs.rst
 
@@ -148,21 +148,21 @@ You can verify that all resources are removed with::
 
   kubectl -n operator get all
 
-If you used the demo to create the Kubernetes cluster for you, destroy the cluster with (estimated running time, 3 minutes):
+If you used the example to create the Kubernetes cluster for you, destroy the cluster with (estimated running time, 3 minutes):
 
 .. sourcecode:: bash
 
   make gke-destroy-cluster
 
-Advanced Demo Usage
-*******************
+Advanced Usage
+**************
 
 .. _examples-operator-gke-base-variable-reference:
 
 Variable Reference
 ``````````````````
 
-The following table documents variables that can be used to configure various demo behaviors.  Variables can be ``exported`` or set in each individual ``make`` command with either sample syntax below:
+The following table documents variables that can be used to configure various behaviors.  Variables can be ``exported`` or set in each individual ``make`` command with either sample syntax below:
 
 .. sourcecode:: bash
 
@@ -176,9 +176,9 @@ The following table documents variables that can be used to configure various de
 | Variable                 | Description                                                                                          | Default                                                                        |
 +==========================+======================================================================================================+================================================================================+
 | GCP_PROJECT_ID           | Maps to your GCP Project ID.                                                                         | The output of the command ``gcloud config list --format 'value(core.project)`` |
-|                          | This is used by the demo to build a new GKE cluster as well as configuring the kubectl context.      |                                                                                |
+|                          | This is used by the example to build a new GKE cluster as well as configuring the kubectl context.      |                                                                                |
 |                          | If you wish to use a different project id that the current active configuration in ``glcoud``        |                                                                                |
-|                          | you should export this value in the current shell where you are running the demo.                    |                                                                                |
+|                          | you should export this value in the current shell where you are running the example.                 |                                                                                |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | GKE_BASE_CLUSTER_ID      | Identifies the GKE Cluster.  Substitutes in the current user to help with project uniqueness on GCP. | ``cp-examples-operator-$USER``                                                 |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
@@ -200,6 +200,6 @@ The following table documents variables that can be used to configure various de
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | GKE_BASE_NUM_NODES       | Maps to the ``--num-nodes`` flag                                                                     | ``3``                                                                          |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo                                       | ``gke_$(GCP_PROJECT_ID)_$(GKE_BASE_ZONE)_$(GKE_BASE_CLUSTER_ID)``              |
+| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the example                                    | ``gke_$(GCP_PROJECT_ID)_$(GKE_BASE_ZONE)_$(GKE_BASE_CLUSTER_ID)``              |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 

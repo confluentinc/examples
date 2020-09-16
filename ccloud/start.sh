@@ -14,7 +14,7 @@ check_env \
   && print_pass "Confluent Platform installed" \
   || exit 1
 check_cp \
-  || exit_with_error -c $? -n $NAME -l $LINENO -m "This demo uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software"
+  || exit_with_error -c $? -n $NAME -l $LINENO -m "This example uses Confluent Replicator which requires Confluent Platform, however this host is running Confluent Community Software"
 check_running_cp ${CONFLUENT} \
   && print_pass "Confluent Platform version ${CONFLUENT} ok" \
   || exit 1
@@ -189,7 +189,7 @@ echo "Local client configuration file written to $CONFIG_FILE"
 echo
 
 echo
-echo "To stop this demo and destroy Confluent Cloud resources run ->"
+echo "To stop this example and destroy Confluent Cloud resources run ->"
 echo "    ./stop.sh $CONFIG_FILE"
 echo
 

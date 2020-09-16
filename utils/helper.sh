@@ -33,7 +33,7 @@ function check_env() {
 function validate_version_confluent_cli_v2() {
 
   if [[ -z $(confluent version | grep "Go") ]]; then
-    echo "This demo requires the new Confluent CLI. Please update your version and try again."
+    echo "This example requires the new Confluent CLI. Please update your version and try again."
     exit 1
   fi
 
@@ -81,7 +81,7 @@ function check_timeout() {
 
 function check_docker() {
   if ! docker ps -q &>/dev/null; then
-    echo "This demo requires Docker but it doesn't appear to be running.  Please start Docker and try again."
+    echo "This example requires Docker but it doesn't appear to be running.  Please start Docker and try again."
     exit 1
   fi
 
@@ -232,7 +232,7 @@ function check_mysql() {
     echo "'mysql' is not found. Install MySQL and try again"
     exit 1
   elif [[ $(echo "exit" | mysql demo -uroot 2>&1) =~ "Access denied" ]]; then
-    echo "This demo expects MySQL user root password is null. Either reset the MySQL user password or modify the script."
+    echo "This example expects MySQL user root password is null. Either reset the MySQL user password or modify the script."
     exit 1
   elif [[ $(echo "show variables;" | mysql -uroot | grep "log_bin\t" 2>&1) =~ "OFF" ]]; then
     echo "The Debezium connector expects MySQL binary logging is enabled. Assuming you installed MySQL on mac with homebrew, modify `/usr/local/etc/my.cnf` and then `brew services restart mysql`"
@@ -241,7 +241,7 @@ function check_mysql() {
 
   actual_version=$(mysql -V | awk '{print $5;}' | rev | cut -c 2- | rev)
   if [[ $expected_version != $actual_version ]]; then
-    echo -e "\nThis demo expects MySQL version $expected_version but the running version is $actual_version. Please run the correct version of MySQL to proceed, or comment out the line 'check_mysql' in the start script and run at your own risk.\n"
+    echo -e "\nThis example expects MySQL version $expected_version but the running version is $actual_version. Please run the correct version of MySQL to proceed, or comment out the line 'check_mysql' in the start script and run at your own risk.\n"
     exit 1
   fi
 
@@ -279,7 +279,7 @@ function error_not_compatible_confluent_cli() {
   adoc_file=$1
 
   echo "******"
-  echo "This demo is currently runnable only with Docker and not Confluent CLI."
+  echo "This example is currently runnable only with Docker and not Confluent CLI."
   echo "To run with Docker, follow step-by-step instructions in $adoc_file"
   echo "To run with Confluent CLI on a local Confluent Platform install, this work is in progress and please check back soon!"
   echo "******"

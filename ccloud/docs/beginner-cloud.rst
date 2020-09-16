@@ -878,8 +878,8 @@ Clean up your Confluent Cloud resources
 
    You should see: ``Deleted environment "env-5qz2q"``.
 
-If you run a demo that ends prematurely, you may receive the following error
-message when trying to run the demo again (``ccloud environment create
+If the tutorial run ends prematurely, you may receive the following error
+message when trying to run the example again (``ccloud environment create
 demo-script-env``):
 
 .. code-block:: text
@@ -889,7 +889,7 @@ demo-script-env``):
 
       Failed to create environment demo-script-env. Please troubleshoot and run again
 
-In this case, run the following script to delete the demo’s topics, |ak| cluster, and environment:
+In this case, run the following script to delete the example’s topics, |ak| cluster, and environment:
 
 .. code-block:: bash
 
@@ -899,7 +899,7 @@ In this case, run the following script to delete the demo’s topics, |ak| clust
 Advanced usage
 --------------
 
-The demo script provides variables that allow you to alter the default |ak|
+The example script provides variables that allow you to alter the default |ak|
 cluster name, cloud provider, and region. For example:
 
 .. code-block:: bash

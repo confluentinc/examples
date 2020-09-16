@@ -3,12 +3,12 @@
 
 This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
 
-.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identicial in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appeneded to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this demo, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: :ref:`ccloud kafka topic delete <ccloud_kafka_topic_delete>` for instructions on deleting |ccloud| topics.
+.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identicial in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appeneded to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this example, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: :ref:`ccloud kafka topic delete <ccloud_kafka_topic_delete>` for instructions on deleting |ccloud| topics.
 
 |ak| Cluster Setup
 +++++++++++++++++++
 
-If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this demo.  This demonstration runs on top of Google Cloud Platform (GCP) and, by default, in the ``us-central1`` region.  It is recommended to name your new cluster ``replicator-gke-cc-demo`` to match names used later in this demo.  The following illustrates the recommended configuration:
+If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this example.  This demonstration runs on top of Google Cloud Platform (GCP) and, by default, in the ``us-central1`` region.  It is recommended to name your new cluster ``replicator-gke-cc-demo`` to match names used later in this example.  The following illustrates the recommended configuration:
 
 .. figure:: images/new-cluster.png
     :alt: New Cluster Example
@@ -18,7 +18,7 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 |ak| Bootstrap Server Configuration
 ++++++++++++++++++++++++++++++++++++
 
-After you have established the |ccloud| cluster you are going to use for the demo you will need the public bootstrap server.
+After you have established the |ccloud| cluster you are going to use for the example you will need the public bootstrap server.
 
 You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your cluster.
 
@@ -110,7 +110,7 @@ The ``ccloud`` CLI allows you to create API Keys to be used with client applicat
 Configure Helm Values
 +++++++++++++++++++++
 
-To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
+To configure the example to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the example looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
 #.  Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values obtained above. 
 
@@ -140,7 +140,7 @@ To configure the demo to access your |ccloud| account, we are going to create a 
               <<: *destinationCluster
         EOF
 
-    You can now verify the values of the file prior to running the demo.  The demo `Makefile` will integrate these values into the Helm deployment.
+    You can now verify the values of the file prior to running the example.  The example `Makefile` will integrate these values into the Helm deployment.
 
     ::
 
