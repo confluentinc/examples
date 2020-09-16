@@ -3,17 +3,17 @@
 .. toctree::
     :maxdepth: 2
 
-Cloud ETL Demo
-==============
+Cloud ETL Example
+=================
 
 As enterprises move more and more of their applications to the cloud, they are also moving their on-prem ETL (extract, transform, load) pipelines to the cloud, as well as building new ones.
-This demo showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
+This example showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
 
 .. figure:: images/cloud-etl.png
    :alt: image
 
-There are many powerful use cases for these real-time cloud ETL pipelines, and this demo showcases one such use case—a log ingestion pipeline that spans multiple cloud providers.
-Using |ccloud| CLI, the demo creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS PostgreSQL database into |ccloud|.
+There are many powerful use cases for these real-time cloud ETL pipelines, and this example showcases one such use case—a log ingestion pipeline that spans multiple cloud providers.
+Using |ccloud| CLI, the example creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS PostgreSQL database into |ccloud|.
 Then it creates a |ccloud| ksqlDB application that processes that data.
 Finally, a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
 
@@ -37,7 +37,7 @@ This enables you to:
 End-to-end Streaming ETL
 ========================
 
-This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
+This example showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 
 -  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
 
@@ -58,7 +58,7 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 Data Flow
 ---------
 
-The data set is a stream of log messages, which in this demo is mock data captured in :devx-examples:`eventlogs.json|cloud-etl/eventlogs.json`.
+The data set is a stream of log messages, which in this example is mock data captured in :devx-examples:`eventlogs.json|cloud-etl/eventlogs.json`.
 It resembles this:
 
 .. sourcecode:: bash
@@ -88,8 +88,8 @@ It resembles this:
 Caution
 =======
 
-This ``cloud-etl`` demo uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS PostgreSQL, and one of the cloud storage providers.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
+This ``cloud-etl`` example uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS PostgreSQL, and one of the cloud storage providers.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all resources are destroyed after you are done running it.
 
 =============
 Prerequisites
@@ -114,16 +114,16 @@ Local Tools
 -  ``python``
 -  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 
-============
-Run the Demo
-============
+===========
+Run Example
+===========
 
 Setup
 -----
 
-Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
+Because this example interacts with real resources in Kinesis or RDS PostgreSQL, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
-#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges so carefully evaluate the cost of resources before launching the demo.
+#. This example creates a new |ccloud| environment with required resources to run this example. As a reminder, this example uses real |ccloud| resources and you may incur charges so carefully evaluate the cost of resources before launching the example.
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -133,14 +133,14 @@ Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a 
      cd examples
      git checkout |release|-post
 
-#. Change directory to the ``cloud-etl`` demo.
+#. Change directory to the ``cloud-etl`` example.
 
    .. sourcecode:: bash
 
      cd cloud-etl
 
 
-#. Modify the demo configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source:
+#. Modify the example configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`. Set the proper credentials and parameters for the source:
 
    - AWS Kinesis
 
@@ -156,7 +156,7 @@ Because this demo interacts with real resources in Kinesis or RDS PostgreSQL, a 
      - ``RDS_REGION``
      - ``AWS_PROFILE``
 
-#. In the same demo configuration file, set the required parameters for the destination cloud storage provider:
+#. In the same example configuration file, set the required parameters for the destination cloud storage provider:
 
    - GCP GCS
 
@@ -185,7 +185,7 @@ Run
 
       ccloud login --save
 
-#. Run the demo. You must explicitly set the cloud provider and region for your |ccloud| cluster when you start the demo, and they must match the destination cloud storage provider and region. This will take several minutes to complete as it creates new resources in |ccloud| and other cloud providers.
+#. Run the example. You must explicitly set the cloud provider and region for your |ccloud| cluster when you start the example, and they must match the destination cloud storage provider and region. This will take several minutes to complete as it creates new resources in |ccloud| and other cloud providers.
 
    .. code:: bash
 
@@ -236,7 +236,7 @@ Run
 Connectors
 ----------
 
-#. The demo automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
+#. The example automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
 
    - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
    - :devx-examples:`PostgreSQL source connector configuration file|cloud-etl/connectors/rds.json`
@@ -247,11 +247,11 @@ Connectors
    - :devx-examples:`Azure Blob sink connector configuration file|cloud-etl/connectors/az_no_avro.json`
    - :devx-examples:`Azure Blob sink connector with Avro configuration file|cloud-etl/connectors/az_avro.json`
 
-   For example, if you configured the demo to source data from Kinesis, it ran this :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json`.
+   For example, if you configured the example to source data from Kinesis, it ran this :devx-examples:`AWS Kinesis connector configuration file|cloud-etl/connectors/kinesis.json`.
 
    .. literalinclude:: ../connectors/kinesis.json
 
-#. Let's say you ran the demo with Kinesis as the source and S3 as the sink, the pipeline would resemble:
+#. Let's say you ran the example with Kinesis as the source and S3 as the sink, the pipeline would resemble:
 
    .. figure:: images/data-kinesis-s3.png
       :alt: image
@@ -440,7 +440,7 @@ Validate
 --------
 
 
-#. View the data from Kinesis, |ak|, and cloud storage after running the demo, running the :devx-examples:`read-data.sh|cloud-etl/read-data.sh` script.
+#. View the data from Kinesis, |ak|, and cloud storage after running the example, running the :devx-examples:`read-data.sh|cloud-etl/read-data.sh` script.
 
    .. code:: bash
 
@@ -544,10 +544,10 @@ Validate
 
 
       
-Stop
-----
+Stop Example
+------------
 
-#. Stop the demo and clean up all the resources, delete Kafka topics, delete the fully-managed connectors, delete the data in the cloud storage:
+#. Stop the example and clean up all the resources, delete Kafka topics, delete the fully-managed connectors, delete the data in the cloud storage:
 
    .. code:: bash
 
@@ -560,4 +560,4 @@ Stop
 Additional Resources
 ====================
 
--  To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
+-  To find additional |ccloud| examples, see :ref:`Confluent Cloud Examples Overview<ccloud-demos-overview>`.
