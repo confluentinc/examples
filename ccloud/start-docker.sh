@@ -75,8 +75,8 @@ if [[ "${CONNECTOR_VERSION}" =~ "SNAPSHOT" ]]; then
     exit 1;
   }
 else
-  echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f ${DIR}/../Dockerfile-confluenthub ."
-  docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f ${DIR}/../Dockerfile-confluenthub . || {
+  echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f Dockerfile-confluenthub ."
+  docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f Dockerfile-confluenthub . || {
     echo "ERROR: Docker image build failed. Please troubleshoot and try again."
     exit 1;
   }
