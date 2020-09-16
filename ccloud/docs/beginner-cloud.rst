@@ -878,7 +878,7 @@ Clean up your Confluent Cloud resources
 
    You should see: ``Deleted environment "env-5qz2q"``.
 
-If the tutorial run ends prematurely, you may receive the following error
+If the tutorial ends prematurely, you may receive the following error
 message when trying to run the example again (``ccloud environment create
 demo-script-env``):
 
