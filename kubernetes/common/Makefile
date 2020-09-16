@@ -95,7 +95,7 @@ deploy-zookeeper: #_ Deploys Zookeeper into the configured k8s cluster
 
 wait-for-zookeeper: #_ Waits until the Zookeeper rollout is complete
 	@$(call echo_stdout_header,Wait for Zookeper)
-	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts zookeeper 
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) get sts zookeeper 
 	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/zookeeper
 	@$(call echo_stdout_footer_pass,Zookeeper ready)
 
@@ -104,9 +104,9 @@ destroy-zookeeper: #_ Purge the Zookeeper package
 	-helm delete zookeeper --namespace $(KUBECTL_NAMESPACE)
 # There are currently some issues with ZK cleanup in the Helm packages, for now i'm helping along with extra delete commands
 	-kubectl -n $(KUBECTL_NAMESPACE) delete sts/zookeeper
-	-kubectl -n operator delete service/zookeeper;kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper-0-internal;
-	-kubectl -n operator delete service/zookeeper;kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper-1-internal;
-	-kubectl -n operator delete service/zookeeper;kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper-2-internal;
+	-kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper;kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper-0-internal;
+	-kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper;kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper-1-internal;
+	-kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper;kubectl -n $(KUBECTL_NAMESPACE) delete service/zookeeper-2-internal;
 	@$(call echo_stdout_footer_pass,Zookeeper purged)
 
 wait-for-zookeeper-destruction: #_ Waits until the Zookeper cluster is destroyed
@@ -169,7 +169,7 @@ deploy-connect: #_ Deploys Kafka Connect to the configured k8s cluster
 
 wait-for-connect: #_ Waits until the Kafka Connect rollout is complete
 	@$(call echo_stdout_header,Wait for Kafka Connect)
-	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts connectors
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) get sts connectors
 	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/connectors
 	@$(call echo_stdout_footer_pass,Kafka Connect ready)
 
@@ -276,7 +276,7 @@ deploy-replicator: #_ Deploys Replicator into the configured k8s cluster
 
 wait-for-replicator: #_ Waits until the Replicator rollout is complete
 	@$(call echo_stdout_header,Wait for Replicator)
-	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n operator get sts replicator 
+	source $(COMMON_MKFILE_DIR)bin/retry.sh; retry 15 kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) get sts replicator 
 	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) rollout status statefulset/replicator
 	@$(call echo_stdout_footer_pass,Replicator ready)
 
