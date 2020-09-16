@@ -1,30 +1,30 @@
 .. _rbac_demo:
 
-RBAC Demo
-=========
+RBAC Example
+============
 
-This demo shows how to enable |rbac-long| functionality across |cp|.
+This example shows how to enable |rbac-long| functionality across |cp|.
 It is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.
 
 .. seealso::
 
-   For an |rbac| demo that is more representative of a real deployment of a |ak| event streaming application, see :ref:`cp-demo`, a Docker-based demo with |rbac| and other |cp| security features and LDAP integration.
+   For an |rbac| example that is more representative of a real deployment of a |ak| event streaming application, see :ref:`cp-demo`, a Docker-based example with |rbac| and other |cp| security features and LDAP integration.
 
 
 .. _rbac_demo_local:
 
-===============================================
-Run demo on local install of Confluent Platform
-===============================================
+====================================
+Run example on local install of |cp|
+====================================
 
 Caveats
 -------
 
--  For simplicity, this demo does not use LDAP, instead it uses the Hash
+-  For simplicity, this example does not use LDAP, instead it uses the Hash
    Login service with statically defined users/passwords. Additional
-   configurations would be required if you wanted to augment the demo to
+   configurations would be required if you wanted to augment the example to
    connect to your LDAP server.
--  The |rbac| configurations and role bindings in this demo are not
+-  The |rbac| configurations and role bindings in this example are not
    comprehensive, they provide minimum |rbac|
    functionality set up across all the services in |cp|.
    Please refer to the :ref:`RBAC documentation <rbac-overview>`
@@ -36,8 +36,8 @@ Prerequisites
 .. include:: ../../../docs/includes/demo-validation-env.rst 
 
 
-Run the demo
-------------
+Run example
+-----------
 
 #. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ repository from GitHub and check out the :litwithvars:`|release|-post` branch.
 
@@ -53,9 +53,9 @@ Run the demo
 
        cd security/rbac/scripts
 
-#. You have two options to run the demo.
+#. You have two options to run the example.
 
-   -  Option 1: run the demo end-to-end for all services
+   -  Option 1: run the example end-to-end for all services
 
       .. code:: bash
 
@@ -73,7 +73,7 @@ Run the demo
          ./enable-rbac-ksqldb-server.sh
          ./enable-rbac-control-center.sh
 
-#. After you run the demo, view the configuration files:
+#. After you run the example, view the configuration files:
 
    .. code:: bash
 
@@ -90,8 +90,8 @@ Run the demo
       # The modified configuration = original + delta
       ls /tmp/rbac_configs/
 
-#. After you run the demo, view the log files for each of the services.
-   Since this demo uses Confluent CLI, all logs are saved in a temporary
+#. After you run the example, view the log files for each of the services.
+   Since this example uses Confluent CLI, all logs are saved in a temporary
    directory specified by ``confluent local current``.
 
    .. code:: bash
@@ -110,17 +110,17 @@ Run the demo
       schema-registry
       zookeeper
    
-#. In this demo, the metadata service (MDS) logs are saved in a temporary directory.
+#. In this example, the metadata service (MDS) logs are saved in a temporary directory.
 
    .. code:: bash
 
       cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
 
 
-Stop the demo
--------------
+Stop example
+------------
 
-To stop the demo, stop |cp|, and delete files in ``/tmp/``.
+To stop the example, stop |cp|, and delete files in ``/tmp/``.
 
 .. code:: bash
 
@@ -132,7 +132,7 @@ Summary of Configurations and Role Bindings
 
 Here is a summary of the delta configurations and required role bindings, by service.
 
-.. note:: For simplicity, this demo uses the Hash Login service instead of LDAP.  If you are using LDAP in your environment, extra configurations are required.
+.. note:: For simplicity, this example uses the Hash Login service instead of LDAP.  If you are using LDAP in your environment, extra configurations are required.
 
 Broker
 ~~~~~~
@@ -313,11 +313,11 @@ For example, list the roles of ``User:bender`` on Kafka cluster ``KAFKA_CLUSTER_
 
 .. _rbac_demo_docker:
 
-==================
-Run demo in Docker
-==================
+=====================
+Run example in Docker
+=====================
 
-A Docker-based |rbac| demo is :ref:`cp-demo`.
+A Docker-based |rbac| example is :ref:`cp-demo`.
 It is representative of a real deployment of a |ak| event streaming application, with |rbac| and other |cp| security features and LDAP integration.
 
 

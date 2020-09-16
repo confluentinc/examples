@@ -3,7 +3,7 @@
 On-Prem Kafka to Cloud
 ======================
 
-This |ccloud| demo showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
+This |ccloud| example showcases a hybrid Kafka cluster: one cluster is a self-managed Kafka cluster running locally, the other is a |ccloud| cluster.
 The use case is "Bridge to Cloud" as customers migrate from on premises to cloud.
 
 .. figure:: images/services-in-cloud.jpg
@@ -13,7 +13,7 @@ The use case is "Bridge to Cloud" as customers migrate from on premises to cloud
 Overview
 ========
 
-The major components of the demo are:
+The major components of the example are:
 
 * Two Kafka clusters: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 * |c3|: manages and monitors the deployment. Use it for topic inspection, viewing the schema, viewing and creating ksqlDB queries, streams monitoring, and more.
@@ -24,9 +24,9 @@ The major components of the demo are:
   * One instance of `kafka-connect-datagen`: a source connector that produces mock data to prepopulate the topic `users` in the |ccloud| cluster
   * Confluent Replicator: copies the topic `pageviews` from the local cluster to the |ccloud| cluster
 
-* |sr-long|: the demo runs with Confluent Cloud Schema Registry, and the Kafka data is written in Avro format.
+* |sr-long|: the example runs with Confluent Cloud Schema Registry, and the Kafka data is written in Avro format.
 
-.. note:: This is a demo environment and has many services running on one host. Do not use this demo in production, and
+.. note:: This is an example environment and has many services running on one host. Do not run this example in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
 .. include:: includes/ccloud-promo-code.rst
@@ -35,8 +35,8 @@ The major components of the demo are:
 Caution
 =======
 
-This demo uses real |ccloud| resources.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done running it.
+This example uses real |ccloud| resources.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all resources are destroyed after you are done running it.
 
 
 =============
@@ -52,14 +52,14 @@ Prerequisites
 #. .. include:: ../../docs/includes/demo-validation-env.rst
 
 
-========
-Run demo
-========
+=============
+Start Example
+=============
 
 Setup
 -----
 
-#. This demo creates a new |ccloud| environment with required resources to run this demo. As a reminder, this demo uses real |ccloud| resources and you may incur charges.
+#. This example creates a new |ccloud| environment with required resources to run this example. As a reminder, this example uses real |ccloud| resources and you may incur charges.
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -69,7 +69,7 @@ Setup
      cd examples
      git checkout |release|-post
 
-#. Change directory to the |ccloud| demo.
+#. Change directory to the |ccloud| example.
 
    .. sourcecode:: bash
 
@@ -85,7 +85,7 @@ Run
       ccloud login --save
 
 
-#. Start the entire demo by running a single command.  You have two choices: using Docker Compose or a |cp| local install. This will take several minutes to complete as it creates new resources in |ccloud|.
+#. Start the entire example by running a single command.  You have two choices: using Docker Compose or a |cp| local install. This will take several minutes to complete as it creates new resources in |ccloud|.
 
    .. sourcecode:: bash
 
@@ -147,7 +147,7 @@ Playbook
 
      ccloud kafka topic list
 
-#. View the ACLs associated to the service account <SERVICE ACCOUNT ID> that was created for this demo at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
+#. View the ACLs associated to the service account <SERVICE ACCOUNT ID> that was created for this example at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
 
    .. sourcecode:: bash
 
@@ -199,7 +199,7 @@ Playbook
 kafka-connect-datagen
 ---------------------
 
-#. In the demo, view :devx-examples:`this code|ccloud/connectors/submit_datagen_pageviews_config.sh` which automatically loads the ``kafka-connect-datagen`` connector for the Kafka topic ``pageviews`` into the ``connect-local`` cluster, which is later replicated by |crep| into |ccloud| (more on |crep| later).
+#. In the example, view :devx-examples:`this code|ccloud/connectors/submit_datagen_pageviews_config.sh` which automatically loads the ``kafka-connect-datagen`` connector for the Kafka topic ``pageviews`` into the ``connect-local`` cluster, which is later replicated by |crep| into |ccloud| (more on |crep| later).
 
    .. literalinclude:: ../connectors/submit_datagen_pageviews_config.sh
       :lines: 13-29
@@ -209,7 +209,7 @@ kafka-connect-datagen
    .. figure:: images/topic_pageviews.png
       :alt: image
 
-#. In the demo, view :devx-examples:`this code|ccloud/connectors/submit_datagen_users_config.sh` which automatically loads the ``kafka-connect-datagen`` connector for the Kafka topic ``users`` into the ``connect-cloud`` cluster.
+#. In the example, view :devx-examples:`this code|ccloud/connectors/submit_datagen_users_config.sh` which automatically loads the ``kafka-connect-datagen`` connector for the Kafka topic ``users`` into the ``connect-cloud`` cluster.
 
    .. literalinclude:: ../connectors/submit_datagen_users_config.sh
       :lines: 13-29
@@ -223,7 +223,7 @@ kafka-connect-datagen
 ksqlDB
 ------
 
-#. In the demo, the Confluent Cloud ksqlDB queries are created from :devx-examples:`statements.sql|ccloud/statements.sql` (for ksqlDB version 0.10.0) using the REST API in :devx-examples:`this code|ccloud/create_ksqldb_app.sh` with proper credentials.
+#. In the example, the Confluent Cloud ksqlDB queries are created from :devx-examples:`statements.sql|ccloud/statements.sql` (for ksqlDB version 0.10.0) using the REST API in :devx-examples:`this code|ccloud/create_ksqldb_app.sh` with proper credentials.
 
    .. literalinclude:: ../create_ksqldb_app.sh
       :lines: 31-52
@@ -243,10 +243,10 @@ Confluent Replicator
 --------------------
 
 Confluent Replicator copies data from a source Kafka cluster to a destination Kafka cluster.
-In this demo, the source cluster is a local install of a self-managed cluster, and the destination cluster is |ccloud|.
+In this example, the source cluster is a local install of a self-managed cluster, and the destination cluster is |ccloud|.
 |crep| is replicating a Kafka topic ``pageviews`` from the local install to |ccloud|, and it is running with Confluent Monitoring Interceptors for |c3| streams monitoring.
 
-#. In the demo, view :devx-examples:`this code|ccloud/connectors/submit_replicator_docker_config.sh` which automatically loads the |crep| connector into the ``connect-cloud`` cluster. Notice that |crep| configuration sets ``confluent.topic.replication.factor=3``, which is required because the source cluster has ``replication.factor=1`` and |ccloud| requires ``replication.factor=3``:
+#. In the example, view :devx-examples:`this code|ccloud/connectors/submit_replicator_docker_config.sh` which automatically loads the |crep| connector into the ``connect-cloud`` cluster. Notice that |crep| configuration sets ``confluent.topic.replication.factor=3``, which is required because the source cluster has ``replication.factor=1`` and |ccloud| requires ``replication.factor=3``:
 
    .. literalinclude:: ../connectors/submit_replicator_docker_config.sh
       :lines: 13-41
@@ -276,7 +276,7 @@ In this demo, the source cluster is a local install of a self-managed cluster, a
 Confluent Schema Registry
 -------------------------
 
-The connectors used in this demo are configured to automatically write Avro-formatted data, leveraging the |ccloud| |sr|.
+The connectors used in this example are configured to automatically write Avro-formatted data, leveraging the |ccloud| |sr|.
 
 #. View all the |sr| subjects.
 
@@ -308,14 +308,14 @@ Confluent Cloud Configurations
 
         ./ccloud-generate-cp-configs.sh
 
-#. If you ran this demo as `start-docker.sh`, configurations for all the |cp| components are available in the :devx-examples:`docker-compose.yml file|ccloud/docker-compose.yml`.
+#. If you ran this example as `start-docker.sh`, configurations for all the |cp| components are available in the :devx-examples:`docker-compose.yml file|ccloud/docker-compose.yml`.
 
    ::
 
         # For Docker Compose
         cat docker-compose.yml
 
-#. If you ran this demo as `start.sh` which uses Confluent CLI, it saves all configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory (requires demo to be actively running):
+#. If you ran this example as `start.sh` which uses Confluent CLI, it saves all configuration files and log files in the respective component subfolders in the current Confluent CLI temp directory (requires example to be actively running):
 
    .. sourcecode:: bash
 
@@ -323,13 +323,13 @@ Confluent Cloud Configurations
         ls `confluent local current | tail -1`
 
 
-========================
-Troubleshooting the demo
-========================
+===========================
+Troubleshooting the example
+===========================
 
 #. If you ran with Docker, then run `docker-compose logs | grep ERROR`.
 
-#. To view log files, look in the current Confluent CLI temp directory (requires demo to be actively running):
+#. To view log files, look in the current Confluent CLI temp directory (requires example to be actively running):
 
    .. sourcecode:: bash
 
@@ -340,11 +340,11 @@ Troubleshooting the demo
         confluent local services kafka log
 
 
-=========
-Stop Demo
-=========
+============
+Stop Example
+============
 
-#. Stop the demo, destroy all resources in |ccloud| and local components.
+#. Stop the example, destroy all resources in |ccloud| and local components.
 
    .. sourcecode:: bash
 
@@ -363,5 +363,5 @@ Stop Demo
 Additional Resources
 ====================
 
--  To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
+-  To find additional |ccloud| example, see :ref:`Confluent Cloud Examples <ccloud-demos-overview>`.
 

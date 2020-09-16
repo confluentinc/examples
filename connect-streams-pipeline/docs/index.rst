@@ -6,7 +6,7 @@ Pipelining with |kconnect-long| and |kstreams|
 Overview
 --------
 
-This demo shows users how to build pipelines with |ak-tm|.
+This example shows users how to build pipelines with |ak-tm|.
 
 .. figure:: images/pipeline.jpg
 
@@ -28,7 +28,7 @@ It showcases different ways to produce data to |ak-tm| topics, with and without 
 | JDBC source connector with Avro         | JDBC                           | `Long`   | `Avro`         | ksqlDB            |
 +-----------------------------------------+--------------------------------+----------+----------------+-------------------+
 
-Detailed walk-thru of this demo is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blogpost `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
+Detailed walk-thru of this example is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blogpost `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
 
 Description of Data
 -------------------
@@ -82,15 +82,15 @@ The output of ``sum`` is:
 .. figure:: images/blog_sum.jpg
 
 
-Demo Prerequisites
-------------------
+Prerequisites
+-------------
 
 - Download `Confluent Platform <https://www.confluent.io/download/>`__
 - Maven command ``mvn`` to compile Java code
 - .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
-Run the demo
-------------
+Run example
+-----------
 
 #. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
 
@@ -100,13 +100,13 @@ Run the demo
      cd examples
      git checkout |release|-post
 
-#. Change directory to the connect-streams-pipeline demo.
+#. Change directory to the connect-streams-pipeline example.
 
    .. sourcecode:: bash
 
      cd connect-streams-pipeline
    
-#. Run the demo, all examples, end-to-end
+#. Run the examples end-to-end:
 
    .. sourcecode:: bash
 

@@ -1,7 +1,7 @@
 .. _ccloud-demos-overview:
 
-|ccloud| Demos
-==============
+|ccloud| Examples
+=================
 
 `Confluent Cloud <https://docs.confluent.io/current/cloud/index.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command-line interface that you can use to manage cluster resources, |ak| topics, |sr|, and other services.
 
@@ -13,14 +13,14 @@ This page describes a few resources to help you build and validate your solution
 Caution
 =======
 
-All the following demos and examples use real |ccloud| resources.
+All the following examples use real |ccloud| resources.
 They create |ccloud| environments, clusters, topics, ACLs, service accounts, ksqlDB applications, and potentially other |ccloud| resources that are billable.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching any demo and manually verify that all |ccloud| resources are destroyed after you are done.
+To avoid unexpected charges, carefully evaluate the cost of resources before launching any example and manually verify that all |ccloud| resources are destroyed after you are done.
 
 
-=====
-Demos
-=====
+========
+Examples
+========
 
 |ccloud| Quickstart
 --------------------------
@@ -60,7 +60,7 @@ It provides client examples written in various programming languages.
 |ccloud| CLI
 ------------
 
-The :ref:`ccloud-cli-tutorial` is a fully scripted demo that shows users how to interact with |ccloud| using the |ccloud| CLI.
+The :ref:`ccloud-cli-tutorial` is a fully scripted example that shows users how to interact with |ccloud| using the |ccloud| CLI.
 It steps through the following workflow:
 
 -  Create a new environment and specify it as the default.
@@ -80,15 +80,15 @@ It steps through the following workflow:
 Cloud ETL
 ---------
 
-The :ref:`cloud ETL demo <cloud-etl>` showcases a cloud ETL solution leveraging all fully-managed services on |ccloud|.
-Using |ccloud| CLI, the demo creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
+The :ref:`cloud ETL example <cloud-etl>` showcases a cloud ETL solution leveraging all fully-managed services on |ccloud|.
+Using |ccloud| CLI, the example creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: ../../cloud-etl/docs/images/topology.png
 
 Hybrid Cloud
 ------------
 
-The :ref:`hybrid cloud demo <quickstart-demos-ccloud>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+The :ref:`hybrid cloud example <quickstart-demos-ccloud>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 Data streams into topics, in both the local cluster and the |ccloud| cluster. |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
 .. figure:: images/services-in-cloud.jpg
@@ -96,7 +96,7 @@ Data streams into topics, in both the local cluster and the |ccloud| cluster. |c
 Microservices in the Cloud
 --------------------------
 
-The :ref:`microservices cloud demo <tutorial-microservices-orders>` showcases an order management workflow targeting |ccloud|.
+The :ref:`microservices cloud example <tutorial-microservices-orders>` showcases an order management workflow targeting |ccloud|.
 Microservices are deployed locally on Docker, and they are configured to use a |ak| cluster, |ksqldb|, and |sr-long| in |ccloud|.
 |kconnect-long| is also deployed locally on Docker, and it runs a SQL source connector to produce to |ccloud| and a Elasticsearch sink connector to consume from |ccloud|.
 
@@ -105,8 +105,8 @@ Microservices are deployed locally on Docker, and they are configured to use a |
 Confluent Operator with Cloud
 -----------------------------
 
-The :ref:`Kubernetes demo <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
-Upon running this demo, you will have a GKE-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+The :ref:`Kubernetes example <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
+Upon running this example, you will have a GKE-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
 
@@ -192,13 +192,13 @@ Using this as a foundation, you can then add any connectors or applications.
 Put It All Together
 -------------------
 
-You can chain these utilities to build your own hybrid demos that span on-prem and |ccloud|, where some self-managed components run on-prem and fully-managed services run in |ccloud|.
+You can chain these utilities to build your own hybrid examples that span on-prem and |ccloud|, where some self-managed components run on-prem and fully-managed services run in |ccloud|.
 
 For example, you may want an easy way to run a connector not yet available in |ccloud|.
 In this case, you can run a self-managed connect worker and connector on prem and connect it to your |ccloud| cluster.
 Or perhaps you want to build a |ak| demo in |ccloud| and run the |crest| client or |c3| against it.
 
-You can build any demo with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in a few easy steps.
+You can build any example with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in a few easy steps.
 
 #. Create a :ref:`ccloud-stack <ccloud-stack>` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
 
