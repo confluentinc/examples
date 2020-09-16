@@ -1,9 +1,9 @@
 .. _quickstart-demos-replicator-schema-translation:
 
-Replicator Schema Translation Demo
-==================================
+Replicator Schema Translation Example
+=====================================
 
-This |crep| demo showcases the transfer of schemas stored in |sr-long| from one cluster to another.
+This |crep| example showcases the transfer of schemas stored in |sr-long| from one cluster to another.
 
 ========
 Overview
@@ -11,7 +11,7 @@ Overview
 
 |crep| features the ability to translate entries from a source |sr| to a destination |sr|.
 
-This demo provides a docker-compose environment with source and destination registries in which schemas are translated. In this demo, you create an entry in the source |sr| and translate it to the destination.
+This example provides a docker-compose environment with source and destination registries in which schemas are translated. In this example, you create an entry in the source |sr| and translate it to the destination.
 
 The ``scripts`` directory provides examples of the operations that you must perform to prepare for the translation, as well as JSON |crep| configurations required.
 
@@ -21,9 +21,9 @@ Prerequisites
 
 .. include:: ../../docs/includes/demo-validation-env.rst
 
-============
-Run the Demo
-============
+===========
+Run Example
+===========
 
 1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
 
@@ -31,19 +31,19 @@ Run the Demo
 
      git clone https://github.com/confluentinc/examples
 
-2. Change directory to the Schema Translation demo.
+2. Change directory to the Schema Translation example.
 
    .. sourcecode:: bash
 
      cd examples/replicator-schema-translation
 
-3. Start the entire demo by running a single command that creates source and destination clusters automatically and adds a schema to the source |sr|. This takes less than 5 minutes to complete.
+3. Start the entire example by running a single command that creates source and destination clusters automatically and adds a schema to the source |sr|. This takes less than 5 minutes to complete.
 
    .. sourcecode:: bash
 
       docker-compose up -d
 
-4. Wait at least 2 minutes and then verify the demo has completely started by checking the subjects in the source and destination |sr|.
+4. Wait at least 2 minutes and then verify the example has completely started by checking the subjects in the source and destination |sr|.
 
    .. sourcecode:: bash
 
@@ -53,7 +53,7 @@ Run the Demo
       # Destination Schema Registry should show no subjects, i.e., the output should be []
       docker-compose exec connect curl http://destSchemaregistry:8086/subjects
 
-5. To prepare for schema translation, put the source |sr| in "READONLY" mode and the destination registry in "IMPORT" mode. Note that this works only when the destination |sr| has no registered subjects (as is true in this demo), otherwise the import would fail with a message similar to "Cannot import since found existing subjects". 
+5. To prepare for schema translation, put the source |sr| in "READONLY" mode and the destination registry in "IMPORT" mode. Note that this works only when the destination |sr| has no registered subjects (as is true in this example), otherwise the import would fail with a message similar to "Cannot import since found existing subjects". 
 
    .. sourcecode:: bash
 
@@ -90,13 +90,13 @@ Run the Demo
       # Destination Schema Registry should show one subject, i.e., the output should be ["testTopic.replica-value"]
       docker-compose exec connect curl http://destSchemaregistry:8086/subjects
 
-8. To complete the demo, reset both Schema Registries to ``READWRITE`` mode:
+8. To complete the example, reset both Schema Registries to ``READWRITE`` mode:
 
    .. sourcecode:: bash
 
       docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
       
-.. tip:: This demo shows a `one-time migration` of schemas across self-managed clusters. To configure a
+.. tip:: This example shows a `one-time migration` of schemas across self-managed clusters. To configure a
          `continuous migration`, the last steps would be to keep the origin (source) |sr| in READONLY mode,
          and set the destination to READWRITE. Note that this would set up a "one-way" migration; that is,
          an active-to-passive |crep| setup.
@@ -105,7 +105,7 @@ Run the Demo
 Teardown
 ========
 
-1. Stop the demo, destroy all local components.
+1. Stop the example, destroy all local components.
 
    .. sourcecode:: bash
 

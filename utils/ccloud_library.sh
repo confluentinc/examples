@@ -33,7 +33,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 # --------------------------------------------------------------
 
 function ccloud::prompt_continue_ccloud_demo() {
-  echo "This demo uses real Confluent Cloud resources."
+  echo "This example uses real Confluent Cloud resources."
   echo "To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it."
   read -p "Do you still want to run this script? [y/n] " -n 1 -r
   echo
@@ -63,7 +63,7 @@ function ccloud::validate_ccloud_cli_v2() {
   ccloud::validate_ccloud_cli_installed || exit 1
 
   if [[ -z $(ccloud version 2>&1 | grep "Go") ]]; then
-    echo "This demo requires the new Confluent Cloud CLI. Please update your version and try again."
+    echo "This example requires the new Confluent Cloud CLI. Please update your version and try again."
     exit 1
   fi
 
@@ -74,7 +74,7 @@ function ccloud::validate_logged_in_ccloud_cli() {
   ccloud::validate_ccloud_cli_v2 || exit 1
 
   if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must log in to run that command." ]]; then
-    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login --save' before running the demo. The '--save' argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local netrc file."
+    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login --save' before running the example. The '--save' argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local netrc file."
     exit 1
   fi
 
@@ -594,7 +594,7 @@ function ccloud::create_connector() {
 
   # About the Confluent Cloud CLI command 'ccloud connector create':
   # - Typical usage of this CLI would be 'ccloud connector create --config <filename>'
-  # - However, in this demo, the connector's configuration file contains parameters that need to be first substituted
+  # - However, in this example, the connector's configuration file contains parameters that need to be first substituted
   #   so the CLI command includes eval and heredoc.
   # - The '-vvv' is added for verbose output
   ccloud connector create -vvv --config <(eval "cat <<EOF

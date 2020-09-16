@@ -28,7 +28,7 @@ The blog post `Building a Microservices Ecosystem with Kafka Streams and ksqlDB 
 .. figure:: images/microservices-demo.png
     :alt: image
 
-Note: this is demo code, not a production system, and certain elements are left for further work.
+Note: this is example code, not a production system, and certain elements are left for further work.
 
 
 Microservices
@@ -80,7 +80,7 @@ Summary of services and the topics they consume from and produce to:
 End-to-end Streaming ETL
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-This demo showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
+This example showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
 It is built on the |cp|, including:
 
 * JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
@@ -97,7 +97,7 @@ It is built on the |cp|, including:
 | ksqlDB                              | `orders`, `customers` | ksqlDB streams and tables |
 +-------------------------------------+-----------------------+---------------------------+
 
-For the end-to-end demo, the code that creates the order events via REST calls to the Orders Service and generates the initial inventory is provided by the following applications:
+For the end-to-end example, the code that creates the order events via REST calls to the Orders Service and generates the initial inventory is provided by the following applications:
 
 +-------------------------------------+-----------------------------------+-----------------------+
 | Application (Datagen)               | Consumes From                     | Produces To           |
@@ -154,8 +154,8 @@ Local
 -----
 
 * `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, |ksqldb| and |sr-long| integration, and streams monitoring capabilities
-* Java 1.8 to run the demo application
-* Maven to compile the demo application
+* Java 1.8 to run the example application
+* Maven to compile the example application
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
 
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
@@ -188,7 +188,7 @@ Setup the Tutorial
 
 #. Run the full end-to-end working solution to see a customer-representative deployment of a streaming application. This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
 
-   - Exercise 0: Run end-to-end demo
+   - Exercise 0: Run end-to-end example
 
 #. After you have successfully run the full solution, go through each of the execises 1-7 to better understand the basic principles of streaming applications:
 
@@ -206,14 +206,14 @@ Setup the Tutorial
    - Edit the file specified in each exercise and fill in the missing code
    - Copy the file to the project, then compile the project and run the test for the service to ensure it works
 
-Exercise 0: Run end-to-end demo
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Exercise 0: Run end-to-end example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Running the fully working demo end-to-end provides context for each of the later exercises.
+Running the fully working example end-to-end provides context for each of the later exercises.
 
 #. Ensure you've followed the appropriate prerequisites section above prior to starting.
 
-#. Start the demo in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
+#. Start the end-to-end example in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
    * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :ref:`ccloud-stack`).
 
@@ -234,7 +234,7 @@ Running the fully working demo end-to-end provides context for each of the later
 
         ./start.sh
 
-#. After starting the demo with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
+#. After starting the example with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
@@ -297,7 +297,7 @@ Running the fully working demo end-to-end provides context for each of the later
          :width: 600px
 
 
-#. When you are done, make sure to stop the demo before proceeding to the exercises.
+#. When you are done, make sure to stop the example before proceeding to the exercises.
 
    * |ccloud|: (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
 

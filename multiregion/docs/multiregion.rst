@@ -69,7 +69,7 @@ You can find full broker configurations in the
 :devx-examples:`docker-compose.yml file|multiregion/docker-compose.yml`. The
 most important configuration parameters include:
 
--  ``broker.rack``: identifies the location of the broker. For the demo,
+-  ``broker.rack``: identifies the location of the broker. For the example,
    it represents a region, either ``east`` or ``west``
 -  ``replica.selector.class=org.apache.kafka.common.replica.RackAwareReplicaSelector``:
    allows clients to read from followers (in contrast, clients are
@@ -80,7 +80,7 @@ most important configuration parameters include:
 Client
 ~~~~~~
 
--  ``client.rack``: identifies the location of the client. For the demo,
+-  ``client.rack``: identifies the location of the client. For the example,
    it represents a region, either ``east`` or ``west``
 -  ``replication.factor``: at the topic level, replication factor is mutually
    exclusive to replica placement constraints, so for |kstreams| applications,
@@ -153,7 +153,7 @@ Startup
 Inject latency and packet loss
 ------------------------------
 
-This demo injects latency between the regions and packet loss to simulate the
+This example injects latency between the regions and packet loss to simulate the
 WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
 
 |Multi-region latencies|
@@ -180,7 +180,7 @@ WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
       e60c3a0210e7        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-high-latency-west-east
       d3c1faf97ba5        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-medium-latency-central
 
-#. View the IP addresses used by Docker for the demo:
+#. View the IP addresses used by Docker for the example:
 
    .. code-block:: text
 
@@ -691,7 +691,7 @@ Now you will bring region ``west`` back online.
 Stop the Tutorial
 -----------------
 
-#. To stop the demo environment and all Docker containers, run the following command:
+#. To stop the example environment and all Docker containers, run the following command:
 
    .. code-block:: bash
 
@@ -709,7 +709,7 @@ running the script
 :devx-examples:`validate_connectivity.sh|multiregion/scripts/validate_connectivity.sh`),
 complete the following steps:
 
-#. Stop the demo.
+#. Stop the example.
 
    .. code-block:: bash
 
@@ -725,7 +725,7 @@ complete the following steps:
       # More aggressive cleanup
       docker volume prune
 
-#. Restart the demo.
+#. Restart the example.
 
    .. code-block:: bash
 

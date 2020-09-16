@@ -7,7 +7,7 @@ You can view the deployed components with:
 
     kubectl -n operator get all
 
-Using the default demo variable values, ``kubectl`` should report something like the following
+Using the default example variable values, ``kubectl`` should report something like the following
 
 ::
 
@@ -58,9 +58,9 @@ Using the default demo variable values, ``kubectl`` should report something like
 Verify Confluent Platform on the CLI 
 ````````````````````````````````````
 
-By default the demo is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following validation instructions may not be applicable to your setup.
+By default the example is deployed without any `Kubernetes Ingress <https://kubernetes.io/docs/concepts/services-networking/ingress/>`__, which means the |cp| resources inside the Kubernetes cluster cannot be reached from external clients.  If you used a pre-existing cluster with Ingress enabled, the following validation instructions may not be applicable to your setup.
 
-The demo deploys a ``client-console`` pod that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
+The example deploys a ``client-console`` pod that can be used to open a terminal inside the cluster with network connectivity to the |cp| services.  For example::
 
 	kubectl -n operator exec -it client-console -- bash
 

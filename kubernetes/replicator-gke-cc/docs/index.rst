@@ -5,7 +5,7 @@
 .. |operator-demo-prefix| replace:: gke
 .. |kubectl-context-pattern| replace:: gke_project-name_us-central1-a_cp-examples-operator-jdoe
 .. |k8s-service-docs-link| replace:: `Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`__
-.. |operator-base-demo-link| replace:: `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__
+.. |operator-base-demo-link| replace:: `Confluent Platform on Google Kubernetes Engine example <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__
 
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
@@ -22,10 +22,10 @@ Overview
 .. figure:: images/operator-demo-phase-2.png
     :alt: operator
 
-Demo Prerequisites
--------------------
+Prerequisites
+-------------
 
-The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
+The following applications or libraries are required to be installed and available in the system path in order to properly run the example.
 
 +------------------+-------------------+----------------------------------------------------------+
 | Application      | Tested Version    | Info                                                     |
@@ -43,10 +43,10 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-Running the Demo
-----------------
+Running the Example
+-------------------
 
-.. warning:: This demo consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.  The |co| :ref:`Sizing Recommendations <co-env-sizing>` document contains information on required sizing for |co-long|.
+.. warning:: This example consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.  The |co| :ref:`Sizing Recommendations <co-env-sizing>` document contains information on required sizing for |co-long|.
 
 Clone the `Confluent examples repository <https://github.com/confluentinc/examples>`__ and change directories on your terminal into the ``kubernetes/replicator-gke-cc`` directory.
 
@@ -58,13 +58,13 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
 GKE Setup
 ~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  
+In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  
 
-.. tip:: The :ref:`examples-operator-gke-base-variable-reference` section can be used to control the size of the deployed resources in this demo.
+.. tip:: The :ref:`examples-operator-gke-base-variable-reference` section can be used to control the size of the deployed resources in this example.
 
 If you wish to use an existing GKE cluster, and your ``kubectl`` client is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
 
-If you wish to create a new GKE cluster for this demo, the ``Makefile`` contains a function to assist you in creating a cluster, assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
+If you wish to create a new GKE cluster for this example, the ``Makefile`` contains a function to assist you in creating a cluster, assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
 
 To verify which GCP Project your ``gcloud`` SDK is currently configured to, run:
 
@@ -86,7 +86,7 @@ To create the standard cluster you can run the following:
 Preflight Checks
 ++++++++++++++++
 
-Prior to running the demo you may want to verify the setup.
+Prior to running the example you may want to verify the setup.
 
 To verify your GKE cluster status:
 
@@ -107,8 +107,8 @@ The output of the previous command should be a name with the combination of your
     kubectl config current-context
     gke_gkeproject_us-central1-a_cp-examples-operator-jdoe
 
-Demo Execution
-++++++++++++++
+Example Execution
++++++++++++++++++
 
 .. include:: ../../docs/includes/replicator-cc-demo/demo-execution.rst
 
@@ -122,13 +122,13 @@ Validate
 Destroy Resources
 ~~~~~~~~~~~~~~~~~
 
-After you are done evaluating the results of the demo, you can destroy all the provisioned Kubernetes resources with:
+After you are done evaluating the results of the example, you can destroy all the provisioned Kubernetes resources with:
 
 .. sourcecode:: bash
 
     make destroy-demo
 
-If you used the demo to create your cluster, you can destroy the GKE cluster with:
+If you used the example to create your cluster, you can destroy the GKE cluster with:
 
 .. sourcecode:: bash
 
