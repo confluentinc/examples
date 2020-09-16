@@ -1,4 +1,4 @@
-# Intentionally pinning Docker images to 5.5.1-post because they have 'tc' used by Pumba to simulate latency
+# Intentionally pinning Docker images to 5.5.1 because they have 'tc' used by Pumba to simulate latency
 # Docker images 6.0.0 and later are based on ubi8 and they do not have 'tc'
 
 # docker-compose supports environment variable substitution with the ${VARIABLE-NAME} syntax.
@@ -18,7 +18,7 @@ version: '3'
 
 services:
   zookeeper-west:
-    image: ${REPOSITORY}/cp-zookeeper:5.5.1-post
+    image: ${REPOSITORY}/cp-zookeeper:5.5.1
     hostname: zookeeper-west
     container_name: zookeeper-west
     networks:
@@ -31,7 +31,7 @@ services:
       ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
 
   zookeeper-central:
-    image: ${REPOSITORY}/cp-zookeeper:5.5.1-post
+    image: ${REPOSITORY}/cp-zookeeper:5.5.1
     hostname: zookeeper-central
     container_name: zookeeper-central
     networks:
@@ -46,7 +46,7 @@ services:
       - zookeeper-west
 
   zookeeper-east:
-    image: ${REPOSITORY}/cp-zookeeper:5.5.1-post
+    image: ${REPOSITORY}/cp-zookeeper:5.5.1
     hostname: zookeeper-east
     container_name: zookeeper-east
     networks:
@@ -62,7 +62,7 @@ services:
       - zookeeper-central
 
   broker-west-1:
-    image: ${REPOSITORY}/cp-server:5.5.1-post
+    image: ${REPOSITORY}/cp-server:5.5.1
     hostname: broker-west-1
     container_name: broker-west-1
     networks:
@@ -93,7 +93,7 @@ services:
       - zookeeper-east
 
   broker-west-2:
-    image: ${REPOSITORY}/cp-server:5.5.1-post
+    image: ${REPOSITORY}/cp-server:5.5.1
     hostname: broker-west-2
     container_name: broker-west-2
     networks:
@@ -123,7 +123,7 @@ services:
       - broker-west-1
 
   broker-east-3:
-    image: ${REPOSITORY}/cp-server:5.5.1-post
+    image: ${REPOSITORY}/cp-server:5.5.1
     hostname: broker-east-3
     container_name: broker-east-3
     networks:
@@ -156,7 +156,7 @@ services:
       - broker-west-2
 
   broker-east-4:
-    image: ${REPOSITORY}/cp-server:5.5.1-post
+    image: ${REPOSITORY}/cp-server:5.5.1
     hostname: broker-east-4
     container_name: broker-east-4
     networks:
