@@ -143,7 +143,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
   connect-cloud:
-    image: cnfldemos/cp-server-connect-datagen:${KAFKA_CONNECT_DATAGEN_DOCKER_TAG}
+    image: localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION}
     hostname: connect-cloud
     container_name: connect-cloud
     depends_on:
@@ -153,9 +153,7 @@ services:
       - "8087:8087"
     volumes:
       - mi2:/usr/share/java/monitoring-interceptors/
-      - mi3:/usr/share/java/kafka-connect-replicator/
       - $PWD/delta_configs/ak-tools-ccloud.delta:/tmp/ak-tools-ccloud.delta
-    command: "bash -c 'cp /usr/share/java/kafka-connect-replicator/replicator-rest-extension-*.jar /etc/kafka-connect/jars/; /etc/confluent/docker/run'"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-cloud
@@ -184,7 +182,8 @@ services:
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
       # CLASSPATH required due to CC-2422
-      CLASSPATH: "/etc/kafka-connect/jars/replicator-rest-extension-${CONFLUENT}.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-${CONFLUENT}.jar"
+      CLASSPATH: "/usr/share/confluent-hub-components/confluentinc-kafka-connect-replicator/lib/replicator-rest-extension-${CONNECTOR_VERSION}.jar:/usr/share/java/monitoring-interceptors/*"
+
 
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
@@ -213,27 +212,5 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
 
-  # This container is just to transfer Replicator jars to the Connect worker
-  # It is not used as a Connect worker
-  replicator-for-jar-transfer:
-    image: ${REPOSITORY}/cp-enterprise-replicator:${CONFLUENT_DOCKER_TAG}
-    hostname: replicator
-    container_name: replicator
-    volumes:
-      - mi3:/usr/share/java/kafka-connect-replicator/
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: localhost:8882
-      CONNECT_REST_PORT: 8883
-      CONNECT_GROUP_ID: "connect-replicator"
-      CONNECT_CONFIG_STORAGE_TOPIC: "default.config"
-      CONNECT_OFFSET_STORAGE_TOPIC: "default.offsets"
-      CONNECT_STATUS_STORAGE_TOPIC: "default.status"
-      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
-      CONNECT_LOG4J_ROOT_LOGLEVEL: DEBUG
-    command: "tail -f /dev/null"
-
 volumes:
     mi2: {}
-    mi3: {}

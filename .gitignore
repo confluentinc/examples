@@ -23,3 +23,4 @@ log.*
 **/stack-configs/
 **/eventlogs.sql
 **/.DS_Store
+ccloud/*.zip
