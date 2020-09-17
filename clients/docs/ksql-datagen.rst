@@ -4,8 +4,8 @@ KSQL Datagen
 ============
 
 In this tutorial, you will run a KSQL Datagen client application using the `KSQL
-Datagen command-line
-tool<https://docs.ksqldb.io/en/latest/developer-guide/test-and-debug/generate-custom-test-data/>`__
+Datagen command-line tool
+<https://docs.ksqldb.io/en/latest/developer-guide/test-and-debug/generate-custom-test-data/>`__
 that produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. note::
