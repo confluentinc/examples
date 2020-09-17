@@ -4,8 +4,8 @@ Ruby
 ====
 
 In this tutorial, you will run a Ruby client application using the `ZenDesk Ruby
-Client for Apache Kafka <https://github.com/zendesk/ruby-kafka>`__  that
-produces messages to and consumes messages from an |ak-tm| cluster.
+Client for Apache Kafka <https://github.com/zendesk/ruby-kafka>`__ that produces
+messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
