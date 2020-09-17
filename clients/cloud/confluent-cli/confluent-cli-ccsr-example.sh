@@ -1,6 +1,7 @@
 #!/bin/bash
 
 CONFIG_FILE=$HOME/.confluent/java.config
+CONFIG_FILE=/Users/yeva/git/examples/ccloud/stack-configs/java-service-account-111108.config
 
 source ../../../utils/helper.sh
 source ../../../utils/ccloud_library.sh
@@ -11,7 +12,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
 set -eu
 
-../../../ccloud/ccloud-generate-cp-configs.sh
+../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 source delta_configs/env.delta
 
 # Set topic name
