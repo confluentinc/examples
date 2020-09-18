@@ -20,24 +20,22 @@ retry $MAX_WAIT check_rest_proxy_up rest-proxy || exit 1
 echo "REST Proxy has started!"
 
 # Set topic name
-topic_name=test1
+topic_name=test3
 
-# List clusters (using API v3 admin functionality)
-docker-compose exec rest-proxy curl -X GET \
-     -H "Content-Type: application/vnd.api+json" \
-     -H "Accept: application/vnd.api+json" \
-     -u "$CLOUD_KEY:$CLOUD_SECRET" \
-     "http://localhost:8082/v3/clusters/"
+# List clusters (API v3)
+KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
+     "http://localhost:8082/v3/clusters/" | jq -r ".data[0].cluster_id")
+echo "KAFKA_CLUSTER_ID: $KAFKA_CLUSTER_ID"
 
-# Create topic (using API v3 admin functionality)
+# Create topic (API v3)
 docker-compose exec rest-proxy curl -X POST \
      -H "Content-Type: application/json" \
-     -H "accept: application/json" \
-     -d "{\"topic_name\":\"$topic_name\",\"partitions_count\":6,\"replication_factor\":3,\"configs\":[{\"name\":\"cleanup.policy\",\"value\":\"compact\"}]}" \
-     "http://localhost:8082/kafka/v3/clusters/${KAFKA_CLUSTER_ID}/topics" | jq
+     -d "{\"topic_name\":\"$topic_name\",\"partitions_count\":6,\"replication_factor\":3,\"configs\":[]}" \
+     "http://localhost:8082/v3/clusters/${KAFKA_CLUSTER_ID}/topics"
 
-# Produce a message using JSON with the value '{ "foo": "bar" }'
+# Produce a message using JSON with the value '{ "foo": "bar" }' (API v2)
 docker-compose exec rest-proxy curl -X POST \
      -H "Content-Type: application/vnd.kafka.json.v2+json" \
      -H "Accept: application/vnd.kafka.v2+json" \
-     --data '{"records":[{"value":{"foo":"bar"}}]}' "http://localhost:8082/topics/$topic_name"
+     --data '{"records":[{"value":{"foo":"bar"}}]}' \
+     "http://localhost:8082/topics/$topic_name"

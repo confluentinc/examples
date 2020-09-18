@@ -5,7 +5,7 @@ CONFIG_FILE=$HOME/.confluent/java.config
 source ../../../utils/helper.sh
 
 # Set topic name
-topic_name=test1
+topic_name=test3
 
 # Create a consumer for JSON data, starting at the beginning of the topic's log
 docker-compose exec rest-proxy curl -X POST \
