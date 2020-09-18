@@ -6,7 +6,6 @@ topic_name=${topic_name:-test1}
 # List clusters (API v3)
 KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
      "http://localhost:8082/v3/clusters/" | jq -r ".data[0].cluster_id")
-echo "KAFKA_CLUSTER_ID: $KAFKA_CLUSTER_ID"
 
 # Produce a message using JSON with the value '{ "foo": "bar" }' (API v2)
 docker-compose exec rest-proxy curl -X POST \
