@@ -19,6 +19,7 @@ docker-compose exec rest-proxy curl -X POST \
      http://localhost:8082/consumers/$cg_name/instances/$ci/subscription
 
 # Consume some data using the base URL in the first response.
+# Note: Issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432
 docker-compose exec rest-proxy curl -X GET \
      -H "Accept: application/vnd.kafka.json.v2+json" \
      http://localhost:8082/consumers/$cg_name/instances/$ci/records
@@ -26,7 +27,6 @@ docker-compose exec rest-proxy curl -X GET \
 echo -e "\nSleeping 10 seconds between first and second consume try"
 sleep 10
 
-# Consume some data using the base URL in the first response.
 docker-compose exec rest-proxy curl -X GET \
      -H "Accept: application/vnd.kafka.json.v2+json" \
      http://localhost:8082/consumers/$cg_name/instances/$ci/records
