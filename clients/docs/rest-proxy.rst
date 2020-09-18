@@ -1,15 +1,10 @@
-.. _client-examples-ksql-datagen:
+.. _client-examples-rest-proxy:
 
-KSQL Datagen
+|crest-long|
 ============
 
-In this tutorial, you will run a KSQL Datagen client application that
-produces messages to and consumes messages from an |ak-tm| cluster.
-
-.. note::
-
-    Use KSQL Datagen for development purposes only. It isn't suitable for a
-    production environment.
+In this tutorial, you will use |crest-long| to
+produce messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
@@ -22,8 +17,6 @@ Client
 ~~~~~~
 
 -  Docker
-
--  `Download <https://www.confluent.io/download/>`__ |cp| |release|
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -40,7 +33,7 @@ Setup
 
    .. code-block:: bash
 
-      cd clients/cloud/ksql-datagen/
+      cd clients/cloud/rest-proxy/
 
 #. .. include:: includes/client-example-create-file-java.rst
 
@@ -54,7 +47,7 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Create the |ak| topic.
+#. Create the |ak| topic. 
 
    .. code-block:: bash
 
@@ -127,7 +120,7 @@ Avro and Confluent Cloud Schema Registry
 Produce Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
-#. Create the topic in |ccloud|.
+#. Create the |ak| topic. 
 
    .. code-block:: bash
 
