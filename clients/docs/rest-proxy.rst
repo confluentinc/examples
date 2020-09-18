@@ -44,14 +44,8 @@ Basic Producer and Consumer
 .. include:: includes/producer-consumer-description.rst
 
 
-Produce Records
-~~~~~~~~~~~~~~~
-
-#. Create the |ak| topic. 
-
-   .. code-block:: bash
-
-       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test1 --create --replication-factor 3 --partitions 6
+Create the topic
+~~~~~~~~~~~~~~~~
 
 #. Generate a file of ENV variables used by Docker to set the bootstrap
    servers and security configuration.
@@ -72,137 +66,86 @@ Produce Records
 
        docker-compose up -d
 
-#. View the :devx-examples:`ksql-datagen code|clients/cloud/ksql-datagen/start-docker.sh`.
+#. Verify REST Proxy has started.  View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests``.
 
+   .. code-block:: bash
+
+      docker-compose logs rest-proxy
+
+#. Get the |ak| cluster id that the |crest| is connected to.
+
+   .. code-block:: bash
+
+      KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
+         "http://localhost:8082/v3/clusters/" | jq -r ".data[0].cluster_id")
+
+#. Create the |ak| topic ``test1``. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+
+   .. code-block:: bash
+
+      docker-compose exec rest-proxy curl -X POST \
+           -H "Content-Type: application/json" \
+           -d "{\"topic_name\":\"test1\",\"partitions_count\":6,\"replication_factor\":3,\"configs\":[]}" \
+           "http://localhost:8082/v3/clusters/${KAFKA_CLUSTER_ID}/topics"
+
+#. View the :devx-examples:`admin code|clients/cloud/rest-proxy/admin.sh`.
+
+Produce Records
+~~~~~~~~~~~~~~~
+
+#. Produce a message ``{"foo":"bar"}`` to the topic ``test1``.
+
+   .. code-block:: bash
+
+      docker-compose exec rest-proxy curl -X POST \
+           -H "Content-Type: application/vnd.kafka.json.v2+json" \
+           -H "Accept: application/vnd.kafka.v2+json" \
+           --data '{"records":[{"value":{"foo":"bar"}}]}' \
+           "http://localhost:8082/topics/$test1
+
+#. View the :devx-examples:`producer code|clients/cloud/rest-proxy/producer.sh`.
 
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Consume from topic ``test1`` by doing the following:
-
-   -  Referencing a properties file
-
-      .. code-block:: bash
-
-         docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/ak-tools-ccloud.delta --max-messages 5'
-
-   -  Referencing individual properties
-
-      .. code-block:: bash
-
-         docker-compose exec connect bash -c 'kafka-console-consumer --topic test1 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer-property ssl.endpoint.identification.algorithm=https --consumer-property sasl.mechanism=PLAIN --consumer-property security.protocol=SASL_SSL --consumer-property sasl.jaas.config="$SASL_JAAS_CONFIG_PROPERTY_FORMAT" --max-messages 5'
-
-   You should see messages similar to the following:
-
-   .. code-block:: text
-
-      {"ordertime":1489322485717,"orderid":15,"itemid":"Item_352","orderunits":9.703502112840228,"address":{"city":"City_48","state":"State_21","zipcode":32731}}
-
-#. When you are done, press ``CTRL-C``.
-
-#. View the :devx-examples:`consumer code|clients/cloud/ksql-datagen/start-docker.sh`.
-
-
-Avro and Confluent Cloud Schema Registry
-----------------------------------------
-
-.. include:: includes/schema-registry-scenario-explain.rst
-
-#. .. include:: includes/client-example-schema-registry-1.rst
-
-#. .. include:: includes/client-example-vpc.rst
-
-#. .. include:: includes/schema-registry-java.rst
-
-#. .. include:: includes/client-example-schema-registry-2-java.rst
-
-
-Produce Avro Records
-~~~~~~~~~~~~~~~~~~~~
-
-#. Create the |ak| topic. 
+#. Create a consumer ``ci1`` belonging to consumer group ``cg1``.  Specify ``auto.offset.reset`` to be ``earliest`` so it starts at the beginning of the topic.
 
    .. code-block:: bash
 
-       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test2 --create --replication-factor 3 --partitions 6
+      docker-compose exec rest-proxy curl -X POST \
+           -H "Content-Type: application/vnd.kafka.v2+json" \
+           --data '{"name": "ci1", "format": "json", "auto.offset.reset": "earliest"}' \
+           http://localhost:8082/consumers/cg1
 
-#. Generate a file of ``ENV`` variables used by Docker to set the bootstrap
-   servers and security configuration.
-
-   .. code-block:: bash
-
-      ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
-
-#. Source the generated file of ``ENV`` variables.
+#. Subscribe the consumer to topic ``test1``.
 
    .. code-block:: bash
 
-      source ./delta_configs/env.delta
+      docker-compose exec rest-proxy curl -X POST \
+           -H "Content-Type: application/vnd.kafka.v2+json" \
+           --data '{"topics":["'"$topic_name"'"]}' \
+           http://localhost:8082/consumers/cg1/instances/ci1/subscription
 
-#. Start Docker by running the following command:
+#. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
 
    .. code-block:: bash
 
-       docker-compose up -d
+      docker-compose exec rest-proxy curl -X GET \
+           -H "Accept: application/vnd.kafka.json.v2+json" \
+           http://localhost:8082/consumers/cg1/instances/ci1/records
+      
+      sleep 10
+      
+      docker-compose exec rest-proxy curl -X GET \
+           -H "Accept: application/vnd.kafka.json.v2+json" \
+           http://localhost:8082/consumers/cg1/instances/ci1/records
+      
+#. Delete the consumer instance to clean up its resources
 
-#. View the :devx-examples:`ksql-datagen Avro code|clients/cloud/ksql-datagen/start-docker-avro.sh`.
+   .. code-block:: bash
 
+      docker-compose exec rest-proxy curl -X DELETE \
+           -H "Content-Type: application/vnd.kafka.v2+json" \
+           http://localhost:8082/consumers/cg1/instances/ci1
 
-Consume Avro Records
-~~~~~~~~~~~~~~~~~~~~
-
-#. Consume from topic ``test2`` by doing the following:
-
-   -  Referencing a properties file
-
-      .. code-block:: bash
-
-         docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer.config /tmp/ak-tools-ccloud.delta --property basic.auth.credentials.source=$CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE --property schema.registry.basic.auth.user.info=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL --max-messages 5'
-
-   -  Referencing individual properties
-
-      .. code-block:: bash
-
-         docker-compose exec connect bash -c 'kafka-avro-console-consumer --topic test2 --bootstrap-server $CONNECT_BOOTSTRAP_SERVERS --consumer-property ssl.endpoint.identification.algorithm=https --consumer-property sasl.mechanism=PLAIN --consumer-property security.protocol=SASL_SSL --consumer-property sasl.jaas.config="$SASL_JAAS_CONFIG_PROPERTY_FORMAT" --property basic.auth.credentials.source=$CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE --property schema.registry.basic.auth.user.info=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL --max-messages 5'
-
-   You should see messages similar to the following:
-
-   .. code-block:: text
-
-      {"ordertime":{"long":1494153923330},"orderid":{"int":25},"itemid":{"string":"Item_441"},"orderunits":{"double":0.9910185646928878},"address":{"io.confluent.ksql.avro_schemas.KsqlDataSourceSchema_address":{"city":{"string":"City_61"},"state":{"string":"State_41"},"zipcode":{"long":60468}}}}
-
-
-#. When you are done, press ``CTRL-C``.
-
-#. View the :devx-examples:`consumer Avro code|clients/cloud/ksql-datagen/start-docker-avro.sh`.
-
-
-Confluent Cloud Schema Registry
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#. View the schema information registered in |sr-ccloud|. In the following
-   output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and
-   ``<SR ENDPOINT>``.
-
-   .. code-block:: text
-
-       curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
-
-#. Verify the subject ``test2-value`` exists.
-
-   .. code-block:: text
-
-      ["test2-value"]
-
-#. View the schema information for subject ``test2-value``. In the following
-   output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
-
-   .. code-block:: text
-
-      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
-
-#. Verify the schema information for subject ``test2-value``.
-
-   .. code-block:: text
-
-      {"subject":"test2-value","version":1,"id":100001,"schema":"{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema\",\"namespace\":\"io.confluent.ksql.avro_schemas\",\"fields\":[{\"name\":\"ordertime\",\"type\":[\"null\",\"long\"],\"default\":null},{\"name\":\"orderid\",\"type\":[\"null\",\"int\"],\"default\":null},{\"name\":\"itemid\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"orderunits\",\"type\":[\"null\",\"double\"],\"default\":null},{\"name\":\"address\",\"type\":[\"null\",{\"type\":\"record\",\"name\":\"KsqlDataSourceSchema_address\",\"fields\":[{\"name\":\"city\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"state\",\"type\":[\"null\",\"string\"],\"default\":null},{\"name\":\"zipcode\",\"type\":[\"null\",\"long\"],\"default\":null}]}],\"default\":null}]}"}
+#. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consumer.sh`.
