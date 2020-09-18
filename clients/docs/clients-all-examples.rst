@@ -23,6 +23,7 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`KSQL Datagen <client-examples-ksql-datagen>`
 * :ref:`Node.js <client-examples-nodejs>`
 * :ref:`Python <client-examples-python>`
+* :ref:`REST Proxy <client-examples-rest-proxy>`
 * :ref:`Ruby <client-examples-ruby>`
 * :ref:`Rust <client-examples-rust>`
 * :ref:`Scala <client-examples-scala>`
@@ -51,6 +52,7 @@ For the subset of languages that support it, the code examples also demonstrate 
       ksql-datagen
       nodejs
       python
+      rest-proxy
       ruby
       rust
       scala
