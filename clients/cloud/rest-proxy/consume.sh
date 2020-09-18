@@ -1,7 +1,7 @@
 #!/bin/bash
   
 # Set topic name
-topic_name=${topic_name:-test3}
+topic_name=${topic_name:-test1}
 
 cg_name=cg1
 ci=ci1

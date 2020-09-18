@@ -1,7 +1,7 @@
 #!/bin/bash
   
 # Set topic name
-topic_name=${topic_name:-test3}
+topic_name=${topic_name:-test1}
 
 # List clusters (API v3)
 KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
