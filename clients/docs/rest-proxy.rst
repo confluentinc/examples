@@ -125,7 +125,7 @@ Produce Records
         }
       }
 
-#. Produce 3 JSON messages to the topic, with key ``alice``, and values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
+#. Produce three JSON messages to the topic, with key ``alice``, and values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce.sh
       :lines: 14-18
@@ -303,10 +303,10 @@ Produce Avro Records
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
       :lines: 22
 
-#. Produce 3 Avro messages to the topic, with values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``. Notice that the request body includes the schema ID.
+#. Produce three Avro messages to the topic, with values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``. Notice that the request body includes the schema ID.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 19-23
+      :lines: 25-29
 
    Verify your output resembles:
 
