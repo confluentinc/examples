@@ -14,5 +14,5 @@ docker-compose exec rest-proxy curl -X POST \
 docker-compose exec rest-proxy curl -X POST \
      -H "Content-Type: application/vnd.kafka.json.v2+json" \
      -H "Accept: application/vnd.kafka.v2+json" \
-     --data '{"records":[{"value":{"count":0}},{"value":{"count":1}},{"value":{"count":2}}]}' \
+     --data '{"records":[{"key":"alice","value":{"count":0}},{"key":"alice","value":{"count":1}},{"key":"alice","value":{"count":2}}]}' \
      "http://localhost:8082/topics/test1" | jq .

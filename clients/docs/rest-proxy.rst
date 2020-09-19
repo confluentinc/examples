@@ -61,7 +61,7 @@ Setup
 
    .. code-block:: text
 
-      docker-compose logs rest-proxy
+      docker-compose logs -f rest-proxy
 
 
 Basic Producer and Consumer
@@ -116,7 +116,7 @@ Produce Records
         }
       }
 
-#. Produce 3 messages to the topic: ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
+#. Produce 3 JSON messages to the topic, with key ``alice``, and values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce.sh
       :lines: 14-18
@@ -128,19 +128,19 @@ Produce Records
       {
         "offsets": [
           {
-            "partition": 3,
+            "partition": 0,
             "offset": 0,
             "error_code": null,
             "error": null
           },
           {
-            "partition": 3,
+            "partition": 0,
             "offset": 1,
             "error_code": null,
             "error": null
           },
           {
-            "partition": 3,
+            "partition": 0,
             "offset": 2,
             "error_code": null,
             "error": null
@@ -187,29 +187,29 @@ Consume Records
       [
         {
           "topic": "test1",
-          "key": null,
+          "key": "alice",
           "value": {
             "count": 0
           },
-          "partition": 3,
+          "partition": 0,
           "offset": 0
         },
         {
           "topic": "test1",
-          "key": null,
+          "key": "alice",
           "value": {
             "count": 1
           },
-          "partition": 3,
+          "partition": 0,
           "offset": 1
         },
         {
           "topic": "test1",
-          "key": null,
+          "key": "alice",
           "value": {
             "count": 2
           },
-          "partition": 3,
+          "partition": 0,
           "offset": 2
         }
       ]
@@ -278,7 +278,23 @@ Produce Avro Records
         }
       }
 
-#. Produce a message ``{"countInfo":{"count": 0}}`` to the topic ``test2``.
+#. Register a new Avro schema for topic ``test2`` with the |ccloud| |sr|.
+
+   .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
+      :lines: 19-20
+
+   Verify the output shows the new schema id:
+
+   .. code-block:: text
+
+      {"id":100001}
+
+#. Set the variable ``schemaid`` to the value of the schema ID.
+
+   .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
+      :lines: 22
+
+#. Produce 3 Avro messages to the topic, with values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``. Notice that the request body includes the schema ID.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
       :lines: 19-23
@@ -290,14 +306,26 @@ Produce Avro Records
       {
         "offsets": [
           {
-            "partition": 2,
+            "partition": 4,
             "offset": 0,
+            "error_code": null,
+            "error": null
+          },
+          {
+            "partition": 4,
+            "offset": 1,
+            "error_code": null,
+            "error": null
+          },
+          {
+            "partition": 4,
+            "offset": 2,
             "error_code": null,
             "error": null
           }
         ],
         "key_schema_id": null,
-        "value_schema_id": null
+        "value_schema_id": 100001
       }
 
 #. View the :devx-examples:`producer Avro code|clients/cloud/rest-proxy/produce-ccsr.sh`.
