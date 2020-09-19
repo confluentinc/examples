@@ -52,7 +52,7 @@ Setup
 
       source ./delta_configs/env.delta
 
-#. Get the :devx-cp-all-in-one:`cp-all-in-one-cloud docker-compose.yml|cp-all-in-one-cloud` file,
+#. Get the :devx-cp-all-in-one:`cp-all-in-one-cloud docker-compose.yml|cp-all-in-one-cloud/docker-compose.yml` file,
    which runs |cp| in containers in your local host, and automatically configures them to
    connect to |ccloud|.
 
