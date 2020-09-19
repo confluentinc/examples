@@ -3,8 +3,10 @@
 Kafka Connect Datagen
 =====================
 
-In this tutorial, you will run a |kconnect-long| Datagen source connector that
-produces messages to and consumes messages from an |ak-tm| cluster.
+In this tutorial, you will run a |kconnect-long| Datagen source connector using
+`Kafka Connect Datagen
+<https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__
+that produces messages to and consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
