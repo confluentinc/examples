@@ -71,31 +71,66 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Get the |ak| cluster id that the |crest| is connected to.
+#. Get the |ak| cluster ID that the |crest| is connected to.
 
-   .. code-block:: text
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 4-5
 
-      KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
-         "http://localhost:8082/v3/clusters/" | jq -r ".data[0].cluster_id")
+   Verify the parameter ``KAFKA_CLUSTER_ID`` has a valid value. For the example
+   in this tutorial, it is set to ``lkc-15mq6``, but it will be different in your
+   environment.
 
 #. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 8-11
+
+   Verify your output resembles:
+
    .. code-block:: text
 
-      docker-compose exec rest-proxy curl -X POST \
-           -H "Content-Type: application/json" \
-           -d "{\"topic_name\":\"test1\",\"partitions_count\":6,\"replication_factor\":3,\"configs\":[]}" \
-           "http://localhost:8082/v3/clusters/${KAFKA_CLUSTER_ID}/topics"
+      {
+        "kind": "KafkaTopic",
+        "metadata": {
+          "self": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test1",
+          "resource_name": "crn:///kafka=lkc-15mq6/topic=test1"
+        },
+        "cluster_id": "lkc-15mq6",
+        "topic_name": "test2",
+        "is_internal": false,
+        "replication_factor": 3,
+        "partitions": {
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/partitions"
+        },
+        "configs": {
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/configs"
+        },
+        "partition_reassignments": {
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test1/partitions/-/reassignment"
+        }
+      }
 
 #. Produce a message ``{"foo":"bar"}`` to the topic ``test1``.
 
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 14-18
+
+   Verify your output resembles:
+
    .. code-block:: text
 
-      docker-compose exec rest-proxy curl -X POST \
-           -H "Content-Type: application/vnd.kafka.json.v2+json" \
-           -H "Accept: application/vnd.kafka.v2+json" \
-           --data '{"records":[{"value":{"foo":"bar"}}]}' \
-           "http://localhost:8082/topics/test1
+      {
+        "offsets": [
+          {
+            "partition": 2,
+            "offset": 0,
+            "error_code": null,
+            "error": null
+          }
+        ],
+        "key_schema_id": null,
+        "value_schema_id": null
+      }
 
 #. View the :devx-examples:`producer code|clients/cloud/rest-proxy/producer.sh`.
 
@@ -104,42 +139,48 @@ Consume Records
 
 #. Create a consumer ``ci1`` belonging to consumer group ``cg1``.  Specify ``auto.offset.reset`` to be ``earliest`` so it starts at the beginning of the topic.
 
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 4-7
+
+   Verify your output resembles:
+
    .. code-block:: text
 
-      docker-compose exec rest-proxy curl -X POST \
-           -H "Content-Type: application/vnd.kafka.v2+json" \
-           --data '{"name": "ci1", "format": "json", "auto.offset.reset": "earliest"}' \
-           http://localhost:8082/consumers/cg1
+      {
+        "instance_id": "ci2",
+        "base_uri": "http://rest-proxy:8082/consumers/cg1/instances/ci1"
+      }
 
 #. Subscribe the consumer to topic ``test1``.
 
-   .. code-block:: text
-
-      docker-compose exec rest-proxy curl -X POST \
-           -H "Content-Type: application/vnd.kafka.v2+json" \
-           --data '{"topics":["'"$topic_name"'"]}' \
-           http://localhost:8082/consumers/cg1/instances/ci1/subscription
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 10-13
 
 #. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
 
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 17-25
+
+   Verify your output resembles:
+
    .. code-block:: text
 
-      docker-compose exec rest-proxy curl -X GET \
-           -H "Accept: application/vnd.kafka.json.v2+json" \
-           http://localhost:8082/consumers/cg1/instances/ci1/records
-      
-      sleep 10
-      
-      docker-compose exec rest-proxy curl -X GET \
-           -H "Accept: application/vnd.kafka.json.v2+json" \
-           http://localhost:8082/consumers/cg1/instances/ci1/records
+      []
+      [
+        {
+          "topic": "test1",
+          "key": null,
+          "value": {
+            "foo": "bar"
+          },
+          "partition": 2,
+          "offset": 0
+        }
+      ]
       
 #. Delete the consumer instance to clean up its resources
 
-   .. code-block:: text
-
-      docker-compose exec rest-proxy curl -X DELETE \
-           -H "Content-Type: application/vnd.kafka.v2+json" \
-           http://localhost:8082/consumers/cg1/instances/ci1
+   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+      :lines: 28-30
 
 #. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consumer.sh`.
