@@ -1,21 +1,5 @@
 #!/bin/bash
   
-source ../../../utils/helper.sh
-source ../../../utils/ccloud_library.sh
-
-CONFIG_FILE="${CONFIG_FILE:-$HOME/.confluent/java.config}"
-
-../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE || exit
-source ./delta_configs/env.delta
-
-docker-compose up -d
-
-# Verify REST Proxy has started
-MAX_WAIT=60
-echo "Waiting up to $MAX_WAIT seconds for REST Proxy to start"
-retry $MAX_WAIT check_rest_proxy_up rest-proxy || exit 1
-echo "REST Proxy has started!"
-
 # Set topic name
 topic_name=${topic_name:-test1}
 

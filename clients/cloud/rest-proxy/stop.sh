@@ -21,4 +21,5 @@ KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
 docker-compose exec rest-proxy curl -X DELETE \
      "http://localhost:8082/v3/clusters/${KAFKA_CLUSTER_ID}/topics/$topic_name"
 
-docker-compose down -v
+docker-compose stop rest-proxy
+docker-compose rm -f rest-proxy

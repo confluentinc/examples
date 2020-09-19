@@ -31,7 +31,7 @@ Setup
 
 #. Change directory to the example for KSQL Datagen.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       cd clients/cloud/rest-proxy/
 
@@ -50,38 +50,38 @@ Create the topic
 #. Generate a file of ENV variables used by Docker to set the bootstrap
    servers and security configuration.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
 
 #. Source the generated file of ``ENV`` variables.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       source ./delta_configs/env.delta
 
 #. Start Docker by running the following command:
 
-   .. code-block:: bash
+   .. code-block:: text
 
        docker-compose up -d
 
 #. Verify REST Proxy has started.  View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests``.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose logs rest-proxy
 
 #. Get the |ak| cluster id that the |crest| is connected to.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
          "http://localhost:8082/v3/clusters/" | jq -r ".data[0].cluster_id")
 
 #. Create the |ak| topic ``test1``. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose exec rest-proxy curl -X POST \
            -H "Content-Type: application/json" \
@@ -95,7 +95,7 @@ Produce Records
 
 #. Produce a message ``{"foo":"bar"}`` to the topic ``test1``.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose exec rest-proxy curl -X POST \
            -H "Content-Type: application/vnd.kafka.json.v2+json" \
@@ -110,7 +110,7 @@ Consume Records
 
 #. Create a consumer ``ci1`` belonging to consumer group ``cg1``.  Specify ``auto.offset.reset`` to be ``earliest`` so it starts at the beginning of the topic.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose exec rest-proxy curl -X POST \
            -H "Content-Type: application/vnd.kafka.v2+json" \
@@ -119,7 +119,7 @@ Consume Records
 
 #. Subscribe the consumer to topic ``test1``.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose exec rest-proxy curl -X POST \
            -H "Content-Type: application/vnd.kafka.v2+json" \
@@ -128,7 +128,7 @@ Consume Records
 
 #. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose exec rest-proxy curl -X GET \
            -H "Accept: application/vnd.kafka.json.v2+json" \
@@ -142,7 +142,7 @@ Consume Records
       
 #. Delete the consumer instance to clean up its resources
 
-   .. code-block:: bash
+   .. code-block:: text
 
       docker-compose exec rest-proxy curl -X DELETE \
            -H "Content-Type: application/vnd.kafka.v2+json" \
