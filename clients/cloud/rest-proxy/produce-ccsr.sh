@@ -25,5 +25,5 @@ schemaid=$(docker-compose exec rest-proxy curl -X GET -u "$SCHEMA_REGISTRY_BASIC
 docker-compose exec rest-proxy curl -X POST \
      -H "Content-Type: application/vnd.kafka.avro.v2+json" \
      -H "Accept: application/vnd.kafka.v2+json" \
-     --data '{"value_schema_id": '"$schemaid"', "records": [{"value": {"countInfo":{"count": 0}}},{"value": {"countInfo":{"count": 1}}},{"value": {"countInfo":{"count": 2}}}]}' \
+     --data '{"value_schema_id": '"$schemaid"', "records": [{"value": {"count":0}},{"value": {"count":1}},{"value": {"count":2}}]}' \
      "http://localhost:8082/topics/test2" | jq .
