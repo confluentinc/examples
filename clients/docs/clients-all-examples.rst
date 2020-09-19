@@ -21,7 +21,7 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Rust <client-examples-rust>`
 * :ref:`Scala <client-examples-scala>`
 
-Additional |ak| and |cp| command line tools and components:
+There are additional examples for |ak| and |cp| command line tools and components:
 
 * :ref:`Apache Kafka commands <client-examples-kafka-commands>`
 * :ref:`Confluent CLI <client-examples-confluent-cli>`
