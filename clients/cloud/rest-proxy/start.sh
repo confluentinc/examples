@@ -18,6 +18,5 @@ echo "Waiting up to $MAX_WAIT seconds for REST Proxy to start"
 retry $MAX_WAIT check_rest_proxy_up rest-proxy || exit 1
 echo "REST Proxy has started!"
 
-./admin.sh
-./produce.sh
-./consume.sh
+topic_name=test1 ./produce.sh
+topic_name=test1 ./consume.sh

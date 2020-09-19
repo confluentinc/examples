@@ -37,16 +37,6 @@ Setup
 
 #. .. include:: includes/client-example-create-file-java.rst
 
-
-Basic Producer and Consumer
----------------------------
-
-.. include:: includes/producer-consumer-description.rst
-
-
-Create the topic
-~~~~~~~~~~~~~~~~
-
 #. Generate a file of ENV variables used by Docker to set the bootstrap
    servers and security configuration.
 
@@ -72,6 +62,15 @@ Create the topic
 
       docker-compose logs rest-proxy
 
+Basic Producer and Consumer
+---------------------------
+
+.. include:: includes/producer-consumer-description.rst
+
+
+Produce Records
+~~~~~~~~~~~~~~~
+
 #. Get the |ak| cluster id that the |crest| is connected to.
 
    .. code-block:: text
@@ -79,7 +78,7 @@ Create the topic
       KAFKA_CLUSTER_ID=$(docker-compose exec rest-proxy curl -X GET \
          "http://localhost:8082/v3/clusters/" | jq -r ".data[0].cluster_id")
 
-#. Create the |ak| topic ``test1``. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+#. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
    .. code-block:: text
 
@@ -87,11 +86,6 @@ Create the topic
            -H "Content-Type: application/json" \
            -d "{\"topic_name\":\"test1\",\"partitions_count\":6,\"replication_factor\":3,\"configs\":[]}" \
            "http://localhost:8082/v3/clusters/${KAFKA_CLUSTER_ID}/topics"
-
-#. View the :devx-examples:`admin code|clients/cloud/rest-proxy/admin.sh`.
-
-Produce Records
-~~~~~~~~~~~~~~~
 
 #. Produce a message ``{"foo":"bar"}`` to the topic ``test1``.
 
@@ -101,7 +95,7 @@ Produce Records
            -H "Content-Type: application/vnd.kafka.json.v2+json" \
            -H "Accept: application/vnd.kafka.v2+json" \
            --data '{"records":[{"value":{"foo":"bar"}}]}' \
-           "http://localhost:8082/topics/$test1
+           "http://localhost:8082/topics/test1
 
 #. View the :devx-examples:`producer code|clients/cloud/rest-proxy/producer.sh`.
 
