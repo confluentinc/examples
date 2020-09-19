@@ -1,7 +1,7 @@
 .. _client-examples-rest-proxy:
 
-|crest-long|
-============
+|crest|
+=======
 
 In this tutorial, you will use |crest-long| to
 produce messages to and consumes messages from an |ak-tm| cluster.
@@ -16,7 +16,8 @@ Prerequisites
 Client
 ~~~~~~
 
--  Docker
+-  Docker version 17.06.1-ce
+-  Docker Compose version 1.25.4
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -29,7 +30,7 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for KSQL Datagen.
+#. Change directory to the example for |crest|.
 
    .. code-block:: text
 
@@ -56,11 +57,12 @@ Setup
 
        docker-compose up -d rest-proxy
 
-#. Verify REST Proxy has started.  View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests``.
+#. View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests`` to confirm |crest| has started.
 
    .. code-block:: text
 
       docker-compose logs rest-proxy
+
 
 Basic Producer and Consumer
 ---------------------------
@@ -114,7 +116,7 @@ Produce Records
         }
       }
 
-#. Produce 3 messages to the topic ``test1``: ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
+#. Produce 3 messages to the topic: ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce.sh
       :lines: 14-18
@@ -163,7 +165,7 @@ Consume Records
    .. code-block:: text
 
       {
-        "instance_id": "ci2",
+        "instance_id": "ci1",
         "base_uri": "http://rest-proxy:8082/consumers/cg1/instances/ci1"
       }
 
@@ -172,7 +174,7 @@ Consume Records
    .. literalinclude:: ../cloud/rest-proxy/consume.sh
       :lines: 10-13
 
-#. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
+#. Consume data using the base URL in the first response. Issue the curl command twice, sleeping 10 seconds in between—this is intentional due to https://github.com/confluentinc/kafka-rest/issues/432.
 
    .. literalinclude:: ../cloud/rest-proxy/consume.sh
       :lines: 17-25
@@ -243,8 +245,8 @@ Produce Avro Records
       :lines: 9-10
 
    Verify the parameter ``KAFKA_CLUSTER_ID`` has a valid value. For the example
-   in this tutorial, it is set to ``lkc-56ngz``, but it will be different in your
-   environment.
+   in this tutorial, it is shown as ``lkc-56ngz``, but it will differ in your
+   output.
 
 #. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
@@ -276,7 +278,7 @@ Produce Avro Records
         }
       }
 
-#. Produce a message ``{"user":{"userid": 1}}`` to the topic ``test2``.
+#. Produce a message ``{"countInfo":{"count": 0}}`` to the topic ``test2``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
       :lines: 19-23
@@ -298,7 +300,7 @@ Produce Avro Records
         "value_schema_id": null
       }
 
-#. View the :devx-examples:`producer code|clients/cloud/rest-proxy/produce-ccsr.sh`.
+#. View the :devx-examples:`producer Avro code|clients/cloud/rest-proxy/produce-ccsr.sh`.
 
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
@@ -349,7 +351,7 @@ Consume Avro Records
    .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
       :lines: 28-30
 
-#. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consume-ccsr.sh`.
+#. View the :devx-examples:`consumer Avro code|clients/cloud/rest-proxy/consume-ccsr.sh`.
 
 
 |ccloud| |sr|
