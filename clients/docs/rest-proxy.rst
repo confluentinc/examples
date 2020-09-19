@@ -16,8 +16,9 @@ Prerequisites
 Client
 ~~~~~~
 
--  Docker version 17.06.1-ce
--  Docker Compose version 1.25.4
+- Docker version 17.06.1-ce
+- Docker Compose version 1.25.4
+- ``wget``
 
 Kafka Cluster
 ~~~~~~~~~~~~~
@@ -51,7 +52,15 @@ Setup
 
       source ./delta_configs/env.delta
 
-#. Start Docker by running the following command:
+#. Get the :devx-cp-all-in-one:`cp-all-in-one-cloud docker-compose.yml|cp-all-in-one-cloud` file,
+   which runs |cp| in containers in your local host, and automatically configures them to
+   connect to |ccloud|.
+
+   .. codewithvars:: bash
+
+      wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/|release|/cp-all-in-one-cloud/docker-compose.yml
+
+#. Start the |crest| Docker container by running the following command:
 
    .. code-block:: text
 
