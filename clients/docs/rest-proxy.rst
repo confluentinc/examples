@@ -428,3 +428,11 @@ Consume Avro Records
 
       {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
 
+Stop
+----
+
+#. Stop Docker by running the following command:
+
+   .. code-block:: text
+
+       docker-compose down
