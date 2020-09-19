@@ -60,6 +60,12 @@ Setup
 
       wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/|release|/cp-all-in-one-cloud/docker-compose.yml
 
+#. For the full |crest| configuration, view the |crest| section in the ``docker-compose.yml`` file which you just downloaded in the previous step.
+
+   .. code-block:: text
+
+      cat docker-compose.yml
+
 #. Start the |crest| Docker container by running the following command:
 
    .. code-block:: text
