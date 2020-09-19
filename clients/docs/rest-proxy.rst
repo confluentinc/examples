@@ -132,14 +132,14 @@ Produce Records
         "value_schema_id": null
       }
 
-#. View the :devx-examples:`producer code|clients/cloud/rest-proxy/producer.sh`.
+#. View the :devx-examples:`producer code|clients/cloud/rest-proxy/produce.sh`.
 
 Consume Records
 ~~~~~~~~~~~~~~~
 
 #. Create a consumer ``ci1`` belonging to consumer group ``cg1``.  Specify ``auto.offset.reset`` to be ``earliest`` so it starts at the beginning of the topic.
 
-   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+   .. literalinclude:: ../cloud/rest-proxy/consume.sh
       :lines: 4-7
 
    Verify your output resembles:
@@ -153,12 +153,12 @@ Consume Records
 
 #. Subscribe the consumer to topic ``test1``.
 
-   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+   .. literalinclude:: ../cloud/rest-proxy/consume.sh
       :lines: 10-13
 
 #. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
 
-   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+   .. literalinclude:: ../cloud/rest-proxy/consume.sh
       :lines: 17-25
 
    Verify your output resembles:
@@ -180,7 +180,169 @@ Consume Records
       
 #. Delete the consumer instance to clean up its resources
 
-   .. literalinclude:: ../cloud/rest-proxy/produce.sh
+   .. literalinclude:: ../cloud/rest-proxy/consume.sh
       :lines: 28-30
 
-#. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consumer.sh`.
+#. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consume.sh`.
+
+
+Avro and Confluent Cloud Schema Registry
+-----------------------------------------
+
+.. include:: includes/schema-registry-scenario-explain.rst
+
+#. .. include:: includes/client-example-schema-registry-1.rst
+
+#. .. include:: includes/client-example-vpc.rst
+
+#. .. include:: includes/schema-registry-java.rst
+
+#. .. include:: includes/client-example-schema-registry-2-java.rst
+
+
+Produce Avro Records
+~~~~~~~~~~~~~~~~~~~~
+
+#. Get the |ak| cluster ID that the |crest| is connected to.
+
+   .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
+      :lines: 4-5
+
+   Verify the parameter ``KAFKA_CLUSTER_ID`` has a valid value. For the example
+   in this tutorial, it is set to ``lkc-15mq6``, but it will be different in your
+   environment.
+
+#. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+
+   .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
+      :lines: 8-11
+
+   Verify your output resembles:
+
+   .. code-block:: text
+
+      {
+        "kind": "KafkaTopic",
+        "metadata": {
+          "self": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2",
+          "resource_name": "crn:///kafka=lkc-15mq6/topic=test2"
+        },
+        "cluster_id": "lkc-15mq6",
+        "topic_name": "test2",
+        "is_internal": false,
+        "replication_factor": 3,
+        "partitions": {
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/partitions"
+        },
+        "configs": {
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/configs"
+        },
+        "partition_reassignments": {
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/partitions/-/reassignment"
+        }
+      }
+
+#. Produce a message ``{"user":{"userid": 1}}`` to the topic ``test2``.
+
+   .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
+      :lines: 14-18
+
+   Verify your output resembles:
+
+   .. code-block:: text
+
+      {
+        "offsets": [
+          {
+            "partition": 2,
+            "offset": 0,
+            "error_code": null,
+            "error": null
+          }
+        ],
+        "key_schema_id": null,
+        "value_schema_id": null
+      }
+
+#. View the :devx-examples:`producer code|clients/cloud/rest-proxy/produce-ccsr.sh`.
+
+Consume Avro Records
+~~~~~~~~~~~~~~~~~~~~
+
+#. Create a consumer ``ci2`` belonging to consumer group ``cg2``.  Specify ``auto.offset.reset`` to be ``earliest`` so it starts at the beginning of the topic.
+
+   .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
+      :lines: 4-7
+
+   Verify your output resembles:
+
+   .. code-block:: text
+
+      {
+        "instance_id": "ci2",
+        "base_uri": "http://rest-proxy:8082/consumers/cg2/instances/ci2"
+      }
+
+#. Subscribe the consumer to topic ``test1``.
+
+   .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
+      :lines: 10-13
+
+#. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
+
+   .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
+      :lines: 17-25
+
+   Verify your output resembles:
+
+   .. code-block:: text
+
+      []
+      [
+        {
+          "topic": "test1",
+          "key": null,
+          "value": {
+            "foo": "bar"
+          },
+          "partition": 2,
+          "offset": 0
+        }
+      ]
+      
+#. Delete the consumer instance to clean up its resources
+
+   .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
+      :lines: 28-30
+
+#. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consume-ccsr.sh`.
+
+
+|ccloud| |sr|
+~~~~~~~~~~~~~
+
+#. View the schema subjects registered in |sr-ccloud|. In the following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
+
+   .. code-block:: text
+
+      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects
+
+#. Verify that the subject ``test2-value`` exists.
+
+
+   .. code-block:: text
+
+      ["test2-value"]
+
+#. View the schema information for subject `test2-value`. In the following output, substitute values for ``<SR API KEY>``, ``<SR API SECRET>``, and ``<SR ENDPOINT>``.
+
+   .. code-block:: text
+
+      curl -u <SR API KEY>:<SR API SECRET> https://<SR ENDPOINT>/subjects/test2-value/versions/1
+
+#. Verify the schema information for subject ``test2-value``.
+
+   .. code-block:: text
+
+      {"subject":"test2-value","version":1,"id":100001,"schema":"{\"name\":\"io.confluent.examples.clients.cloud.DataRecordAvro\",\"type\":\"record\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}"}
+
