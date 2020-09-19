@@ -15,13 +15,13 @@ docker-compose exec rest-proxy curl -X POST \
 # Consume some data using the base URL in the first response.
 # Note: Issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432
 docker-compose exec rest-proxy curl -X GET \
-     -H "Accept: application/vnd.kafka.json.v2+json" \
+     -H "Accept: application/vnd.kafka.avro.v2+json" \
      http://localhost:8082/consumers/cg2/instances/ci2/records | jq .
 
 sleep 10
 
 docker-compose exec rest-proxy curl -X GET \
-     -H "Accept: application/vnd.kafka.json.v2+json" \
+     -H "Accept: application/vnd.kafka.avro.v2+json" \
      http://localhost:8082/consumers/cg2/instances/ci2/records | jq .
 
 # Close the consumer with a DELETE to make it leave the group and clean up its resources

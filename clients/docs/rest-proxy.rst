@@ -347,12 +347,12 @@ Consume Avro Records
         "base_uri": "http://rest-proxy:8082/consumers/cg2/instances/ci2"
       }
 
-#. Subscribe the consumer to topic ``test1``.
+#. Subscribe the consumer to topic ``test2``.
 
    .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
       :lines: 10-13
 
-#. Consume data using the base URL in the first response. It is intentional to issue this command twice due to https://github.com/confluentinc/kafka-rest/issues/432, sleeping 10 seconds in between.
+#. Consume data using the base URL in the first response. Issue the curl command twice, sleeping 10 seconds in between—this is intentional due to https://github.com/confluentinc/kafka-rest/issues/432.
 
    .. literalinclude:: ../cloud/rest-proxy/consume-ccsr.sh
       :lines: 17-25
@@ -364,13 +364,31 @@ Consume Avro Records
       []
       [
         {
-          "topic": "test1",
+          "topic": "test2",
           "key": null,
           "value": {
             "count": 0
           },
-          "partition": 2,
+          "partition": 0,
           "offset": 0
+        },
+        {
+          "topic": "test2",
+          "key": null,
+          "value": {
+            "count": 1
+          },
+          "partition": 0,
+          "offset": 1
+        },
+        {
+          "topic": "test2",
+          "key": null,
+          "value": {
+            "count": 2
+          },
+          "partition": 0,
+          "offset": 2
         }
       ]
       
