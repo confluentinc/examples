@@ -54,7 +54,7 @@ Setup
 
    .. code-block:: text
 
-       docker-compose up -d
+       docker-compose up -d rest-proxy
 
 #. Verify REST Proxy has started.  View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests``.
 
@@ -77,8 +77,12 @@ Produce Records
       :lines: 4-5
 
    Verify the parameter ``KAFKA_CLUSTER_ID`` has a valid value. For the example
-   in this tutorial, it is set to ``lkc-15mq6``, but it will be different in your
-   environment.
+   in this tutorial, it is shown as ``lkc-56ngz``, but it will differ in your
+   output.
+
+   .. code-block:: text
+
+      echo $KAFKA_CLUSTER_ID
 
 #. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
@@ -92,25 +96,25 @@ Produce Records
       {
         "kind": "KafkaTopic",
         "metadata": {
-          "self": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test1",
-          "resource_name": "crn:///kafka=lkc-15mq6/topic=test1"
+          "self": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test1",
+          "resource_name": "crn:///kafka=lkc-56ngz/topic=test1"
         },
-        "cluster_id": "lkc-15mq6",
+        "cluster_id": "lkc-56ngz",
         "topic_name": "test2",
         "is_internal": false,
         "replication_factor": 3,
         "partitions": {
-          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/partitions"
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions"
         },
         "configs": {
-          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/configs"
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/configs"
         },
         "partition_reassignments": {
-          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test1/partitions/-/reassignment"
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test1/partitions/-/reassignment"
         }
       }
 
-#. Produce a message ``{"foo":"bar"}`` to the topic ``test1``.
+#. Produce 3 messages to the topic ``test1``: ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce.sh
       :lines: 14-18
@@ -122,8 +126,20 @@ Produce Records
       {
         "offsets": [
           {
-            "partition": 2,
+            "partition": 3,
             "offset": 0,
+            "error_code": null,
+            "error": null
+          },
+          {
+            "partition": 3,
+            "offset": 1,
+            "error_code": null,
+            "error": null
+          },
+          {
+            "partition": 3,
+            "offset": 2,
             "error_code": null,
             "error": null
           }
@@ -131,7 +147,7 @@ Produce Records
         "key_schema_id": null,
         "value_schema_id": null
       }
-
+      
 #. View the :devx-examples:`producer code|clients/cloud/rest-proxy/produce.sh`.
 
 Consume Records
@@ -171,10 +187,28 @@ Consume Records
           "topic": "test1",
           "key": null,
           "value": {
-            "foo": "bar"
+            "count": 0
           },
-          "partition": 2,
+          "partition": 3,
           "offset": 0
+        },
+        {
+          "topic": "test1",
+          "key": null,
+          "value": {
+            "count": 1
+          },
+          "partition": 3,
+          "offset": 1
+        },
+        {
+          "topic": "test1",
+          "key": null,
+          "value": {
+            "count": 2
+          },
+          "partition": 3,
+          "offset": 2
         }
       ]
       
@@ -206,16 +240,16 @@ Produce Avro Records
 #. Get the |ak| cluster ID that the |crest| is connected to.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 4-5
+      :lines: 9-10
 
    Verify the parameter ``KAFKA_CLUSTER_ID`` has a valid value. For the example
-   in this tutorial, it is set to ``lkc-15mq6``, but it will be different in your
+   in this tutorial, it is set to ``lkc-56ngz``, but it will be different in your
    environment.
 
 #. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 8-11
+      :lines: 13-16
 
    Verify your output resembles:
 
@@ -224,28 +258,28 @@ Produce Avro Records
       {
         "kind": "KafkaTopic",
         "metadata": {
-          "self": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2",
-          "resource_name": "crn:///kafka=lkc-15mq6/topic=test2"
+          "self": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2",
+          "resource_name": "crn:///kafka=lkc-56ngz/topic=test2"
         },
-        "cluster_id": "lkc-15mq6",
+        "cluster_id": "lkc-56ngz",
         "topic_name": "test2",
         "is_internal": false,
         "replication_factor": 3,
         "partitions": {
-          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/partitions"
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions"
         },
         "configs": {
-          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/configs"
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/configs"
         },
         "partition_reassignments": {
-          "related": "http://rest-proxy:8082/v3/clusters/lkc-15mq6/topics/test2/partitions/-/reassignment"
+          "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions/-/reassignment"
         }
       }
 
 #. Produce a message ``{"user":{"userid": 1}}`` to the topic ``test2``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 14-18
+      :lines: 19-23
 
    Verify your output resembles:
 
@@ -303,7 +337,7 @@ Consume Avro Records
           "topic": "test1",
           "key": null,
           "value": {
-            "foo": "bar"
+            "count": 0
           },
           "partition": 2,
           "offset": 0
