@@ -4,7 +4,7 @@
 
 ## Overview
 
-You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#ccloud-install-cli?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) to interact with your [Confluent Cloud](https://confluent.cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud) cluster.
+You can use [Confluent Cloud CLI](https://docs.confluent.io/current/cloud/cli/install.html#install-the-ccloud-cli) to interact with your [Confluent Cloud](https://www.confluent.io/confluent-cloud/) cluster.
 
 
 # Documentation
