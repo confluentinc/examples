@@ -36,7 +36,7 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 Prerequisites
 =============
 
-- Create a user account in `Confluent Cloud <https://confluent.cloud/>`__ 
+- Create a user account in `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__
 - Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
 - ``jq`` tool
 

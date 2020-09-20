@@ -43,7 +43,7 @@ To avoid unexpected charges, carefully evaluate the cost of resources before lau
 Prerequisites
 =============
 
-#. An initialized `Confluent Cloud cluster <https://confluent.cloud/>`__
+#. An initialized `Confluent Cloud cluster <https://www.confluent.io/confluent-cloud/>`__
 
 #. Local install of `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
 
