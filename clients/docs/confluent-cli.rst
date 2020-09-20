@@ -3,8 +3,8 @@
 Confluent CLI
 =============
 
-In this tutorial, you will use the |confluent-cli| to
-messages to and consumes messages from an |ak-tm| cluster.
+In this tutorial, you will use the |confluent-cli| to produce messages to and
+consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
@@ -102,7 +102,7 @@ Consume Records
 
       confluent local services kafka consume test1 --cloud --config $HOME/.confluent/java.config --property print.key=true --from-beginning
 
-#. Verify that the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: text
 
@@ -228,7 +228,7 @@ Consume Avro Records
 
       confluent local services kafka consume test2 --cloud --config $HOME/.confluent/java.config --value-format avro --property schema.registry.url=https://<SR ENDPOINT> --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info='<SR API KEY>:<SR API SECRET>' --from-beginning
 
-#. Verify that the consumer received all the messages. You should see:
+#. Verify the consumer received all the messages. You should see:
 
    .. code-block:: text
 
