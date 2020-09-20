@@ -3,7 +3,7 @@
 ################################################################
 # ccloud_library.sh
 # --------------------------------------------------------------
-# This library of functions automates common tasks with Confluent Cloud https://confluent.cloud/ 
+# This library of functions automates common tasks with Confluent Cloud https://www.confluent.io/confluent-cloud/
 #
 # Example usage in https://github.com/confluentinc/examples
 #
