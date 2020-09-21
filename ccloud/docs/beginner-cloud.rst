@@ -69,14 +69,19 @@ To run this tutorial, complete the following steps:
 
        git clone https://github.com/confluentinc/examples.git
 
-#. Navigate to the ``examples/ccloud/beginner-cloud/`` directory and switch to the |cp| release branch:
+#. Navigate to the ``examples/ccloud/beginner-cloud/`` directory and switch to
+   the |cp| release branch:
 
    .. codewithvars:: bash
 
        cd examples/ccloud/beginner-cloud/
        git checkout |release_post_branch|
 
-#. If you want to manually step through the tutorial, which is advised for new users who want to gain familiarity with |ccloud| CLI, skip ahead to the next section. Alternatively, you can run the full tutorial end-to-end with the :devx-examples:`start.sh script|ccloud/beginner-cloud/start.sh`, which automates all the steps in the tutorial:
+#. If you want to manually step through the tutorial, which is advised for new
+   users who want to gain familiarity with |ccloud| CLI, skip ahead to the next
+   section. Alternatively, you can run the full tutorial end-to-end with the
+   :devx-examples:`start.sh script|ccloud/beginner-cloud/start.sh`, which
+   automates all the steps in the tutorial:
 
    .. code-block:: bash
 
@@ -102,9 +107,10 @@ Create a new Confluent Cloud environment
         "name": "demo-script-env"
       }
 
-   The value of the environment ID, in this case ``env-5qz2q``, may differ in your output.
-   In this tutorial, the values for certain variables, including your environment ID,
-   |ak| cluster ID, API key, will be unique and will not match the output shown.
+   The value of the environment ID, in this case ``env-5qz2q``, may differ in
+   your output. In this tutorial, the values for certain variables, including
+   your environment ID, |ak| cluster ID, API key, will be unique and will not
+   match the output shown.
 
 #. Specify ``env-5qz2q`` as the active environment by running the following
    command:
@@ -155,9 +161,9 @@ Create a new Confluent Cloud cluster
       | ApiEndpoint  | https://pkac-ldgj1.us-west-2.aws.confluent.cloud        |
       +--------------+---------------------------------------------------------+
 
-   The value of the |ak| cluster ID, in this case ``lkc-x6m01``,
-   and |ak| cluster endpoint, in this case ``pkc-4kgmg.us-west-2.aws.confluent.cloud:9092``,
-   may differ in your output.
+   The value of the |ak| cluster ID, in this case ``lkc-x6m01``, and |ak|
+   cluster endpoint, in this case
+   ``pkc-4kgmg.us-west-2.aws.confluent.cloud:9092``, may differ in your output.
 
 #. Specify ``lkc-x6m01`` as the active |ak| cluster by running the following
    command:
@@ -176,7 +182,8 @@ Create a new Confluent Cloud cluster
 Create a new API key/secret pair for user
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the following command to create a user API key/secret pair for your |ak| cluster ``lkc-x6m01``:
+#. Run the following command to create a user API key/secret pair for your |ak|
+   cluster ``lkc-x6m01``:
 
    .. code-block:: bash
 
@@ -192,8 +199,9 @@ Create a new API key/secret pair for user
       }
 
    The value of the API key, in this case ``QX7X4VA4DFJTTOIA``, and API secret,
-   in this case ``fjcDDyr0Nm84zZr77ku/AQqCKQOOmb35Ql68HQnb60VuU+xLKiu/n2UNQ0WYXp/D``
-   may differ in your output.
+   in this case
+   ``fjcDDyr0Nm84zZr77ku/AQqCKQOOmb35Ql68HQnb60VuU+xLKiu/n2UNQ0WYXp/D`` may
+   differ in your output.
 
 #. Specify the API key ``QX7X4VA4DFJTTOIA`` for the |ak| cluster ``lkc-x6m01``:
 
@@ -205,7 +213,7 @@ Create a new API key/secret pair for user
 
    .. code-block:: text
 
-      Set the API Key "QX7X4VA4DFJTTOIA" as the active API key for ``lkc-x6m0``.
+      Set the API Key "QX7X4VA4DFJTTOIA" as the active API key for ``lkc-x6m01``.
 
       Waiting for Confluent Cloud cluster to be ready and for credentials to propagate
       ....
@@ -288,10 +296,11 @@ Create a new service account with an API key/secret pair
          "description": "demo-app-3288"
       }
 
-   The value of the service account ID, in this case ``104349``, may differ in your output.
+   The value of the service account ID, in this case ``104349``, may differ in
+   your output.
 
-#. Create an API key and secret for the service account ``104349`` for the |ak| cluster ``lkc-x6m01``
-   by running the following command:
+#. Create an API key and secret for the service account ``104349`` for the |ak|
+   cluster ``lkc-x6m01`` by running the following command:
 
    .. code-block:: bash
 
@@ -306,13 +315,14 @@ Create a new service account with an API key/secret pair
         "secret": "nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB"
       }
 
-   The value of the service account's API key, in this case ``ESN5FSNDHOFFSUEV``,
-   and API secret, in this case ``nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB``,
-   may differ in your output.
+   The value of the service account's API key, in this case
+   ``ESN5FSNDHOFFSUEV``, and API secret, in this case
+   ``nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB``, may
+   differ in your output.
 
 #. Create a local configuration file ``/tmp/client.config`` with |ccloud|
-   connection information using the newly created |ak| cluster and the
-   API key and secret for the service account:
+   connection information using the newly created |ak| cluster and the API key
+   and secret for the service account:
 
    .. code-block:: text
 
@@ -330,8 +340,8 @@ Run a Java producer without ACLs
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. By default, no ACLs are configured for the service account, which means the
-   service account has no access to any |ccloud| resources. Run the following command
-   to verify no ACLs are configured:
+   service account has no access to any |ccloud| resources. Run the following
+   command to verify no ACLs are configured:
 
    .. code-block:: bash
 
@@ -397,7 +407,8 @@ Run a Java producer with ACLs
          User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic-1 | LITERAL
          User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic-1 | LITERAL
 
-#. Run the Java producer to ``demo-topic-1`` after configuring the ACLs (expected to pass):
+#. Run the Java producer to ``demo-topic-1`` after configuring the ACLs
+   (expected to pass):
 
    .. code-block:: bash
 
@@ -591,8 +602,8 @@ Run kafka-connect-datagen connector with wildcard ACLs
        +------------------+------------+-----------+----------+------+---------+
          User:104349      | ALLOW      | READ      | TOPIC    | *    | LITERAL
 
-#. Run the following command to allow service account ID ``104349`` to have a consumer group
-   called ``connect``:
+#. Run the following command to allow service account ID ``104349`` to have a
+   consumer group called ``connect``:
 
    .. code-block:: bash
 
@@ -744,7 +755,8 @@ Run a Java consumer with a Wildcard ACL
          User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
 
 
-#. Run the Java consumer from ``demo-topic-3`` which is populated by kafka-connect-datagen:
+#. Run the Java consumer from ``demo-topic-3`` which is populated by
+   kafka-connect-datagen:
 
    .. code-block:: bash
 
@@ -795,7 +807,8 @@ Run a Java consumer with a Wildcard ACL
       ccloud kafka acl delete --allow --service-account 104349 --operation READ --topic '*'
       ccloud kafka acl delete --allow --service-account 104349 --operation READ --consumer-group connect
 
-   You should see a ``Deleted ACLs.`` message after running each of the previous commands.
+   You should see a ``Deleted ACLs.`` message after running each of the previous
+   commands.
 
 
 Clean up your Confluent Cloud resources
@@ -833,7 +846,8 @@ Clean up your Confluent Cloud resources
 
       You should see: ``Deleted topic "demo-topic-3"``.
 
-   d. Delete ``connect-configs``, one of the 3 topics created by the |kconnect| worker:
+   d. Delete ``connect-configs``, one of the 3 topics created by the |kconnect|
+      worker:
 
       .. code-block:: bash
 
@@ -841,7 +855,8 @@ Clean up your Confluent Cloud resources
 
       You should see: ``Deleted topic "connect-configs"``.
 
-   e. Delete ``connect-offsets``, one of the 3 topics created by the |kconnect| worker:
+   e. Delete ``connect-offsets``, one of the 3 topics created by the |kconnect|
+      worker:
 
       .. code-block:: bash
 
@@ -849,7 +864,8 @@ Clean up your Confluent Cloud resources
 
       You should see: ``Deleted topic "connect-offsets"``.
 
-   f. Delete ``connect-status``, one of the 3 topics created by the |kconnect| worker:
+   f. Delete ``connect-status``, one of the 3 topics created by the |kconnect|
+      worker:
 
       .. code-block:: bash
 
@@ -878,8 +894,8 @@ Clean up your Confluent Cloud resources
 
    You should see: ``Deleted environment "env-5qz2q"``.
 
-If the tutorial ends prematurely, you may receive the following error
-message when trying to run the example again (``ccloud environment create
+If the tutorial ends prematurely, you may receive the following error message
+when trying to run the example again (``ccloud environment create
 demo-script-env``):
 
 .. code-block:: text
@@ -889,7 +905,8 @@ demo-script-env``):
 
       Failed to create environment demo-script-env. Please troubleshoot and run again
 
-In this case, run the following script to delete the example’s topics, |ak| cluster, and environment:
+In this case, run the following script to delete the example’s topics, |ak|
+cluster, and environment:
 
 .. code-block:: bash
 
