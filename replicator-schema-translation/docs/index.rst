@@ -96,15 +96,15 @@ Run the Demo
       # Destination Schema Registry should show one subject, i.e., the output should be ["testTopic.replica-value"]
       docker-compose exec connect curl http://destSchemaregistry:8086/subjects
 
-8. To complete the demo, reset both Schema Registries to ``READWRITE`` mode:
+8. To complete the demo, reset both Schema Registries to ``READWRITE`` mode, this completes the migration process:
 
    .. sourcecode:: bash
 
       docker-compose exec connect /etc/kafka/scripts/set_sr_modes_post_translation.sh
       
 .. tip:: This demo shows a `one-time migration` of schemas across self-managed clusters. To configure a
-         `continuous migration`, the last steps would be to keep the origin (source) |sr| in READONLY mode,
-         and set the destination to READWRITE. Note that this would set up a "one-way" migration; that is,
+         `continuous migration`, the last steps would be to set the origin (source) |sr| to READWRITE mode,
+         and maintain the destination in IMPORT mode. Note that this would set up a "one-way" migration; that is,
          an active-to-passive |crep| setup.
 
 ========
