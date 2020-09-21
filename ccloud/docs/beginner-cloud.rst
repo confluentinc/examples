@@ -213,7 +213,7 @@ Create a new API key/secret pair for user
 
    .. code-block:: text
 
-      Set the API Key "QX7X4VA4DFJTTOIA" as the active API key for ``lkc-x6m01``.
+      Set the API Key "QX7X4VA4DFJTTOIA" as the active API key for "lkc-x6m01".
 
       Waiting for Confluent Cloud cluster to be ready and for credentials to propagate
       ....
