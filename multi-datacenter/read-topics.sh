@@ -7,7 +7,7 @@ source ../utils/config.env
 
 echo -e "\n-----dc1-----"
 echo -e "\nlist topics:"
-docker-compose exec broker-dc2 kafka-topics --list --bootstrap-server broker-dc1:29091
+docker-compose exec broker-dc1 kafka-topics --list --bootstrap-server broker-dc1:29091
 echo -e "\ntopic1:"
 docker-compose exec schema-registry-dc1 kafka-avro-console-consumer --topic topic1 --bootstrap-server broker-dc1:29091 --property schema.registry.url=http://schema-registry-dc1:8081 --max-messages 10 --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer
 echo -e "\ntopic2:"
