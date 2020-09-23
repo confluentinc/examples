@@ -7,6 +7,8 @@ super.users=User:ANONYMOUS;User:mds
 # Enable all authenticated users to connect to the HTTP service.
 confluent.metadata.server.authentication.roles=**
 confluent.metadata.topic.replication.factor=1
+confluent.balancer.topic.replication.factor=1
+confluent.security.event.logger.exporter.kafka.topic.replicas=1
 
 # MDS Token Service Settings
 confluent.metadata.server.token.key.path=/tmp/tokenKeypair.pem
