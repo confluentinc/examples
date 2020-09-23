@@ -147,7 +147,7 @@ services:
     command: "bash -c -a 'echo Waiting for Kafka to be ready... && \
                        /etc/confluent/docker/configure && \
                        cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
-                       kafka-topics --zookeeper srcZookeeper:2181 --topic testTopic --create --replication-factor 1 --partitions 6 && \
+                       kafka-topics --bootstrap-server srcKafka1:10091 --topic testTopic --create --replication-factor 1 --partitions 6 && \
                        kafka-console-producer --broker-list srcKafka1:10091 --topic testTopic < /etc/kafka/testData/testData.txt'"
     environment:
       # The following settings are listed here only to satisfy the image's requirements.

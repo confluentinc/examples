@@ -77,7 +77,6 @@ services:
     container_name: schema-registry-dc1
     restart: always
     depends_on:
-      - zookeeper-dc1
       - broker-dc1
     ports:
       - "8081:8081"
@@ -93,7 +92,6 @@ services:
     container_name: schema-registry-dc2
     restart: always
     depends_on:
-      - zookeeper-dc1
       - broker-dc1
       - schema-registry-dc1
     ports:
@@ -110,10 +108,8 @@ services:
     hostname: connect-dc2
     container_name: connect-dc2
     depends_on:
-      - zookeeper-dc1
       - broker-dc1
       - schema-registry-dc1
-      - zookeeper-dc2
       - broker-dc2
       - schema-registry-dc2
     ports:
@@ -153,10 +149,8 @@ services:
     hostname: connect-dc1
     container_name: connect-dc1
     depends_on:
-      - zookeeper-dc1
       - broker-dc1
       - schema-registry-dc1
-      - zookeeper-dc2
       - broker-dc2
       - schema-registry-dc2
     ports:
@@ -268,7 +262,6 @@ services:
     hostname: control-center
     container_name: control-center
     depends_on:
-      - zookeeper-dc2
       - broker-dc2
       - schema-registry-dc2
       - connect-dc2

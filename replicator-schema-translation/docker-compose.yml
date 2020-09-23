@@ -82,7 +82,6 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - destZookeeper
       - destKafka1
     volumes:
       - mi3:/usr/share/replicator/kafka-connect-replicator/
@@ -112,7 +111,6 @@ services:
     cpus: 0.4
     restart: always
     depends_on:
-      - srcZookeeper
       - srcKafka1
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "srcKafka1:10091"
@@ -129,7 +127,6 @@ services:
     cpus: 0.4
     restart: always
     depends_on:
-      - destZookeeper
       - destKafka1
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "destKafka1:11091"
@@ -162,7 +159,7 @@ services:
                        cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
                        cub kafka-ready -b destKafka1:11091 1 60 --config /etc/kafka/kafka.properties && \
                        sleep 30 && \
-                       kafka-topics --zookeeper srcZookeeper:2181 --topic testTopic --create --replication-factor 1 --partitions 6 && \
+                       kafka-topics --bootstrap-server srcKafka:10091 --topic testTopic --create --replication-factor 1 --partitions 6 && \
                        echo submitting test subjects && \
                        /etc/kafka/scripts/submit_source_subjects.sh && \
                        echo submitted source_subjects'"

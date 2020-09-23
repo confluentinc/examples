@@ -97,7 +97,6 @@ services:
     hostname: connect-local
     container_name: connect-local
     depends_on:
-      - zookeeper
       - kafka
     ports:
       - "8083:8083"
@@ -106,7 +105,6 @@ services:
       - $PWD/delta_configs/ak-tools-ccloud.delta:/tmp/ak-tools-ccloud.delta
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'kafka:29092'
-      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-local
       CONNECT_PRODUCER_CLIENT_ID: "connect-local-worker-producer"
       CONNECT_REST_PORT: 8083
@@ -147,7 +145,6 @@ services:
     hostname: connect-cloud
     container_name: connect-cloud
     depends_on:
-      - zookeeper
       - kafka
     ports:
       - "8087:8087"
