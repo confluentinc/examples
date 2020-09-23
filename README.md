@@ -78,10 +78,9 @@ You can find the documentation and instructions for all Confluent Cloud demos at
 # Build Your Own
 
 As a next step, you may want to build your own custom demo or test environment.
-We have several resources that launch just the services in Confluent Platform with no pre-configured connectors, data sources, topics, schemas, etc.
+We have several resources that launch just the services in Confluent Cloud or on prem, with no pre-configured connectors, data sources, topics, schemas, etc.
 Using these as a foundation, you can then add any connectors or applications.
-See [confluentinc/cp-all-in-one](https://github.com/confluentinc/cp-all-in-one/) for more information.
-
+You can find the documentation and instructions for these "build-your-own" resources at [https://docs.confluent.io/current/tutorials/build-your-own-demos.html](https://docs.confluent.io/current/tutorials/build-your-own-demos.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top).
 
 # Additional Demos
 
