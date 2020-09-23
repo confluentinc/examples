@@ -44,3 +44,9 @@ listener.name.token.oauthbearer.sasl.jaas.config= \
 listener.name.token.oauthbearer.sasl.server.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerValidatorCallbackHandler
 # Set SASL callback handler for handling tokens on login. This is essentially a noop if not used for inter-broker communication.
 listener.name.token.oauthbearer.sasl.login.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerServerLoginCallbackHandler
+
+# Settings for Self-Balancing Clusters
+confluent.balancer.topic.replication.factor=1
+
+# Settings for Audit Logging
+confluent.security.event.logger.exporter.kafka.topic.replicas=1
