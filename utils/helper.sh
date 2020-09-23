@@ -385,6 +385,16 @@ check_control_center_up() {
   return 0
 }
 
+check_rest_proxy_up() {
+  containerName=$1
+
+  FOUND=$(docker-compose logs $containerName | grep "Server started, listening for requests")
+  if [ -z "$FOUND" ]; then
+    return 1
+  fi
+  return 0
+}
+
 check_topic_exists() {
   containerName=$1
   brokerConn=$2

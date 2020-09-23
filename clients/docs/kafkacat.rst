@@ -51,7 +51,7 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Create the topic in |ccloud|.
+#. Create the |ak| topic. 
 
    .. code-block:: text
 
