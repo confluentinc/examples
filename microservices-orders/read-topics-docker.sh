@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source ../utils/helper.sh
+
 ################################
 
 echo -e "\n*** Sampling messages in Kafka topics and a KSQL stream ***\n"
@@ -33,9 +35,11 @@ docker-compose exec connect kafka-console-consumer --bootstrap-server broker:909
 echo -e "\n-----platinum-----"
 docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:9092 --topic platinum --property print.key=true --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --property schema.registry.url=http://schema-registry:8081 --from-beginning --max-messages 3 --timeout-ms 10000
 
-for i in {1..10}; do 
-  docker-compose exec connect kafka-console-consumer --bootstrap-server broker:9092 --topic ORDERS_CUST1_JOINED --max-messages 1 >/dev/null && break || sleep 15;
-done
+echo -e "\n-----waiting for ksqlDB topics-----"
+retry 60 check_topic_exists connect broker:9092 ORDERS_CUST1_JOINED || {
+	echo "ksqlDB topics were not created, debug and try again"
+	exit 1
+}
 
 # Read queries
 docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
