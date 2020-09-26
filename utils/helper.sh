@@ -40,6 +40,23 @@ function validate_version_confluent_cli_v2() {
   return 0
 }
 
+function get_version_confluent_cli() {
+  confluent version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
+}
+
+function validate_version_confluent_cli_for_cp() {
+
+  validate_version_confluent_cli_v2 || exit 1
+
+  VER_REQ="1.16.3"
+  CLI_VER=$(get_version_confluent_cli)
+
+  if [[ "$VER_REQ" != "$CLI_VER" ]]; then
+    echo "Confluent CLI version ${CLI_VER} is not compatibile with the currently running Confluent Platform version ${CONFLUENT}. Set Confluent CLI version appropriately, see https://docs.confluent.io/current/installation/versions-interoperability.html#confluent-cli for more information."
+    exit 1
+  fi
+}
+
 function check_sqlite3() {
   if [[ $(type sqlite3 2>&1) =~ "not found" ]]; then
     echo "'sqlite3' is not found. Install sqlite3 and try again."
