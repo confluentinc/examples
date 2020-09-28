@@ -98,7 +98,7 @@ echo $OUTPUT
 if [[ $OUTPUT =~ "Not authorized to access group" ]]; then
   echo "PASS: Consuming messages from topic $TOPIC3 failed due to Not authorized to access group (expected because User:$USER_CLIENT_RP is not allowed access to the consumer group)"
 else
-  echo "FAIL: Something went wrong, check output"
+  echo -e "FAIL: Something went wrong, check output:\n$OUTPUT"
 fi
 
 echo -e "\n# Grant the principal User:$USER_CLIENT_RP to the DeveloperRead role for Group:$CONSUMER_GROUP"

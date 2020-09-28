@@ -58,11 +58,11 @@ confluent iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-clust
 ##################################################
 echo -e "\n# Try to create topic $TOPIC1, before authorization (should fail)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
-OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta)
+OUTPUT=$(kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.TopicAuthorizationException" ]]; then
   echo "PASS: Topic creation failed due to org.apache.kafka.common.errors.TopicAuthorizationException (expected because User:$USER_CLIENT_A is not allowed to create topics)"
 else
-  echo "FAIL: Something went wrong, check output"
+  echo -e "FAIL: Something went wrong, check output:\n$OUTPUT"
 fi
 
 echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC1"
@@ -105,7 +105,7 @@ OUTPUT=$(confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOT
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$USER_CLIENT_A is not allowed access to consumer groups)"
 else
-  echo "FAIL: Something went wrong, check output"
+  echo -e "FAIL: Something went wrong, check output:\n$OUTPUT"
 fi
 
 echo -e "#\n Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer- prefix"
