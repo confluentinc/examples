@@ -7,6 +7,7 @@ check_env || exit 1
 check_mvn || exit 1
 check_running_cp ${CONFLUENT} || exit
 check_timeout || exit 1
+check_sqlite3 || exit 1
 
 ./stop.sh
 
