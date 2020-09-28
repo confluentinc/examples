@@ -89,10 +89,10 @@ SUBJECT="new-topic-value"
 echo -e "\n# Register new schema for subject $SUBJECT (should fail)"
 echo "curl --silent -u $USER_CLIENT_A:${USER_CLIENT_A}1 -X POST -H \"Content-Type: application/vnd.schemaregistry.v1+json\" --data '"'{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}'"' http://localhost:8081/subjects/$SUBJECT/versions"
 OUTPUT=$(curl --silent -u $USER_CLIENT_A:${USER_CLIENT_A}1 -X POST -H "Content-Type: application/vnd.schemaregistry.v1+json" --data '{"schema": "{\"type\":\"record\",\"name\":\"Payment\",\"namespace\":\"io.confluent.examples.clients.basicavro\",\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"},{\"name\":\"region\",\"type\":\"string\"}]}"}' http://localhost:8081/subjects/$SUBJECT/versions)
-if [[ $OUTPUT =~ "User cannot access the resource" ]]; then
-  echo "PASS: Schema registration failed due to 'User cannot access the resource'"
+if [[ $OUTPUT =~ "User is denied operation" ]]; then
+  echo "PASS: Schema registration failed due to 'User is denied operation'"
 else
-  echo "FAIL: Something went wrong, check output"
+  echo -e "FAIL: Something went wrong, check output:\n$OUTPUT"
 fi
 
 echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Subject:$SUBJECT"
