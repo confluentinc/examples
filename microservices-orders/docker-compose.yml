@@ -45,7 +45,6 @@ services:
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:9092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
@@ -54,19 +53,17 @@ services:
     image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     container_name: schema-registry
     depends_on:
-      - zookeeper
       - broker
     ports:
       - "8081:8081"
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: 'zookeeper:2181'
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker:9092
 
   connect:
     image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
     container_name: connect
     depends_on:
-      - zookeeper
       - broker
       - schema-registry
       - sqlite
@@ -88,7 +85,6 @@ services:
       CONNECT_KEY_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
-      CONNECT_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       # CLASSPATH required due to CC-2422
       CLASSPATH: /usr/share/java/monitoring-interceptors/monitoring-interceptors-${CONFLUENT}.jar
       CONNECT_PRODUCER_INTERCEPTOR_CLASSES: "io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor"
@@ -113,7 +109,6 @@ services:
     image: ${REPOSITORY}/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
     container_name: control-center
     depends_on:
-      - zookeeper
       - broker
       - schema-registry
       - connect
@@ -122,7 +117,6 @@ services:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:9092'
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_CONNECT_CLUSTER: http://connect:8083
       CONTROL_CENTER_KSQL_MICROSERVICES_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_MICROSERVICES_ADVERTISED_URL: "http://localhost:8088"
