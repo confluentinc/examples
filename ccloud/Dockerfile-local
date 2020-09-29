@@ -17,7 +17,7 @@ ARG CP_VERSION
 
 FROM confluentinc/cp-server-connect-base:$CP_VERSION
 
-ARG CONNECTOR_VERSION=5.5.0-SNAPSHOT
+ARG CONNECTOR_VERSION=6.0.0
 
 ENV CONNECT_PLUGIN_PATH: "/usr/share/java,/connect-plugins,/usr/share/confluent-hub-components"
 
