@@ -45,7 +45,6 @@ services:
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: kafka:29092
-      CONFLUENT_METRICS_REPORTER_ZOOKEEPER_CONNECT: zookeeper:2181
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'true'
       CONFLUENT_SUPPORT_CUSTOMER_ID: 'anonymous'
@@ -54,11 +53,10 @@ services:
     container_name: schema-registry
     image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     depends_on:
-      - zookeeper
       - kafka
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
-      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: zookeeper:2181
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: kafka:29092
 
   ksqldb-server:
     container_name: ksqldb-server
@@ -153,7 +151,6 @@ services:
     hostname: control-center
     container_name: control-center
     depends_on:
-      - zookeeper
       - kafka
       - schema-registry
       - ksqldb-server
@@ -161,7 +158,6 @@ services:
       - 9021:9021
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: 'zookeeper:2181'
       CONTROL_CENTER_CONNECT_CLUSTER: 'ksqldb-server:8083'
       CONTROL_CENTER_KSQL_CLICKSTREAM_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_CLICKSTREAM_ADVERTISED_URL: "http://localhost:8088"
