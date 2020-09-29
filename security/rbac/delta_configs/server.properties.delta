@@ -4,13 +4,10 @@
 super.users=User:ANONYMOUS;User:mds
 
 # MDS Server Settings
-# Enable all authenticated users to connect to the HTTP service.
-confluent.metadata.server.authentication.roles=**
 confluent.metadata.topic.replication.factor=1
 
 # MDS Token Service Settings
 confluent.metadata.server.token.key.path=/tmp/tokenKeypair.pem
-confluent.metadata.server.public.key.path=/tmp/tokenPublicKey.pem
 
 # Configure the RBAC Metadata Service authorizer
 authorizer.class.name=io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
