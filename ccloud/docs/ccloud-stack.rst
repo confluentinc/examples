@@ -178,7 +178,6 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 Additional Resources
 ====================
 
-- For a practical guide to configuring, monitoring, and optimizing your Kafka
-  client applications when using |ccloud| see :ref:`ccloud-best-practices`.
+- For a practical guide to configuring, monitoring, and optimizing your Kafka client applications when using |ccloud| see :ref:`ccloud-best-practices`.
 - Read this blog post about `using Confluent Cloud to manage data pipelines that use both on-premise and cloud deployments <https://www.confluent.io/blog/multi-cloud-integration-across-distributed-systems-with-kafka-connect/>`__.
 - For sample usage of ``ccloud-stack``, see :ref:`ccloud-demos-overview` .
