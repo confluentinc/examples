@@ -32,7 +32,7 @@ SKIP_CLIENT_CONSOLE ?=
  
 HELM_COMMON_FLAGS := --wait --timeout=5m -f $(GKE_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} $(ADDITIONAL_HELM_FLAGS)
 
-gke-check-dependencies: check-dependencies
+gke-check-dependencies: 
 	@$(call check-var-defined,GCP_PROJECT_ID)
 	@$(call check-dependency,gcloud)
 	@$(call echo_pass,gke-base dependencies verified)
@@ -52,7 +52,7 @@ gke-base-deploy-client-console:
 	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(GKE_BASE_MKFILE_DIR)cfg/client-console-pod.yaml
 	@$(call echo_stdout_footer_pass,client-console deployed)
 
-gke-base-validate: gke-check-dependencies init
+gke-base-validate: gke-check-dependencies 
 	@echo
 	@$(call echo_pass,gke-base demo validation complete)
 
