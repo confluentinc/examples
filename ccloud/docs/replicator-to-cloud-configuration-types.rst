@@ -206,7 +206,12 @@ Additional Resources
 ====================
 
 - For additional considerations on running |crep| to |ccloud|, refer to :ref:`cloud-migrate-topics`.
-- To run a |ccloud| demo that showcases a hybrid |ak| cluster: one cluster is a self-managed |ak| cluster running locally, the other is a |ccloud| cluster, see :ref:`quickstart-demos-ccloud`..
+- To run a |ccloud| demo that showcases a hybrid |ak| cluster: one cluster is a
+  self-managed |ak| cluster running locally, the other is a |ccloud| cluster, see
+  :ref:`quickstart-demos-ccloud`.
 - To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
-- For a practical guide to configuring, monitoring, and optimizing your |ak| client applications, see the `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf>`__ whitepaper.
-- To run a |crep| tutorial with an active-active multi-datacenter design, with two instances of |crep-full| that copy data bidirectionally between the datacenters, see :ref:`replicator`.
+- For a practical guide to configuring, monitoring, and optimizing your |ak|
+  client applications, see :ref:`ccloud-best-practices`.
+- To run a |crep| tutorial with an active-active multi-datacenter design, with
+  two instances of |crep-full| that copy data bidirectionally between the
+  datacenters, see :ref:`replicator`.
