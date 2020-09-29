@@ -20,7 +20,7 @@ COMMON_MKFILE_DIR := $(dir $(COMMON_MKFILE_PATH))
 # lastword above changes after this include
 include ../../utils/config.env
 
-OPERATOR_DOWNLOAD_PATH := $(COMMON_MKFILE_DIR)cp/operator/confluent-operator-$(OPERATOR_BUNDLE_VERSION).tar.gz
+OPERATOR_DOWNLOAD_PATH := $(COMMON_MKFILE_DIR)cp/operator/confluent-operator-$(OPERATOR_BUNDLE_VERSION)-for-confluent-platform-$(CONFLUENT).tar.gz
 OPERATOR_PATH := $(dir $(OPERATOR_DOWNLOAD_PATH))$(OPERATOR_BUNDLE_VERSION)/
 
 check-dependency = $(if $(shell command -v $(1)),$(call echo_pass,found $(1)),$(call echo_fail,$(1) not installed);exit 1)
@@ -40,11 +40,12 @@ help: ## shows help for each target
 extended-help: 
 	@$(foreach m,$(MAKEFILE_LIST),grep -E '^[a-zA-Z_-]+:.*?#_ .*$$' $(m) | sort | awk 'BEGIN {FS = ":.*?#_ "}; {printf "\033[36m%-$(HELP_TAB_WIDTH)s\033[0m %s\n", $$1, $$2}';)
 
+# https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-1.6.0-for-confluent-platform-6.0.0.tar.gz
 get-helm-bundle: #_ Download the Confluent Operator Helm bundle locally in preparation for installation
 ifeq (,$(wildcard $(OPERATOR_DOWNLOAD_PATH)))
 	@mkdir -p $(dir $(OPERATOR_DOWNLOAD_PATH))
 	@echo "downloading Confluent Operator to $(OPERATOR_DOWNLOAD_PATH)"
-	@curl -s https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-$(OPERATOR_BUNDLE_VERSION).tar.gz --output $(OPERATOR_DOWNLOAD_PATH)
+	@curl -s https://platform-ops-bin.s3-us-west-1.amazonaws.com/operator/confluent-operator-$(OPERATOR_BUNDLE_VERSION)-for-confluent-platform-$(CONFLUENT).tar.gz --output $(OPERATOR_DOWNLOAD_PATH)
 endif
 ifeq (,$(wildcard $(OPERATOR_PATH)))
 	@mkdir -p $(dir $(OPERATOR_DOWNLOAD_PATH))$(OPERATOR_BUNDLE_VERSION)/
@@ -57,7 +58,7 @@ init: check-dependencies get-helm-bundle #_ Initializes the common dependencies 
 	@$(call echo_pass,common initialization complete)
 
 ensure-namespace:
-	@$(call echo_stdout_header,ensuring namespace is avaiable)	
+	@$(call echo_stdout_header,ensuring namespace is available)	
 	-kubectl --context $(KUBECTL_CONTEXT) apply -f $(COMMON_MKFILE_DIR)cfg/operator-namespace.json
 	@$(call echo_stdout_footer_pass,namespace ready)
 
@@ -214,7 +215,7 @@ deploy-clicks-connector-config: #_ Deploys configuration for a connector that ge
 	@$(call echo_stdout_footer_pass,clicks datagen connector config deployed)
 
 destroy-clicks-connector-deploy-job: #_ Destroys the job that deployed the sample data generator connector
-	@$(call echo_stdout_header,destory Deploy clicks datagen connector job)
+	@$(call echo_stdout_header,destroy Deploy clicks datagen connector job)
 	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete jobs/clicks-datagen-connector-deploy ## name dependnecy in file, required unless/until TTL works across all k8s configurations
 	@$(call echo_stdout_footer_pass,clicks datagen connector job destroyed)
 
@@ -231,13 +232,13 @@ deploy-stock-trades-connector-config: #_ Deploys configuration for a connector t
 	@$(call echo_stdout_footer_pass,stock trades datagen connector config deployed)
 
 destroy-stock-trades-connector: #_ Destroys the deploy job and configuration for the sample stock trades data generator
-	@$(call echo_stdout_header,destory Deploy stock trades datagen connector)
+	@$(call echo_stdout_header,destroy Deploy stock trades datagen connector)
 	-make --no-print-directory destroy-stock-trades-connector-deploy-job
 	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete configmap/stock-trades-datagen-connector
 	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
 
 destroy-stock-trades-connector-deploy-job: #_ Destroys the job that deployed the sample stock trades data generator connector
-	@$(call echo_stdout_header,destory Deploy stock trades datagen connector job)
+	@$(call echo_stdout_header,destroy Deploy stock trades datagen connector job)
 	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete jobs/stock-trades-datagen-connector-deploy ## name dependnecy in file, required unless/until TTL works across all k8s configurations
 	@$(call echo_stdout_footer_pass,stock trades datagen connector job destroyed)
 
@@ -299,7 +300,7 @@ deploy-replicator-demo-helm: #_ Deploys the helm chart for some custom items for
 	@$(call echo_stdout_footer_pass,Replicator Deploy Job deployed)
 
 destroy-demo-helm: #_ Destroys the deploy job and configuration for Replicator
-	@$(call echo_stdout_header,destory Deploy stock trades datagen connector)
+	@$(call echo_stdout_header,destroy Deploy stock trades datagen connector)
 	-helm delete replicator-cc --namespace $(KUBECTL_NAMESPACE)
 	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete configmap/stock-trades-datagen-connector
 	@$(call echo_stdout_footer_pass,stock trades datagen connector destroyed)
