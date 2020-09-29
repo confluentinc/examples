@@ -84,7 +84,6 @@ services:
     ports:
       - "8083:8083"
     depends_on:
-      - destZookeeper
       - destKafka1
     volumes:
       - mi3:/usr/share/replicator/kafka-connect-replicator/
@@ -130,7 +129,7 @@ services:
                        cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
                        cub kafka-ready -b destKafka1:11091 1 60 --config /etc/kafka/kafka.properties && \
                        sleep 30 && \
-                       kafka-topics --zookeeper srcZookeeper:2181 --topic testTopic --create --replication-factor 1 --partitions 6 && \
+                       kafka-topics --bootstrap-server srcKafka1:10091 --topic testTopic --create --replication-factor 1 --partitions 6 && \
                        kafka-console-producer --broker-list srcKafka1:10091 --topic testTopic < /etc/kafka/testData/testData.txt && \
                        echo submitting replicator && \
                        /etc/kafka/scripts/submit_replicator_unsecure.sh && \
