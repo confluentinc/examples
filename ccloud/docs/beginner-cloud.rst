@@ -945,4 +945,4 @@ Additional Resources
 -  See :ref:`ccloud-best-practices` for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
 
-- See other :ref:`ccloud-demos-overview`.
+-  See other :ref:`ccloud-demos-overview`.
