@@ -1,6 +1,6 @@
 package io.confluent.examples.clients;
 
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
@@ -38,7 +38,7 @@ public class ConsumerMultiDatacenterExample {
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "java-consumer-" + topic);
         props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "true");
         props.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-        props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
+        props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, schemaRegistryUrl);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, KafkaAvroDeserializer.class);
 
@@ -57,7 +57,7 @@ public class ConsumerMultiDatacenterExample {
             consumer.subscribe(Collections.singletonList(topic));
 
             while (true) {
-                final ConsumerRecords<String, GenericRecord> records = consumer.poll(100);
+                final ConsumerRecords<String, GenericRecord> records = consumer.poll(Duration.ofMillis(100));
                 for (final ConsumerRecord<String, GenericRecord> record : records) {
                     final String key = record.key();
                     final GenericRecord value = record.value();

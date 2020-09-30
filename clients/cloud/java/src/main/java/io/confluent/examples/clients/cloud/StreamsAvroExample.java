@@ -35,7 +35,7 @@ import org.apache.kafka.streams.state.KeyValueStore;
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 
@@ -75,7 +75,7 @@ public class StreamsAvroExample {
         final Serde<DataRecordAvro> dataRecordAvroSerde = new SpecificAvroSerde<>();
         final boolean isKeySerde = false;
         Map<String, Object> SRconfig = new HashMap<>();
-        SRconfig.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, props.getProperty(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG));
+        SRconfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, props.getProperty(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG));
         SRconfig.put("schema.registry.basic.auth.user.info", props.getProperty("schema.registry.basic.auth.user.info"));
         SRconfig.put("basic.auth.credentials.source", props.getProperty("basic.auth.credentials.source"));
         dataRecordAvroSerde.configure(
