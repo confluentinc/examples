@@ -39,7 +39,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: srcKafka1
     container_name: srcKafka1
-    cpus: 0.3
     depends_on:
       - srcZookeeper
     ports:
@@ -60,7 +59,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: destKafka1
     container_name: destKafka1
-    cpus: 0.3
     depends_on:
       - destZookeeper
     ports:
@@ -79,7 +77,6 @@ services:
   connect:
     image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
     container_name: connect
-    cpus: 0.2
     restart: always
     ports:
       - "8083:8083"
@@ -110,7 +107,6 @@ services:
   srcSchemaregistry:
     image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     container_name: srcSchemaregistry
-    cpus: 0.4
     restart: always
     depends_on:
       - srcKafka1
@@ -126,7 +122,6 @@ services:
   destSchemaregistry:
     image: ${REPOSITORY}/cp-schema-registry:${CONFLUENT_DOCKER_TAG}
     container_name: destSchemaregistry
-    cpus: 0.4
     restart: always
     depends_on:
       - destKafka1
@@ -150,7 +145,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: kafka-client
     container_name: kafka-client
-    cpus: 0.1
     depends_on:
       - srcKafka1
       - connect
@@ -161,7 +155,7 @@ services:
                        cub kafka-ready -b srcKafka1:10091 1 60 --config /etc/kafka/kafka.properties && \
                        cub kafka-ready -b destKafka1:11091 1 60 --config /etc/kafka/kafka.properties && \
                        sleep 30 && \
-                       kafka-topics --bootstrap-server srcKafka:10091 --topic testTopic --create --replication-factor 1 --partitions 6 && \
+                       kafka-topics --bootstrap-server srcKafka1:10091 --topic testTopic --create --replication-factor 1 --partitions 6 && \
                        echo submitting test subjects && \
                        /etc/kafka/scripts/submit_source_subjects.sh && \
                        echo submitted source_subjects'"
