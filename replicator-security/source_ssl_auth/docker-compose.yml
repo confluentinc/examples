@@ -39,7 +39,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: srcKafka1
     container_name: srcKafka1
-    cpus: 0.3
     depends_on:
       - srcZookeeper
     ports:
@@ -69,7 +68,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: destKafka1
     container_name: destKafka1
-    cpus: 0.3
     depends_on:
       - destZookeeper
     ports:
@@ -88,7 +86,6 @@ services:
   connect:
     image: ${REPOSITORY}/cp-server-connect:${CONFLUENT_DOCKER_TAG}
     container_name: connect
-    cpus: 0.2
     restart: always
     ports:
       - "8083:8083"
@@ -127,7 +124,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: srcKafkaClient
     container_name: srcKafkaClient
-    cpus: 0.1
     depends_on:
       - srcKafka1
     volumes:
@@ -154,7 +150,6 @@ services:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: destKafkaClient
     container_name: destKafkaClient
-    cpus: 0.1
     depends_on:
       - destKafka1
       - connect
