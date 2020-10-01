@@ -187,7 +187,7 @@ Create a new API key/secret pair for user
 
    .. code-block:: bash
 
-      cloud api-key create --description "Demo credentials" --resource lkc-x6m01 -o json
+      ccloud api-key create --description "Demo credentials" --resource lkc-x6m01 -o json
 
 #. Verify your output resembles:
 
