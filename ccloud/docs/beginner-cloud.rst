@@ -31,10 +31,6 @@ Prerequisites
 
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
--  |ccloud| user credentials saved in ``~/.netrc``. (Use ``ccloud login --save``
-   when logging in to the |ccloud| CLI. The ``--save`` flag will save your login
-   credentials to the ``~/.netrc`` file.)
-
 -  Local `install of Confluent Cloud CLI
    <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.7.0 or later)
 
@@ -62,6 +58,16 @@ Run the tutorial
 ----------------
 
 To run this tutorial, complete the following steps:
+
+#. Log in to the |ccloud| CLI:
+
+   .. code-block:: bash
+
+      ccloud login --save
+
+   The ``--save`` flag will save your |ccloud| login credentials to the
+   ``~/.netrc`` file.
+
 
 #. Clone the Confluent examples repository:
 
