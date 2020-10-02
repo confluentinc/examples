@@ -19,9 +19,19 @@
 # Source library
 source ../../../utils/helper.sh
 
-check_env || exit 1
-validate_version_confluent_cli_v2 || exit 1
-check_jq || exit 1
+check_env \
+  && print_pass "Confluent Platform installed" \
+  || exit 1
+check_running_cp ${CONFLUENT} \
+  && print_pass "Confluent Platform version ${CONFLUENT} ok" \
+  || exit 1
+validate_version_confluent_cli_for_cp \
+  && print_pass "Confluent CLI version ok" \
+  || exit 1
+check_jq \
+  && print_pass "jq installed" \
+  || exit 1
+sleep 1
 
 
 ./cleanup.sh
