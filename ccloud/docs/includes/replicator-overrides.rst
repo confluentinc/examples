@@ -4,7 +4,6 @@ To override the embedded producers, configure |crep| to write to the destination
 .. sourcecode:: bash
 
    producer.override.bootstrap.servers=<bootstrap-servers-destination>
-   producer.override.ssl.endpoint.identification.algorithm=https
    producer.override.security.protocol=SASL_SSL
    producer.override.sasl.mechanism=PLAIN
    producer.override.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";

@@ -85,7 +85,6 @@ Create a ccloud-stack
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
       # KSQLDB APP ID: <KSQLDB APP ID>
       # ------------------------------
-      ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
       bootstrap.servers=<BROKER ENDPOINT>
