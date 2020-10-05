@@ -424,7 +424,6 @@ Run a Java producer with ACLs
 
    .. code-block:: text
 
-         [2020-08-29 13:52:10,836] WARN The configuration 'sasl.jaas.config' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
          Producing record: alice	{"count":0}
          Producing record: alice	{"count":1}
          Producing record: alice	{"count":2}
@@ -515,7 +514,6 @@ Run a Java producer with a prefixed ACL
 
    .. code-block:: text
 
-      [2020-08-29 13:52:39,012] WARN The configuration 'sasl.jaas.config' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
       Producing record: alice	{"count":0}
       Producing record: alice	{"count":1}
       Producing record: alice	{"count":2}
