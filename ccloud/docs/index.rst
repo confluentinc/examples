@@ -147,7 +147,7 @@ Playbook
 
      ccloud kafka topic list
 
-#. View the ACLs associated to the service account <SERVICE ACCOUNT ID> that was created for this example at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
+#. View the ACLs associated to the service account ``<SERVICE ACCOUNT ID>`` that was created for this example at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
 
    .. sourcecode:: bash
 
@@ -344,17 +344,17 @@ Troubleshooting the example
 Stop Example
 ============
 
-#. Stop the example, destroy all resources in |ccloud| and local components.
+#. Stop the example, destroy all resources in |ccloud| and local components. As an argument to the script, pass in the path to the local configuration file and substitute ``<SERVICE ACCOUNT ID>`` to match what was auto-generated when you started the demo.
 
    .. sourcecode:: bash
 
       # For Docker Compose
-      ./stop-docker.sh
+      ./stop-docker.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
    .. sourcecode:: bash
 
       # For Confluent Platform local install using Confluent CLI
-      ./stop.sh
+      ./stop.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
 #. Always verify that resources in |ccloud| have been destroyed.
 
