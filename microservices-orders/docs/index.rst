@@ -173,7 +173,7 @@ Setup the Tutorial
 
 #. Follow the "Environment Setup" instructions.
 
-#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__:
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. codewithvars:: bash
 
