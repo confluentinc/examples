@@ -41,18 +41,18 @@ This example showcases an entire end-to-end cloud ETL deployment, built for 100%
 
 -  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
 
-   - :ref:`cc_kinesis-source`
-   - :ref:`cc_postgresql-source`
+   - `Amazon Kinesis Source Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-kinesis-source.html#cc-kinesis-source>`__
+   - `PostgreSQL CDC Source Connector (Debezium) for Confluent Cloud <https://docs.confluent.io/current/cloud/connectors/cc-postgresql-cdc-source-debezium.html>`__
 
 -  Cloud sink connectors: writes data from Kafka topics in |ccloud| to cloud storage, one of:
 
-   - :ref:`cc_azure_blob_sink`
-   - :ref:`cc_gcs_connect_sink`
-   - :ref:`cc_s3_connect_sink`
+   - `Azure Blob Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-azure-blob-sink.html>`__
+   - `Google Cloud Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-gcs-sink.html>`__
+   - `Amazon S3 Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-s3-sink.html>`__
 
 -  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
 
--  :ref:`Confluent Cloud Schema Registry <cloud-install-schema-registry>`: centralized management of schemas and compatibility checks as schemas evolve 
+-  `Confluent Cloud Schema Registry <https://docs.confluent.io/cloud/cp-component/schema-reg-cloud-config.html>`__: centralized management of schemas and compatibility checks as schemas evolve
 
 
 Data Flow
