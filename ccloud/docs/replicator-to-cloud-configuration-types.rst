@@ -205,7 +205,7 @@ Configure ACLs
 Additional Resources
 ====================
 
-- For additional considerations on running |crep| to |ccloud|, refer to :ref:`cloud-migrate-topics`.
+- For additional considerations on running |crep| to |ccloud|, refer to `Migrate Topics on Confluent Cloud Clusters <https://docs.confluent.io/cloud/migrate-topics-on-cloud-clusters.html>`__.
 - To run a |ccloud| demo that showcases a hybrid |ak| cluster: one cluster is a
   self-managed |ak| cluster running locally, the other is a |ccloud| cluster, see
   :ref:`quickstart-demos-ccloud`.
