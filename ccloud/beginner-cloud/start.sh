@@ -149,7 +149,6 @@ API_SECRET_SA=$(echo "$OUTPUT" | jq -r ".secret")
 CLIENT_CONFIG="/tmp/client.config"
 echo -e "\n# Create a local configuration file $CLIENT_CONFIG with Confluent Cloud connection information with the newly created API key and secret"
 cat <<EOF > $CLIENT_CONFIG
-ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}

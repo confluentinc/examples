@@ -1,5 +1,4 @@
 # Configuration derived from template_delta_configs/example_ccloud_config
-ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
@@ -9,7 +8,6 @@ schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_
 schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>
 
 # Confluent Monitoring Interceptor specific configuration
-confluent.monitoring.interceptor.ssl.endpoint.identification.algorithm=https
 confluent.monitoring.interceptor.sasl.mechanism=PLAIN
 confluent.monitoring.interceptor.security.protocol=SASL_SSL
 confluent.monitoring.interceptor.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>

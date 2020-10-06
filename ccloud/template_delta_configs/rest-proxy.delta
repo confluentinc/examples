@@ -1,5 +1,3 @@
-ssl.endpoint.identification.algorithm=https
-client.ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 client.sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
