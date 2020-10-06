@@ -206,7 +206,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
       ./ccloud_stack_create.sh
 
-#. Run the :ref:`configuration generation script <auto-generate-configs>`, passing in that local configuration file (created in previous step) as input. This script generates delta configuration files for all |cp| components and clients, including information for bootstrap servers, endpoints, and credentials required to connect to |ccloud|.
+#. Run the `configuration generation script <https://docs.confluent.io/cloud/cp-component/auto-generate-configs.html>`__ , passing in that local configuration file (created in previous step) as input. This script generates delta configuration files for all |cp| components and clients, including information for bootstrap servers, endpoints, and credentials required to connect to |ccloud|.
 
    .. sourcecode:: bash
 
