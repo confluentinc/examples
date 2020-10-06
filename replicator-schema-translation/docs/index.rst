@@ -122,7 +122,7 @@ Suggested Reading
 
 * These sections in `Replicator Configuration Properties <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html>`__:
 
-  - :ref:`rep-source-topics`
-  - :ref:`rep-destination-topics`
-  - :ref:`schema_translation`
+  - `Source Topics <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#destination-data-conversion>`__
+  - `Destination Topics <https://docs.confluent.io//kafka-connect-replicator/current/configuration_options.html#destination-topics>`__
+  - `Schema Translation <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#schema-translation>`__
 
