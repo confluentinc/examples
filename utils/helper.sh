@@ -387,6 +387,15 @@ check_connect_up_logFile() {
   return 0
 }
 
+host_check_ksqlDBserver_up()
+{
+  KSQLDB_CLUSTER_ID=$(curl -s http://localhost:8088/info | jq -r ".KsqlServerInfo.ksqlServiceId")
+  if [ "$KSQLDB_CLUSTER_ID" == "ksql-cluster" ]; then
+    return 0
+  fi
+  return 1
+}
+
 check_connect_up() {
   containerName=$1
 

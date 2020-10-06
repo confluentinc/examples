@@ -15,7 +15,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
+-  Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.13.0 or later.
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
 
@@ -58,7 +58,7 @@ Produce Records
 
       ccloud kafka topic create test1
 
-#. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`,
+#. Run the `Confluent Cloud CLI producer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_produce.html>`__,
    writing messages to topic ``test1``, passing in arguments for:
 
    -  ``--parse-key --delimiter ,``: pass key and value, separated by a comma
@@ -84,7 +84,7 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run the :ref:`Confluent Cloud CLI consumer <ccloud_kafka_topic_consume>`,
+#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_consume.html>`__,
    reading messages from topic ``test1``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic -
@@ -132,7 +132,7 @@ Produce Avro Records
 
       echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
 
-#. Run the :ref:`Confluent Cloud CLI producer <ccloud_kafka_topic_produce>`
+#. Run the `Confluent Cloud CLI producer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_produce.html>`__
    writing messages to topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the
@@ -164,7 +164,7 @@ Produce Avro Records
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
-#. Run the :ref:`Confluent Confluent CLI consumer <ccloud_kafka_topic_consume>`
+#. Run the `Confluent Confluent CLI consumer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_consume.html>`__
    reading messages from topic ``test2``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic
