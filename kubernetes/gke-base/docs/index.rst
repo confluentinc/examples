@@ -35,7 +35,7 @@ Running the Example
 Setup
 *****
 
-Clone the Confluent examples repository and change directories on your terminal into the ``gke-base`` directory.
+Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/gke-base`` directory.
 
 .. sourcecode:: bash
 

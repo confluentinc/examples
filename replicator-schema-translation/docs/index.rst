@@ -25,7 +25,7 @@ Prerequisites
 Run Example
 ===========
 
-1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. sourcecode:: bash
 
