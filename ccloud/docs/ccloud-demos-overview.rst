@@ -240,7 +240,7 @@ Additional Resources
 ====================
 
 -  For a practical guide to configuring, monitoring, and optimizing your |ak|
-   client applications, see :ref:`ccloud-best-practices`.
+   client applications, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__.
 -  Learn how to use |crep-full| to copy Kafka data to |ccloud|, in different
    configurations that allow |kconnect-long| to be backed to |ccloud| or to your
    origin Kafka cluster. See :ref:`replicator-to-cloud-configurations` for more
