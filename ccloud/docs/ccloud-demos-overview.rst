@@ -137,7 +137,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Auto-generate Configurations to connect to |ccloud|
 ---------------------------------------------------
 
-The :ref:`configuration generation script <auto-generate-configs>` reads a configuration file and auto-generates delta configurations for all |cp| components and clients.
+The `configuration generation script <https://docs.confluent.io/cloud/cp-component/auto-generate-configs.html>`__ reads a configuration file and auto-generates delta configurations for all |cp| components and clients.
 Use these per-component configurations for |cp| components and clients connecting to |ccloud|:
 
 * |cp| Components:
