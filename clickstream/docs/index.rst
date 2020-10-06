@@ -28,7 +28,7 @@ Docker images with the required networking and dependencies. The images
 are quite large and depending on your network connection may take 
 10-15 minutes to download.
 
-#. Clone the Confluent examples repository.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. code:: bash
 

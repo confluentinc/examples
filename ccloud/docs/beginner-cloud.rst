@@ -69,7 +69,7 @@ To run this tutorial, complete the following steps:
    ``~/.netrc`` file.
 
 
-#. Clone the Confluent examples repository:
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. code-block:: bash
 

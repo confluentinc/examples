@@ -1,5 +1,5 @@
-Clone the `confluentinc/examples GitHub repository
-<https://github.com/confluentinc/examples>`__ and check out the
+Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__
+GitHub repository and check out the
 :litwithvars:`|release|-post` branch.
 
 .. codewithvars:: bash

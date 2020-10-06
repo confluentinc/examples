@@ -102,8 +102,7 @@ Topic
 Download and run the tutorial
 -----------------------------
 
-#. Clone the `confluentinc/examples GitHub repo
-   <https://github.com/confluentinc/examples>`__ by running the following command:
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and check out the :litwithvars:`|release|-post` branch.
 
    .. codewithvars:: bash
 

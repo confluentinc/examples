@@ -48,7 +48,7 @@ Running the Example
 
 .. warning:: This example consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.  The |co| :ref:`Sizing Recommendations <co-env-sizing>` document contains information on required sizing for |co-long|.
 
-Clone the `Confluent examples repository <https://github.com/confluentinc/examples>`__ and change directories on your terminal into the ``kubernetes/replicator-gke-cc`` directory.
+Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-gke-cc`` directory.
 
 .. sourcecode:: bash
 

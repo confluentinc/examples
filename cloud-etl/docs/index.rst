@@ -125,7 +125,7 @@ Because this example interacts with real resources in Kinesis or RDS PostgreSQL,
 
 #. This example creates a new |ccloud| environment with required resources to run this example. As a reminder, this example uses real |ccloud| resources and you may incur charges so carefully evaluate the cost of resources before launching the example.
 
-#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and check out the :litwithvars:`|release|-post` branch..
 
    .. codewithvars:: bash
 
