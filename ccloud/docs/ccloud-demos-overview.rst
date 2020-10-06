@@ -230,7 +230,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
       docker-compose up -d <service>
 
-   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in :ref:`connect_adding_connectors_to_images`, and then substitute that Docker image in your Docker Compose file.
+   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in `Add Connectors or Software <https://docs.confluent.io/connect/extending.html>`__, and then substitute that Docker image in your Docker Compose file.
 
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
