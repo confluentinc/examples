@@ -93,6 +93,7 @@ services:
       KSQL_CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: '[%d] %p %X{connector.context}%m (%c:%L)%n'
       KSQL_CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components/,/data/connect-jars'
 
+      KSQL_KSQL_SERVICE_ID: "ksql-cluster"
       CONNECT_HOST: ksqldb-server
       ELASTIC_HOST: elasticsearch
       GRAFANA_HOST: grafana

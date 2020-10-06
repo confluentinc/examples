@@ -10,8 +10,17 @@ docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components conf
 docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components confluentinc/ksqldb-server:0.8.0 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
 
 docker-compose up -d
-echo -e "\nSleeping 60 seconds while Docker containers start\n"
-sleep 60
+
+MAX_WAIT=90
+echo "Waiting up to $MAX_WAIT seconds for ksqlDB server's embedded Connect to be ready"
+retry $MAX_WAIT check_connect_up ksqldb-server || exit 1
+
+# Verify ksqlDB server has started
+MAX_WAIT=30
+echo "Waiting up to $MAX_WAIT seconds for ksqlDB server to be ready to serve requests"
+retry $MAX_WAIT host_check_ksqlDBserver_up || exit 1
+
+sleep 2
 
 # Run the source connectors (with ksqlDB CLI) that generate data
 docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
