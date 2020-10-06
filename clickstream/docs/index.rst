@@ -8,9 +8,22 @@ These steps will guide you through how to setup your environment and run the cli
 .. figure:: images/clickstream_demo_flow.png
    :alt: image
 
+Prerequisites:
+     - Docker
 
-
-.. include:: ../../../../quickstart/includes/docker-prereqs.rst
+       - Docker version 1.11 or later is
+         `installed and running <https://docs.docker.com/engine/installation/>`_.
+       - Docker Compose is `installed <https://docs.docker.com/compose/install/>`_. Docker Compose is installed by default with Docker
+         for Mac.
+       - Docker memory is allocated minimally at 8 GB. When using Docker Desktop for Mac, the default Docker memory 
+         allocation is 2 GB. You can change the default allocation to 8 GB in Docker. Navigate to **Preferences** > **Resources** > **Advanced**.
+     
+     - `Git <https://git-scm.com/downloads>`__
+     - Internet connectivity
+     - :ref:`Operating System<operating-systems>` currently supported by |cp|
+     - Networking and |ak| on Docker
+     
+       - Configure your hosts and ports to allow both internal and external components to the Docker network to communicate. For more details, see `this article <https://rmoff.net/2018/08/02/kafka-listeners-explained/>`__.
 
 - If you are using Linux as your host, for the Elasticsearch container to start successfully you must first run: 
 
