@@ -62,7 +62,6 @@ services:
       KAFKA_SSL_TRUSTSTORE_FILENAME: kafka.srcKafka1.truststore.jks
       KAFKA_SSL_TRUSTSTORE_CREDENTIALS: srcKafka1_truststore_creds
       KAFKA_SSL_CLIENT_AUTH: "required"
-      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
       KAFKA_CONFLUENT_SUPPORT_METRICS_ENABLE: "false"
   destKafka1:
     image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
