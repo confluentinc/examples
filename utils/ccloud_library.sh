@@ -945,7 +945,6 @@ EOF
     fi
     cat <<EOF >> $CLIENT_CONFIG
 # --------------------------------------
-ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}

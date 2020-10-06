@@ -105,7 +105,6 @@ cat <<EOF >> $C3_CONFIG
 # Kafka clusters
 confluent.controlcenter.kafka.local.bootstrap.servers=localhost:9092
 confluent.controlcenter.kafka.cloud.bootstrap.servers=$BOOTSTRAP_SERVERS
-confluent.controlcenter.kafka.cloud.ssl.endpoint.identification.algorithm=https
 confluent.controlcenter.kafka.cloud.sasl.mechanism=PLAIN
 confluent.controlcenter.kafka.cloud.security.protocol=SASL_SSL
 confluent.controlcenter.kafka.cloud.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$CLOUD_KEY\" password=\"$CLOUD_SECRET\";

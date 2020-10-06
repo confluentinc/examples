@@ -1,6 +1,5 @@
 
 # Confluent Control Center specific configuration
-confluent.controlcenter.streams.ssl.endpoint.identification.algorithm=https
 confluent.controlcenter.streams.sasl.mechanism=PLAIN
 confluent.controlcenter.streams.security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
