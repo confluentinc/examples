@@ -39,7 +39,7 @@ Prerequisites
 Run example
 -----------
 
-#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ repository from GitHub and check out the :litwithvars:`|release|-post` branch.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and check out the :litwithvars:`|release|-post` branch.
 
    .. codewithvars:: bash
 
