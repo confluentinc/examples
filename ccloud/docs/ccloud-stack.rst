@@ -36,7 +36,7 @@ To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud
 
 .. code-block:: text
 
-   ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json
+   ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME -o json
 
    ccloud environment create $ENVIRONMENT_NAME -o json
 
@@ -49,8 +49,7 @@ To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud
    ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME"
    ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB
 
-   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // many permissive ACLs with wildcards
-
+   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs
 
 
 =============
@@ -94,6 +93,25 @@ Create a ccloud-stack
    .. code:: bash
 
       ./ccloud_stack_create.sh
+
+#. The above command also configures permissive ACLs with wildcards. This is useful for development and learning environments, but in production, configure much stricter ACLs.
+
+   .. code-block:: text
+   
+        ServiceAccountId | Permission |    Operation     |     Resource     |     Name      |  Type    
+      +------------------+------------+------------------+------------------+---------------+---------+
+        User:119608      | ALLOW      | READ             | GROUP            | *             | LITERAL  
+        User:119608      | ALLOW      | WRITE            | GROUP            | *             | LITERAL  
+        User:119608      | ALLOW      | CREATE           | GROUP            | *             | LITERAL  
+        User:119608      | ALLOW      | CREATE           | TOPIC            | *             | LITERAL  
+        User:119608      | ALLOW      | DELETE           | TOPIC            | *             | LITERAL  
+        User:119608      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *             | LITERAL  
+        User:119608      | ALLOW      | WRITE            | TOPIC            | *             | LITERAL  
+        User:119608      | ALLOW      | DESCRIBE         | TOPIC            | *             | LITERAL  
+        User:119608      | ALLOW      | READ             | TOPIC            | *             | LITERAL  
+        User:119608      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *             | LITERAL  
+        User:119608      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *             | LITERAL  
+        User:119608      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster | LITERAL  
 
 #. In addition to creating all the resources in |ccloud| with associated service account and ACLs, running ``ccloud-stack`` also generates a local configuration file with all the |ccloud| connection information, which is useful for other demos/automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
 
