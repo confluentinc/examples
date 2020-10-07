@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.Properties;
 
 import io.confluent.examples.connectandstreams.avro.Location;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 
 public class StreamsIngest {
@@ -72,7 +72,7 @@ public class StreamsIngest {
     final Serde<Location> locationSerde = new SpecificAvroSerde<>();
     final boolean isKeySerde = false;
     locationSerde.configure(
-        Collections.singletonMap(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL),
+        Collections.singletonMap(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL),
         isKeySerde);
 
     final KStream<String, Location>
