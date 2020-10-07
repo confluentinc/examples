@@ -32,7 +32,7 @@ Caution
 This utility uses real |ccloud| resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
 
-To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`). By default, the ksqlDB app is not created with ``ccloud-stack``, you have to explicitly allow it.
+To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`). By default, the ksqlDB app is not created with ``ccloud-stack``, you have to explicitly set it.
 
 .. code-block:: text
 
@@ -49,7 +49,7 @@ To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud
    ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME"
    ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB
 
-   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs
+   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
 
 
 =============
@@ -94,9 +94,16 @@ Create a ccloud-stack
 
       ./ccloud_stack_create.sh
 
-#. The above command also configures permissive ACLs with wildcards. This is useful for development and learning environments, but in production, configure much stricter ACLs.
+#. You will be prompted twice. Note the second prompt which is where you can optionally enable Confluent Cloud ksqlDB.
 
-   If you ran without ksqlDB (in this case, service account ID is 119612):
+   .. code-block:: text
+
+      Do you still want to run this script? [y/n] y
+      Do you also want to create a Confluent Cloud ksqlDB app (hourly charges may apply)? [y/n] n
+
+#. ``ccloud-stack`` configures permissive ACLs with wildcards, which is useful for development and learning environments. In production, configure much stricter ACLs.
+
+   If you ran without ksqlDB (in the output below, service account ID is 119612):
 
    .. code-block:: text
    
