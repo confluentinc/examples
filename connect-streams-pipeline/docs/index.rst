@@ -85,8 +85,8 @@ The output of ``sum`` is:
 Prerequisites
 -------------
 
-- Download `Confluent Platform <https://www.confluent.io/download/>`__
-- Maven command ``mvn`` to compile Java code
+- .. include:: ../../docs/includes/example-prereq-local-install.rst
+- ``mvn``: Maven command to compile Java code
 - .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
 Run example
