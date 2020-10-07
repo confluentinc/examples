@@ -32,6 +32,27 @@ Caution
 This utility uses real |ccloud| resources.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
 
+To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`). By default, the ksqlDB app is not created with ``ccloud-stack``, you have to explicitly allow it.
+
+.. code-block:: text
+
+   ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json
+
+   ccloud environment create $ENVIRONMENT_NAME -o json
+
+   ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION
+   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for kafka
+
+   ccloud schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json
+   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
+
+   ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME"
+   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB
+
+   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // many permissive ACLs with wildcards
+
+
+
 =============
 Prerequisites
 =============
