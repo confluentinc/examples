@@ -8,7 +8,7 @@ Overview
 ========
 
 This ``ccloud-stack`` utility creates a stack of fully managed services in |ccloud|.
-It is a quick way to create fully managed resources in |ccloud|, which you can then use for learning and building other demos. 
+It is a quick way to create fully managed resources in |ccloud|, with correct credentials, which you can then use for learning and building other examples.
 The utility uses |ccloud| CLI under the hood to dynamically do the following in |ccloud| :
 
 -  Create a new environment
