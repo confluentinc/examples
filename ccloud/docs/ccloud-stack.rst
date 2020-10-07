@@ -96,22 +96,75 @@ Create a ccloud-stack
 
 #. The above command also configures permissive ACLs with wildcards. This is useful for development and learning environments, but in production, configure much stricter ACLs.
 
+   If you ran without ksqlDB (in this case, service account ID is 119612):
+
    .. code-block:: text
    
         ServiceAccountId | Permission |    Operation     |     Resource     |     Name      |  Type    
       +------------------+------------+------------------+------------------+---------------+---------+
-        User:119608      | ALLOW      | READ             | GROUP            | *             | LITERAL  
-        User:119608      | ALLOW      | WRITE            | GROUP            | *             | LITERAL  
-        User:119608      | ALLOW      | CREATE           | GROUP            | *             | LITERAL  
-        User:119608      | ALLOW      | CREATE           | TOPIC            | *             | LITERAL  
-        User:119608      | ALLOW      | DELETE           | TOPIC            | *             | LITERAL  
-        User:119608      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *             | LITERAL  
-        User:119608      | ALLOW      | WRITE            | TOPIC            | *             | LITERAL  
-        User:119608      | ALLOW      | DESCRIBE         | TOPIC            | *             | LITERAL  
-        User:119608      | ALLOW      | READ             | TOPIC            | *             | LITERAL  
-        User:119608      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *             | LITERAL  
-        User:119608      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *             | LITERAL  
-        User:119608      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster | LITERAL  
+        User:119612      | ALLOW      | READ             | GROUP            | *             | LITERAL  
+        User:119612      | ALLOW      | WRITE            | GROUP            | *             | LITERAL  
+        User:119612      | ALLOW      | CREATE           | GROUP            | *             | LITERAL  
+        User:119612      | ALLOW      | CREATE           | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | DELETE           | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | WRITE            | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | DESCRIBE         | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | READ             | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *             | LITERAL  
+        User:119612      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *             | LITERAL  
+        User:119612      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster | LITERAL  
+
+   If you ran with ksqlDB:
+
+   .. code-block:: text
+   
+        ServiceAccountId | Permission |    Operation     |     Resource     |             Name             |   Type    
+      +------------------+------------+------------------+------------------+------------------------------+----------+
+        User:119612      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *                            | LITERAL   
+        User:119612      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER            | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DELETE           | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | READ             | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | CREATE           | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | WRITE            | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER_CONFIGS    | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | CLUSTER          | kafka-cluster                | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | CLUSTER          | kafka-cluster                | LITERAL   
+        User:119612      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster                | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | GROUP            | *                            | LITERAL   
+        User:119612      | ALLOW      | READ             | GROUP            | *                            | LITERAL   
+        User:119612      | ALLOW      | WRITE            | GROUP            | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | *                            | LITERAL   
+        User:119612      | ALLOW      | CREATE           | GROUP            | *                            | LITERAL   
+        User:119616      | ALLOW      | CREATE           | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER            | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DELETE           | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | READ             | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE         | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER_CONFIGS    | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | WRITE            | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER            | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | DELETE           | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | WRITE            | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | CREATE           | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | ALTER_CONFIGS    | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | READ             | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE         | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119612      | ALLOW      | CREATE           | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | WRITE            | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | DESCRIBE         | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | READ             | TOPIC            | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | DELETE           | TOPIC            | *                            | LITERAL   
+        User:119616      | ALLOW      | WRITE            | TRANSACTIONAL_ID | pksqlc-e0q79                 | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | pksqlc-e0q79                 | LITERAL   
 
 #. In addition to creating all the resources in |ccloud| with associated service account and ACLs, running ``ccloud-stack`` also generates a local configuration file with all the |ccloud| connection information, which is useful for other demos/automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
 
