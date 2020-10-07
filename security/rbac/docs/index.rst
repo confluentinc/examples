@@ -33,6 +33,8 @@ Caveats
 Prerequisites
 -------------
 
+.. include:: ../../../docs/includes/example-prereq-local-install.rst
+
 .. include:: ../../../docs/includes/demo-validation-env.rst 
 
 

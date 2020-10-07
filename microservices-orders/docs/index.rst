@@ -153,9 +153,9 @@ Docker
 Local
 -----
 
-* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, |ksqldb| and |sr-long| integration, and streams monitoring capabilities
+* .. include:: ../../docs/includes/example-prereq-local-install.rst
 * Java 1.8 to run the example application
-* Maven to compile the example application
+* ``mvn``: Maven command to compile Java code
 * (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
 
   * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script

@@ -15,7 +15,7 @@ as cleartext, you can encrypt the data within a configuration file itself.
 Prerequisites
 ~~~~~~~~~~~~~
 
-#. `Download <https://www.confluent.io/download/>`__ |cp| |release|
+#. .. include:: ../../../docs/includes/example-prereq-local-install.rst
 
 
 Setup

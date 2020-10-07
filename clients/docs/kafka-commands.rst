@@ -15,7 +15,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  `Download <https://www.confluent.io/download/>`__ |cp| |release|
+.. include:: ../../docs/includes/example-prereq-local-install.rst
 
 Kafka Cluster
 ~~~~~~~~~~~~~

@@ -47,7 +47,7 @@ Prerequisites
 
 #. Local install of `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
 
-#. `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
+#. .. include:: ../../docs/includes/example-prereq-local-install.rst
 
 #. .. include:: ../../docs/includes/demo-validation-env.rst
 

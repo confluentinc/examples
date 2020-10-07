@@ -19,8 +19,7 @@ Prerequisites
 Client
 ~~~~~~
 
-- `Download <https://www.confluent.io/download/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__ |cp| |release|, which includes the |confluent-cli|.
-
+.. include:: ../../docs/includes/example-prereq-local-install.rst
 
 Kafka Cluster
 ~~~~~~~~~~~~~
