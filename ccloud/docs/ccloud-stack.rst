@@ -30,8 +30,8 @@ Caution
 =======
 
 This utility uses real |ccloud| resources.
-If you just run ``ccloud-stack`` without enabling |ccloud| ksqlDB and do not create any topics or other resources, then there is no billing charge.
-If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, or create topics, run a |ccloud| connector, create ksqlDB queries, or enable other resources, then there will be a billing charge.
+If you just run ``ccloud-stack`` without enabling |ccloud| ksqlDB, then there is no billing charge (but as soon as you produce data to the |ak| cluster or provision any other fully-managed services, there may be charges).
+If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin in accrue charges.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
 
 Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
