@@ -15,7 +15,7 @@ The utility uses |ccloud| CLI under the hood to dynamically do the following in 
 -  Create a new service account
 -  Create a new Kafka cluster and associated credentials
 -  Enable Schema Registry and associated credentials
--  Create a new ksqlDB app and associated credentials
+-  (Optional) Create a new ksqlDB app and associated credentials
 -  Create ACLs with wildcard for the service account
 
 .. figure:: images/ccloud-stack-resources.png 
