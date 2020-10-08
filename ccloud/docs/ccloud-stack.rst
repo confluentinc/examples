@@ -8,7 +8,7 @@ Overview
 ========
 
 This ``ccloud-stack`` utility creates a stack of fully managed services in |ccloud|.
-It is a quick way to create fully managed resources in |ccloud|, with correct credentials, which you can then use for learning and building other examples.
+It is a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
 The utility uses |ccloud| CLI under the hood to dynamically do the following in |ccloud| :
 
 -  Create a new environment
@@ -30,6 +30,7 @@ Caution
 =======
 
 This utility uses real |ccloud| resources.
+It is intended to be a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
 If you just run ``ccloud-stack`` without enabling |ccloud| ksqlDB, then there is no billing charge (but as soon as you produce data to the |ak| cluster or provision any other fully-managed services, there may be charges).
 If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin in accrue charges.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
