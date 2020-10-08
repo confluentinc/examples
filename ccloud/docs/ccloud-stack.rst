@@ -30,9 +30,12 @@ Caution
 =======
 
 This utility uses real |ccloud| resources.
+If you just run ``ccloud-stack`` without enabling |ccloud| ksqlDB and do not create any topics or other resources, then there is no billing charge.
+If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, or create topics, run a |ccloud| connector, create ksqlDB queries, or enable other resources, then there will be a billing charge.
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
 
-To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`). By default, the ksqlDB app is not created with ``ccloud-stack``, you have to explicitly set it.
+Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
+By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you have to explicitly enable it.
 
 .. code-block:: text
 
@@ -46,6 +49,7 @@ To help evaluate the cost of running ``ccloud-stack``, here is a list of |ccloud
    ccloud schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json
    ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
 
+   # By default, ccloud-stack does not enable Confluent Cloud ksqlDB, but if you explicitly enable it:
    ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME"
    ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB
 
