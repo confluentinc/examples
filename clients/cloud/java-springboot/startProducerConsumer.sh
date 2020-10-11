@@ -10,10 +10,10 @@ source ../../../utils/ccloud_library.sh
 
 echo -e "\n${BLUE}\t☁️  Generating a config from Confluent Cloud properties... ${NC}\n"
 
-export CONFIG_FILE=~/.ccloud/java.config
+export CONFIG_FILE=~/.confluent/springboot.config
 ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
-SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
+SCHEMA_REGISTRY_CONFIG_FILE=$CONFIG_FILE
 
 ../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
 
