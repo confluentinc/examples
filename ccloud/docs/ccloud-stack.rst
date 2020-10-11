@@ -88,7 +88,7 @@ Create a ccloud-stack
       security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
       bootstrap.servers=<BROKER ENDPOINT>
-      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
       basic.auth.credentials.source=USER_INFO
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
