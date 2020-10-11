@@ -59,7 +59,7 @@
 #   bootstrap.servers=<BROKER ENDPOINT>
 #   security.protocol=SASL_SSL
 #   sasl.mechanism=PLAIN
-#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
 #
 # If you are using Confluent Cloud Schema Registry, add the following configuration parameters
 # either to file above (arg 1 CONFIG_FILE) or to a separate file (arg 2 SR_CONFIG_FILE)
