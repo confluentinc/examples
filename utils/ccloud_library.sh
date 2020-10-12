@@ -54,7 +54,7 @@ function ccloud::validate_expect_installed() {
 }
 function ccloud::validate_ccloud_cli_installed() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
-    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
+    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/ccloud-cli/install.html) and try again"
     exit 1
   fi
 }
