@@ -34,7 +34,7 @@ Setup
 
       cd clients/cloud/java-springboot/
 
-#. .. include:: includes/client-example-create-file-springboot.rst
+#. .. include:: includes/client-example-create-file-java.rst
 
 
 Avro and Confluent Cloud Schema Registry
@@ -46,9 +46,9 @@ Avro and Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-vpc.rst
 
-#. .. include:: includes/schema-registry-springboot.rst
+#. .. include:: includes/schema-registry-java.rst
 
-#. .. include:: includes/client-example-schema-registry-2-springboot.rst
+#. .. include:: includes/client-example-schema-registry-2-java.rst
 
 
 Produce and Consume Records

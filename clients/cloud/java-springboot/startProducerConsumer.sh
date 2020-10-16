@@ -10,12 +10,10 @@ source ../../../utils/ccloud_library.sh
 
 echo -e "\n${BLUE}\t☁️  Generating a config from Confluent Cloud properties... ${NC}\n"
 
-export CONFIG_FILE=~/.ccloud/java.config
+export CONFIG_FILE=~/.confluent/java.config
 ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
-SCHEMA_REGISTRY_CONFIG_FILE=$HOME/.ccloud/config
-
-../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE $SCHEMA_REGISTRY_CONFIG_FILE
+../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
