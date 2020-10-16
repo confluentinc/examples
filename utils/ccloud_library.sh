@@ -855,7 +855,7 @@ function ccloud::set_kafka_cluster_use() {
 #
 function ccloud::create_ccloud_stack() {
   QUIET="${QUIET:-true}"
-  REPLICATION_FACTOR=${REPLICATION_FACTOR:-1}
+  REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=$1
 
   if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
