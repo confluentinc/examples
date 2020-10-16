@@ -14,7 +14,7 @@ ccloud::validate_logged_in_ccloud_cli \
 
 printf "\n====== Create new Confluent Cloud stack\n"
 [[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
-REPLICATION_FACTOR=3 ccloud::create_ccloud_stack true
+ccloud::create_ccloud_stack true
 
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
