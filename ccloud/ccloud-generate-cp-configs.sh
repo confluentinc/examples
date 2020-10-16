@@ -59,7 +59,7 @@
 #   bootstrap.servers=<BROKER ENDPOINT>
 #   security.protocol=SASL_SSL
 #   sasl.mechanism=PLAIN
-#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
 #
 # If you are using Confluent Cloud Schema Registry, add the following configuration parameters
 # either to file above (arg 1 CONFIG_FILE) or to a separate file (arg 2 SR_CONFIG_FILE)
@@ -122,8 +122,8 @@ BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS/\\/}
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CONFIG_FILE | cut -d'=' -f2- )
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
-CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
-CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
+CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F[\"\'] '$0=$2' )
+CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F[\"\'] '$0=$2' )
 
 # Schema Registry
 BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )

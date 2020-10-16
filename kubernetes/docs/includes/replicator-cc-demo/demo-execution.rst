@@ -4,7 +4,7 @@ To run the automated demo (estimated running time, 8 minutes):
 
     make demo
 
-The demo will deploy |cp| leverging |co-long|.   As the various components are deployed, the demonstration will echo the various commands as executing them so you can observe the process.  For example, the deployment message for |ak| will look similar to:
+The demo will deploy |cp| leveraging |co-long|.   As the various components are deployed, the demonstration will echo the various commands as executing them so you can observe the process.  For example, the deployment message for |ak| will look similar to:
 
 .. codewithvars:: bash
 
