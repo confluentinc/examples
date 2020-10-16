@@ -28,7 +28,7 @@
 (defn producer! [config-fname topic]
   (let [props (build-properties config-fname)
         print-ex (comp println (partial str "Failed to deliver message: "))
-        print-metadata #(printf "Produced record to topic %s partiton [%d] @ offest %d\n"
+        print-metadata #(printf "Produced record to topic %s partition [%d] @ offest %d\n"
                                 (.topic %)
                                 (.partition %)
                                 (.offset %))
