@@ -65,6 +65,9 @@ Prerequisites
 - Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.13.0 or later.
 - ``jq`` tool
 
+Note that ``ccloud-stack`` has been validated on macOS 10.15.3 with bash version 3.2.57.
+If you encounter issues on any other operating systems or versions, please open a GitHub issue at `confluentinc/examples <https://github.com/confluentinc/examples>`__.
+
 
 .. _ccloud-stack-usage:
 
