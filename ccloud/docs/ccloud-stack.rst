@@ -266,7 +266,7 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
       source ./ccloud_library.sh
 
-#. Optionally set the ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``.
+#. Optionally override the ``CLUSTER_CLOUD`` and ``CLUSTER_REGION`` configuration parameters.
 
    .. code:: bash
 
