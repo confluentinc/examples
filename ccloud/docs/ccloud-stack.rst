@@ -29,13 +29,20 @@ This file is particularly useful because it contains connection information to y
 Caution
 =======
 
+Billing
+-------
+
 This utility uses real |ccloud| resources.
 It is intended to be a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
 
-- If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you produce data to the |ak| cluster or provision any other fully-managed services.
+- If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you create a topic, produce data to the |ak| cluster, or provision any other fully-managed service.
 - If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
 
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
+See :ref:`cloud-billing` for details.
+
+|ccloud| Resources
+------------------
 
 Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
 By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you have to explicitly enable it.
