@@ -856,7 +856,7 @@ function ccloud::set_kafka_cluster_use() {
 function ccloud::create_ccloud_stack() {
   QUIET="${QUIET:-true}"
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
-  enable_ksqldb=$1
+  enable_ksqldb=${1:-false}
 
   if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
     # Service Account is not received so it will be created

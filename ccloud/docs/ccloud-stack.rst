@@ -31,8 +31,10 @@ Caution
 
 This utility uses real |ccloud| resources.
 It is intended to be a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
-If you just run ``ccloud-stack`` without enabling |ccloud| ksqlDB, then there is no billing charge until you produce data to the |ak| cluster or provision any other fully-managed services.
-If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
+
+- If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you produce data to the |ak| cluster or provision any other fully-managed services.
+- If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
+
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
 
 Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
@@ -102,7 +104,7 @@ Create a ccloud-stack
 
       ./ccloud_stack_create.sh
 
-#. You will be prompted twice. Note the second prompt which is where you can optionally enable Confluent Cloud ksqlDB.
+#. You will be prompted twice. Note the second prompt which is where you can optionally enable |ccloud| ksqlDB.
 
    .. code-block:: text
 
@@ -264,16 +266,29 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
       source ./ccloud_library.sh
 
-#. Run the bash functions directly from the command line. To create the ``cloud-stack``:
+#. Optionally set the ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``.
 
    .. code:: bash
 
       CLUSTER_CLOUD=aws
       CLUSTER_REGION=us-west-2 
+
+#. Run the bash function directly from the command line.
+
+   To create the ``cloud-stack`` without |ccloud| ksqlDB:
+
+   .. code:: bash
+
       ccloud::create_ccloud_stack
 
+   To create the ``cloud-stack`` with |ccloud| ksqlDB:
 
-   To destroy the ``ccloud-stack``:
+   .. code:: bash
+
+      ccloud::create_ccloud_stack true
+
+
+#. To destroy the ``ccloud-stack``:
 
    .. code:: bash
 
