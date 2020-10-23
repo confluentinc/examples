@@ -7,11 +7,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.confluent</groupId>
     <artifactId>rest-utils-parent</artifactId>
-    <version>6.1.0-SNAPSHOT</version>
+    <version>[6.1.0-0, 6.1.1-0)</version>
   </parent>
 
   <artifactId>java-client-avro-examples</artifactId>
   <packaging>jar</packaging>
+  <version>6.1.0-0</version>
 
   <organization>
     <name>Confluent, Inc.</name>
@@ -30,6 +31,9 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <io.confluent.blueway.version>${confluent.version.range}</io.confluent.blueway.version>
+    <io.confluent.kafka-connect-replicator.version>${confluent.version.range}</io.confluent.kafka-connect-replicator.version>
+    <io.confluent.schema-registry.version>${confluent.version.range}</io.confluent.schema-registry.version>
   </properties>
 
   <repositories>
@@ -52,7 +56,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-avro-serializer</artifactId>
-      <version>${confluent.version}</version>
+      <version>${io.confluent.schema-registry.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
@@ -72,12 +76,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <dependency>		
       <groupId>io.confluent</groupId>		
       <artifactId>connect-replicator</artifactId>		
-      <version>${confluent.version}</version>		
+      <version>${io.confluent.kafka-connect-replicator.version}</version>		
      </dependency>		
      <dependency>		
        <groupId>io.confluent</groupId>		
        <artifactId>monitoring-interceptors</artifactId>		
-       <version>${confluent.version}</version>		
+       <version>${io.confluent.blueway.version}</version>		
      </dependency>
   </dependencies>
   <build>
@@ -105,7 +109,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <plugin>
         <groupId>io.confluent</groupId>
         <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-        <version>${confluent.version}</version>
+        <version>${io.confluent.schema-registry.version}</version>
         <configuration>
           <schemaRegistryUrls>
             <param>http://localhost:8081</param>
