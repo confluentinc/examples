@@ -699,16 +699,19 @@ END
 }
 
 function ccloud::get_service_account() {
-  CLOUD_KEY=$1
-  CONFIG_FILE=$2
 
-  if [[ "$CLOUD_KEY" == "" ]]; then
-    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
-    exit 1
-  fi
-  serviceAccount=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $3;}')
+	[ -z "$1" ] && {
+		echo "ccloud::get_service_account expects one parameter (API Key)"
+		exit 1
+	}
+
+	[ $# -gt 1 ] && echo "WARN: ccloud::get_service_account function expects one parameter, received two"
+
+  local key="$1"
+
+  serviceAccount=$(ccloud api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'"))) | .[].owner')
   if [[ "$serviceAccount" == "" ]]; then
-    echo "ERROR: Could not associate key $CLOUD_KEY to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
+    echo "ERROR: Could not associate key $key to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
   fi
   if ! [[ "$serviceAccount" =~ ^-?[0-9]+$ ]]; then
