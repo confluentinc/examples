@@ -500,25 +500,18 @@ function ccloud::delete_acls_ccloud_stack() {
 }
 
 function ccloud::validate_ccloud_config() {
-  expected_configfile=$1
+	[ -z "$1" ] && {
+  	echo "ccloud::validate_ccloud_config expects one parameter (Config File)"
+  	exit 1
+  }
 
-  if [[ ! -f "$expected_configfile" ]]; then
-    echo "Confluent Cloud configuration file does not exist at $expected_configfile. Please create the configuration file with properties set to your Confluent Cloud cluster and try again."
-    exit 1
-  else
-    cat "$CONFIG_FILE" | jq . &> /dev/null
-    status=$?
-    if [[ $status == 0 ]]; then
-      echo "ERROR: File $CONFIG_FILE is not properly formatted as key=value pairs (did you accidentally point to the Confluent Cloud CLI 'config.json' file?--this will not work). Manually create the required properties file to connect to your Confluent Cloud cluster and then try again."
-      echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
-      exit 1
-    elif ! [[ $(grep "^\s*bootstrap.server" $expected_configfile) ]]; then
-      echo "Missing 'bootstrap.server' in $expected_configfile. Please modify the configuration file with properties set to your Confluent Cloud cluster and try again."
-      exit 1
-    fi
-  fi
-
-  return 0
+	local cfg_file="$1"
+	local bootstrap=$(grep "bootstrap\.servers" "$cfg_file" | cut -d'=' -f2-)
+	[ -z "$bootstrap" ] && {
+		echo "ERROR: Given config file does not contain, at minimum, the bootstrap.servers key value pair"
+		exit 1;
+	}
+	return 0;
 }
 
 function ccloud::validate_ksqldb_up() {
