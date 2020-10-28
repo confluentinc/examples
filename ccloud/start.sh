@@ -80,7 +80,7 @@ printf "\n"
 echo ====== Set current Confluent Cloud 
 # Set Kafka cluster and service account
 ccloud::set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
-serviceAccount=$(ccloud::get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
+serviceAccount=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
 printf "\n"
 
 echo ====== Validate Schema Registry credentials

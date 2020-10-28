@@ -44,7 +44,7 @@ ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo ====== Set Kafka cluster and service account
 ccloud::set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
-serviceAccount=$(ccloud::get_service_account $CLOUD_KEY $CONFIG_FILE) || exit 1
+serviceAccount=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
 
 echo ====== Set ACLs for Confluent Control Center and Kafka Connect
 ccloud::create_acls_control_center $serviceAccount
