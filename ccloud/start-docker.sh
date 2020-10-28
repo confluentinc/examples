@@ -43,7 +43,7 @@ retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT |
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 echo ====== Set Kafka cluster and service account
-ccloud::set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+ccloud::set_kafka_cluster_use_from_api_key $CLOUD_KEY || exit 1
 serviceAccount=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
 
 echo ====== Set ACLs for Confluent Control Center and Kafka Connect

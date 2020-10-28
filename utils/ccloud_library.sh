@@ -814,7 +814,7 @@ function ccloud::validate_ccloud_stack_up() {
   fi
 
   ccloud::validate_environment_set || exit 1
-  ccloud::set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
+  ccloud::set_kafka_cluster_use_from_api_key "$CLOUD_KEY" || exit 1
   ccloud::validate_schema_registry_up "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
   if $enable_ksqldb ; then
     ccloud::validate_ksqldb_up "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_BASIC_AUTH_USER_INFO" || exit 1
@@ -831,24 +831,35 @@ function ccloud::validate_environment_set() {
 
 }
 
-function ccloud::set_kafka_cluster_use() {
-  CLOUD_KEY=$1
-  CONFIG_FILE=$2
+function ccloud::set_kafka_cluster_use_from_api_key() {
+	[ -z "$1" ] && {
+		echo "ccloud::set_kafka_cluster_use_from_api_key expects one parameter (API Key)"
+		exit 1
+	}
 
-  if [[ "$CLOUD_KEY" == "" ]]; then
-    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
-    exit 1
-  fi
-  kafkaCluster=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $8;}')
+	[ $# -gt 1 ] && echo "WARN: ccloud::set_kafka_cluster_use_from_api_key function expects one parameter, received two"
+
+  local key="$1"
+
+  local kafkaCluster=$(ccloud api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'" and .resource_type == "kafka"))) | .[].resource_id')
   if [[ "$kafkaCluster" == "" ]]; then
-    echo "ERROR: Could not associate key $CLOUD_KEY to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
+    echo "ERROR: Could not associate key $key to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
   fi
+
   ccloud kafka cluster use $kafkaCluster
-  endpoint=$(ccloud kafka cluster describe $kafkaCluster -o json | jq -r ".endpoint" | cut -c 12-)
-  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster at $endpoint"
+  local endpoint=$(ccloud kafka cluster describe $kafkaCluster -o json | jq -r ".endpoint" | cut -c 12-)
+  echo -e "\nAssociated key $key to Confluent Cloud Kafka cluster $kafkaCluster at $endpoint"
 
   return 0
+}
+
+###
+# Deprecated 10/28/2020, use ccloud::set_kafka_cluster_use_from_api_key
+###
+function ccloud::set_kafka_cluster_use() {
+	echo "WARN: set_kafka_cluster_use is deprecated, use ccloud::set_kafka_cluster_use_from_api_key"
+	ccloud::set_kafka_cluster_use_from_api_key "$@"
 }
 
 
