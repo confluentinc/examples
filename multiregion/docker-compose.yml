@@ -198,5 +198,29 @@ services:
     cap_add:
       - NET_ADMIN
 
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:5.5.1
+    hostname: control-center
+    container_name: control-center
+    networks:
+      - n1
+    depends_on:
+      - zookeeper-west
+      - zookeeper-central
+      - zookeeper-east
+      - broker-west-1
+      - broker-west-2
+      - broker-east-3
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-west-2:19092,broker-east-3:19093,broker-east-4:19094
+      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183
+      CONTROL_CENTER_REPLICATION_FACTOR: 2
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 2
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 2
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 2
+      PORT: 9021
+
 networks:
   n1:
