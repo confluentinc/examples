@@ -611,13 +611,7 @@ EOF
 }
 
 function ccloud::validate_connector_up() {
-  connectorName=$1
-
-  if [[ $(ccloud connector list | grep $connectorName | awk '{print $5;}') == "RUNNING" ]]; then
-    return 0
-  fi
-  
-  return 1
+  ccloud connector list -o json | jq -e 'map(select(.name == "'"$1"'" and .status == "RUNNING")) | .[]' > /dev/null 2>&1
 }
 
 function ccloud::wait_for_connector_up() {
