@@ -510,28 +510,30 @@ function ccloud::validate_ccloud_config() {
 }
 
 function ccloud::validate_ksqldb_up() {
-  ksqldb_endpoint=$1
-  ccloud_config_file=$2
-  credentials=$3
+  [ -z "$1" ] && {
+    echo "ccloud::validate_ksqldb_up expects one parameter (ksqldb endpoint)"
+    exit 1
+  }
+
+  [ $# -gt 1 ] && echo "WARN: ccloud::validate_ksqldb_up function expects one parameter"
+
+  local ksqldb_endpoint=$1
 
   ccloud::validate_logged_in_ccloud_cli || exit 1
 
-  if [[ "$ksqldb_endpoint" == "" ]]; then
-    echo "ERROR: Provision a ksqlDB cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
-    exit 1
-  fi
-  ksqlDBAppId=$(ccloud ksql app list | grep "$ksqldb_endpoint" | awk '{print $1}')
-  if [[ "$ksqlDBAppId" == "" ]]; then
+  local ksqldb_meta=$(ccloud ksql app list -o json | jq -r 'map(select(.endpoint == "'"$ksqldb_endpoint"'")) | .[]')
+
+  local ksqldb_appid=$(echo "$ksqldb_meta" | jq -r '.id')
+  if [[ "$ksqldb_appid" == "" ]]; then
     echo "ERROR: Confluent Cloud ksqlDB endpoint $ksqldb_endpoint is not found. Provision a ksqlDB cluster via the Confluent Cloud UI and add the configuration parameter ksql.endpoint and ksql.basic.auth.user.info into your Confluent Cloud configuration file at $ccloud_config_file and try again."
     exit 1
   fi
-  STATUS=$(ccloud ksql app describe $ksqlDBAppId | grep "Status" | grep UP)
-  if [[ "$STATUS" == "" ]]; then
+
+  local ksqldb_status=$(echo "$ksqldb_meta" | jq -r '.status')
+  if [[ $ksqldb_status != "UP" ]]; then
     echo "ERROR: Confluent Cloud ksqlDB endpoint $ksqldb_endpoint with id $ksqlDBAppId is not in UP state. Troubleshoot and try again."
     exit 1
   fi
-
-  ccloud::validate_credentials_ksqldb "$ksqldb_endpoint" "$ccloud_config_file" "$credentials" || exit 1
 
   return 0
 }
@@ -682,12 +684,12 @@ END
 
 function ccloud::get_service_account() {
 
-	[ -z "$1" ] && {
-		echo "ccloud::get_service_account expects one parameter (API Key)"
-		exit 1
-	}
+  [ -z "$1" ] && {
+    echo "ccloud::get_service_account expects one parameter (API Key)"
+    exit 1
+  }
 
-	[ $# -gt 1 ] && echo "WARN: ccloud::get_service_account function expects one parameter, received two"
+  [ $# -gt 1 ] && echo "WARN: ccloud::get_service_account function expects one parameter, received two"
 
   local key="$1"
 
@@ -799,7 +801,8 @@ function ccloud::validate_ccloud_stack_up() {
   ccloud::set_kafka_cluster_use_from_api_key "$CLOUD_KEY" || exit 1
   ccloud::validate_schema_registry_up "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
   if $enable_ksqldb ; then
-    ccloud::validate_ksqldb_up "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_BASIC_AUTH_USER_INFO" || exit 1
+    ccloud::validate_ksqldb_up "$KSQLDB_ENDPOINT" || exit 1
+    ccloud::validate_credentials_ksqldb "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_BASIC_AUTH_USER_INFO" || exit 1
   fi
 }
 
@@ -814,12 +817,12 @@ function ccloud::validate_environment_set() {
 }
 
 function ccloud::set_kafka_cluster_use_from_api_key() {
-	[ -z "$1" ] && {
-		echo "ccloud::set_kafka_cluster_use_from_api_key expects one parameter (API Key)"
-		exit 1
-	}
+  [ -z "$1" ] && {
+    echo "ccloud::set_kafka_cluster_use_from_api_key expects one parameter (API Key)"
+    exit 1
+  }
 
-	[ $# -gt 1 ] && echo "WARN: ccloud::set_kafka_cluster_use_from_api_key function expects one parameter, received two"
+  [ $# -gt 1 ] && echo "WARN: ccloud::set_kafka_cluster_use_from_api_key function expects one parameter, received two"
 
   local key="$1"
 
@@ -840,8 +843,8 @@ function ccloud::set_kafka_cluster_use_from_api_key() {
 # Deprecated 10/28/2020, use ccloud::set_kafka_cluster_use_from_api_key
 ###
 function ccloud::set_kafka_cluster_use() {
-	echo "WARN: set_kafka_cluster_use is deprecated, use ccloud::set_kafka_cluster_use_from_api_key"
-	ccloud::set_kafka_cluster_use_from_api_key "$@"
+  echo "WARN: set_kafka_cluster_use is deprecated, use ccloud::set_kafka_cluster_use_from_api_key"
+  ccloud::set_kafka_cluster_use_from_api_key "$@"
 }
 
 
