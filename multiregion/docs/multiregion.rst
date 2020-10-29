@@ -743,6 +743,15 @@ If Pumba is overloading the Docker inter-container network, complete the followi
 #. Re-test in your environment.
 
 
+No detectable latency and jitter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If there is no performance difference between the sync replication for the ``multi-region-sync`` and the other topics,
+it is possible Pumba and 'tc' is not working properly.
+
+#. Restart the entire Docker Desktop.
+
+
 
 .. |Multi-region Architecture|
    image:: images/multi-region-base-v2.png
