@@ -39,7 +39,7 @@ It is intended to be a quick way to create resources in |ccloud| with correct cr
 - If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
 
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
-See :ref:`cloud-billing` for details.
+See `Confluent Cloud Billing <https://docs.confluent.io/cloud/current/billing.html>`__ for details.
 
 |ccloud| Resources
 ------------------
