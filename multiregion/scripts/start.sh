@@ -15,10 +15,6 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 
-for host in broker-west-1 broker-west-2 zookeeper-west zookeeper-central zookeeper-east broker-east-3 broker-east-4; do
-  docker-compose exec -u0 $host /tmp/install-tc.sh
-done
-
 ${DIR}/latency_docker.sh
 
 echo -e "\nSleeping 30 seconds"

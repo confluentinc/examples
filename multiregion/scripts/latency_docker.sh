@@ -1,4 +1,13 @@
 #!/bin/bash
+
+# How to run Pumba with Confluent Docker images
+# 1. Confluent's ubi-based Docker images do not have 'tc' installed, so this script installs required libraries
+# 2. Pumba cannot run 'tc' on containers that run as 'appuser', so pumba requires the flag '--tc-image gaiadocker/iproute2'
+
+for host in broker-west-1 broker-west-2 zookeeper-west zookeeper-central zookeeper-east broker-east-3 broker-east-4; do
+  docker-compose exec -u0 $host /tmp/install-tc.sh
+done
+
 export DOCKER_NETWORK=multiregion_n1
 export ZOOKEEPER_WEST_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' zookeeper-west)
 export ZOOKEEPER_EAST_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' zookeeper-east)
@@ -18,6 +27,7 @@ docker run --rm -d \
 	-v /var/run/docker.sock:/var/run/docker.sock \
 	-e SUBNET=${SUBNET} \
 	gaiaadm/pumba:0.6.4 -l debug netem --duration 24000h \
+                --tc-image gaiadocker/iproute2 \
   		--target $SUBNET \
                 delay --time 50 zookeeper-central --jitter 10 &
 
@@ -32,6 +42,7 @@ docker run --rm -d \
 	-e KAFKA_EAST_3_IP=${KAFKA_EAST_3_IP} \
 	-e KAFKA_EAST_4_IP=${KAFKA_EAST_4_IP} \
 	gaiaadm/pumba:0.6.4 -l debug netem --duration 24000h \
+                --tc-image gaiadocker/iproute2 \
 		--target ${ZOOKEEPER_EAST_IP} \
 		--target ${KAFKA_EAST_3_IP} \
 		--target ${KAFKA_EAST_4_IP} \
@@ -47,6 +58,7 @@ docker run --rm -d \
 	-e KAFKA_EAST_3_IP=${KAFKA_EAST_3_IP} \
 	-e KAFKA_EAST_4_IP=${KAFKA_EAST_4_IP} \
 	gaiaadm/pumba:0.6.4 -l debug netem --duration 24000h \
+                --tc-image gaiadocker/iproute2 \
 		--target ${ZOOKEEPER_EAST_IP} \
 		--target ${KAFKA_EAST_3_IP} \
 		--target ${KAFKA_EAST_4_IP} \
@@ -62,6 +74,7 @@ docker run --rm -d \
 	-e KAFKA_WEST_1_IP=${KAFKA_WEST_1_IP} \
 	-e KAFKA_WEST_2_IP=${KAFKA_WEST_2_IP} \
 	gaiaadm/pumba:0.6.4 -l debug netem --duration 24000h \
+                --tc-image gaiadocker/iproute2 \
 		--target ${ZOOKEEPER_WEST_IP} \
 		--target ${KAFKA_WEST_1_IP} \
 		--target ${KAFKA_WEST_2_IP} \
