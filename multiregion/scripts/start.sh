@@ -9,11 +9,20 @@ docker-compose up -d
 echo "Sleeping 30 seconds"
 sleep 30
 
+for host in broker-west-1 broker-west-2 zookeeper-west zookeeper-central zookeeper-east broker-east-3 broker-east-4; do
+  docker-compose exec -u0 $host /tmp/install-tc.sh || {
+    echo "ERROR: something went wrong while trying to install 'tc' on $host.  Please troubleshoot"
+    exit 1
+  }
+done
+
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then
   echo "Please troubleshoot"
   exit 1
 fi
+
+exit
 
 ${DIR}/latency_docker.sh
 

@@ -1,6 +1,3 @@
-# Intentionally pinning Docker images to 5.5.1 because they have 'tc' used by Pumba to simulate latency
-# Docker images 6.0.0 and later are based on ubi8 and they do not have 'tc'
-
 # docker-compose supports environment variable substitution with the ${VARIABLE-NAME} syntax.
 # Environment variables can be sourced in a variety of ways.  One of those ways is through
 # a well known '.env' file located in the same folder as the docker-compose.yml file.  See the Docker
@@ -18,41 +15,51 @@ version: '3'
 
 services:
   zookeeper-west:
-    image: confluentinc/cp-zookeeper:5.5.1
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-west
     container_name: zookeeper-west
     networks:
       - n1
     ports:
       - "2181:2181"
+    volumes:
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+    cap_add:
+      - NET_ADMIN
 
   zookeeper-central:
-    image: confluentinc/cp-zookeeper:5.5.1
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-central
     container_name: zookeeper-central
     networks:
       - n1
     ports:
       - "2182:2182"
+    volumes:
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 2
       ZOOKEEPER_CLIENT_PORT: 2182
       ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
     depends_on:
       - zookeeper-west
+    cap_add:
+      - NET_ADMIN
 
   zookeeper-east:
-    image: confluentinc/cp-zookeeper:5.5.1
+    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-east
     container_name: zookeeper-east
     networks:
       - n1
     ports:
       - "2183:2183"
+    volumes:
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 3
       ZOOKEEPER_CLIENT_PORT: 2183
@@ -60,9 +67,11 @@ services:
     depends_on:
       - zookeeper-west
       - zookeeper-central
+    cap_add:
+      - NET_ADMIN
 
   broker-west-1:
-    image: confluentinc/cp-server:5.5.1
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker-west-1
     container_name: broker-west-1
     networks:
@@ -72,6 +81,7 @@ services:
       - "8091:8091"
     volumes:
       - ./config:/etc/kafka/demo
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_BROKER_RACK: 'west'
@@ -91,9 +101,11 @@ services:
       - zookeeper-west
       - zookeeper-central
       - zookeeper-east
+    cap_add:
+      - NET_ADMIN
 
   broker-west-2:
-    image: confluentinc/cp-server:5.5.1
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker-west-2
     container_name: broker-west-2
     networks:
@@ -101,6 +113,8 @@ services:
     ports:
       - "9092:9092"
       - "8092:8092"
+    volumes:
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_BROKER_RACK: 'west'
@@ -121,9 +135,11 @@ services:
       - zookeeper-central
       - zookeeper-east
       - broker-west-1
+    cap_add:
+      - NET_ADMIN
 
   broker-east-3:
-    image: confluentinc/cp-server:5.5.1
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker-east-3
     container_name: broker-east-3
     networks:
@@ -133,6 +149,7 @@ services:
       - "8093:8093"
     volumes:
       - ./config:/etc/kafka/demo
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_BROKER_RACK: 'east'
@@ -154,9 +171,11 @@ services:
       - zookeeper-east
       - broker-west-1
       - broker-west-2
+    cap_add:
+      - NET_ADMIN
 
   broker-east-4:
-    image: confluentinc/cp-server:5.5.1
+    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
     hostname: broker-east-4
     container_name: broker-east-4
     networks:
@@ -164,6 +183,8 @@ services:
     ports:
       - "9094:9094"
       - "8094:8094"
+    volumes:
+      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 4
       KAFKA_BROKER_RACK: 'east'
@@ -186,6 +207,8 @@ services:
       - broker-west-1
       - broker-west-2
       - broker-east-3
+    cap_add:
+      - NET_ADMIN
 
 networks:
   n1:
