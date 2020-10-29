@@ -16,13 +16,8 @@ if [[ $? != 0 ]]; then
 fi
 
 for host in broker-west-1 broker-west-2 zookeeper-west zookeeper-central zookeeper-east broker-east-3 broker-east-4; do
-  docker-compose exec -u0 $host /tmp/install-tc.sh || {
-    echo "ERROR: something went wrong while trying to install 'tc' on $host.  Please troubleshoot"
-    exit 1
-  }
+  docker-compose exec -u0 $host /tmp/install-tc.sh
 done
-
-exit
 
 ${DIR}/latency_docker.sh
 
