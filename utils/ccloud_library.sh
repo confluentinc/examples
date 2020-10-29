@@ -508,7 +508,7 @@ function ccloud::validate_ccloud_config() {
 	local cfg_file="$1"
 	local bootstrap=$(grep "bootstrap\.servers" "$cfg_file" | cut -d'=' -f2-)
 	[ -z "$bootstrap" ] && {
-		echo "ERROR: Given config file does not contain, at minimum, the bootstrap.servers key value pair"
+		echo "ERROR: Cannot read the 'bootstrap.servers' key-value pair from $cfg_file."
 		exit 1;
 	}
 	return 0;
