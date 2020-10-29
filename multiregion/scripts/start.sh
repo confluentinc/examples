@@ -17,8 +17,8 @@ fi
 
 ${DIR}/latency_docker.sh
 
-echo -e "\nSleeping 30 seconds"
-sleep 30
+echo -e "\nSleeping 35 seconds"
+sleep 35
 
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then

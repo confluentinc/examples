@@ -22,8 +22,6 @@ services:
       - n1
     ports:
       - "2181:2181"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -39,8 +37,6 @@ services:
       - n1
     ports:
       - "2182:2182"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 2
       ZOOKEEPER_CLIENT_PORT: 2182
@@ -58,8 +54,6 @@ services:
       - n1
     ports:
       - "2183:2183"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 3
       ZOOKEEPER_CLIENT_PORT: 2183
@@ -81,7 +75,6 @@ services:
       - "8091:8091"
     volumes:
       - ./config:/etc/kafka/demo
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_BROKER_RACK: 'west'
@@ -113,8 +106,6 @@ services:
     ports:
       - "9092:9092"
       - "8092:8092"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_BROKER_RACK: 'west'
@@ -149,7 +140,6 @@ services:
       - "8093:8093"
     volumes:
       - ./config:/etc/kafka/demo
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_BROKER_RACK: 'east'
@@ -183,8 +173,6 @@ services:
     ports:
       - "9094:9094"
       - "8094:8094"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 4
       KAFKA_BROKER_RACK: 'east'
