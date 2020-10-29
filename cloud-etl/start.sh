@@ -58,7 +58,7 @@ retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT |
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
 # Set Kafka cluster
-ccloud::set_kafka_cluster_use $CLOUD_KEY $CONFIG_FILE || exit 1
+ccloud::set_kafka_cluster_use_from_api_key $CLOUD_KEY || exit 1
 
 #################################################################
 # Source: create and populate source endpoints
