@@ -501,7 +501,7 @@ function ccloud::delete_acls_ccloud_stack() {
 
 function ccloud::validate_ccloud_config() {
 	[ -z "$1" ] && {
-  	echo "ccloud::validate_ccloud_config expects one parameter (Config File)"
+  	echo "ccloud::validate_ccloud_config expects one parameter (configuration file with Confluent Cloud connection information)"
   	exit 1
   }
 
