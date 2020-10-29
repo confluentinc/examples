@@ -11,7 +11,7 @@
 # you can execute the `docker-compose config` command.  Take note that some demos provide additional 
 # environment variable values by exporting them in a script prior to running `docker-compose up`.
 ---
-version: '3'
+version: '3.5'
 
 services:
   zookeeper-west:
