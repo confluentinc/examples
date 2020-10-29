@@ -997,6 +997,9 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
+  # Delete API keys associated to the service account
+  ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
+
   if [[ $KSQLDB_ENDPOINT != "" ]]; then
     KSQLDB=$(ccloud ksql app list | grep $KSQLDB_NAME | awk '{print $1;}')
     echo "KSQLDB: $KSQLDB"
