@@ -1000,22 +1000,22 @@ function ccloud::destroy_ccloud_stack() {
   # Delete API keys associated to the service account
   ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
 
-  if [[ $KSQLDB_ENDPOINT != "" ]]; then
-    KSQLDB=$(ccloud ksql app list | grep $KSQLDB_NAME | awk '{print $1;}')
-    echo "KSQLDB: $KSQLDB"
-    ccloud ksql app delete $KSQLDB &>"$REDIRECT_TO"
+  if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
+    local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
+    echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id"
+    ccloud ksql app delete $ksqldb_id &> "$REDIRECT_TO"
   fi
 
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
+  local cluster_id=$(ccloud kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
+  ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
+
+	local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name == "'"$ENVIRONMENT_NAME"'")) | .[].id')
+  echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
+  ccloud environment delete $environment_id &> "$REDIRECT_TO"
+  
+	ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
-
-  CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
-  echo "CLUSTER: $CLUSTER"
-  ccloud kafka cluster delete $CLUSTER &> "$REDIRECT_TO"
-
-  ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')
-  echo "ENVIRONMENT: $ENVIRONMENT"
-  ccloud environment delete $ENVIRONMENT &> "$REDIRECT_TO"
 
   rm -f $CLIENT_CONFIG
 
