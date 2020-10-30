@@ -872,6 +872,12 @@ function ccloud::create_ccloud_stack() {
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
 
+  # Check if credit card is on file, which is required for cluster creation
+  if [[ $(ccloud admin payment describe) =~ "Payment method not found" ]]; then
+    echo "ERROR: No credit card on file. Add a payment method and try again."
+    exit 1
+  fi
+
   if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
     # Service Account is not received so it will be created
     local RANDOM_NUM=$((1 + RANDOM % 1000000))
