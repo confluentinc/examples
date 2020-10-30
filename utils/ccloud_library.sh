@@ -873,7 +873,7 @@ function ccloud::create_ccloud_stack() {
   enable_ksqldb=${1:-false}
 
   # Check if credit card is on file, which is required for cluster creation
-  if [[ $(ccloud admin payment describe) =~ "Payment method not found" ]]; then
+  if [[ $(ccloud admin payment describe) =~ "not found" ]]; then
     echo "ERROR: No credit card on file. Add a payment method and try again."
     exit 1
   fi
