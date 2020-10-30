@@ -703,8 +703,7 @@ Troubleshooting
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If containers fail to ping each other (for example, failures you may see when
-running the script
+If containers fail to ping each other (for example, failures when running the script
 :devx-examples:`validate_connectivity.sh|multiregion/scripts/validate_connectivity.sh`),
 complete the following steps:
 
@@ -712,7 +711,7 @@ complete the following steps:
 
    .. code-block:: bash
 
-         ./scripts/stop.sh
+      ./scripts/stop.sh
 
 #. Clean up the Docker environment.
 
@@ -747,9 +746,21 @@ No detectable latency and jitter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If there is no performance difference between the sync replication for the ``multi-region-sync`` and the other topics,
-it is possible Pumba and 'tc' is not working properly.
+it is possible Pumba and 'tc' is not working or cleaning up properly between runs.
 
-#. Restart the entire Docker Desktop.
+#. Restart Docker. You can restart it via the UI, or:
+
+   If you are running macOS:
+
+   .. code-block:: bash
+
+      osascript -e 'quit app "Docker"' && open -a Docker
+
+   If you are running Docker Toolbox:
+
+   .. code-block:: bash
+
+      docker-machine restart
 
 
 

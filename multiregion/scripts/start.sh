@@ -6,8 +6,8 @@ ${DIR}/stop.sh
 
 docker-compose up -d
 
-echo "Sleeping 30 seconds"
-sleep 30
+echo "Sleeping 20 seconds"
+sleep 20
 
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then
@@ -17,8 +17,8 @@ fi
 
 ${DIR}/latency_docker.sh
 
-echo -e "\nSleeping 35 seconds"
-sleep 35
+echo -e "\nSleeping 40 seconds"
+sleep 40
 
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then
