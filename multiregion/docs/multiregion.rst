@@ -152,38 +152,23 @@ Startup
 Inject latency and packet loss
 ------------------------------
 
-This example injects latency between the regions and packet loss to simulate the
-WAN link. It uses `Pumba <https://github.com/alexei-led/pumba>`__.
+This example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
+WAN link.
 
 |Multi-region latencies|
-
-#. Run the Dockerized Pumba script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh`:
-
-   .. code-block:: bash
-
-      ./scripts/latency_docker.sh
-
-#. Verify you see the following Docker containers by running the following command:
-
-   .. code-block:: bash
-
-      docker container ls --filter "name=pumba"
-
-   You should see:
-
-   .. code-block:: text
-
-      CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS               NAMES
-      652fcf244c4d        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-loss-east-west
-      5590c230aef1        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-loss-west-east
-      e60c3a0210e7        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-high-latency-west-east
-      d3c1faf97ba5        gaiaadm/pumba:0.6.4   "/pumba netem --dura…"   9 seconds ago       Up 8 seconds                            pumba-medium-latency-central
 
 #. View the IP addresses used by Docker for the example:
 
    .. code-block:: text
 
       docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
+
+#. Run the script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh` that installs and configures
+   ``tc`` on the Docker containers to simulate the latency and packet loss:
+
+   .. code-block:: bash
+
+      ./scripts/latency_docker.sh
 
 
 Replica Placement
@@ -703,8 +688,7 @@ Troubleshooting
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If containers fail to ping each other (for example, failures you may see when
-running the script
+If containers fail to ping each other (for example, failures when running the script
 :devx-examples:`validate_connectivity.sh|multiregion/scripts/validate_connectivity.sh`),
 complete the following steps:
 
@@ -712,13 +696,12 @@ complete the following steps:
 
    .. code-block:: bash
 
-         ./scripts/stop.sh
+      ./scripts/stop.sh
 
 #. Clean up the Docker environment.
 
    .. code-block:: bash
 
-      for c in $(docker container ls -q --filter "name=pumba"); do docker container stop "$c" && docker container rm "$c"; done
       docker-compose down -v --remove-orphans
 
       # More aggressive cleanup
@@ -733,14 +716,25 @@ complete the following steps:
    If the containers still fail to ping each other, restart Docker and run again.
 
 
-Pumba is overloading the Docker inter-container network
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+No detectable latency and jitter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If Pumba is overloading the Docker inter-container network, complete the following steps:
+If there is no performance difference between the sync replication for the ``multi-region-sync`` and the other topics,
+it is possible Docker networking not working or cleaning up properly between runs.
 
-#. Tweak the Pumba settings in :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh`.
+#. Restart Docker. You can restart it via the UI, or:
 
-#. Re-test in your environment.
+   If you are running macOS:
+
+   .. code-block:: bash
+
+      osascript -e 'quit app "Docker"' && open -a Docker
+
+   If you are running Docker Toolbox:
+
+   .. code-block:: bash
+
+      docker-machine restart
 
 
 
