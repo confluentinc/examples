@@ -8,7 +8,7 @@
 # - Pumba can't run 'tc' on the Confluent containers because Docker containers run as 'appuser', not 'root'
 # - Pumba could run with '--tc-image gaiadocker/iproute2' flag (does not require 'tc' on Docker containers)
 #   but that works only on the first run and fails on subsequent runs, requiring a Docker restart in between runs
-# - Because the outcomes are inconsistent, code uses 'tc' instead of Pumba
+# - Because the outcomes with Pumba are inconsistent, code uses 'tc' instead
 ##########################################################################
   
 export DOCKER_NETWORK=multiregion_n1
