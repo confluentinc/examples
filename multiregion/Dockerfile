@@ -13,9 +13,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+ARG REPOSITORY
+ARG IMAGE
 ARG CP_VERSION
 
-FROM confluentinc/cp-server:$CP_VERSION
+FROM $REPOSITORY/$IMAGE:$CP_VERSION
 
 USER root
 RUN yum install -y \

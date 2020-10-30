@@ -8,8 +8,9 @@ ${DIR}/stop.sh
 # Confluent's ubi-based Docker images do not have 'tc' installed
 echo
 echo "Build custom cp-zookeeper and cp-server images with 'tc' installed"
-docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG} -f Dockerfile-cp-zookeeper .
-docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG} -f Dockerfile-cp-server .
+for image in cp-zookeeper cp-server; do
+  docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg REPOSITORY=${REPOSITORY} --build-arg IMAGE=$image -t localbuild/${image}-tc:${CONFLUENT_DOCKER_TAG} -f Dockerfile .
+done
 
 docker-compose up -d
 
