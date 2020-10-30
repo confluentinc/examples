@@ -17,9 +17,6 @@ fi
 
 ${DIR}/latency_docker.sh
 
-echo -e "\nSleeping 40 seconds"
-sleep 40
-
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then
   echo "Please see the Troubleshooting section of the README"
