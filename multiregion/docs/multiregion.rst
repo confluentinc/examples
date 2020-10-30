@@ -170,8 +170,6 @@ WAN link.
 
       ./scripts/latency_docker.sh
 
-#. The warnings "Error: Exclusivity flag on, cannot modify." can safely be ignored.
-
 
 Replica Placement
 -----------------

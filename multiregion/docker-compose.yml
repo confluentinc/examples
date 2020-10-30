@@ -15,15 +15,13 @@ version: '3.5'
 
 services:
   zookeeper-west:
-    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-west
     container_name: zookeeper-west
     networks:
       - n1
     ports:
       - "2181:2181"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -32,15 +30,13 @@ services:
       - NET_ADMIN
 
   zookeeper-central:
-    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-central
     container_name: zookeeper-central
     networks:
       - n1
     ports:
       - "2182:2182"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 2
       ZOOKEEPER_CLIENT_PORT: 2182
@@ -51,15 +47,13 @@ services:
       - NET_ADMIN
 
   zookeeper-east:
-    image: ${REPOSITORY}/cp-zookeeper:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
     hostname: zookeeper-east
     container_name: zookeeper-east
     networks:
       - n1
     ports:
       - "2183:2183"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       ZOOKEEPER_SERVER_ID: 3
       ZOOKEEPER_CLIENT_PORT: 2183
@@ -71,7 +65,7 @@ services:
       - NET_ADMIN
 
   broker-west-1:
-    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
     hostname: broker-west-1
     container_name: broker-west-1
     networks:
@@ -81,7 +75,6 @@ services:
       - "8091:8091"
     volumes:
       - ./config:/etc/kafka/demo
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_BROKER_RACK: 'west'
@@ -105,7 +98,7 @@ services:
       - NET_ADMIN
 
   broker-west-2:
-    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
     hostname: broker-west-2
     container_name: broker-west-2
     networks:
@@ -113,8 +106,6 @@ services:
     ports:
       - "9092:9092"
       - "8092:8092"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_BROKER_RACK: 'west'
@@ -139,7 +130,7 @@ services:
       - NET_ADMIN
 
   broker-east-3:
-    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
     hostname: broker-east-3
     container_name: broker-east-3
     networks:
@@ -149,7 +140,6 @@ services:
       - "8093:8093"
     volumes:
       - ./config:/etc/kafka/demo
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_BROKER_RACK: 'east'
@@ -175,7 +165,7 @@ services:
       - NET_ADMIN
 
   broker-east-4:
-    image: ${REPOSITORY}/cp-server:${CONFLUENT_DOCKER_TAG}
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
     hostname: broker-east-4
     container_name: broker-east-4
     networks:
@@ -183,8 +173,6 @@ services:
     ports:
       - "9094:9094"
       - "8094:8094"
-    volumes:
-      - ./scripts/install-tc.sh:/tmp/install-tc.sh
     environment:
       KAFKA_BROKER_ID: 4
       KAFKA_BROKER_RACK: 'east'

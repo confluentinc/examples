@@ -1,8 +1,15 @@
 #!/bin/bash
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
+source ${DIR}/../.env
 
 ${DIR}/stop.sh
+
+# Confluent's ubi-based Docker images do not have 'tc' installed
+echo
+echo "Build custom cp-zookeeper and cp-server images with 'tc' installed"
+docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG} -f Dockerfile-cp-zookeeper .
+docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG} -f Dockerfile-cp-server .
 
 docker-compose up -d
 
@@ -25,12 +32,12 @@ fi
 
 ${DIR}/create-topics.sh
 
-echo "Sleeping 5 seconds"
+echo -e "\nSleeping 5 seconds"
 sleep 5
 
 ${DIR}/describe-topics.sh
 
-echo "Sleeping 5 seconds"
+echo -e "\nSleeping 5 seconds"
 sleep 5
 
 ${DIR}/run-producer.sh
