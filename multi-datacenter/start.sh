@@ -49,6 +49,7 @@ echo
 MAX_WAIT=300
 echo "Waiting up to $MAX_WAIT seconds for Confluent Control Center to start"
 retry $MAX_WAIT check_control_center_up control-center || exit 1
-echo "Control Center has started!"
 
-./read-topics.sh
+echo -e "\n\n\n******************************************************************"
+echo -e "DONE! Connect to Confluent Control Center at http://localhost:9021"
+echo -e "******************************************************************\n"
