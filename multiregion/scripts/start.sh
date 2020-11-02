@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source ${DIR}/../.env
 
 ${DIR}/stop.sh
-
+set -x
 # Confluent's ubi-based Docker images do not have 'tc' installed
 echo
 echo "Build custom cp-zookeeper and cp-server images with 'tc' installed"
