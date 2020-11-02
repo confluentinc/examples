@@ -8,14 +8,14 @@ Overview
 ========
 
 This ``ccloud-stack`` utility creates a stack of fully managed services in |ccloud|.
-It is a quick way to create fully managed resources in |ccloud|, which you can then use for learning and building other demos. 
+It is a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
 The utility uses |ccloud| CLI under the hood to dynamically do the following in |ccloud| :
 
 -  Create a new environment
 -  Create a new service account
 -  Create a new Kafka cluster and associated credentials
 -  Enable Schema Registry and associated credentials
--  Create a new ksqlDB app and associated credentials
+-  (Optional) Create a new ksqlDB app and associated credentials
 -  Create ACLs with wildcard for the service account
 
 .. figure:: images/ccloud-stack-resources.png 
@@ -29,16 +29,53 @@ This file is particularly useful because it contains connection information to y
 Caution
 =======
 
+Billing
+-------
+
 This utility uses real |ccloud| resources.
+It is intended to be a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
+
+- If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you create a topic, produce data to the |ak| cluster, or provision any other fully-managed service.
+- If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
+
 To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
+See `Confluent Cloud Billing <https://docs.confluent.io/cloud/current/billing.html>`__ for details.
+
+|ccloud| Resources
+------------------
+
+Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
+By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you have to explicitly enable it.
+
+.. code-block:: text
+
+   ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME -o json
+
+   ccloud environment create $ENVIRONMENT_NAME -o json
+
+   ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION
+   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for kafka
+
+   ccloud schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json
+   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
+
+   # By default, ccloud-stack does not enable Confluent Cloud ksqlDB, but if you explicitly enable it:
+   ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME"
+   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB
+
+   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
+
 
 =============
 Prerequisites
 =============
 
 - Create a user account in `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__
-- Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
+- Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.13.0 or later.
 - ``jq`` tool
+
+Note that ``ccloud-stack`` has been validated on macOS 10.15.3 with bash version 3.2.57.
+If you encounter issues on any other operating systems or versions, please open a GitHub issue at `confluentinc/examples <https://github.com/confluentinc/examples>`__.
 
 
 .. _ccloud-stack-usage:
@@ -74,6 +111,85 @@ Create a ccloud-stack
 
       ./ccloud_stack_create.sh
 
+#. You will be prompted twice. Note the second prompt which is where you can optionally enable |ccloud| ksqlDB.
+
+   .. code-block:: text
+
+      Do you still want to run this script? [y/n] y
+      Do you also want to create a Confluent Cloud ksqlDB app (hourly charges may apply)? [y/n] n
+
+#. ``ccloud-stack`` configures permissive ACLs with wildcards, which is useful for development and learning environments. In production, configure much stricter ACLs.
+
+   If you ran without ksqlDB (in the output below, service account ID is 119612):
+
+   .. code-block:: text
+   
+        ServiceAccountId | Permission |    Operation     |     Resource     |     Name      |  Type    
+      +------------------+------------+------------------+------------------+---------------+---------+
+        User:119612      | ALLOW      | READ             | GROUP            | *             | LITERAL  
+        User:119612      | ALLOW      | WRITE            | GROUP            | *             | LITERAL  
+        User:119612      | ALLOW      | CREATE           | GROUP            | *             | LITERAL  
+        User:119612      | ALLOW      | CREATE           | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | DELETE           | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | WRITE            | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | DESCRIBE         | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | READ             | TOPIC            | *             | LITERAL  
+        User:119612      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *             | LITERAL  
+        User:119612      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *             | LITERAL  
+        User:119612      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster | LITERAL  
+
+   If you ran with ksqlDB:
+
+   .. code-block:: text
+   
+        ServiceAccountId | Permission |    Operation     |     Resource     |             Name             |   Type    
+      +------------------+------------+------------------+------------------+------------------------------+----------+
+        User:119612      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *                            | LITERAL   
+        User:119612      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER            | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DELETE           | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | READ             | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | CREATE           | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | WRITE            | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER_CONFIGS    | GROUP            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | CLUSTER          | kafka-cluster                | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | CLUSTER          | kafka-cluster                | LITERAL   
+        User:119612      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster                | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | GROUP            | *                            | LITERAL   
+        User:119612      | ALLOW      | READ             | GROUP            | *                            | LITERAL   
+        User:119612      | ALLOW      | WRITE            | GROUP            | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | *                            | LITERAL   
+        User:119612      | ALLOW      | CREATE           | GROUP            | *                            | LITERAL   
+        User:119616      | ALLOW      | CREATE           | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER            | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DELETE           | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | READ             | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE         | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER_CONFIGS    | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | WRITE            | TOPIC            | _confluent-ksql-pksqlc-e0q79 | PREFIXED  
+        User:119616      | ALLOW      | ALTER            | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | DELETE           | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | WRITE            | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | CREATE           | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | ALTER_CONFIGS    | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | READ             | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119616      | ALLOW      | DESCRIBE         | TOPIC            | pksqlc-e0q79                 | PREFIXED  
+        User:119612      | ALLOW      | CREATE           | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | WRITE            | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | DESCRIBE         | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | READ             | TOPIC            | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *                            | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *                            | LITERAL   
+        User:119612      | ALLOW      | DELETE           | TOPIC            | *                            | LITERAL   
+        User:119616      | ALLOW      | WRITE            | TRANSACTIONAL_ID | pksqlc-e0q79                 | LITERAL   
+        User:119616      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | pksqlc-e0q79                 | LITERAL   
+
 #. In addition to creating all the resources in |ccloud| with associated service account and ACLs, running ``ccloud-stack`` also generates a local configuration file with all the |ccloud| connection information, which is useful for other demos/automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
 
    .. code-block:: text
@@ -85,11 +201,10 @@ Create a ccloud-stack
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
       # KSQLDB APP ID: <KSQLDB APP ID>
       # ------------------------------
-      ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
       bootstrap.servers=<BROKER ENDPOINT>
-      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
       basic.auth.credentials.source=USER_INFO
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
@@ -135,9 +250,9 @@ Use Existing Environment
 
 By default, a new ``ccloud-stack`` creates a new environment. To reuse an existing environment, create the ``ccloud-stack`` and override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the following example:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
+   ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
 
 ===================
@@ -158,16 +273,29 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
       source ./ccloud_library.sh
 
-#. Run the bash functions directly from the command line. To create the ``cloud-stack``:
+#. Optionally override the ``CLUSTER_CLOUD`` and ``CLUSTER_REGION`` configuration parameters.
 
    .. code:: bash
 
       CLUSTER_CLOUD=aws
       CLUSTER_REGION=us-west-2 
+
+#. Run the bash function directly from the command line.
+
+   To create the ``cloud-stack`` without |ccloud| ksqlDB:
+
+   .. code:: bash
+
       ccloud::create_ccloud_stack
 
+   To create the ``cloud-stack`` with |ccloud| ksqlDB:
 
-   To destroy the ``ccloud-stack``:
+   .. code:: bash
+
+      ccloud::create_ccloud_stack true
+
+
+#. To destroy the ``ccloud-stack``:
 
    .. code:: bash
 
@@ -178,6 +306,7 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 Additional Resources
 ====================
 
--  Refer to `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud>`__ whitepaper for a practical guide to configuring, monitoring, and optimizing your Kafka client applications when using Confluent Cloud.
+- For a practical guide to configuring, monitoring, and optimizing your Kafka
+  client applications when using |ccloud|, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__.
 - Read this blog post about `using Confluent Cloud to manage data pipelines that use both on-premise and cloud deployments <https://www.confluent.io/blog/multi-cloud-integration-across-distributed-systems-with-kafka-connect/>`__.
--  For sample usage of ``ccloud-stack``, see :ref:`ccloud-demos-overview` .
+- For sample usage of ``ccloud-stack``, see :ref:`ccloud-demos-overview` .

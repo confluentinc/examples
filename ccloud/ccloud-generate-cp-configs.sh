@@ -57,10 +57,9 @@
 #   $ cat $HOME/.ccloud/config
 #
 #   bootstrap.servers=<BROKER ENDPOINT>
-#   ssl.endpoint.identification.algorithm=https
 #   security.protocol=SASL_SSL
 #   sasl.mechanism=PLAIN
-#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+#   sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
 #
 # If you are using Confluent Cloud Schema Registry, add the following configuration parameters
 # either to file above (arg 1 CONFIG_FILE) or to a separate file (arg 2 SR_CONFIG_FILE)
@@ -123,8 +122,8 @@ BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS/\\/}
 SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CONFIG_FILE | cut -d'=' -f2- )
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
 SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
-CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F'"' '$0=$2' )
-CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F'"' '$0=$2' )
+CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F[\"\'] '$0=$2' )
+CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F[\"\'] '$0=$2' )
 
 # Schema Registry
 BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $SR_CONFIG_FILE | awk -F'=' '{print $2;}' )
@@ -723,16 +722,16 @@ echo "$ENV_CONFIG"
 rm -f $ENV_CONFIG
 
 cat <<EOF >> $ENV_CONFIG
-export BOOTSTRAP_SERVERS='$BOOTSTRAP_SERVERS'
-export SASL_JAAS_CONFIG='$SASL_JAAS_CONFIG'
-export SASL_JAAS_CONFIG_PROPERTY_FORMAT='$SASL_JAAS_CONFIG_PROPERTY_FORMAT'
-export REPLICATOR_SASL_JAAS_CONFIG='$REPLICATOR_SASL_JAAS_CONFIG'
-export BASIC_AUTH_CREDENTIALS_SOURCE=$BASIC_AUTH_CREDENTIALS_SOURCE
-export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-export SCHEMA_REGISTRY_URL=$SCHEMA_REGISTRY_URL
-export CLOUD_KEY=$CLOUD_KEY
-export CLOUD_SECRET=$CLOUD_SECRET
-export KSQLDB_ENDPOINT=$KSQLDB_ENDPOINT
-export KSQLDB_BASIC_AUTH_USER_INFO=$KSQLDB_BASIC_AUTH_USER_INFO
+export BOOTSTRAP_SERVERS="$BOOTSTRAP_SERVERS"
+export SASL_JAAS_CONFIG="$SASL_JAAS_CONFIG"
+export SASL_JAAS_CONFIG_PROPERTY_FORMAT="$SASL_JAAS_CONFIG_PROPERTY_FORMAT"
+export REPLICATOR_SASL_JAAS_CONFIG="$REPLICATOR_SASL_JAAS_CONFIG"
+export BASIC_AUTH_CREDENTIALS_SOURCE="$BASIC_AUTH_CREDENTIALS_SOURCE"
+export SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO="$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO"
+export SCHEMA_REGISTRY_URL="$SCHEMA_REGISTRY_URL"
+export CLOUD_KEY="$CLOUD_KEY"
+export CLOUD_SECRET="$CLOUD_SECRET"
+export KSQLDB_ENDPOINT="$KSQLDB_ENDPOINT"
+export KSQLDB_BASIC_AUTH_USER_INFO="$KSQLDB_BASIC_AUTH_USER_INFO"
 EOF
 chmod $PERM $ENV_CONFIG

@@ -54,7 +54,7 @@ function ccloud::validate_expect_installed() {
 }
 function ccloud::validate_ccloud_cli_installed() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
-    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli) and try again"
+    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/ccloud-cli/install.html) and try again"
     exit 1
   fi
 }
@@ -611,13 +611,7 @@ EOF
 }
 
 function ccloud::validate_connector_up() {
-  connectorName=$1
-
-  if [[ $(ccloud connector list | grep $connectorName | awk '{print $5;}') == "RUNNING" ]]; then
-    return 0
-  fi
-  
-  return 1
+  ccloud connector list -o json | jq -e 'map(select(.name == "'"$1"'" and .status == "RUNNING")) | .[]' > /dev/null 2>&1
 }
 
 function ccloud::wait_for_connector_up() {
@@ -699,16 +693,19 @@ END
 }
 
 function ccloud::get_service_account() {
-  CLOUD_KEY=$1
-  CONFIG_FILE=$2
 
-  if [[ "$CLOUD_KEY" == "" ]]; then
-    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
-    exit 1
-  fi
-  serviceAccount=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $3;}')
+	[ -z "$1" ] && {
+		echo "ccloud::get_service_account expects one parameter (API Key)"
+		exit 1
+	}
+
+	[ $# -gt 1 ] && echo "WARN: ccloud::get_service_account function expects one parameter, received two"
+
+  local key="$1"
+
+  serviceAccount=$(ccloud api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'"))) | .[].owner')
   if [[ "$serviceAccount" == "" ]]; then
-    echo "ERROR: Could not associate key $CLOUD_KEY to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
+    echo "ERROR: Could not associate key $key to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
   fi
   if ! [[ "$serviceAccount" =~ ^-?[0-9]+$ ]]; then
@@ -811,7 +808,7 @@ function ccloud::validate_ccloud_stack_up() {
   fi
 
   ccloud::validate_environment_set || exit 1
-  ccloud::set_kafka_cluster_use "$CLOUD_KEY" "$CONFIG_FILE" || exit 1
+  ccloud::set_kafka_cluster_use_from_api_key "$CLOUD_KEY" || exit 1
   ccloud::validate_schema_registry_up "$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO" "$SCHEMA_REGISTRY_URL" || exit 1
   if $enable_ksqldb ; then
     ccloud::validate_ksqldb_up "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_BASIC_AUTH_USER_INFO" || exit 1
@@ -828,24 +825,35 @@ function ccloud::validate_environment_set() {
 
 }
 
-function ccloud::set_kafka_cluster_use() {
-  CLOUD_KEY=$1
-  CONFIG_FILE=$2
+function ccloud::set_kafka_cluster_use_from_api_key() {
+	[ -z "$1" ] && {
+		echo "ccloud::set_kafka_cluster_use_from_api_key expects one parameter (API Key)"
+		exit 1
+	}
 
-  if [[ "$CLOUD_KEY" == "" ]]; then
-    echo "ERROR: could not parse the broker credentials from $CONFIG_FILE. Verify your credentials and try again."
-    exit 1
-  fi
-  kafkaCluster=$(ccloud api-key list | grep "$CLOUD_KEY" | awk '{print $8;}')
+	[ $# -gt 1 ] && echo "WARN: ccloud::set_kafka_cluster_use_from_api_key function expects one parameter, received two"
+
+  local key="$1"
+
+  local kafkaCluster=$(ccloud api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'" and .resource_type == "kafka"))) | .[].resource_id')
   if [[ "$kafkaCluster" == "" ]]; then
-    echo "ERROR: Could not associate key $CLOUD_KEY to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
+    echo "ERROR: Could not associate key $key to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
   fi
+
   ccloud kafka cluster use $kafkaCluster
-  endpoint=$(ccloud kafka cluster describe $kafkaCluster -o json | jq -r ".endpoint" | cut -c 12-)
-  echo -e "\nAssociated key $CLOUD_KEY to Confluent Cloud Kafka cluster $kafkaCluster at $endpoint"
+  local endpoint=$(ccloud kafka cluster describe $kafkaCluster -o json | jq -r ".endpoint" | cut -c 12-)
+  echo -e "\nAssociated key $key to Confluent Cloud Kafka cluster $kafkaCluster at $endpoint"
 
   return 0
+}
+
+###
+# Deprecated 10/28/2020, use ccloud::set_kafka_cluster_use_from_api_key
+###
+function ccloud::set_kafka_cluster_use() {
+	echo "WARN: set_kafka_cluster_use is deprecated, use ccloud::set_kafka_cluster_use_from_api_key"
+	ccloud::set_kafka_cluster_use_from_api_key "$@"
 }
 
 
@@ -855,8 +863,14 @@ function ccloud::set_kafka_cluster_use() {
 #
 function ccloud::create_ccloud_stack() {
   QUIET="${QUIET:-true}"
-  REPLICATION_FACTOR=${REPLICATION_FACTOR:-1}
-  enable_ksqldb=$1
+  REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
+  enable_ksqldb=${1:-false}
+
+  # Check if credit card is on file, which is required for cluster creation
+  if [[ $(ccloud admin payment describe) =~ "not found" ]]; then
+    echo "ERROR: No credit card on file. Add a payment method and try again."
+    exit 1
+  fi
 
   if [[ -z "$SERVICE_ACCOUNT_ID" ]]; then
     # Service Account is not received so it will be created
@@ -945,11 +959,10 @@ EOF
     fi
     cat <<EOF >> $CLIENT_CONFIG
 # --------------------------------------
-ssl.endpoint.identification.algorithm=https
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${CLOUD_API_KEY}" password\="${CLOUD_API_SECRET}";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='${CLOUD_API_KEY}' password='${CLOUD_API_SECRET}';
 basic.auth.credentials.source=USER_INFO
 schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
 schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $2}'`
@@ -984,22 +997,25 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
-  if [[ $KSQLDB_ENDPOINT != "" ]]; then
-    KSQLDB=$(ccloud ksql app list | grep $KSQLDB_NAME | awk '{print $1;}')
-    echo "KSQLDB: $KSQLDB"
-    ccloud ksql app delete $KSQLDB &>"$REDIRECT_TO"
+  # Delete API keys associated to the service account
+  ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
+
+  if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
+    local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
+    echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id"
+    ccloud ksql app delete $ksqldb_id &> "$REDIRECT_TO"
   fi
 
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
+  local cluster_id=$(ccloud kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
+  ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
+
+	local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name == "'"$ENVIRONMENT_NAME"'")) | .[].id')
+  echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
+  ccloud environment delete $environment_id &> "$REDIRECT_TO"
+  
+	ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
-
-  CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
-  echo "CLUSTER: $CLUSTER"
-  ccloud kafka cluster delete $CLUSTER &> "$REDIRECT_TO"
-
-  ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')
-  echo "ENVIRONMENT: $ENVIRONMENT"
-  ccloud environment delete $ENVIRONMENT &> "$REDIRECT_TO"
 
   rm -f $CLIENT_CONFIG
 

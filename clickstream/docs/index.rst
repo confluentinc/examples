@@ -8,8 +8,6 @@ These steps will guide you through how to setup your environment and run the cli
 .. figure:: images/clickstream_demo_flow.png
    :alt: image
 
-
-
 .. include:: ../../../../quickstart/includes/docker-prereqs.rst
 
 - If you are using Linux as your host, for the Elasticsearch container to start successfully you must first run: 
@@ -28,7 +26,7 @@ Docker images with the required networking and dependencies. The images
 are quite large and depending on your network connection may take 
 10-15 minutes to download.
 
-#. Clone the Confluent examples repository.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. code:: bash
 

@@ -137,7 +137,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Auto-generate Configurations to connect to |ccloud|
 ---------------------------------------------------
 
-The :ref:`configuration generation script <auto-generate-configs>` reads a configuration file and auto-generates delta configurations for all |cp| components and clients.
+The `configuration generation script <https://docs.confluent.io/cloud/cp-component/auto-generate-configs.html>`__ reads a configuration file and auto-generates delta configurations for all |cp| components and clients.
 Use these per-component configurations for |cp| components and clients connecting to |ccloud|:
 
 * |cp| Components:
@@ -206,7 +206,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
       ./ccloud_stack_create.sh
 
-#. Run the :ref:`configuration generation script <auto-generate-configs>`, passing in that local configuration file (created in previous step) as input. This script generates delta configuration files for all |cp| components and clients, including information for bootstrap servers, endpoints, and credentials required to connect to |ccloud|.
+#. Run the `configuration generation script <https://docs.confluent.io/cloud/cp-component/auto-generate-configs.html>`__ , passing in that local configuration file (created in previous step) as input. This script generates delta configuration files for all |cp| components and clients, including information for bootstrap servers, endpoints, and credentials required to connect to |ccloud|.
 
    .. sourcecode:: bash
 
@@ -230,7 +230,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
       docker-compose up -d <service>
 
-   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in :ref:`connect_adding_connectors_to_images`, and then substitute that Docker image in your Docker Compose file.
+   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in `Add Connectors or Software <https://docs.confluent.io/connect/extending.html>`__, and then substitute that Docker image in your Docker Compose file.
 
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
@@ -239,8 +239,12 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 Additional Resources
 ====================
 
--  For a practical guide to configuring, monitoring, and optimizing your |ak| client applications, see the `Best Practices for Developing Kafka Applications on Confluent Cloud <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf>`__ whitepaper.
--  Learn how to use |crep-full| to copy Kafka data to |ccloud|, in different configurations that allow |kconnect-long| to be backed to |ccloud| or to your origin Kafka cluster. See :ref:`replicator-to-cloud-configurations` for more information.
+-  For a practical guide to configuring, monitoring, and optimizing your |ak|
+   client applications, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__.
+-  Learn how to use |crep-full| to copy Kafka data to |ccloud|, in different
+   configurations that allow |kconnect-long| to be backed to |ccloud| or to your
+   origin Kafka cluster. See :ref:`replicator-to-cloud-configurations` for more
+   information.
 
 
 .. toctree::

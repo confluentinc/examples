@@ -40,6 +40,28 @@ function validate_version_confluent_cli_v2() {
   return 0
 }
 
+function get_version_confluent_cli() {
+  confluent version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
+}
+
+function version_gt() {
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
+
+function validate_version_confluent_cli_for_cp() {
+
+  validate_version_confluent_cli_v2 || exit 1
+
+  VER_MIN="1.11.0"
+  VER_MAX="1.16.3"
+  CLI_VER=$(get_version_confluent_cli)
+
+  if version_gt $VER_MIN $CLI_VER || version_gt $CLI_VER $VER_MAX ; then
+    echo "Confluent CLI version ${CLI_VER} is not compatibile with the currently running Confluent Platform version ${CONFLUENT}. Set Confluent CLI version appropriately, see https://docs.confluent.io/current/installation/versions-interoperability.html#confluent-cli for more information."
+    exit 1
+  fi
+}
+
 function check_sqlite3() {
   if [[ $(type sqlite3 2>&1) =~ "not found" ]]; then
     echo "'sqlite3' is not found. Install sqlite3 and try again."
@@ -363,6 +385,15 @@ check_connect_up_logFile() {
     return 1
   fi
   return 0
+}
+
+host_check_ksqlDBserver_up()
+{
+  KSQLDB_CLUSTER_ID=$(curl -s http://localhost:8088/info | jq -r ".KsqlServerInfo.ksqlServiceId")
+  if [ "$KSQLDB_CLUSTER_ID" == "ksql-cluster" ]; then
+    return 0
+  fi
+  return 1
 }
 
 check_connect_up() {

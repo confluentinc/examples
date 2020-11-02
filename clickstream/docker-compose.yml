@@ -78,7 +78,7 @@ services:
 
       # ksqlDB embedded Connect worker
       KSQL_CONNECT_BOOTSTRAP_SERVERS: kafka:29092
-      KSQL_CONNECT_REST_ADVERTISED_HOST_NAME: ksqldb'
+      KSQL_CONNECT_REST_ADVERTISED_HOST_NAME: ksqldb
       KSQL_CONNECT_REST_PORT: 8083
       KSQL_CONNECT_GROUP_ID: ksqldb-kafka-connect-group-01
       KSQL_CONNECT_CONFIG_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-configs
@@ -93,6 +93,7 @@ services:
       KSQL_CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: '[%d] %p %X{connector.context}%m (%c:%L)%n'
       KSQL_CONNECT_PLUGIN_PATH: '/usr/share/java,/usr/share/confluent-hub-components/,/data/connect-jars'
 
+      KSQL_KSQL_SERVICE_ID: "ksql-cluster"
       CONNECT_HOST: ksqldb-server
       ELASTIC_HOST: elasticsearch
       GRAFANA_HOST: grafana

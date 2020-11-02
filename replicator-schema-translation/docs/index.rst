@@ -25,7 +25,7 @@ Prerequisites
 Run Example
 ===========
 
-1. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. sourcecode:: bash
 
@@ -120,9 +120,9 @@ Suggested Reading
 * :ref:`replicator_quickstart`
 * :ref:`replicator_failover`
 
-* These sections in :ref:`Replicator Configuration Options<connect_replicator_config_options>`: 
+* These sections in `Replicator Configuration Properties <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html>`__:
 
-  - :ref:`rep-source-topics`
-  - :ref:`rep-destination-topics`
-  - :ref:`schema_translation`
+  - `Source Topics <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#destination-data-conversion>`__
+  - `Destination Topics <https://docs.confluent.io//kafka-connect-replicator/current/configuration_options.html#destination-topics>`__
+  - `Schema Translation <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#schema-translation>`__
 

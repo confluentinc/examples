@@ -4,9 +4,16 @@
 source ../utils/helper.sh
 source ../utils/ccloud_library.sh
 
-check_env || exit 1
-check_running_cp ${CONFLUENT} || exit
-validate_version_confluent_cli_v2 || exit
+check_env \
+  && print_pass "Confluent Platform installed" \
+  || exit 1
+check_running_cp ${CONFLUENT} \
+  && print_pass "Confluent Platform version ${CONFLUENT} ok" \
+  || exit 1
+validate_version_confluent_cli_for_cp \
+  && print_pass "Confluent CLI version ok" \
+  || exit 1
+sleep 1
 
 ./stop.sh
 
