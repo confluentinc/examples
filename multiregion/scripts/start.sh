@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source ${DIR}/../.env
 
 ${DIR}/stop.sh
-set -x
+
 # Confluent's ubi-based Docker images do not have 'tc' installed
 echo
 echo "Build custom cp-zookeeper and cp-server images with 'tc' installed"
@@ -53,8 +53,19 @@ sleep 5
 
 ${DIR}/jmx_metrics.sh
 
+echo -e "\nDegrade west region"
+docker-compose stop broker-west-1
+
+echo "Sleeping 30 seconds"
+sleep 30
+
+${DIR}/describe-topics.sh
+
+echo "Sleeping 30 seconds"
+sleep 30
+
 echo -e "\nFail west region"
-docker-compose stop broker-west-1 broker-west-2 zookeeper-west
+docker-compose stop broker-west-2 zookeeper-west
 
 echo "Sleeping 30 seconds"
 sleep 30
