@@ -53,8 +53,19 @@ sleep 5
 
 ${DIR}/jmx_metrics.sh
 
+echo -e "\nDegrade west region"
+docker-compose stop broker-west-1
+
+echo "Sleeping 30 seconds"
+sleep 30
+
+${DIR}/describe-topics.sh
+
+echo "Sleeping 30 seconds"
+sleep 30
+
 echo -e "\nFail west region"
-docker-compose stop broker-west-1 broker-west-2 zookeeper-west
+docker-compose stop broker-west-2 zookeeper-west
 
 echo "Sleeping 30 seconds"
 sleep 30

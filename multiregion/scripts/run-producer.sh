@@ -38,3 +38,33 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-
         bootstrap.servers=broker-west-1:19091,broker-east-3:19093 \
         compression.type=none \
         batch.size=8196
+
+docker-compose exec broker-west-1 kafka-producer-perf-test --topic under-min-isr-promotion \
+    --num-records 5000 \
+    --record-size 5000 \
+    --throughput -1 \
+    --producer-props \
+        acks=all \
+        bootstrap.servers=broker-west-1:19091,broker-east-3:19093 \
+        compression.type=none \
+        batch.size=8196
+
+docker-compose exec broker-west-1 kafka-producer-perf-test --topic under-replicated-promotion \
+    --num-records 5000 \
+    --record-size 5000 \
+    --throughput -1 \
+    --producer-props \
+        acks=all \
+        bootstrap.servers=broker-west-1:19091,broker-east-3:19093 \
+        compression.type=none \
+        batch.size=8196
+
+docker-compose exec broker-west-1 kafka-producer-perf-test --topic leader-is-observer-promotion \
+    --num-records 5000 \
+    --record-size 5000 \
+    --throughput -1 \
+    --producer-props \
+        acks=all \
+        bootstrap.servers=broker-west-1:19091,broker-east-3:19093 \
+        compression.type=none \
+        batch.size=8196

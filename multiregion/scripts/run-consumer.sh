@@ -16,3 +16,24 @@ docker-compose exec broker-east-3 kafka-consumer-perf-test --topic multi-region-
     --broker-list broker-west-1:19091,broker-east-3:19093 \
     --timeout 20000 \
     --consumer.config /etc/kafka/demo/consumer-east.config
+
+docker-compose exec broker-east-3 kafka-consumer-perf-test --topic under-min-isr-promotion \
+    --messages 5000 \
+    --threads 1 \
+    --broker-list broker-west-1:19091,broker-east-3:19093 \
+    --timeout 20000 \
+    --consumer.config /etc/kafka/demo/consumer-east.config
+
+docker-compose exec broker-east-3 kafka-consumer-perf-test --topic under-replicated-promotion \
+    --messages 5000 \
+    --threads 1 \
+    --broker-list broker-west-1:19091,broker-east-3:19093 \
+    --timeout 20000 \
+    --consumer.config /etc/kafka/demo/consumer-east.config
+
+docker-compose exec broker-east-3 kafka-consumer-perf-test --topic leader-is-observer-promotion \
+    --messages 5000 \
+    --threads 1 \
+    --broker-list broker-west-1:19091,broker-east-3:19093 \
+    --timeout 20000 \
+    --consumer.config /etc/kafka/demo/consumer-east.config
