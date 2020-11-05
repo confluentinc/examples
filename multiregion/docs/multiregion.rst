@@ -656,6 +656,21 @@ In this section, you will simulate a region failure by bringing down the ``west`
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
+      ==> Describe topic under-min-isr-promotion
+
+      Topic: under-min-isr-promotion	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=2,confluent.placement.constraints={"observerPromotionPolicy":"under-min-isr","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: under-min-isr-promotion	Partition: 0	Leader: 4	Replicas: 2,1,4,3	Isr: 4,3	Offline: 2,1	Observers: 4,3
+
+      ==> Describe topic under-replicated-promotion
+
+      Topic: under-replicated-promotion	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"under-replicated","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: under-replicated-promotion	Partition: 0	Leader: 4	Replicas: 1,2,3,4	Isr: 4,3	Offline: 1,2	Observers: 3,4
+
+      ==> Describe topic leader-is-observer-promotion
+
+      Topic: leader-is-observer-promotion	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"leader-is-observer","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: leader-is-observer-promotion	Partition: 0	Leader: none	Replicas: 1,2,4,3	Isr: 2	Offline: 1,2	Observers: 4,3
+
 #. Observe the following:
 
    - In the first scenario, the ``single-region`` topic has no leader, because
@@ -666,11 +681,15 @@ In this section, you will simulate a region failure by bringing down the ``west`
      elected a new leader in ``east`` (for example, replica 3 in the previous
      output). Clients can failover to those replicas in the ``east`` region.
 
-   - In the last two scenarios, the ``multi-region-async`` and
-     ``multi-region-default`` topics have no leader, because they had only two
-     replicas in the ISR, both of which were in the ``west`` region and are now
-     down. The observers in the ``east`` region are not eligible to become
+   - The ``multi-region-async``, ``multi-region-default`` and
+     ``leader-is-observer-promotion`` topics have no leader, because they had
+     only two replicas in the ISR, both of which were in the ``west`` region and
+     are now down. The observers in the ``east`` region are not eligible to become
      leaders automatically because they were not in the ISR.
+
+   - The ``under-min-isr-promotion`` and ``under-replicated-promotion`` topics have
+     have promoted observers into the ISR and an observer has become the leader.
+     This is because their observerPromotionPolicy allows this.
 
 
 Failover Observers
@@ -845,7 +864,7 @@ Now you will bring region ``west`` back online.
 
    - Any observers automatically promoted in ``under-min-isr-promotion`` and
      ``under-replicated-promotion`` are automatically demoted once the ``west``
-     region is restored. Note: Leader election is not required for this demotion
+     region is restored. Leader election is not required for this demotion
      process, it will happen as soon as the failed region is restored.
 
 .. note::
