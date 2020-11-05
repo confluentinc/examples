@@ -563,16 +563,6 @@ In this section, you will simulate a broker failure in the ``west`` region.
 
    .. code-block:: text
 
-#. Verify the new topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
-
-   .. code-block:: bash
-
-      ./scripts/describe-topics.sh
-
-   You should see output similar to the following:
-
-   .. code-block:: text
-
       ==> Describe topic single-region
 
       Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
