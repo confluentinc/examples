@@ -545,7 +545,7 @@ Failover and Failback
 ---------------------
 
 Degrade Region
-~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 In this section, you will simulate a broker failure in the ``west`` region.
 
