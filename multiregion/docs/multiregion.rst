@@ -201,7 +201,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
 
 .. list-table::
-   :widths: 20 15 20 20 10 15
+   :widths: 18 10 16 16 10 10 18
    :header-rows: 1
 
    * - Topic name
