@@ -217,8 +217,6 @@ services:
       ZOOKEEPER_SERVER_ID: 4
       ZOOKEEPER_CLIENT_PORT: 2188
       ZOOKEEPER_SERVERS: zookeeper-ccc:2888:3888
-    cap_add:
-      - NET_ADMIN
 
   broker-ccc:
     image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
@@ -247,8 +245,6 @@ services:
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper-ccc
-    cap_add:
-      - NET_ADMIN
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
@@ -259,20 +255,17 @@ services:
     depends_on:
       - zookeeper-ccc
       - broker-ccc
-      - broker-east-4
     ports:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-ccc:19098
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-ccc:2188
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONTROL_CENTER_KAFKA_MRC_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-east-3:19093,broker-east-4:19094
+      CONTROL_CENTER_KAFKA_MRC_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-west-2:19092,broker-east-3:19093,broker-east-4:19094
       CONTROL_CENTER_KAFKA_METRICS_BOOTSTRAP_SERVERS: broker-ccc:19098
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
-    cap_add:
-      - NET_ADMIN
+
 networks:
   n1:
