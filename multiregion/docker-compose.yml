@@ -28,8 +28,6 @@ services:
       ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
     cap_add:
       - NET_ADMIN
-    depends_on:
-      - broker-ccc-2
 
   zookeeper-central:
     image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
@@ -87,8 +85,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_JMX_PORT: 8091
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
@@ -97,7 +95,6 @@ services:
       - zookeeper-west
       - zookeeper-central
       - zookeeper-east
-      - broker-ccc-2
     cap_add:
       - NET_ADMIN
 
@@ -120,8 +117,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_JMX_PORT: 8092
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
@@ -156,8 +153,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_JMX_PORT: 8093
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
@@ -191,8 +188,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_JMX_PORT: 8094
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
@@ -220,8 +217,6 @@ services:
       ZOOKEEPER_SERVER_ID: 4
       ZOOKEEPER_CLIENT_PORT: 2188
       ZOOKEEPER_SERVERS: zookeeper-ccc:2888:3888
-    cap_add:
-      - NET_ADMIN
 
   broker-ccc:
     image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
@@ -236,51 +231,20 @@ services:
       - ./config:/etc/kafka/demo
     environment:
       KAFKA_BROKER_ID: 8
+      KAFKA_BROKER_RACK: 'metrics'
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-ccc:19098,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9098
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-ccc:2188'
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_JMX_PORT: 8098
-      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 2
+      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper-ccc
-    cap_add:
-      - NET_ADMIN
-
-  broker-ccc-2:
-    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
-    hostname: broker-ccc-2
-    container_name: broker-ccc-2
-    networks:
-      - n1
-    ports:
-      - "9099:9099"
-      - "8099:8099"
-    volumes:
-      - ./config:/etc/kafka/demo
-    environment:
-      KAFKA_BROKER_ID: 9
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
-      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-ccc-2:19099,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9099
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-ccc:2188'
-      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      KAFKA_JMX_PORT: 8099
-      KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 2
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
-    depends_on:
-      - zookeeper-ccc
-      - broker-ccc
-    cap_add:
-      - NET_ADMIN
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
@@ -290,22 +254,18 @@ services:
       - n1
     depends_on:
       - zookeeper-ccc
-      - broker-ccc-2
       - broker-ccc
-      - broker-east-4
     ports:
       - "9021:9021"
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-ccc:2188
-      CONTROL_CENTER_REPLICATION_FACTOR: 2
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
-      CONTROL_CENTER_KAFKA_MRC_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-east-3:19093,broker-east-4:19094
-      CONTROL_CENTER_KAFKA_METRICS_BOOTSTRAP_SERVERS: broker-ccc:19098,broker-ccc-2:19099
-      CONFLUENT_METRICS_TOPIC_REPLICATION: 2
+      CONTROL_CENTER_KAFKA_MRC_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-west-2:19092,broker-east-3:19093,broker-east-4:19094
+      CONTROL_CENTER_KAFKA_METRICS_BOOTSTRAP_SERVERS: broker-ccc:19098
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
-    cap_add:
-      - NET_ADMIN
+
 networks:
   n1:
