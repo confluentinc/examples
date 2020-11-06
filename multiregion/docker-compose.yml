@@ -28,6 +28,8 @@ services:
       ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
     cap_add:
       - NET_ADMIN
+    depends_on:
+      - broker-ccc-2
 
   zookeeper-central:
     image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
@@ -95,6 +97,7 @@ services:
       - zookeeper-west
       - zookeeper-central
       - zookeeper-east
+      - broker-ccc-2
     cap_add:
       - NET_ADMIN
 
@@ -152,7 +155,6 @@ services:
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
       KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
-      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
       KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
       KAFKA_JMX_PORT: 8093
@@ -266,30 +268,6 @@ services:
       CONTROL_CENTER_KAFKA_METRICS_BOOTSTRAP_SERVERS: broker-ccc:19098
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
-
-  control-center:
-    image: confluentinc/cp-enterprise-control-center:5.5.1
-    hostname: control-center
-    container_name: control-center
-    networks:
-      - n1
-    depends_on:
-      - zookeeper-west
-      - zookeeper-central
-      - zookeeper-east
-      - broker-west-1
-      - broker-west-2
-      - broker-east-3
-    ports:
-      - "9021:9021"
-    environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-west-2:19092,broker-east-3:19093,broker-east-4:19094
-      CONTROL_CENTER_ZOOKEEPER_CONNECT: zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183
-      CONTROL_CENTER_REPLICATION_FACTOR: 2
-      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 2
-      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 2
-      CONFLUENT_METRICS_TOPIC_REPLICATION: 2
-      PORT: 9021
-
+      
 networks:
   n1:
