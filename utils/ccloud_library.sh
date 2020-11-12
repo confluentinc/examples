@@ -286,8 +286,8 @@ function ccloud::validate_schema_registry_up() {
 function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
 
-  OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json) || \
-    echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again" && exit 1
+  OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
+  (($? != 0)) && { echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again"; exit 1; }
   ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
   ccloud environment use $ENVIRONMENT &>/dev/null
 
@@ -880,8 +880,8 @@ function ccloud::create_ccloud_stack() {
   then
     # Environment is not received so it will be created
     ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
-    ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) || \
-      echo "$ENVIRONMENT" && exit 1
+    ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME)
+    (($? != 0)) && { echo "$ENVIRONMENT"; exit 1; }
   else
     ccloud environment use $ENVIRONMENT &>/dev/null
   fi
