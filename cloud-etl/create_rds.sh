@@ -49,8 +49,20 @@ retry $MAX_WAIT ccloud::validate_aws_cli_installed_rds_db_ready $DB_INSTANCE_IDE
 print_pass "Database $DB_INSTANCE_IDENTIFIER is available"
 
 SECURITY_GROUP=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId")
-aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all
-aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all
+echo "aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE"
+aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE
+status=$?
+if [[ "$status" != 0 ]]; then
+  echo "ERROR: Could not configure aws ec2 authorize-security-group-ingress. Please troubleshoot, clean up resources, and try again"
+  exit 1
+fi
+echo "aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE"
+aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE
+status=$?
+if [[ "$status" != 0 ]]; then
+  echo "ERROR: Could not configure aws ec2 authorize-security-group-egress. Please troubleshoot, clean up resources, and try again"
+  exit 1
+fi
 
 echo "Creating $KAFKA_TOPIC_NAME_IN.sql"
 rm -fr $KAFKA_TOPIC_NAME_IN.sql
