@@ -885,7 +885,6 @@ function ccloud::create_ccloud_stack() {
   else
     ccloud environment use $ENVIRONMENT &>/dev/null
   fi
-  exit 1
   
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
