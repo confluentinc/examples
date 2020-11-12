@@ -476,9 +476,9 @@ function ccloud::create_acls_all_resources_full_access() {
 function ccloud::delete_acls_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
 
-  [[ $QUIET == "true" ]] && 
-    local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+  echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
+
+  local REDIRECT_TO="/dev/null"
 
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
@@ -992,6 +992,9 @@ function ccloud::destroy_ccloud_stack() {
   # Delete API keys associated to the service account
   ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
 
+  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
+  ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
+
   if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
     local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
     echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id"
@@ -1006,9 +1009,6 @@ function ccloud::destroy_ccloud_stack() {
   echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
   ccloud environment delete $environment_id &> "$REDIRECT_TO"
   
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
-  ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
-
   rm -f $CLIENT_CONFIG
 
   return 0
