@@ -316,14 +316,10 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_REGION=$3
   
   OUTPUT=$(ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>&1)
-  if [ $? -eq 0 ]; then 
-    CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
-    ccloud kafka cluster use $CLUSTER
-    echo $CLUSTER
-  else
-    echo "Error creating cluster: $OUTPUT.  Troubleshoot and try again" 
-    exit 1
-  fi
+  (($? != 0)) && { echo "$OUTPUT"; exit 1; }
+  CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
+  ccloud kafka cluster use $CLUSTER
+  echo $CLUSTER
 
   return 0
 }
@@ -338,7 +334,9 @@ function ccloud::maybe_create_and_use_cluster() {
     ccloud kafka cluster use $CLUSTER_ID
     echo $CLUSTER_ID
   else
-    ccloud::create_and_use_cluster "$CLUSTER_NAME" "$CLUSTER_CLOUD" "$CLUSTER_REGION"
+    OUTPUT=$(ccloud::create_and_use_cluster "$CLUSTER_NAME" "$CLUSTER_CLOUD" "$CLUSTER_REGION")
+    (($? != 0)) && { echo "$OUTPUT"; exit 1; }
+    echo "$OUTPUT"
   fi
 
   return 0
@@ -890,6 +888,7 @@ function ccloud::create_ccloud_stack() {
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
   CLUSTER=$(ccloud::maybe_create_and_use_cluster "$CLUSTER_NAME" $CLUSTER_CLOUD $CLUSTER_REGION)
+  (($? != 0)) && { echo "$CLUSTER"; exit 1; }
   if [[ "$CLUSTER" == "" ]] ; then
     echo "Kafka cluster id is empty"
     echo "ERROR: Could not create cluster. Please troubleshoot"
