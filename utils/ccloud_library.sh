@@ -286,11 +286,8 @@ function ccloud::validate_schema_registry_up() {
 function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
 
-  OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
-  if [[ $? != 0 ]]; then
-    echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again"
-    exit 1
-  fi
+  OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json) || \
+    echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again" && exit 1
   ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
   ccloud environment use $ENVIRONMENT &>/dev/null
 
@@ -883,10 +880,12 @@ function ccloud::create_ccloud_stack() {
   then
     # Environment is not received so it will be created
     ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
-    ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) 
+    ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME) || \
+      echo "$ENVIRONMENT" && exit 1
   else
     ccloud environment use $ENVIRONMENT &>/dev/null
   fi
+  exit 1
   
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
@@ -983,7 +982,8 @@ function ccloud::destroy_ccloud_stack() {
   CLIENT_CONFIG=${CLIENT_CONFIG:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
   KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
 
-  QUIET="${QUIET:-true}"
+  # Setting default QUIET=false to surface potential deletion errors
+  QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] && 
     local REDIRECT_TO="/dev/null" ||
     local REDIRECT_TO="/dev/stdout"
@@ -1003,11 +1003,11 @@ function ccloud::destroy_ccloud_stack() {
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
   ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
 
-	local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name == "'"$ENVIRONMENT_NAME"'")) | .[].id')
+  local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name == "'"$ENVIRONMENT_NAME"'")) | .[].id')
   echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
   ccloud environment delete $environment_id &> "$REDIRECT_TO"
   
-	ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
+  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
   ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
   rm -f $CLIENT_CONFIG
