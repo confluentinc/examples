@@ -53,15 +53,13 @@ echo "aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr
 aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE
 status=$?
 if [[ "$status" != 0 ]]; then
-  echo "ERROR: Could not configure aws ec2 authorize-security-group-ingress. Please troubleshoot, clean up resources, and try again"
-  exit 1
+  echo "WARNING: status response not 0 when running aws ec2 authorize-security-group-ingress"
 fi
 echo "aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE"
 aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE
 status=$?
 if [[ "$status" != 0 ]]; then
-  echo "ERROR: Could not configure aws ec2 authorize-security-group-egress. Please troubleshoot, clean up resources, and try again"
-  exit 1
+  echo "WARNING: status response not 0 when running aws ec2 authorize-security-group-ingress"
 fi
 
 echo "Creating $KAFKA_TOPIC_NAME_IN.sql"
