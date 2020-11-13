@@ -41,10 +41,10 @@ An ``Observer`` is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer doesn't wait
-on observers to get back an acknowledgement. By default, observers don't
-participate in the ISR list and can't become the leader if the current leader
-fails, but if a user manually changes leader assignment then they can
-participate in the ISR list.
+on observers to get back an acknowledgement. In non degraded states, observers don't
+participate in the ISR list and won't become the leader. If a broker in the ISR
+fails, they could be promoted to the ISR list automatically with
+``Observer Promotion`` or by manual changes to leader assignment.
 
 |Follower_Fetching|
 
@@ -55,7 +55,7 @@ have values:
 
 - under-min-isr: observers will be promoted if the isr size drops below the topic's min.insync.replicas configuration.
 - under-replicated: observers will be promoted if the isr size drops below the configured count of replicas in the topic's replica placement policy.
-- leader-is-observer: observers will only be promoted if the leader is an observer.
+- leader-is-observer: observers will only be promoted if the current partition leader is an observer.
 
 
 Configuration
@@ -208,7 +208,7 @@ You could create all the topics by running the script :devx-examples:`create-top
      - Observers (async replicas)
      - ISR list
      - Use default placement contraints
-     - Promotion policy
+     - Observer Promotion policy
 
    * - single-region
      - 1x west
@@ -608,11 +608,11 @@ In this section, you will simulate a broker failure in the ``west`` region.
      placement policy always allows for brokers from east to join the ISR.
 
    - The ``under-min-isr-promotion`` and ``under-replicated-promotion`` topics have placement policies that allow
-     observers to be promoted into the ISR. In the case of ``under-min-isr-promotion`` the number of non-observer
-     replicas (1) is less than the ``min.insync.replicas`` value (2). Observers are promoted to the ISR to meet the
-     ``min.insync.replicas`` requirement. In the case of ``under-replicated-promotion`` the number of online replicas
-     (1) is less than the intended number of non observer replicas from the replica placement (2). An observer is
-     promoted to fulfil this requirement.
+     observers to be automatically promoted into the ISR. In the case of ``under-min-isr-promotion`` the number of
+     non-observer replicas (1) is less than the ``min.insync.replicas`` value (2). Observers are promoted to the ISR
+     to meet the ``min.insync.replicas`` requirement. In the case of ``under-replicated-promotion`` the number of
+     online replicas (1) is less than the intended number of non observer replicas from the replica placement (2). An
+     observer is promoted to fulfill this requirement.
 
 
 Fail Region
