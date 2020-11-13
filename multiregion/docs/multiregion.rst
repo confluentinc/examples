@@ -53,7 +53,7 @@ ISR in certain degraded scenarios. This behaviour is controlled by the
 ``observerPromotionPolicy`` field in a topic's replica placement policy. It can
 have values:
 
-- under-min-isr: observers will be promoted if the isr size drops below the topic's min.insync.replicas configuration.
+- ``under-min-isr``: observers will be promoted if the ISR size drops below the topic's ``min.insync.replicas`` configuration.
 - under-replicated: observers will be promoted if the isr size drops below the configured count of replicas in the topic's replica placement policy.
 - leader-is-observer: observers will only be promoted if the leader is an observer.
 
@@ -961,4 +961,3 @@ Additional Resources
 --------------------
 
 -  `Blog post: Multi-Region Clusters with Confluent Platform 5.4 <https://www.confluent.io/blog/multi-region-data-replication>`__
-
