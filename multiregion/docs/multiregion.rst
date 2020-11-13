@@ -688,7 +688,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
      leaders automatically because they were not in the ISR.
 
    - The ``under-min-isr-promotion`` and ``under-replicated-promotion`` topics have
-     have promoted observers into the ISR and an observer has become the leader.
+    promoted observers into the ISR and an observer has become the leader.
      This is because their observerPromotionPolicy allows this.
 
 
