@@ -961,4 +961,3 @@ Additional Resources
 --------------------
 
 -  `Blog post: Multi-Region Clusters with Confluent Platform 5.4 <https://www.confluent.io/blog/multi-region-data-replication>`__
-
