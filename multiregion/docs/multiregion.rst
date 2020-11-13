@@ -604,7 +604,7 @@ In this section, you will simulate a broker failure in the ``west`` region.
      there is only 1 replica in the ISR. This is because replica placement dictated all replicas were in the ``west``
      region which has only 1 remaining live broker.
 
-   - In the second scenario, the ``multi-region-sync`` topic maintained an ISR of 3 brokers. This is because it's
+   - In the second scenario, the ``multi-region-sync`` topic maintained an ISR of 3 brokers. This is because its
      placement policy always allows for brokers from east to join the ISR.
 
    - The ``under-min-isr-promotion`` and ``under-replicated-promotion`` topics have placement policies that allow
