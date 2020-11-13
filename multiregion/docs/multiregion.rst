@@ -689,7 +689,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
    - The ``under-min-isr-promotion`` and ``under-replicated-promotion`` topics have
     promoted observers into the ISR and an observer has become the leader.
-     This is because their observerPromotionPolicy allows this.
+     This is because their replica placement policy has set ``observerPromotionPolicy`` to allow this.
 
 
 Failover Observers
