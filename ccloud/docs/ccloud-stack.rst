@@ -245,7 +245,6 @@ By default, the ``cloud-stack`` utility creates resources in the cloud provider 
 
       CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
 
-
 Use Existing Environment
 ------------------------
 
