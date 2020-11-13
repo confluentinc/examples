@@ -249,16 +249,18 @@ Use Existing Environment
 ------------------------
 
 By default, a new ``ccloud-stack`` assumes a new environment.
-This means that, by default, ``./ccloud_stack_create.sh`` creates a new environment and ``./ccloud_stack_destroy.sh`` deletes the environment specified in the configuration file.
+This means that ``./ccloud_stack_create.sh`` creates a new environment and ``./ccloud_stack_destroy.sh`` deletes the environment specified in the configuration file.
 However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/features.html#resource-limits-for-ccloud>`__, it may be desirable to work within an existing environment.
 
-To reuse an existing environment when creating a new ``ccloud-stack``, override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the following example:
+By default, ``./ccloud_stack_create.sh`` creates a new environment.
+To reuse an existing environment when creating a new ``ccloud-stack``, set the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the example:
 
 .. code-block:: bash
 
    ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
-To preserve the environment when destroying the ``ccloud-stack``, override set the parameter ``PRESERVE_ENVIRONMENT=true``, as shown in the following example:
+By default, ``./ccloud_stack_destroy.sh`` deletes the environment in the configuration file.
+To preserve the environment when destroying all the other resources in the ``ccloud-stack``, set the parameter ``PRESERVE_ENVIRONMENT=true``, as shown in the following example:
 
 .. code-block:: bash
 
