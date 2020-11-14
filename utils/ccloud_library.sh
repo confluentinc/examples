@@ -1008,8 +1008,12 @@ function ccloud::destroy_ccloud_stack() {
 
   if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then
     local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name == "'"$ENVIRONMENT_NAME"'")) | .[].id')
-    echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
-    ccloud environment delete $environment_id &> "$REDIRECT_TO"
+    if [[ "$environment_id" == "" ]]; then
+      echo "WARNING: Could not find environment with name $ENVIRONMENT_NAME (did you create this ccloud-stack reusing an existing environment?)"
+    else
+      echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
+      ccloud environment delete $environment_id &> "$REDIRECT_TO"
+    fi
   fi
   
   rm -f $CLIENT_CONFIG

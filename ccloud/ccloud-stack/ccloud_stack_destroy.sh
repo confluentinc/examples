@@ -19,9 +19,9 @@ fi
 
 PRESERVE_ENVIRONMENT="${PRESERVE_ENVIRONMENT:-false}"
 if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then
-  read -p "This script will destroy all the resources (including the environment itself) in $CONFIG_FILE.  Do you want to proceed? [y/n] " -n 1 -r
+  read -p "This script will destroy all the resources (including the Confluent Cloud environment) in $CONFIG_FILE.  Do you want to proceed? [y/n] " -n 1 -r
 else
-  read -p "This script will destroy all the resources (except the environment) in $CONFIG_FILE.  Do you want to proceed? [y/n] " -n 1 -r
+  read -p "This script will destroy all the resources (except the Confluent Cloud environment) in $CONFIG_FILE.  Do you want to proceed? [y/n] " -n 1 -r
 fi
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
