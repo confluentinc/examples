@@ -200,6 +200,6 @@ The following table documents variables that can be used to configure various be
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | AKS_BASE_NUM_NODES       | Maps to the ``--node-count`` flag                                                                    | ``3``                                                                          |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo                                       | ``aks_$(AZ_RESOURCE_GROUP)_$(AKS_BASE_REGION)_$(AKS_BASE_CLUSTER_ID)``              |
+| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo                                       | ``aks_$(AZ_RESOURCE_GROUP)_$(AKS_BASE_REGION)_$(AKS_BASE_CLUSTER_ID)``         |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 
