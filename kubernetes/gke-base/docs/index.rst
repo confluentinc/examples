@@ -125,7 +125,6 @@ Remaining configuration details are specificied in individual ``helm`` commands.
 
   helm upgrade --install --namespace operator --set zookeeper.enabled=true ... 
 
-.. _examples-operator-base-client-configurations:
 
 .. include:: ../../docs/includes/base-demo/highlight-client-configs.rst
 
