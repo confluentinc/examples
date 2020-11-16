@@ -1,8 +1,8 @@
-.. _quickstart-demos-operator-gke:
+.. _quickstart-demos-operator-aks:
 
 
-.. |k8s-service-name-long| replace:: Google Kubernetes Engine
-.. |k8s-service-name| replace:: GKE
+.. |k8s-service-name-long| replace:: Azure Kubernetes Service
+.. |k8s-service-name| replace:: AKS
 
 |cp| on |k8s-service-name-long|
 ======================================
@@ -13,64 +13,71 @@ Prerequisites
 -------------
 The following applications or libraries are required to be installed and available in the system path in order to properly run the demo.
 
-+------------------+----------------+---------------------------------------------------------+
-| Application      | Tested Version | Info                                                    |
-+==================+================+=========================================================+
-| ``kubectl``      | ``1.18.0``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/ |
-+------------------+----------------+---------------------------------------------------------+
-| ``helm``         | ``3.1.2``      | https://github.com/helm/helm/releases/tag/v3.1.2        |
-+------------------+----------------+---------------------------------------------------------+
-| ``gcloud``       | ``286.0.0``    |  https://cloud.google.com/sdk/install                   |
-| ``GCP sdk core`` | ``2020.03.24`` |                                                         |
-+------------------+----------------+---------------------------------------------------------+
++------------------+----------------+-------------------------------------------------------------------------------------+
+| Application      | Tested Version | Info                                                                                |
++==================+================+=====================================================================================+
+| ``kubectl``      | ``1.18.0``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/                             |
++------------------+----------------+-------------------------------------------------------------------------------------+
+| ``helm``         | ``3.1.2``      | https://github.com/helm/helm/releases/tag/v3.1.2                                    |
++------------------+----------------+-------------------------------------------------------------------------------------+
+| ``az``           | ``2.10.1``     |  https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest |
++------------------+----------------+-------------------------------------------------------------------------------------+
 
-Running the Example
--------------------
+.. include:: ../../docs/includes/helm-requirement-note.rst
 
-.. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
+Running the Demo
+----------------
+
+.. warning:: This demo uses the real Azure CLI to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| :ref:`Sizing Recommendations <co-env-sizing>` document and the :ref:`examples-operator-aks-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
 
  
-.. _quickstart-demos-operator-gke-setup:
+.. _quickstart-demos-operator-aks-setup:
 
 Setup
 *****
 
-Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/gke-base`` directory.
+Clone the Confluent examples repository and change directories on your terminal into the ``aks-base`` directory.
 
 .. sourcecode:: bash
 
     git clone https://github.com/confluentinc/examples.git
-    cd examples/kubernetes/gke-base
+    cd examples/kubernetes/aks-base
 
 This demo requires a Kubernetes Cluster and ``kubectl`` context configured properly to manage it.
 
-The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on Google Kubernetes Engine (GKE).  If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-gke-base-validate` section of these instructions.
+The remaining steps in the **Setup** section of the instructions help you build a Kubernetes cluster on |k8s-service-name-long| (|k8s-service-name|).  If you already have a cluster you wish to use for the demo, you can skip to the :ref:`examples-operator-aks-base-validate` section of these instructions.
 
-To verify the Google Cloud Platform (GCP) Project in which a new cluster will be created, run the following and verify it is the desired `GCP Project ID <https://support.google.com/googleapi/answer/7014113?hl=en>`__:
-
-.. include:: ../../docs/includes/gcloud-config-list.rst
+To select the Azure Resource Group in which a new cluster will be created, set the variable ``AZ_RESOURCE_GROUP`` accordingly in the command below.
 
 .. note::
 
-    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-gke-base-variable-reference` section of these instructions.  You may also use these variables to modify the default behavior of the demo create cluster functionality.
+    For specific details on how the cluster will be created (size, region, zone, etc...), view the :ref:`examples-operator-aks-base-variable-reference` section of these instructions.  You may also use these variables to modify the default behavior of the demo create cluster functionality.
 
 To create the cluster, run the following (estimated running time, 4 minutes):
 
 .. sourcecode:: bash
 
-    make gke-create-cluster
+    export AZ_RESOURCE_GROUP={{ azure resource group name }}
+    make aks-create-cluster
 
-Verify that ``gcloud`` has created the cluster properly::
+Verify that ``az`` has created the cluster properly::
 
     ...
-    Created [https://container.googleapis.com/v1/projects/<project-id>/zones/us-central1-a/clusters/cp-examples-operator-<username>].
-    To inspect the contents of your cluster, go to: <link> 
-    kubeconfig entry generated for cp-examples-operator-<username>.
-    NAME                            LOCATION  MASTER_VERSION  MASTER_IP     MACHINE_TYPE  NODE_VERSION   NUM_NODES  STATUS
-    cp-examples-operator-<username> <zone>    1.12.8-gke.10   <ip-address>  n1-highmem-2  1.12.8-gke.10  3          RUNNING
-    ✔  ++++++++++ GKE Cluster Created
 
-.. _examples-operator-gke-base-validate:
+    provisioningState: Succeeded
+    sku:
+      name: Basic
+      tier: Free
+    tags: null
+    type: Microsoft.ContainerService/ManagedClusters
+    
+    ...
+
+    az aks get-credentials --only-show-errors --resource-group confluent-operator-demo --name cp-examples-operator-user --context aks_confluent-operator-demo_centralus_cp-examples-operator-user
+    Merged "aks_confluent-operator-demo_centralus_cp-examples-operator-user" as current context in /Users/user/.kube/config
+    ✔  ++++++++++ AKS Cluster Created
+
+.. _examples-operator-aks-base-validate:
 
 Validate
 ********
@@ -81,9 +88,9 @@ The demo uses ``kubectl`` to control the cluster.  To verify that your local ``k
 
     kubectl config current-context
 
-The context should contain the proper region and cluster name.  If you used the demo ``gke-create-cluster`` function to create your cluster, the context name should have the format: ``gke_<google-project-id>_<region>_<cp-examples-operator>-<username>``
+The context should contain the proper region and cluster name.  If you used the demo ``aks-create-cluster`` function to create your cluster, the context name should have the format: ``aks_<azure_resource_group>_<region>_<cp-examples-operator>-<username>``
 
-.. _examples-operator-gke-base-run:
+.. _examples-operator-aks-base-run:
 
 Run
 ***
@@ -96,9 +103,9 @@ To deploy |cp| run (estimated running time, 7 minutes):
 
 The last output message you should see is::
 
-	✔ GKE Base Demo running
+	✔ AKS Base Demo running
 
-.. _examples-operator-gke-verify-confluent-platform:
+.. _examples-operator-aks-verify-confluent-platform:
 
 Verify 
 ******
@@ -108,18 +115,18 @@ Verify
 Highlights 
 **********
 
-.. _examples-operator-gke-base-configuration:
+.. _examples-operator-aks-base-configuration:
 
 Service Configurations
 ``````````````````````
 
-The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this example we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
+The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this example we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/aks-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
 
-The following is an example section of the ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/gke-base/cfg/values.yaml` for further details.
+The following is an example section of the ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/aks-base/cfg/values.yaml` for further details.
 
 .. include:: ../../docs/includes/base-demo/highlight-service-configs.rst
 
-Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/gke-base/Makefile-impl` for the full commands.
+Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/aks-base/Makefile-impl` for the full commands.
 
 .. sourcecode:: bash
 
@@ -129,11 +136,11 @@ Remaining configuration details are specificied in individual ``helm`` commands.
 
 .. include:: ../../docs/includes/base-demo/highlight-client-configs.rst
 
-.. _examples-operator-gke-base-connector-deployments:
+.. _examples-operator-aks-base-connector-deployments:
 
 .. include:: ../../docs/includes/base-demo/highlight-connector-deployments.rst
 
-.. _examples-operator-gke-base-tear-down:
+.. _examples-operator-aks-base-tear-down:
 
 Tear down
 *********
@@ -152,12 +159,12 @@ If you used the example to create the Kubernetes cluster for you, destroy the cl
 
 .. sourcecode:: bash
 
-  make gke-destroy-cluster
+  make aks-destroy-cluster
 
 Advanced Usage
 **************
 
-.. _examples-operator-gke-base-variable-reference:
+.. _examples-operator-aks-base-variable-reference:
 
 Variable Reference
 ``````````````````
@@ -175,31 +182,24 @@ The following table documents variables that can be used to configure various be
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | Variable                 | Description                                                                                          | Default                                                                        |
 +==========================+======================================================================================================+================================================================================+
-| GCP_PROJECT_ID           | Maps to your GCP Project ID.                                                                         | The output of the command ``gcloud config list --format 'value(core.project)`` |
-|                          | This is used by the example to build a new GKE cluster as well as configuring the kubectl context.   |                                                                                |
-|                          | If you wish to use a different project id that the current active configuration in ``glcoud``        |                                                                                |
-|                          | you should export this value in the current shell where you are running the example.                 |                                                                                |
+| AZ_RESOURCE_GROUP        | Maps to your AZURE RESOURCE GROUP.                                                                   | none                                                                           |
+|                          | This is used by the demo to build a new AKS cluster as well as configuring the kubectl context.      |                                                                                |                                                                               |
+|                          | You must set this variable in the current shell where you are running the demo.                      |                                                                                |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_CLUSTER_ID      | Identifies the GKE Cluster.  Substitutes in the current user to help with project uniqueness on GCP. | ``cp-examples-operator-$USER``                                                 |
+| AKS_BASE_CLUSTER_ID      | Identifies the AKS Cluster.  Substitutes in the current user to help with project uniqueness on GCP. | ``cp-examples-operator-$USER``                                                 |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_REGION          | Used in the ``--subnetwork`` flag to define the networking region                                    | ``us-central1``                                                                |
+| AKS_BASE_REGION          | Used in the ``--location`` flag to define the networking region                                      | ``us-central1``                                                                |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_ZONE            | Maps to the ``--zone`` flag                                                                          | ``us-central1-a``                                                              |
+| AKS_BASE_ZONE            | Maps to the ``--zones`` flag                                                                         | ``us-central1-a``                                                              |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_SUBNET          | Used in the ``--subnetwork`` flag to define the subnet                                               | ``default``                                                                    |
+| AKS_BASE_CLUSTER_VERSION | Maps to the ``--kubernetes-version`` flag                                                            | ``1.17.7``                                                                     |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_CLUSTER_VERSION | Maps to the ``--cluster-version`` flag                                                               | ``1.12.8-gke.10``                                                              |
+| AKS_BASE_MACHINE_TYPE    | Maps to the ``--node-vm-size`` flag                                                                  | ``Standard_D4_v3``                                                             |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_MACHINE_TYPE    | Maps to the ``--machine-type`` flag                                                                  | ``n1-highmem-2``                                                               |
+| AKS_BASE_DISK_SIZE       | Maps to the ``--node-osdisk-size`` flag                                                              | ``100``                                                                        |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_IMAGE_TYPE      | Maps to the ``--image-type`` flag.  Verify CPU Platform minimums if changing                         | ``COS``                                                                        |
+| AKS_BASE_NUM_NODES       | Maps to the ``--node-count`` flag                                                                    | ``3``                                                                          |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_DISK_TYPE       | Maps to the ``--disk-type`` flag                                                                     | ``pd-standard``                                                                |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_DISK_SIZE       | Maps to the ``--disksize`` flag                                                                      | ``100``                                                                        |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| GKE_BASE_NUM_NODES       | Maps to the ``--num-nodes`` flag                                                                     | ``3``                                                                          |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the example                                    | ``gke_$(GCP_PROJECT_ID)_$(GKE_BASE_ZONE)_$(GKE_BASE_CLUSTER_ID)``              |
+| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo                                       | ``aks_$(AZ_RESOURCE_GROUP)_$(AKS_BASE_REGION)_$(AKS_BASE_CLUSTER_ID)``              |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 

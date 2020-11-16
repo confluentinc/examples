@@ -2,12 +2,13 @@ global:
   provider:
     registry:
       fqdn: docker.io 
-    name: gcp 
+    name: azure 
     storage:
-      provisioner: kubernetes.io/gce-pd 
+      provisioner: kubernetes.io/azure-disk
       reclaimPolicy: Delete 
       parameters:
-        type: pd-ssd 
+        storageaccounttype: Standard_LRS
+        kind: managed 
 
 zookeeper:
   disableHostPort: true
