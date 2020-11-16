@@ -1,5 +1,3 @@
-.. _examples-operator-base-client-configurations:
-
 Client Configurations
 `````````````````````
 
