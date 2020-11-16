@@ -133,7 +133,6 @@ Remaining configuration details are specificied in individual ``helm`` commands.
   helm upgrade --install --namespace operator --set zookeeper.enabled=true ... 
 
 
-
 .. include:: ../../docs/includes/base-demo/highlight-client-configs.rst
 
 .. _examples-operator-aks-base-connector-deployments:
