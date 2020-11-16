@@ -1,0 +1,70 @@
+
+GKE_BASE_MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+GKE_BASE_MKFILE_DIR := $(dir $(GKE_BASE_MKFILE_PATH))
+
+include $(GKE_BASE_MKFILE_DIR)../common/Makefile
+
+GCP_PROJECT_ID ?= $(shell gcloud config list --format 'value(core.project)')
+
+GKE_BASE_CLUSTER_ID ?= cp-examples-operator-$(USER)
+GKE_BASE_REGION ?= us-central1
+GKE_BASE_ZONE ?= us-central1-a
+GKE_BASE_SUBNET ?= default
+GKE_BASE_CLUSTER_VERSION ?= latest
+GKE_BASE_MACHINE_TYPE ?= n1-highmem-2
+GKE_BASE_IMAGE_TYPE ?= COS
+GKE_BASE_DISK_TYPE ?= pd-standard
+GKE_BASE_DISK_SIZE ?= 100
+GKE_BASE_NUM_NODES ?= 3
+
+ZOOKEEPER_REPLICAS ?= 1
+KAFKA_REPLICAS ?= 1
+CONNECT_REPLICAS ?= 1
+SCHEMA_REGISTRY_REPLICAS ?= 1
+
+KUBECTL_CONTEXT ?= gke_$(GCP_PROJECT_ID)_$(GKE_BASE_ZONE)_$(GKE_BASE_CLUSTER_ID)
+KUBECTL_NAMESPACE ?= operator
+
+ADDITIONAL_HELM_FLAGS ?=
+
+SKIP_CLICKS ?=
+SKIP_CLIENT_CONSOLE ?=
+ 
+HELM_COMMON_FLAGS := --wait --timeout=5m -f $(GKE_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(GKE_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(GKE_BASE_ZONE)} $(ADDITIONAL_HELM_FLAGS)
+
+gke-check-dependencies: 
+	@$(call check-var-defined,GCP_PROJECT_ID)
+	@$(call check-dependency,gcloud)
+	@$(call echo_pass,gke-base dependencies verified)
+
+gke-create-cluster: gke-check-dependencies ## Creates a GKE cluster based on the values of the GKE_* variables.  WARN: This will incur charges in your GCP account.
+	@$(call echo_stdout_header,Create GKE cluster expect 4 mins)	
+	gcloud --quiet container --project $(GCP_PROJECT_ID) clusters create $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE) --no-enable-basic-auth --cluster-version $(GKE_BASE_CLUSTER_VERSION) --machine-type $(GKE_BASE_MACHINE_TYPE) --image-type $(GKE_BASE_IMAGE_TYPE) --disk-type $(GKE_BASE_DISK_TYPE) --disk-size $(GKE_BASE_DISK_SIZE) --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --num-nodes $(GKE_BASE_NUM_NODES) --no-enable-autoupgrade --no-issue-client-certificate --metadata disable-legacy-endpoints=true --enable-ip-alias --network "projects/$(GCP_PROJECT_ID)/global/networks/default" --subnetwork "projects/$(GCP_PROJECT_ID)/regions/$(GKE_BASE_REGION)/subnetworks/$(GKE_BASE_SUBNET)" --default-max-pods-per-node "110" --addons HorizontalPodAutoscaling,HttpLoadBalancing 
+	@$(call echo_stdout_footer_pass,GKE Cluster Created)
+
+gke-destroy-cluster: gke-check-dependencies ## Destroys the GKE cluster built from the gke-create-cluster command 
+	@$(call echo_stdout_header,Delete GKE cluster)
+	gcloud --quiet container clusters delete $(GKE_BASE_CLUSTER_ID) --zone $(GKE_BASE_ZONE)
+	@$(call echo_stdout_footer_pass,GKE Cluster Deleted)
+
+gke-base-deploy-client-console:
+	@$(call echo_stdout_header,Deploy client-console)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(GKE_BASE_MKFILE_DIR)cfg/client-console-pod.yaml
+	@$(call echo_stdout_footer_pass,client-console deployed)
+
+gke-base-validate: gke-check-dependencies 
+	@echo
+	@$(call echo_pass,gke-base demo validation complete)
+
+gke-base-demo: gke-base-validate
+	@make --no-print-directory run-base-demo
+ifeq ($(strip $(SKIP_CLIENT_CONSOLE)),)
+	@make --no-print-directory gke-base-deploy-client-console
+endif
+	@echo
+	@$(call echo_pass,GKE Base Demo running)
+
+gke-base-destroy-demo: gke-base-validate
+	@make --no-print-directory destroy-base-demo
+	@echo
+	@$(call echo_pass,GKE Base Demo destroyed)
