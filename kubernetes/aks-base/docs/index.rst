@@ -132,10 +132,7 @@ Remaining configuration details are specificied in individual ``helm`` commands.
 
   helm upgrade --install --namespace operator --set zookeeper.enabled=true ... 
 
-<<<<<<< HEAD
-=======
 .. _examples-operator-base-client-configurations:
->>>>>>> parent of be109cd8... CSID-460: Fixing doc double reference
 
 .. include:: ../../docs/includes/base-demo/highlight-client-configs.rst
 
