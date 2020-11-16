@@ -61,7 +61,7 @@ Setup
 
 #. This example creates a new |ccloud| environment with required resources to run this example. As a reminder, this example uses real |ccloud| resources and you may incur charges.
 
-#. Clone the `examples GitHub repository <https://github.com/confluentinc/examples>`__ and check out the :litwithvars:`|release|-post` branch.
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and check out the :litwithvars:`|release|-post` branch..
 
    .. codewithvars:: bash
 
@@ -117,7 +117,6 @@ Run
       # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
       # KSQLDB APP ID: <KSQLDB APP ID>
       # ------------------------------
-      ssl.endpoint.identification.algorithm=https
       security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
       bootstrap.servers=<BROKER ENDPOINT>
@@ -147,7 +146,7 @@ Playbook
 
      ccloud kafka topic list
 
-#. View the ACLs associated to the service account <SERVICE ACCOUNT ID> that was created for this example at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
+#. View the ACLs associated to the service account ``<SERVICE ACCOUNT ID>`` that was created for this example at the start. The resource name corresponds to the respective cluster, Kafka topic name, or consumer group name. Note: in production, you would not use the wildcard ``*``, this is included just for demo purposes.
 
    .. sourcecode:: bash
 
@@ -344,17 +343,17 @@ Troubleshooting the example
 Stop Example
 ============
 
-#. Stop the example, destroy all resources in |ccloud| and local components.
+#. Stop the example, destroy all resources in |ccloud| and local components. As an argument to the script, pass in the path to the local configuration file and substitute ``<SERVICE ACCOUNT ID>`` to match what was auto-generated when you started the demo.
 
    .. sourcecode:: bash
 
       # For Docker Compose
-      ./stop-docker.sh
+      ./stop-docker.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
    .. sourcecode:: bash
 
       # For Confluent Platform local install using Confluent CLI
-      ./stop.sh
+      ./stop.sh stack-configs/java-service-account-<SERVICE ACCOUNT ID>.config
 
 #. Always verify that resources in |ccloud| have been destroyed.
 

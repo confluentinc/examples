@@ -35,7 +35,7 @@ import org.apache.kafka.streams.state.KeyValueStore;
 
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 
@@ -62,7 +62,7 @@ public class StreamsAvroExample {
         // Load properties from a local configuration file
         // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
         // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
-        // Follow these detailed instructions to properly create this file: https://github.com/confluentinc/configuration-templates/tree/master/README.md
+        // Follow these instructions to create this file: https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html
         final Properties props = loadConfig(args[0]);
 
         // Add additional properties.
@@ -75,7 +75,7 @@ public class StreamsAvroExample {
         final Serde<DataRecordAvro> dataRecordAvroSerde = new SpecificAvroSerde<>();
         final boolean isKeySerde = false;
         Map<String, Object> SRconfig = new HashMap<>();
-        SRconfig.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, props.getProperty(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG));
+        SRconfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, props.getProperty(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG));
         SRconfig.put("schema.registry.basic.auth.user.info", props.getProperty("schema.registry.basic.auth.user.info"));
         SRconfig.put("basic.auth.credentials.source", props.getProperty("basic.auth.credentials.source"));
         dataRecordAvroSerde.configure(

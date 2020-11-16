@@ -36,14 +36,12 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      # CLASSPATH required due to CC-2422
-      CLASSPATH: "/etc/kafka-connect/jars/replicator-rest-extension-${CONFLUENT}.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-${CONFLUENT}.jar"
+      CLASSPATH: "/usr/share/java/kafka-connect-replicator/replicator-rest-extension-6.0.0.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0.jar"
 
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG_ORIGIN
       CONNECT_SASL_MECHANISM: PLAIN
-      CONNECT_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM: "HTTPS"
 
       # Connect embedded producer
       CONNECT_PRODUCER_SECURITY_PROTOCOL: SASL_SSL

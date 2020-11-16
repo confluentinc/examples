@@ -3,7 +3,7 @@
 
 This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
 
-.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identicial in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appeneded to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this example, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: :ref:`ccloud kafka topic delete <ccloud_kafka_topic_delete>` for instructions on deleting |ccloud| topics.
+.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identical in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appended to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this example, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: `ccloud kafka topic delete <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_delete.html>`__ for instructions on deleting |ccloud| topics.
 
 |ak| Cluster Setup
 +++++++++++++++++++
@@ -67,7 +67,7 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
 
         ccloud kafka cluster describe lkc-3r3vj
 
-    This will produce a detailed view of the cluster.  The ``Endpoint`` field contains the Boostrap Server value
+    This will produce a detailed view of the cluster.  The ``Endpoint`` field contains the bootstrap server value
 
     ::
 
@@ -89,7 +89,7 @@ API Key and Secret Configuration
 
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can also create the API Key using the :ref:`Confluent Cloud UI <cloud-api-key-resource-edit-ui>`.
+.. tip:: You can also create the API Key using the `Confluent Cloud UI <https://docs.confluent.io/cloud/using/api-keys.html#edit-resource-specific-api-key-descriptions-using-the-ui>`__.
 
 #.  To create a new API Key:
 

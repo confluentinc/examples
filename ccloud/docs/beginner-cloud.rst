@@ -31,10 +31,6 @@ Prerequisites
 
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
--  |ccloud| user credentials saved in ``~/.netrc``. (Use ``ccloud login --save``
-   when logging in to the |ccloud| CLI. The ``--save`` flag will save your login
-   credentials to the ``~/.netrc`` file.)
-
 -  Local `install of Confluent Cloud CLI
    <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.7.0 or later)
 
@@ -63,7 +59,17 @@ Run the tutorial
 
 To run this tutorial, complete the following steps:
 
-#. Clone the Confluent examples repository:
+#. Log in to the |ccloud| CLI:
+
+   .. code-block:: bash
+
+      ccloud login --save
+
+   The ``--save`` flag will save your |ccloud| login credentials to the
+   ``~/.netrc`` file.
+
+
+#. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
    .. code-block:: bash
 
@@ -187,7 +193,7 @@ Create a new API key/secret pair for user
 
    .. code-block:: bash
 
-      cloud api-key create --description "Demo credentials" --resource lkc-x6m01 -o json
+      ccloud api-key create --description "Demo credentials" --resource lkc-x6m01 -o json
 
 #. Verify your output resembles:
 
@@ -326,7 +332,6 @@ Create a new service account with an API key/secret pair
 
    .. code-block:: text
 
-       ssl.endpoint.identification.algorithm=https
        sasl.mechanism=PLAIN
        security.protocol=SASL_SSL
        bootstrap.servers=pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
@@ -419,8 +424,6 @@ Run a Java producer with ACLs
 
    .. code-block:: text
 
-         [2020-08-29 13:52:10,836] WARN The configuration 'sasl.jaas.config' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
-         [2020-08-29 13:52:10,837] WARN The configuration 'ssl.endpoint.identification.algorithm' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
          Producing record: alice	{"count":0}
          Producing record: alice	{"count":1}
          Producing record: alice	{"count":2}
@@ -511,8 +514,6 @@ Run a Java producer with a prefixed ACL
 
    .. code-block:: text
 
-      [2020-08-29 13:52:39,012] WARN The configuration 'sasl.jaas.config' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
-      [2020-08-29 13:52:39,013] WARN The configuration 'ssl.endpoint.identification.algorithm' was supplied but isn't a known config. (org.apache.kafka.clients.admin.AdminClientConfig)
       Producing record: alice	{"count":0}
       Producing record: alice	{"count":1}
       Producing record: alice	{"count":2}
@@ -942,10 +943,7 @@ Here are the variables and their default values:
 Additional Resources
 ---------------------
 
--  See the `Best Practices for Developing Kafka Applications on
-   Confluent Cloud
-   <https://assets.confluent.io/m/14397e757459a58d/original/20200205-WP-Best_Practices_for_Developing_Apache_Kafka_Applications_on_Confluent_Cloud.pdf?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.ccloud>`__
-   white paper for a guide to configuring, monitoring, and optimizing
-   your |ak| client applications when using |ccloud|.
+-  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__ for a guide to configuring, monitoring, and
+   optimizing your |ak| client applications when using |ccloud|.
 
-- See other :ref:`ccloud-demos-overview`.
+-  See other :ref:`ccloud-demos-overview`.

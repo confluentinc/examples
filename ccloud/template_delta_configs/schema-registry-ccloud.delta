@@ -1,4 +1,3 @@
-kafkastore.ssl.endpoint.identification.algorithm=https
 kafkastore.sasl.mechanism=PLAIN
 kafkastore.security.protocol=SASL_SSL
 kafkastore.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
