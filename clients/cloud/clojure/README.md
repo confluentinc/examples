@@ -1,6 +1,6 @@
 # Overview
 
-Produce messages to and consume messages from a Kafka cluster using Java interop form Clojure.
+Produce messages to and consume messages from a Kafka cluster using Java interop from Clojure.
 
 # Documentation
 
