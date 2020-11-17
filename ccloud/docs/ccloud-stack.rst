@@ -215,7 +215,7 @@ Create a ccloud-stack
 Destroy a ccloud-stack
 ----------------------
 
-#. To destroy a ``cloud-stack`` created in the previous step, call the bash script :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh` and pass in the client properties file auto-generated in the step above.
+#. To destroy a ``cloud-stack`` created in the previous step, call the bash script :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh` and pass in the client properties file auto-generated in the step above. By default, this deletes all resources, including the |ccloud| environment specified by the service account ID in the configuration file.
 
    .. code:: bash
 
@@ -248,16 +248,25 @@ By default, the ``cloud-stack`` utility creates resources in the cloud provider 
 Use Existing Environment
 ------------------------
 
-By default, a new ``ccloud-stack`` creates a new environment. To reuse an existing environment, create the ``ccloud-stack`` and override the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the following example:
+By default, a new ``ccloud-stack`` creates a new environment.
+This means that, by default, ``./ccloud_stack_create.sh`` creates a new environment and ``./ccloud_stack_destroy.sh`` deletes the environment specified in the configuration file.
+However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/features.html#resource-limits-for-ccloud>`__, it may be desirable to work within an existing environment.
+
+To reuse an existing environment when creating a new ``ccloud-stack``, set the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the example:
 
 .. code-block:: bash
 
    ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
+To preserve the environment when destroying all the other resources in the ``ccloud-stack``, set the parameter ``PRESERVE_ENVIRONMENT=true``, as shown in the following example.
+If you do not specify ``PRESERVE_ENVIRONMENT=true``, then the default behavior is that the environment specified by the service account ID in the configuration file is deleted.
 
-===================
+.. code-block:: bash
+
+   PRESERVE_ENVIRONMENT=true ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+
 Automated Workflows
-===================
+-------------------
 
 If you don't want to create and destroy a ``ccloud-stack`` using the provided bash scripts :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh` and :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh`, you may pull in the :devx-examples:`ccloud_library|utils/ccloud_library.sh` and call the functions ``ccloud::create_ccloud_stack()`` and ``ccloud::destroy_ccloud_stack()`` directly.
 
@@ -295,7 +304,7 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
       ccloud::create_ccloud_stack true
 
 
-#. To destroy the ``ccloud-stack``:
+#. To destroy the ``ccloud-stack``, run the following command. By default, it deletes all resources, including the |ccloud| environment specified by the service account ID in the configuration file.
 
    .. code:: bash
 

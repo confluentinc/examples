@@ -24,6 +24,12 @@ then
   enable_ksqldb=true
 fi
 
+if [[ -z "$ENVIRONMENT" ]]; then
+  STMT=""
+else
+  STMT="PRESERVE_ENVIRONMENT=true"
+fi
+
 echo
 ccloud::create_ccloud_stack $enable_ksqldb || exit 1
 
@@ -53,7 +59,7 @@ echo
 
 echo
 echo "To destroy this Confluent Cloud stack run ->"
-echo "    ./ccloud_stack_destroy.sh $CONFIG_FILE"
+echo "    $STMT ./ccloud_stack_destroy.sh $CONFIG_FILE"
 echo
 
 echo
