@@ -46,13 +46,19 @@ List your Azure subscription and identify the one you wish to use for this examp
 
 .. sourcecode:: bash
 
-    az account list
+    az account list -o table
 
 Set the active Azure subription via the Azure CLI.
 
 .. sourcecode:: bash
 
     az account set --subscription {{ azure subscription name }}
+
+List your Azure resource groups and identify the one you wish to use for this example.
+
+.. sourcecode:: bash
+
+    az group list -o table
 
 Clone the Confluent examples repository and change directories on your terminal into the ``aks-base`` directory.
 
@@ -210,7 +216,7 @@ The following table documents variables that can be used to configure various be
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | AKS_BASE_ZONE            | Maps to the ``--zones`` flag                                                                         | ``us-central1-a``                                                              |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_CLUSTER_VERSION | Maps to the ``--kubernetes-version`` flag                                                            | ``1.17.7``                                                                     |
+| AKS_BASE_CLUSTER_VERSION | Maps to the ``--kubernetes-version`` flag                                                            | ``1.17.13``                                                                     |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | AKS_BASE_MACHINE_TYPE    | Maps to the ``--node-vm-size`` flag                                                                  | ``Standard_D4_v3``                                                             |
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
