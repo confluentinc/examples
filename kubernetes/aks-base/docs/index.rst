@@ -36,29 +36,7 @@ Running the Demo
 Setup
 *****
 
-Log in via the Azure CLI from your terminal (this should open a window in your browser):
-
-.. sourcecode:: bash
-
-    az login
-
-List your Azure subscription and identify the one you wish to use for this example.
-
-.. sourcecode:: bash
-
-    az account list -o table
-
-Set the active Azure subription via the Azure CLI.
-
-.. sourcecode:: bash
-
-    az account set --subscription {{ azure subscription name }}
-
-List your Azure resource groups and identify the one you wish to use for this example.
-
-.. sourcecode:: bash
-
-    az group list -o table
+.. include:: ../../docs/includes/aks-cli-setup.rst
 
 Clone the Confluent examples repository and change directories on your terminal into the ``aks-base`` directory.
 
@@ -203,27 +181,4 @@ The following table documents variables that can be used to configure various be
 
    make <make-target> VARIABLE=value
 
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| Variable                 | Description                                                                                          | Default                                                                        |
-+==========================+======================================================================================================+================================================================================+
-| AZ_RESOURCE_GROUP        | Maps to your AZURE RESOURCE GROUP.                                                                   | none                                                                           |
-|                          | This is used by the demo to build a new AKS cluster as well as configuring the kubectl context.      |                                                                                |
-|                          | You must set this variable in the current shell where you are running the demo.                      |                                                                                |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_CLUSTER_ID      | Identifies the AKS Cluster.  Substitutes in the current user to help with project uniqueness on GCP. | ``cp-examples-operator-$USER``                                                 |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_REGION          | Used in the ``--location`` flag to define the networking region                                      | ``us-central1``                                                                |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_ZONE            | Maps to the ``--zones`` flag                                                                         | ``us-central1-a``                                                              |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_CLUSTER_VERSION | Maps to the ``--kubernetes-version`` flag                                                            | ``1.17.13``                                                                     |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_MACHINE_TYPE    | Maps to the ``--node-vm-size`` flag                                                                  | ``Standard_D4_v3``                                                             |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_DISK_SIZE       | Maps to the ``--node-osdisk-size`` flag                                                              | ``100``                                                                        |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| AKS_BASE_NUM_NODES       | Maps to the ``--node-count`` flag                                                                    | ``3``                                                                          |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-| KUBECTL_CONTEXT          | Used to explicitly set the ``kubectl`` context within the demo                                       | ``aks_$(AZ_RESOURCE_GROUP)_$(AKS_BASE_REGION)_$(AKS_BASE_CLUSTER_ID)``         |
-+--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
-
+.. include:: ../../docs/includes/aks-custom-variables.rst

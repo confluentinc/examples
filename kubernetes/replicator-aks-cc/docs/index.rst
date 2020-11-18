@@ -1,11 +1,11 @@
-.. _quickstart-demos-operator-replicator-gke-cc:
+.. _quickstart-demos-operator-replicator-aks-cc:
 
-.. |k8s-service-name-long| replace:: Google Kubernetes Engine
-.. |k8s-service-name| replace:: GKE
-.. |operator-demo-prefix| replace:: gke
-.. |kubectl-context-pattern| replace:: gke_project-name_us-central1-a_cp-examples-operator-jdoe
-.. |k8s-service-docs-link| replace:: `Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`__
-.. |operator-base-demo-link| replace:: `Confluent Platform on Google Kubernetes Engine example <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__
+.. |k8s-service-name-long| replace:: Azure Kubernetes Service
+.. |k8s-service-name| replace:: AKS
+.. |operator-demo-prefix| replace:: aks
+.. |kubectl-context-pattern| replace:: aks_project-name_us-central1-a_cp-examples-operator-jdoe
+.. |k8s-service-docs-link| replace:: `Azure Kubernetes Service (AKS) <https://azure.microsoft.com/en-us/services/kubernetes-service/>`__
+.. |operator-base-demo-link| replace:: `Confluent Platform on Azure Kubernetes Service example <https://docs.confluent.io/current/tutorials/examples/kubernetes/aks-base/docs/index.html>`__
 
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
@@ -27,56 +27,70 @@ Prerequisites
 
 The following applications or libraries are required to be installed and available in the system path in order to properly run the example.
 
-+------------------+-------------------+----------------------------------------------------------+
-| Application      | Tested Version    | Info                                                     |
-+==================+===================+==========================================================+
-| ``kubectl``      | ``1.18.0``        | https://kubernetes.io/docs/tasks/tools/install-kubectl/  |
-+------------------+-------------------+----------------------------------------------------------+
-| ``helm``         | ``3.1.2``         | https://github.com/helm/helm/releases/tag/v3.1.2         |
-+------------------+-------------------+----------------------------------------------------------+
-| ``gcloud``       | ``286.0.0``       | https://cloud.google.com/sdk/install                     |
-| ``GCP sdk core`` | ``2020.03.24``    |                                                          |
-| ``GKE cluster``  | ``1.15.11-gke.1`` |                                                          |
-+------------------+-------------------+----------------------------------------------------------+
-| ``ccloud``       | ``v1.0.0``        | https://docs.confluent.io/current/cloud/cli/install.html |
-+------------------+-------------------+----------------------------------------------------------+
++------------------+----------------+-------------------------------------------------------------------------------------+
+| Application      | Tested Version | Info                                                                                |
++==================+================+=====================================================================================+
+| ``kubectl``      | ``1.18.0``     | https://kubernetes.io/docs/tasks/tools/install-kubectl/                             |
++------------------+----------------+-------------------------------------------------------------------------------------+
+| ``helm``         | ``3.1.2``      | https://github.com/helm/helm/releases/tag/v3.1.2                                    |
++------------------+----------------+-------------------------------------------------------------------------------------+
+| ``az``           | ``2.10.1``     |  https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest |
++------------------+----------------+-------------------------------------------------------------------------------------+
+| ``ccloud``       | ``v1.0.0``     | https://docs.confluent.io/current/cloud/cli/install.html                            |
++------------------+----------------+-------------------------------------------------------------------------------------+
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
 Running the Example
 -------------------
 
-.. warning:: This example consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.  The |co| `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
+.. warning:: This example consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-aks-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Azure <https://azure.microsoft.com/en-us/pricing/calculator/>`__ pricing data for more information.  The |co| `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
 
-Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-gke-cc`` directory.
+Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-aks-cc`` directory.
 
 .. sourcecode:: bash
 
     git clone https://github.com/confluentinc/examples.git
-    cd examples/kubernetes/replicator-gke-cc
+    cd examples/kubernetes/replicator-aks-cc
 
-GKE Setup
+AKS Setup
 ~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  
+In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a AKS Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``Standard_D4_v3``.  
 
-.. tip:: The :ref:`examples-operator-gke-base-variable-reference` section can be used to control the size of the deployed resources in this example.
+.. tip:: The :ref:`examples-operator-aks-base-variable-reference` section can be used to control the size of the deployed resources in this example.
 
-If you wish to use an existing GKE cluster, and your ``kubectl`` client is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-setup` section of these instructions.
+If you wish to use an existing AKS cluster, and your ``kubectl`` client is already configured to operate with it, skip to the :ref:`quickstart-demos-operator-replicator-aks-cc-ccloud-setup` section of these instructions.
 
-If you wish to create a new GKE cluster for this example, the ``Makefile`` contains a function to assist you in creating a cluster, assuming you have your ``glcoud`` SDK properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage` section of this document.
+If you wish to create a new AKS cluster for this example, the ``Makefile`` contains a function to assist you in creating a cluster, assuming you have your ``az`` CLI properly configured to access your account.  If you wish to override the behavior of the create cluster function, see the :ref:`quickstart-demos-operator-replicator-aks-cc-ccloud-advanced-usage` section of this document.
 
-To verify which GCP Project your ``gcloud`` SDK is currently configured to, run:
-
-.. include:: ../../docs/includes/gcloud-config-list.rst
+.. include:: ../../docs/includes/aks-cli-setup.rst
 
 To create the standard cluster you can run the following:
 
 .. sourcecode:: bash
 
-    make gke-create-cluster
+    export AZ_RESOURCE_GROUP={{ azure resource group name }}
+    make aks-create-cluster
 
-.. _quickstart-demos-operator-replicator-gke-cc-ccloud-setup:
+Verify that ``az`` has created the cluster properly::
+
+    ...
+
+    provisioningState: Succeeded
+    sku:
+      name: Basic
+      tier: Free
+    tags: null
+    type: Microsoft.ContainerService/ManagedClusters
+    
+    ...
+
+    az aks get-credentials --only-show-errors --resource-group confluent-operator-demo --name cp-examples-operator-user --context aks_confluent-operator-demo_centralus_cp-examples-operator-user
+    Merged "aks_confluent-operator-demo_centralus_cp-examples-operator-user" as current context in /Users/user/.kube/config
+    ✔  ++++++++++ AKS Cluster Created
+
+.. _quickstart-demos-operator-replicator-aks-cc-ccloud-setup:
 
 |ccloud| Setup
 ~~~~~~~~~~~~~~~~~~~~~
@@ -88,24 +102,19 @@ Preflight Checks
 
 Prior to running the example you may want to verify the setup.
 
-To verify your GKE cluster status:
+To verify your AKS cluster status:
 
 .. sourcecode:: bash
 
-    gcloud container clusters list
+    az aks list
 
-To verify that your ``kubectl`` command is configured with the proper context to control your GKE cluster, run:
-
-.. sourcecode:: bash
-
-    kubectl config current-context
-
-The output of the previous command should be a name with the combination of your GKE project, the region, and the value of the ``Makefile`` variable ``GKE_BASE_CLUSTER_ID`` and your machine username, for example:
+To verify that your ``kubectl`` command is configured with the proper context to control your AKS cluster, run:
 
 .. sourcecode:: bash
 
     kubectl config current-context
-    gke_gkeproject_us-central1-a_cp-examples-operator-jdoe
+
+The context should contain the proper region and cluster name.  If you used the demo ``aks-create-cluster`` function to create your cluster, the context name should have the format: ``aks_<azure_resource_group>_<region>_<cp-examples-operator>-<username>``
 
 Example Execution
 +++++++++++++++++
@@ -117,7 +126,7 @@ Validate
 
 .. include:: ../../docs/includes/replicator-cc-demo/verify-demo.rst
 
-.. _quickstart-demos-operator-replicator-gke-cc-destroy:
+.. _quickstart-demos-operator-replicator-aks-cc-destroy:
 
 Destroy Resources
 ~~~~~~~~~~~~~~~~~
@@ -128,11 +137,11 @@ After you are done evaluating the results of the example, you can destroy all th
 
     make destroy-demo
 
-If you used the example to create your cluster, you can destroy the GKE cluster with:
+If you used the example to create your cluster, you can destroy the AKS cluster with:
 
 .. sourcecode:: bash
 
-    make gke-destroy-cluster
+    make aks-destroy-cluster
 
 Highlights
 ----------
@@ -141,47 +150,14 @@ Highlights
 
 .. include:: ../../docs/includes/deploy-jars-k8s.rst
 
-.. _quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage:
+.. _quickstart-demos-operator-replicator-aks-cc-ccloud-advanced-usage:
 
 Advanced Usage
 --------------
 
-Customize GKE Cluster Creation
+Customize AKS Cluster Creation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
-
-.. sourcecode:: bash
-
-  GKE_BASE_ZONE=us-central1-b make gke-create-cluster
-
-Or they can be exported to the current environment prior to running the make command:
-
-.. sourcecode:: bash
-
-    export GKE_BASE_ZONE=us-central1-b
-    make gke-create-cluster
-
-.. table:: Cluster Creation Variables
-
-    +--------------------------+---------------+
-    | Variable                 | Default       |
-    +==========================+===============+
-    | GKE_BASE_REGION          | us-central1   |
-    +--------------------------+---------------+
-    | GKE_BASE_ZONE            | us-central1-a |
-    +--------------------------+---------------+
-    | GKE_BASE_SUBNET          | default       |
-    +--------------------------+---------------+
-    | GKE_BASE_CLUSTER_VERSION | 1.13.7-gke.24 |
-    +--------------------------+---------------+
-    | GKE_BASE_MACHINE_TYPE    | n1-highmem-2  |
-    +--------------------------+---------------+
-    | GKE_BASE_IMAGE_TYPE      | COS           |
-    +--------------------------+---------------+
-    | GKE_BASE_DISK_TYPE       | pd-standard   |
-    +--------------------------+---------------+
-    | GKE_BASE_DISK_SIZE       | 100           |
-    +--------------------------+---------------+
+.. include:: ../../docs/includes/aks-custom-variables.rst
 
 .. include:: ../../docs/includes/replicator-cc-demo/closing.rst
