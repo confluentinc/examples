@@ -168,4 +168,7 @@ Advanced Usage
 
 .. _examples-operator-aks-base-variable-reference:
 
+Variable Reference
+``````````````````
+
 .. include:: ../../docs/includes/aks-custom-variables.rst
