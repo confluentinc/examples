@@ -95,7 +95,7 @@ Verify that ``az`` has created the cluster properly::
 |ccloud| Setup
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. include:: ../../docs/includes/replicator-cc-demo/ccloud-setup.rst
+.. include:: ../../docs/includes/replicator-cc-demo/ccloud-setup-aks.rst
 
 Preflight Checks
 ++++++++++++++++
