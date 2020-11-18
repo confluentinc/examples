@@ -168,17 +168,4 @@ Advanced Usage
 
 .. _examples-operator-aks-base-variable-reference:
 
-Variable Reference
-``````````````````
-
-The following table documents variables that can be used to configure various behaviors.  Variables can be ``exported`` or set in each individual ``make`` command with either sample syntax below:
-
-.. sourcecode:: bash
-
-   VARIABLE=value make <make-target>
- 
-.. sourcecode:: bash
-
-   make <make-target> VARIABLE=value
-
 .. include:: ../../docs/includes/aks-custom-variables.rst
