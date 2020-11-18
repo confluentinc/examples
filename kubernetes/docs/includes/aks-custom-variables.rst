@@ -8,8 +8,6 @@ The following table documents variables that can be used to configure various be
 
    make <make-target> VARIABLE=value
 
-Variable Reference
-``````````````````
 
 +--------------------------+------------------------------------------------------------------------------------------------------+--------------------------------------------------------------------------------+
 | Variable                 | Description                                                                                          | Default                                                                        |
