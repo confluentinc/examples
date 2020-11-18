@@ -8,7 +8,7 @@ This demonstration requires that you have a |ccloud| account and a |ak| cluster 
 |ak| Cluster Setup
 +++++++++++++++++++
 
-If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this example.  This demonstration runs on top of Google Cloud Platform (GCP) and, by default, in the ``us-central1`` region.  It is recommended to name your new cluster ``replicator-aks-cc-demo`` to match names used later in this example.  The following illustrates the recommended configuration:
+If you are creating a new cluster, it is advised to create it within the same Cloud Provider and region as this example.  This demonstration runs on top of Azure and, by default, in the ``centralus`` region.  It is recommended to name your new cluster ``replicator-aks-cc-demo`` to match names used later in this example.  The following illustrates the recommended configuration:
 
 .. figure:: images/new-cluster-1.png
     :alt: New Cluster Example
@@ -80,14 +80,15 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
         +-------------+------------------------------------------------------------+
         | Id          | lkc-3r3vj                                                  |
         | Name        | replicator-aks-cc-demo                                     |
+        | Type        | BASIC                                                      |
         | Ingress     |                                                        100 |
         | Egress      |                                                        100 |
         | Storage     |                                                       5000 |
-        | Provider    | gcp                                                        |
-        | Region      | us-central1                                                |
+        | Provider    | azure                                                      |
+        | Region      | centralus                                                  |
         | Status      | UP                                                         |
-        | Endpoint    | SASL_SSL://abc-12345.us-central1.gcp.stag.cpdev.cloud:9092 |
-        | ApiEndpoint | https://abc-12345.us-central1.gcp.stag.cpdev.cloud         |
+        | Endpoint    | SASL_SSL://abc-12345.centralus.azure.confluent.cloud:9092  |
+        | ApiEndpoint | https://abc-12345.centralus.azure.confluent.cloud          |
         +-------------+------------------------------------------------------------+
 
 API Key and Secret Configuration
