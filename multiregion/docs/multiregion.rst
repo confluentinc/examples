@@ -554,7 +554,7 @@ Degraded Region
 
 In this section, you will simulate a single broker failure in the ``west`` region.
 
-#. Run the following command to stop on of the broker Docker containers corresponding in the ``west`` region:
+#. Run the following command to stop one of the broker Docker containers in the ``west`` region:
 
    .. code-block:: bash
 
