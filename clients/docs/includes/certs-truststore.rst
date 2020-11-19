@@ -57,9 +57,10 @@ You may need to install CA root certificates in the following way:
 
    sudo yum reinstall ca-certificates
 
-Once you install the CA root certificates, set the ``ssl.ca.location`` property in the client code.
+This should be sufficient for the Kafka clients to find the certificates.
+However, if you still get the same error, you can set the ``ssl.ca.location`` property in the client code.
 Edit both the producer and consumer code files, and add the ``ssl.ca.location`` configuration parameter into the producer and consumer properties.
-The value should correspond to the location of the appropriate CA root certificates file on your host.
+The value should correspond to the location of the appropriate CA root certificates file on your host, for example:
 
 .. code-block:: text
 
