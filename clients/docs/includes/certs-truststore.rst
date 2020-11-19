@@ -37,13 +37,13 @@ Once you install the CA root certificates, set the ``ssl.ca.location`` property 
 Edit both the producer and consumer code files, and add the ``ssl.ca.location`` configuration parameter into the producer and consumer properties.
 The value should correspond to the location of the appropriate CA root certificates file on your host.
 
-For the Python client, it may be:
+For the Python client, use ``certifi.where()`` to determine the location of the certificate files:
 
 .. code-block:: text
 
-   ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
+   ssl.ca.location: certifi.where()
 
-For other clients:
+For other clients, check the install path and provide it in the code:
 
 .. code-block:: text
 
