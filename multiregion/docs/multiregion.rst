@@ -140,10 +140,13 @@ Startup
 
             Name                   Command            State                            Ports
       ----------------------------------------------------------------------------------------------------------------
+      broker-ccc          /etc/confluent/docker/run   Up      0.0.0.0:8098->8098/tcp, 9092/tcp, 0.0.0.0:9098->9098/tcp
       broker-east-3       /etc/confluent/docker/run   Up      0.0.0.0:8093->8093/tcp, 9092/tcp, 0.0.0.0:9093->9093/tcp
       broker-east-4       /etc/confluent/docker/run   Up      0.0.0.0:8094->8094/tcp, 9092/tcp, 0.0.0.0:9094->9094/tcp
       broker-west-1       /etc/confluent/docker/run   Up      0.0.0.0:8091->8091/tcp, 0.0.0.0:9091->9091/tcp, 9092/tcp
       broker-west-2       /etc/confluent/docker/run   Up      0.0.0.0:8092->8092/tcp, 0.0.0.0:9092->9092/tcp
+      control-center      /etc/confluent/docker/run   Up      0.0.0.0:9021->9021/tcp
+      zookeeper-ccc       /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2188->2188/tcp, 2888/tcp, 3888/tcp
       zookeeper-central   /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2182->2182/tcp, 2888/tcp, 3888/tcp
       zookeeper-east      /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2183->2183/tcp, 2888/tcp, 3888/tcp
       zookeeper-west      /etc/confluent/docker/run   Up      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
@@ -291,6 +294,14 @@ You could create all the topics by running the script :devx-examples:`create-top
          Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
             Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
+#. View the topic replica placement in Confluent Control Center:
+   Navigate to the |c3| [UI at http://localhost:9021](http://localhost:9021).
+
+   |C3 cluster navigation|
+
+   Click on the "mrc" cluster, then make your way to the "Topics" section.
+
+   |C3 topics overview|
 
 #. Observe the following:
 
@@ -754,6 +765,13 @@ it is possible Docker networking not working or cleaning up properly between run
    image:: images/multi-region-topic-replicas-v2.png
    :alt: Multi-region topic replicas
 
+..|C3 cluster navigation|
+  image:: images/c3-cluster-navigation.png
+  :alt: C3 cluster navigation
+
+..|C3 topics overview|
+  image:: images/c3-topics-overview.png
+  :alt: C3 topics overview
 
 Additional Resources
 --------------------
