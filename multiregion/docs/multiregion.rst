@@ -611,7 +611,7 @@ In this section, you will simulate a single broker failure in the ``west`` regio
      there is only 1 replica in the ISR. This is because replica placement dictated all replicas were in the ``west``
      region which has only 1 remaining live broker.
 
-   - In the second scenario, the ``multi-region-sync`` topic maintained an ISR of 3 brokers. This is because it's
+   - In the second scenario, the ``multi-region-sync`` topic maintained an ISR of 3 brokers. This is because its
      placement policy always allows for brokers from east to join the ISR.
 
    - The ``multi-region-async-op-under-min-isr`` and ``multi-region-async-op-under-replicated`` topics have placement policies that allow
@@ -697,8 +697,8 @@ In this section, you will simulate a region failure by bringing down the ``west`
      leaders automatically because they were not in the ISR.
 
    - The ``multi-region-async-op-under-min-isr`` and ``multi-region-async-op-under-replicated`` topics have
-     have promoted observers into the ISR and an observer has become the leader.
-     This is because their observerPromotionPolicy allows this.
+     promoted observers into the ISR and an observer has become the leader.
+     This is because their replica placement policy has set ``observerPromotionPolicy`` to allow this.
 
 
 Failover Observers
