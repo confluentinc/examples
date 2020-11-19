@@ -20,17 +20,17 @@ echo -e "\n==> Describe topic multi-region-default\n"
 docker-compose exec broker-east-3 kafka-topics --describe \
         --bootstrap-server broker-east-3:19093 --topic multi-region-default
 
-echo -e "\n==> Describe topic under-min-isr-promotion\n"
+echo -e "\n==> Describe topic multi-region-async-op-under-min-isr\n"
 
 docker-compose exec broker-east-3 kafka-topics --describe \
-        --bootstrap-server broker-east-3:19093 --topic under-min-isr-promotion
+        --bootstrap-server broker-east-3:19093 --topic multi-region-async-op-under-min-isr
 
-echo -e "\n==> Describe topic under-replicated-promotion\n"
-
-docker-compose exec broker-east-3 kafka-topics --describe \
-        --bootstrap-server broker-east-3:19093 --topic under-replicated-promotion
-
-echo -e "\n==> Describe topic leader-is-observer-promotion\n"
+echo -e "\n==> Describe topic multi-region-async-op-under-replicated\n"
 
 docker-compose exec broker-east-3 kafka-topics --describe \
-        --bootstrap-server broker-east-3:19093 --topic leader-is-observer-promotion
+        --bootstrap-server broker-east-3:19093 --topic multi-region-async-op-under-replicated
+
+echo -e "\n==> Describe topic multi-region-async-op-leader-is-observer\n"
+
+docker-compose exec broker-east-3 kafka-topics --describe \
+        --bootstrap-server broker-east-3:19093 --topic multi-region-async-op-leader-is-observer

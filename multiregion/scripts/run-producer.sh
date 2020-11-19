@@ -39,7 +39,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-
         compression.type=none \
         batch.size=8196
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic under-min-isr-promotion \
+docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-under-min-isr \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
@@ -49,7 +49,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic under-min-isr
         compression.type=none \
         batch.size=8196
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic under-replicated-promotion \
+docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-under-replicated \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
@@ -59,7 +59,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic under-replica
         compression.type=none \
         batch.size=8196
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic leader-is-observer-promotion \
+docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-leader-is-observer \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \

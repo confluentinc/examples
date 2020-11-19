@@ -37,32 +37,32 @@ docker-compose exec broker-west-1 kafka-topics  \
 	--topic multi-region-default \
 	--config min.insync.replicas=1
 
-echo -e "\n==> Creating topic under-min-isr-promotion"
+echo -e "\n==> Creating topic multi-region-async-op-under-min-isr"
 
 docker-compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
-	--topic under-min-isr-promotion \
+	--topic multi-region-async-op-under-min-isr \
 	--partitions 1 \
-	--replica-placement /etc/kafka/demo/placement-under-min-isr-promotion.json \
+	--replica-placement /etc/kafka/demo/placement-multi-region-async-op-under-min-isr.json \
 	--config min.insync.replicas=2
 
-echo -e "\n==> Creating topic under-replicated-promotion"
+echo -e "\n==> Creating topic multi-region-async-op-under-replicated"
 
 docker-compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
-	--topic under-replicated-promotion \
+	--topic multi-region-async-op-under-replicated \
 	--partitions 1 \
-	--replica-placement /etc/kafka/demo/placement-under-replicated-promotion.json \
+	--replica-placement /etc/kafka/demo/placement-multi-region-async-op-under-replicated.json \
 	--config min.insync.replicas=1
 
-echo -e "\n==> Creating topic leader-is-observer-promotion"
+echo -e "\n==> Creating topic multi-region-async-op-leader-is-observer"
 
 docker-compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
-	--topic leader-is-observer-promotion \
+	--topic multi-region-async-op-leader-is-observer \
 	--partitions 1 \
-	--replica-placement /etc/kafka/demo/placement-leader-is-observer-promotion.json \
+	--replica-placement /etc/kafka/demo/placement-multi-region-async-op-leader-is-observer.json \
 	--config min.insync.replicas=1
