@@ -41,7 +41,7 @@ An ``Observer`` is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer doesn't wait
-on observers to get back an acknowledgement. In non degraded states, observers don't
+on observers to get back an acknowledgement. In "non-degraded" steady state, observers don't
 participate in the ISR list and won't become the leader. If a broker in the ISR
 fails, they could be promoted to the ISR list automatically with
 ``Observer Promotion`` or by manual changes to leader assignment.
