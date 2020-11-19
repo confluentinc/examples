@@ -13,7 +13,7 @@ similar to the following:
    %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
 
 In this case, you need to manually install a bundle of validated CA root certificates before running the client code.
-(For more information, see the documentation for `librdkafka <https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka>`__ on which this client is built)
+(For more information, see the documentation for `librdkafka <https://github.com/edenhill/librdkafka/blob/master/INTRODUCTION.md#ssl>`__ on which this client is built)
 
 macOS
 """""
