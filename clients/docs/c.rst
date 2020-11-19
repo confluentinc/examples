@@ -20,6 +20,7 @@ Client
    your machine. See the `librdkafka installation
    instructions <https://github.com/edenhill/librdkafka/blob/master/README.md#instructions>`__.
 
+.. include:: includes/certs-truststore.rst
 
 Kafka Cluster
 ~~~~~~~~~~~~~
