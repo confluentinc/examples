@@ -13,6 +13,8 @@ Often referred to as a stretch cluster, |mrrep| replicate data between datacente
 You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
 It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
+We will use a dedicated metrics cluster running |c3| to monitor the Multi-Region Cluster.
+
 Benefits:
 
 - Supports multi-site deployments of synchronous and asynchronous replication between datacenters
@@ -85,6 +87,8 @@ most important configuration parameters include:
    typically only allowed to read from leaders)
 -  ``confluent.log.placement.constraints``: sets the default replica
    placement constraint configuration for newly created topics.
+- ``confluent.metrics.reporter.bootstrap.servers`` and
+  ``confluent.monitoring.interceptor.bootstrap.servers``: directs metrics to the dedicated metrics cluster.
 
 Client
 ~~~~~~
@@ -381,37 +385,25 @@ You could create all the topics by running the script :devx-examples:`create-top
          Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
             Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
-#. View the topic replica placement in Confluent Control Center:
+#. View the topic replica placement in |c3|:
 
    Navigate to the C3 UI at http://localhost:9021.
 
    |C3 cluster navigation|
 
-   Click on the "mrc" cluster, then make your way to the "Topics" section.
+   You will notice 2 clusters, "mrc" which is the multiregion cluster and "metrics" which is a dedicated metrics cluster that runs Control Center. By hosting Control Center on its own Kafka cluster, it is independent of the availability of the production cluster it is monitoring. We will be working on topics within the "mrc" cluster for the remainder of this tutorial. Click on the "mrc" cluster, then make your way to the "Topics" section.
 
    |C3 topics overview|
 
-   Click on the single-region topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
-
-   |single-region-placement|
-
-   Click on the multi-region-sync topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
-
-   |single-region-placement|
-
-   Click on the multi-region-async topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
+   Click on each topic to see details about the replica and observer placement. This will mirror the CLI output above. Below is an example of the multi-region-async topic.
 
    |multi-region-async replicas|
-
-   Click on the multi-region-default topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
-
-   |multi-region-default-placement|
 
 #. Observe the following:
 
    - The ``multi-region-async``, ``multi-region-async-op-under-min-isr``, ``multi-region-async-op-under-replicated``, ``multi-region-async-op-leader-is-observer`` and ``multi-region-default`` topics have replicas
      across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
-     4 are observers.
+     4 are observers. This can be observed via the CLI output or C3.
 
 
 Client Performance
@@ -494,11 +486,11 @@ Consumer
    - In the first scenario, the consumer running in ``east`` reads from the
      leader in ``west`` and is impacted by the low bandwidth between ``east``
      and ``west``–the throughput of the throughput is lower in this case (for
-     example, ``0.9025`` MB per sec in the previous example).
+     example, ``0.9025`` MB per sec in the previous example).
 
    - In the second scenario, the consumer running in ``east`` reads from the
      follower that is also in ``east``–the throughput of the consumer is higher
-     in this case (for example, ``3.9356`` MBps in the previous example).
+     in this case (for example, ``3.9356`` MBps in the previous example).
 
    - This example doesn’t consume from ``multi-region-default`` as the
      behavior should be the same as ``multi-region-async`` since the
@@ -584,19 +576,12 @@ There is a script you can run to collect the JMX metrics from the command line, 
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
 
-#. Some of these metrics are viewable in the "Topics" section of the C3 UI.
-
-   The "Out of sync followers" displays "x of n", with "x" being how many followers are out of sync and "n" being the InSyncReplicasCount.
-
-   "ReplicasCount" can be determined by adding the "n" from the "Out of sync followers" and the "n" from "Out of sync observers".
-
-   |c3-monitoring-topics|
 
 Degraded Region
 ---------------
 
 In this section, you will simulate a single broker failure in the ``west`` region.
-=======
+
 #. Run the following command to stop one of the broker Docker containers in the ``west`` region:
 
    .. code-block:: bash
@@ -648,6 +633,9 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       Topic: multi-region-default	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
       	Topic: multi-region-default	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2	Offline: 1	Observers: 3,4
 
+#. Verify similar replica placement in C3. Note that it may take up to 5 minutes for C3 to properly report the new topic stats.
+
+   |C3 degraded region|
 
 #. Observe the following:
 
@@ -678,8 +666,8 @@ In this section, you will simulate a single broker failure in the ``west`` regio
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
@@ -687,10 +675,10 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 1
       multi-region-sync: 3
       multi-region-async: 1
@@ -698,10 +686,10 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 1
       multi-region-default: 1
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 1
       multi-region-sync: 4
       multi-region-async: 3
@@ -709,10 +697,10 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 3
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
@@ -781,9 +769,9 @@ In this section, you will simulate a region failure by bringing down the ``west`
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
-#. Given five minutes, you should see something similar to below in C3. The numbers may be off while the cluster stabilizes.
+#. After the |c3| cluster metrics stabilize in about five minutes, you should see output similar to below.
 
-   |fail-region|
+   |C3 fail region|
 
 #. Observe the following:
 
@@ -792,7 +780,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
      region and are now down.
 
    - In the second scenario, the ``multi-region-sync`` topic automatically
-     elected a new leader in ``east`` (for example, replica 3 in the previous
+     elected a new leader in ``east`` (for example, replica 3 in the previous
      output). Clients can failover to those replicas in the ``east`` region.
 
    - The ``multi-region-async``, ``multi-region-default`` and
@@ -818,8 +806,8 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 0
       multi-region-sync: 4
       multi-region-async: 0
@@ -827,10 +815,10 @@ In this section, you will simulate a region failure by bringing down the ``west`
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 0
@@ -838,10 +826,10 @@ In this section, you will simulate a region failure by bringing down the ``west`
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 0
@@ -849,10 +837,10 @@ In this section, you will simulate a region failure by bringing down the ``west`
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
@@ -901,14 +889,14 @@ steps:
 
 #. View the changes in the unclean leader election in C3 under the "Topics" section.
 
-   |unclean-leader-election|
+   |C3 unclean leader election|
 
 
 #. Observe the following:
 
-   - The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the CLI output)
+   - The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the CLI output)
 
-   - The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the CLI output)
+   - The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the CLI output)
 
 #. Run the script
    :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
@@ -923,8 +911,8 @@ steps:
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 0
       multi-region-sync: 4
       multi-region-async: 4
@@ -932,10 +920,10 @@ steps:
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -943,10 +931,10 @@ steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -954,10 +942,10 @@ steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 2
@@ -1011,6 +999,11 @@ the following steps:
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline: 2,1    Observers: 2,1
       ...
 
+#. See similar leader placement by clicking on the ``multi-region-default`` topic and referencing the ``Partitions`` and ``Replica Placement`` section.
+
+   |C3 permanent failover|
+
+
 #. Observe the following:
 
    - For topic ``multi-region-default``, replicas 2 and 1, which were previously sync replicas, are now
@@ -1032,8 +1025,8 @@ the following steps:
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 0
       multi-region-sync: 4
       multi-region-async: 4
@@ -1041,10 +1034,10 @@ the following steps:
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -1052,10 +1045,10 @@ the following steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -1063,10 +1056,10 @@ the following steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 2
@@ -1137,7 +1130,6 @@ Now you will bring region ``west`` back online and restore configuration to the 
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline:    Observers: 2,1
 
-
 #. Observe the following:
 
    - All topics have leaders again, in particular ``single-region`` which lost its
@@ -1154,6 +1146,8 @@ Now you will bring region ``west`` back online and restore configuration to the 
      ``multi-region-async-op-under-replicated`` are automatically demoted once the ``west``
      region is restored. Leader election is not required for this demotion
      process, it will happen as soon as the failed region is restored.
+
+   - The C3 topics page is the same as it was at the start of this tutorial.
 
 .. note::
 
@@ -1174,8 +1168,8 @@ Now you will bring region ``west`` back online and restore configuration to the 
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
@@ -1183,10 +1177,10 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 2
@@ -1194,10 +1188,10 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 2
       multi-region-default: 2
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
@@ -1205,10 +1199,10 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
@@ -1285,56 +1279,49 @@ it is possible Docker networking not working or cleaning up properly between run
 
 
 .. |Multi-region Architecture|
-   image:: images/multi-region-base-v2.png
+image:: images/multi-region-base-v2.png
    :alt: Multi-region Architecture
 
 .. |Follower_Fetching|
-   image:: images/Follower_Fetching.png
+image:: images/Follower_Fetching.png
    :alt: Follower fetching
 
 .. |Multi-region latencies|
-   image:: images/multi-region-latencies-v2.png
+image:: images/multi-region-latencies-v2.png
    :alt: Multi-region latencies
 
 .. |Multi-region topic replicas|
-   image:: images/multi-region-topic-replicas-v2.png
+image:: images/multi-region-topic-replicas-v2.png
    :alt: Multi-region topic replicas
 
 .. |C3 cluster navigation|
-   image:: images/c3-cluster-navigation.png
+image:: images/c3-cluster-navigation.png
    :alt: C3 cluster navigation
 
 .. |C3 topics overview|
-   image:: images/c3-topics-overview.png
+image:: images/c3-topics-overview.png
    :alt: C3 topics overview
 
 .. |multi-region-async replicas|
-   image:: images/multi-region-async-placement.png
+image:: images/multi-region-async-placement.png
    :alt: multi-region-async replicas
 
-.. |multi-region-default-placement|
-   image:: images/multi-region-default-placement.png
-   :alt: multi-region-default replicas
+.. |C3 degraded region|
+image:: images/c3-degraded-region.png
+   :alt: C3 degraded region
 
-.. |multi-region-sync replicas|
-   image:: images/multi-region-sync-placement.png
-   :alt: multi-region-sync replicas
+.. |C3 fail region|
+image:: images/c3-fail-region.png
+   :alt: C3 fail region
 
-.. |single-region-placement|
-   image:: images/single-region-placement.png
-   :alt: single-region replicas
+.. |C3 unclean leader election|
+image:: images/c3-unclean-election.png
+   :alt: C3 unclean leader election
 
-.. |c3-monitoring-topics|
-   image:: images/c3-monitoring-topics.png
-   :alt: C3 monitoring topics
+.. |C3 permanent failover|
+image:: images/c3-perminant-failover-default.png
+   :alt: C3 permanent failover
 
-.. |fail-region|
-   image:: images/fail-region.png
-   :alt: Fail region
-
-.. |unclean-leader-election|
-   image:: images/unclean-leader-election.png
-   :alt: Unclean leader election
 
 Additional Resources
 --------------------
