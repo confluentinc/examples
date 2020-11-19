@@ -765,13 +765,13 @@ it is possible Docker networking not working or cleaning up properly between run
    image:: images/multi-region-topic-replicas-v2.png
    :alt: Multi-region topic replicas
 
-..|C3 cluster navigation|
-  image:: images/c3-cluster-navigation.png
-  :alt: C3 cluster navigation
+.. |C3 cluster navigation|
+   image:: images/c3-cluster-navigation.png
+   :alt: C3 cluster navigation
 
-..|C3 topics overview|
-  image:: images/c3-topics-overview.png
-  :alt: C3 topics overview
+.. |C3 topics overview|
+   image:: images/c3-topics-overview.png
+   :alt: C3 topics overview
 
 Additional Resources
 --------------------
