@@ -35,7 +35,7 @@ For other clients:
 
 Once you install the CA root certificates, set the ``ssl.ca.location`` property in the client code.
 Edit both the producer and consumer code files, and add the ``ssl.ca.location`` configuration parameter into the producer and consumer properties.
-The value should correspond to the location of the appropriate CA certificates file on your host.
+The value should correspond to the location of the appropriate CA root certificates file on your host.
 
 For the Python client, it may be:
 
@@ -53,13 +53,15 @@ For other clients:
 CentOS
 """"""
 
+You may need to install CA root certificates in the following way:
+
 .. code-block:: bash
 
    sudo yum reinstall ca-certificates
 
 Once you install the CA root certificates, set the ``ssl.ca.location`` property in the client code.
-Edit the producer and consumer code files, and add the ``ssl.ca.location`` configuration parameter into the producer and consumer properties.
-Its value should correspond to the location of the appropriate CA certificates file on your host.
+Edit both the producer and consumer code files, and add the ``ssl.ca.location`` configuration parameter into the producer and consumer properties.
+The value should correspond to the location of the appropriate CA root certificates file on your host.
 
 .. code-block:: text
 
