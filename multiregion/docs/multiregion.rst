@@ -382,13 +382,30 @@ You could create all the topics by running the script :devx-examples:`create-top
             Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
 #. View the topic replica placement in Confluent Control Center:
-   Navigate to the |c3| [UI at http://localhost:9021](http://localhost:9021).
+
+   Navigate to the C3 UI at http://localhost:9021.
 
    |C3 cluster navigation|
 
    Click on the "mrc" cluster, then make your way to the "Topics" section.
 
    |C3 topics overview|
+
+   Click on the single-region topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
+
+   |single-region-placement|
+
+   Click on the multi-region-sync topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
+
+   |single-region-placement|
+
+   Click on the multi-region-async topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
+
+   |multi-region-async replicas|
+
+   Click on the multi-region-default topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
+
+   |multi-region-default-placement|
 
 #. Observe the following:
 
@@ -567,12 +584,19 @@ There is a script you can run to collect the JMX metrics from the command line, 
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
 
+#. Some of these metrics are viewable in the "Topics" section of the C3 UI.
+
+   The "Out of sync followers" displays "x of n", with "x" being how many followers are out of sync and "n" being the InSyncReplicasCount.
+
+   "ReplicasCount" can be determined by adding the "n" from the "Out of sync followers" and the "n" from "Out of sync observers".
+
+   |c3-monitoring-topics|
 
 Degraded Region
 ---------------
 
 In this section, you will simulate a single broker failure in the ``west`` region.
-
+=======
 #. Run the following command to stop one of the broker Docker containers in the ``west`` region:
 
    .. code-block:: bash
@@ -757,6 +781,9 @@ In this section, you will simulate a region failure by bringing down the ``west`
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
+#. Given five minutes, you should see something similar to below in C3. The numbers may be off while the cluster stabilizes.
+
+   |fail-region|
 
 #. Observe the following:
 
@@ -872,12 +899,16 @@ steps:
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
 
+#. View the changes in the unclean leader election in C3 under the "Topics" section.
+
+   |unclean-leader-election|
+
 
 #. Observe the following:
 
-   - The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the previous output)
+   - The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the CLI output)
 
-   - The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the previous output)
+   - The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the CLI output)
 
 #. Run the script
    :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
@@ -1276,6 +1307,34 @@ it is possible Docker networking not working or cleaning up properly between run
 .. |C3 topics overview|
    image:: images/c3-topics-overview.png
    :alt: C3 topics overview
+
+.. |multi-region-async replicas|
+   image:: images/multi-region-async-placement.png
+   :alt: multi-region-async replicas
+
+.. |multi-region-default-placement|
+   image:: images/multi-region-default-placement.png
+   :alt: multi-region-default replicas
+
+.. |multi-region-sync replicas|
+   image:: images/multi-region-sync-placement.png
+   :alt: multi-region-sync replicas
+
+.. |single-region-placement|
+   image:: images/single-region-placement.png
+   :alt: single-region replicas
+
+.. |c3-monitoring-topics|
+   image:: images/c3-monitoring-topics.png
+   :alt: C3 monitoring topics
+
+.. |fail-region|
+   image:: images/fail-region.png
+   :alt: Fail region
+
+.. |unclean-leader-election|
+   image:: images/unclean-leader-election.png
+   :alt: Unclean leader election
 
 Additional Resources
 --------------------
