@@ -6,7 +6,7 @@ source ../utils/helper.sh
 
 MAX_WAIT=${MAX_WAIT:-60}
 
-ccloud::validate_version_ccloud_cli 1.10.0 \
+ccloud::validate_version_ccloud_cli 1.20.1 \
   && print_pass "ccloud version ok"
 
 ccloud::validate_logged_in_ccloud_cli \
@@ -37,6 +37,10 @@ docker-compose -f docker-compose-ccloud.yml up -d --build
 
 printf "\n====== Giving services $WARMUP_TIME seconds to startup\n"
 sleep $WARMUP_TIME 
+MAX_WAIT=240
+echo "Waiting up to $MAX_WAIT seconds for connect to start"
+retry $MAX_WAIT check_connect_up connect || exit 1
+printf "\n\n"
 
 printf "\n====== Configuring Elasticsearch mappings\n"
 ./dashboard/set_elasticsearch_mapping.sh

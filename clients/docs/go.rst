@@ -18,6 +18,7 @@ Client
    for Apache Kafka <https://github.com/confluentinc/confluent-kafka-go>`__
    installed.
 
+.. include:: includes/certs-truststore.rst
 
 Kafka Cluster
 ~~~~~~~~~~~~~

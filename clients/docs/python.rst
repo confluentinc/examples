@@ -34,57 +34,8 @@ Client
   library manually or globally, the same version requirements apply.
 
 
-Configure SSL trust store
-^^^^^^^^^^^^^^^^^^^^^^^^^
+.. include:: includes/certs-truststore.rst
 
-Depending on your operating system or Linux distro you may need to take extra
-steps to set up the SSL CA root certificates. If your system doesn't have the
-SSL CA root certificates properly set up, you may receive an error message
-similar to the following:
-
-.. code-block:: bash
-
-   %3|1554125834.196|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
-   %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/bootstrap: Failed to verify broker certificate: unable to get issuer certificate (after 626ms in state CONNECT)
-   %3|1554125834.197|ERROR|rdkafka#producer-2| [thrd:sasl_ssl://pkc-epgnk.us-central1.gcp.confluent.cloud\:9092/boot]: 1/1 brokers are down
-
-macOS
-"""""
-
-On newer versions of macOS (for example, 10.15), you may need to add an
-additional dependency:
-
-.. code-block:: bash
-
-   pip install certifi
-
-Add the ``ssl.ca.location`` property to the config dict object in
-``producer.py`` and ``consumer.py``, and its value should correspond to
-the location of the appropriate CA certificates file on your host:
-
-.. code-block:: text
-
-   ssl.ca.location: '/Library/Python/3.7/site-packages/certifi/cacert.pem'
-
-CentOS
-""""""
-
-.. code-block:: bash
-
-   sudo yum reinstall ca-certificates
-
-Add the ``ssl.ca.location`` property to the config dict object in
-``producer.py`` and ``consumer.py``, and its value should correspond to
-the location of the appropriate CA certificates file on your host:
-
-
-.. code-block:: text
-
-   ssl.ca.location: '/etc/ssl/certs/ca-bundle.crt'
-
-For more information, see the `librdkafka
-<https://github.com/edenhill/librdkafka/wiki/Using-SSL-with-librdkafka>`__
-documentation on which this Python producer is built.
 
 Kafka Cluster
 ~~~~~~~~~~~~~
