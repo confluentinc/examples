@@ -1,7 +1,7 @@
 Configure SSL trust store
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Depending on your operating system or Linux distro you may need to take extra
+Depending on your operating system or Linux distribution you may need to take extra
 steps to set up the SSL CA root certificates. If your system doesn't have the
 SSL CA root certificates properly set up, you may receive a ``SSL handshake failed``
 error message similar to the following:
@@ -10,7 +10,7 @@ error message similar to the following:
 
    %3|1605776788.619|FAIL|rdkafka#producer-1| [thrd:sasl_ssl://...confluent.cloud:9092/bootstr]: sasl_ssl://...confluent.cloud:9092/bootstrap: SSL handshake failed: error:14090086:SSL routines:ssl3_get_server_certificate:certificate verify failed: broker certificate could not be verified, verify that ssl.ca.location is correctly configured or root CA certificates are installed (brew install openssl) (after 258ms in state CONNECT)
 
-In this case, you need to manually install a bundle of validated CA root certificates before running the client code.
+In this case, you need to manually install a bundle of validated CA root certificates and potentially modify the client code to set the ``ssl.ca.location`` configuration property.
 (For more information, see the documentation for `librdkafka <https://github.com/edenhill/librdkafka/blob/master/INTRODUCTION.md#ssl>`__ on which this client is built)
 
 macOS
