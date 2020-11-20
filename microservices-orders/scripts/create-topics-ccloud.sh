@@ -16,7 +16,6 @@ while IFS= read -r TOPIC;
       else
         printf "\nCreating topic $TOPIC on Confluent Cloud\n"
         ccloud kafka topic create $TOPIC
-        printf "\n"
       fi
     }
   done <$TOPICS_FILE
