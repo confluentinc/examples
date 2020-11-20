@@ -18,11 +18,12 @@ Client
 
 - On Windows, default trusted root CA certificates are stored in the Windows Registry. These are required for secure access to Confluent Cloud. The .NET library does not currently have the capability to access these certificates, so you must obtain them from somewhere else, for example use the ``cacert.pem`` file distributed with curl (`download cacert.pm <https://curl.haxx.se/ca/cacert.pem>`__).
 
+.. include:: includes/certs-truststore.rst
+
 Kafka Cluster
 ~~~~~~~~~~~~~
 
 .. include:: includes/client-example-prerequisites.rst
-
 
 Setup
 -----
