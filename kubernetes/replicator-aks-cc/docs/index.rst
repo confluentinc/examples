@@ -106,7 +106,7 @@ To verify your AKS cluster status:
 
 .. sourcecode:: bash
 
-    az aks list
+    az aks list --output table
 
 To verify that your ``kubectl`` command is configured with the proper context to control your AKS cluster, run:
 
