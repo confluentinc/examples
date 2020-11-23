@@ -123,6 +123,6 @@ Suggested Reading
 * These sections in `Replicator Configuration Properties <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html>`__:
 
   - `Source Topics <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#destination-data-conversion>`__
-  - `Destination Topics <https://docs.confluent.io//kafka-connect-replicator/current/configuration_options.html#destination-topics>`__
+  - `Destination Topics <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#destination-topics>`__
   - `Schema Translation <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html#schema-translation>`__
 
