@@ -477,7 +477,7 @@ Consumer
 
 
 Monitoring
-----------
+~~~~~~~~~~
 
 In |cs| there are a few JMX metrics you should monitor for determining the
 health and state of a topic partition. The tutorial describes the following JMX
@@ -502,8 +502,8 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
 #. Run the script
    :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
-   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``ObserversInIsrCount`` and
-   ``CaughtUpReplicasCount`` from each of the brokers:
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
 
    .. code-block:: bash
 
@@ -628,6 +628,63 @@ In this section, you will simulate a single broker failure in the ``west`` regio
      online replicas (1) is less than the intended number of non observer replicas from the replica placement (2). An
      observer is promoted to fulfill this requirement.
 
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 2
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 1
+      multi-region-sync: 3
+      multi-region-async: 1
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 1
+      multi-region-default: 1
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 1
+      multi-region-sync: 4
+      multi-region-async: 3
+      multi-region-async-op-under-min-isr: 3
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 3
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 1
+      multi-region-async-op-under-replicated: 1
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+
+
 Failover and Failback
 ---------------------
 
@@ -706,6 +763,62 @@ In this section, you will simulate a region failure by bringing down the ``west`
    - The ``multi-region-async-op-under-min-isr`` and ``multi-region-async-op-under-replicated`` topics have
      promoted observers into the ISR and an observer has become the leader.
      This is because their replica placement policy has set ``observerPromotionPolicy`` to allow this.
+
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
 
 
 Failover Observers
@@ -808,7 +921,7 @@ the following steps:
 Failback
 ~~~~~~~~
 
-Now you will bring region ``west`` back online.
+Now you will bring region ``west`` back online and restore configuration to the same as in steady state.
 
 #. Run the following command to bring the ``west`` region back online:
 
