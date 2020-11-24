@@ -5,7 +5,7 @@ do
 
   echo -e "\n\n==> JMX metric: $metric \n"
 
-  for topic in single-region multi-region-sync multi-region-async multi-region-default multi-region-async-op-under-min-isr multi-region-async-op-under-replicated multi-region-async-op-leader-is-observer
+  for topic in single-region multi-region-sync multi-region-async multi-region-async-op-under-min-isr multi-region-async-op-under-replicated multi-region-async-op-leader-is-observer multi-region-default
   do
 
     test "$(docker inspect -f '{{.State.ExitCode}}' $(docker ps -laq --filter="name=broker-west-1"))" = "0" \
