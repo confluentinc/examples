@@ -478,7 +478,7 @@ Consumer
 
 
 Monitoring
-~~~~~~~~~~
+----------
 
 In |cs| there are a few JMX metrics you should monitor for determining the
 health and state of a topic partition. The tutorial describes the following JMX
@@ -687,8 +687,8 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-default: 0
 
 
-Failover and Failback
----------------------
+Failover
+--------
 
 Fail Region
 ~~~~~~~~~~~
@@ -1035,7 +1035,7 @@ the following steps:
 
 
 Failback
-~~~~~~~~
+--------
 
 Now you will bring region ``west`` back online and restore configuration to the same as in steady state.
 
