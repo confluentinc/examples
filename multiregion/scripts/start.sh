@@ -32,7 +32,7 @@ ${DIR}/create-topics.sh
 echo -e "\nSleeping 5 seconds"
 sleep 5
 
-echo -e "\n=========== Steady state ==========="
+echo -e "\n=========== Steady state ===========\n"
 
 ${DIR}/describe-topics.sh
 
@@ -51,7 +51,8 @@ sleep 5
 
 ${DIR}/jmx_metrics.sh
 
-echo -e "\n=========== Degrade west region ==========="
+echo -e "\n=========== Degrade west region ===========\n"
+
 docker-compose stop broker-west-1
 
 echo "Sleeping 30 seconds"
@@ -64,7 +65,8 @@ sleep 30
 
 ${DIR}/jmx_metrics.sh
 
-echo -e "\n=========== Fail west region ==========="
+echo -e "\n=========== Fail west region ===========\n"
+
 docker-compose stop broker-west-2 zookeeper-west
 
 echo "Sleeping 30 seconds"
@@ -90,7 +92,7 @@ sleep 5
 
 ${DIR}/jmx_metrics.sh
 
-${DIR}/permanent-fallback.sh
+${DIR}/permanent-failover.sh
 
 echo "Sleeping 30 seconds"
 sleep 30
@@ -99,7 +101,7 @@ ${DIR}/describe-topics.sh
 
 ${DIR}/jmx_metrics.sh
 
-echo -e "\n=========== Restore west region  ==========="
+echo -e "\n=========== Restore west region  ===========\n"
 docker-compose start broker-west-1 broker-west-2 zookeeper-west
 
 echo "Sleeping 300 seconds until the leadership election restores the preferred replicas"
