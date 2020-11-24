@@ -41,21 +41,22 @@ An ``Observer`` is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer doesn't wait
-on observers to get back an acknowledgement. In "non-degraded" steady state, observers don't
-participate in the ISR list and won't become the leader. If a broker in the ISR
-fails, they could be promoted to the ISR list automatically with
-``Observer Promotion`` or by manual changes to leader assignment.
+on observers to get back an acknowledgement.
 
 |Follower_Fetching|
 
-``Observer Promotion`` is the process whereby an observer is promoted into the
-ISR in certain degraded scenarios. This behaviour is controlled by the
-``observerPromotionPolicy`` field in a topic's replica placement policy. It can
-have values:
+In "non-degraded" steady state, observers don't participate in the ISR list and
+won't become the leader. If a broker in the ISR fails, observers could be
+promoted to the ISR list in one of two ways: manual changes to leader assignment,
+or automatically with ``Observer Promotion``.
+``Observer Promotion`` is the process by which an observer is promoted into the
+ISR in certain "degraded" situations. The qualifications for whether an observer
+can be automatically promoted into the ISR is controlled by the
+``observerPromotionPolicy`` field in a topic's replica placement policy:
 
-- under-min-isr: observers will be promoted if the isr size drops below the topic's min.insync.replicas configuration.
-- under-replicated: observers will be promoted if the isr size drops below the configured count of replicas in the topic's replica placement policy.
-- leader-is-observer: observers will only be promoted if the current partition leader is an observer.
+- ``under-min-isr``: if the number of replicas in the ISR drops below the topic's ``min.insync.replicas`` configuration.
+- ``under-replicated``: if the number of replicas in the ISR ISR drops below the configured count of replicas in the topic's replica placement policy.
+- ``leader-is-observer``: if the current partition leader is an observer.
 
 
 Configuration
@@ -68,7 +69,7 @@ The scenario for this tutorial is as follows:
 
 |Multi-region Architecture|
 
-Here are some relevant configuration parameters:
+Here are some relevant configuration parameters at different component levels:
 
 Broker
 ~~~~~~
@@ -136,7 +137,14 @@ Download and run the tutorial
 Startup
 -------
 
-#. Run the following command:
+#. This |mrrep| example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
+WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
+
+   .. code-block:: bash
+
+      ./scripts/build_docker_images.sh
+
+#. Start all the Docker containers
 
    .. code-block:: bash
 
@@ -160,8 +168,7 @@ Startup
 Inject latency and packet loss
 ------------------------------
 
-This example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
-WAN link.
+Here is a diagram of the simulated latency between the regions and the WAN link.
 
 |Multi-region latencies|
 
@@ -171,8 +178,8 @@ WAN link.
 
       docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
 
-#. Run the script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh` that installs and configures
-   ``tc`` on the Docker containers to simulate the latency and packet loss:
+#. Run the script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh` that configures
+   ``tc`` on the Docker containers:
 
    .. code-block:: bash
 
@@ -506,47 +513,47 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
    .. code-block:: text
 
-      ==> Monitor ReplicasCount
+      ==> JMX metric: ReplicasCount
 
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
-      multi-region-default: 4
       multi-region-async-op-under-min-isr: 4
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 4
 
 
-      ==> Monitor InSyncReplicasCount
+      ==> JMX metric: InSyncReplicasCount
 
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 2
-      multi-region-default: 2
       multi-region-async-op-under-min-isr: 2
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 2
+      multi-region-default: 2
 
 
-      ==> Monitor CaughtUpReplicasCount
+      ==> JMX metric: CaughtUpReplicasCount
 
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
-      multi-region-default: 4
       multi-region-async-op-under-min-isr: 4
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 4
 
-      ==> Monitor ObserversInIsrCount
+      ==> JMX metric: ObserversInIsrCount
 
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
-      multi-region-default: 0
       multi-region-async-op-under-min-isr: 0
       multi-region-async-op-under-replicated: 0
       multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
 
 
 Degraded Region
