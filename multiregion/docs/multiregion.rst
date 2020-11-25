@@ -41,13 +41,22 @@ An ``Observer`` is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer doesn't wait
-on observers to get back an acknowledgement. By default, observers don't
-participate in the ISR list and can't become the leader if the current leader
-fails, but if a user manually changes leader assignment then they can
-participate in the ISR list.
+on observers to get back an acknowledgement.
 
 |Follower_Fetching|
 
+In "non-degraded" steady state, observers don't participate in the ISR list and
+won't become the leader. If a broker in the ISR fails, observers could be
+promoted to the ISR list in one of two ways: manual changes to leader assignment,
+or automatically with ``Observer Promotion``.
+``Observer Promotion`` is the process by which an observer is promoted into the
+ISR in certain "degraded" situations. The qualifications for whether an observer
+can be automatically promoted into the ISR is controlled by the
+``observerPromotionPolicy`` field in a topic's replica placement policy:
+
+- ``under-min-isr``: if the number of replicas in the ISR drops below the topic's ``min.insync.replicas`` configuration.
+- ``under-replicated``: if the number of replicas in the ISR ISR drops below the configured count of replicas in the topic's replica placement policy.
+- ``leader-is-observer``: if the current partition leader is an observer.
 
 
 Configuration
@@ -60,7 +69,7 @@ The scenario for this tutorial is as follows:
 
 |Multi-region Architecture|
 
-Here are some relevant configuration parameters:
+Here are some relevant configuration parameters at different component levels:
 
 Broker
 ~~~~~~
@@ -128,7 +137,14 @@ Download and run the tutorial
 Startup
 -------
 
-#. Run the following command:
+#. This |mrrep| example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
+WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
+
+   .. code-block:: bash
+
+      ./scripts/build_docker_images.sh
+
+#. Start all the Docker containers
 
    .. code-block:: bash
 
@@ -152,8 +168,7 @@ Startup
 Inject latency and packet loss
 ------------------------------
 
-This example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
-WAN link.
+Here is a diagram of the simulated latency between the regions and the WAN link.
 
 |Multi-region latencies|
 
@@ -163,8 +178,8 @@ WAN link.
 
       docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(docker ps -aq)
 
-#. Run the script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh` that installs and configures
-   ``tc`` on the Docker containers to simulate the latency and packet loss:
+#. Run the script :devx-examples:`latency_docker.sh|multiregion/scripts/latency_docker.sh` that configures
+   ``tc`` on the Docker containers:
 
    .. code-block:: bash
 
@@ -191,7 +206,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
 
 .. list-table::
-   :widths: 20 15 20 20 10 15
+   :widths: 18 10 16 16 10 10 18
    :header-rows: 1
 
    * - Topic name
@@ -200,6 +215,7 @@ You could create all the topics by running the script :devx-examples:`create-top
      - Observers (async replicas)
      - ISR list
      - Use default placement contraints
+     - Observer Promotion policy
 
    * - single-region
      - 1x west
@@ -207,6 +223,7 @@ You could create all the topics by running the script :devx-examples:`create-top
      - n/a
      - {1,2}
      - no
+     - none
 
    * - multi-region-sync
      - 1x west
@@ -214,6 +231,7 @@ You could create all the topics by running the script :devx-examples:`create-top
      - n/a
      - {1,2,3,4}
      - no
+     - none
 
    * - multi-region-async
      - 1x west
@@ -221,6 +239,31 @@ You could create all the topics by running the script :devx-examples:`create-top
      - 2x east
      - {1,2}
      - no
+     - none
+
+   * - multi-region-async-op-under-min-isr
+     - 1x west
+     - 1x west
+     - 2x east
+     - {1,2}
+     - no
+     - under-min-isr
+
+   * - multi-region-async-op-under-replicated
+     - 1x west
+     - 1x west
+     - 2x east
+     - {1,2}
+     - no
+     - under-replicated
+
+   * - multi-region-async-op-leader-is-observer
+     - 1x west
+     - 1x west
+     - 2x east
+     - {1,2}
+     - no
+     - leader-is-observer
 
    * - multi-region-default
      - 1x west
@@ -228,6 +271,8 @@ You could create all the topics by running the script :devx-examples:`create-top
      - 2x east
      - {1,2}
      - yes
+     - none
+
 
 #. Create the |ak| topic ``single-region``.
 
@@ -256,6 +301,33 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    .. literalinclude:: ../config/placement-multi-region-async.json
 
+#. Create the |ak| topic ``multi-region-async-op-under-min-isr``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 42-48
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-async-op-under-min-isr.json|multiregion/config/placement-multi-region-async-op-under-min-isr.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-async-op-under-min-isr.json
+
+#. Create the |ak| topic ``multi-region-async-op-under-replicated``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 52-58
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-async-op-under-replicated.json|multiregion/config/placement-multi-region-async-op-under-replicated.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-async-op-under-replicated.json
+
+#. Create the |ak| topic ``multi-region-async-op-leader-is-observer``.
+
+   .. literalinclude:: ../scripts/create-topics.sh
+      :lines: 62-68
+
+   Here is the topic's replica placement policy :devx-examples:`placement-multi-region-async-op-leader-is-observer.json|multiregion/config/placement-multi-region-async-op-leader-is-observer.json`:
+
+   .. literalinclude:: ../config/placement-multi-region-async-op-leader-is-observer.json
+
 #. Create the |ak| topic ``multi-region-default``. Note that the ``--replica-placement`` argument is not used in order to demonstrate the default placement constraints.
 
    .. literalinclude:: ../scripts/create-topics.sh
@@ -271,22 +343,37 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    .. code-block:: text
 
-         ==> Describe topic single-region
+         ==> Describe topic: single-region
 
          Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
             Topic: single-region    Partition: 0    Leader: 2   Replicas: 2,1   Isr: 2,1    Offline:
 
-         ==> Describe topic multi-region-sync
+         ==> Describe topic: multi-region-sync
 
          Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
             Topic: multi-region-sync    Partition: 0    Leader: 1   Replicas: 1,2,3,4   Isr: 1,2,3,4    Offline:
 
-         ==> Describe topic multi-region-async
+         ==> Describe topic: multi-region-async
 
          Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
             Topic: multi-region-async   Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
-         ==> Describe topic multi-region-default
+         ==> Describe topic: multi-region-async-op-under-min-isr
+
+         Topic: multi-region-async-op-under-min-isr	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=2,confluent.placement.constraints={"observerPromotionPolicy":"under-min-isr","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         	Topic: multi-region-async-op-under-min-isr	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2,1	Offline: 	Observers: 3,4
+
+         ==> Describe topic: multi-region-async-op-under-replicated
+
+         Topic: multi-region-async-op-under-replicated	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"under-replicated","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         	Topic: multi-region-async-op-under-replicated	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2,1	Offline: 	Observers: 3,4
+
+         ==> Describe topic: multi-region-async-op-leader-is-observer
+
+         Topic: multi-region-async-op-leader-is-observer	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"leader-is-observer","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+         	Topic: multi-region-async-op-leader-is-observer	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2,1	Offline: 	Observers: 3,4
+
+         ==> Describe topic: multi-region-default
 
          Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
             Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
@@ -294,7 +381,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
 #. Observe the following:
 
-   - The ``multi-region-async`` and ``multi-region-default`` topics have replicas
+   - The ``multi-region-async``, ``multi-region-async-op-under-min-isr``, ``multi-region-async-op-under-replicated``, ``multi-region-async-op-leader-is-observer`` and ``multi-region-default`` topics have replicas
      across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
      4 are observers.
 
@@ -404,6 +491,8 @@ metrics. For a description of other relevant JMX metrics, see
   It reports the number of replicas in the ISR.
 - ``CaughtUpReplicasCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=CaughtUpReplicasCount,topic=<topic-name>,partition=<partition-id>``.
   It reports the number of replicas that are consider caught up to the topic partition leader. Note that this may be greater than the size of the ISR as observers may be caught up but are not part of ISR.
+- ``ObserversInIsrCount`` - In JMX the full object name is ``kafka.cluster:type=Partition,name=ObserversInIsrCount,topic=<topic-name>,partition=<partition-id>``.
+  It reports the number of observers that are currently promoted to the ISR.
 
 There is a script you can run to collect the JMX metrics from the command line, but the general form is:
 
@@ -414,8 +503,8 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
 #. Run the script
    :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
-   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, and
-   ``CaughtUpReplicasCount`` from each of the brokers:
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
 
    .. code-block:: bash
 
@@ -425,32 +514,181 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
    .. code-block:: text
 
-      ==> Monitor ReplicasCount
+      ==> JMX metric: ReplicasCount
 
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
 
 
-      ==> Monitor InSyncReplicasCount
+      ==> JMX metric: InSyncReplicasCount
 
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 2
       multi-region-default: 2
 
 
-      ==> Monitor CaughtUpReplicasCount
+      ==> JMX metric: CaughtUpReplicasCount
 
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
 
+      ==> JMX metric: ObserversInIsrCount
 
-Failover and Failback
----------------------
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 0
+      multi-region-async-op-under-replicated: 0
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+
+
+Degraded Region
+---------------
+
+In this section, you will simulate a single broker failure in the ``west`` region.
+
+#. Run the following command to stop one of the broker Docker containers in the ``west`` region:
+
+   .. code-block:: bash
+
+      docker-compose stop broker-west-1
+
+#. Verify the new topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
+
+   .. code-block:: bash
+
+      ./scripts/describe-topics.sh
+
+   You should see output similar to the following:
+
+   .. code-block:: text
+
+      ==> Describe topic: single-region
+
+      Topic: single-region	PartitionCount: 1	ReplicationFactor: 2	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
+      	Topic: single-region	Partition: 0	Leader: 2	Replicas: 1,2	Isr: 2	Offline: 1
+
+      ==> Describe topic: multi-region-sync
+
+      Topic: multi-region-sync	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
+      	Topic: multi-region-sync	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2,3,4	Offline: 1
+
+      ==> Describe topic: multi-region-async
+
+      Topic: multi-region-async	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async	Partition: 0	Leader: 2	Replicas: 1,2,4,3	Isr: 2	Offline: 1	Observers: 4,3
+
+      ==> Describe topic: multi-region-async-op-under-min-isr
+
+      Topic: multi-region-async-op-under-min-isr	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=2,confluent.placement.constraints={"observerPromotionPolicy":"under-min-isr","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-under-min-isr	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2,4	Offline: 1	Observers: 3,4
+
+      ==> Describe topic: multi-region-async-op-under-replicated
+
+      Topic: multi-region-async-op-under-replicated	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"under-replicated","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-under-replicated	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2,4	Offline: 1	Observers: 3,4
+
+      ==> Describe topic: multi-region-async-op-leader-is-observer
+
+      Topic: multi-region-async-op-leader-is-observer	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"leader-is-observer","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-leader-is-observer	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2	Offline: 1	Observers: 3,4
+
+      ==> Describe topic: multi-region-default
+
+      Topic: multi-region-default	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-default	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2	Offline: 1	Observers: 3,4
+
+
+#. Observe the following:
+
+   - In all topics except ``multi-region-async-op-under-min-isr``, ``multi-region-sync`` and ``multi-region-async-op-under-replicated``
+     there is only 1 replica in the ISR. This is because replica placement dictated all replicas were in the ``west``
+     region which has only 1 remaining live broker.
+
+   - In the second scenario, the ``multi-region-sync`` topic maintained an ISR of 3 brokers. This is because its
+     placement policy always allows for brokers from east to join the ISR.
+
+   - The ``multi-region-async-op-under-min-isr`` and ``multi-region-async-op-under-replicated`` topics have placement policies that allow
+     observers to be automatically promoted into the ISR. In the case of ``multi-region-async-op-under-min-isr`` the number of
+     non-observer replicas (1) is less than the ``min.insync.replicas`` value (2). Observers are promoted to the ISR
+     to meet the ``min.insync.replicas`` requirement. In the case of ``multi-region-async-op-under-replicated`` the number of
+     online replicas (1) is less than the intended number of non observer replicas from the replica placement (2). An
+     observer is promoted to fulfill this requirement.
+
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 2
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 1
+      multi-region-sync: 3
+      multi-region-async: 1
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 1
+      multi-region-default: 1
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 1
+      multi-region-sync: 4
+      multi-region-async: 3
+      multi-region-async-op-under-min-isr: 3
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 3
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 1
+      multi-region-async-op-under-replicated: 1
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+
+
+Failover
+--------
 
 Fail Region
 ~~~~~~~~~~~
@@ -473,25 +711,41 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
    .. code-block:: text
 
-      ==> Describe topic single-region
+      ==> Describe topic: single-region
 
       Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
          Topic: single-region    Partition: 0    Leader: none    Replicas: 2,1   Isr: 1  Offline: 2,1
 
-      ==> Describe topic multi-region-sync
+      ==> Describe topic: multi-region-sync
 
       Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
          Topic: multi-region-sync    Partition: 0    Leader: 3   Replicas: 1,2,3,4   Isr: 3,4    Offline: 1,2
 
-      ==> Describe topic multi-region-async
+      ==> Describe topic: multi-region-async
 
       Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-async   Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
-      ==> Describe topic multi-region-default
+      ==> Describe topic: multi-region-async-op-under-min-isr
+
+      Topic: multi-region-async-op-under-min-isr	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=2,confluent.placement.constraints={"observerPromotionPolicy":"under-min-isr","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-under-min-isr	Partition: 0	Leader: 4	Replicas: 2,1,4,3	Isr: 4,3	Offline: 2,1	Observers: 4,3
+
+      ==> Describe topic: multi-region-async-op-under-replicated
+
+      Topic: multi-region-async-op-under-replicated	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"under-replicated","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-under-replicated	Partition: 0	Leader: 4	Replicas: 1,2,3,4	Isr: 4,3	Offline: 1,2	Observers: 3,4
+
+      ==> Describe topic: multi-region-async-op-leader-is-observer
+
+      Topic: multi-region-async-op-leader-is-observer	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"leader-is-observer","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-leader-is-observer	Partition: 0	Leader: none	Replicas: 1,2,4,3	Isr: 2	Offline: 1,2	Observers: 4,3
+
+      ==> Describe topic: multi-region-default
 
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
+
 
 #. Observe the following:
 
@@ -503,11 +757,71 @@ In this section, you will simulate a region failure by bringing down the ``west`
      elected a new leader in ``east`` (for example, replica 3 in the previous
      output). Clients can failover to those replicas in the ``east`` region.
 
-   - In the last two scenarios, the ``multi-region-async`` and
-     ``multi-region-default`` topics have no leader, because they had only two
-     replicas in the ISR, both of which were in the ``west`` region and are now
-     down. The observers in the ``east`` region are not eligible to become
+   - The ``multi-region-async``, ``multi-region-default`` and
+     ``multi-region-async-op-leader-is-observer`` topics have no leader, because they had
+     only two replicas in the ISR, both of which were in the ``west`` region and
+     are now down. The observers in the ``east`` region are not eligible to become
      leaders automatically because they were not in the ISR.
+
+   - The ``multi-region-async-op-under-min-isr`` and ``multi-region-async-op-under-replicated`` topics have
+     promoted observers into the ISR and an observer has become the leader.
+     This is because their replica placement policy has set ``observerPromotionPolicy`` to allow this.
+
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 4
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
 
 
 Failover Observers
@@ -536,12 +850,13 @@ steps:
    .. code-block:: text
 
       ...
-      ==> Describe topic multi-region-async
+      ==> Describe topic: multi-region-async
 
       Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
 
-      ==> Describe topic multi-region-default
+      ...
+      ==> Describe topic: multi-region-default
 
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
@@ -552,6 +867,62 @@ steps:
    - The topics ``multi-region-async`` and ``multi-region-default`` have leaders again (for example, replica 3 in the previous output)
 
    - The topics ``multi-region-async`` and ``multi-region-default`` had observers that are now in the ISR list (for example, replicas 3,4 in the previous output)
+
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
 
 
 Permanent Failover
@@ -571,15 +942,15 @@ the following steps:
 
 #. Change the replica placement constraints configuration and replica assignment
    for ``multi-region-default``, by running the script
-   :devx-examples:`permanent-fallback.sh|multiregion/scripts/permanent-fallback.sh`.
+   :devx-examples:`permanent-failover.sh|multiregion/scripts/permanent-failover.sh`.
 
    .. code-block:: bash
 
-      ./scripts/permanent-fallback.sh
+      ./scripts/permanent-failover.sh
 
    The script uses ``kafka-configs`` to change the replica placement policy and then it runs ``confluent-rebalancer`` to move the replicas.
 
-   .. literalinclude:: ../scripts/permanent-fallback.sh
+   .. literalinclude:: ../scripts/permanent-failover.sh
 
 #. Describe the topics again with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
@@ -592,7 +963,7 @@ the following steps:
    .. code-block:: text
 
       ...
-      ==> Describe topic multi-region-default
+      ==> Describe topic: multi-region-default
 
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline: 2,1    Observers: 2,1
@@ -606,11 +977,67 @@ the following steps:
    - For topic ``multi-region-default``, replicas 3 and 4, which were previously observers, are now sync
      replicas.
 
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 0
+      multi-region-sync: 2
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
+
 
 Failback
-~~~~~~~~
+--------
 
-Now you will bring region ``west`` back online.
+Now you will bring region ``west`` back online and restore configuration to the same as in steady state.
 
 #. Run the following command to bring the ``west`` region back online:
 
@@ -638,20 +1065,36 @@ Now you will bring region ``west`` back online.
       Topic: single-region    PartitionCount: 1   ReplicationFactor: 2    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[]}
          Topic: single-region    Partition: 0    Leader: 2   Replicas: 2,1   Isr: 1,2    Offline:
 
-      ==> Describe topic multi-region-sync
+      ==> Describe topic: multi-region-sync
 
       Topic: multi-region-sync    PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}},{"count":2,"constraints":{"rack":"east"}}],"observers":[]}
          Topic: multi-region-sync    Partition: 0    Leader: 1   Replicas: 1,2,3,4   Isr: 3,4,2,1    Offline:
 
-      ==> Describe topic multi-region-async
+      ==> Describe topic: multi-region-async
 
       Topic: multi-region-async   PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
-      ==> Describe topic multi-region-default
+      ==> Describe topic: multi-region-async-op-under-min-isr
+
+      Topic: multi-region-async-op-under-min-isr	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=2,confluent.placement.constraints={"observerPromotionPolicy":"under-min-isr","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-under-min-isr	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 1,2	Offline: 	Observers: 3,4
+
+      ==> Describe topic: multi-region-async-op-under-replicated
+
+      Topic: multi-region-async-op-under-replicated	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"under-replicated","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-under-replicated	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 1,2	Offline: 	Observers: 3,4
+
+      ==> Describe topic: multi-region-async-op-leader-is-observer
+
+      Topic: multi-region-async-op-leader-is-observer	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"observerPromotionPolicy":"leader-is-observer","version":2,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
+      	Topic: multi-region-async-op-leader-is-observer	Partition: 0	Leader: 2	Replicas: 2,1,3,4	Isr: 2,1	Offline: 	Observers: 3,4
+
+      ==> Describe topic: multi-region-default
 
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline:    Observers: 2,1
+
 
 #. Observe the following:
 
@@ -665,11 +1108,72 @@ Now you will bring region ``west`` back online.
    - The leader for ``multi-region-default`` stayed in the ``east`` region
      because you performed a permanent failover.
 
+   - Any observers automatically promoted in ``multi-region-async-op-under-min-isr`` and
+     ``multi-region-async-op-under-replicated`` are automatically demoted once the ``west``
+     region is restored. Leader election is not required for this demotion
+     process, it will happen as soon as the failed region is restored.
+
 .. note::
 
    On failback from a failover to observers, any data that wasn't replicated to
    observers will be lost because logs are truncated before catching up and
    joining the ISR.
+
+#. Run the script
+   :devx-examples:`jmx_metrics.sh|multiregion/scripts/jmx_metrics.sh` to get the
+   JMX metrics for ``ReplicasCount``,  ``InSyncReplicasCount``, ``CaughtUpReplicasCount``, and ``ObserversInIsrCount``
+   from each of the brokers:
+
+   .. code-block:: bash
+
+      ./scripts/jmx_metrics.sh
+
+#. Verify you see output similar to the following, which should exactly match the output from the start of the tutorial at steady state:
+
+   .. code-block:: text
+
+      ==> JMX metric: ReplicasCount 
+      
+      single-region: 2
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: InSyncReplicasCount 
+      
+      single-region: 2
+      multi-region-sync: 4
+      multi-region-async: 2
+      multi-region-async-op-under-min-isr: 2
+      multi-region-async-op-under-replicated: 2
+      multi-region-async-op-leader-is-observer: 2
+      multi-region-default: 2
+      
+      
+      ==> JMX metric: CaughtUpReplicasCount 
+      
+      single-region: 2
+      multi-region-sync: 4
+      multi-region-async: 4
+      multi-region-async-op-under-min-isr: 4
+      multi-region-async-op-under-replicated: 4
+      multi-region-async-op-leader-is-observer: 4
+      multi-region-default: 4
+      
+      
+      ==> JMX metric: ObserversInIsrCount 
+      
+      single-region: 0
+      multi-region-sync: 0
+      multi-region-async: 0
+      multi-region-async-op-under-min-isr: 0
+      multi-region-async-op-under-replicated: 0
+      multi-region-async-op-leader-is-observer: 0
+      multi-region-default: 0
 
 
 Stop the Tutorial
@@ -759,4 +1263,3 @@ Additional Resources
 --------------------
 
 -  `Blog post: Multi-Region Clusters with Confluent Platform 5.4 <https://www.confluent.io/blog/multi-region-data-replication>`__
-

@@ -5,13 +5,9 @@ source ${DIR}/../.env
 
 ${DIR}/stop.sh
 
-# Confluent's ubi-based Docker images do not have 'tc' installed
-echo
-echo "Build custom cp-zookeeper and cp-server images with 'tc' installed"
-for image in cp-zookeeper cp-server; do
-  docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg REPOSITORY=${REPOSITORY} --build-arg IMAGE=$image -t localbuild/${image}-tc:${CONFLUENT_DOCKER_TAG} -f Dockerfile .
-done
+${DIR}/build_docker_images.sh
 
+echo "Bring up docker-compose"
 docker-compose up -d
 
 echo "Sleeping 20 seconds"
@@ -36,6 +32,8 @@ ${DIR}/create-topics.sh
 echo -e "\nSleeping 5 seconds"
 sleep 5
 
+echo -e "\n=========== Steady state ===========\n"
+
 ${DIR}/describe-topics.sh
 
 echo -e "\nSleeping 5 seconds"
@@ -53,13 +51,30 @@ sleep 5
 
 ${DIR}/jmx_metrics.sh
 
-echo -e "\nFail west region"
-docker-compose stop broker-west-1 broker-west-2 zookeeper-west
+echo -e "\n=========== Degrade west region ===========\n"
+
+docker-compose stop broker-west-1
 
 echo "Sleeping 30 seconds"
 sleep 30
 
 ${DIR}/describe-topics.sh
+
+echo "Sleeping 30 seconds"
+sleep 30
+
+${DIR}/jmx_metrics.sh
+
+echo -e "\n=========== Fail west region ===========\n"
+
+docker-compose stop broker-west-2 zookeeper-west
+
+echo "Sleeping 30 seconds"
+sleep 30
+
+${DIR}/describe-topics.sh
+
+${DIR}/jmx_metrics.sh
 
 echo -e "\nFail over the observers in the topic multi-region-async to the east region, trigger leader election"
 
@@ -75,17 +90,23 @@ ${DIR}/describe-topics.sh
 echo "Sleeping 5 seconds"
 sleep 5
 
-${DIR}/permanent-fallback.sh
+${DIR}/jmx_metrics.sh
+
+${DIR}/permanent-failover.sh
 
 echo "Sleeping 30 seconds"
 sleep 30
 
 ${DIR}/describe-topics.sh
 
-echo -e "\nRestore west region"
+${DIR}/jmx_metrics.sh
+
+echo -e "\n=========== Restore west region  ===========\n"
 docker-compose start broker-west-1 broker-west-2 zookeeper-west
 
 echo "Sleeping 300 seconds until the leadership election restores the preferred replicas"
 sleep 300
 
 ${DIR}/describe-topics.sh
+
+${DIR}/jmx_metrics.sh
