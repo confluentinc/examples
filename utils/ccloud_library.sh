@@ -390,7 +390,7 @@ function ccloud::create_credentials_resource() {
   return 0
 }
 #####################################################################
-# The return from this function will be a colon ':' deliminted 
+# The return from this function will be a colon ':' delimited
 #   list, if the api-key is created the second element of the
 #   list will the secret.  If the api-key is being reused
 #   the second element of the list will be empty

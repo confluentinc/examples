@@ -130,7 +130,7 @@ Once you've confirmed all the Docker containers are running, create the source c
           'kafka.topic'              = 'clickstream_codes',
           'quickstart'               = 'clickstream_codes',
           'maxInterval'              = '20',
-          'interations'              = '100',
+          'iterations'               = '100',
           'format'                   = 'json',
           'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter');
          Message
