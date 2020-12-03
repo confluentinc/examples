@@ -1,0 +1,17 @@
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  annotations:
+#    helm.sh/hook: post-upgrade, post-install
+#    helm.sh/hook-delete-policy: "before-hook-creation"
+  labels:
+    namespace: {{ .Release.Namespace }}
+    type: {{ .Values.name }}
+  name: {{ .Values.name }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      namespace: {{ .Release.Namespace }}
+      type: {{ .Values.name }}

@@ -31,6 +31,7 @@ replicator-aks-cc-deploy-client-console: #_ Deploys the client console for CLI a
 ##################################################################
 
 replicator-aks-cc-demo:
+	cp $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/pdb.yaml $(OPERATOR_PATH)helm/confluent-operator/charts/kafka/templates/pdb.yaml
 	@make --no-print-directory run-replicator-demo
 	@make --no-print-directory replicator-aks-cc-deploy-client-console
 	@echo
