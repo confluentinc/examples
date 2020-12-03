@@ -42,7 +42,7 @@ The Helm chart is located in the ``kubernetes/common/helm/replicator-cc`` folder
          }
        }'
 
-In the same directory as the ConfigMap manifest file is a `Kubernetes Job <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>`__ manifest (``replicator-connector-deploy-job.yaml``).  This defines a Kuberenetes `Job <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>`__ that will successfully execute a job to completion and terminate.  Using a Docker image that contains the ``curl`` program, the ConfigMap defined above is mounted to the batch job Pod, and then ``curl`` executes a ``POST`` to the |kconnect-long| REST API to deploy |crep|.
+In the same directory as the ConfigMap manifest file is a `Kubernetes Job <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>`__ manifest (``replicator-connector-deploy-job.yaml``).  This defines a Kubernetes `Job <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>`__ that will successfully execute a job to completion and terminate.  Using a Docker image that contains the ``curl`` program, the ConfigMap defined above is mounted to the batch job Pod, and then ``curl`` executes a ``POST`` to the |kconnect-long| REST API to deploy |crep|.
 
 ::
 
