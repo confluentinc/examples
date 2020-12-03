@@ -130,7 +130,7 @@ Once you've confirmed all the Docker containers are running, create the source c
           'kafka.topic'              = 'clickstream_codes',
           'quickstart'               = 'clickstream_codes',
           'maxInterval'              = '20',
-          'interations'              = '100',
+          'iterations'               = '100',
           'format'                   = 'json',
           'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter');
          Message
@@ -308,14 +308,12 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
         Loading Grafana ClickStream Dashboard
 
 
-#. Navigate to the [Grafana dashboard at http://localhost:3000](http://localhost:3000)
+#. Navigate to the Grafana dashboard at http://localhost:3000. Enter the username and password as ``user`` and ``user``. Then navigate to the ``Clickstream Analysis Dashboard``.
 
-    Enter the username and password as ``user`` and ``user``. Then navigate to the ``Clickstream Analysis Dashboard``.
+   .. image:: images/grafana-dashboard.png
+      :alt: Grafana Dashboard
 
-    .. image:: images/grafana-dashboard.png
-       :alt: Grafana Dashboard
-
-#. In the |c3| [UI at http://localhost:9021](http://localhost:9021), again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+#. In the |c3| UI at http://localhost:9021, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
 
    .. image:: images/c3_connectors.png
         :alt: Connectors
@@ -352,14 +350,10 @@ The script will issue some statements to the console about where it is in the pr
 View the data in Grafana
 ---------------------------------------------
 
-Now open your your browser using the URL output from the step where you loaded the data into Grafana.
-    You can login with user ID ``user`` and password ``user``.
+#. Navigate to the Grafana dashboard at http://localhost:3000. Enter the username and password as ``user`` and ``user``. Then navigate to the ``Clickstream Analysis Dashboard``.
 
-    **Important:** If you already have Grafana UI open, you may need to
-    enter the specific clickstream URL output by the previous step
-
-    .. image:: images/grafana-sessions.png
-       :alt: Grafana UI success
+   .. image:: images/grafana-sessions.png
+      :alt: Grafana UI success
 
 This dashboard demonstrates a series of streaming functionality where the title of each panel describes the type of stream
 processing required to generate the data. For example, the large chart in the middle is showing web-resource requests on a per-username basis

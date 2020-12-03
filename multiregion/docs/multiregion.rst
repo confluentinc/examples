@@ -199,7 +199,7 @@ You could create all the topics by running the script :devx-examples:`create-top
      - Followers (sync replicas)
      - Observers (async replicas)
      - ISR list
-     - Use default placement contraints
+     - Use default placement constraints
 
    * - single-region
      - 1x west
@@ -382,7 +382,7 @@ Consumer
      example, ``0.9025`` MB per sec in the previous example).
 
    - In the second scenario, the consumer running in ``east`` reads from the
-     follower that is also in ``east``–the throughput of the consumner is higher
+     follower that is also in ``east``–the throughput of the consumer is higher
      in this case (for example, ``3.9356`` MBps in the previous example).
 
    - This example doesn’t consume from ``multi-region-default`` as the
