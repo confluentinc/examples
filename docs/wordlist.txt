@@ -568,7 +568,6 @@ autotest
 avroMovie
 avroMovieStream
 awaitTermination
-awaitign
 backoffLimit
 backstore
 backtrace
@@ -578,7 +577,6 @@ baseseq
 basicAuth
 beginTransaction
 binutils
-blogpost
 bnoordhuis
 boolean
 br
@@ -642,8 +640,6 @@ consoleproducer
 consumerProps
 consumerRecords
 consumerTest
-consumner
-contraints
 convertRawMovie
 convertedTable
 copyFieldToKey
@@ -674,7 +670,6 @@ datagen
 dataset
 datasources
 datetime
-de
 debhelper
 debuginfo
 debuild
@@ -705,7 +700,6 @@ distro
 distros
 dll
 dlopen
-dnZwEAm
 dname
 docblock
 docstrings
@@ -736,7 +730,6 @@ extfile
 extractKeyFromStruct
 fanout
 fileUriToPath
-fno
 forEach
 freenumber
 fromByteBuffer
@@ -967,7 +960,6 @@ newTopicName
 newversion
 nocerts
 nounset
-nptl
 nullable
 nullptr
 num
@@ -1227,7 +1219,6 @@ ubi
 ubsan
 uc
 ucase
-ugprade
 ulimit
 uname
 unassign
