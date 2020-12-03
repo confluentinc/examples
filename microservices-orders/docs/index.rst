@@ -190,7 +190,7 @@ Setup the Tutorial
 
    - Exercise 0: Run end-to-end example
 
-#. After you have successfully run the full solution, go through each of the execises 1-7 to better understand the basic principles of streaming applications:
+#. After you have successfully run the full solution, go through each of the exercises 1-7 to better understand the basic principles of streaming applications:
 
    - Exercise 1: Persist events 
    - Exercise 2: Event-driven applications
@@ -508,7 +508,7 @@ Exercise 4: Filtering and branching
 A stream of events can be captured in a Kafka topic.
 Client applications can then manipulate this stream based on some user-defined criteria, even creating new streams of data that they can act on or downstream services can act on.
 These help create new streams with more logically consistent data.
-In some cases, the application may need to filter events from an input stream that match certain critera, which results in a new stream with just a subset of records from the original stream.
+In some cases, the application may need to filter events from an input stream that match certain criteria, which results in a new stream with just a subset of records from the original stream.
 In other cases, the application may need to branch events, whereby each event is tested against a predicate and then routed to a stream that matches, which results in multiple new streams split from the original stream.
 
 .. figure:: images/microservices-exercise-4.png
