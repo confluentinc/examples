@@ -308,14 +308,12 @@ Send the ksqlDB tables to Elasticsearch and Grafana.
         Loading Grafana ClickStream Dashboard
 
 
-#. Navigate to the [Grafana dashboard at http://localhost:3000](http://localhost:3000)
-
-    Enter the username and password as ``user`` and ``user``. Then navigate to the ``Clickstream Analysis Dashboard``.
+#. Navigate to the Grafana dashboard at http://localhost:3000. Enter the username and password as ``user`` and ``user``. Then navigate to the ``Clickstream Analysis Dashboard``.
 
     .. image:: images/grafana-dashboard.png
        :alt: Grafana Dashboard
 
-#. In the |c3| [UI at http://localhost:9021](http://localhost:9021), again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
+#. In the |c3| UI at http://localhost:9021, again view the running connectors. The three kafka-connect-datagen source connectors were created with the ksqlDB CLI, and the seven Elasticsearch sink connectors were created with the ksqlDB REST API.
 
    .. image:: images/c3_connectors.png
         :alt: Connectors
