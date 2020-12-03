@@ -661,7 +661,6 @@ createPartitions
 createReadStream
 createTempDirectory
 createTopics
-critera
 crt
 csa
 csv
@@ -669,7 +668,6 @@ ctest
 ctrl
 customerLevel
 cyrus
-czd
 dassert
 datadog
 datagen
@@ -714,7 +712,6 @@ docstrings
 doesn
 downcasts
 doxygen
-eachother
 eaj
 electPreferredLeader
 emacs
@@ -741,7 +738,6 @@ fanout
 fileUriToPath
 fno
 forEach
-foward
 freenumber
 fromByteBuffer
 fromJson
@@ -796,7 +792,6 @@ hasAmount
 hasName
 hasSale
 heredoc
-hickups
 homepath
 html
 http
@@ -813,7 +808,6 @@ importkeystore
 includePath
 incrementalAlterConfigs
 incrementing
-infastructure
 inflight
 ini
 init
@@ -821,17 +815,11 @@ initTransactions
 inputAvroTopicName
 inputStream
 inputTopic
-instantation
 integrations
 intelliSenseMode
 intellisense
-interations
-intervalled
 intra
-invocing
 io
-iojs
-iovecs
 ip
 isDefault
 isEmpty
@@ -877,7 +865,6 @@ keytab
 keytabs
 keytool
 kkoopa
-kngnv
 ksql
 ksqlDB
 ksqlDB's
@@ -932,8 +919,6 @@ microservice
 minify
 minmax
 mkdir
-mkrufky
-mnt
 monitoringKafkaClusters
 movieFiguresTestOutputTopic
 movieId
@@ -1146,7 +1131,6 @@ someKey
 someNumber
 someString
 sourcecode
-specfic
 specialOrderOutput
 sql
 sqlite
@@ -1287,5 +1271,4 @@ workdir
 xml
 xmm
 yaml
-yeva
 yml
