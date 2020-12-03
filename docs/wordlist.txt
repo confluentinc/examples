@@ -157,7 +157,6 @@ GCCallbackFlags
 GCP
 GCS
 GITVER
-Garrity
 GenericAvroSerde
 GetAlignedPointerFromInternalField
 GetBackingStore
@@ -212,7 +211,6 @@ JoinGroupRequest
 JoinStreamToTable
 JoinStreamToTableTest
 Jolokia
-KAIOy
 KEEPALIVE
 KEYCOL
 KGroupedStream
@@ -243,7 +241,6 @@ KeyValueStore
 Kinesis
 KsqlServerInfo
 KsqlServerMain
-Kuberenetes
 LD
 LDFLAGS
 LTS
@@ -259,7 +256,6 @@ LoginAggregator
 LoginAggregatorTest
 LoginEvent
 LoginRollup
-Loic
 LongSerializer
 MBps
 MDS
@@ -355,7 +351,6 @@ OpenLDAP
 OpenSSL
 OpenSSL's
 OrderValidationResult
-Oriana
 PAGEVIEWS
 PID's
 PROTOBUF
@@ -370,7 +365,6 @@ Prem
 PressureAlert
 PressureDatetimeExtractor
 PressureDatetimeExtractorTest
-Produban's
 ProducerAvroExample
 ProducerID
 ProducerRecord
@@ -383,7 +377,6 @@ PropertyQueryName
 PropertySetterName
 Protobuf
 PrototypeTemplate's
-Prozess
 PyPi
 README
 REBALANCING
@@ -415,7 +408,6 @@ ReplicatorApp
 ResolvingDecoder
 ResultConsumer
 Rolebinding
-Romagosa
 RunningAverage
 RunningAverageTest
 RuntimeException
@@ -478,7 +470,6 @@ StreamsToTable
 StreamsToTableTest
 SyncGroup
 TABLENAME
-THRES
 TIMESTAMPTOSTRING
 TaskId
 TaskKey
@@ -515,7 +506,6 @@ VV
 VWAP
 Vagg
 ValueJoiner
-Verwandlung
 Virtualenv
 Visualisation
 VwapUdf
