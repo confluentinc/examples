@@ -25,7 +25,7 @@ ADDITIONAL_HELM_FLAGS ?=
 SKIP_CLICKS ?=
 SKIP_CLIENT_CONSOLE ?=
  
-HELM_COMMON_FLAGS := --wait --timeout=5m -f $(AKS_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(AKS_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(AKS_BASE_REGION)-$(AKS_BASE_ZONE)} $(AKS_BASE_ADDITIONAL_HELM_FLAGS)
+HELM_COMMON_FLAGS := --wait --timeout=5m -f $(AKS_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(AKS_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(AKS_BASE_REGION)-$(AKS_BASE_ZONE)} $(ADDITIONAL_HELM_FLAGS)
 
 aks-check-dependencies: check-dependencies
 	@$(call check-var-defined,AZ_RESOURCE_GROUP)
