@@ -12,7 +12,7 @@ CREATE SOURCE CONNECTOR datagen_clickstream_users WITH (
   'kafka.topic'              = 'clickstream_users',
   'quickstart'               = 'clickstream_users',
   'maxInterval'              = '10',
-  'iterations'              = '1000',
+  'iterations'               = '1000',
   'format'                   = 'json',
   'key.converter'            = 'org.apache.kafka.connect.converters.IntegerConverter');
 
