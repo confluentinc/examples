@@ -152,7 +152,7 @@ cat <<EOF > $CLIENT_CONFIG
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='${API_KEY_SA}' password='${API_SECRET_SA}';
 EOF
 echo "$ cat $CLIENT_CONFIG"
 cat $CLIENT_CONFIG
