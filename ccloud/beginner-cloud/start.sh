@@ -109,17 +109,17 @@ if [[ $status != 0 ]]; then
   exit 1
 fi
 
-echo -e "\n# Produce 10 messages to topic $TOPIC1"
-echo '(for i in `seq 1 10`; do echo "${i}" ; done) | \'
+echo -e "\n# Produce 5 messages to topic $TOPIC1"
+echo '(for i in `seq 1 5`; do echo "${i}" ; done) | \'
 echo "timeout 10s ccloud kafka topic produce $TOPIC1"
-(for i in `seq 1 10`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
+(for i in `seq 1 5`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
 status=$?
 if [[ $status != 0 && $status != 124 ]]; then
   echo "ERROR: There seems to be a failure with 'ccloud kafka topic produce' command. Please troubleshoot"
   exit 1
 fi
 # Print messages to give user feedback during script run because it's not printed above
-(for i in `seq 1 10`; do echo "${i}" ; done)
+(for i in `seq 1 5`; do echo "${i}" ; done)
 
 echo -e "\n# Consume messages from topic $TOPIC1"
 echo "ccloud kafka topic consume $TOPIC1 -b"
@@ -152,7 +152,7 @@ cat <<EOF > $CLIENT_CONFIG
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="${API_KEY_SA}" password\="${API_SECRET_SA}";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='${API_KEY_SA}' password='${API_SECRET_SA}';
 EOF
 echo "$ cat $CLIENT_CONFIG"
 cat $CLIENT_CONFIG

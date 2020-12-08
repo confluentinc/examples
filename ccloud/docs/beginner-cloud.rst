@@ -32,7 +32,7 @@ Prerequisites
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
 -  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.7.0 or later)
+   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.21.0 or later)
 
 -  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
    <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
@@ -160,7 +160,7 @@ Create a new Confluent Cloud cluster
       | Egress       |                                                     100 |
       | Storage      |                                                    5000 |
       | Provider     | aws                                                     |
-      | Availability | LOW                                                     |
+      | Availability | single-zone                                             |
       | Region       | us-west-2                                               |
       | Status       | UP                                                      |
       | Endpoint     | SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092 |
@@ -221,8 +221,6 @@ Create a new API key/secret pair for user
 
       Set the API Key "QX7X4VA4DFJTTOIA" as the active API key for "lkc-x6m01".
 
-      Waiting for Confluent Cloud cluster to be ready and for credentials to propagate
-      ....
 
 Produce and consume records with Confluent Cloud CLI
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -233,29 +231,23 @@ Produce and consume records with Confluent Cloud CLI
 
       ccloud kafka topic create demo-topic-1
 
-#. Produce 10 messages to topic ``demo-topic-1`` by running the following
-   commands:
+#. Start producing to this topic ``demo-topic-1`` by running the following command:
 
    .. code-block:: bash
 
-         (for i in `seq 1 10`; do echo "${i}" ; done) | \
-           ccloud kafka topic produce demo-topic-1
+      ccloud kafka topic produce demo-topic-1
 
-#. Verify your output resembles:
+#. The CLI waits for you to type data at the prompt, so type a few characters each on a new line. For example, type the numbers 1 through 5:
 
-   .. code-block:: text
+   .. code-block:: bash
 
-      Starting Kafka Producer. ^C or ^D to exit
       1
       2
       3
       4
       5
-      6
-      7
-      8
-      9
-      10
+
+#. Type ``<CTRL-C>`` when you are finished.
 
 #. Run the following command to consume messages from topic ``demo-topic-1``.
    The flag ``-b`` allows the consumer to read from the beginning of the topic.
@@ -264,23 +256,18 @@ Produce and consume records with Confluent Cloud CLI
 
       ccloud kafka topic consume demo-topic-1 -b
 
-#. Verify your output resembles:
+#. Verify your output resembles the following. It is expected to be out of order because of round-robin partitioner:
 
    .. code-block:: text
 
       Starting Kafka Consumer. ^C or ^D to exit
-      2
-      3
-      9
-      4
-      5
-      7
-      10
       1
-      6
-      8
+      3
+      5
+      2
+      4
 
-#. Press ``CTRL-C`` to stop the consumer.
+#. Type ``CTRL-C`` to stop the consumer.
 
 
 Create a new service account with an API key/secret pair
@@ -328,14 +315,15 @@ Create a new service account with an API key/secret pair
 
 #. Create a local configuration file ``/tmp/client.config`` with |ccloud|
    connection information using the newly created |ak| cluster and the API key
-   and secret for the service account:
+   and secret for the service account. Substitute your values for the bootstrap
+   server and credentials just created.
 
    .. code-block:: text
 
        sasl.mechanism=PLAIN
        security.protocol=SASL_SSL
        bootstrap.servers=pkc-4kgmg.us-west-2.aws.confluent.cloud:9092
-       sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="ESN5FSNDHOFFSUEV" password\="nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB";
+       sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='ESN5FSNDHOFFSUEV' password='nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB';
 
 #. Wait about 90 seconds for the |ccloud| cluster to be ready and for the
    service account credentials to propagate.
@@ -358,6 +346,12 @@ Run a Java producer without ACLs
 
         ServiceAccountId | Permission | Operation | Resource | Name | Type
       +------------------+------------+-----------+----------+------+------+
+
+#. Compile the Java project at :devx-examples:`clients/cloud/java|clients/cloud/java/`
+
+   .. code-block:: bash
+
+      mvn  -f ../../clients/cloud/java/pom.xml compile
 
 #. Run a Java producer to ``demo-topic-1`` before configuring ACLs (expected
    to fail). Note that you pass in an argument to ``/tmp/client.config`` which
@@ -643,8 +637,8 @@ Run kafka-connect-datagen connector with wildcard ACLs
       ../../ccloud/ccloud-generate-cp-configs.sh /tmp/client.config &>/dev/null
       source delta_configs/env.delta
 
-#. Run the following :devx-examples:`docker-compose.yml file|ccloud/beginner-cloud/docker-compose.yml`
-   which is a |kconnect| container with the`kafka-connect-datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ plugin:
+#. Run the provided :devx-examples:`docker-compose.yml file|ccloud/beginner-cloud/docker-compose.yml`
+   which is a |kconnect| container with the `kafka-connect-datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ plugin:
 
    .. code-block:: bash
 
@@ -654,9 +648,8 @@ Run kafka-connect-datagen connector with wildcard ACLs
 
    .. code-block:: text
 
+      Creating network "beginner-cloud_default" with the default driver
       Creating connect-cloud ... done
-      Waiting up to 180 seconds for Docker container for connect to be up
-      ............
 
 #. Post the configuration for the kafka-connect-datagen connector that produces
    pageviews data to |ccloud| topic ``demo-topic-3``:
@@ -684,7 +677,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
          curl --silent --output /dev/null -X POST -H "Content-Type: application/json" --data "${DATA}" http://localhost:8083/connectors
 
 
-#. Wait about 20 seconds for kafka-connect-datagen to start producing messages.
+#. Wait about 20 seconds for the kafka-connect-datagen connector to start producing messages.
 
 #. Run the following command to verify connector is running:
 
@@ -757,18 +750,17 @@ Run a Java consumer with a Wildcard ACL
 
 
 #. Run the Java consumer from ``demo-topic-3`` which is populated by
-   kafka-connect-datagen:
+   the kafka-connect-datagen connector, and wait 15 seconds for it to complete.
 
    .. code-block:: bash
 
-      mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="/tmp/client.config demo-topic-3" -Dlog4j.configuration=file:log4j.properties > /tmp/log.4 2>&1
+      timeout 15s mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="/tmp/client.config demo-topic-3" -Dlog4j.configuration=file:log4j.properties > /tmp/log.4 2>&1
 
-#. Verify you see the ``Consumed record with`` message in the log file
+#. Verify you see ``Consumed record with`` messages in the log file
    ``/tmp/log.4`` as shown in the following example:
 
    .. code-block:: text
 
-      Consumed record with key 1 and value {"viewtime":1,"userid":"User_6","pageid":"Page_82"}
       Consumed record with key 71 and value {"viewtime":71,"userid":"User_6","pageid":"Page_11"}
       Consumed record with key 51 and value {"viewtime":51,"userid":"User_7","pageid":"Page_24"}
       Consumed record with key 31 and value {"viewtime":31,"userid":"User_7","pageid":"Page_68"}
