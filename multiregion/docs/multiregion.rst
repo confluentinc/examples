@@ -391,27 +391,15 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    |C3 topics overview|
 
-   Click on the single-region topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
-
-   |single-region-placement|
-
-   Click on the multi-region-sync topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
-
-   |single-region-placement|
-
-   Click on the multi-region-async topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
+   Click on each topic to see details about the replica and observer placement. This will mirror the CLI output above. Below is an example of the multi-region-async topic.
 
    |multi-region-async replicas|
-
-   Click on the multi-region-default topic and scroll to the bottom of the page to see the replica placement. It should resemble the image below and the CLI output above.
-
-   |multi-region-default-placement|
 
 #. Observe the following:
 
    - The ``multi-region-async``, ``multi-region-async-op-under-min-isr``, ``multi-region-async-op-under-replicated``, ``multi-region-async-op-leader-is-observer`` and ``multi-region-default`` topics have replicas
      across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
-     4 are observers.
+     4 are observers. This can be observed via the CLI output or C3.
 
 
 Client Performance
@@ -586,9 +574,9 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
 #. Some of these metrics are viewable in the "Topics" section of the C3 UI.
 
-   The "Out of sync followers" displays "x of n", with "x" being how many followers are out of sync and "n" being the InSyncReplicasCount.
+    TODO FIX--what other metrics are here?
 
-   "ReplicasCount" can be determined by adding the "n" from the "Out of sync followers" and the "n" from "Out of sync observers".
+   "ReplicasCount" can be determined by adding the number of "Followers" and the number of "Observers".
 
    |c3-monitoring-topics|
 
@@ -648,6 +636,9 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       Topic: multi-region-default	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
       	Topic: multi-region-default	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2	Offline: 1	Observers: 3,4
 
+#. Verify similar replica placement in C3:
+
+
 
 #. Observe the following:
 
@@ -678,8 +669,8 @@ In this section, you will simulate a single broker failure in the ``west`` regio
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
@@ -687,10 +678,10 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 1
       multi-region-sync: 3
       multi-region-async: 1
@@ -698,10 +689,10 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 1
       multi-region-default: 1
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 1
       multi-region-sync: 4
       multi-region-async: 3
@@ -709,10 +700,10 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 3
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
@@ -818,8 +809,8 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 0
       multi-region-sync: 4
       multi-region-async: 0
@@ -827,10 +818,10 @@ In this section, you will simulate a region failure by bringing down the ``west`
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 0
@@ -838,10 +829,10 @@ In this section, you will simulate a region failure by bringing down the ``west`
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 0
@@ -849,10 +840,10 @@ In this section, you will simulate a region failure by bringing down the ``west`
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
@@ -923,8 +914,8 @@ steps:
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 0
       multi-region-sync: 4
       multi-region-async: 4
@@ -932,10 +923,10 @@ steps:
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -943,10 +934,10 @@ steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -954,10 +945,10 @@ steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 2
@@ -1032,8 +1023,8 @@ the following steps:
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 0
       multi-region-sync: 4
       multi-region-async: 4
@@ -1041,10 +1032,10 @@ the following steps:
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -1052,10 +1043,10 @@ the following steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 0
       multi-region-sync: 2
       multi-region-async: 2
@@ -1063,10 +1054,10 @@ the following steps:
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 2
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 2
@@ -1174,8 +1165,8 @@ Now you will bring region ``west`` back online and restore configuration to the 
 
    .. code-block:: text
 
-      ==> JMX metric: ReplicasCount 
-      
+      ==> JMX metric: ReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
@@ -1183,10 +1174,10 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
-      
-      
-      ==> JMX metric: InSyncReplicasCount 
-      
+
+
+      ==> JMX metric: InSyncReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 2
@@ -1194,10 +1185,10 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-under-replicated: 2
       multi-region-async-op-leader-is-observer: 2
       multi-region-default: 2
-      
-      
-      ==> JMX metric: CaughtUpReplicasCount 
-      
+
+
+      ==> JMX metric: CaughtUpReplicasCount
+
       single-region: 2
       multi-region-sync: 4
       multi-region-async: 4
@@ -1205,10 +1196,10 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-under-replicated: 4
       multi-region-async-op-leader-is-observer: 4
       multi-region-default: 4
-      
-      
-      ==> JMX metric: ObserversInIsrCount 
-      
+
+
+      ==> JMX metric: ObserversInIsrCount
+
       single-region: 0
       multi-region-sync: 0
       multi-region-async: 0
@@ -1311,18 +1302,6 @@ it is possible Docker networking not working or cleaning up properly between run
 .. |multi-region-async replicas|
    image:: images/multi-region-async-placement.png
    :alt: multi-region-async replicas
-
-.. |multi-region-default-placement|
-   image:: images/multi-region-default-placement.png
-   :alt: multi-region-default replicas
-
-.. |multi-region-sync replicas|
-   image:: images/multi-region-sync-placement.png
-   :alt: multi-region-sync replicas
-
-.. |single-region-placement|
-   image:: images/single-region-placement.png
-   :alt: single-region replicas
 
 .. |c3-monitoring-topics|
    image:: images/c3-monitoring-topics.png
