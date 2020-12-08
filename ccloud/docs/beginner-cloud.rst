@@ -237,7 +237,7 @@ Produce and consume records with Confluent Cloud CLI
 
       ccloud kafka topic produce demo-topic-1
 
-#. The CLI waits for you to type data at the prompt, so type a few characters each on a new line. For example, type th enumbers 1 through 5
+#. The CLI waits for you to type data at the prompt, so type a few characters each on a new line. For example, type the numbers 1 through 5:
 
    .. code-block:: bash
 
