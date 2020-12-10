@@ -56,7 +56,7 @@ Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ G
 AKS Setup
 ~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a AKS Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``Standard_D4_v3``.  
+In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a AKS Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``Standard_D4s_v4``.  
 
 .. tip:: The :ref:`examples-operator-aks-base-variable-reference` section can be used to control the size of the deployed resources in this example.
 
