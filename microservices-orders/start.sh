@@ -80,7 +80,7 @@ echo "Port $FREE_PORT looks free for the Orders Service"
 JAR=$(ls kafka-streams-examples/target/ | grep standalone | awk '{print $NF;}')
 
 echo "Running Microservices"
-( RESTPORT=$FREE_PORT JAR="${JAR}" scripts/run-services.sh > logs/run-services.log 2>&1 & )
+( RESTPORT=$FREE_PORT JAR="$(pwd)/${JAR}" scripts/run-services.sh > logs/run-services.log 2>&1 & )
 
 echo "Waiting for data population before starting ksqlDB applications"
 sleep 150
