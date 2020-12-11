@@ -12,6 +12,14 @@ check_running_kibana || exit 1
 check_running_cp ${CONFLUENT} || exit 1
 check_sqlite3 || exit 1
 
+check_env \
+  && print_pass "Confluent Platform installed" \
+  || exit 1
+check_running_cp ${CONFLUENT} \
+  && print_pass "Confluent Platform version ${CONFLUENT} ok" \
+  || exit 1
+
+
 ./stop.sh
 
 if [ ! -z "$KAFKA_STREAMS_BRANCH" ]; then
@@ -68,8 +76,11 @@ while [[ $(netstat -ant | grep "$FREE_PORT") != "" ]]; do
   fi
 done
 echo "Port $FREE_PORT looks free for the Orders Service"
+
+JAR=$(ls kafka-streams-examples/target/ | grep standalone | awk '{print $NF;}')
+
 echo "Running Microservices"
-( RESTPORT=$FREE_PORT JAR=$(pwd)"/kafka-streams-examples/target/kafka-streams-examples-$CONFLUENT-standalone.jar" scripts/run-services.sh > logs/run-services.log 2>&1 & )
+( RESTPORT=$FREE_PORT JAR="${JAR}" scripts/run-services.sh > logs/run-services.log 2>&1 & )
 
 echo "Waiting for data population before starting ksqlDB applications"
 sleep 150
