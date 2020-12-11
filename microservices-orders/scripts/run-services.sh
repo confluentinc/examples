@@ -5,8 +5,7 @@ set -m
 BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS:-broker:9092}
 SCHEMA_REGISTRY_URL=${SCHEMA_REGISTRY_URL:-http://schema-registry:8081}
 RESTPORT=${RESTPORT:-18894}
-JAR_DEFAULT="/usr/share/java/kafka-streams-examples/"$(ls /usr/share/java/kafka-streams-examples/ | grep standalone | awk '{print $NF;}')
-JAR=${JAR:-$JAR_DEFAULT}
+JAR=${JAR:-"/usr/share/java/kafka-streams-examples/kafka-streams-examples-*-standalone.jar"}
 PIDS=()
 [[ -z "$CONFIG_FILE" ]] && CONFIG_FILE_ARG="" || CONFIG_FILE_ARG="--config-file $CONFIG_FILE"
 ADDITIONAL_ARGS=${ADDITIONAL_ARGS:-""}

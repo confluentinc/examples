@@ -27,6 +27,7 @@ if [ ! -z "$KAFKA_STREAMS_BRANCH" ]; then
 else
 	get_and_compile_kafka_streams_examples || exit 1;
 fi;
+JAR="$(pwd)/kafka-streams-examples/target/kafka-streams-examples-*-standalone.jar"
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
@@ -39,6 +40,7 @@ export SCHEMA_REGISTRY_URL=http://localhost:8081
 export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
 export ELASTICSEARCH_URL=http://localhost:9200
 
+echo
 echo "Creating demo topics"
 ./scripts/create-topics.sh topics.txt
 
@@ -77,9 +79,7 @@ while [[ $(netstat -ant | grep "$FREE_PORT") != "" ]]; do
 done
 echo "Port $FREE_PORT looks free for the Orders Service"
 
-JAR="$(pwd)/kafka-streams-examples/target/"$(ls kafka-streams-examples/target/ | grep standalone | awk '{print $NF;}')
-
-echo "Running Microservices"
+echo "Starting microservices from $JAR"
 ( RESTPORT=$FREE_PORT JAR="${JAR}" scripts/run-services.sh > logs/run-services.log 2>&1 & )
 
 echo "Waiting for data population before starting ksqlDB applications"
