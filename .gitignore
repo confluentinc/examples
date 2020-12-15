@@ -24,3 +24,6 @@ log.*
 **/eventlogs.sql
 **/.DS_Store
 ccloud/*.zip
+*.project
+*.classpath
+**/.settings/
