@@ -578,7 +578,7 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
    "ReplicasCount" can be determined by adding the number of "Followers" and the number of "Observers".
 
-   |c3-monitoring-topics|
+   |C3 monitoring topics|
 
 Degraded Region
 ---------------
@@ -636,9 +636,8 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       Topic: multi-region-default	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
       	Topic: multi-region-default	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2	Offline: 1	Observers: 3,4
 
-#. Verify similar replica placement in C3:
-
-
+#. Verify similar replica placement in C3. Note that it may take up to 5 minutes for C3 to properly report the new topic stats.
+    |C3 degraded region|
 
 #. Observe the following:
 
@@ -774,7 +773,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
 #. Given five minutes, you should see something similar to below in C3. The numbers may be off while the cluster stabilizes.
 
-   |fail-region|
+   |C3 fail region|
 
 #. Observe the following:
 
@@ -892,7 +891,7 @@ steps:
 
 #. View the changes in the unclean leader election in C3 under the "Topics" section.
 
-   |unclean-leader-election|
+   |C3 unclean leader election|
 
 
 #. Observe the following:
@@ -1128,7 +1127,6 @@ Now you will bring region ``west`` back online and restore configuration to the 
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"east"}}],"observers":[{"count":2,"constraints":{"rack":"west"}}]}
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline:    Observers: 2,1
 
-
 #. Observe the following:
 
    - All topics have leaders again, in particular ``single-region`` which lost its
@@ -1145,6 +1143,8 @@ Now you will bring region ``west`` back online and restore configuration to the 
      ``multi-region-async-op-under-replicated`` are automatically demoted once the ``west``
      region is restored. Leader election is not required for this demotion
      process, it will happen as soon as the failed region is restored.
+
+   - The C3 topics page is the same as it was at the start of this tutorial.
 
 .. note::
 
@@ -1303,17 +1303,21 @@ it is possible Docker networking not working or cleaning up properly between run
    image:: images/multi-region-async-placement.png
    :alt: multi-region-async replicas
 
-.. |c3-monitoring-topics|
+.. |C3 monitoring topics|
    image:: images/c3-monitoring-topics.png
    :alt: C3 monitoring topics
 
-.. |fail-region|
-   image:: images/fail-region.png
-   :alt: Fail region
+.. |C3 degraded region|
+   image:: images/c3-degraded-region.png
+   :alt: C3 degraded region
 
-.. |unclean-leader-election|
-   image:: images/unclean-leader-election.png
-   :alt: Unclean leader election
+.. |C3 fail region|
+   image:: images/c3-fail-region.png
+   :alt: C3 fail region
+
+.. |C3 unclean leader election|
+   image:: images/c3-unclean-election.png
+   :alt: C3 unclean leader election
 
 Additional Resources
 --------------------
