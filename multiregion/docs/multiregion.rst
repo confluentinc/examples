@@ -572,11 +572,7 @@ There is a script you can run to collect the JMX metrics from the command line, 
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
 
-#. Some of these metrics are viewable in the "Topics" section of the C3 UI.
-
-    TODO FIX--what other metrics are here?
-
-   "ReplicasCount" can be determined by adding the number of "Followers" and the number of "Observers".
+#. Metrics relating to partitions, followers and observers are viewable in the "Topics" section of the C3 UI.
 
    |C3 monitoring topics|
 
@@ -637,6 +633,7 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       	Topic: multi-region-default	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2	Offline: 1	Observers: 3,4
 
 #. Verify similar replica placement in C3. Note that it may take up to 5 minutes for C3 to properly report the new topic stats.
+   
     |C3 degraded region|
 
 #. Observe the following:
