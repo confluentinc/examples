@@ -138,7 +138,7 @@ Startup
 -------
 
 #. This |mrrep| example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
-WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
+   WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
 
    .. code-block:: bash
 
