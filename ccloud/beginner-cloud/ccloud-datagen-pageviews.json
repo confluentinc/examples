@@ -1,0 +1,12 @@
+{
+    "name" : "datagen_ccloud_pageviews",
+    "connector.class": "DatagenSource",
+    "kafka.api.key": "$CLOUD_KEY",
+    "kafka.api.secret" : "$CLOUD_SECRET",
+    "kafka.topic" : "demo-topic-3",
+    "output.data.format" : "JSON",
+    "quickstart" : "PAGEVIEWS",
+    "max.interval": "500",
+    "iterations": "1000000000",
+    "tasks.max" : "1"
+}
