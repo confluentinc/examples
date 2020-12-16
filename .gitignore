@@ -27,3 +27,5 @@ ccloud/*.zip
 *.project
 *.classpath
 **/.settings/
+**/.gradle/
+clients/cloud/**/bin/
