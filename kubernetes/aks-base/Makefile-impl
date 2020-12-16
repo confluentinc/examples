@@ -27,7 +27,7 @@ SKIP_CLIENT_CONSOLE ?=
  
 HELM_COMMON_FLAGS := --wait --timeout=5m -f $(AKS_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(AKS_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(AKS_BASE_REGION)-$(AKS_BASE_ZONE)} $(ADDITIONAL_HELM_FLAGS)
 
-aks-check-dependencies: check-dependencies
+aks-check-dependencies:
 	@$(call check-var-defined,AZ_RESOURCE_GROUP)
 	@$(call check-dependency,az)
 	@$(call echo_pass,aks-base dependencies verified)
@@ -49,7 +49,7 @@ aks-base-deploy-client-console:
 	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(AKS_BASE_MKFILE_DIR)cfg/client-console-pod.yaml
 	@$(call echo_stdout_footer_pass,client-console deployed)
 
-aks-base-validate: aks-check-dependencies init
+aks-base-validate: aks-check-dependencies
 	@echo
 	@$(call echo_pass,aks-base demo validation complete)
 
