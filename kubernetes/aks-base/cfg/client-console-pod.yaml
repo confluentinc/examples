@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: operator
+  name: client-console
+spec:
+  containers:
+  - name: client-console
+    image: docker.io/confluentinc/cp-server-operator:6.0.0.0
+    command: [sleep, "86400"]
+    volumeMounts:
+    - name: kafka-client-properties
+      mountPath: /etc/kafka-client-properties/
+  volumes:
+  - name: kafka-client-properties
+    secret:
+      secretName: kafka-client.properties

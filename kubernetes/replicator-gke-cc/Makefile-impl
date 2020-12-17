@@ -30,7 +30,7 @@ replicator-gke-cc-deploy-client-console: #_ Deploys the client console for CLI a
 	@$(call echo_stdout_footer_pass,client-console deployed)
 ##################################################################
 
-replicator-gke-cc-demo:
+replicator-gke-cc-demo: gke-base-validate
 	@make --no-print-directory run-replicator-demo
 	@make --no-print-directory replicator-gke-cc-deploy-client-console
 	@echo
