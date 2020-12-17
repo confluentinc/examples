@@ -1,0 +1,67 @@
+
+AKS_BASE_MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+AKS_BASE_MKFILE_DIR := $(dir $(AKS_BASE_MKFILE_PATH))
+
+include $(AKS_BASE_MKFILE_DIR)../common/Makefile
+
+AKS_BASE_CLUSTER_ID ?= cp-examples-operator-$(USER)
+AKS_BASE_REGION ?= centralus
+AKS_BASE_ZONE ?= 1
+AKS_BASE_CLUSTER_VERSION ?= 1.17.13
+AKS_BASE_MACHINE_TYPE ?= Standard_D4s_v4
+AKS_BASE_DISK_SIZE ?= 100
+AKS_BASE_NUM_NODES ?= 3
+
+ZOOKEEPER_REPLICAS ?= 1
+KAFKA_REPLICAS ?= 1
+CONNECT_REPLICAS ?= 1
+SCHEMA_REGISTRY_REPLICAS ?= 1
+
+KUBECTL_CONTEXT ?= aks_$(AZ_RESOURCE_GROUP)_$(AKS_BASE_REGION)_$(AKS_BASE_CLUSTER_ID)
+KUBECTL_NAMESPACE ?= operator
+
+ADDITIONAL_HELM_FLAGS ?=
+
+SKIP_CLICKS ?=
+SKIP_CLIENT_CONSOLE ?=
+ 
+HELM_COMMON_FLAGS := --wait --timeout=5m -f $(AKS_BASE_MKFILE_DIR)cfg/values.yaml --set global.initContainer.image.tag=$(OPERATOR_CP_IMAGE_TAG) --set global.provider.region=$(AKS_BASE_REGION) --set global.provider.kubernetes.deployment.zones={$(AKS_BASE_REGION)-$(AKS_BASE_ZONE)} $(ADDITIONAL_HELM_FLAGS)
+
+aks-check-dependencies:
+	@$(call check-var-defined,AZ_RESOURCE_GROUP)
+	@$(call check-dependency,az)
+	@$(call echo_pass,aks-base dependencies verified)
+
+aks-create-cluster: aks-check-dependencies ## Creates a AKS cluster based on the values of the AKS_* variables.  WARN: This will incur charges in your Azure account.
+	@$(call echo_stdout_header,Create AKS cluster expect 5 mins)	
+	az aks create --only-show-errors --resource-group $(AZ_RESOURCE_GROUP) --name $(AKS_BASE_CLUSTER_ID) --location $(AKS_BASE_REGION) --zones $(AKS_BASE_ZONE) --kubernetes-version $(AKS_BASE_CLUSTER_VERSION) --node-vm-size $(AKS_BASE_MACHINE_TYPE) --node-osdisk-size $(AKS_BASE_DISK_SIZE) --node-count $(AKS_BASE_NUM_NODES)  --enable-addons monitoring --generate-ssh-keys  -o yaml
+	az aks get-credentials --only-show-errors --resource-group $(AZ_RESOURCE_GROUP) --name $(AKS_BASE_CLUSTER_ID) --context $(KUBECTL_CONTEXT)
+	@$(call echo_stdout_footer_pass,AKS Cluster Created)
+
+aks-destroy-cluster: aks-check-dependencies ## Destroys the AKS cluster built from the aks-create-cluster command 
+	@$(call echo_stdout_header,Delete AKS cluster)
+	az aks delete --name $(AKS_BASE_CLUSTER_ID) --resource-group $(AZ_RESOURCE_GROUP) --yes
+	kubectl config unset contexts.$(KUBECTL_CONTEXT)
+	@$(call echo_stdout_footer_pass,AKS Cluster Deleted)
+
+aks-base-deploy-client-console:
+	@$(call echo_stdout_header,Deploy client-console)
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(AKS_BASE_MKFILE_DIR)cfg/client-console-pod.yaml
+	@$(call echo_stdout_footer_pass,client-console deployed)
+
+aks-base-validate: aks-check-dependencies
+	@echo
+	@$(call echo_pass,aks-base demo validation complete)
+
+aks-base-demo: aks-base-validate
+	@make --no-print-directory run-base-demo
+ifeq ($(strip $(SKIP_CLIENT_CONSOLE)),)
+	@make --no-print-directory aks-base-deploy-client-console
+endif
+	@echo
+	@$(call echo_pass,AKS Base Demo running)
+
+aks-base-destroy-demo: aks-base-validate
+	@make --no-print-directory destroy-base-demo
+	@echo
+	@$(call echo_pass,AKS Base Demo destroyed)

@@ -1,0 +1,44 @@
+############################################################
+# For the replicator example we need a larger source cluster
+# to simulate a real world workload to sync to CCloud
+AKS_BASE_NUM_NODES := 7
+ZOOKEEPER_REPLICAS := 3
+KAFKA_REPLICAS := 3
+############################################################
+
+REPLICATOR_AKS_CC_MKFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+REPLICATOR_AKS_CC_MKFILE_DIR := $(dir $(REPLICATOR_AKS_CC_MKFILE_PATH))
+
+###############################################################################################
+## The next two functions are requried to fill a minor gap in the Replicator helm chart where
+## 	credentials cannot be specified in values but must be filled in last minute in a helm --set 
+## 	argument.  These are used below in the replicator helm commands
+CCLOUD_API_KEY = $(shell cat $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/my-values.yaml | grep username: | cut -d ':' -f2 | tr -d ' ')
+CCLOUD_API_SECRET = $(shell cat $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/my-values.yaml | grep password: | cut -d ':' -f2 | tr -d ' ')
+###############################################################################################
+
+ADDITIONAL_HELM_FLAGS ?=
+ADDITIONAL_HELM_FLAGS := -f $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/values.yaml -f $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/my-values.yaml $(ADDITIONAL_HELM_FLAGS) --no-hooks
+
+include $(THIS_MKFILE_DIR)../aks-base/Makefile-impl
+
+##### Update client console with destination cluster secrets #####
+replicator-aks-cc-deploy-client-console: #_ Deploys the client console for CLI access inside k8s
+	@$(call echo_stdout_header,Update client-console)
+	-kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) delete pods/client-console
+	kubectl --context $(KUBECTL_CONTEXT) -n $(KUBECTL_NAMESPACE) apply -f $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/client-console-pod.yaml
+	@$(call echo_stdout_footer_pass,client-console deployed)
+##################################################################
+
+replicator-aks-cc-demo: aks-base-validate
+	#cp $(REPLICATOR_AKS_CC_MKFILE_DIR)cfg/pdb.yaml $(OPERATOR_PATH)helm/confluent-operator/charts/kafka/templates/pdb.yaml
+	@make --no-print-directory run-replicator-demo
+	@make --no-print-directory replicator-aks-cc-deploy-client-console
+	@echo
+	@$(call echo_pass,Replicator AKS->CC Demo running)
+
+replicator-aks-cc-destroy-demo:
+	@make --no-print-directory destroy-replicator-demo
+	@echo
+	@$(call echo_pass,Replicator AKS->CC Demo destroyed)
+
