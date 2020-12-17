@@ -296,51 +296,21 @@ echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
 
-echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
-echo "docker-compose up -d"
-docker-compose up -d
-MAX_WAIT=180
-echo "Waiting up to $MAX_WAIT seconds for Docker container for connect to be up"
-retry $MAX_WAIT check_connect_up connect-cloud || exit 1
-sleep 5
+echo -e "\n# Create a managed connector"
+echo "source ../../utils/ccloud_library.sh"
+source ../../utils/ccloud_library.sh
+echo "ccloud::create_connector ccloud-datagen-pageviews.json"
+ccloud::create_connector ccloud-datagen-pageviews.json
 
-echo -e "\n# Post the configuration for the kafka-connect-datagen connector that produces pageviews data to Confluent Cloud topic $TOPIC3"
-CONNECTOR=datagen-$TOPIC3
-HEADER="Content-Type: application/json"
-DATA=$( cat << EOF
-{
-  "name": "$CONNECTOR",
-  "config": {
-    "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-    "kafka.topic": "$TOPIC3",
-    "quickstart": "pageviews",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter.schemas.enable": "false",
-    "max.interval": 5000,
-    "iterations": 1000,
-    "tasks.max": "1"
-  }
-}
-EOF
-)
-echo "curl --silent --output /dev/null -X POST -H \"${HEADER}\" --data \"${DATA}\" http://localhost:8083/connectors"
-curl --silent --output /dev/null -X POST -H "${HEADER}" --data "${DATA}" http://localhost:8083/connectors
-if [[ $? != 0 ]]; then
-  echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
-  #exit $?
-fi
-
-echo -e "\n\n# Wait 20 seconds for kafka-connect-datagen to start producing messages"
-sleep 20
+echo "\n# Wait for connector to be up"
+echo "ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240"
+ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
 
 echo -e "\n# Verify connector is running"
-echo "curl --silent http://localhost:8083/connectors/$CONNECTOR/status"
-curl --silent http://localhost:8083/connectors/$CONNECTOR/status
-STATE=$(curl --silent http://localhost:8083/connectors/$CONNECTOR/status | jq -r '.connector.state')
+$STATE=$(ccloud::validate_connector_up $CONNECTOR_NAME)
 #echo $STATE
 if [[ "$STATE" != "RUNNING" ]]; then
-  echo "ERROR: connector $CONNECTOR is not running.  Please troubleshoot the Docker logs."
+  echo "ERROR: connector $CONNECTOR is not running. Please troubleshoot via the CCloud UI in the 'Connector' section."
   exit $?
 fi
 
