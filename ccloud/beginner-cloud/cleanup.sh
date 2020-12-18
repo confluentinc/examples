@@ -35,10 +35,11 @@ CONNECTOR=$(ccloud connector list | grep $CONNECTOR_NAME | tr -d '\*' | awk '{pr
 # - Delete the managed Kafka connector, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
-echo -e "\n# Cleanup: delete connecotr, topics, kafka cluster, environment"
+echo -e "\n# Cleanup: delete connector, topics, kafka cluster, environment"
 if [[ ! -z "$CONNECTOR" ]]; then
     echo "ccloud connector delete $CONNECTOR"
-    ccloud kafka connector delete $CONNECTOR 1>/dev/null
+    ccloud connector delete $CONNECTOR 1>/dev/null
+    sleep 5
 fi
 
 for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
