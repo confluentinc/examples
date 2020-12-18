@@ -271,7 +271,7 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 ##################################################
 
 TOPIC3="demo-topic-3"
-
+CONNECTOR="datagen_ccloud_pageviews"
 echo -e "\n# Create a new Kafka topic $TOPIC3"
 echo "ccloud kafka topic create $TOPIC3"
 ccloud kafka topic create $TOPIC3
@@ -305,14 +305,6 @@ ccloud::create_connector ccloud-datagen-pageviews.json
 echo "\n# Wait for connector to be up"
 echo "ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240"
 ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
-
-echo -e "\n# Verify connector is running"
-$STATE=$(ccloud::validate_connector_up $CONNECTOR_NAME)
-#echo $STATE
-if [[ "$STATE" != "RUNNING" ]]; then
-  echo "ERROR: connector $CONNECTOR is not running. Please troubleshoot via the CCloud UI in the 'Connector' section."
-  exit $?
-fi
 
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
