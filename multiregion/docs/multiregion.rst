@@ -634,7 +634,7 @@ In this section, you will simulate a single broker failure in the ``west`` regio
 
 #. Verify similar replica placement in C3. Note that it may take up to 5 minutes for C3 to properly report the new topic stats.
    
-    |C3 degraded region|
+   |C3 degraded region|
 
 #. Observe the following:
 
@@ -998,6 +998,11 @@ the following steps:
          Topic: multi-region-async   Partition: 0    Leader: 3   Replicas: 3,4,2,1   Isr: 3,4    Offline: 2,1    Observers: 2,1
       ...
 
+#. See similar leader placement by clicking on the ``multi-region-default`` topic and referencing the ``Partitions`` and ``Replica Placement`` section.
+
+   |C3 permanent failover|
+
+
 #. Observe the following:
 
    - For topic ``multi-region-default``, replicas 2 and 1, which were previously sync replicas, are now
@@ -1316,6 +1321,11 @@ it is possible Docker networking not working or cleaning up properly between run
    image:: images/c3-unclean-election.png
    :alt: C3 unclean leader election
 
+.. |C3 permanent failover|
+   image:: images/c3-perminant-failover-default.png
+   :alt: C3 permanent failover
+
+	 
 Additional Resources
 --------------------
 
