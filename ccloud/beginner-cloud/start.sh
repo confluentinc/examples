@@ -19,7 +19,6 @@ check_timeout || exit 1
 check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
-check_docker || exit 1
 
 ##################################################
 # Create a new environment and specify it as the default
@@ -303,8 +302,8 @@ echo "ccloud::create_connector ccloud-datagen-pageviews.json"
 ccloud::create_connector ccloud-datagen-pageviews.json
 
 echo "\n# Wait for connector to be up"
-echo "ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240"
-ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
+echo "ccloud::wait_for_connector_up ccloud-datagen-pageviews.json 300"
+ccloud::wait_for_connector_up ccloud-datagen-pageviews.json 300 || exit 1
 
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
@@ -342,11 +341,6 @@ echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --op
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
-# Stop the connector
-echo -e "\n# Stop Docker"
-echo "docker-compose down"
-docker-compose down
-
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
@@ -363,10 +357,13 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 # - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
-echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
+echo -e "\n# Cleanup: delete connector, service-account, topics, api-keys, kafka cluster, environment"
+CONNECTOR_ID=$(ccloud connector list | grep $CONNECTOR | tr -d '\*' | awk '{print $1;}')
+echo "ccloud connector delete $CONNECTOR_ID"
+ccloud connector delete $CONNECTOR_ID 1>/dev/null
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
-for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
+for t in $TOPIC1 $TOPIC2 $TOPIC3; do
   echo "ccloud kafka topic delete $t"
   ccloud kafka topic delete $t
 done
