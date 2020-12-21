@@ -298,12 +298,12 @@ source delta_configs/env.delta
 echo -e "\n# Create a managed connector"
 echo "source ../../utils/ccloud_library.sh"
 source ../../utils/ccloud_library.sh
-echo "ccloud::create_connector ccloud-datagen-pageviews.json"
-ccloud::create_connector ccloud-datagen-pageviews.json
+echo "ccloud::create_connector $CONNECTOR.json"
+ccloud::create_connector $CONNECTOR.json
 
-echo "\n# Wait for connector to be up"
-echo "ccloud::wait_for_connector_up ccloud-datagen-pageviews.json 300"
-ccloud::wait_for_connector_up ccloud-datagen-pageviews.json 300 || exit 1
+echo -e "\n# Wait for connector to be up"
+echo "ccloud::wait_for_connector_up $CONNECTOR.json 300"
+ccloud::wait_for_connector_up $CONNECTOR.json 300 || exit 1
 
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL

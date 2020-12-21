@@ -635,19 +635,19 @@ Run kafka-connect-datagen connector with wildcard ACLs
       source delta_configs/env.delta
 
 #. Create a managed connector in Confluent Cloud with the provided configurations
-   :devx-examples:`ccloud-datagen-pageviews.json file|ccloud/beginner-cloud/ccloud-datagen-pageviews.json`
+   :devx-examples:`datagen_ccloud_pageviews.json file|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
    using the following commands:
 
    .. code-block:: text
 
       source ../../utils/ccloud_library.sh 
-      ccloud::create_connector ccloud-datagen-pageviews.json
+      ccloud::create_connector datagen_ccloud_pageviews.json
 
    Your output should resemble:
 
    .. code-block:: text
 
-      Creating connector from ccloud-datagen-pageviews.json
+      Creating connector from datagen_ccloud_pageviews.json
 
       2020-12-16T16:10:09.732-0700 [DEBUG] ConnectService.Create request: POST https://confluent.cloud/api/accounts/env-5qz2q/clusters/lkc-x6m01/connectors Body:{"name":"datagen_ccloud_pageviews","config":{"connector.class":"DatagenSource","iterations":"1000000000","kafka.api.key":"ESN5FSNDHOFFSUEV","kafka.api.secret":"nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB","kafka.topic":"demo-topic-3","max.interval":"500","name":"datagen_ccloud_pageviews","output.data.format":"JSON","quickstart":"PAGEVIEWS","tasks.max":"1"}}
       2020-12-16T16:10:21.658-0700 [DEBUG] ConnectService.Create response: 201 Created Body: {"name":"datagen_ccloud_pageviews","type":"source","config":{"cloud.environment":"prod","cloud.provider":"aws","connector.class":"DatagenSource","iterations":"1000000000","kafka.api.key":"****************","kafka.api.secret":"****************","kafka.dedicated":"false","kafka.endpoint":"SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092","kafka.region":"us-west-2","kafka.topic":"demo-topic-3","kafka.user.id":"152738","max.interval":"500","name":"datagen_ccloud_pageviews","output.data.format":"JSON","quickstart":"PAGEVIEWS","tasks.max":"1"},"tasks":[]} request: POST https://confluent.cloud/api/accounts/env-5qz2q/clusters/lkc-x6m01/connectors Body:{"name":"datagen_ccloud_pageviews","config":{"connector.class":"DatagenSource","iterations":"1000000000","kafka.api.key":"ESN5FSNDHOFFSUEV","kafka.api.secret":"nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB","kafka.topic":"demo-topic-3","max.interval":"500","name":"datagen_ccloud_pageviews","output.data.format":"JSON","quickstart":"PAGEVIEWS","tasks.max":"1"}}
@@ -657,15 +657,15 @@ Run kafka-connect-datagen connector with wildcard ACLs
 
    .. code-block:: bash
 
-      ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 240 || exit 1
+      ccloud::wait_for_connector_up datagen_ccloud_pageviews.json 300
 
    Your output should resemble:
 
    .. code-block:: text
 
-      Waiting up to 240 seconds for connector ccloud-datagen-pageviews.json (datagen_ccloud_pageviews) to be RUNNING
+      Waiting up to 240 seconds for connector datagen_ccloud_pageviews.json (datagen_ccloud_pageviews) to be RUNNING
       .........
-      Connector ccloud-datagen-pageviews.json (datagen_ccloud_pageviews) is RUNNING
+      Connector datagen_ccloud_pageviews.json (datagen_ccloud_pageviews) is RUNNING
 
 
 Run a Java consumer with a Wildcard ACL
