@@ -771,18 +771,21 @@ Clean up your Confluent Cloud resources
 #. Complete the following steps to delete the managed connector:
 
    a. Find the connector ID:
+      
       .. code-block:: bash
 
          ccloud connector list
 	 
       Whicch should display a something similar to below. Locate your connector ID, in this case the connector ID is ``lcc-zno83``.
+      
       .. clode-block:: text
-		       
-              ID     |           Name           | Status  |  Type  | Trace  
+
+              ID     |           Name           | Status  |  Type  | Trace
          +-----------+--------------------------+---------+--------+-------+
-           lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |        
+           lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |
 
    b. Delete the connector using the ID:
+      
       .. code-block:: bash
 		      
 	 ccloud connector delete lcc-zno83
