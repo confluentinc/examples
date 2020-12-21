@@ -778,7 +778,7 @@ Clean up your Confluent Cloud resources
 	 
       Whicch should display a something similar to below. Locate your connector ID, in this case the connector ID is ``lcc-zno83``.
       
-      .. clode-block:: text
+      .. code-block:: text
 
               ID     |           Name           | Status  |  Type  | Trace
          +-----------+--------------------------+---------+--------+-------+
