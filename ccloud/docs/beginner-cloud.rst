@@ -780,7 +780,7 @@ Clean up your Confluent Cloud resources
 
       .. code-block:: text
 
-                       ID     |           Name           | Status  |  Type  | Trace
+              ID     |           Name           | Status  |  Type  | Trace
          +-----------+--------------------------+---------+--------+-------+
            lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |
 
