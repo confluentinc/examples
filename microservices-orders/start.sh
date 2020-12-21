@@ -12,6 +12,14 @@ check_running_kibana || exit 1
 check_running_cp ${CONFLUENT} || exit 1
 check_sqlite3 || exit 1
 
+check_env \
+  && print_pass "Confluent Platform installed" \
+  || exit 1
+check_running_cp ${CONFLUENT} \
+  && print_pass "Confluent Platform version ${CONFLUENT} ok" \
+  || exit 1
+
+
 ./stop.sh
 
 if [ ! -z "$KAFKA_STREAMS_BRANCH" ]; then
@@ -19,9 +27,10 @@ if [ ! -z "$KAFKA_STREAMS_BRANCH" ]; then
 else
 	get_and_compile_kafka_streams_examples || exit 1;
 fi;
+JAR="$(pwd)/kafka-streams-examples/target/kafka-streams-examples-*-standalone.jar"
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
-confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest
+confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:10.0.2
 grep -qxF 'auto.offset.reset=earliest' $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties || echo 'auto.offset.reset=earliest' >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties 
 confluent local services start
 sleep 5
@@ -31,6 +40,7 @@ export SCHEMA_REGISTRY_URL=http://localhost:8081
 export SQLITE_DB_PATH=${PWD}/db/data/microservices.db
 export ELASTICSEARCH_URL=http://localhost:9200
 
+echo
 echo "Creating demo topics"
 ./scripts/create-topics.sh topics.txt
 
@@ -68,10 +78,12 @@ while [[ $(netstat -ant | grep "$FREE_PORT") != "" ]]; do
   fi
 done
 echo "Port $FREE_PORT looks free for the Orders Service"
-echo "Running Microservices"
-( RESTPORT=$FREE_PORT JAR=$(pwd)"/kafka-streams-examples/target/kafka-streams-examples-$CONFLUENT-standalone.jar" scripts/run-services.sh > logs/run-services.log 2>&1 & )
+
+echo "Starting microservices from $JAR"
+( RESTPORT=$FREE_PORT JAR="${JAR}" scripts/run-services.sh > logs/run-services.log 2>&1 & )
 
 echo "Waiting for data population before starting ksqlDB applications"
+echo "Sleeping for 150 seconds"
 sleep 150
 # Create ksqlDB queries
 ksql http://localhost:8088 <<EOF

@@ -138,7 +138,7 @@ Startup
 -------
 
 #. This |mrrep| example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
-WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
+   WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
 
    .. code-block:: bash
 
@@ -217,7 +217,7 @@ You could create all the topics by running the script :devx-examples:`create-top
      - Followers (sync replicas)
      - Observers (async replicas)
      - ISR list
-     - Use default placement contraints
+     - Use default placement constraints
      - Observer Promotion policy
 
    * - single-region
@@ -485,7 +485,7 @@ Consumer
      example, ``0.9025`` MB per sec in the previous example).
 
    - In the second scenario, the consumer running in ``east`` reads from the
-     follower that is also in ``east``–the throughput of the consumner is higher
+     follower that is also in ``east``–the throughput of the consumer is higher
      in this case (for example, ``3.9356`` MBps in the previous example).
 
    - This example doesn’t consume from ``multi-region-default`` as the
