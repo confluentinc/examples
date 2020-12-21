@@ -777,7 +777,14 @@ Clean up your Confluent Cloud resources
          ccloud connector list
 	 
       Which should display a something similar to below. Locate your connector ID, in this case the connector ID is ``lcc-zno83``.
-      
+
+      .. code-block:: text
+
+                       ID     |           Name           | Status  |  Type  | Trace
+         +-----------+--------------------------+---------+--------+-------+
+           lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |
+
+
    b. Delete the connector using the ID:
       
       .. code-block:: bash
