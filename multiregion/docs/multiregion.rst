@@ -768,7 +768,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: none    Replicas: 2,1,3,4   Isr: 1  Offline: 2,1    Observers: 3,4
 
-#. Given five minutes, you should see something similar to below in C3. The numbers may be off while the cluster stabilizes.
+#. After the |c3| cluster metrics stabilize in about five minutes, you should see output similar to below.
 
    |C3 fail region|
 
