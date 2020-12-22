@@ -13,7 +13,7 @@ Often referred to as a stretch cluster, |mrrep| replicate data between datacente
 You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
 It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
-We will use a dedicated metrics cluster running Confluent Control Center to monitor the Multi-Region Cluster.
+We will use a dedicated metrics cluster running |c3| to monitor the Multi-Region Cluster.
 
 Benefits:
 
@@ -385,7 +385,7 @@ You could create all the topics by running the script :devx-examples:`create-top
          Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
             Topic: multi-region-default Partition: 0    Leader: 2   Replicas: 2,1,3,4   Isr: 2,1    Offline:    Observers: 3,4
 
-#. View the topic replica placement in Confluent Control Center:
+#. View the topic replica placement in |c3|:
 
    Navigate to the C3 UI at http://localhost:9021.
 
