@@ -585,13 +585,11 @@ Run a fully managed datagen_ccloud_pageviews connector
       ../../ccloud/ccloud-generate-cp-configs.sh /tmp/client.config &>/dev/null
       source delta_configs/env.delta
 
-#. Review the managed connector config file :devx-examples:`datagen_ccloud_pageviews.json file|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`:
+#. Review the managed connector config file :devx-examples:`datagen_ccloud_pageviews.json|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`:
 
    .. literalinclude:: ../beginner-cloud/datagen_ccloud_pageviews.json
 
-#. Create a managed connector in Confluent Cloud with the provided configurations
-   :devx-examples:`datagen_ccloud_pageviews.json file|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
-   using the following commands:
+#. Create a managed connector in Confluent Cloud with the provided configurations mentioned above using the following commands:
 
    .. code-block:: text
 
