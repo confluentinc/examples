@@ -1,7 +1,7 @@
 - You can use this tutorial with a |ak| cluster in any environment:
 
   - In `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__
-  - On your local host
+  - On your :ref:`local host <quickstart>`
   - Any remote |ak| cluster
 
 - If you are running on |ccloud|, you must have access to a
