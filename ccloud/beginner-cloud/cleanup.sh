@@ -39,7 +39,6 @@ echo -e "\n# Cleanup: delete connector, topics, kafka cluster, environment"
 if [[ ! -z "$CONNECTOR" ]]; then
     echo "ccloud connector delete $CONNECTOR"
     ccloud connector delete $CONNECTOR 1>/dev/null
-    sleep 5
 fi
 
 for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
