@@ -13,6 +13,8 @@ Often referred to as a stretch cluster, |mrrep| replicate data between datacente
 You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
 It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
+We will use a dedicated metrics cluster running Confluent Control Center to monitor the Multi-Region Cluster.
+
 Benefits:
 
 - Supports multi-site deployments of synchronous and asynchronous replication between datacenters
@@ -85,6 +87,8 @@ most important configuration parameters include:
    typically only allowed to read from leaders)
 -  ``confluent.log.placement.constraints``: sets the default replica
    placement constraint configuration for newly created topics.
+- ``confluent.metrics.reporter.bootstrap.servers`` and
+  ``confluent.monitoring.interceptor.bootstrap.servers``: directs metrics to the dedicated metrics cluster.
 
 Client
 ~~~~~~
@@ -387,7 +391,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    |C3 cluster navigation|
 
-   Click on the "mrc" cluster, then make your way to the "Topics" section.
+   You will notice 2 clusters, "mrc" which is the multiregion cluster and "metrics" which is a dedicated metrics cluster that runs Control Center. By hosting Control Center on its own Kafka cluster, it is independent of the availability of the production cluster it is monitoring. We will be working on topics within the "mrc" cluster for the remainder of this tutorial. Click on the "mrc" cluster, then make your way to the "Topics" section.
 
    |C3 topics overview|
 
@@ -572,9 +576,6 @@ There is a script you can run to collect the JMX metrics from the command line, 
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
 
-#. Metrics relating to partitions, followers and observers are viewable in the "Topics" section of the C3 UI.
-
-   |C3 monitoring topics|
 
 Degraded Region
 ---------------
@@ -1304,10 +1305,6 @@ it is possible Docker networking not working or cleaning up properly between run
 .. |multi-region-async replicas|
    image:: images/multi-region-async-placement.png
    :alt: multi-region-async replicas
-
-.. |C3 monitoring topics|
-   image:: images/c3-monitoring-topics.png
-   :alt: C3 monitoring topics
 
 .. |C3 degraded region|
    image:: images/c3-degraded-region.png
