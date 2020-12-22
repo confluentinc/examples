@@ -587,7 +587,7 @@ Run a fully managed datagen_ccloud_pageviews connector
 
 #. Review the managed connector config file :devx-examples:`datagen_ccloud_pageviews.json file|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`:
 
-   .. literalinclude:: datagen_ccloud_pageviews.json
+   .. literalinclude:: /ccloud/beginner-cloud/datagen_ccloud_pageviews.json
 
 #. Create a managed connector in Confluent Cloud with the provided configurations
    :devx-examples:`datagen_ccloud_pageviews.json file|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
