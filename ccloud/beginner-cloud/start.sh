@@ -265,8 +265,7 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 
 
 ##################################################
-# Run Connect and kafka-connect-datagen connector with permissions
-# - Confluent Hub: https://www.confluent.io/hub/
+# Run a fully managed datagen_ccloud_pageviews connector
 ##################################################
 
 TOPIC3="demo-topic-3"

@@ -41,7 +41,7 @@ if [[ ! -z "$CONNECTOR" ]]; then
     ccloud connector delete $CONNECTOR 1>/dev/null
 fi
 
-for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
+for t in $TOPIC1 $TOPIC2 $TOPIC3; do
   if ccloud kafka topic describe $t &>/dev/null; then
     echo "ccloud kafka topic delete $t"
     ccloud kafka topic delete $t
