@@ -537,7 +537,7 @@ Run a Java producer with a prefixed ACL
    You should see two ``Deleted ACLs.`` messages.
 
 
-Run a fully managed datagen_ccloud_pageviews connector
+Run a fully managed Confluent Cloud connector
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create a new |ak| topic ``demo-topic-3``:
@@ -597,8 +597,7 @@ Run a fully managed datagen_ccloud_pageviews connector
 
       Created connector datagen_ccloud_pageviews lcc-zno83
 
-#. The connector may take up to 5 minutes to provision, use the following command to check if the
-   connector is `PROVISIONING` or `RUNNING`.
+#. The connector may take up to 5 minutes to provision. Run the following command to check the connector status
 
    .. code-block:: bash
 
@@ -612,7 +611,7 @@ Run a fully managed datagen_ccloud_pageviews connector
       +-----------+---------------------------+--------------+--------+-------+
         lcc-zno83 | datagen_ccloud_pageviews  | PROVISIONING | source |
 
-   If the ``Status`` is ``RUNNING`` you may move on to the next step.
+   When the ``Status`` is ``RUNNING`` you may move on to the next step.
 
 Run a Java consumer with a Wildcard ACL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -726,7 +725,7 @@ Clean up your Confluent Cloud resources
            lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |
 
 
-   b. Delete the connector using the ID:
+   b. Delete the connector, referencing the connector ID from the previous step:
       
       .. code-block:: bash
 		      
