@@ -287,10 +287,13 @@ echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
+jq '.["kafka.api.key"] = "$CLOUD_KEY"' datagen_ccloud_pageviews.json > datagen_ccloud_pageviews.json
+jq '.["kafka.api.secret"] = "$CLOUD_SECRET"' datagen_ccloud_pageviews.json > datagen_ccloud_pageviews.json
 
 echo -e "\n# Create a managed connector"
 echo "source ../../utils/ccloud_library.sh"
 source ../../utils/ccloud_library.sh
+
 echo "ccloud::create_connector $CONNECTOR.json"
 ccloud::create_connector $CONNECTOR.json
 
@@ -298,6 +301,7 @@ echo -e "\n# Wait for connector to be up"
 echo "ccloud::wait_for_connector_up $CONNECTOR.json 300"
 ccloud::wait_for_connector_up $CONNECTOR.json 300 || exit 1
 
+exit
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
 # - The following steps configure ACLs to match topics using a wildcard

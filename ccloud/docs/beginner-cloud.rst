@@ -577,49 +577,42 @@ Run a fully managed datagen_ccloud_pageviews connector
        +------------------+------------+-----------+----------+---------+---------+
          User:104349      | ALLOW      | WRITE     | TOPIC    | *       | LITERAL
 
-#. Generate environment variables with |ccloud| connection information for
-   |kconnect| to use:
-
-   .. code-block:: text
-
-      ../../ccloud/ccloud-generate-cp-configs.sh /tmp/client.config &>/dev/null
-      source delta_configs/env.delta
-
-#. Review the managed connector config file :devx-examples:`datagen_ccloud_pageviews.json|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`:
+#. Create a local configuration file
+   :devx-examples:`datagen_ccloud_pageviews.json|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
+   with |ccloud| connection information. Substitue your API key and secret for the service account,
+   in the ``kafka.api.key`` and ``kafka.api.secret`` fields. See below for an example:
 
    .. literalinclude:: ../beginner-cloud/datagen_ccloud_pageviews.json
 
-#. Create a managed connector in Confluent Cloud with the provided configurations mentioned above using the following commands:
+#. Create a managed connector in Confluent Cloud with the configuration file you made in the
+   previous step using the following commands:
 
    .. code-block:: text
 
-      source ../../utils/ccloud_library.sh 
-      ccloud::create_connector datagen_ccloud_pageviews.json
+      ccloud connector create --config datagen_ccloud_pageviews.json
 
    Your output should resemble:
 
    .. code-block:: text
 
-      Creating connector from datagen_ccloud_pageviews.json
-
-      2020-12-16T16:10:09.732-0700 [DEBUG] ConnectService.Create request: POST https://confluent.cloud/api/accounts/env-5qz2q/clusters/lkc-x6m01/connectors Body:{"name":"datagen_ccloud_pageviews","config":{"connector.class":"DatagenSource","iterations":"1000000000","kafka.api.key":"ESN5FSNDHOFFSUEV","kafka.api.secret":"nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB","kafka.topic":"demo-topic-3","max.interval":"500","name":"datagen_ccloud_pageviews","output.data.format":"JSON","quickstart":"PAGEVIEWS","tasks.max":"1"}}
-      2020-12-16T16:10:21.658-0700 [DEBUG] ConnectService.Create response: 201 Created Body: {"name":"datagen_ccloud_pageviews","type":"source","config":{"cloud.environment":"prod","cloud.provider":"aws","connector.class":"DatagenSource","iterations":"1000000000","kafka.api.key":"****************","kafka.api.secret":"****************","kafka.dedicated":"false","kafka.endpoint":"SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092","kafka.region":"us-west-2","kafka.topic":"demo-topic-3","kafka.user.id":"152738","max.interval":"500","name":"datagen_ccloud_pageviews","output.data.format":"JSON","quickstart":"PAGEVIEWS","tasks.max":"1"},"tasks":[]} request: POST https://confluent.cloud/api/accounts/env-5qz2q/clusters/lkc-x6m01/connectors Body:{"name":"datagen_ccloud_pageviews","config":{"connector.class":"DatagenSource","iterations":"1000000000","kafka.api.key":"ESN5FSNDHOFFSUEV","kafka.api.secret":"nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB","kafka.topic":"demo-topic-3","max.interval":"500","name":"datagen_ccloud_pageviews","output.data.format":"JSON","quickstart":"PAGEVIEWS","tasks.max":"1"}}
       Created connector datagen_ccloud_pageviews lcc-zno83
 
-#. Run the following command to verify connector is running:
+#. The connector may take up to 5 minutes to provision, use the following command to check if the
+   connector is `PROVISIONING` or `RUNNING`.
 
    .. code-block:: bash
 
-      ccloud::wait_for_connector_up datagen_ccloud_pageviews.json 300
+      ccloud connector list
 
-   Your output should resemble:
+   Your output should resemble the following:
 
    .. code-block:: text
 
-      Waiting up to 240 seconds for connector datagen_ccloud_pageviews.json (datagen_ccloud_pageviews) to be RUNNING
-      .........
-      Connector datagen_ccloud_pageviews.json (datagen_ccloud_pageviews) is RUNNING
+           ID     |           Name            |    Status    |  Type  | Trace
+      +-----------+---------------------------+--------------+--------+-------+
+        lcc-zno83 | datagen_ccloud_pageviews  | PROVISIONING | source |
 
+   If the ``Status`` is ``RUNNING`` you may move on to the next step.
 
 Run a Java consumer with a Wildcard ACL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
