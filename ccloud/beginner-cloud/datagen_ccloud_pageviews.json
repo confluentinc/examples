@@ -1,8 +1,8 @@
 {
     "name" : "datagen_ccloud_pageviews",
     "connector.class": "DatagenSource",
-    "kafka.api.key": "$CLOUD_KEY",
-    "kafka.api.secret" : "$CLOUD_SECRET",
+    "kafka.api.key": "ESN5FSNDHOFFSUEV",
+    "kafka.api.secret" : "nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB",
     "kafka.topic" : "demo-topic-3",
     "output.data.format" : "JSON",
     "quickstart" : "PAGEVIEWS",

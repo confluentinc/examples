@@ -579,7 +579,7 @@ Run a fully managed datagen_ccloud_pageviews connector
 
 #. Create a local configuration file
    :devx-examples:`datagen_ccloud_pageviews.json|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
-   with |ccloud| connection information. Substitue your API key and secret for the service account,
+   with |ccloud| connection information. Substitute your API key and secret for the service account,
    in the ``kafka.api.key`` and ``kafka.api.secret`` fields. See below for an example:
 
    .. literalinclude:: ../beginner-cloud/datagen_ccloud_pageviews.json
