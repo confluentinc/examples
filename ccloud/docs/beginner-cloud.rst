@@ -21,7 +21,7 @@ the following steps:
 -  `Run a Java producer without ACLs`_
 -  `Run a Java producer with ACLs`_
 -  `Run a Java producer with a prefixed ACL`_
--  `Run a fully managed datagen_ccloud_pageviews connector`_
+-  `Run a fully managed Confluent Cloud connector`_
 -  `Run a Java consumer with a Wildcard ACL`_
 -  `Clean up your Confluent Cloud resources`_
 
