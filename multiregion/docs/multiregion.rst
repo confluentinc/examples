@@ -1322,7 +1322,7 @@ image:: images/c3-unclean-election.png
 image:: images/c3-perminant-failover-default.png
    :alt: C3 permanent failover
 
-
+	 
 Additional Resources
 --------------------
 
