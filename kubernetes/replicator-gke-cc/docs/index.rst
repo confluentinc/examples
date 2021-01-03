@@ -43,7 +43,7 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-.. include:: ../../../ccloud/includes/ccloud-examples-caution.rst
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
 
 Details
 -------
@@ -133,7 +133,7 @@ Validate
 
 .. _quickstart-demos-operator-replicator-gke-cc-destroy:
 
-.. include:: ../../../ccloud/includes/ccloud-examples-terminate.rst
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 Details
 -------
