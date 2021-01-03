@@ -797,8 +797,8 @@ Run a Java consumer with a Wildcard ACL
 
 .. include:: includes/ccloud-examples-terminate.rst
 
-Details
--------
+Clean up your Confluent Cloud resources
+---------------------------------------
 
 #. Run the following command to delete the service account:
 
