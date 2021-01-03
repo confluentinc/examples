@@ -54,6 +54,7 @@ This example consumes real cloud resources on both |ccloud| and |az-long|:
 Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-aks-cc-destroy>` after you are done.
 
 
+===============
 Run the Example
 ===============
 
@@ -160,6 +161,7 @@ If you used the example to create your cluster, you can destroy the AKS cluster 
 
     make aks-destroy-cluster
 
+==========
 Highlights
 ==========
 
