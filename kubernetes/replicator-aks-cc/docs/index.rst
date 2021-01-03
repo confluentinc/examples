@@ -41,9 +41,9 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-====================
-Cost to Run Tutorial
-====================
+===================
+Cost to Run Example
+===================
 
 Caution
 -------
@@ -150,10 +150,11 @@ Validate
 
 .. _quickstart-demos-operator-replicator-aks-cc-destroy:
 
-.. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
+============
+Stop Example
+============
 
-Details
--------
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 After you are done evaluating the results of the example, you can destroy all the provisioned Kubernetes resources with:
 
@@ -177,11 +178,12 @@ Highlights
 
 .. _quickstart-demos-operator-replicator-aks-cc-ccloud-advanced-usage:
 
+==============
 Advanced Usage
---------------
+==============
 
 Customize AKS Cluster Creation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 .. include:: ../../docs/includes/aks-custom-variables.rst
 

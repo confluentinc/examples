@@ -69,9 +69,6 @@ Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-g
 Run Example
 ===========
 
-Setup
------
-
 Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-gke-cc`` directory.
 
 .. sourcecode:: bash
@@ -143,10 +140,11 @@ Validate
 
 .. _quickstart-demos-operator-replicator-gke-cc-destroy:
 
-.. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
+============
+Stop Example
+============
 
-Details
--------
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 After you are done evaluating the results of the example, you can destroy all the provisioned Kubernetes resources with:
 
@@ -170,11 +168,12 @@ Highlights
 
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage:
 
+==============
 Advanced Usage
---------------
+==============
 
 Customize GKE Cluster Creation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 There are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
 
