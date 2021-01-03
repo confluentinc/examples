@@ -25,15 +25,13 @@ the following steps:
 -  `Run a Java consumer with a Wildcard ACL`_
 -  `Clean up your Confluent Cloud resources`_
 
-
 .. include:: includes/ccloud-examples-caution.rst
 
 Run the Tutorial
 ================
 
-
 Prerequisites
-~~~~~~~~~~~~~~
+-------------
 
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
@@ -49,11 +47,8 @@ Prerequisites
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
-
 Start Tutorial
 --------------
-
-To run this tutorial, complete the following steps:
 
 #. Log in to the |ccloud| CLI:
 
@@ -88,6 +83,9 @@ To run this tutorial, complete the following steps:
    .. code-block:: bash
 
          ./start.sh
+
+Run Tutorial
+------------
 
 
 Create a new Confluent Cloud environment

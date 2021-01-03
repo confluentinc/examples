@@ -43,7 +43,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Client Code Examples
 --------------------
 
-If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to the :devx-examples:`client examples|clients/cloud/README.md`.
+If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to :ref:`clients-all-examples`.
 It provides client examples written in various programming languages.
 
 .. figure:: ../../clients/cloud/images/clients-all.png
@@ -96,8 +96,13 @@ Microservices are deployed locally on Docker, and they are configured to use a |
 Confluent Operator with Cloud
 -----------------------------
 
-The :ref:`Kubernetes example <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
-Upon running this example, you will have a GKE-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+The Kubernetes examples feature a deployment of |cp| on Google Kubernetes Engine (GKE) or Microsoft Azure leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
+Upon running this example, you will have a GKE-based or Azure-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+
+You can choose between two examples:
+
+- :ref:`quickstart-demos-operator-replicator-gke-cc`
+- :ref:`quickstart-demos-operator-replicator-aks-cc`
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
 
