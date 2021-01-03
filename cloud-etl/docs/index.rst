@@ -6,6 +6,9 @@
 Cloud ETL Example
 =================
 
+Overview
+--------
+
 As enterprises move more and more of their applications to the cloud, they are also moving their on-prem ETL (extract, transform, load) pipelines to the cloud, as well as building new ones.
 This example showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
 
