@@ -7,7 +7,19 @@
 
 This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
+====================
+Cost to Run Tutorial
+====================
+
+Caution
+-------
+
 .. include:: includes/ccloud-examples-caution.rst
+
+|ccloud| Promo Code
+-------------------
+
+.. include:: includes/ccloud-examples-promo-code.rst
 
 ========
 Examples

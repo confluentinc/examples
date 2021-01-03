@@ -41,10 +41,14 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-.. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
+====================
+Cost to Run Tutorial
+====================
 
-Details
+Caution
 -------
+
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
 
 In addition to |ccloud| resources, this example uses |az-long| resources: 
 
@@ -52,6 +56,11 @@ In addition to |ccloud| resources, this example uses |az-long| resources:
 * Refer to `Azure <https://azure.microsoft.com/en-us/pricing/calculator/>`__ pricing data for more information.
 
 Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-aks-cc-destroy>` after you are done.
+
+|ccloud| Promo Code
+-------------------
+
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
 
 ===========

@@ -1,0 +1,1 @@
+To receive an additional $50 free usage in |ccloud|, in the |ccloud| `Billing and payment` section, enter promo code ``C50INTEG`` (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer>`__).

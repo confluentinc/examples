@@ -162,7 +162,19 @@ Local
 
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
-.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+====================
+Cost to Run Tutorial
+====================
+
+Caution
+-------
+
+.. include:: includes/ccloud-examples-caution.rst
+
+|ccloud| Promo Code
+-------------------
+
+.. include:: includes/ccloud-examples-promo-code.rst
 
 ========
 Tutorial
@@ -720,7 +732,7 @@ Then create the following persistent queries:
 The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
-.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+.. include:: ../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources

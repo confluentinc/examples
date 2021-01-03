@@ -34,16 +34,25 @@ This enables you to:
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
          `blog post <https://www.confluent.io/blog/build-a-cloud-etl-pipeline-with-confluent-cloud/>`__.
 
-.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+====================
+Cost to Run Tutorial
+====================
 
-Details
+Caution
 -------
 
-This ``cloud-etl`` example uses real cloud resources, including:
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
 
-* |ccloud|
+This example also uses real cloud resources, including:
+
 * AWS Kinesis or RDS PostgreSQL
 * One of the cloud storage providers, depending on your configuration
+
+|ccloud| Promo Code
+-------------------
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
+
 
 ========================
 End-to-end Streaming ETL

@@ -29,7 +29,19 @@ The major components of the example are:
 .. note:: This is an example environment and has many services running on one host. Do not run this example in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
+====================
+Cost to Run Tutorial
+====================
+
+Caution
+-------
+
 .. include:: includes/ccloud-examples-caution.rst
+
+|ccloud| Promo Code
+-------------------
+
+.. include:: includes/ccloud-examples-promo-code.rst
 
 =============
 Prerequisites
