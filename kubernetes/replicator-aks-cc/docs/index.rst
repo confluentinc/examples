@@ -54,9 +54,9 @@ In addition to |ccloud| resources, this example uses |az-long| resources:
 Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-aks-cc-destroy>` after you are done.
 
 
-===============
-Run the Example
-===============
+===========
+Run Example
+===========
 
 Setup
 -----

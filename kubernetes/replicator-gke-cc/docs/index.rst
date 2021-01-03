@@ -56,9 +56,9 @@ In addition to |ccloud| resources, this example uses |gcp-long| resources:
 Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done.
 
 
-===============
-Run the Example
-===============
+===========
+Run Example
+===========
 
 Setup
 -----
