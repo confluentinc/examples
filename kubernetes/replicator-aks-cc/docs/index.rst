@@ -46,7 +46,7 @@ The following applications or libraries are required to be installed and availab
 Details
 -------
 
-This example consumes real cloud resources on both |ccloud| and |az-long|:
+In addition to |ccloud| resources, this example uses |az-long| resources: 
 
 * Refer to `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
 * Refer to `Azure <https://azure.microsoft.com/en-us/pricing/calculator/>`__ pricing data for more information.

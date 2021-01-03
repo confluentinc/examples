@@ -48,7 +48,7 @@ The following applications or libraries are required to be installed and availab
 Details
 -------
 
-This example consumes real cloud resources on both |ccloud| and |gcp-long|:
+In addition to |ccloud| resources, this example uses |gcp-long| resources:
 
 * Refer to `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
 * Refer to `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.
