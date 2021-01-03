@@ -7,16 +7,7 @@
 
 This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
-.. include:: includes/ccloud-promo-code.rst
-
-=======
-Caution
-=======
-
-All the following examples use real |ccloud| resources.
-They create |ccloud| environments, clusters, topics, ACLs, service accounts, ksqlDB applications, and potentially other |ccloud| resources that are billable.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching any example and manually verify that all |ccloud| resources are destroyed after you are done.
-
+.. include:: includes/ccloud-examples-caution.rst
 
 ========
 Examples
@@ -234,6 +225,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
+.. include:: includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources

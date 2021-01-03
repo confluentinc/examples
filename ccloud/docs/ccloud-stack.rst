@@ -23,13 +23,9 @@ The utility uses |ccloud| CLI under the hood to dynamically do the following in 
 In addition to creating these resources, ``ccloud-stack`` also generates a local configuration file with connection information to all of the above services.
 This file is particularly useful because it contains connection information to your |ccloud| instance, and any downstream application or |ak| client can use it, or you can use it for other demos or automation workflows.
 
-.. include:: includes/ccloud-promo-code.rst
+.. include:: includes/ccloud-examples-caution.rst
 
-=======
-Caution
-=======
-
-Billing
+Details
 -------
 
 This utility uses real |ccloud| resources.
@@ -37,12 +33,6 @@ It is intended to be a quick way to create resources in |ccloud| with correct cr
 
 - If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you create a topic, produce data to the |ak| cluster, or provision any other fully-managed service.
 - If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
-
-To avoid unexpected charges, carefully evaluate the cost of resources before launching the utility and ensure all resources are destroyed after you are done running it.
-See `Confluent Cloud Billing <https://docs.confluent.io/cloud/current/billing.html>`__ for details.
-
-|ccloud| Resources
-------------------
 
 Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
 By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you have to explicitly enable it.
@@ -212,6 +202,8 @@ Create a ccloud-stack
       ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 
 
+.. _ccloud-stack-destroy:
+
 Destroy a ccloud-stack
 ----------------------
 
@@ -220,6 +212,13 @@ Destroy a ccloud-stack
    .. code:: bash
 
       ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+
+.. include:: includes/ccloud-examples-terminate.rst
+
+Details
+-------
+
+See section :ref:`ccloud-stack-destroy` for more details.
 
 
 .. _ccloud-stack-options:

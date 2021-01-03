@@ -31,7 +31,16 @@ This enables you to:
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
          `blog post <https://www.confluent.io/blog/build-a-cloud-etl-pipeline-with-confluent-cloud/>`__.
 
-.. include:: ../../ccloud/docs/includes/ccloud-promo-code.rst
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+
+Details
+-------
+
+This ``cloud-etl`` example uses real cloud resources, including:
+
+* |ccloud|
+* AWS Kinesis or RDS PostgreSQL
+* One of the cloud storage providers, depending on your configuration
 
 ========================
 End-to-end Streaming ETL
@@ -83,13 +92,6 @@ It resembles this:
 | sink connector        | ``COUNT_PER_SOURCE``, |                       |
 |                       | ``SUM_PER_SOURCE``    |                       |
 +-----------------------+-----------------------+-----------------------+
-
-=======
-Caution
-=======
-
-This ``cloud-etl`` example uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS PostgreSQL, and one of the cloud storage providers.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all resources are destroyed after you are done running it.
 
 =============
 Prerequisites
@@ -542,9 +544,10 @@ Validate
    :alt: image
 
 
-      
-Stop Example
-------------
+.. include:: ../../ccloud/docs/includes/ccloud-examples-terminate.rst
+
+Details
+-------
 
 #. Stop the example and clean up all the resources, delete Kafka topics, delete the fully-managed connectors, delete the data in the cloud storage:
 

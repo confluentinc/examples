@@ -29,15 +29,7 @@ The major components of the example are:
 .. note:: This is an example environment and has many services running on one host. Do not run this example in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
-.. include:: includes/ccloud-promo-code.rst
-
-=======
-Caution
-=======
-
-This example uses real |ccloud| resources.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all resources are destroyed after you are done running it.
-
+.. include:: includes/ccloud-examples-caution.rst
 
 =============
 Prerequisites
@@ -338,10 +330,10 @@ Troubleshooting the example
         # View log file per service, e.g. for the Kafka broker
         confluent local services kafka log
 
+.. include:: includes/ccloud-examples-terminate.rst
 
-============
-Stop Example
-============
+Details
+-------
 
 #. Stop the example, destroy all resources in |ccloud| and local components. As an argument to the script, pass in the path to the local configuration file and substitute ``<SERVICE ACCOUNT ID>`` to match what was auto-generated when you started the demo.
 

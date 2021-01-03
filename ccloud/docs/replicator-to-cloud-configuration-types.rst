@@ -8,7 +8,7 @@ Learn the different ways to configure |crep| and |kconnect-long|.
 
 .. figure:: images/replicator-to-ccloud.png
 
-.. include:: includes/ccloud-promo-code.rst
+.. include:: includes/ccloud-examples-caution.rst
 
 ===============
 Concepts Review
@@ -200,6 +200,7 @@ Configure ACLs
 
 .. include:: includes/set-acls-origin-and-destination.rst
 
+.. include:: includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources
