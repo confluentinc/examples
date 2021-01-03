@@ -67,9 +67,6 @@ Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-a
 Run Example
 ===========
 
-Setup
------
-
 Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-aks-cc`` directory.
 
 .. sourcecode:: bash

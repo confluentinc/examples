@@ -342,10 +342,11 @@ Troubleshooting the example
         # View log file per service, e.g. for the Kafka broker
         confluent local services kafka log
 
-.. include:: includes/ccloud-examples-terminate.rst
+=================
+Destroy resources
+=================
 
-Details
--------
+.. include:: includes/ccloud-examples-terminate.rst
 
 #. Stop the example, destroy all resources in |ccloud| and local components. As an argument to the script, pass in the path to the local configuration file and substitute ``<SERVICE ACCOUNT ID>`` to match what was auto-generated when you started the demo.
 

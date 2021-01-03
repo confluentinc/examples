@@ -807,9 +807,9 @@ Run a Java consumer with a Wildcard ACL
    commands.
 
 
-=========
-Terminate
-=========
+=================
+Destroy resources
+=================
 
 .. include:: includes/ccloud-examples-terminate.rst
 
