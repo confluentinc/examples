@@ -27,8 +27,9 @@ the following steps:
 
 .. include:: includes/ccloud-examples-caution.rst
 
-Run the Tutorial
-================
+============
+Run Tutorial
+============
 
 Prerequisites
 -------------
@@ -47,8 +48,8 @@ Prerequisites
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
-Start Tutorial
---------------
+Start
+-----
 
 #. Log in to the |ccloud| CLI:
 
@@ -84,12 +85,8 @@ Start Tutorial
 
          ./start.sh
 
-Run Tutorial
-------------
-
-
 Create a new Confluent Cloud environment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------
 
 #. Run the following command to create a new |ccloud| environment
    ``demo-script-env``:
@@ -127,7 +124,7 @@ Create a new Confluent Cloud environment
 
 
 Create a new Confluent Cloud cluster
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------
 
 #. Run the following command to create a new |ccloud| cluster
    ``demo-kafka-cluster``. It takes up to 5 minutes for the |ak| cluster to be
@@ -180,7 +177,7 @@ Create a new Confluent Cloud cluster
 
 
 Create a new API key/secret pair for user
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------------
 
 #. Run the following command to create a user API key/secret pair for your |ak|
    cluster ``lkc-x6m01``:
@@ -217,7 +214,7 @@ Create a new API key/secret pair for user
 
 
 Produce and consume records with Confluent Cloud CLI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+----------------------------------------------------
 
 #. Run the following command to create a new |ak| topic ``demo-topic-1``:
 
@@ -265,7 +262,7 @@ Produce and consume records with Confluent Cloud CLI
 
 
 Create a new service account with an API key/secret pair
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------------------------------
 
 #. Run the following command to create a new service account:
 
@@ -324,7 +321,7 @@ Create a new service account with an API key/secret pair
 
 
 Run a Java producer without ACLs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------------
 
 #. By default, no ACLs are configured for the service account, which means the
    service account has no access to any |ccloud| resources. Run the following
@@ -364,7 +361,7 @@ Run a Java producer without ACLs
        [ERROR] Failed to execute goal org.codehaus.mojo:exec-maven-plugin:1.2.1:java (default-cli) on project clients-example: An exception occured while executing the Java class. null: InvocationTargetException: java.util.concurrent.ExecutionException: org.apache.kafka.common.errors.TopicAuthorizationException: Authorization failed. -> [Help 1]
 
 Run a Java producer with ACLs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------
 
 #. Run the following commands to create ACLs for the service account:
 
@@ -445,7 +442,7 @@ Run a Java producer with ACLs
 
 
 Run a Java producer with a prefixed ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
 
 #. Create a new |ak| topic ``demo-topic-2``:
 
@@ -535,7 +532,7 @@ Run a Java producer with a prefixed ACL
 
 
 Run kafka-connect-datagen connector with wildcard ACLs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------------------------------
 
 #. Create a new |ak| topic ``demo-topic-3``:
 
@@ -701,7 +698,7 @@ Run kafka-connect-datagen connector with wildcard ACLs
 
 
 Run a Java consumer with a Wildcard ACL
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------------------
 
 #. Create ACLs for the consumer using a wildcard by running the following
    commands:
@@ -902,8 +899,9 @@ cluster, and environment:
    ./cleanup.sh
 
 
+==============
 Advanced usage
---------------
+==============
 
 The example script provides variables that allow you to alter the default |ak|
 cluster name, cloud provider, and region. For example:
@@ -928,8 +926,9 @@ Here are the variables and their default values:
      - us-west-2
 
 
+====================
 Additional Resources
----------------------
+====================
 
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
