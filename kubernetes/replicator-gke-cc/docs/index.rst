@@ -138,9 +138,8 @@ Validate
 
 .. _quickstart-demos-operator-replicator-gke-cc-destroy:
 
-============
 Stop Example
-============
+------------
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
@@ -156,9 +155,8 @@ If you used the example to create your cluster, you can destroy the GKE cluster 
 
     make gke-destroy-cluster
 
-==========
 Highlights
-==========
+----------
 
 .. include:: ../../docs/includes/replicator-cc-demo/highlight-connector-deployment.rst
 
@@ -166,12 +164,11 @@ Highlights
 
 .. _quickstart-demos-operator-replicator-gke-cc-ccloud-advanced-usage:
 
-==============
 Advanced Usage
-==============
+--------------
 
 Customize GKE Cluster Creation
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 There are variables you can override and pass to the `make` command.  The following table shows the variables and their defaults.  The variables can be set on the ``make`` command, such as:
 
