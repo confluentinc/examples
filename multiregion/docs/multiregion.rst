@@ -1279,48 +1279,48 @@ it is possible Docker networking not working or cleaning up properly between run
 
 
 .. |Multi-region Architecture|
-image:: images/multi-region-base-v2.png
+   image:: images/multi-region-base-v2.png
    :alt: Multi-region Architecture
 
 .. |Follower_Fetching|
-image:: images/Follower_Fetching.png
+   image:: images/Follower_Fetching.png
    :alt: Follower fetching
 
 .. |Multi-region latencies|
-image:: images/multi-region-latencies-v2.png
+   image:: images/multi-region-latencies-v2.png
    :alt: Multi-region latencies
 
 .. |Multi-region topic replicas|
-image:: images/multi-region-topic-replicas-v2.png
+   image:: images/multi-region-topic-replicas-v2.png
    :alt: Multi-region topic replicas
 
 .. |C3 cluster navigation|
-image:: images/c3-cluster-navigation.png
+   image:: images/c3-cluster-navigation.png
    :alt: Control Center cluster navigation
 
 .. |C3 topics overview|
-image:: images/c3-topics-overview.png
+   image:: images/c3-topics-overview.png
    :alt: Control Center topics overview
 
 .. |Multi-region-async replicas|
-image:: images/multi-region-async-placement.png
+   image:: images/multi-region-async-placement.png
    :width: 500
    :alt: multi-region-async replicas
 
 .. |C3 degraded region|
-image:: images/c3-degraded-region.png
+   image:: images/c3-degraded-region.png
    :alt: Control Center degraded region
 
 .. |C3 fail region|
-image:: images/c3-fail-region.png
+   image:: images/c3-fail-region.png
    :alt: Control Center fail region
 
 .. |C3 unclean leader election|
-image:: images/c3-unclean-election.png
+   image:: images/c3-unclean-election.png
    :alt: Control Center unclean leader election
 
 .. |C3 permanent failover|
-image:: images/c3-perminant-failover-default.png
+   image:: images/c3-perminant-failover-default.png
    :alt: Control Center permanent failover
 
 	 
