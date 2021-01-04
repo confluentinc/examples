@@ -29,6 +29,18 @@ The major components of the example are:
 .. note:: This is an example environment and has many services running on one host. Do not run this example in production, and
           do not use Confluent CLI in production. This is meant exclusively to easily demo the |cp| and |ccloud|.
 
+=============
+Prerequisites
+=============
+
+#. An initialized `Confluent Cloud cluster <https://www.confluent.io/confluent-cloud/>`__
+
+#. Local install of `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
+
+#. `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
+
+#. .. include:: ../../docs/includes/demo-validation-env.rst
+
 ====================
 Cost to Run Tutorial
 ====================
@@ -42,19 +54,6 @@ Caution
 -------------------
 
 .. include:: includes/ccloud-examples-promo-code.rst
-
-=============
-Prerequisites
-=============
-
-#. An initialized `Confluent Cloud cluster <https://www.confluent.io/confluent-cloud/>`__
-
-#. Local install of `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
-
-#. `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
-
-#. .. include:: ../../docs/includes/demo-validation-env.rst
-
 
 =============
 Start Example

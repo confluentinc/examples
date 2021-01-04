@@ -25,6 +25,24 @@ the following steps:
 -  `Run a Java consumer with a Wildcard ACL`_
 -  `Clean up Confluent Cloud resources`_
 
+Prerequisites
+-------------
+
+-  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
+
+-  Local `install of Confluent Cloud CLI
+   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.21.0 or later)
+
+-  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
+   <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
+
+-  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
+
+-  `mvn <https://maven.apache.org/install.html>`__ installed on your host
+
+-  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
+
+
 Cost to Run Tutorial
 --------------------
 
@@ -40,23 +58,6 @@ Caution
 
 Run Tutorial
 ------------
-
-Prerequisites
-~~~~~~~~~~~~~
-
--  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
-
--  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.21.0 or later)
-
--  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
-   <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
-
--  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
-
--  `mvn <https://maven.apache.org/install.html>`__ installed on your host
-
--  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
 Start
 ~~~~~
