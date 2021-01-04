@@ -23,23 +23,21 @@ the following steps:
 -  `Run a Java producer with a prefixed ACL`_
 -  `Run kafka-connect-datagen connector with wildcard ACLs`_
 -  `Run a Java consumer with a Wildcard ACL`_
--  `Clean up your Confluent Cloud resources`_
+-  `Clean up Confluent Cloud resources`_
 
-====================
 Cost to Run Tutorial
-====================
+--------------------
 
 Caution
--------
+~~~~~~~
 
 .. include:: includes/ccloud-examples-caution.rst
 
 |ccloud| Promo Code
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 .. include:: includes/ccloud-examples-promo-code.rst
 
-============
 Run Tutorial
 ============
 
@@ -807,14 +805,10 @@ Run a Java consumer with a Wildcard ACL
    commands.
 
 
-=================
-Destroy resources
-=================
+Clean up Confluent Cloud resources
+----------------------------------
 
 .. include:: includes/ccloud-examples-terminate.rst
-
-Clean up your Confluent Cloud resources
----------------------------------------
 
 #. Run the following command to delete the service account:
 
@@ -915,7 +909,6 @@ cluster, and environment:
    ./cleanup.sh
 
 
-==============
 Advanced usage
 ==============
 
@@ -942,7 +935,6 @@ Here are the variables and their default values:
      - us-west-2
 
 
-====================
 Additional Resources
 ====================
 
