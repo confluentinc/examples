@@ -732,9 +732,9 @@ Then create the following persistent queries:
 The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
-============
-Stop Example
-============
+=============
+Stop Tutorial
+=============
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
