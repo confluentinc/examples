@@ -8,9 +8,9 @@ Learn the different ways to configure |crep| and |kconnect-long|.
 
 .. figure:: images/replicator-to-ccloud.png
 
-====================
-Cost to Run Tutorial
-====================
+===================
+Cost to Run Example
+===================
 
 Caution
 -------

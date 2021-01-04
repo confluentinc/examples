@@ -41,12 +41,11 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-===================
 Cost to Run Example
-===================
+-------------------
 
 Caution
--------
+~~~~~~~
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
 
@@ -58,14 +57,13 @@ In addition to |ccloud| resources, this example uses |az-long| resources:
 Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-aks-cc-destroy>` after you are done.
 
 |ccloud| Promo Code
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
 
-===========
 Run Example
-===========
+-----------
 
 Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-aks-cc`` directory.
 
@@ -150,9 +148,8 @@ Validate
 
 .. _quickstart-demos-operator-replicator-aks-cc-destroy:
 
-============
 Stop Example
-============
+------------
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
@@ -168,9 +165,8 @@ If you used the example to create your cluster, you can destroy the AKS cluster 
 
     make aks-destroy-cluster
 
-==========
 Highlights
-==========
+----------
 
 .. include:: ../../docs/includes/replicator-cc-demo/highlight-connector-deployment.rst
 
@@ -178,12 +174,11 @@ Highlights
 
 .. _quickstart-demos-operator-replicator-aks-cc-ccloud-advanced-usage:
 
-==============
 Advanced Usage
-==============
+--------------
 
 Customize AKS Cluster Creation
-------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. include:: ../../docs/includes/aks-custom-variables.rst
 
