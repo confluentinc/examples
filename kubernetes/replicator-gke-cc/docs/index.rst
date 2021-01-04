@@ -43,12 +43,11 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-====================
 Cost to Run Tutorial
-====================
+--------------------
 
 Caution
--------
+~~~~~~~
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
 
@@ -60,14 +59,13 @@ In addition to |ccloud| resources, this example uses |gcp-long| resources:
 Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done.
 
 |ccloud| Promo Code
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
 
-===========
 Run Example
-===========
+-----------
 
 Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-gke-cc`` directory.
 
