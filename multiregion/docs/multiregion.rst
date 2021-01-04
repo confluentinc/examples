@@ -1304,8 +1304,8 @@ image:: images/c3-topics-overview.png
 
 .. |Multi-region-async replicas|
 image:: images/multi-region-async-placement.png
+   :width: 500
    :alt: multi-region-async replicas
-   :width: 500px
 
 .. |C3 degraded region|
 image:: images/c3-degraded-region.png
