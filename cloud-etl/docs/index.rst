@@ -34,12 +34,11 @@ This enables you to:
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
          `blog post <https://www.confluent.io/blog/build-a-cloud-etl-pipeline-with-confluent-cloud/>`__.
 
-====================
 Cost to Run Tutorial
-====================
+--------------------
 
 Caution
--------
+~~~~~~~
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
 
@@ -49,7 +48,7 @@ This example also uses real cloud resources, including:
 * One of the cloud storage providers, depending on your configuration
 
 |ccloud| Promo Code
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
