@@ -8,7 +8,7 @@
 This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
 ====================
-Cost to Run Tutorial
+Cost to Run Examples
 ====================
 
 Caution
