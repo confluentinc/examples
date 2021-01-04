@@ -397,7 +397,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    Click on each topic to see details about the replica and observer placement. |c3| matches the CLI output above. Below is an example of the ``multi-region-async`` topic.
 
-   |multi-region-async replicas|
+   |Multi-region-async replicas|
 
 #. Observe the following:
 
@@ -1296,32 +1296,32 @@ image:: images/multi-region-topic-replicas-v2.png
 
 .. |C3 cluster navigation|
 image:: images/c3-cluster-navigation.png
-   :alt: |c3-short| cluster navigation
+   :alt: Control Center cluster navigation
 
 .. |C3 topics overview|
 image:: images/c3-topics-overview.png
-   :alt: |c3-short| topics overview
+   :alt: Control Center topics overview
 
-.. |multi-region-async replicas|
+.. |Multi-region-async replicas|
 image:: images/multi-region-async-placement.png
    :alt: multi-region-async replicas
    :width: 500px
 
 .. |C3 degraded region|
 image:: images/c3-degraded-region.png
-   :alt: |c3-short| degraded region
+   :alt: Control Center degraded region
 
 .. |C3 fail region|
 image:: images/c3-fail-region.png
-   :alt: |c3-short| fail region
+   :alt: Control Center fail region
 
 .. |C3 unclean leader election|
 image:: images/c3-unclean-election.png
-   :alt: |c3-short| unclean leader election
+   :alt: Control Center unclean leader election
 
 .. |C3 permanent failover|
 image:: images/c3-perminant-failover-default.png
-   :alt: |c3-short| permanent failover
+   :alt: Control Center permanent failover
 
 	 
 Additional Resources
