@@ -23,9 +23,9 @@ The utility uses |ccloud| CLI under the hood to dynamically do the following in 
 In addition to creating these resources, ``ccloud-stack`` also generates a local configuration file with connection information to all of the above services.
 This file is particularly useful because it contains connection information to your |ccloud| instance, and any downstream application or |ak| client can use it, or you can use it for other demos or automation workflows.
 
-====================
-Cost to Run Tutorial
-====================
+========================
+Cost to Run ccloud-stack
+========================
 
 Caution
 -------

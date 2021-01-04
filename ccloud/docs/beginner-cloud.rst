@@ -25,16 +25,17 @@ the following steps:
 -  `Run a Java consumer with a Wildcard ACL`_
 -  `Clean up your Confluent Cloud resources`_
 
+====================
 Cost to Run Tutorial
---------------------
+====================
 
 Caution
-~~~~~~~
+-------
 
 .. include:: includes/ccloud-examples-caution.rst
 
 |ccloud| Promo Code
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
 .. include:: includes/ccloud-examples-promo-code.rst
 
