@@ -114,10 +114,10 @@ Caution
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
 
-This example also uses real cloud resources, including:
+This example also uses real resources from other cloud providers, including:
 
 * AWS Kinesis or RDS PostgreSQL
-* One of the cloud storage providers, depending on your configuration
+* Cloud storage providers (one of GCP GCS, AWS S3, or Azure Blob) depending on your configuration
 
 |ccloud| Promo Code
 ~~~~~~~~~~~~~~~~~~~
