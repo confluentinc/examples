@@ -387,7 +387,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
 #. View the topic replica placement in |c3|:
 
-   Navigate to the C3 UI at http://localhost:9021.
+   Navigate to the |c3| UI at http://localhost:9021.
 
    |C3 cluster navigation|
 
@@ -887,7 +887,7 @@ steps:
       Topic: multi-region-default PartitionCount: 1   ReplicationFactor: 4    Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
          Topic: multi-region-default Partition: 0    Leader: 3   Replicas: 2,1,3,4   Isr: 3,4    Offline: 2,1    Observers: 3,4
 
-#. View the changes in the unclean leader election in C3 under the "Topics" section.
+#. View the changes in the unclean leader election in |c3| under the "Topics" section.
 
    |C3 unclean leader election|
 
@@ -1296,31 +1296,32 @@ image:: images/multi-region-topic-replicas-v2.png
 
 .. |C3 cluster navigation|
 image:: images/c3-cluster-navigation.png
-   :alt: C3 cluster navigation
+   :alt: |c3-short| cluster navigation
 
 .. |C3 topics overview|
 image:: images/c3-topics-overview.png
-   :alt: C3 topics overview
+   :alt: |c3-short| topics overview
 
 .. |multi-region-async replicas|
 image:: images/multi-region-async-placement.png
    :alt: multi-region-async replicas
+   :width: 500px
 
 .. |C3 degraded region|
 image:: images/c3-degraded-region.png
-   :alt: C3 degraded region
+   :alt: |c3-short| degraded region
 
 .. |C3 fail region|
 image:: images/c3-fail-region.png
-   :alt: C3 fail region
+   :alt: |c3-short| fail region
 
 .. |C3 unclean leader election|
 image:: images/c3-unclean-election.png
-   :alt: C3 unclean leader election
+   :alt: |c3-short| unclean leader election
 
 .. |C3 permanent failover|
 image:: images/c3-perminant-failover-default.png
-   :alt: C3 permanent failover
+   :alt: |c3-short| permanent failover
 
 	 
 Additional Resources
