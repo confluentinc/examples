@@ -13,7 +13,7 @@ Often referred to as a stretch cluster, |mrrep| replicate data between datacente
 You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
 It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
-We will use a dedicated metrics cluster running |c3| to monitor the Multi-Region Cluster.
+This tutorial uses a dedicated |ak| cluster backing |c3|, which monitors the multi-region cluster.
 
 Benefits:
 
@@ -391,11 +391,11 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    |C3 cluster navigation|
 
-   You will notice 2 clusters, "mrc" which is the multiregion cluster and "metrics" which is a dedicated metrics cluster that runs Control Center. By hosting Control Center on its own Kafka cluster, it is independent of the availability of the production cluster it is monitoring. We will be working on topics within the "mrc" cluster for the remainder of this tutorial. Click on the "mrc" cluster, then make your way to the "Topics" section.
+   Notice two clusters: "mrc" which is the multiregion cluster, and "metrics" which is a dedicated metrics cluster that runs |c3|. By backing |c3| to its own |ak| cluster, it has no dependency on the availability of the production cluster it is monitoring. The remainder of this tutorial works on topics within the "mrc" cluster. Click on the "mrc" cluster, then make your way to the "Topics" section.
 
    |C3 topics overview|
 
-   Click on each topic to see details about the replica and observer placement. This will mirror the CLI output above. Below is an example of the multi-region-async topic.
+   Click on each topic to see details about the replica and observer placement. |c3| matches the CLI output above. Below is an example of the ``multi-region-async`` topic.
 
    |multi-region-async replicas|
 
@@ -403,7 +403,7 @@ You could create all the topics by running the script :devx-examples:`create-top
 
    - The ``multi-region-async``, ``multi-region-async-op-under-min-isr``, ``multi-region-async-op-under-replicated``, ``multi-region-async-op-leader-is-observer`` and ``multi-region-default`` topics have replicas
      across ``west`` and ``east`` regions, but only 1 and 2 are in the ISR, and 3 and
-     4 are observers. This can be observed via the CLI output or C3.
+     4 are observers. This can be observed via the CLI output or |c3|.
 
 
 Client Performance
@@ -633,7 +633,7 @@ In this section, you will simulate a single broker failure in the ``west`` regio
       Topic: multi-region-default	PartitionCount: 1	ReplicationFactor: 4	Configs: min.insync.replicas=1,confluent.placement.constraints={"version":1,"replicas":[{"count":2,"constraints":{"rack":"west"}}],"observers":[{"count":2,"constraints":{"rack":"east"}}]}
       	Topic: multi-region-default	Partition: 0	Leader: 2	Replicas: 1,2,3,4	Isr: 2	Offline: 1	Observers: 3,4
 
-#. Verify similar replica placement in C3. Note that it may take up to 5 minutes for C3 to properly report the new topic stats.
+#. Verify similar replica placement in |c3|. Note that it may take up to 5 minutes it to properly report the new topic stats.
 
    |C3 degraded region|
 
@@ -1147,7 +1147,7 @@ Now you will bring region ``west`` back online and restore configuration to the 
      region is restored. Leader election is not required for this demotion
      process, it will happen as soon as the failed region is restored.
 
-   - The C3 topics page is the same as it was at the start of this tutorial.
+   - The |c3| topics page is the same as it was at the start of this tutorial.
 
 .. note::
 
