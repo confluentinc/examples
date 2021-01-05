@@ -64,6 +64,7 @@ object Streams extends App {
     // Disable caching to print the aggregation value after each record
     properties.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, "0")
     properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
+    properties.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, "-1");
     properties.load(new FileReader(configFileName))
     properties
   }
