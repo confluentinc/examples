@@ -45,7 +45,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 
 public class StreamsAvroExample {
@@ -73,14 +72,8 @@ public class StreamsAvroExample {
 
         final Serde<DataRecordAvro> dataRecordAvroSerde = new SpecificAvroSerde<>();
         final boolean isKeySerde = false;
-        Map<String, Object> SRconfig = new HashMap<>();
-        SRconfig.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, props.getProperty(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG));
-        if (props.getProperty("schema.registry.basic.auth.user.info") != null) {
-            SRconfig.put("schema.registry.basic.auth.user.info", props.getProperty("schema.registry.basic.auth.user.info"));
-        }
-        if (props.getProperty("basic.auth.credentials.source") != null) {
-            SRconfig.put("basic.auth.credentials.source", props.getProperty("basic.auth.credentials.source"));
-        }
+        // Read Schema Registry URL, and optionally authentication configuration, from the props
+        Map<String, Object> SRconfig = (Map<String, Object>) ((Map) props);
         dataRecordAvroSerde.configure(
             SRconfig,
             isKeySerde);
