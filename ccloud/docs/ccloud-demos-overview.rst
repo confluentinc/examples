@@ -7,16 +7,19 @@
 
 This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
-.. include:: includes/ccloud-promo-code.rst
+====================
+Cost to Run Examples
+====================
 
-=======
 Caution
-=======
+-------
 
-All the following examples use real |ccloud| resources.
-They create |ccloud| environments, clusters, topics, ACLs, service accounts, ksqlDB applications, and potentially other |ccloud| resources that are billable.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching any example and manually verify that all |ccloud| resources are destroyed after you are done.
+.. include:: includes/ccloud-examples-caution.rst
 
+|ccloud| Promo Code
+-------------------
+
+.. include:: includes/ccloud-examples-promo-code.rst
 
 ========
 Examples
@@ -52,7 +55,7 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 Client Code Examples
 --------------------
 
-If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to the :devx-examples:`client examples|clients/cloud/README.md`.
+If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to :ref:`clients-all-examples`.
 It provides client examples written in various programming languages.
 
 .. figure:: ../../clients/cloud/images/clients-all.png
@@ -105,8 +108,13 @@ Microservices are deployed locally on Docker, and they are configured to use a |
 Confluent Operator with Cloud
 -----------------------------
 
-The :ref:`Kubernetes example <quickstart-demos-operator-replicator-gke-cc>` features a deployment of |cp| on Google Kubernetes Engine (GKE) leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
-Upon running this example, you will have a GKE-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+The Kubernetes examples feature a deployment of |cp| on Google Kubernetes Engine (GKE) or Microsoft Azure leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
+Upon running this example, you will have a GKE-based or Azure-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
+
+You can choose between two examples:
+
+- :ref:`quickstart-demos-operator-replicator-gke-cc`
+- :ref:`quickstart-demos-operator-replicator-aks-cc`
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
 
@@ -234,6 +242,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 
+.. include:: includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources
