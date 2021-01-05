@@ -15,15 +15,9 @@
 
 ARG CP_VERSION
 
-FROM confluentinc/cp-server-connect-base:$CP_VERSION
-
-ARG CONNECTOR_VERSION=6.0.0
+FROM confluentinc/cp-enterprise-replicator:$CP_VERSION
 
 ENV CONNECT_PLUGIN_PATH: "/usr/share/java,/connect-plugins,/usr/share/confluent-hub-components"
-
-# Install Confluent Replicator connector
-COPY confluentinc-kafka-connect-replicator-${CONNECTOR_VERSION}.zip /tmp/confluentinc-kafka-connect-replicator-${CONNECTOR_VERSION}.zip
-RUN confluent-hub install --no-prompt /tmp/confluentinc-kafka-connect-replicator-${CONNECTOR_VERSION}.zip
 
 # Install kafka-connect-datagen connector
 RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:latest

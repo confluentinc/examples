@@ -64,23 +64,9 @@ ccloud kafka acl create --allow --service-account $serviceAccount --operation WR
 ccloud::create_acls_replicator $serviceAccount pageviews
 printf "\n"
 
-echo ====== Building custom Docker image with Connect version ${CONFLUENT_DOCKER_TAG} and connector version ${CONNECTOR_VERSION}
-# If CONNECTOR_VERSION ~ `SNAPSHOT` then cp-demo uses Dockerfile-local
-# and expects user to build and provide a local file confluentinc-kafka-connect-replicator-${CONNECTOR_VERSION}.zip
-export CONNECTOR_VERSION=${CONNECTOR_VERSION:-$CONFLUENT}
-if [[ "${CONNECTOR_VERSION}" =~ "SNAPSHOT" ]]; then
-  echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f Dockerfile-local ."
-  docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f Dockerfile-local . || {
-    echo "ERROR: Docker image build failed. Please troubleshoot and try again."
-    exit 1;
-  }
-else
-  echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f Dockerfile-confluenthub ."
-  docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg CONNECTOR_VERSION=${CONNECTOR_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG}-${CONNECTOR_VERSION} -f Dockerfile-confluenthub . || {
-    echo "ERROR: Docker image build failed. Please troubleshoot and try again."
-    exit 1;
-  }
-fi
+echo ====== Building custom Docker image with Connect version ${CONFLUENT_DOCKER_TAG}
+echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile ."
+docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile .
 
 echo ====== Starting local services in Docker
 docker-compose up -d
