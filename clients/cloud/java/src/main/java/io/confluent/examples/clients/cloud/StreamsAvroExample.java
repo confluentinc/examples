@@ -73,7 +73,7 @@ public class StreamsAvroExample {
 
         final Serde<DataRecordAvro> dataRecordAvroSerde = new SpecificAvroSerde<>();
         final boolean isKeySerde = false;
-        Map<String, Object> SRconfig = (Map<String, Object>) ((Map) props);
+        Map<String, String> SRconfig = (Map)props;
         dataRecordAvroSerde.configure(
             SRconfig,
             isKeySerde);
