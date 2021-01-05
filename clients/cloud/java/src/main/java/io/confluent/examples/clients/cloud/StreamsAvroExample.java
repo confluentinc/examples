@@ -73,7 +73,6 @@ public class StreamsAvroExample {
 
         final Serde<DataRecordAvro> dataRecordAvroSerde = new SpecificAvroSerde<>();
         final boolean isKeySerde = false;
-        // Read Schema Registry URL, and optionally authentication configuration, from the props
         Map<String, Object> SRconfig = (Map<String, Object>) ((Map) props);
         dataRecordAvroSerde.configure(
             SRconfig,
