@@ -23,11 +23,10 @@ the following steps:
 -  `Run a Java producer with a prefixed ACL`_
 -  `Run kafka-connect-datagen connector with wildcard ACLs`_
 -  `Run a Java consumer with a Wildcard ACL`_
--  `Clean up your Confluent Cloud resources`_
-
+-  `Clean up Confluent Cloud resources`_
 
 Prerequisites
-~~~~~~~~~~~~~~
+-------------
 
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
@@ -44,20 +43,24 @@ Prerequisites
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
 
-Confluent Cloud Promo Code
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+Cost to Run Tutorial
+--------------------
 
-The first 20 users to sign up for `Confluent Cloud
-<https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__
-and use promo code ``C50INTEG`` will receive an additional $50 free usage
-(`details
-<https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__).
+Caution
+~~~~~~~
 
+.. include:: includes/ccloud-examples-caution.rst
 
-Run the tutorial
-----------------
+|ccloud| Promo Code
+~~~~~~~~~~~~~~~~~~~
 
-To run this tutorial, complete the following steps:
+.. include:: includes/ccloud-examples-promo-code.rst
+
+Run Tutorial
+------------
+
+Start
+~~~~~
 
 #. Log in to the |ccloud| CLI:
 
@@ -92,7 +95,6 @@ To run this tutorial, complete the following steps:
    .. code-block:: bash
 
          ./start.sh
-
 
 Create a new Confluent Cloud environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -223,7 +225,7 @@ Create a new API key/secret pair for user
 
 
 Produce and consume records with Confluent Cloud CLI
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ak| topic ``demo-topic-1``:
 
@@ -804,8 +806,10 @@ Run a Java consumer with a Wildcard ACL
    commands.
 
 
-Clean up your Confluent Cloud resources
----------------------------------------
+Clean up Confluent Cloud resources
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. include:: includes/ccloud-examples-terminate.rst
 
 #. Run the following command to delete the service account:
 
@@ -933,7 +937,7 @@ Here are the variables and their default values:
 
 
 Additional Resources
----------------------
+--------------------
 
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
