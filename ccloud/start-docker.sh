@@ -4,6 +4,7 @@
 source ../utils/helper.sh
 source ../utils/ccloud_library.sh
 
+echo
 echo ====== Verifying prerequisites
 ccloud::validate_version_ccloud_cli 1.7.0 \
   && print_pass "ccloud version ok" \
@@ -15,6 +16,7 @@ check_jq \
   && print_pass "jq installed" \
   || exit 1
 
+echo
 echo ====== Create new Confluent Cloud stack
 ccloud::prompt_continue_ccloud_demo || exit 1
 ccloud::create_ccloud_stack true
@@ -29,6 +31,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
+echo
 echo ====== Generate Confluent Cloud configurations
 ./ccloud-generate-cp-configs.sh $CONFIG_FILE
 
@@ -42,19 +45,23 @@ echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be U
 retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
 
+echo
 echo ====== Set Kafka cluster and service account
 ccloud::set_kafka_cluster_use_from_api_key $CLOUD_KEY || exit 1
 serviceAccount=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
 
+echo
 echo ====== Set ACLs for Confluent Control Center and Kafka Connect
 ccloud::create_acls_control_center $serviceAccount
 ccloud::create_acls_connect_topics $serviceAccount
 printf "\n"
 
+echo
 echo ====== Validate credentials to Confluent Cloud Schema Registry
 ccloud::validate_schema_registry_up $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO $SCHEMA_REGISTRY_URL || exit 1
 printf "Done\n\n"
 
+echo
 echo ====== Create topic users and set ACLs in Confluent Cloud cluster
 # users
 ccloud kafka topic create users
@@ -64,10 +71,12 @@ ccloud kafka acl create --allow --service-account $serviceAccount --operation WR
 ccloud::create_acls_replicator $serviceAccount pageviews
 printf "\n"
 
+echo
 echo ====== Building custom Docker image with Connect version ${CONFLUENT_DOCKER_TAG}
 echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile ."
 docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile .
 
+echo
 echo ====== Starting local services in Docker
 docker-compose up -d
 printf "\n"
@@ -79,6 +88,7 @@ echo "Waiting up to $MAX_WAIT seconds for connect-cloud to start"
 retry $MAX_WAIT check_connect_up connect-cloud || exit 1
 printf "\n\n"
 
+echo
 echo ====== Create topic pageviews in local cluster
 docker-compose exec kafka kafka-topics --bootstrap-server localhost:9092 --create --topic pageviews --partitions 6 --replication-factor 1
 MAX_WAIT=30
@@ -87,14 +97,17 @@ retry $MAX_WAIT check_topic_exists kafka kafka:9092 pageviews || exit 1
 echo "Topic pageviews exists in local cluster"
 printf "\n"
 
+echo
 echo ====== Deploying kafka-connect-datagen for users 
 source ./connectors/submit_datagen_users_config.sh
 printf "\n\n"
 
+echo
 echo ====== Deploying kafka-connect-datagen for pageviews
 source ./connectors/submit_datagen_pageviews_config.sh
 printf "\n\n"
 
+echo
 echo ====== Starting Replicator
 source ./connectors/submit_replicator_docker_config.sh
 MAX_WAIT=120
@@ -104,6 +117,7 @@ printf "\nWaiting up to $MAX_WAIT seconds for the subject pageviews-value to be 
 retry $MAX_WAIT ccloud::validate_subject_exists "pageviews-value" $SCHEMA_REGISTRY_URL $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO || exit 1
 printf "\n\n"
 
+echo
 echo ====== Creating Confluent Cloud ksqlDB application
 ./create_ksqldb_app.sh || exit 1
 
