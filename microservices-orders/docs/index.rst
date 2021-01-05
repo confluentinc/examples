@@ -141,8 +141,6 @@ Make sure you have the following pre-requisites, depending on whether you are ru
 * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
 * |ccloud| CLI. See `Install and Configure the Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__.
 
-.. note:: The first 20 users to sign up for |ccloud| and use promo code ``C50INTEG`` will receive an additional $50 free usage (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer>`__).
-
 Docker
 ------
 
@@ -163,6 +161,20 @@ Local
 * (optional) `Kibana 5.5.2 <https://www.elastic.co/downloads/past-releases/kibana-5-5-2>`__ to visualize data
 
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
+
+====================
+Cost to Run Tutorial
+====================
+
+Caution
+~~~~~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+
+|ccloud| Promo Code
+~~~~~~~~~~~~~~~~~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
 ========
 Tutorial
@@ -720,7 +732,11 @@ Then create the following persistent queries:
 The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
+=============
+Stop Tutorial
+=============
 
+.. include:: ../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources
