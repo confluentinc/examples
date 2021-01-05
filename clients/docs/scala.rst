@@ -51,7 +51,7 @@ Consume Records
 
    .. code-block:: bash
 
-      sbt “runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config test1”
+      sbt "runMain io.confluent.examples.clients.scala.Consumer $HOME/.confluent/java.config test1"
 
    You should see:
 
