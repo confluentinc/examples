@@ -15,11 +15,10 @@ source ../../utils/ccloud_library.sh
 
 ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
 ccloud::validate_logged_in_ccloud_cli || exit 1
+ccloud::prompt_continue_ccloud_demo || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
-check_expect || exit 1
 check_jq || exit 1
-check_docker || exit 1
 
 ##################################################
 # Create a new environment and specify it as the default
@@ -266,25 +265,18 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 
 
 ##################################################
-# Run Connect and kafka-connect-datagen connector with permissions
-# - Confluent Hub: https://www.confluent.io/hub/
+# Run a fully managed datagen_ccloud_pageviews connector
 ##################################################
 
 TOPIC3="demo-topic-3"
-
+CONNECTOR="datagen_ccloud_pageviews"
 echo -e "\n# Create a new Kafka topic $TOPIC3"
 echo "ccloud kafka topic create $TOPIC3"
 ccloud kafka topic create $TOPIC3
 
 echo -e "\n# Create ACLs for Connect"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
 echo
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
@@ -295,55 +287,20 @@ echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
+cat  $CONNECTOR.json > .ignored_folder/$CONNECTOR.json
+sed -i '' 's/ESN5FSNDHOFFSUEV/$CLOUD_KEY/g' .ignored_folder/$CONNECTOR.json
+sed -i '' 's/nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB/$CLOUD_SECRET/g' .ignored_folder/$CONNECTOR.json
 
-echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
-echo "docker-compose up -d"
-docker-compose up -d
-MAX_WAIT=180
-echo "Waiting up to $MAX_WAIT seconds for Docker container for connect to be up"
-retry $MAX_WAIT check_connect_up connect-cloud || exit 1
-sleep 5
+echo -e "\n# Create a managed connector"
+echo "source ../../utils/ccloud_library.sh"
+source ../../utils/ccloud_library.sh
 
-echo -e "\n# Post the configuration for the kafka-connect-datagen connector that produces pageviews data to Confluent Cloud topic $TOPIC3"
-CONNECTOR=datagen-$TOPIC3
-HEADER="Content-Type: application/json"
-DATA=$( cat << EOF
-{
-  "name": "$CONNECTOR",
-  "config": {
-    "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-    "kafka.topic": "$TOPIC3",
-    "quickstart": "pageviews",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter.schemas.enable": "false",
-    "max.interval": 5000,
-    "iterations": 1000,
-    "tasks.max": "1"
-  }
-}
-EOF
-)
-echo "curl --silent --output /dev/null -X POST -H \"${HEADER}\" --data \"${DATA}\" http://localhost:8083/connectors"
-curl --silent --output /dev/null -X POST -H "${HEADER}" --data "${DATA}" http://localhost:8083/connectors
-if [[ $? != 0 ]]; then
-  echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
-  #exit $?
-fi
+echo "ccloud::create_connector $CONNECTOR.json"
+ccloud::create_connector .ignored_folder/$CONNECTOR.json
 
-echo -e "\n\n# Wait 20 seconds for kafka-connect-datagen to start producing messages"
-sleep 20
-
-echo -e "\n# Verify connector is running"
-echo "curl --silent http://localhost:8083/connectors/$CONNECTOR/status"
-curl --silent http://localhost:8083/connectors/$CONNECTOR/status
-STATE=$(curl --silent http://localhost:8083/connectors/$CONNECTOR/status | jq -r '.connector.state')
-#echo $STATE
-if [[ "$STATE" != "RUNNING" ]]; then
-  echo "ERROR: connector $CONNECTOR is not running.  Please troubleshoot the Docker logs."
-  exit $?
-fi
-
+echo -e "\n# Wait for connector to be up"
+echo "ccloud::wait_for_connector_up $CONNECTOR.json 300"
+ccloud::wait_for_connector_up .ignored_folder/$CONNECTOR.json 300 || exit 1
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
 # - The following steps configure ACLs to match topics using a wildcard
@@ -380,20 +337,9 @@ echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --op
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
-# Stop the connector
-echo -e "\n# Stop Docker"
-echo "docker-compose down"
-docker-compose down
-
 echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
 
 
 ##################################################
@@ -401,10 +347,13 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 # - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
-echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
+echo -e "\n# Cleanup: delete connector, service-account, topics, api-keys, kafka cluster, environment"
+CONNECTOR_ID=$(ccloud connector list | grep $CONNECTOR | tr -d '\*' | awk '{print $1;}')
+echo "ccloud connector delete $CONNECTOR_ID"
+ccloud connector delete $CONNECTOR_ID 1>/dev/null
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
-for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
+for t in $TOPIC1 $TOPIC2 $TOPIC3; do
   echo "ccloud kafka topic delete $t"
   ccloud kafka topic delete $t
 done

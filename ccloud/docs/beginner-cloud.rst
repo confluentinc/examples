@@ -21,7 +21,7 @@ the following steps:
 -  `Run a Java producer without ACLs`_
 -  `Run a Java producer with ACLs`_
 -  `Run a Java producer with a prefixed ACL`_
--  `Run kafka-connect-datagen connector with wildcard ACLs`_
+-  `Run a fully managed Confluent Cloud connector`_
 -  `Run a Java consumer with a Wildcard ACL`_
 -  `Clean up Confluent Cloud resources`_
 
@@ -32,9 +32,6 @@ Prerequisites
 
 -  Local `install of Confluent Cloud CLI
    <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.21.0 or later)
-
--  `Docker <https://docs.docker.com/get-docker/>`__ and `Docker Compose
-   <https://docs.docker.com/compose/install/>`__ for the local |kconnect| worker
 
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
@@ -542,7 +539,7 @@ Run a Java producer with a prefixed ACL
    You should see two ``Deleted ACLs.`` messages.
 
 
-Run kafka-connect-datagen connector with wildcard ACLs
+Run a fully managed Confluent Cloud connector
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Create a new |ak| topic ``demo-topic-3``:
@@ -552,21 +549,6 @@ Run kafka-connect-datagen connector with wildcard ACLs
       ccloud kafka topic create demo-topic-3
 
    You should see a ``Created topic "demo-topic-3"`` message.
-
-#. Run the following command to create an ACL that allows creation of any topic:
-
-   .. code-block:: bash
-
-      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic '*'
-
-#. Verify your output resembles:
-
-   .. code-block:: text
-
-         ServiceAccountId | Permission | Operation | Resource | Name |  Type
-       +------------------+------------+-----------+----------+------+---------+
-         User:104349      | ALLOW      | CREATE    | TOPIC    | *    | LITERAL
-
 
 #. Run the following command to allow service account ID ``104349`` to write to
    any topic:
@@ -583,37 +565,6 @@ Run kafka-connect-datagen connector with wildcard ACLs
        +------------------+------------+-----------+----------+------+---------+
          User:104349      | ALLOW      | WRITE     | TOPIC    | *    | LITERAL
 
-
-#. Run the following command to allow service account ID ``104349`` to read from
-   any topic:
-
-   .. code-block:: bash
-
-      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic '*'
-
-#. Verify your output resembles:
-
-   .. code-block:: text
-
-         ServiceAccountId | Permission | Operation | Resource | Name |  Type
-       +------------------+------------+-----------+----------+------+---------+
-         User:104349      | ALLOW      | READ      | TOPIC    | *    | LITERAL
-
-#. Run the following command to allow service account ID ``104349`` to have a
-   consumer group called ``connect``:
-
-   .. code-block:: bash
-
-       ccloud kafka acl create --allow --service-account 104349 --operation READ --consumer-group connect
-
-   Your output should resemble:
-
-   .. code-block:: text
-
-         ServiceAccountId | Permission | Operation | Resource |  Name   |  Type
-         +------------------+------------+-----------+----------+---------+---------+
-         User:104349      | ALLOW      | READ      | GROUP    | connect | LITERAL
-
 #. Verify the ACLs were configured by running the following command:
 
    .. code-block:: bash
@@ -627,86 +578,42 @@ Run kafka-connect-datagen connector with wildcard ACLs
          ServiceAccountId | Permission | Operation | Resource |  Name   |  Type
        +------------------+------------+-----------+----------+---------+---------+
          User:104349      | ALLOW      | WRITE     | TOPIC    | *       | LITERAL
-         User:104349      | ALLOW      | CREATE    | TOPIC    | *       | LITERAL
-         User:104349      | ALLOW      | READ      | TOPIC    | *       | LITERAL
-         User:104349      | ALLOW      | READ      | GROUP    | connect | LITERAL
 
-#. Generate environment variables with |ccloud| connection information for
-   |kconnect| to use:
+#. Create a local configuration file
+   :devx-examples:`datagen_ccloud_pageviews.json|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
+   with |ccloud| connection information. Substitute your API key and secret for the service account,
+   in the ``kafka.api.key`` and ``kafka.api.secret`` fields. See below for an example:
+
+   .. literalinclude:: ../beginner-cloud/datagen_ccloud_pageviews.json
+
+#. Create a managed connector in Confluent Cloud with the configuration file you made in the
+   previous step using the following commands:
 
    .. code-block:: text
 
-      ../../ccloud/ccloud-generate-cp-configs.sh /tmp/client.config &>/dev/null
-      source delta_configs/env.delta
-
-#. Run the provided :devx-examples:`docker-compose.yml file|ccloud/beginner-cloud/docker-compose.yml`
-   which is a |kconnect| container with the `kafka-connect-datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ plugin:
-
-   .. code-block:: bash
-
-      docker-compose up -d
+      ccloud connector create --config datagen_ccloud_pageviews.json
 
    Your output should resemble:
 
    .. code-block:: text
 
-      Creating network "beginner-cloud_default" with the default driver
-      Creating connect-cloud ... done
+      Created connector datagen_ccloud_pageviews lcc-zno83
 
-#. Post the configuration for the kafka-connect-datagen connector that produces
-   pageviews data to |ccloud| topic ``demo-topic-3``:
-
-   .. code-block:: text
-
-         DATA=$( cat << EOF
-         {
-            "name": "datagen-demo-topic-3",
-            "config": {
-              "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-              "kafka.topic": "demo-topic-3",
-              "quickstart": "pageviews",
-              "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-              "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-              "value.converter.schemas.enable": "false",
-              "max.interval": 5000,
-              "iterations": 1000,
-              "tasks.max": "1"
-            }
-         }
-         EOF
-         )
-
-         curl --silent --output /dev/null -X POST -H "Content-Type: application/json" --data "${DATA}" http://localhost:8083/connectors
-
-
-#. Wait about 20 seconds for the kafka-connect-datagen connector to start producing messages.
-
-#. Run the following command to verify connector is running:
+#. The connector may take up to 5 minutes to provision. Run the following command to check the connector status
 
    .. code-block:: bash
 
-      curl --silent http://localhost:8083/connectors/datagen-demo-topic-3/status | jq -r '.'
+      ccloud connector list
 
-   Your output should resemble:
+   Your output should resemble the following:
 
    .. code-block:: text
 
-      {
-         "name": "datagen-demo-topic-3",
-         "connector": {
-           "state": "RUNNING",
-           "worker_id": "connect:8083"
-         },
-         "tasks": [
-           {
-             "id": 0,
-             "state": "RUNNING",
-             "worker_id": "connect:8083"
-           }
-         ],
-         "type": "source"
-      }
+           ID     |           Name            |    Status    |  Type  | Trace
+      +-----------+---------------------------+--------------+--------+-------+
+        lcc-zno83 | datagen_ccloud_pageviews  | PROVISIONING | source |
 
+   When the ``Status`` is ``RUNNING`` you may move on to the next step.
 
 Run a Java consumer with a Wildcard ACL
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -744,15 +651,13 @@ Run a Java consumer with a Wildcard ACL
 
          ServiceAccountId | Permission | Operation | Resource |         Name          |  Type
        +------------------+------------+-----------+----------+-----------------------+---------+
-         User:104349      | ALLOW      | READ      | GROUP    | connect               | LITERAL
-         User:104349      | ALLOW      | CREATE    | TOPIC    | *                     | LITERAL
          User:104349      | ALLOW      | WRITE     | TOPIC    | *                     | LITERAL
          User:104349      | ALLOW      | READ      | TOPIC    | *                     | LITERAL
          User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
 
 
 #. Run the Java consumer from ``demo-topic-3`` which is populated by
-   the kafka-connect-datagen connector, and wait 15 seconds for it to complete.
+   the datagen_ccloud_pageviews connector, and wait 15 seconds for it to complete.
 
    .. code-block:: bash
 
@@ -797,19 +702,38 @@ Run a Java consumer with a Wildcard ACL
 
    .. code-block:: bash
 
-      ccloud kafka acl delete --allow --service-account 104349 --operation CREATE --topic '*'
       ccloud kafka acl delete --allow --service-account 104349 --operation WRITE --topic '*'
-      ccloud kafka acl delete --allow --service-account 104349 --operation READ --topic '*'
-      ccloud kafka acl delete --allow --service-account 104349 --operation READ --consumer-group connect
 
    You should see a ``Deleted ACLs.`` message after running each of the previous
    commands.
 
 
-Clean up Confluent Cloud resources
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Clean up your Confluent Cloud resources
+---------------------------------------
+#. Complete the following steps to delete the managed connector:
 
-.. include:: includes/ccloud-examples-terminate.rst
+   a. Find the connector ID:
+      
+      .. code-block:: bash
+
+         ccloud connector list
+	 
+      Which should display a something similar to below. Locate your connector ID, in this case the connector ID is ``lcc-zno83``.
+
+      .. code-block:: text
+
+              ID     |           Name           | Status  |  Type  | Trace
+         +-----------+--------------------------+---------+--------+-------+
+           lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |
+
+
+   b. Delete the connector, referencing the connector ID from the previous step:
+      
+      .. code-block:: bash
+		      
+	 ccloud connector delete lcc-zno83
+	 
+      You should see: ``Deleted connector "lcc-zno83".``.
 
 #. Run the following command to delete the service account:
 
@@ -842,33 +766,6 @@ Clean up Confluent Cloud resources
          ccloud kafka topic delete demo-topic-3
 
       You should see: ``Deleted topic "demo-topic-3"``.
-
-   d. Delete ``connect-configs``, one of the 3 topics created by the |kconnect|
-      worker:
-
-      .. code-block:: bash
-
-         ccloud kafka topic delete connect-configs
-
-      You should see: ``Deleted topic "connect-configs"``.
-
-   e. Delete ``connect-offsets``, one of the 3 topics created by the |kconnect|
-      worker:
-
-      .. code-block:: bash
-
-         ccloud kafka topic delete connect-offsets
-
-      You should see: ``Deleted topic "connect-offsets"``.
-
-   f. Delete ``connect-status``, one of the 3 topics created by the |kconnect|
-      worker:
-
-      .. code-block:: bash
-
-         ccloud kafka topic delete connect-status
-
-      You should see: ``Deleted topic "connect-status"``.
 
 #. Run the following commands to delete the API keys:
 
