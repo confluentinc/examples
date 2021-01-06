@@ -930,8 +930,8 @@ function ccloud::create_ccloud_stack() {
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER)
     KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQLDB -o json | jq -r ".endpoint")
-    KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
     KSQLDB_SERVICE_ACCOUNT_ID=$(ccloud service-account list -o json 2>/dev/null | jq -r "map(select(.name == \"KSQL.$KSQLDB\")) | .[0].id")
+    KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $KSQLDB_SERVICE_ACCOUNT_ID $KSQLDB)
     ccloud ksql app configure-acls $KSQLDB
   fi
 
