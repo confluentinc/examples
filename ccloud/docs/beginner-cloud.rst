@@ -708,8 +708,9 @@ Run a Java consumer with a Wildcard ACL
    commands.
 
 
-Clean up your Confluent Cloud resources
----------------------------------------
+Clean up Confluent Cloud resources
+----------------------------------
+
 #. Complete the following steps to delete the managed connector:
 
    a. Find the connector ID:
