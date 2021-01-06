@@ -18,7 +18,6 @@ ccloud::validate_logged_in_ccloud_cli || exit 1
 ccloud::prompt_continue_ccloud_demo || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
-check_expect || exit 1
 check_jq || exit 1
 
 ##################################################
