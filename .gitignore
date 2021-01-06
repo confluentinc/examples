@@ -24,3 +24,5 @@ log.*
 **/eventlogs.sql
 **/.DS_Store
 ccloud/*.zip
+ccloud/beginner-cloud/.ignored_folder/*
+!ccloud/beginner-cloud/.ignored_folder/.gitkeep

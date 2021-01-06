@@ -287,20 +287,20 @@ echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
 ../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
-sed -i '' 's/ESN5FSNDHOFFSUEV/$CLOUD_KEY/g' datagen_ccloud_pageviews.json
-sed -i '' 's/nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB/$CLOUD_SECRET/g' datagen_ccloud_pageviews.json
+cat  $CONNECTOR.json > .ignored_folder/$CONNECTOR.json
+sed -i '' 's/ESN5FSNDHOFFSUEV/$CLOUD_KEY/g' .ignored_folder/$CONNECTOR.json
+sed -i '' 's/nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB/$CLOUD_SECRET/g' .ignored_folder/$CONNECTOR.json
 
 echo -e "\n# Create a managed connector"
 echo "source ../../utils/ccloud_library.sh"
 source ../../utils/ccloud_library.sh
 
 echo "ccloud::create_connector $CONNECTOR.json"
-ccloud::create_connector $CONNECTOR.json
+ccloud::create_connector .ignored_folder/$CONNECTOR.json
 
 echo -e "\n# Wait for connector to be up"
 echo "ccloud::wait_for_connector_up $CONNECTOR.json 300"
-ccloud::wait_for_connector_up $CONNECTOR.json 300 || exit 1
-git checkout datagen_ccloud_pageviews.json
+ccloud::wait_for_connector_up .ignored_folder/$CONNECTOR.json 300 || exit 1
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
 # - The following steps configure ACLs to match topics using a wildcard
