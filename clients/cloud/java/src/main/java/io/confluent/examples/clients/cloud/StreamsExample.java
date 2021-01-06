@@ -71,7 +71,6 @@ public class StreamsExample {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "demo-streams-1");
         // Disable caching to print the aggregation value after each record
         props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
-        props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         final Serde<DataRecord> DataRecord = getJsonSerde();

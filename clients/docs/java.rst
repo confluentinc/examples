@@ -114,6 +114,7 @@ Consume Records
    .. code-block:: text
 
       ...
+      Polling
       Consumed record with key alice and value {"count":0}, and updated total count to 0
       Consumed record with key alice and value {"count":1}, and updated total count to 1
       Consumed record with key alice and value {"count":2}, and updated total count to 3
@@ -124,6 +125,8 @@ Consume Records
       Consumed record with key alice and value {"count":7}, and updated total count to 28
       Consumed record with key alice and value {"count":8}, and updated total count to 36
       Consumed record with key alice and value {"count":9}, and updated total count to 45
+      Polling
+      ...
 
 #. When you are done, press ``Ctrl-C``.
 
