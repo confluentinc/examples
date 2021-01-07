@@ -1016,7 +1016,10 @@ function ccloud::destroy_ccloud_stack() {
     ccloud ksql app delete $ksqldb_id &> "$REDIRECT_TO"
   fi
 
+  # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
   local cluster_id=$(ccloud kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  ccloud connector list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} ccloud connector delete {}
+
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
   ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
 
