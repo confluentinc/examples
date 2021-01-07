@@ -43,10 +43,29 @@ The following applications or libraries are required to be installed and availab
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
 
-Running the Example
--------------------
+Cost to Run Tutorial
+--------------------
 
-.. warning:: This example consumes real cloud resources on both |ccloud| and |gcp-long|.  To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done evaluating the demonstration.  Refer to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.  The |co| `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
+Caution
+~~~~~~~
+
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
+
+In addition to |ccloud| resources, this example uses |gcp-long| resources:
+
+* Refer to `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
+* Refer to `Google Cloud <https://cloud.google.com/pricing/>`__ pricing data for more information.
+
+Ensure all :ref:`resources are destroyed <quickstart-demos-operator-replicator-gke-cc-destroy>` after you are done.
+
+|ccloud| Promo Code
+~~~~~~~~~~~~~~~~~~~
+
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-promo-code.rst
+
+
+Run Example
+-----------
 
 Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository, and change directories to the ``kubernetes/replicator-gke-cc`` directory.
 
@@ -119,8 +138,10 @@ Validate
 
 .. _quickstart-demos-operator-replicator-gke-cc-destroy:
 
-Destroy Resources
-~~~~~~~~~~~~~~~~~
+Stop Example
+------------
+
+.. include:: ../../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 After you are done evaluating the results of the example, you can destroy all the provisioned Kubernetes resources with:
 

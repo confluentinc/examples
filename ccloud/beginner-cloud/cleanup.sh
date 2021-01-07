@@ -27,14 +27,21 @@ CLUSTER_NAME="demo-kafka-cluster"
 CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
 #echo "CLUSTER: $CLUSTER"
 CLIENT_CONFIG="/tmp/client.config"
+CONNECTOR_NAME="datagen_ccloud_pageviews"
+CONNECTOR=$(ccloud connector list | grep $CONNECTOR_NAME | tr -d '\*' | awk '{print $1;}')
 
 ##################################################
 # Cleanup
-# - Delete the Kafka topics, Kafka cluster, environment, and the log files
+# - Delete the managed Kafka connector, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
-echo -e "\n# Cleanup: delete topics, kafka cluster, environment"
-for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
+echo -e "\n# Cleanup: delete connector, topics, kafka cluster, environment"
+if [[ ! -z "$CONNECTOR" ]]; then
+    echo "ccloud connector delete $CONNECTOR"
+    ccloud connector delete $CONNECTOR 1>/dev/null
+fi
+
+for t in $TOPIC1 $TOPIC2 $TOPIC3; do
   if ccloud kafka topic describe $t &>/dev/null; then
     echo "ccloud kafka topic delete $t"
     ccloud kafka topic delete $t

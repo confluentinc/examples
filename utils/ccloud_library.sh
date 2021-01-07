@@ -33,8 +33,19 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 # --------------------------------------------------------------
 
 function ccloud::prompt_continue_ccloud_demo() {
-  echo "This example uses real Confluent Cloud resources."
-  echo "To avoid unexpected charges, carefully evaluate the cost of resources before launching the script and ensure all resources are destroyed after you are done running it."
+  echo
+  echo "---------------------------------------------------------------------------------------------"
+  echo "Any Confluent Cloud example uses real Confluent Cloud resources that may be billable."
+  echo "An example may create a new Confluent Cloud environment, Kafka cluster, topics, ACLs,"
+  echo "and service accounts, as well as resources that have hourly charges like connectors and"
+  echo "ksqlDB applications."
+  echo
+  echo "To avoid unexpected charges, carefully evaluate the cost of resources before you start."
+  echo "After you are done running a Confluent Cloud example, destroy all Confluent Cloud resources"
+  echo "to avoid accruing hourly charges for services and verify that they have been deleted."
+  echo "---------------------------------------------------------------------------------------------"
+  echo
+
   read -p "Do you still want to run this script? [y/n] " -n 1 -r
   echo
   if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -919,8 +930,8 @@ function ccloud::create_ccloud_stack() {
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER)
     KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQLDB -o json | jq -r ".endpoint")
-    KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
     KSQLDB_SERVICE_ACCOUNT_ID=$(ccloud service-account list -o json 2>/dev/null | jq -r "map(select(.name == \"KSQL.$KSQLDB\")) | .[0].id")
+    KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $KSQLDB_SERVICE_ACCOUNT_ID $KSQLDB)
     ccloud ksql app configure-acls $KSQLDB
   fi
 
@@ -1005,7 +1016,10 @@ function ccloud::destroy_ccloud_stack() {
     ccloud ksql app delete $ksqldb_id &> "$REDIRECT_TO"
   fi
 
+  # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
   local cluster_id=$(ccloud kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  ccloud connector list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} ccloud connector delete {}
+
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
   ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
 

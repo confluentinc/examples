@@ -18,6 +18,11 @@ Client
    for Apache Kafka <https://github.com/confluentinc/confluent-kafka-python>`__
    installed.
 
+- Check your ``confluent-kafka`` library version. The :devx-examples:`requirements.txt|clients/cloud/python/requirements.txt`
+  file specifies a version of the ``confluent-kafka`` library >= 1.4.2 which is
+  required for the latest Serialization API demonstrated here. If you install the
+  library manually or globally, the same version requirements apply.
+
 -  You can use `Virtualenv <https://virtualenv.pypa.io/en/latest/>`__ and
    run the following commands to create a virtual environment with the client
    installed.
@@ -27,11 +32,6 @@ Client
       virtualenv ccloud-venv
       source ./ccloud-venv/bin/activate
       pip install -r requirements.txt
-
-- Check your ``confluent-kafka`` library version. The :devx-examples:`requirements.txt|clients/cloud/python/requirements.txt`
-  file specifies a version of the ``confluent-kafka`` library >= 1.4.2 which is
-  required for the latest Serialization API demonstrated here. If you install the
-  library manually or globally, the same version requirements apply.
 
 
 .. include:: includes/certs-truststore.rst
