@@ -1,7 +1,7 @@
 Connector Deployments
 `````````````````````
 
-|kconnect-long| utilizes a `REST endpoint <https://docs.confluent.io/current/connect/references/restapi.html>`__, which accepts JSON objects, for Connector deployments.  This demo shows one approach for deploying a connector inside the Kubernetes cluster using Kubernetes `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ objects, a standard Docker image with an overridden command, and the Kubernetes `Batch Job API <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>`__.
+|kconnect-long| utilizes a `REST endpoint <https://docs.confluent.io/platform/current/connect/references/restapi.html>`__, which accepts JSON objects, for Connector deployments.  This demo shows one approach for deploying a connector inside the Kubernetes cluster using Kubernetes `ConfigMap <https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/>`__ objects, a standard Docker image with an overridden command, and the Kubernetes `Batch Job API <https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/>`__.
 
 First the connector definition is defined inside a ConfigMap object.  Notice how everything after the ``clicks-datagen-connector.json`` name is a full JSON object::
 
