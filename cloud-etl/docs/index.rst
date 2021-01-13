@@ -13,18 +13,18 @@ This example showcases an entire end-to-end cloud ETL deployment, built for 100%
 
 -  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
 
-   - `Amazon Kinesis Source Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-kinesis-source.html#cc-kinesis-source>`__
-   - `PostgreSQL CDC Source Connector (Debezium) for Confluent Cloud <https://docs.confluent.io/current/cloud/connectors/cc-postgresql-cdc-source-debezium.html>`__
+   - `Amazon Kinesis Source Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-kinesis-source.html>`__
+   - `PostgreSQL CDC Source Connector (Debezium) for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-postgresql-cdc-source-debezium.html>`__
 
 -  Cloud sink connectors: writes data from Kafka topics in |ccloud| to cloud storage, one of:
 
-   - `Azure Blob Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-azure-blob-sink.html>`__
-   - `Google Cloud Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-gcs-sink.html>`__
-   - `Amazon S3 Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/connectors/cc-s3-sink.html>`__
+   - `Azure Blob Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-azure-blob-sink.html>`__
+   - `Google Cloud Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-gcs-sink.html>`__
+   - `Amazon S3 Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-s3-sink.html>`__
 
--  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
+-  `Confluent Cloud ksqlDB <https://docs.confluent.io/cloud/current/get-started/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
 
--  `Confluent Cloud Schema Registry <https://docs.confluent.io/cloud/cp-component/schema-reg-cloud-config.html>`__: centralized management of schemas and compatibility checks as schemas evolve
+-  `Confluent Cloud Schema Registry <https://docs.confluent.io/cloud/current/cp-component/schema-reg-cloud-config.html>`__: centralized management of schemas and compatibility checks as schemas evolve
 
 ========
 Overview
@@ -95,7 +95,7 @@ Cloud services
 Local Tools
 ~~~~~~~~~~~
 
--  `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+-  `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.7.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
@@ -265,7 +265,7 @@ Connectors
    .. figure:: images/data-kinesis-s3.png
       :alt: image
 
-#. Using the `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__, list all the fully-managed connectors created in this cluster.
+#. Using the `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__, list all the fully-managed connectors created in this cluster.
 
    .. code:: bash
 
@@ -336,7 +336,7 @@ Connectors
 ksqlDB
 ~~~~~~
 
-#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html#data-flow>`__ through your ksqlDB application:
+#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/cloud/current/get-started/ksql.html#use-flow-view-to-inspect-data>`__ through your ksqlDB application:
 
    .. figure:: images/flow.png
       :alt: image

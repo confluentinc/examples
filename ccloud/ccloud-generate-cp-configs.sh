@@ -45,7 +45,7 @@
 #
 # Documentation for using this script:
 #
-#   https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html
+#   https://docs.confluent.io/cloud/current/cp-component/auto-generate-configs.html#auto-generate-configs
 #
 # Arguments:
 #
@@ -81,7 +81,7 @@ if [[ -z "$CONFIG_FILE" ]]; then
 fi
 if [[ ! -f "$CONFIG_FILE" ]]; then
   echo "File $CONFIG_FILE is not found.  Please create this properties file to connect to your Confluent Cloud cluster and then try again"
-  echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
+  echo "See https://docs.confluent.io/cloud/current/cp-component/auto-generate-configs.html#auto-generate-configs for more information"
   exit 1
 fi
 
@@ -91,7 +91,7 @@ if [[ -z "$SR_CONFIG_FILE" ]]; then
 fi
 if [[ ! -f "$SR_CONFIG_FILE" ]]; then
   echo "File $SR_CONFIG_FILE is not found.  Please create this properties file to connect to your Schema Registry and then try again"
-  echo "See https://docs.confluent.io/current/cloud/connect/auto-generate-configs.html for more information"
+  echo "See https://docs.confluent.io/cloud/current/cp-component/auto-generate-configs.html#auto-generate-configs for more information"
   exit 1
 fi
 
