@@ -99,6 +99,7 @@ Local Tools
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
+-  ``psql``: (optional) if source is RDS PostgreSQL
 -  ``jq``
 -  ``curl``
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
