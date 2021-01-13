@@ -118,6 +118,10 @@ You can choose between two examples:
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
 
+Kafka DevOps
+------------
+
+The :ref:`kafka_devops` project is a simulated production environment running a streaming application targeting |ak-long| on |ccloud|.  Applications and resources are managed by GitOps with a declarative infrastructure, Kubernetes, and the Operator Pattern.
 
 =========================
 Build Your Own Cloud Demo
