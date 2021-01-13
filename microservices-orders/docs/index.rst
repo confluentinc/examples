@@ -229,6 +229,8 @@ Running the fully working example end-to-end provides context for each of the la
 
    * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :ref:`ccloud-stack`).
 
+     .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
+
      .. sourcecode:: bash
 
         ccloud login --save
