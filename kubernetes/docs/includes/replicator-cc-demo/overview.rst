@@ -4,7 +4,7 @@ If you'd like a primer on running |co-long| in |k8s-service-name| with lower res
 
 This example is featured in the `Conquering Hybrid Cloud with Replicated Event-Driven Architectures blog post <https://www.confluent.io/blog/replicated-event-driven-architectures-for-hybrid-cloud-kafka/>`__ which provides more details on use cases for replicated event streaming architectures.
 
-.. note:: See the :ref:`kafka_devops` project for an example of using Kubernetes in a production like environment targeting |ccloud|.
+.. note:: See the :ref:`kafka_devops` project for an example of using Kubernetes in a production-like environment targeting |ccloud|.
 
 The major components of this example are:
 
