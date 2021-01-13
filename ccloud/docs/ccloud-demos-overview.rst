@@ -121,7 +121,7 @@ You can choose between two examples:
 Kafka DevOps
 ------------
 
-The :ref:`kafka-devops` project is a simulated production environment running a streaming application targeting |ak-tm| on |ccloud|.  Applications and resources are managed by GitOps with a declarative infrastructure, Kubernetes, and the Operator Pattern.
+The :ref:`kafka-devops` project is a simulated production-environment running a streaming application targeting |ak-tm| on |ccloud|.  Applications and resources are managed by GitOps with a declarative infrastructure, Kubernetes, and the Operator Pattern.
 
 .. figure:: ../../images/github-flux-kubernetes-600x105.png
 
