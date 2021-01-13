@@ -3,7 +3,7 @@ Overview
 
 This demo shows a deployment of |cp| on |k8s-service-name-long| (|k8s-service-name|) leveraging |co-long| with mock data generation provided via the `Kafka Connect Datagen <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__.
 
-.. note:: See the :ref:`kafka_devops` project for an example of using Kubernetes in a production-like environment targeting |ccloud|.
+.. note:: See the :ref:`kafka-devops` project for an example of using Kubernetes in a production-like environment targeting |ccloud|.
 
 The major components of this demo are:
 
