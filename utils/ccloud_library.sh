@@ -65,7 +65,7 @@ function ccloud::validate_expect_installed() {
 }
 function ccloud::validate_ccloud_cli_installed() {
   if [[ $(type ccloud 2>&1) =~ "not found" ]]; then
-    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/current/ccloud-cli/install.html) and try again"
+    echo "'ccloud' is not found. Install Confluent Cloud CLI (https://docs.confluent.io/ccloud-cli/current/install.html) and try again"
     exit 1
   fi
 }
@@ -861,7 +861,7 @@ function ccloud::set_kafka_cluster_use() {
 
 #
 # ccloud-stack documentation:
-# https://docs.confluent.io/current/tutorials/examples/ccloud/docs/ccloud-stack.html
+# https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html
 #
 function ccloud::create_ccloud_stack() {
   QUIET="${QUIET:-true}"
