@@ -50,8 +50,8 @@ on observers to get back an acknowledgement.
 In "non-degraded" steady state, observers don't participate in the ISR list and
 won't become the leader. If a broker in the ISR fails, observers could be
 promoted to the ISR list in one of two ways: manual changes to leader assignment,
-or automatically with ``Observer Promotion``.
-``Observer Promotion`` is the process by which an observer is promoted into the
+or automatically with ``Automatic Observer Promotion``.
+``Automatic Observer Promotion`` is the process by which an observer is promoted into the
 ISR in certain "degraded" situations. The qualifications for whether an observer
 can be automatically promoted into the ISR is controlled by the
 ``observerPromotionPolicy`` field in a topic's replica placement policy:
