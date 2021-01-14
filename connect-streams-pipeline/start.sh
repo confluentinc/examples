@@ -14,7 +14,7 @@ check_sqlite3 || exit 1
 mvn clean compile
 
 echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
-confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.0.1
 confluent local services start
 
 # Create the SQL table
