@@ -3,8 +3,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 # Source library
-source $DIR/../../utils/helper.sh
-source $DIR/../../utils/ccloud_library.sh
+source "${DIR}"/../../utils/helper.sh
+source "${DIR}"/../../utils/ccloud_library.sh
 
 ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
 ccloud::validate_logged_in_ccloud_cli || exit 1
@@ -31,7 +31,7 @@ fi
 
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-$DIR/../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
+"${DIR}"/../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 SERVICE_ACCOUNT_ID=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
 
