@@ -9,7 +9,7 @@
     ../../ccloud/docs/ccloud-stack
     ../../ccloud/docs/beginner-cloud
     ../../clients/docs/clients-all-examples
-    On-Prem Kafka to Cloud <../../../cp-demo/docs/index>
+    On-Prem Kafka to Cloud <cp-demo>
     ../../cloud-etl/docs/index
     ../../microservices-orders/docs/index
     ../../kubernetes/replicator-gke-cc/docs/index
