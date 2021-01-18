@@ -101,7 +101,7 @@ Create a new Confluent Cloud environment
 
    .. code-block:: bash
 
-      ccloud environment create demo-script-env -o json
+      ccloud environment create demo-env-000000-beginner-cli -o json
 
 #. Verify your output resembles:
 

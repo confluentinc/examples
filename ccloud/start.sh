@@ -28,6 +28,8 @@ ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" \
   || exit 1
 
+export EXAMPLE="original-hybrid-cloud-tarball"
+
 echo ====== Create new Confluent Cloud stack
 ccloud::prompt_continue_ccloud_demo || exit 1
 ccloud::create_ccloud_stack true

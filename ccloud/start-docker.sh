@@ -15,6 +15,8 @@ check_jq \
   && print_pass "jq installed" \
   || exit 1
 
+export EXAMPLE="original-hybrid-cloud-docker"
+
 echo ====== Create new Confluent Cloud stack
 ccloud::prompt_continue_ccloud_demo || exit 1
 ccloud::create_ccloud_stack true

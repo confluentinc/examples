@@ -14,6 +14,7 @@ ccloud::validate_logged_in_ccloud_cli \
 
 printf "\n====== Create new Confluent Cloud stack\n"
 [[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
+export EXAMPLE="microservices-orders"
 ccloud::create_ccloud_stack true
 
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
