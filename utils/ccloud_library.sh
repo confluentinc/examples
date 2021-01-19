@@ -293,6 +293,17 @@ function ccloud::validate_schema_registry_up() {
   return 0
 }
 
+function ccloud::get_environment_id_from_service_id() {
+  SERVICE_ACCOUNT_ID=$1
+
+  ENVIRONMENT_NAME_PREFIX=${ENVIRONMENT_NAME_PREFIX:-"demo-env-$SERVICE_ACCOUNT_ID"}
+  ENVIRONMENT=$(ccloud environment list -o json | jq -r 'map(select(.name | startswith("'"$ENVIRONMENT_NAME_PREFIX"'"))) | .[].id')
+
+  echo $ENVIRONMENT
+
+  return 0
+}
+
 
 function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1

@@ -791,7 +791,7 @@ Clean up Confluent Cloud resources
 
 If the tutorial ends prematurely, you may receive the following error message
 when trying to run the example again (``ccloud environment create
-demo-script-env``):
+demo-script-env-000000-beginner-cli``):
 
 .. code-block:: text
 
