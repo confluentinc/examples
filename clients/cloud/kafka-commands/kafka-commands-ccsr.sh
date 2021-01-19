@@ -10,7 +10,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
 set -eu
 
-ccloud::generate_delta_configs $CONFIG_FILE
+ccloud::generate_configs $CONFIG_FILE
 source delta_configs/env.delta
 
 # Set topic name

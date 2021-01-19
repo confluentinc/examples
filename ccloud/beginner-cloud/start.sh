@@ -283,7 +283,7 @@ ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
-ccloud::generate_delta_configs $CONFIG_FILE
+ccloud::generate_configs $CONFIG_FILE
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
 cat  $CONNECTOR.json > .ignored_folder/$CONNECTOR.json

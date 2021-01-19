@@ -1095,7 +1095,7 @@ function ccloud::destroy_ccloud_stack() {
 #   ksql.basic.auth.user.info=<ksqlDB API KEY>:<ksqlDB API SECRET>
 #
 ################################################################################
-function ccloud::generate_delta_configs() {
+function ccloud::generate_configs() {
   CONFIG_FILE=$1
   if [[ -z "$CONFIG_FILE" ]]; then
     CONFIG_FILE=~/.ccloud/config

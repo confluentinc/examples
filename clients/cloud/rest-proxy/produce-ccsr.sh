@@ -4,7 +4,7 @@ source ../../../utils/ccloud_library.sh
 
 CONFIG_FILE="${CONFIG_FILE:-$HOME/.confluent/java.config}"
 
-ccloud::generate_delta_configs $CONFIG_FILE || exit
+ccloud::generate_configs $CONFIG_FILE || exit
 source ./delta_configs/env.delta
   
 # List clusters (API v3)

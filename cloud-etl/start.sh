@@ -45,7 +45,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   || exit 1
 
 echo ====== Generate CCloud configurations
-ccloud::generate_delta_configs $CONFIG_FILE
+ccloud::generate_configs $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
