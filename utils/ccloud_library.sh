@@ -357,7 +357,7 @@ function ccloud::create_service_account() {
   SERVICE_NAME=$1
 
   CCLOUD_EMAIL=$(ccloud prompt -f '%u')
-  OUTPUT=$(ccloud service-account create $SERVICE_NAME --description "$EXAMPLE run by $CCLOUD_EMAIL"  -o json)
+  OUTPUT=$(ccloud service-account create $SERVICE_NAME --description "SA for $EXAMPLE run by $CCLOUD_EMAIL"  -o json)
   SERVICE_ACCOUNT_ID=$(echo "$OUTPUT" | jq -r ".id")
 
   echo $SERVICE_ACCOUNT_ID
