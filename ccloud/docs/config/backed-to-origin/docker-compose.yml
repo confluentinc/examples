@@ -14,7 +14,7 @@ services:
       CONNECT_PRODUCER_CLIENT_ID: "demo-connect-origin-worker-producer"
       CONNECT_REST_PORT: 8087
       CONNECT_GROUP_ID: "connect-origin"
-      CONNECT_CONNECTOR_CONFIG_FILE_OVERRIDE_POLICY: "All"
+      CONNECT_CONNECTOR_CLIENT_CONFIG_OVERRIDE_POLICY: "All"
 
       CONNECT_CONFIG_STORAGE_TOPIC: demo-connect-origin-configs
       CONNECT_OFFSET_STORAGE_TOPIC: demo-connect-origin-offsets
