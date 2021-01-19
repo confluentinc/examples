@@ -1,5 +1,3 @@
-.. _ccloud-demos-overview:
-
 |ccloud| Examples
 =================
 
@@ -88,13 +86,13 @@ Using |ccloud| CLI, the example creates a source connector that reads data from 
 
 .. figure:: ../../cloud-etl/docs/images/topology.png
 
-Hybrid Cloud
-------------
+On-Prem Kafka to Cloud
+----------------------
 
-The :ref:`hybrid cloud example <quickstart-demos-ccloud>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
-Data streams into topics, in both the local cluster and the |ccloud| cluster. |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
+The :ref:`hybrid cloud example <cp-demo>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+|crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
-.. figure:: images/services-in-cloud.jpg
+.. figure:: ../../../cp-demo/docs/images/cp-demo-overview-with-ccloud.jpg
 
 Microservices in the Cloud
 --------------------------
@@ -266,12 +264,13 @@ Additional Resources
     :maxdepth: 1
     :hidden:
 
+    Overview <index>
     ../../ccloud/docs/ccloud-stack
     ../../ccloud/docs/beginner-cloud
     ../../clients/docs/clients-all-examples
-    ../../ccloud/docs/index
+    On-Prem Kafka to Cloud <../../../cp-demo/docs/index>
     ../../cloud-etl/docs/index
     ../../microservices-orders/docs/index
     ../../kubernetes/replicator-gke-cc/docs/index
+    ../../kubernetes/replicator-aks-cc/docs/index
     ../../ccloud/docs/replicator-to-cloud-configuration-types
-
