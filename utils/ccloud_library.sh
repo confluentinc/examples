@@ -942,12 +942,12 @@ function ccloud::create_ccloud_stack() {
   ccloud api-key use $CLOUD_API_KEY --resource ${CLUSTER}
 
   if [[ -z "$SKIP_CONFIG_FILE_WRITE" ]]; then
-    if [[ -z "$CLIENT_CONFIG" ]]; then
+    if [[ -z "$CONFIG_FILE" ]]; then
       mkdir -p stack-configs
-      CLIENT_CONFIG="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
+      CONFIG_FILE="stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"
     fi
   
-    cat <<EOF > $CLIENT_CONFIG
+    cat <<EOF > $CONFIG_FILE
 # --------------------------------------
 # Confluent Cloud connection information
 # --------------------------------------
@@ -957,11 +957,11 @@ function ccloud::create_ccloud_stack() {
 # SCHEMA REGISTRY CLUSTER ID: ${SCHEMA_REGISTRY}
 EOF
     if $enable_ksqldb ; then
-      cat <<EOF >> $CLIENT_CONFIG
+      cat <<EOF >> $CONFIG_FILE
 # KSQLDB APP ID: ${KSQLDB}
 EOF
     fi
-    cat <<EOF >> $CLIENT_CONFIG
+    cat <<EOF >> $CONFIG_FILE
 # --------------------------------------
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
@@ -973,14 +973,14 @@ schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{pr
 replication.factor=${REPLICATION_FACTOR}
 EOF
     if $enable_ksqldb ; then
-      cat <<EOF >> $CLIENT_CONFIG
+      cat <<EOF >> $CONFIG_FILE
 ksql.endpoint=${KSQLDB_ENDPOINT}
 ksql.basic.auth.user.info=`echo $KSQLDB_CREDS | awk -F: '{print $1}'`:`echo $KSQLDB_CREDS | awk -F: '{print $2}'`
 EOF
     fi
 
     echo
-    echo "Client configuration file saved to: $CLIENT_CONFIG"
+    echo "Client configuration file saved to: $CONFIG_FILE"
   fi
 
   return 0
@@ -993,7 +993,7 @@ function ccloud::destroy_ccloud_stack() {
 
   ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
-  CLIENT_CONFIG=${CLIENT_CONFIG:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
+  CONFIG_FILE=${CONFIG_FILE:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
   KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
 
   # Setting default QUIET=false to surface potential deletion errors
@@ -1033,7 +1033,7 @@ function ccloud::destroy_ccloud_stack() {
     fi
   fi
   
-  rm -f $CLIENT_CONFIG
+  rm -f $CONFIG_FILE
 
   return 0
 }
@@ -1095,7 +1095,7 @@ function ccloud::destroy_ccloud_stack() {
 #   ksql.basic.auth.user.info=<ksqlDB API KEY>:<ksqlDB API SECRET>
 #
 ################################################################################
-function ccloud::generate-delta-configs() {
+function ccloud::generate_delta_configs() {
   CONFIG_FILE=$1
   if [[ -z "$CONFIG_FILE" ]]; then
     CONFIG_FILE=~/.ccloud/config

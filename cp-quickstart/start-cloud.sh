@@ -47,8 +47,8 @@ CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 
-../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE \
-	&& print_code_pass -c "../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE"
+ccloud::generate_delta_configs $CONFIG_FILE \
+	&& print_code_pass -c "ccloud::generate_delta_configs $CONFIG_FILE"
 
 DELTA_CONFIGS_ENV=delta_configs/env.delta
 printf "\nSetting local environment based on values in $DELTA_CONFIGS_ENV\n"
