@@ -30,7 +30,7 @@ else
   STMT="PRESERVE_ENVIRONMENT=true"
 fi
 
-export EXAMPLE="ccloud-stack"
+export EXAMPLE="ccloud-stack-script"
 
 echo
 ccloud::create_ccloud_stack $enable_ksqldb || exit 1

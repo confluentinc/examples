@@ -195,5 +195,5 @@ echo "    ./stop.sh $CONFIG_FILE"
 echo
 
 echo
-ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+ENVIRONMENT=$(ccloud environment list | grep ccloud-stack-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
 echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
