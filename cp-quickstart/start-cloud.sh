@@ -39,6 +39,7 @@ printf "\nFor your reference the demo will highlight some commands in "; print_c
 printf "\n====== Starting\n\n"
 
 printf "\n====== Creating new Confluent Cloud stack using the ccloud::create_ccloud_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/ccloud_library.sh"
+export EXAMPLE="cp-quickstart"
 ccloud::create_ccloud_stack true  \
 	&& print_code_pass -c "cccloud::create_ccloud_stack true"
 
