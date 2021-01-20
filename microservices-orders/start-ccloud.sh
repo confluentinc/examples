@@ -24,8 +24,8 @@ fi
 export CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 
 printf "\n====== Generating Confluent Cloud configurations\n"
-../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
- 
+ccloud::generate_configs $CONFIG_FILE
+
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
 
