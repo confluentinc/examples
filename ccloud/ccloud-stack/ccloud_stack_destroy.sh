@@ -31,7 +31,7 @@ fi
 
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-$DIR/../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
+ccloud::generate_configs $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 SERVICE_ACCOUNT_ID=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
 

@@ -145,16 +145,16 @@ echo "$OUTPUT" | jq .
 API_KEY_SA=$(echo "$OUTPUT" | jq -r ".key")
 API_SECRET_SA=$(echo "$OUTPUT" | jq -r ".secret")
 
-CLIENT_CONFIG="/tmp/client.config"
-echo -e "\n# Create a local configuration file $CLIENT_CONFIG with Confluent Cloud connection information with the newly created API key and secret"
-cat <<EOF > $CLIENT_CONFIG
+CONFIG_FILE="/tmp/client.config"
+echo -e "\n# Create a local configuration file $CONFIG_FILE with Confluent Cloud connection information with the newly created API key and secret"
+cat <<EOF > $CONFIG_FILE
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='${API_KEY_SA}' password='${API_SECRET_SA}';
 EOF
-echo "$ cat $CLIENT_CONFIG"
-cat $CLIENT_CONFIG
+echo "$ cat $CONFIG_FILE"
+cat $CONFIG_FILE
 
 echo -e "\n# Wait 90 seconds for the service account credentials to propagate"
 sleep 90
@@ -180,8 +180,8 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 LOG1="/tmp/log.1"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
 echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException' (expected because there are no ACLs to allow this client application)"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
@@ -203,8 +203,8 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
@@ -246,8 +246,8 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
@@ -283,8 +283,7 @@ ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
-echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
-../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
+ccloud::generate_configs $CONFIG_FILE
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
 cat  $CONNECTOR.json > .ignored_folder/$CONNECTOR.json
@@ -320,8 +319,8 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC3 (populated by kafka-connect-datagen): wildcard ACLs"
 LOG4="/tmp/log.4"
-echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExamplePageviews\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC3\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
-timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CLIENT_CONFIG $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
+echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExamplePageviews\" -Dexec.args=\"$CONFIG_FILE $TOPIC3\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
+timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CONFIG_FILE $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
 echo "# Check logs for 'Consumed record with'"
 OUTPUT=$(grep "Consumed record with" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
@@ -372,4 +371,4 @@ rm -f "$LOG1"
 rm -f "$LOG2"
 rm -f "$LOG3"
 rm -f "$LOG4"
-rm -f "$CLIENT_CONFIG"
+rm -f "$CONFIG_FILE"
