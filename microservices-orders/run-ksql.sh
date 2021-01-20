@@ -1,7 +1,12 @@
 #!/bin/bash
 
-echo "Sleeping 300 seconds until ksqlDB server starts and topics have data"
-sleep 300
+echo -e "\nWaiting for ksqlDB and topics to be available prior to running ksqlDB statements\n"
+while [[ $(curl -s http://ksqldb-server:8088/info) != *RUNNING* ||  $(curl -s http://schema-registry:8081/subjects) != *platinum* ]]
+do 
+    sleep 5
+    echo "Sleeping for 5 seconds, waiting for ksqlDB and topics to be available"
+done
+
 
 # Create KSQL queries
 ksql http://ksqldb-server:8088 <<EOF
