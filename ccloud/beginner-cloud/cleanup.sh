@@ -20,7 +20,7 @@ check_mvn || exit 1
 check_expect || exit 1
 check_jq || exit 1
 
-ENVIRONMENT_NAME="demo-script-env"
+ENVIRONMENT_NAME="ccloud-stack-000000-beginner-cli"
 ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | awk '{print $1;}')
 #echo "ENVIRONMENT: $ENVIRONMENT"
 CLUSTER_NAME="demo-kafka-cluster"
