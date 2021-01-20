@@ -26,7 +26,7 @@ ENVIRONMENT=$(ccloud environment list | grep $ENVIRONMENT_NAME | tr -d '\*' | aw
 CLUSTER_NAME="demo-kafka-cluster"
 CLUSTER=$(ccloud kafka cluster list | grep $CLUSTER_NAME | tr -d '\*' | awk '{print $1;}')
 #echo "CLUSTER: $CLUSTER"
-CLIENT_CONFIG="/tmp/client.config"
+CONFIG_FILE="/tmp/client.config"
 CONNECTOR_NAME="datagen_ccloud_pageviews"
 CONNECTOR=$(ccloud connector list | grep $CONNECTOR_NAME | tr -d '\*' | awk '{print $1;}')
 
@@ -58,4 +58,4 @@ if [[ ! -z "$ENVIRONMENT" ]]; then
   ccloud environment delete $ENVIRONMENT 1>/dev/null
 fi
 
-rm -f "$CLIENT_CONFIG"
+rm -f "$CONFIG_FILE"
