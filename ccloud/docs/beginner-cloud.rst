@@ -101,7 +101,7 @@ Create a new Confluent Cloud environment
 
    .. code-block:: bash
 
-      ccloud environment create demo-script-env -o json
+      ccloud environment create ccloud-stack-000000-beginner-cli -o json
 
 #. Verify your output resembles:
 
@@ -791,7 +791,7 @@ Clean up Confluent Cloud resources
 
 If the tutorial ends prematurely, you may receive the following error message
 when trying to run the example again (``ccloud environment create
-demo-script-env``):
+demo-script-env-000000-beginner-cli``):
 
 .. code-block:: text
 

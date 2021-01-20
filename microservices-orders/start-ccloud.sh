@@ -14,6 +14,7 @@ ccloud::validate_logged_in_ccloud_cli \
 
 printf "\n====== Create new Confluent Cloud stack\n"
 [[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
+export EXAMPLE="microservices-orders"
 ccloud::create_ccloud_stack true
 
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
@@ -108,6 +109,6 @@ echo "    ./stop-ccloud.sh $CONFIG_FILE"
 echo
 
 echo
-ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+ENVIRONMENT=$(ccloud::get_environment_id_from_service_id $SERVICE_ACCOUNT_ID)
 echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
 

@@ -293,6 +293,17 @@ function ccloud::validate_schema_registry_up() {
   return 0
 }
 
+function ccloud::get_environment_id_from_service_id() {
+  SERVICE_ACCOUNT_ID=$1
+
+  ENVIRONMENT_NAME_PREFIX=${ENVIRONMENT_NAME_PREFIX:-"ccloud-stack-$SERVICE_ACCOUNT_ID"}
+  local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name | startswith("'"$ENVIRONMENT_NAME_PREFIX"'"))) | .[].id')
+
+  echo $environment_id
+
+  return 0
+}
+
 
 function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
@@ -356,7 +367,8 @@ function ccloud::maybe_create_and_use_cluster() {
 function ccloud::create_service_account() {
   SERVICE_NAME=$1
 
-  OUTPUT=$(ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json)
+  CCLOUD_EMAIL=$(ccloud prompt -f '%u')
+  OUTPUT=$(ccloud service-account create $SERVICE_NAME --description "SA for $EXAMPLE run by $CCLOUD_EMAIL"  -o json)
   SERVICE_ACCOUNT_ID=$(echo "$OUTPUT" | jq -r ".id")
 
   echo $SERVICE_ACCOUNT_ID
@@ -867,6 +879,7 @@ function ccloud::create_ccloud_stack() {
   QUIET="${QUIET:-true}"
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
+  EXAMPLE=${EXAMPLE:-ccloud-stack-function}
 
   # Check if credit card is on file, which is required for cluster creation
   if [[ $(ccloud admin payment describe) =~ "not found" ]]; then
@@ -891,7 +904,7 @@ function ccloud::create_ccloud_stack() {
   if [[ -z "$ENVIRONMENT" ]]; 
   then
     # Environment is not received so it will be created
-    ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
+    ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"ccloud-stack-$SERVICE_ACCOUNT_ID-$EXAMPLE"}
     ENVIRONMENT=$(ccloud::create_and_use_environment $ENVIRONMENT_NAME)
     (($? != 0)) && { echo "$ENVIRONMENT"; exit 1; }
   else
@@ -991,7 +1004,7 @@ function ccloud::destroy_ccloud_stack() {
 
   PRESERVE_ENVIRONMENT="${PRESERVE_ENVIRONMENT:-false}"
 
-  ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"demo-env-$SERVICE_ACCOUNT_ID"}
+  ENVIRONMENT_NAME_PREFIX=${ENVIRONMENT_NAME_PREFIX:-"ccloud-stack-$SERVICE_ACCOUNT_ID"}
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CONFIG_FILE=${CONFIG_FILE:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
   KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
@@ -1024,11 +1037,11 @@ function ccloud::destroy_ccloud_stack() {
   ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
 
   if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then
-    local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name == "'"$ENVIRONMENT_NAME"'")) | .[].id')
+    local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name | startswith("'"$ENVIRONMENT_NAME_PREFIX"'"))) | .[].id')
     if [[ "$environment_id" == "" ]]; then
-      echo "WARNING: Could not find environment with name $ENVIRONMENT_NAME (did you create this ccloud-stack reusing an existing environment?)"
+      echo "WARNING: Could not find environment with name that starts with $ENVIRONMENT_NAME_PREFIX (did you create this ccloud-stack reusing an existing environment?)"
     else
-      echo "Deleting ENVIRONMENT: $ENVIRONMENT_NAME : $environment_id"
+      echo "Deleting ENVIRONMENT: prefix $ENVIRONMENT_NAME_PREFIX : $environment_id"
       ccloud environment delete $environment_id &> "$REDIRECT_TO"
     fi
   fi

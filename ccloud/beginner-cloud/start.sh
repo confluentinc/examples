@@ -24,7 +24,7 @@ check_jq || exit 1
 # Create a new environment and specify it as the default
 ##################################################
 
-ENVIRONMENT_NAME="demo-script-env"
+ENVIRONMENT_NAME="ccloud-stack-000000-beginner-cli"
 echo -e "\n# Create a new Confluent Cloud environment $ENVIRONMENT_NAME"
 echo "ccloud environment create $ENVIRONMENT_NAME -o json"
 OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
