@@ -297,9 +297,9 @@ function ccloud::get_environment_id_from_service_id() {
   SERVICE_ACCOUNT_ID=$1
 
   ENVIRONMENT_NAME_PREFIX=${ENVIRONMENT_NAME_PREFIX:-"ccloud-stack-$SERVICE_ACCOUNT_ID"}
-  local ENVIRONMENT=$(ccloud environment list -o json | jq -r 'map(select(.name | startswith("'"$ENVIRONMENT_NAME_PREFIX"'"))) | .[].id')
+  local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name | startswith("'"$ENVIRONMENT_NAME_PREFIX"'"))) | .[].id')
 
-  echo $ENVIRONMENT
+  echo $environment_id
 
   return 0
 }
