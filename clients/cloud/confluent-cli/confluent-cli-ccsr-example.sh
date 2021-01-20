@@ -1,7 +1,6 @@
 #!/bin/bash
 
 CONFIG_FILE=$HOME/.confluent/java.config
-CONFIG_FILE=/Users/yeva/git/examples/ccloud/stack-configs/java-service-account-111108.config
 
 source ../../../utils/helper.sh
 source ../../../utils/ccloud_library.sh
