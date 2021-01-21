@@ -257,7 +257,7 @@ Produce Avro Records
 #. Get the |ak| cluster ID that the |crest| is connected to.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 9-10
+      :lines: 11-12
 
    Verify the parameter ``KAFKA_CLUSTER_ID`` has a valid value. For the example
    in this tutorial, it is shown as ``lkc-56ngz``, but it will differ in your
@@ -266,7 +266,7 @@ Produce Avro Records
 #. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 13-16
+      :lines: 15-18
 
    Verify your output resembles:
 
@@ -296,7 +296,7 @@ Produce Avro Records
 #. Register a new Avro schema for topic ``test2`` with the |ccloud| |sr|.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 19-20
+      :lines: 21-22
 
    Verify the output shows the new schema id:
 
@@ -307,12 +307,12 @@ Produce Avro Records
 #. Set the variable ``schemaid`` to the value of the schema ID.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 22
+      :lines: 24
 
 #. Produce three Avro messages to the topic, with values ``{"count":0}``, ``{"count":1}``, and ``{"count":2}``. Notice that the request body includes the schema ID.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
-      :lines: 25-29
+      :lines: 27-31
 
    Verify your output resembles:
 

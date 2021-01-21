@@ -9,7 +9,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
 ./stop-docker.sh
 
-../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
+ccloud::generate_configs $CONFIG_FILE
 source ./delta_configs/env.delta 
 
 docker-compose up -d connect
