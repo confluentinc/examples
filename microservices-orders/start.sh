@@ -29,7 +29,7 @@ else
 fi;
 JAR="$(pwd)/kafka-streams-examples/target/kafka-streams-examples-*-standalone.jar"
 
-confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.0.1
+confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$KAFKA_CONNECT_JDBC_VERSION
 confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:10.0.2
 grep -qxF 'auto.offset.reset=earliest' $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties || echo 'auto.offset.reset=earliest' >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties 
 confluent local services start

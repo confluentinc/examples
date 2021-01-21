@@ -98,6 +98,7 @@ services:
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
       CONNECT_CONSUMER_CONFLUENT_MONITORING_INTERCEPTOR_SASL_MECHANISM: PLAIN
+      KAFKA_CONNECT_JDBC_VERSION: ${KAFKA_CONNECT_JDBC_VERSION}
     volumes:
       - database:/opt/docker/db/data
       - $PWD/stack-configs:/opt/docker/stack-configs
@@ -106,7 +107,7 @@ services:
       - -c
       - |
         echo "Installing connector plugins"
-        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:10.0.1
+        confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$KAFKA_CONNECT_JDBC_VERSION
         confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:10.0.2
         echo "Launching Kafka Connect worker"
         /etc/confluent/docker/run
