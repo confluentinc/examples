@@ -20,4 +20,4 @@ FROM confluentinc/cp-enterprise-replicator:$CP_VERSION
 ENV CONNECT_PLUGIN_PATH: "/usr/share/java,/connect-plugins,/usr/share/confluent-hub-components"
 
 # Install kafka-connect-datagen connector
-RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.4.0
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
