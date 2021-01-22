@@ -168,6 +168,8 @@ services:
     volumes:
       - ${PWD}/run-ksql.sh:/tmp/run-ksql.sh
       - ${PWD}/statements.sql:/tmp/statements.sql
+      - ${PWD}/../utils/helper.sh:/tmp/helper.sh
+      - ${PWD}/../utils/config.env:/tmp/config.env
     entrypoint: /bin/sh
     tty: true
     command: "/tmp/run-ksql.sh"

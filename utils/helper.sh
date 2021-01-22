@@ -539,3 +539,24 @@ function append_once() {
     echo ${1} >> ${2}
   fi
 }
+
+function check_ksqlDB_host_running()
+{
+  if [[ $(curl -s http://ksqldb-server:8088/info) != *RUNNING* ]]; then
+    return 1
+  fi
+  return 0
+}
+
+function check_schema_registry_topics_exists()
+{
+  SR_TOPICS=$(curl -s http://schema-registry:8081/subjects)
+  arr=("$@")
+  for i in "${arr[@]}";
+    do
+      if [ $(echo "$SR_TOPICS" | grep -v "$i") ]; then
+        return 1
+      fi
+    done
+  return 0
+}
