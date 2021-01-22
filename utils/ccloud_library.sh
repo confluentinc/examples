@@ -1146,8 +1146,8 @@ function ccloud::generate_configs() {
   SASL_JAAS_CONFIG=$( grep "^sasl.jaas.config" $CONFIG_FILE | cut -d'=' -f2- )
   SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG/username\\=/username=}
   SASL_JAAS_CONFIG_PROPERTY_FORMAT=${SASL_JAAS_CONFIG_PROPERTY_FORMAT/password\\=/password=}
-  CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F[\"\'] '$0=$2' )
-  CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F[\"\'] '$0=$2' )
+  CLOUD_KEY=$( echo $SASL_JAAS_CONFIG | awk '{print $3}' | awk -F"'" '$0=$2' )
+  CLOUD_SECRET=$( echo $SASL_JAAS_CONFIG | awk '{print $4}' | awk -F"'" '$0=$2' )
   
   # Schema Registry
   BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $CONFIG_FILE | awk -F'=' '{print $2;}' )
@@ -1240,6 +1240,7 @@ function ccloud::generate_configs() {
   ################################################################################
   KSQLDB_SERVER_DELTA=$DEST/ksqldb-server-ccloud.delta
   echo "$KSQLDB_SERVER_DELTA"
+  rm -f $KSQLDB_SERVER_DELTA
   cp $INTERCEPTORS_CONFIG_FILE $KSQLDB_SERVER_DELTA
   echo -e "\n# ksqlDB Server specific configuration" >> $KSQLDB_SERVER_DELTA
   echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQLDB_SERVER_DELTA
