@@ -5,4 +5,4 @@
 # Source library
 source ../utils/ccloud_library.sh
 
-ccloud::generate-delta-configs "$1"
+ccloud::generate_configs "$1"
