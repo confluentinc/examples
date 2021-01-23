@@ -1163,7 +1163,7 @@ function ccloud::generate_configs() {
   # Confluent Monitoring Interceptors for Streams Monitoring in Confluent Control Center
   ################################################################################
   INTERCEPTORS_CONFIG_FILE=$DEST/interceptors-ccloud.config
-  rm $INTERCEPTORS_CONFIG_FILE 2>/dev/null
+  rm -f $INTERCEPTORS_CONFIG_FILE
   echo "# Configuration derived from $CONFIG_FILE" > $INTERCEPTORS_CONFIG_FILE
   while read -r line
   do
@@ -1210,7 +1210,7 @@ function ccloud::generate_configs() {
   ################################################################################
   SR_CONFIG_DELTA=$DEST/schema-registry-ccloud.delta
   echo "$SR_CONFIG_DELTA"
-  rm $SR_CONFIG_DELTA 2>/dev/null
+  rm -f $SR_CONFIG_DELTA
   while read -r line
   do
     if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -1226,7 +1226,7 @@ function ccloud::generate_configs() {
   ################################################################################
   REPLICATOR_PRODUCER_DELTA=$DEST/replicator-to-ccloud-producer.delta
   echo "$REPLICATOR_PRODUCER_DELTA"
-  rm $REPLICATOR_PRODUCER_DELTA 2>/dev/null
+  rm -f $REPLICATOR_PRODUCER_DELTA
   cp $INTERCEPTORS_CONFIG_FILE $REPLICATOR_PRODUCER_DELTA
   echo -e "\n# Confluent Replicator (executable) specific configuration" >> $REPLICATOR_PRODUCER_DELTA
   echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $REPLICATOR_PRODUCER_DELTA
@@ -1240,7 +1240,7 @@ function ccloud::generate_configs() {
   ################################################################################
   KSQLDB_SERVER_DELTA=$DEST/ksqldb-server-ccloud.delta
   echo "$KSQLDB_SERVER_DELTA"
-  rm $KSQLDB_SERVER_DELTA 2>/dev/null
+  rm -f $KSQLDB_SERVER_DELTA
   cp $INTERCEPTORS_CONFIG_FILE $KSQLDB_SERVER_DELTA
   echo -e "\n# ksqlDB Server specific configuration" >> $KSQLDB_SERVER_DELTA
   echo "producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQLDB_SERVER_DELTA
@@ -1268,7 +1268,7 @@ function ccloud::generate_configs() {
   ################################################################################
   KSQL_DATAGEN_DELTA=$DEST/ksql-datagen.delta
   echo "$KSQL_DATAGEN_DELTA"
-  rm $KSQL_DATAGEN_DELTA 2>/dev/null
+  rm -f $KSQL_DATAGEN_DELTA
   cp $INTERCEPTORS_CONFIG_FILE $KSQL_DATAGEN_DELTA
   echo -e "\n# KSQL DataGen specific configuration" >> $KSQL_DATAGEN_DELTA
   echo "interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor" >> $KSQL_DATAGEN_DELTA
@@ -1288,7 +1288,7 @@ function ccloud::generate_configs() {
   ################################################################################
   C3_DELTA=$DEST/control-center-ccloud.delta
   echo "$C3_DELTA"
-  rm $C3_DELTA 2>/dev/null
+  rm -f $C3_DELTA
   echo -e "\n# Confluent Control Center specific configuration" >> $C3_DELTA
   while read -r line
     do
@@ -1320,7 +1320,7 @@ function ccloud::generate_configs() {
   ################################################################################
   METRICS_REPORTER_DELTA=$DEST/metrics-reporter.delta
   echo "$METRICS_REPORTER_DELTA"
-  rm $METRICS_REPORTER_DELTA 2>/dev/null
+  rm -f $METRICS_REPORTER_DELTA
   echo "metric.reporters=io.confluent.metrics.reporter.ConfluentMetricsReporter" >> $METRICS_REPORTER_DELTA
   echo "confluent.metrics.reporter.topic.replicas=3" >> $METRICS_REPORTER_DELTA
   while read -r line
@@ -1338,7 +1338,7 @@ function ccloud::generate_configs() {
   ################################################################################
   REST_PROXY_DELTA=$DEST/rest-proxy.delta
   echo "$REST_PROXY_DELTA"
-  rm $REST_PROXY_DELTA 2>/dev/null
+  rm -f $REST_PROXY_DELTA
   while read -r line
     do
     if [[ ! -z $line && ${line:0:1} != '#' ]]; then
@@ -1364,7 +1364,7 @@ function ccloud::generate_configs() {
   ################################################################################
   CONNECT_DELTA=$DEST/connect-ccloud.delta
   echo "$CONNECT_DELTA"
-  rm $CONNECT_DELTA 2>/dev/null
+  rm -f $CONNECT_DELTA
   cat <<EOF > $CONNECT_DELTA
 # Configuration for embedded admin client
 replication.factor=3
@@ -1419,7 +1419,7 @@ EOF
   ################################################################################
   CONNECTOR_DELTA=$DEST/connector-ccloud.delta
   echo "$CONNECTOR_DELTA"
-  rm $CONNECTOR_DELTA 2>/dev/null
+  rm -f $CONNECTOR_DELTA
   cat <<EOF >> $CONNECTOR_DELTA
 // Confluent Schema Registry for Kafka connectors
 value.converter=io.confluent.connect.avro.AvroConverter
@@ -1434,7 +1434,7 @@ EOF
   ################################################################################
   AK_TOOLS_DELTA=$DEST/ak-tools-ccloud.delta
   echo "$AK_TOOLS_DELTA"
-  rm $AK_TOOLS_DELTA 2>/dev/null
+  rm -f $AK_TOOLS_DELTA
   cp $CONFIG_FILE $AK_TOOLS_DELTA
   chmod $PERM $AK_TOOLS_DELTA
   
@@ -1446,7 +1446,7 @@ EOF
   ################################################################################
   JAVA_PC_CONFIG=$DEST/java_producer_consumer.delta
   echo "$JAVA_PC_CONFIG"
-  rm $JAVA_PC_CONFIG 2>/dev/null
+  rm -f $JAVA_PC_CONFIG
   
   cat <<EOF >> $JAVA_PC_CONFIG
 import java.util.Properties;
@@ -1495,7 +1495,7 @@ EOF
   ################################################################################
   JAVA_STREAMS_CONFIG=$DEST/java_streams.delta
   echo "$JAVA_STREAMS_CONFIG"
-  rm $JAVA_STREAMS_CONFIG 2>/dev/null
+  rm -f $JAVA_STREAMS_CONFIG
   
   cat <<EOF >> $JAVA_STREAMS_CONFIG
 import java.util.Properties;
@@ -1545,7 +1545,7 @@ EOF
   ################################################################################
   PYTHON_CONFIG=$DEST/python.delta
   echo "$PYTHON_CONFIG"
-  rm $PYTHON_CONFIG 2>/dev/null
+  rm -f $PYTHON_CONFIG
   
   cat <<EOF >> $PYTHON_CONFIG
 from confluent_kafka import Producer, Consumer, KafkaError
@@ -1583,7 +1583,7 @@ EOF
   ################################################################################
   DOTNET_CONFIG=$DEST/dotnet.delta
   echo "$DOTNET_CONFIG"
-  rm $DOTNET_CONFIG 2>/dev/null
+  rm -f $DOTNET_CONFIG
   
   cat <<EOF >> $DOTNET_CONFIG
 using Confluent.Kafka;
@@ -1623,7 +1623,7 @@ EOF
   ################################################################################
   GO_CONFIG=$DEST/go.delta
   echo "$GO_CONFIG"
-  rm $GO_CONFIG 2>/dev/null
+  rm -f $GO_CONFIG
   
   cat <<EOF >> $GO_CONFIG
 import (
@@ -1664,7 +1664,7 @@ EOF
   ################################################################################
   NODE_CONFIG=$DEST/node.delta
   echo "$NODE_CONFIG"
-  rm $NODE_CONFIG 2>/dev/null
+  rm -f $NODE_CONFIG
   
   cat <<EOF >> $NODE_CONFIG
 var Kafka = require('node-rdkafka');
@@ -1702,7 +1702,7 @@ EOF
   ################################################################################
   CPP_CONFIG=$DEST/cpp.delta
   echo "$CPP_CONFIG"
-  rm $CPP_CONFIG 2>/dev/null
+  rm -f $CPP_CONFIG
   
   cat <<EOF >> $CPP_CONFIG
 #include <librdkafka/rdkafkacpp.h>
@@ -1744,7 +1744,7 @@ EOF
   ################################################################################
   ENV_CONFIG=$DEST/env.delta
   echo "$ENV_CONFIG"
-  rm $ENV_CONFIG 2>/dev/null
+  rm -f $ENV_CONFIG
   
   cat <<EOF >> $ENV_CONFIG
 export BOOTSTRAP_SERVERS="$BOOTSTRAP_SERVERS"
