@@ -53,7 +53,7 @@ if __name__ == '__main__':
                                                ccloud_lib.Count.dict_to_count)
 
     # for full list of configurations, see:
-    #   https://docs.confluent.io/current/clients/confluent-kafka-python/#deserializingconsumer
+    #   https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#deserializingconsumer
     consumer_conf = {
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': conf['sasl.mechanisms'],

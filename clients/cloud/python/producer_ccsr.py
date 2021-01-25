@@ -42,7 +42,7 @@ if __name__ == '__main__':
     ccloud_lib.create_topic(conf, topic)
 
     # for full list of configurations, see:
-    #  https://docs.confluent.io/current/clients/confluent-kafka-python/#schemaregistryclient
+    #  https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#schemaregistryclient
     schema_registry_conf = {
         'url': conf['schema.registry.url'],
         'basic.auth.user.info': conf['schema.registry.basic.auth.user.info']}
@@ -57,7 +57,7 @@ if __name__ == '__main__':
                                            ccloud_lib.Count.count_to_dict)
 
     # for full list of configurations, see:
-    #  https://docs.confluent.io/current/clients/confluent-kafka-python/#serializingproducer
+    #  https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#serializingproducer
     producer_conf = {
         'bootstrap.servers': conf['bootstrap.servers'],
         'sasl.mechanisms': conf['sasl.mechanisms'],
