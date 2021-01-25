@@ -7,7 +7,7 @@ Overview
 --------
 
 This tutorial shows you how to use the `Confluent Cloud CLI
-<https://docs.confluent.io/current/cloud/cli/install.html>`__ to interact with
+<https://docs.confluent.io/ccloud-cli/current/install.html>`__ to interact with
 your `Confluent Cloud <https://confluent.cloud/login>`__ cluster. It uses real
 resources in |ccloud|, and it creates and deletes topics, service accounts,
 credentials, and ACLs. Following the workflow in this tutorial, you accomplish
@@ -31,7 +31,7 @@ Prerequisites
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
 -  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/current/cloud/cli/install.html>`__ (v1.21.0 or later)
+   <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.21.0 or later)
 
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 

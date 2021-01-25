@@ -7,4 +7,4 @@ Visualisation of the results is provided by Grafana, on top of data streamed to 
 
 # Documentation
 
-You can find the documentation for running this example and its accompanying tutorial at [https://docs.confluent.io/current/tutorials/examples/clickstream/docs/index.html](https://docs.confluent.io/current/tutorials/examples/clickstream/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clickstream)
+You can find the documentation for running this example and its accompanying tutorial at [https://docs.confluent.io/platform/current/tutorials/examples/clickstream/docs/index.html](https://docs.confluent.io/platform/current/tutorials/examples/clickstream/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clickstream)

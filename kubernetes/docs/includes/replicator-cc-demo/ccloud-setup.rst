@@ -13,7 +13,7 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 .. figure:: images/new-cluster.png
     :alt: New Cluster Example
 
-.. tip:: See the `Confluent Cloud Quick Start <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html>`__ for more information.
+.. tip:: See the `Confluent Cloud Quick Start <https://docs.confluent.io/cloud/current/get-started/index.html>`__ for more information.
 
 |ak| Bootstrap Server Configuration
 ++++++++++++++++++++++++++++++++++++
@@ -26,7 +26,7 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
   
   |cluster-settings| 
 
-#.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
+#.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__
 
 #.  Log in to your |ccloud| cluster. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 

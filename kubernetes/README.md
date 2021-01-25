@@ -2,7 +2,7 @@
 
 # Overview
 
-This section of the examples repository will contain a variety of demos showcasing various uses cases leveraging [Confluent Operator](https://docs.confluent.io/current/installation/operator/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kubernetes) to deploy and manage Confluent Platform.
+This section of the examples repository will contain a variety of demos showcasing various uses cases leveraging [Confluent Operator](https://docs.confluent.io/operator/current/overview.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kubernetes) to deploy and manage Confluent Platform.
 
 # Demo List 
 | Demo     | Info |
@@ -15,6 +15,6 @@ This section of the examples repository will contain a variety of demos showcasi
 # Documentation
 See each individual use case above for detailed documentation on running the demos.
 
-For further details on Confluent Operator, see the official [Operator Documentation](https://docs.confluent.io/current/installation/operator/co-deployment.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kubernetes).
+For further details on Confluent Operator, see the official [Operator Documentation](https://docs.confluent.io/operator/current/co-deployment.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.kubernetes).
 
 For more details on Kubernetes, see the official [Kubernetes Docs](https://kubernetes.io/docs/home/).
