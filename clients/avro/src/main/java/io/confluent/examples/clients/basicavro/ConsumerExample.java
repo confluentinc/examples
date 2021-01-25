@@ -35,7 +35,7 @@ public class ConsumerExample {
           // Load properties from a local configuration file
           // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
           // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
-          // Documentation at https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html
+          // Documentation at https://docs.confluent.io/platform/current/tutorials/examples/clients/docs/java.html
           configFile = args[0];
           if (!Files.exists(Paths.get(configFile))) {
             throw new IOException(configFile + " not found.");

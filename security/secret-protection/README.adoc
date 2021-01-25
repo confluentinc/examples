@@ -8,4 +8,4 @@ Instead of storing passwords or other sensitive data as cleartext, Secret Protec
 = Documentation
 
 You can find the documentation and instructions for running this Secret Protection example at
-https://docs.confluent.io/current/tutorials/examples/security/secret-protection/docs/secret-protection.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[https://docs.confluent.io/current/tutorials/examples/security/secret-protection/docs/secret-protection.html]
+https://docs.confluent.io/platform/current/tutorials/examples/security/secret-protection/docs/secret-protection.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud[https://docs.confluent.io/platform/current/tutorials/examples/security/secret-protection/docs/secret-protection.html]
