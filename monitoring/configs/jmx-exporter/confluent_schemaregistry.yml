@@ -1,0 +1,108 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+whitelistObjectNames:
+  - kafka.schema.registry:type=jetty-metrics
+  - kafka.schema.registry:type=jersey-metrics
+  - kafka.schema.registry:type=app-info,id=*
+  - kafka.schema.registry:type=registered-count
+  - kafka.schema.registry:type=json-schema*
+  - kafka.schema.registry:type=protobuf-schemas*
+  - kafka.schema.registry:type=avro-schemas*
+  - kafka.schema.registry:type=kafka.schema.registry-metrics,client-id=*
+  - kafka.schema.registry:type=kafka.schema.registry-coordinator-metrics,client-id=*
+  # The two lines below are used to pull the Kafka Client Producer & consumer metrics from SR Client.
+  # If you care about Producer/Consumer metrics for SR, please uncomment 2 lines below.
+  # Please note that this increases the scrape duration to about 1 second as it needs to parse a lot of data.
+  - "kafka.consumer:*"
+  - "kafka.producer:*"
+blacklistObjectNames:
+  # This will ignore the admin client metrics from SR server and will blacklist certain metrics
+  # that do not make sense for ingestion.
+  - kafka.producer:type=app-info,client-id=*
+  - kafka.consumer:type=app-info,client-id=*
+  - "kafka.admin.client:*"
+  - "kafka.consumer:type=*,id=*"
+  - "kafka.producer:type=*,id=*"
+  # - "kafka.producer:client-id=confluent.monitoring*,*"
+  # - "kafka.producer:client-id=confluent-license*,*"
+  - "kafka.*:type=kafka-metrics-count,*"
+rules:
+  # "kafka.schema.registry:type=jetty-metrics"
+  - pattern: "kafka.schema.registry<type=jetty-metrics>([^:]+):"
+    name: "kafka_schema_registry_jetty_metrics_$1"
+  # "kafka.schema.registry:type=jersey-metrics"
+  - pattern: "kafka.schema.registry<type=jersey-metrics>([^:]+):"
+    name: "kafka_schema_registry_jersey_metrics_$1"
+  # "kafka.schema.registry:type=app-info,id=*"
+  - pattern: "kafka.schema.registry<type=app-info, id=(.+)><>(.+): (.+)"
+    name: "kafka_schema_registry_app_info"
+    value: 1
+    labels:
+      client-id: "$1"
+      $2: "$3"
+    type: UNTYPED
+  # "kafka.schema.registry:type=registered-count"
+  - pattern: "kafka.schema.registry<type=registered-count>([^:]+):"
+    name: "kafka_schema_registry_registered_count"
+  # "kafka.schema.registry:type=json-schemas-created"
+  # "kafka.schema.registry:type=json-schemas-deleted"
+  # "kafka.schema.registry:type=protobuf-schemas-created"
+  # "kafka.schema.registry:type=protobuf-schemas-deleted"
+  # "kafka.schema.registry:type=avro-schemas-created"
+  # "kafka.schema.registry:type=avro-schemas-deleted"
+  - pattern: "kafka.schema.registry<type=(\\w+)-schemas-(\\w+)>([^:]+):"
+    name: "kafka_schema_registry_schemas_$2"
+    labels:
+      schema_type: $1
+  # kafka.schema.registry:type=kafka.schema.registry-metrics,client-id=*
+  # kafka.schema.registry:type=kafka.schema.registry-coordinator-metrics,client-id=*
+  - pattern: "kafka.schema.registry<type=(.+), client-id=(.+)><>([^:]+):"
+    name: "kafka_schema_registry_$1_$3"
+    labels:
+      client_id: $2
+  # "kafka.consumer:type=app-info,client-id=*"
+  # "kafka.producer:type=app-info,client-id=*"
+  - pattern: "kafka.(.+)<type=app-info, client-id=(.+)><>(.+): (.+)"
+    value: 1
+    name: kafka_$1_app_info
+    labels:
+      client_type: $1
+      client_id: $2
+      $3: $4
+    type: UNTYPED
+  # "kafka.consumer:type=consumer-metrics,client-id=*, protocol=*, cipher=*"
+  # "kafka.consumer:type=type=consumer-fetch-manager-metrics,client-id=*, topic=*, partition=*"
+  # "kafka.producer:type=producer-metrics,client-id=*, protocol=*, cipher=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+), (.+)=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$9
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+      $5: "$6"
+      $7: "$8"
+  # "kafka.consumer:type=consumer-node-metrics,client-id=*, node-id=*"
+  # "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*, topic=*"
+  # "kafka.producer:type=producer-node-metrics,client-id=*, node-id=*"
+  # "kafka.producer:type=producer-topic-metrics,client-id=*, topic=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$7
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+      $5: "$6"
+  # "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*"
+  # "kafka.consumer:type=consumer-metrics,client-id=*"
+  # "kafka.producer:type=producer-metrics,client-id=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$5
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+  - pattern: "kafka.(.+)<type=(.+)><>(.+):"
+    name: kafka_$1_$2_$3
+    labels:
+      client_type: $1

@@ -1,0 +1,27 @@
+global:
+  # How frequently to scrape targets by default.
+  # Default 15s
+  scrape_interval: 60s
+  # How frequently to evaluate rules.
+  # Default 15s
+  evaluation_interval: 15s
+  # How long until a scrape request times out.
+  # Default to 10s.
+  # Required because cp-demo is using cpu throttling, so let's leave enough time to fetch the metrics in particular for the first time as it needs to compile all rexps
+  scrape_timeout: 30s
+
+rule_files:
+  - "alert.rules"
+
+alerting:
+  alertmanagers:
+    - scheme: http
+      static_configs:
+        - targets:
+            - "alertmanager:9093"
+
+scrape_configs:
+  - job_name: 'json-targets'
+    file_sd_configs:
+      - files:
+          - targets.json

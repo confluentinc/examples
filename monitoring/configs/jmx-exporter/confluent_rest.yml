@@ -1,0 +1,38 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+whitelistObjectNames:
+  - kafka.rest:type=jetty-metrics
+  - kafka.rest:type=jersey-metrics
+  # The line below add more metrics for the clients setup by kafka rest proxy.
+  # Comment them out if you feel there are too much metrics emitted or you don't care
+  # about the fine grained detail per client id
+  - kafka.rest:type=consumer-metrics,client-id=*
+  - kafka.rest:type=producer-metrics,client-id=*
+  # The line below add more details for client metrics.
+  # Comment them out if you feel there are too much metrics emitted or you don't care
+  # about the fine grained detail per client id and per node in that client
+  - kafka.rest:type=consumer-node-metrics,client-id=*,node-id=*
+  - kafka.rest:type=producer-node-metrics,client-id=*,node-id=*
+rules:
+  # "kafka.rest:type=jetty-metrics"
+  - pattern: "kafka.rest<type=jetty-metrics>([^:]+):"
+    name: "kafka_rest_jetty_metrics_$1"
+  # "kafka.rest:type=jersey-metrics"
+  - pattern: "kafka.rest<type=jersey-metrics>([^:]+):"
+    name: "kafka_rest_jersey_metrics_$1"
+  # "kafka.rest:type=consumer-node-metrics,client-id=*,node-id=*,"
+  # "kafka.rest:type=producer-node-metrics,client-id=*,node-id=*,"
+  - pattern: "kafka.rest<type=(.+), client-id=(.+), node-id=node-(.+)><>(.+): (.+)"
+    name: "kafka_rest_$1_$4"
+    type: GAUGE
+    labels:
+      client_id: $2
+      node_id: $3
+  # "kafka.rest:type=consumer-metrics,client-id=*"
+  # "kafka.rest:type=producer-metrics,client-id=*"
+  - pattern: "kafka.rest<type=(.+), client-id=(.+)><>(.+): (.+)"
+    name: "kafka_rest_$1_$3"
+    type: GAUGE
+    labels:
+      client_id: $2

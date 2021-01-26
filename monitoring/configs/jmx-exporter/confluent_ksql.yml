@@ -1,0 +1,124 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+whitelistObjectNames:
+  - "io.confluent.ksql.metrics:*"
+  # The two lines below are used to pull the Kafka Client Producer & consumer metrics from KSQL Client.
+  # If you care about Producer/Consumer metrics for KSQL, please uncomment 2 lines below.
+  # Please note that this increases the scrape duration to about 1 second as it needs to parse a lot of data.
+  - "kafka.consumer:*"
+  - "kafka.producer:*"
+  - "kafka.streams:*"
+blacklistObjectNames:
+  - kafka.streams:type=kafka-metrics-count
+  # This will ignore the admin client metrics from KSQL server and will blacklist certain metrics
+  # that do not make sense for ingestion.
+  - "kafka.admin.client:*"
+  - "kafka.consumer:type=*,id=*"
+  - "kafka.consumer:type=*,client-id=*"
+  - "kafka.consumer:type=*,client-id=*,node-id=*"
+  - "kafka.producer:type=*,id=*"
+  - "kafka.producer:type=*,client-id=*"
+  - "kafka.producer:type=*,client-id=*,node-id=*"
+  - "kafka.streams:type=stream-processor-node-metrics,thread-id=*,task-id=*,processor-node-id=*"
+  - "kafka.*:type=kafka-metrics-count,*"
+rules:
+  # "io.confluent.ksql.metrics:type=producer-metrics,key=*,id=*"
+  # "io.confluent.ksql.metrics:type=consumer-metrics,key=*,id=*"
+  - pattern: io.confluent.ksql.metrics<type=(.+), key=(.+), id=(.+)><>([^:]+)
+    name: ksql_$1_$4
+    labels:
+      key: "$2"
+      id: "$3"
+  # "io.confluent.ksql.metrics:type=_confluent-ksql-<cluster-id>ksql-engine-query-stats"
+  # The below statement parses KSQL Cluster Name and adds a new label so that per cluster data is searchable.
+  - pattern: io.confluent.ksql.metrics<type=_confluent-ksql-(.+)ksql-engine-query-stats><>([^:]+)
+    name: "ksql_ksql_engine_query_stats_$2"
+    labels:
+      ksql_cluster: $1
+  # "io.confluent.ksql.metrics:type=ksql-queries,status=_confluent-ksql-<cluser-id>_query_<query>
+  # The below statement parses KSQL query specific status
+  - pattern: "io.confluent.ksql.metrics<type=(.+), status=_confluent-ksql-(.+)query_(.+)><>(.+): (.+)"
+    value: 1
+    name: ksql_ksql_metrics_$1_$4
+    labels:
+      ksql_query: $3
+      ksql_cluster: $2
+      $4: $5
+  # kafka.streams:type=stream-processor-node-metrics,processor-node-id=*,task-id=*,thread-id=*
+  # kafka.streams:type=stream-record-cache-metrics,record-cache-id=*,task-id=*,thread-id=*
+  # kafka.streams:type=stream-state-metrics,rocksdb-state-id=*,task-id=*,thread-id=*
+  # kafka.streams:type=stream-state-metrics,rocksdb-state-id=*,task-id=*,thread-id=*
+  - pattern: "kafka.streams<type=(.+), thread-id=(.+), task-id=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_streams_$1_$6
+    type: GAUGE
+    labels:
+      thread_id: "$2"
+      task_id: "$3"
+      $4: "$5"
+  # kafka.streams:type=stream-task-metrics,task-id=*,thread-id=*
+  - pattern: "kafka.streams<type=(.+), thread-id=(.+), task-id=(.+)><>(.+):"
+    name: kafka_streams_$1_$4
+    type: GAUGE
+    labels:
+      thread_id: "$2"
+      task_id: "$3"
+  # kafka.streams:type=stream-metrics,client-id=*
+  - pattern: "kafka.streams<type=stream-metrics, (.+)=(.+)><>(state|alive-stream-threads|commit-id|version|application-id): (.+)"
+    name: kafka_streams_stream_metrics
+    value: 1
+    type: UNTYPED
+    labels:
+      $1: "$2"
+      $3: "$4"
+  # kafka.streams:type=stream-thread-metrics,thread-id=*
+  - pattern: "kafka.streams<type=(.+), (.+)=(.+)><>([^:]+)"
+    name: kafka_streams_$1_$4
+    type: GAUGE
+    labels:
+      $2: "$3"
+  # "kafka.consumer:type=app-info,client-id=*"
+  # "kafka.producer:type=app-info,client-id=*"
+  - pattern: "kafka.(.+)<type=app-info, client-id=(.+)><>(.+): (.+)"
+    value: 1
+    name: kafka_$1_app_info
+    labels:
+      client_type: $1
+      client_id: $2
+      $3: $4
+    type: UNTYPED
+  # "kafka.consumer:type=consumer-metrics,client-id=*, protocol=*, cipher=*"
+  # "kafka.consumer:type=type=consumer-fetch-manager-metrics,client-id=*, topic=*, partition=*"
+  # "kafka.producer:type=producer-metrics,client-id=*, protocol=*, cipher=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+), (.+)=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$9
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+      $5: "$6"
+      $7: "$8"
+  # "kafka.consumer:type=consumer-node-metrics,client-id=*, node-id=*"
+  # "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*, topic=*"
+  # "kafka.producer:type=producer-node-metrics,client-id=*, node-id=*"
+  # "kafka.producer:type=producer-topic-metrics,client-id=*, topic=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$7
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+      $5: "$6"
+  # "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*"
+  # "kafka.consumer:type=consumer-metrics,client-id=*"
+  # "kafka.producer:type=producer-metrics,client-id=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$5
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+  - pattern: "kafka.(.+)<type=(.+)><>(.+):"
+    name: kafka_$1_$2_$3
+    labels:
+      client_type: $1

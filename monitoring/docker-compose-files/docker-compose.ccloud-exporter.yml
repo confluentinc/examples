@@ -1,0 +1,13 @@
+version: '3.0'
+volumes:
+  database:
+services:
+  ccloud-exporter:
+    image: dabz/ccloudexporter:latest
+    container_name: ccloud-exporter
+    hostname: ccloud-exporter
+    restart: always
+    environment:
+      - CCLOUD_API_KEY=$CCLOUD_API_KEY
+      - CCLOUD_API_SECRET=$CCLOUD_API_SECRET
+      - CCLOUD_CLUSTER=$CCLOUD_CLUSTER

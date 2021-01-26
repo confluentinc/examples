@@ -1,0 +1,10 @@
+version: '3.0'
+volumes:
+  database:
+services:
+  jmx-exporter:
+    container_name: $JMX_SERVICE
+    volumes:
+      - $MONITORING_STACK/assets/prometheus/jmx-exporter/:/usr/share/jmx-exporter
+    environment:
+      EXTRA_ARGS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/$JMX_SERVICE.yml

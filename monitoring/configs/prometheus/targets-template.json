@@ -1,0 +1,11 @@
+[
+    {
+			"labels": {
+	                "job": "node",
+                  "env": "dev"
+		            },
+			"targets": [
+	                  "localhost:9100"
+			            ]
+    }
+]

@@ -1,0 +1,57 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+whitelistObjectNames:
+  - "kafka.consumer:*"
+  - "kafka.producer:*"
+blacklistObjectNames:
+  - "kafka.admin.client:*"
+  - "kafka.consumer:type=*,id=*"
+  - "kafka.producer:type=*,id=*"
+  - "kafka.*:type=kafka-metrics-count,*"
+rules:
+  # "kafka.consumer:type=app-info,client-id=*"
+  # "kafka.producer:type=app-info,client-id=*"
+  - pattern: "kafka.(.+)<type=app-info, client-id=(.+)><>(.+): (.+)"
+    value: 1
+    name: kafka_$1_app_info
+    labels:
+      client_type: $1
+      client_id: $2
+      $3: $4
+    type: UNTYPED
+  # "kafka.consumer:type=consumer-metrics,client-id=*, protocol=*, cipher=*"
+  # "kafka.consumer:type=type=consumer-fetch-manager-metrics,client-id=*, topic=*, partition=*"
+  # "kafka.producer:type=producer-metrics,client-id=*, protocol=*, cipher=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+), (.+)=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$9
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+      $5: "$6"
+      $7: "$8"
+  # "kafka.consumer:type=consumer-node-metrics,client-id=*, node-id=*"
+  # "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*, topic=*"
+  # "kafka.producer:type=producer-node-metrics,client-id=*, node-id=*"
+  # "kafka.producer:type=producer-topic-metrics,client-id=*, topic=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$7
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+      $5: "$6"
+  # "kafka.consumer:type=consumer-fetch-manager-metrics,client-id=*"
+  # "kafka.consumer:type=consumer-metrics,client-id=*"
+  # "kafka.producer:type=producer-metrics,client-id=*"
+  - pattern: "kafka.(.+)<type=(.+), (.+)=(.+)><>(.+):"
+    name: kafka_$1_$2_$5
+    type: GAUGE
+    labels:
+      client_type: $1
+      $3: "$4"
+  - pattern: "kafka.(.+)<type=(.+)><>(.+):"
+    name: kafka_$1_$2_$3
+    labels:
+      client_type: $1

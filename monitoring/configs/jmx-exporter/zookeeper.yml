@@ -1,0 +1,80 @@
+---
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+whitelistObjectNames:
+  - org.apache.ZooKeeperService:name3=Connections,*
+  - org.apache.ZooKeeperService:name3=InMemoryDataTree,*
+  - org.apache.ZooKeeperService:name0=*,name1=replica*
+  - org.apache.ZooKeeperService:name0=*
+  # If you are running a Standalone Zookeeper, the whitelist objects below would help.
+  # If the zookeeper has a quorum, no need to worry about anything else.
+  - org.apache.ZooKeeperService:name1=InMemoryDataTree,name0=*
+  - org.apache.ZooKeeperService:name0=*,name1=Connections,name2=*,name3=*
+rules:
+  # Below rule applies for Zookeeper Cluster having multiple ZK nodes
+  # org.apache.ZooKeeperService:name0=*,name3=Connections,name1=*,name2=*,name4=*,name5=*
+  - pattern: "org.apache.ZooKeeperService<name0=(.+), name1=replica.(\\d+), name2=(\\w+), name3=Connections, name4=(.+), name5=(.+)><>([^:]+)"
+    name: zookeeper_connections_$6
+    labels:
+      server_name: "$1"
+      server_id: $2
+      client_address: "$4"
+      connection_id: "$5"
+      member_type: "$3"
+  # Below rule applies for Zookeeper Cluster having multiple ZK nodes
+  # org.apache.ZooKeeperService:name0=*,name3=InMemoryDataTree
+  - pattern: "org.apache.ZooKeeperService<name0=(.+), name1=replica.(\\d+), name2=(\\w+), name3=InMemoryDataTree><>(WatchCount|NodeCount): (\\d+)"
+    name: zookeeper_inmemorydatatree_$4
+    type: GAUGE
+    labels:
+      server_name: "$1"
+      server_id: $2
+      member_type: "$3"
+  # Below rule applies for Zookeeper Cluster having multiple ZK nodes
+  # org.apache.ZooKeeperService:name0=*,name1=replica*
+  - pattern: "org.apache.ZooKeeperService<name0=(.+), name1=replica.(\\d+)><>(.+): (.+)"
+    name: zookeeper_status
+    type: UNTYPED
+    value: 1
+    labels:
+      server_name: "$1"
+      server_id: $2
+      $3: $4
+  # Below rule applies for Zookeeper Cluster having multiple ZK nodes
+  # org.apache.ZooKeeperService:name0=*
+  - pattern: "org.apache.ZooKeeperService<name0=ReplicatedServer_id(\\d+)><>(QuorumSize): (\\d+)"
+    name: zookeeper_status_$2
+    type: GAUGE
+    labels:
+      server_id: $1
+  # ###########################################################################
+  # ###########################################################################
+  # Below rule applies to a Standalone ZK
+  # org.apache.ZooKeeperService:name0=*,name1=InMemoryDataTree
+  - pattern: "org.apache.ZooKeeperService<name0=(.+), name1=InMemoryDataTree><>(WatchCount|NodeCount): (\\d+)"
+    name: zookeeper_inmemorydatatree_$2
+    type: GAUGE
+    labels:
+      server_name: $1
+      server_id: "1"
+  # Below rule applies to a Standalone ZK
+  # org.apache.ZooKeeperService:name0=*,name1=Connections,name2=*,name3=*
+  - pattern: "org.apache.ZooKeeperService<name0=(.+), name1=Connections, name2=(.+), name3=(.+)><>([^:]+)"
+    name: zookeeper_connections_$4
+    labels:
+      server_name: "$1"
+      client_address: "$2"
+      connection_id: "$3"
+  # Below rule applies to a Standalone ZK
+  # org.apache.ZooKeeperService:name0=*
+  - pattern: "org.apache.ZooKeeperService<name0=(.+)><>(StartTime|ClientPort|SecureClientAddress|Version|SecureClientPort): (.+)"
+    name: zookeeper_$2
+    value: 1
+    labels:
+      server_name: "$1"
+      $2: "$3"
+  # Below rule applies to a Standalone ZK
+  # org.apache.ZooKeeperService:name0=*
+  - pattern: "org.apache.ZooKeeperService<name0=(.+)><>(.+): (.+)"
+    name: zookeeper_$2
+    type: GAUGE
