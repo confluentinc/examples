@@ -1,0 +1,46 @@
+version: '2.3'
+
+x-volume: &default-volume
+  volumes:
+    - $MONITORING_STACK/assets/prometheus/jmx-exporter/:/usr/share/jmx-exporter
+
+services:
+  zookeeper:
+    <<: *default-volume
+    environment:
+      EXTRA_ARGS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/zookeeper.yml
+
+  kafka1:
+    <<: *default-volume
+    environment:
+      EXTRA_ARGS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_broker.yml
+
+  kafka2:
+    <<: *default-volume
+    environment:
+      EXTRA_ARGS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_broker.yml
+
+  streams-demo:
+    <<: *default-volume
+    environment:
+      JAVA_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_streams.yml
+
+  connect:
+    <<: *default-volume
+    environment:
+      EXTRA_ARGS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_connect.yml
+
+  schemaregistry:
+    <<: *default-volume
+    environment:
+      EXTRA_ARGS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/confluent_schemaregistry.yml
+
+  ksqldb-server:
+    <<: *default-volume
+    environment:
+      KSQL_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/confluent_ksql.yml
+
+  restproxy:
+    <<: *default-volume
+    environment:
+      KAFKAREST_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/confluent_rest.yml

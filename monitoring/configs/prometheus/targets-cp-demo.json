@@ -1,0 +1,77 @@
+[
+  {
+    "labels": {
+      "job": "prometheus",
+      "env": "dev"
+    },
+    "targets": [
+      "localhost:9090"
+    ]
+  },
+  {
+    "labels": {
+      "job": "kafka",
+      "env": "dev"
+    },
+    "targets": [
+      "kafka1:1234",
+      "kafka2:1234"
+    ]
+  },
+  {
+    "labels": {
+      "job": "zookeeper",
+      "env": "dev"
+    },
+    "targets": [
+      "zookeeper:1234"
+    ]
+  },
+  {
+    "labels": {
+      "job": "connect",
+      "env": "dev",
+      "cluster": "cluster1"
+    },
+    "targets": [
+      "connect:1234"
+    ]
+  },
+  {
+    "labels": {
+      "job": "streams-demo",
+      "env": "dev"
+    },
+    "targets": [
+      "streams-demo:1234"
+    ]
+  },
+  {
+    "labels": {
+      "job": "schemaregistry",
+      "env": "dev"
+    },
+    "targets": [
+      "schemaregistry:1234"
+    ]
+  },
+  {
+    "labels": {
+      "job": "ksqldb",
+      "env": "dev"
+    },
+    "targets": [
+      "ksqldb-server:1234"
+    ]
+  },
+  {
+    "labels": {
+      "job": "kafka-lag-exporter",
+      "env": "dev"
+    },
+    "targets": [
+      "kafka-lag-exporter:9999"
+    ]
+  }
+
+]

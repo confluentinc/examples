@@ -1,11 +1,11 @@
 [
-    {
-			"labels": {
-	                "job": "node",
-                  "env": "dev"
-		            },
-			"targets": [
-	                  "localhost:9100"
-			            ]
-    }
+	{
+		"labels": {
+			"job": "prometheus",
+			"env": "dev"
+		},
+		"targets": [
+			"localhost:9090"
+		]
+	}
 ]
