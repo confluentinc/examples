@@ -1,0 +1,47 @@
+version: '2.3'
+volumes:
+  database:
+services:
+  node-exporter:
+    image: prom/node-exporter:v0.18.1
+    container_name: node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.ignored-mount-points"
+      - "^(aufs|proc|nsfs|shm|cgroup|tmpfs|binfmt_misc|debugfs|devpts|fusectl|hugetlbfs|fuse.lxcfs|mqueue|pstore|securityfs|sysfs|autofs|devtmpfs|configfs)"
+
+  ccloud-exporter:
+    image: dabz/ccloudexporter:latest
+    container_name: ccloud-exporter
+    hostname: ccloud-exporter
+    restart: always
+    environment:
+      - CCLOUD_API_KEY=$CCLOUD_API_KEY
+      - CCLOUD_API_SECRET=$CCLOUD_API_SECRET
+      - CCLOUD_CLUSTER=$CCLOUD_CLUSTER
+
+  prometheus:
+    image: prom/prometheus:v2.24.1
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./monitoring_configs/prometheus/:/etc/prometheus/
+
+  grafana:
+    image: grafana/grafana:7.3.7
+    container_name: grafana
+    environment:
+      - "GF_INSTALL_PLUGINS=grafana-piechart-panel"
+      - "GF_SECURITY_ADMIN_USER=admin"
+      - "GF_SECURITY_ADMIN_PASSWORD=password"
+      - "GF_USERS_ALLOW_SIGN_UP=false"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./monitoring_configs/grafana/provisioning/:/etc/grafana/provisioning/
