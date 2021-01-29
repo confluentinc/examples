@@ -105,6 +105,8 @@ echo -e "\n#Sleep 60 seconds to ensure key is in working order (DO I NEED TO DO 
 sleep 60
 echo -e "\n#Starting up Prometheus, Grafana, and exporters"
 docker-compose up -d
+echo -e "\n#Login to grafana at http://localhost:3000/ un:admin pw:password"
+echo -e "\n#Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
 
 exit
 ##################################################
