@@ -93,6 +93,21 @@ sleep 60
 printf "\n\n"
 
 ##################################################
+# Start up monitoring
+##################################################
+OUTPUT=$(ccloud api-key create --resource cloud --description "ccloud-exporter" -o json)
+rm .env 2>/dev/null
+echo "$OUTPUT" | jq .
+echo "CCLOUD_API_KEY=$(echo "$OUTPUT" | jq -r ".key")">>.env
+echo "CCLOUD_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")">>.env
+echo "CCLOUD_CLUSTER=$CLUSTER">>.env
+echo -e "\n#Sleep 60 seconds to ensure key is in working order (DO I NEED TO DO THIS?)"
+sleep 60
+echo -e "\n#Starting up Prometheus, Grafana, and exporters"
+docker-compose up -d
+
+exit
+##################################################
 # Produce and consume with Confluent Cloud CLI
 ##################################################
 
@@ -180,6 +195,12 @@ if [[ $? != 0 ]]; then
 fi
 LOG1="/tmp/log.1"
 
+<<<<<<< HEAD
+=======
+#TODO finsih
+JMX_AGENT="-javaagent:monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:monitoring_configs/jmx-exporter/kafka_client.yml"
+
+>>>>>>> b7e4cc98... DEVX-2465: push up working prometheus start
 echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
 mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
 echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException' (expected because there are no ACLs to allow this client application)"
