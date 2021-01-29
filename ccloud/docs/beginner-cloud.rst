@@ -97,7 +97,7 @@ Create a new Confluent Cloud environment
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the following command to create a new |ccloud| environment
-   ``demo-script-env``:
+   ``ccloud-stack-000000-beginner-cli``:
 
    .. code-block:: bash
 
@@ -109,7 +109,7 @@ Create a new Confluent Cloud environment
 
       {
         "id": "env-5qz2q",
-        "name": "demo-script-env"
+        "name": "ccloud-stack-000000-beginner-cli"
       }
 
    The value of the environment ID, in this case ``env-5qz2q``, may differ in
@@ -791,14 +791,14 @@ Clean up Confluent Cloud resources
 
 If the tutorial ends prematurely, you may receive the following error message
 when trying to run the example again (``ccloud environment create
-demo-script-env-000000-beginner-cli``):
+ccloud-stack-000000-beginner-cli``):
 
 .. code-block:: text
 
       Error: 1 error occurred:
          * error creating account: Account name is already in use
 
-      Failed to create environment demo-script-env. Please troubleshoot and run again
+      Failed to create environment ccloud-stack-000000-beginner-cli. Please troubleshoot and run again
 
 In this case, run the following script to delete the example’s topics, |ak|
 cluster, and environment:
