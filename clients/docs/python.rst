@@ -1,7 +1,7 @@
 .. _client-examples-python:
 
-Python
-======
+Apache Kafka Producer and Consumer Example: Python
+==================================================
 
 In this tutorial, you will run a Python client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

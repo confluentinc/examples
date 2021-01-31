@@ -1,7 +1,7 @@
 .. _client-examples-ksql-datagen:
 
-KSQL Datagen
-============
+Apache Kafka Producer and Consumer Example: KSQL Datagen
+========================================================
 
 In this tutorial, you will run a KSQL Datagen client application using the `KSQL
 Datagen command-line tool

@@ -1,7 +1,7 @@
 .. _client-examples-java-springboot:
 
-Java Spring Boot
-================
+Apache Kafka Producer and Consumer Example: Java Spring Boot
+============================================================
 
 In this tutorial, you will run a Java Spring Boot client application that
 produces messages to and consumes messages from an |ak-tm| cluster.

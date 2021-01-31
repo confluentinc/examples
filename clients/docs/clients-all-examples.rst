@@ -1,13 +1,13 @@
 .. _clients-all-examples:
 
-Code Examples
-=============
+Apache Kafka Producer and Consumer Code Examples
+================================================
 
 There are many programming languages that provide |ak| client libraries.
 The following "Hello, World!" examples are written in various languages to demonstrate how to produce to and consume from an |ak-tm| cluster, which can be in `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__, on your local host, or any other |ak| cluster.
 For the subset of languages that support it, the code examples also demonstrate how to use Avro and |sr-long|.
 
-* :ref:`C <client-examples-c>`
+* :ref:`C (librdkafka) <client-examples-c>`
 * :ref:`Clojure <client-examples-clojure>`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
 * :ref:`Go <client-examples-go>`

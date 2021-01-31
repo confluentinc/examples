@@ -1,7 +1,7 @@
 .. _client-examples-go:
 
-Go
-===
+Apache Kafka Producer and Consumer Example: Go
+==============================================
 
 In this tutorial, you will run a Golang client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

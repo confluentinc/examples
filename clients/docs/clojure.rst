@@ -1,7 +1,7 @@
 .. _client-examples-clojure:
 
-Clojure
-=======
+Apache Kafka Producer and Consumer Example: Clojure
+===================================================
 
 In this tutorial, you will run a Clojure client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

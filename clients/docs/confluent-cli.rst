@@ -1,7 +1,7 @@
 .. _client-examples-confluent-cli:
 
-Confluent CLI
-=============
+Apach Kafka Producer and Consumer Example: Confluent CLI
+========================================================
 
 In this tutorial, you will use the |confluent-cli| to produce messages to and
 consumes messages from an |ak-tm| cluster.

@@ -1,8 +1,7 @@
 .. _client-examples-c:
 
-C
-=
-
+Apache Kafka Producer and Consumer Example: C (librdkafka)
+==========================================================
 
 In this tutorial, you will run a C client application that produces messages to
 and consumes messages from an |ak-tm| cluster.
