@@ -1,7 +1,7 @@
 .. _clients-all-examples:
 
-Apache Kafka Producer and Consumer Code Examples
-================================================
+|ak-tm| Producer and Consumer Code Examples
+===========================================
 
 There are many programming languages that provide |ak| client libraries.
 The following "Hello, World!" examples are written in various languages to demonstrate how to produce to and consume from an |ak-tm| cluster, which can be in `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__, on your local host, or any other |ak| cluster.
