@@ -1,7 +1,7 @@
 .. _client-examples-groovy:
 
-Apache Kafka Producer and Consumer Example: Groovy
-==================================================
+|ak-tm| Producer and Consumer Example: Groovy
+=============================================
 
 In this tutorial, you will run a Groovy client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

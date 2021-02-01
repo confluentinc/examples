@@ -1,7 +1,7 @@
 .. _client-examples-nodejs:
 
-Apache Kafka Producer and Consumer Example: Node.js
-===================================================
+|ak-tm| Producer and Consumer Example: Node.js
+==============================================
 
 In this tutorial, you will run a Node.js client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

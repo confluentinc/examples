@@ -1,7 +1,7 @@
 .. _client-examples-rust:
 
-Apache Kafka Producer and Consumer Example: Rust
-================================================
+|ak-tm| Producer and Consumer Example: Rust
+===========================================
 
 In this tutorial, you will run a Rust client application that produces messages
 to and consumes messages from an |ak-tm| cluster.

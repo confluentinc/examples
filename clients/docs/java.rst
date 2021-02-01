@@ -1,7 +1,7 @@
 .. _client-examples-java:
 
-Apache Kafka Producer and Consumer Example: Java
-================================================
+|ak-tm| Producer and Consumer Example: Java
+===========================================
 
 In this tutorial, you will run a Java client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

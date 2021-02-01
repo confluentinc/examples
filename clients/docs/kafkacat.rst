@@ -1,7 +1,7 @@
 .. _client-examples-kafkacat:
 
-Apache Kafka Producer and Consumer Example: kafkacat
-====================================================
+|ak-tm| Producer and Consumer Example: kafkacat
+===============================================
 
 In this tutorial, you will run a |kcat| client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

@@ -1,7 +1,7 @@
 .. _client-examples-kotlin:
 
-Apache Kafka Producer and Consumer Example: Kotlin
-==================================================
+|ak-tm| Producer and Consumer Example: Kotlin
+=============================================
 
 In this tutorial, you will run a Kotlin client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

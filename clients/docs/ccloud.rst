@@ -1,7 +1,7 @@
 .. _client-examples-ccloud:
 
-Apache Kafka Producer and Consumer Example: Confluent Cloud CLI
-===============================================================
+|ak-tm| Producer and Consumer Example: Confluent Cloud CLI
+==========================================================
 
 In this tutorial, you will use the |ccloud| CLI to
 produces messages to and consumes messages from an |ak-tm| cluster.
