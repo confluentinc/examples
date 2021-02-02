@@ -710,6 +710,33 @@ Run a Java consumer with a Wildcard ACL
    You should see a ``Deleted ACLs.`` message after running each of the previous
    commands.
 
+Monitor producers and consumers
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#. Create fat jar with `ProducerExample` as the main class:
+
+   .. code-block:: bash
+
+      mvn package -f ../../clients/cloud/java/ -Dmain.class=ProducerExample -Dclass.path.prefix=io.confluent.examples.clients.cloud
+
+   ``main.class`` specifies the main class in the created jar and ``class.path.prefix`` is the path to the main class. This ``mvn package`` command will create a few jars in ``../../clients/cloud/java/target/``. The one we are interested in running is ``ProducerExample-jar-with-dependencies.jar``.
+
+#. Run `ProducerExample` with a jmx_prometheus_javaagent:
+
+   .. code-block:: bash
+
+      java -javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml -jar ../../clients/cloud/java/target/ProducerExample-jar-with-dependencies.jar /tmp/client.config demo-topic-1
+
+#. Start up Prometheus, Grafana, a ccloud-exporter, and a node-exporter by running:
+
+   .. code-block:: bash
+
+      docker-compose up -d
+
+#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__. No targets should be unhealthy, this may take a few minutes.
+
+   TODO: add picture of targets and explain what they are
+
 
 Monitor producers and consumers
 -------------------------------
