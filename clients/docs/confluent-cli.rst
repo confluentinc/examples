@@ -1,7 +1,7 @@
 .. _client-examples-confluent-cli:
 
-|ak-tm| Producer and Consumer Example: Confluent CLI
-====================================================
+Confluent CLI: Command Example for |ak-tm|
+==========================================
 
 In this tutorial, you will use the |confluent-cli| to produce messages to and
 consumes messages from an |ak-tm| cluster.

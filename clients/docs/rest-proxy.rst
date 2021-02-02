@@ -1,7 +1,7 @@
 .. _client-examples-rest-proxy:
 
-|ak-tm| Producer and Consumer Example: |crest|
-==============================================
+|crest|: Example for |ak-tm|
+============================
 
 In this tutorial, you will use |crest-long| to
 produce messages to and consumes messages from an |ak-tm| cluster.

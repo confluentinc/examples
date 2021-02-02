@@ -1,7 +1,7 @@
 .. _client-examples-ruby:
 
-|ak-tm| Producer and Consumer Example: Ruby
-===========================================
+Ruby: Code Example for |ak-tm|
+==============================
 
 In this tutorial, you will run a Ruby client application using the `ZenDesk Ruby
 Client for Apache Kafka <https://github.com/zendesk/ruby-kafka>`__ that produces

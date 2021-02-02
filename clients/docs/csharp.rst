@@ -1,7 +1,7 @@
 .. _client-examples-csharp:
 
-|ak-tm| Producer and Consumer Example: .NET
-===========================================
+.NET: Code Example for |ak-tm|
+==============================
 
 In this tutorial, you will run a .NET client application that produces messages to and consumes messages from an |ak-tm| cluster.
 
