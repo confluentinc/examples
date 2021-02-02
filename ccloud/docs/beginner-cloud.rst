@@ -713,6 +713,12 @@ Run a Java consumer with a Wildcard ACL
 
 Monitor producers and consumers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#. Run the following commands to create ACLs for the service account:
+
+   .. code-block:: bash
+
+      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
+      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
 
 #. Create fat jar with ``ProducerExample`` as the main class:
 
@@ -728,7 +734,40 @@ Monitor producers and consumers
 
       java -javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml -jar ../../clients/cloud/java/target/ProducerExample-jar-with-dependencies.jar /tmp/client.config demo-topic-1
 
-#. Start up Prometheus, Grafana, a ccloud-exporter, and a node-exporter by running:
+#. Create an api-key for the ``cloud`` resource with the command below. The
+   `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
+   key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
+   `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
+   for metrics about your Confluent Cloud deployment and displays them in a Prometheus scrapable
+   webpage.
+
+   .. code-block:: bash
+
+      ccloud api-key create --resource cloud --description "ccloud-exporter" -o json
+
+   Verify your output resembles:
+
+   .. code-block:: text
+
+      {
+        "key": "LUFEIWBMYXD2AMN5",
+        "secret": "yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
+      }
+
+   The value of the API key, in this case ``LUFEIWBMYXD2AMN5``, and API secret, in this case
+   ``yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd``, may differ in your output.
+
+#. Create a ``.env`` file to mimic the following:
+
+   .. code-block:: text
+
+      CCLOUD_API_KEY=LUFEIWBMYXD2AMN5
+      CCLOUD_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
+      CCLOUD_CLUSTER=lkc-x6m01
+
+   This ``.env`` file will be used by the ``ccloud-exporter`` container.
+
+#. Start up Prometheus, Grafana, a ``ccloud-exporter``, and a ``node-exporter`` by running:
 
    .. code-block:: bash
 
