@@ -710,10 +710,11 @@ Run a Java consumer with a Wildcard ACL
    You should see a ``Deleted ACLs.`` message after running each of the previous
    commands.
 
+
 Monitor producers and consumers
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Create fat jar with `ProducerExample` as the main class:
+#. Create fat jar with ``ProducerExample`` as the main class:
 
    .. code-block:: bash
 
@@ -721,7 +722,7 @@ Monitor producers and consumers
 
    ``main.class`` specifies the main class in the created jar and ``class.path.prefix`` is the path to the main class. This ``mvn package`` command will create a few jars in ``../../clients/cloud/java/target/``. The one we are interested in running is ``ProducerExample-jar-with-dependencies.jar``.
 
-#. Run `ProducerExample` with a jmx_prometheus_javaagent:
+#. Run ``ProducerExample`` with a jmx_prometheus_javaagent:
 
    .. code-block:: bash
 
@@ -733,7 +734,7 @@ Monitor producers and consumers
 
       docker-compose up -d
 
-#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__. No targets should be unhealthy, this may take a few minutes.
+#. Navigate to the Prometheus Targets page at localhost:9090/targets. No targets should be unhealthy, this may take a few minutes.
 
    TODO: add picture of targets and explain what they are
 
