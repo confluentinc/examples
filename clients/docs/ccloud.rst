@@ -1,7 +1,7 @@
 .. _client-examples-ccloud:
 
-Confluent Cloud CLI
-===================
+Confluent Cloud CLI: Command Example for |ak-tm|
+================================================
 
 In this tutorial, you will use the |ccloud| CLI to
 produces messages to and consumes messages from an |ak-tm| cluster.
