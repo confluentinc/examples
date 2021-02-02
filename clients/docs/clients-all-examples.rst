@@ -39,23 +39,23 @@ There are additional examples for |ak| and |cp| command line tools and component
       :maxdepth: 1
       :hidden:
 
-      `Apache Kafka commands <client-examples-kafka-commands>`
-      `C (librdkafka) <c>`
-      `Clojure <clojure>`
-      `Confluent CLI <confluent-cli>`
-      `Confluent Cloud CLI <ccloud>`
-      `.NET <csharp>`
-      `Go <go>`
-      `Groovy <groovy>`
-      `Java <java>`
-      `Java Spring Boot <java-springboot>`
-      `Kafka Connect Datagen <kafka-connect-datagen>`
-      `kafkacat <kafkacat>`
-      `Kotlin <kotlin>`
-      `KSQL Datagen <ksql-datagen>`
-      `Node.js <nodejs>`
-      `Python <python>`
-      `REST Proxy <rest-proxy>`
-      `Ruby <ruby>`
-      `Rust <rust>`
-      `Scala <scala>`
+      Apache Kafka commands <kafka-commands>
+      C (librdkafka) <c>
+      Clojure <clojure>
+      Confluent CLI <confluent-cli>
+      Confluent Cloud CLI <ccloud>
+      .NET <csharp>
+      Go <go>
+      Groovy <groovy>
+      Java <java>
+      Java Spring Boot <java-springboot>
+      Kafka Connect Datagen <kafka-connect-datagen>
+      kafkacat <kafkacat>
+      Kotlin <kotlin>
+      KSQL Datagen <ksql-datagen>
+      Node.js <nodejs>
+      Python <python>
+      REST Proxy <rest-proxy>
+      Ruby <ruby>
+      Rust <rust>
+      Scala <scala>
