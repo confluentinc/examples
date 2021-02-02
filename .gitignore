@@ -31,4 +31,4 @@ ccloud/*.zip
 clients/cloud/**/bin/
 ccloud/beginner-cloud/.ignored_folder/*
 !ccloud/beginner-cloud/.ignored_folder/.gitkeep
-ccloud//beginner-cloud/.env
+ccloud/beginner-cloud/.env
