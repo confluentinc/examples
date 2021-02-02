@@ -40,7 +40,7 @@ Prerequisites
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
--  `docker`__ installed on your host
+-  `docker <https://docs.docker.com/get-docker/>`__ installed on your host
 
 
 Cost to Run Tutorial
@@ -734,7 +734,7 @@ Monitor producers and consumers
 
       docker-compose up -d
 
-#. Navigate to the Prometheus Targets page at localhost:9090/targets. No targets should be unhealthy, this may take a few minutes.
+#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__. No targets should be unhealthy, this may take a few minutes.
 
    TODO: add picture of targets and explain what they are
 
