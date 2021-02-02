@@ -734,9 +734,15 @@ Monitor producers and consumers
 
       docker-compose up -d
 
-#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__. No targets should be unhealthy, this may take a few minutes.
+#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__. At first the Targets page will look like the image below.
 
-   TODO: add picture of targets and explain what they are
+   |Prometheus Targets Unknown|
+
+   After a one to two minutes, the targets should be up. The Targets page will them resemble the following:
+
+   |Prometheus Targets Up|
+
+#. Tear down monitoring. ``CNTRL+C`` the ``ProducerExample``.  Then run ``docker-compose down``.
 
 
 Monitor producers and consumers
@@ -1011,7 +1017,6 @@ Here are the variables and their default values:
 .. |Confluent Cloud Dashboard|
    image:: images/confluent-cloud-dashboard.png
    :alt: Confluent Cloud Dashboard
-
 
 .. |Confluent Cloud Panel|
    image:: images/cloud-panel.png
