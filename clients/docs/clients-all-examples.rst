@@ -39,7 +39,7 @@ There are additional examples for |ak| and |cp| command line tools and component
       :maxdepth: 1
       :hidden:
 
-      `Apache Kafka commands <kafka-commands>`
+      `Apache Kafka commands <client-examples-kafka-commands>`
       `C (librdkafka) <c>`
       `Clojure <clojure>`
       `Confluent CLI <confluent-cli>`
