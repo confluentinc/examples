@@ -1,7 +1,7 @@
 .. _client-examples-kafka-commands:
 
-|ak| CLI : Command Example for |ak-tm|
-======================================
+|ak-tm| CLI : Command Example
+=============================
 
 In this tutorial, you will run |ak-tm| commands that produce messages to and
 consumes messages from an |ak-tm| cluster.
