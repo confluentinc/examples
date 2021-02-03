@@ -1,7 +1,7 @@
 .. _client-examples-ksql-datagen:
 
-KSQL Datagen
-============
+KSQL Datagen: Example for |ak-tm|
+=================================
 
 In this tutorial, you will run a KSQL Datagen client application using the `KSQL
 Datagen command-line tool

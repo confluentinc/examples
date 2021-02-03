@@ -1,13 +1,13 @@
 .. _clients-all-examples:
 
-Code Examples
-=============
+Code Examples for |ak-tm|
+=========================
 
 There are many programming languages that provide |ak| client libraries.
 The following "Hello, World!" examples are written in various languages to demonstrate how to produce to and consume from an |ak-tm| cluster, which can be in `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud>`__, on your local host, or any other |ak| cluster.
 For the subset of languages that support it, the code examples also demonstrate how to use Avro and |sr-long|.
 
-* :ref:`C <client-examples-c>`
+* :ref:`C (librdkafka) <client-examples-c>`
 * :ref:`Clojure <client-examples-clojure>`
 * :ref:`C-sharp/.Net <client-examples-csharp>`
 * :ref:`Go <client-examples-go>`
@@ -39,23 +39,23 @@ There are additional examples for |ak| and |cp| command line tools and component
       :maxdepth: 1
       :hidden:
 
-      kafka-commands
-      c
-      clojure
-      confluent-cli
-      ccloud
-      csharp
-      go
-      groovy
-      java
-      java-springboot
-      kafka-connect-datagen
-      kafkacat
-      kotlin
-      ksql-datagen
-      nodejs
-      python
-      rest-proxy
-      ruby
-      rust
-      scala
+      Apache Kafka commands <kafka-commands>
+      C (librdkafka) <c>
+      Clojure <clojure>
+      Confluent CLI <confluent-cli>
+      Confluent Cloud CLI <ccloud>
+      .NET <csharp>
+      Go <go>
+      Groovy <groovy>
+      Java <java>
+      Java Spring Boot <java-springboot>
+      Kafka Connect Datagen <kafka-connect-datagen>
+      kafkacat <kafkacat>
+      Kotlin <kotlin>
+      KSQL Datagen <ksql-datagen>
+      Node.js <nodejs>
+      Python <python>
+      REST Proxy <rest-proxy>
+      Ruby <ruby>
+      Rust <rust>
+      Scala <scala>
