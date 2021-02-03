@@ -29,9 +29,11 @@ scrape_configs:
     static_configs:
       - targets: ["node-exporter:9100"]
 
-  - job_name: 'producer'
+  - job_name: "producer"
     static_configs:
       - targets: ["host.docker.internal:1234"]
+        labels:
+          env: "dev"
 
   # No consumer for the moment in cp-demo
   #  - job_name: 'consumer'
