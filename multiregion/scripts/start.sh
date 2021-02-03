@@ -7,6 +7,8 @@ ${DIR}/stop.sh
 
 ${DIR}/build_docker_images.sh
 
+export RUN_JMX=${RUN_JMX:-true}
+
 echo "Bring up docker-compose"
 docker-compose up -d
 
@@ -49,7 +51,7 @@ ${DIR}/run-consumer.sh
 echo "Sleeping 5 seconds"
 sleep 5
 
-${DIR}/jmx_metrics.sh
+if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 echo -e "\n=========== Degrade west region ===========\n"
 
@@ -63,7 +65,7 @@ ${DIR}/describe-topics.sh
 echo "Sleeping 30 seconds"
 sleep 30
 
-${DIR}/jmx_metrics.sh
+if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 echo -e "\n=========== Fail west region ===========\n"
 
@@ -74,7 +76,7 @@ sleep 30
 
 ${DIR}/describe-topics.sh
 
-${DIR}/jmx_metrics.sh
+if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 echo -e "\nFail over the observers in the topic multi-region-async to the east region, trigger leader election"
 
@@ -90,7 +92,7 @@ ${DIR}/describe-topics.sh
 echo "Sleeping 5 seconds"
 sleep 5
 
-${DIR}/jmx_metrics.sh
+if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 ${DIR}/permanent-failover.sh
 
@@ -99,7 +101,7 @@ sleep 30
 
 ${DIR}/describe-topics.sh
 
-${DIR}/jmx_metrics.sh
+if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 echo -e "\n=========== Restore west region  ===========\n"
 docker-compose start broker-west-1 broker-west-2 zookeeper-west
@@ -109,4 +111,4 @@ sleep 300
 
 ${DIR}/describe-topics.sh
 
-${DIR}/jmx_metrics.sh
+if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
