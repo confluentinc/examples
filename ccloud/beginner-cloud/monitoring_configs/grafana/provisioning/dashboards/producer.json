@@ -129,7 +129,7 @@
       "pluginVersion": "7.3.7",
       "targets": [
         {
-          "expr": "rate(kafka_producer_producer_metrics_record_error_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+          "expr": "rate(kafka_producer_producer_metrics_record_error_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": " {{instance}}",
@@ -770,7 +770,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum without(gc)(rate(jvm_gc_collection_seconds_sum{job=\"producer\",env=\"$env\"}[$interval]))",
+              "expr": "sum without(gc)(rate(jvm_gc_collection_seconds_sum{job=\"producer\",env=\"$env\"}[$__rate_interval]))",
               "hide": false,
               "interval": "",
               "legendFormat": "{{instance}}",
@@ -883,7 +883,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(kafka_producer_producer_metrics_outgoing_byte_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+              "expr": "rate(kafka_producer_producer_metrics_outgoing_byte_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
               "interval": "",
               "legendFormat": "{{client_id}} - {{instance}}",
               "refId": "B"
@@ -980,7 +980,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(kafka_producer_producer_topic_metrics_byte_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])) by (topic)",
+              "expr": "sum(rate(kafka_producer_producer_topic_metrics_byte_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])) by (topic)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{topic}}",
@@ -1078,7 +1078,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "sum(rate(kafka_producer_producer_topic_metrics_record_send_total{job=\"producer\"}[$interval])) by (topic)",
+              "expr": "sum(rate(kafka_producer_producer_topic_metrics_record_send_total{job=\"producer\"}[$__rate_interval])) by (topic)",
               "hide": false,
               "interval": "",
               "legendFormat": "{{topic}}",
@@ -1176,7 +1176,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(kafka_producer_producer_metrics_record_send_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+              "expr": "rate(kafka_producer_producer_metrics_record_send_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "{{client_id}} - {{instance}}",
@@ -1595,7 +1595,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(kafka_producer_producer_metrics_request_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+              "expr": "rate(kafka_producer_producer_metrics_request_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "{{client_id}} - {{instance}}",
@@ -1790,7 +1790,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(kafka_producer_producer_metrics_response_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+              "expr": "rate(kafka_producer_producer_metrics_response_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
               "hide": false,
               "interval": "",
               "legendFormat": "{{client_id}} - {{instance}}",
@@ -1903,7 +1903,7 @@
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(kafka_producer_producer_metrics_connection_count{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+              "expr": "rate(kafka_producer_producer_metrics_connection_count{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
               "interval": "",
               "legendFormat": "",
               "refId": "A"
@@ -2683,7 +2683,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(kafka_producer_producer_metrics_failed_authentication_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+          "expr": "rate(kafka_producer_producer_metrics_failed_authentication_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "{{client_id}} - {{instance}}",
@@ -2781,7 +2781,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(kafka_producer_producer_metrics_failed_reauthentication_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$interval])",
+          "expr": "rate(kafka_producer_producer_metrics_failed_reauthentication_total{job=\"producer\",env=\"$env\",client_id=~\"$client_id\"}[$__rate_interval])",
           "hide": false,
           "interval": "",
           "legendFormat": "{{client_id}} - {{instance}}",
