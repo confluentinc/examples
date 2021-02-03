@@ -10,7 +10,7 @@ docker-compose exec broker-east-3 kafka-configs \
 echo -e "\n==> Running Confluent Rebalancer on multi-region-default\n"
 
 docker-compose exec broker-east-3 confluent-rebalancer execute \
-	--metrics-bootstrap-server broker-east-3:19093 \
+	--metrics-bootstrap-server broker-ccc:19098 \
 	--bootstrap-server broker-east-3:19093 \
 	--replica-placement-only \
 	--topics multi-region-default \
