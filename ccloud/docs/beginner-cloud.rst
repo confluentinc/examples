@@ -713,6 +713,7 @@ Run a Java consumer with a Wildcard ACL
 
 Monitor producers and consumers
 -------------------------------
+
 Using Confluent Cloud has the advantage of circumventing the trials and tribulations of monitoring
 a Kafka cluster but you still need to monitor your client applications. Your success in Confluent
 Cloud largely depends on how well your applications are performing. Monitoring your client
@@ -722,7 +723,7 @@ your Confluent Cloud cluster, what might be going wrong and how to resolve the p
 This module will cover how to setup a time-series database (Prometheus) populated with data from the
 Confluent Cloud Metrics API and client metrics from a locally running Java consumer and producer,
 along with how to setup a data visualization tool (Grafana). After the initial setup, a set of use
-cases
+cases.
 
 
 #. Create an api-key for the ``cloud`` resource with the command below. The
@@ -764,13 +765,10 @@ cases
 
       docker-compose up -d
 
-#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__. At first the Targets page will look like the image below.
+Producer Client Use Cases
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   |Prometheus Targets Unknown|
-
-   After a one to two minutes, the targets should be up. The Targets page will them resemble the following:
-
-   |Prometheus Targets Up|
+Producer Setup
 
 #. Run the following commands to create ACLs for the service account:
 
@@ -794,10 +792,25 @@ cases
       mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.3 2>&1
 
 
-#. Tear down monitoring. ``CNTRL+C`` the ``ProducerExample``.  Then run ``docker-compose down``.
+Teardown
+~~~~~~~~~
+
+#. Tear down monitoring containers by typing ``docker-compose down`` into the CLI.
 
 
-Clean up Confluent Cloud resources
+Troubleshoot Monitoring
+~~~~~~~~~~~~~~~~~~~~~~~
+
+#. Data isn't showing up.
+
+   Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__.
+
+   |Prometheus Targets Unknown|
+
+   This page will show you if Prometheus is scraping the targets you have created.
+
+
+lean up Confluent Cloud resources
 ----------------------------------
 
 #. Complete the following steps to delete the managed connector:

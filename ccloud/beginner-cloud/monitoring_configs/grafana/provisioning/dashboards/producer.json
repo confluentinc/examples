@@ -17,7 +17,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 2,
-  "iteration": 1612391369790,
+  "iteration": 1612393476283,
   "links": [],
   "panels": [
     {
@@ -3093,52 +3093,6 @@
         "tagsQuery": "",
         "type": "query",
         "useTags": false
-      },
-      {
-        "auto": false,
-        "auto_count": 30,
-        "auto_min": "10s",
-        "current": {
-          "selected": false,
-          "text": "10m",
-          "value": "10m"
-        },
-        "error": null,
-        "hide": 0,
-        "label": "rate interval",
-        "name": "interval",
-        "options": [
-          {
-            "selected": false,
-            "text": "1m",
-            "value": "1m"
-          },
-          {
-            "selected": false,
-            "text": "5m",
-            "value": "5m"
-          },
-          {
-            "selected": true,
-            "text": "10m",
-            "value": "10m"
-          },
-          {
-            "selected": false,
-            "text": "30mh",
-            "value": "30mh"
-          },
-          {
-            "selected": false,
-            "text": "1h",
-            "value": "1h"
-          }
-        ],
-        "query": "1m,5m,10m,30mh,1h",
-        "queryValue": "",
-        "refresh": 2,
-        "skipUrlSync": false,
-        "type": "interval"
       }
     ]
   },
@@ -3163,5 +3117,5 @@
   "timezone": "",
   "title": "Producer Client Metrics",
   "uid": "-C-IEldWk",
-  "version": 11
+  "version": 2
 }
