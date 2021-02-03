@@ -116,10 +116,10 @@ You can choose between two examples:
 
 .. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
 
-Kafka DevOps
-------------
+DevOps for Apache Kafka® with Kubernetes and GitOps
+---------------------------------------------------
 
-The :ref:`kafka-devops` project is a simulated production-environment running a streaming application targeting |ak-tm| on |ccloud|.  Applications and resources are managed by GitOps with a declarative infrastructure, Kubernetes, and the Operator Pattern.
+The :ref:`streaming-ops` project is a simulated production-environment running a streaming application targeting |ak-tm| on |ccloud|.  Applications and resources are managed by GitOps with a declarative infrastructure, Kubernetes, and the Operator Pattern.
 
 .. figure:: ../../images/github-flux-kubernetes-600x105.png
 
