@@ -722,118 +722,18 @@ your Confluent Cloud cluster, what might be going wrong and how to resolve the p
 
 This module will cover how to setup a time-series database (Prometheus) populated with data from the
 Confluent Cloud Metrics API and client metrics from a locally running Java consumer and producer,
-along with how to setup a data visualization tool (Grafana). After the initial setup, a set of use
-cases.
-
-
-#. Create an api-key for the ``cloud`` resource with the command below. The
-   `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
-   key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
-   `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
-   for metrics about your Confluent Cloud deployment and displays them in a Prometheus scrapable
-   webpage.
-
-   .. code-block:: bash
-
-      ccloud api-key create --resource cloud --description "ccloud-exporter" -o json
-
-   Verify your output resembles:
-
-   .. code-block:: text
-
-      {
-        "key": "LUFEIWBMYXD2AMN5",
-        "secret": "yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
-      }
-
-   The value of the API key, in this case ``LUFEIWBMYXD2AMN5``, and API secret, in this case
-   ``yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd``, may differ in your output.
-
-#. Create a ``.env`` file to mimic the following:
-
-   .. code-block:: text
-
-      CCLOUD_API_KEY=LUFEIWBMYXD2AMN5
-      CCLOUD_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
-      CCLOUD_CLUSTER=lkc-x6m01
-
-   This ``.env`` file will be used by the ``ccloud-exporter`` container.
-
-#. Start up Prometheus, Grafana, a ``ccloud-exporter``, and a ``node-exporter`` by running:
-
-   .. code-block:: bash
-
-      docker-compose up -d
-
-Producer Client Use Cases
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Producer Setup
-
-#. Run the following commands to create ACLs for the service account:
-
-   .. code-block:: bash
-
-      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
-      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
-
-#. Set the ``MAVEN_OPTS`` environment variable:
-
-   .. code-block:: bash
-
-      export MAVEN_OPTS="-javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml"
-
-   This environment variable specifies a ``javaagent`` that creates a webpage that formats jmx metrics in a Prometheus scrapable format.
-
-#. Run ``ProducerExample`` which will by manipulated by the ``jmx_prometheus_javaagent``:
-
-   .. code-block:: bash
-
-      mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.3 2>&1
-
-
-Teardown
-~~~~~~~~~
-
-#. Tear down monitoring containers by typing ``docker-compose down`` into the CLI.
-
-
-Troubleshoot Monitoring
-~~~~~~~~~~~~~~~~~~~~~~~
-
-#. Data isn't showing up.
-
-   Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__.
-
-   |Prometheus Targets Unknown|
-
-   This page will show you if Prometheus is scraping the targets you have created.
-
-
-Monitor producers and consumers
--------------------------------
-
-Using Confluent Cloud has the advantage of circumventing the trials and tribulations of monitoring
-a Kafka cluster but you still need to monitor your client applications. Your success in Confluent
-Cloud largely depends on how well your applications are performing. Monitoring your client
-applications will give you insights on how to fine tune your producers and consumers, when to scale
-your Confluent Cloud cluster, what might be going wrong and how to resolve the problem.
-
-This module will cover how to setup a time-series database (Prometheus) populated with data from the
-Confluent Cloud Metrics API and client metrics from a locally running Java consumer and producer,
-along with how to setup a data visualization tool (Grafana). After the initial setup, a set of use
-cases.
+along with how to setup a data visualization tool (Grafana). After the initial setup, we will cover
+a set of use cases.
 
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
-
-#. Create `localbuild:client` docker image:
+#. First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
+   Create the ``localbuild/client:latest`` docker image with the following command:
 
    .. code-block:: bash
 
-      docker build -t localbuild:client .
+      docker build -t localbuild/client:latest .
 
    This image caches Kafka client dependencies, so that they won't need to be pulled each time we start a client container.
 
@@ -846,10 +746,7 @@ First we will create a base client container and set all the necessary acls to a
       ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-4
       ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
 
-
-Next we will bring up our monitoring services and client applications.
-
-#. Prior to starting any docker containers, dreate an api-key for the ``cloud`` resource with the command below. The
+#. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
    key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
    `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
@@ -882,45 +779,130 @@ Next we will bring up our monitoring services and client applications.
 
    This ``.env`` file will be used by the ``ccloud-exporter`` container.
 
-#. Start up Prometheus, Grafana, a ``ccloud-exporter``, and a ``node-exporter`` by running:
+
+#. Next we will setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
+   Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
+   You will need to sub in information about your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``/tmp/client.config``).
+
+   .. literalinclude:: ../beginner-cloud/monitoring_configs/kafka-lag-exporter/application.conf
+
+
+#. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients by running:
 
    .. code-block:: bash
 
       docker-compose up -d
 
-Producer or Consumer Client Use Cases
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+General Client Use Cases
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Confluent Cloud offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. This demo assumes
 you are running on a "basic" or "standard" cluster; both have similar limitations. Limits are
 important to be cognizant of, otherwise you will find client requests getting throttled or denied.
 If you are bumping up against your limits, it might be time to consider upgrading your cluster to a different type.
 
-The dashboard and use cases below are powered by Metrics API data.
-
-|Confluent Cloud Dashboard|
-
+The dashboard and use cases in this section are powered by Metrics API data.
 It is unrealistic to instruct you to hit cloud limits in this demo, instead the following will walk
 you through where to look in this dashboard if you are experiencing a problem.
 
-Client unable to create a connection
-*************************************
-There are a few reasons this could happen. Looking solely from a Confluent Cloud limitation perspective, it
-is possible you have hit a limit on the number of requests you are allowed to send or total
-number of active connections.
+|Confluent Cloud Dashboard|
 
-#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
+Failing to create a new partition
+*********************************
+It's possible you won't be able to create a partition because you have reached a one of Confluent Clouds partition limits.
+Follow the instructions below to check if your cluster is getting close to its partition limits.
 
-#. Navigate to the `Confluent Cloud` dashboard.
+#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login
 
-#. Check the `Requests (rate)` and the `Active connections` panels.
+#. Navigate to the ``Confluent Cloud`` dashboard.
+
+#. Check the ``Partition Count`` panel. If this panel is yellow, you have used 80% of your allowed partitions; if it's red, you have used 90%.
 
    |Confluent Cloud Panel|
 
-   These panels will turn yellow when you have hit 80% utilization of a resource and red when you have hit 90% utilization of a resource.
+   A maximum number of partitions can exist on the cluster at one time, before replication.
+   All topics that are created by you as well as internal topics that are automatically created by
+   Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Control Center–count towards the cluster partition limit.
+
+#. Check the ``Partition count change (delta)`` panel. Confluent Cloud clusters have a limit on the
+   number of partitions that can be created and deleted in a 5 minute period. This single stat
+   provides the absolute difference between the number of partitions at the beginning and end of
+   the 5 minute period. This over simplifies the problem. An example being, at the start of a 5
+   minute window you have 18 partitions. During the 5 minute window you create a new topic with 6
+   partitions and delete a topic with 6 partitions. At the end of the five minute window you still
+   have 18 partitions but you actually created and deleted 12 partitions.
+
+   More conservative thresholds are put in place--this panel will turn yellow when at 50%
+   utilization and red at 60%.
 
 
 Producer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Connectivity Problem
+********************
+In this use case we will simulate a network failure, see how your producer reacts when it can't reach the broker.
+
+Introduce failure scenario
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. Add a rule blocking traffic in the ``producer`` container on port ``9092`` which is used to talk to the broker:
+
+   .. code-block:: bash
+
+      docker-compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
+
+Diagnose the problem
+^^^^^^^^^^^^^^^^^^^^
+
+#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login
+
+#. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
+   trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
+   Within two minutes, the top level panels like ``Record error rate`` and ``Free buffer space`` should turn red, a major indication something is wrong.
+   This means our producer is not producing data, which could happen for a few reasons.
+
+   |Producer Connectivity Loss|
+
+
+#. In order to say this is a truly a problem on the producer end, let's check the status of the Confluent Cloud cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
+
+#. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
+
+   |Confluent Cloud Panel|
+
+   For a connectivity problem in a client, look specifically at the ``Requests (rate)``. If this value
+   were yellow or red, the client connectivity problem could be due to hitting the Confluent Cloud
+   requests rate limit. If you exceed the maximum, requests may be refused. Producer and consumer
+   clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
+   values for the producer client produce-throttle-time-max and produce-throttle-time-avg metrics and
+   consumer client fetch-throttle-time-max and fetch-throttle-time-avg metrics.
+
+#. Let's check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
+
+   .. code-block:: bash
+
+      docker-compose logs producer
+
+   They should look something like what is below:
+
+   .. code-block:: text
+
+      producer           | [2021-02-11 18:16:12,231] WARN [Producer clientId=producer-1] Got error produce response with correlation id 15603 on topic-partition demo-topic-4-3, retrying (2147483646 attempts left). Error: NETWORK_EXCEPTION (org.apache.kafka.clients.producer.internals.Sender)
+      producer           | [2021-02-11 18:16:12,232] WARN [Producer clientId=producer-1] Received invalid metadata error in produce request on partition demo-topic-4-3 due to org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.. Going to request metadata update now (org.apache.kafka.clients.producer.internals.Sender)
+
+
+   Note that the logs validate provide a clear picture of what is going on--``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was entirely to be expected because the failure scenario we introduced blocked outgoing traffic to the broker's post. Looking at metrics alone won't always lead you directly to an answer but they are a quick way to see if things are working as expected.
+
+Resolve failure scenario
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+#. Remove the rule we created earlier that blocked traffic with the following command:
+
+   .. code-block:: bash
+
+      docker-compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
+
+#. It may take a few minutes for the producer to start sending requests again.
 
 
 Consumer Client Use Cases
@@ -944,6 +926,9 @@ Troubleshoot Monitoring
 
    This page will show you if Prometheus is scraping the targets you have created.
 
+#. Producer output rate doesn't come back up after adding in the ``iptables`` rule.
+
+   Restart the producer by running ``docker-compose restart producer``.
 
 Clean up Confluent Cloud resources
 ----------------------------------
@@ -1083,9 +1068,14 @@ Here are the variables and their default values:
    image:: images/confluent-cloud-dashboard.png
    :alt: Confluent Cloud Dashboard
 
+
 .. |Confluent Cloud Panel|
    image:: images/cloud-panel.png
    :alt: Confluent Cloud Panel
+
+.. |Producer Connectivity Loss|
+   image:: images/producer-connectivity-loss.png
+   :alt: Producer Connectivity Loss
 
 Additional Resources
 --------------------
