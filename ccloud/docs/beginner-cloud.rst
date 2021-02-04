@@ -810,7 +810,7 @@ Troubleshoot Monitoring
    This page will show you if Prometheus is scraping the targets you have created.
 
 
-lean up Confluent Cloud resources
+Clean up Confluent Cloud resources
 ----------------------------------
 
 #. Complete the following steps to delete the managed connector:
