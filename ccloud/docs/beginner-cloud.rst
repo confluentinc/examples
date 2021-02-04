@@ -769,6 +769,8 @@ Producer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Producer Setup
+**************
+
 
 #. Run the following commands to create ACLs for the service account:
 
@@ -790,7 +792,6 @@ Producer Setup
    .. code-block:: bash
 
       mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.3 2>&1
-
 
 Teardown
 ~~~~~~~~~
