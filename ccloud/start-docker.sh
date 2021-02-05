@@ -73,8 +73,8 @@ printf "\n"
 
 echo
 echo ====== Building custom Docker image with Connect version ${CONFLUENT_DOCKER_TAG}
-echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile ."
-docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile .
+echo "docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg  KAFKA_CONNECT_DATAGEN_VERSION=${KAFKA_CONNECT_DATAGEN_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile ."
+docker build --build-arg CP_VERSION=${CONFLUENT_DOCKER_TAG} --build-arg  KAFKA_CONNECT_DATAGEN_VERSION=${KAFKA_CONNECT_DATAGEN_VERSION} -t localbuild/connect-cloud:${CONFLUENT_DOCKER_TAG} -f Dockerfile .
 
 echo
 echo ====== Starting local services in Docker
