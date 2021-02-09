@@ -343,21 +343,6 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 ##################################################
 # Start up monitoring
 ##################################################
-
-echo -e "\n# Create ACLs for the service account"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
-echo
-
-JAVA_APP_PATH=../../clients/cloud/java
-echo -e "\n# Create fat jar"
-echo "mvn package -f $JAVA_APP_PATH -Dmain.class=ProducerExample -Dclass.path.prefix=io.confluent.examples.clients.cloud"
-mvn package -f $JAVA_APP_PATH -Dmain.class=ProducerExample -Dclass.path.prefix=io.confluent.examples.clients.cloud
-echo "\n# Start up application with prometheus jmx javaagent"
-java -javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml -jar ./$JAVA_APP_PATH/target/ProducerExample-jar-with-dependencies.jar /tmp/client.config demo-topic-1
-
 echo -e "\n# Create cloud api-key and add it to .env"
 echo "ccloud api-key create --resource cloud --description \"ccloud-exporter\" -o json"
 OUTPUT=$(ccloud api-key create --resource cloud --description "ccloud-exporter" -o json)
