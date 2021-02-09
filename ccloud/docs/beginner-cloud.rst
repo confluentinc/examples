@@ -725,6 +725,16 @@ Confluent Cloud Metrics API and client metrics from a locally running Java consu
 along with how to setup a data visualization tool (Grafana). After the initial setup, a set of use
 cases.
 
+Monitoring Container Setup
+**************************
+
+#. Create `localbuild:client` docker image:
+
+   .. code-block:: bash
+
+      docker build -t localbuild:client .
+
+   This image caches Kafka client dependencies, so that they won't need to be pulled each time we start a client container.
 
 #. Create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
@@ -771,7 +781,6 @@ Producer Client Use Cases
 Producer Setup
 **************
 
-
 #. Run the following commands to create ACLs for the service account:
 
    .. code-block:: bash
@@ -792,6 +801,34 @@ Producer Setup
    .. code-block:: bash
 
       mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.3 2>&1
+
+Consumer Client Use Cases
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Consumer Setup
+**************
+
+#. Run the following commands to create ACLs for the service account:
+
+   .. code-block:: bash
+
+      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-1
+      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
+
+#. Set the ``MAVEN_OPTS`` environment variable:
+
+   .. code-block:: bash
+
+      export MAVEN_OPTS="-javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml"
+
+   This environment variable specifies a ``javaagent`` that creates a webpage that formats jmx metrics in a Prometheus scrapable format.
+
+#. Run ``ProducerExample`` which will by manipulated by the ``jmx_prometheus_javaagent``:
+
+   .. code-block:: bash
+
+      mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.4 2>&1
+
 
 Teardown
 ~~~~~~~~~
