@@ -37,7 +37,7 @@ scrape_configs:
 
   - job_name: "consumer"
     static_configs:
-      - targets: ["consumer-1:1237", "consumer-2:1236"]
+      - targets: ["consumer-1:1234", "consumer-2:1234"]
         labels:
           env: 'dev'
 

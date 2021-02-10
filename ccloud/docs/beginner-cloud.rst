@@ -728,6 +728,9 @@ cases.
 Monitoring Container Setup
 **************************
 
+
+First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
+
 #. Create `localbuild:client` docker image:
 
    .. code-block:: bash
@@ -736,7 +739,19 @@ Monitoring Container Setup
 
    This image caches Kafka client dependencies, so that they won't need to be pulled each time we start a client container.
 
-#. Create an api-key for the ``cloud`` resource with the command below. The
+#. Run the following commands to create ACLs for the service account:
+
+   .. code-block:: bash
+
+      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-4
+      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-4
+      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-4
+      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
+
+
+Next we will bring up our monitoring services and client applications.
+
+#. Prior to starting any docker containers, dreate an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
    key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
    `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
@@ -775,59 +790,43 @@ Monitoring Container Setup
 
       docker-compose up -d
 
+Producer or Consumer Client Use Cases
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Confluent Cloud offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. This demo assumes
+you are running on a "basic" or "standard" cluster; both have similar limitations. Limits are
+important to be cognizant of, otherwise you will find client requests getting throttled or denied.
+If you are bumping up against your limits, it might be time to consider upgrading your cluster to a different type.
+
+The dashboard and use cases below are powered by Metrics API data.
+
+|Confluent Cloud Dashboard|
+
+It is unrealistic to instruct you to hit cloud limits in this demo, instead the following will walk
+you through where to look in this dashboard if you are experiencing a problem.
+
+Client unable to create a connection
+*************************************
+There are a few reasons this could happen. Looking solely from a Confluent Cloud limitation perspective, it
+is possible you have hit a limit on the number of requests you are allowed to send or total
+number of active connections.
+
+#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
+
+#. Navigate to the `Confluent Cloud` dashboard.
+
+#. Check the `Requests (rate)` and the `Active connections` panels.
+
+   |Confluent Cloud Panel|
+
+   These panels will turn yellow when you have hit 80% utilization of a resource and red when you have hit 90% utilization of a resource.
+
+
 Producer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Producer Setup
-**************
-
-#. Run the following commands to create ACLs for the service account:
-
-   .. code-block:: bash
-
-      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
-      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
-
-#. Set the ``MAVEN_OPTS`` environment variable:
-
-   .. code-block:: bash
-
-      export MAVEN_OPTS="-javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml"
-
-   This environment variable specifies a ``javaagent`` that creates a webpage that formats jmx metrics in a Prometheus scrapable format.
-
-#. Run ``ProducerExample`` which will by manipulated by the ``jmx_prometheus_javaagent``:
-
-   .. code-block:: bash
-
-      mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.3 2>&1
 
 Consumer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Consumer Setup
-**************
-
-#. Run the following commands to create ACLs for the service account:
-
-   .. code-block:: bash
-
-      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-1
-      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
-
-#. Set the ``MAVEN_OPTS`` environment variable:
-
-   .. code-block:: bash
-
-      export MAVEN_OPTS="-javaagent:./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:./monitoring_configs/jmx-exporter/kafka_client.yml"
-
-   This environment variable specifies a ``javaagent`` that creates a webpage that formats jmx metrics in a Prometheus scrapable format.
-
-#. Run ``ProducerExample`` which will by manipulated by the ``jmx_prometheus_javaagent``:
-
-   .. code-block:: bash
-
-      mvn -q -f ../../clients/cloud/java/pom.xml exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExample" -Dexec.args="/tmp/client.config demo-topic-1" -Dlog4j.configuration=file:log4j.properties > /tmp/log.4 2>&1
 
 
 Teardown
@@ -982,6 +981,14 @@ Here are the variables and their default values:
    image:: images/prometheus-targets-up.png
    :alt: Prometheus Targets Up
 
+.. |Confluent Cloud Dashboard|
+   image:: images/confluent-cloud-dashboard.png
+   :alt: Confluent Cloud Dashboard
+
+
+.. |Confluent Cloud Panel|
+   image:: images/cloud-panel.png
+   :alt: Confluent Cloud Panel
 
 Additional Resources
 --------------------
