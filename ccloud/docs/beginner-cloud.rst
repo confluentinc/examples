@@ -726,8 +726,7 @@ along with how to setup a data visualization tool (Grafana). After the initial s
 cases.
 
 Monitoring Container Setup
-**************************
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
 
