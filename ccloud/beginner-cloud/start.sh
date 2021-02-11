@@ -164,6 +164,12 @@ sleep 90
 echo -e "\n# Create demo-topic-4"
 ccloud kafka topic create demo-topic-4
 
+echo -s "\n# Set all acls to do use cases"
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic demo-topic-4
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic demo-topic-4
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic demo-topic-4
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ  --consumer-group demo-beginner-cloud-1
+
 echo -e "\n# Create cloud api-key and add it to .env"
 echo "ccloud api-key create --resource cloud --description \"ccloud-exporter\" -o json"
 OUTPUT=$(ccloud api-key create --resource cloud --description "ccloud-exporter" -o json)
@@ -172,8 +178,8 @@ echo "$OUTPUT" | jq .
 echo "CCLOUD_API_KEY=$(echo "$OUTPUT" | jq -r ".key")">>.env
 echo "CCLOUD_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")">>.env
 echo "CCLOUD_CLUSTER=$CLUSTER">>.env
-echo -e "\n#Sleep 60 seconds to ensure key is in working order"
-sleep 60
+echo "Build client container"
+docker build -t localbuild/client:latest .
 echo -e "\n#Starting up Prometheus, Grafana, and exporters"
 echo "docker-compose up -d"
 docker-compose up -d

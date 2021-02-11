@@ -722,15 +722,15 @@ your Confluent Cloud cluster, what might be going wrong and how to resolve the p
 
 This module will cover how to setup a time-series database (Prometheus) populated with data from the
 Confluent Cloud Metrics API and client metrics from a locally running Java consumer and producer,
-along with how to setup a data visualization tool (Grafana). After the initial setup, a set of use
-cases.
+along with how to setup a data visualization tool (Grafana). After the initial setup, we will cover
+a set of use cases.
 
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
 
-#. Create `localbuild:client` docker image:
+#. Create the ``localbuild/client:latest`` docker image with the following command:
 
    .. code-block:: bash
 
@@ -750,7 +750,7 @@ First we will create a base client container and set all the necessary acls to a
 
 Next we will bring up our monitoring services and client applications.
 
-#. Prior to starting any docker containers, dreate an api-key for the ``cloud`` resource with the command below. The
+#. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
    key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
    `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
@@ -783,7 +783,7 @@ Next we will bring up our monitoring services and client applications.
 
    This ``.env`` file will be used by the ``ccloud-exporter`` container.
 
-#. Start up Prometheus, Grafana, a ``ccloud-exporter``, and a ``node-exporter`` by running:
+#. Start up Prometheus, Grafana, a ``ccloud-exporter``, a ``node-exporter``, and a few Kafka clients by running:
 
    .. code-block:: bash
 
@@ -796,30 +796,30 @@ you are running on a "basic" or "standard" cluster; both have similar limitation
 important to be cognizant of, otherwise you will find client requests getting throttled or denied.
 If you are bumping up against your limits, it might be time to consider upgrading your cluster to a different type.
 
-The dashboard and use cases below are powered by Metrics API data.
-
-|Confluent Cloud Dashboard|
-
+The dashboard and use cases in this section are powered by Metrics API data.
 It is unrealistic to instruct you to hit cloud limits in this demo, instead the following will walk
 you through where to look in this dashboard if you are experiencing a problem.
 
+|Confluent Cloud Dashboard|
+
 Failing to create a new partition
 *********************************
-A maximum number of partitions can exist on the cluster at one time, before replication.
-All topics that are created by you as well as internal topics that are automatically created by
-Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Control Center–count towards the cluster partition limit.
+It's possible you won't be able to create a partition because you have reached a one of Confluent Clouds partition limits.
+Follow the instructions below to check if your cluster is getting close to its partition limits.
 
-#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
+#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login
 
-#. Navigate to the `Confluent Cloud` dashboard.
+#. Navigate to the ``Confluent Cloud`` dashboard.
 
-#. Check the `Partition Count` panel.
+#. Check the ``Partition Count`` panel. If this panel is yellow, you have used 80% of your allowed partitions; if it's red, you have used 90%.
 
    |Confluent Cloud Panel|
 
-   This panel will turn yellow when you have hit 80% utilization of partitions and red when you have hit 90% utilization of partitions.
+   A maximum number of partitions can exist on the cluster at one time, before replication.
+   All topics that are created by you as well as internal topics that are automatically created by
+   Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Control Center–count towards the cluster partition limit.
 
-#. Check the `Partition count change (delta)` panel. Confluent Cloud clusters have a limit on the
+#. Check the ``Partition count change (delta)`` panel. Confluent Cloud clusters have a limit on the
    number of partitions that can be created and deleted in a 5 minute period. This single stat
    provides the absolute difference between the number of partitions at the beginning and end of
    the 5 minute period. This over simplifies the problem. An example being, at the start of a 5
@@ -831,30 +831,12 @@ Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Cont
    utilization and red at 60%.
 
 
-Client unable to create a connection
-*************************************
-There are a few reasons this could happen. Looking solely from a Confluent Cloud limitation perspective, it
-is possible you have hit a limit on the number of requests you are allowed to send or total
-number of active connections.
-
-#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
-
-#. Navigate to the `Confluent Cloud` dashboard.
-
-#. Check the `Requests (rate)` and the `Active connections` panels.
-
-   |Confluent Cloud Panel|
-
-   These panels will turn yellow when you have hit 80% utilization of a resource and red when you have hit 90% utilization of a resource.
-
-#. To reduce your requests you can adjust producer and consumer batching configurations, and shutdown inactive clients.
-
-
 Producer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Connectivity Problem
 ********************
+In this use case we will simulate a network failure, see how
 
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -868,15 +850,17 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
+#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login
 
-#. Navigate to the `Producer Client Metrics` dashboard. The top metrics that have turned red (`Record error rate` and `Free buffer space`) indicate something is wrong.
-   Upon expanding the `Throughput` tab, you'll notice a downward trend in outgoing bytes. This means our producer is not producing data, this is likely due to a networking problem.
+#. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
+   trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
+   Within two minutes, the top level panels like `Record error rate` and `Free buffer space` should turn red, a major indication something is wrong.
+   This means our producer is not producing data, which could happen for a few reasons.
 
    |Producer Connectivity Loss|
 
 
-#. Next check that the Confluent Cloud cluster is accepting requests. Navigate to the `Confluent Cloud` dashboard.
+#. In order to say this is a truly a problem on the producer end, let's check the status of the Confluent Cloud cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
 
 #. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
 
@@ -889,7 +873,7 @@ Diagnose the problem
    values for the producer client produce-throttle-time-max and produce-throttle-time-avg metrics and
    consumer client fetch-throttle-time-max and fetch-throttle-time-avg metrics.
 
-#. Let's check the producer logs for an indication of what is going wrong. Use the following docker command to get the producer logs:
+#. Let's check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
    .. code-block:: bash
 
@@ -903,7 +887,7 @@ Diagnose the problem
       producer           | [2021-02-11 18:16:12,232] WARN [Producer clientId=producer-1] Received invalid metadata error in produce request on partition demo-topic-4-3 due to org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.. Going to request metadata update now (org.apache.kafka.clients.producer.internals.Sender)
 
 
-   Note that the logs validate our assumptions earlier that there was a network problem. The logs mentioned ``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was entirely to be expected because the failure scenario we introduced blocked outgoing traffic to the broker's post.
+   Note that the logs validate provide a clear picture of what is going on--``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was entirely to be expected because the failure scenario we introduced blocked outgoing traffic to the broker's post. Looking at metrics alone won't always lead you directly to an answer but they are a quick way to see if things are working as expected.
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -913,6 +897,9 @@ Resolve failure scenario
    .. code-block:: bash
 
       docker-compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
+
+#. It may take a few minutes for the producer to start sending requests again.
+
 
 Consumer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
