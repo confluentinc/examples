@@ -855,7 +855,10 @@ Producer Client Use Cases
 
 Connectivity Problem
 ********************
+
 Introduce failure scenario
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 #. Add a rule blocking traffic in the ``producer`` container on port ``9092`` which is used to talk to the broker:
 
    .. code-block:: bash
@@ -863,6 +866,8 @@ Introduce failure scenario
       docker-compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
 
 Diagnose the problem
+^^^^^^^^^^^^^^^^^^^^
+
 #. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
 
 #. Navigate to the `Producer Client Metrics` dashboard. The top metrics that have turned red (`Record error rate` and `Free buffer space`) indicate something is wrong.
@@ -892,11 +897,17 @@ Diagnose the problem
 
    They should look something like what is below:
 
-   .. include:: ../beginner-cloud/producer-network-error.log
+   .. code-block:: text
+
+      producer           | [2021-02-11 18:16:12,231] WARN [Producer clientId=producer-1] Got error produce response with correlation id 15603 on topic-partition demo-topic-4-3, retrying (2147483646 attempts left). Error: NETWORK_EXCEPTION (org.apache.kafka.clients.producer.internals.Sender)
+      producer           | [2021-02-11 18:16:12,232] WARN [Producer clientId=producer-1] Received invalid metadata error in produce request on partition demo-topic-4-3 due to org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.. Going to request metadata update now (org.apache.kafka.clients.producer.internals.Sender)
+
 
    Note that the logs validate our assumptions earlier that there was a network problem. The logs mentioned ``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was entirely to be expected because the failure scenario we introduced blocked outgoing traffic to the broker's post.
 
 Resolve failure scenario
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 #. Remove the rule we created earlier that blocked traffic with the following command:
 
    .. code-block:: bash
