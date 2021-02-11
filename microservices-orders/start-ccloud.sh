@@ -63,7 +63,7 @@ curl -s -S -XPOST -H Accept:application/json -H Content-Type:application/json ht
 
 printf "\n====== Validating and setting up ksqlDB App\n"
 
-MAX_WAIT_KSQLDB=$MAX_WAIT
+MAX_WAIT_KSQLDB=720
 printf "\n====== Waiting up to $MAX_WAIT_KSQLDB for ksqlDB to be ready\n"
 retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 
