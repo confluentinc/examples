@@ -158,6 +158,29 @@ cat $CONFIG_FILE
 echo -e "\n# Wait 90 seconds for the service account credentials to propagate"
 sleep 90
 
+##################################################
+# Start up monitoring
+##################################################
+echo -e "\n# Create demo-topic-4"
+ccloud kafka topic create demo-topic-4
+
+echo -e "\n# Create cloud api-key and add it to .env"
+echo "ccloud api-key create --resource cloud --description \"ccloud-exporter\" -o json"
+OUTPUT=$(ccloud api-key create --resource cloud --description "ccloud-exporter" -o json)
+rm .env 2>/dev/null
+echo "$OUTPUT" | jq .
+echo "CCLOUD_API_KEY=$(echo "$OUTPUT" | jq -r ".key")">>.env
+echo "CCLOUD_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")">>.env
+echo "CCLOUD_CLUSTER=$CLUSTER">>.env
+echo -e "\n#Sleep 60 seconds to ensure key is in working order"
+sleep 60
+echo -e "\n#Starting up Prometheus, Grafana, and exporters"
+echo "docker-compose up -d"
+docker-compose up -d
+echo -e "\n#Login to grafana at http://localhost:3000/ un:admin pw:password"
+echo -e "\n#Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
+
+exit
 
 ##################################################
 # Run a Java producer: before and after ACLs
@@ -339,27 +362,6 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 echo -e "\n# Delete ACLs"
 echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-
-##################################################
-# Start up monitoring
-##################################################
-echo -e "\n# Create cloud api-key and add it to .env"
-echo "ccloud api-key create --resource cloud --description \"ccloud-exporter\" -o json"
-OUTPUT=$(ccloud api-key create --resource cloud --description "ccloud-exporter" -o json)
-rm .env 2>/dev/null
-echo "$OUTPUT" | jq .
-echo "CCLOUD_API_KEY=$(echo "$OUTPUT" | jq -r ".key")">>.env
-echo "CCLOUD_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")">>.env
-echo "CCLOUD_CLUSTER=$CLUSTER">>.env
-echo -e "\n#Sleep 60 seconds to ensure key is in working order"
-sleep 60
-echo -e "\n#Starting up Prometheus, Grafana, and exporters"
-echo "docker-compose up -d"
-docker-compose up -d
-echo -e "\n#Login to grafana at http://localhost:3000/ un:admin pw:password"
-echo -e "\n#Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
-
-exit
 
 ##################################################
 # Cleanup

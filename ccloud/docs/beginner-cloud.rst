@@ -789,8 +789,8 @@ Next we will bring up our monitoring services and client applications.
 
       docker-compose up -d
 
-Producer or Consumer Client Use Cases
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+General Client Use Cases
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Confluent Cloud offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. This demo assumes
 you are running on a "basic" or "standard" cluster; both have similar limitations. Limits are
 important to be cognizant of, otherwise you will find client requests getting throttled or denied.
@@ -802,6 +802,34 @@ The dashboard and use cases below are powered by Metrics API data.
 
 It is unrealistic to instruct you to hit cloud limits in this demo, instead the following will walk
 you through where to look in this dashboard if you are experiencing a problem.
+
+Failing to create a new partition
+*********************************
+A maximum number of partitions can exist on the cluster at one time, before replication.
+All topics that are created by you as well as internal topics that are automatically created by
+Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Control Center–count towards the cluster partition limit.
+
+#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
+
+#. Navigate to the `Confluent Cloud` dashboard.
+
+#. Check the `Partition Count` panel.
+
+   |Confluent Cloud Panel|
+
+   This panel will turn yellow when you have hit 80% utilization of partitions and red when you have hit 90% utilization of partitions.
+
+#. Check the `Partition count change (delta)` panel. Confluent Cloud clusters have a limit on the
+   number of partitions that can be created and deleted in a 5 minute period. This single stat
+   provides the absolute difference between the number of partitions at the beginning and end of
+   the 5 minute period. This over simplifies the problem. An example being, at the start of a 5
+   minute window you have 18 partitions. During the 5 minute window you create a new topic with 6
+   partitions and delete a topic with 6 partitions. At the end of the five minute window you still
+   have 18 partitions but you actually created and deleted 12 partitions.
+
+   A more conservative thresholds are put in place--this panel will turn yellow when at 50%
+   utilization and red at 60%.
+
 
 Client unable to create a connection
 *************************************
@@ -819,10 +847,20 @@ number of active connections.
 
    These panels will turn yellow when you have hit 80% utilization of a resource and red when you have hit 90% utilization of a resource.
 
+#. To reduce your requests you can adjust producer and consumer batching configurations, and shutdown inactive clients.
+
 
 Producer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
+Failing to create a new partition
+*********************************
+Introduce failure scenario
+#. Add a firewall rule blocking access to the broker in the ``producer`` container:
+
+   .. code-block:: bash
+
+      docker-compose exec -it
 
 Consumer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~

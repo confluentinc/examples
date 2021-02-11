@@ -2,6 +2,9 @@ version: '2.3'
 volumes:
   database:
 
+x-network: &cap-add
+  cap_add:
+    - NET_ADMIN
 x-consumer: &consumer
   image: localbuild/client:latest
   restart: always
@@ -86,6 +89,7 @@ services:
     command: >
       bash -c "mvn clean compile -f /tmp/java/
       &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"/tmp/client.config demo-topic-4 99999\""
+    <<: *cap-add
 
   consumer-1:
     <<: *consumer
@@ -93,6 +97,7 @@ services:
     container_name: consumer-1
     ports:
       - 1237:1234
+    <<: *cap-add
 
   consumer-2:
     <<: *consumer
@@ -100,3 +105,4 @@ services:
     container_name: consumer-2
     ports:
       - 1236:1234
+    <<: *cap-add
