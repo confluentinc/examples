@@ -65,7 +65,7 @@ printf "\n====== Validating and setting up ksqlDB App\n"
 
 MAX_WAIT_KSQLDB=720
 printf "\n====== Waiting up to $MAX_WAIT_KSQLDB for ksqlDB to be ready\n"
-retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
+retry $MAX_WAIT_KSQLDB ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 
 printf "====== Creating ksqlDB ACLs\n"
 ccloud kafka acl create --allow --service-account $KSQLDB_SERVICE_ACCOUNT_ID --operation READ --topic 'orders'
