@@ -734,7 +734,7 @@ First we will create a base client container and set all the necessary acls to a
 
    .. code-block:: bash
 
-      docker build -t localbuild:client .
+      docker build -t localbuild/client:latest .
 
    This image caches Kafka client dependencies, so that they won't need to be pulled each time we start a client container.
 
@@ -853,14 +853,55 @@ number of active connections.
 Producer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Failing to create a new partition
-*********************************
+Connectivity Problem
+********************
 Introduce failure scenario
-#. Add a firewall rule blocking access to the broker in the ``producer`` container:
+#. Add a rule blocking traffic in the ``producer`` container on port ``9092`` which is used to talk to the broker:
 
    .. code-block:: bash
 
-      docker-compose exec -it
+      docker-compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
+
+Diagnose the problem
+#. Open `Grafana <localhost:3000>`__ and use the username `admin` and password `password` to login
+
+#. Navigate to the `Producer Client Metrics` dashboard. The top metrics that have turned red (`Record error rate` and `Free buffer space`) indicate something is wrong.
+   Upon expanding the `Throughput` tab, you'll notice a downward trend in outgoing bytes. This means our producer is not producing data, this is likely due to a networking problem.
+
+   |Producer Connectivity Loss|
+
+
+#. Next check that the Confluent Cloud cluster is accepting requests. Navigate to the `Confluent Cloud` dashboard.
+
+#. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
+
+   |Confluent Cloud Panel|
+
+   For a connectivity problem in a client, look specifically at the `Requests (rate)`. If this value
+   were yellow or red, the client connectivity problem could be due to hitting the Confluent Cloud
+   requests rate limit. If you exceed the maximum, requests may be refused. Producer and consumer
+   clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
+   values for the producer client produce-throttle-time-max and produce-throttle-time-avg metrics and
+   consumer client fetch-throttle-time-max and fetch-throttle-time-avg metrics.
+
+#. Let's check the producer logs for an indication of what is going wrong. Use the following docker command to get the producer logs:
+
+   .. code-block:: bash
+
+      docker-compose logs producer
+
+   They should look something like what is below:
+
+   .. include:: ../beginner-cloud/producer-network-error.log
+
+   Note that the logs validate our assumptions earlier that there was a network problem. The logs mentioned ``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was entirely to be expected because the failure scenario we introduced blocked outgoing traffic to the broker's post.
+
+Resolve failure scenario
+#. Remove the rule we created earlier that blocked traffic with the following command:
+
+   .. code-block:: bash
+
+      docker-compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
 
 Consumer Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -883,6 +924,9 @@ Troubleshoot Monitoring
 
    This page will show you if Prometheus is scraping the targets you have created.
 
+#. Producer output rate doesn't come back up after adding in the ``iptables`` rule.
+
+   Restart the producer by running ``docker-compose restart producer``.
 
 Clean up Confluent Cloud resources
 ----------------------------------
@@ -1026,6 +1070,10 @@ Here are the variables and their default values:
 .. |Confluent Cloud Panel|
    image:: images/cloud-panel.png
    :alt: Confluent Cloud Panel
+
+.. |Producer Connectivity Loss|
+   image:: images/producer-connectivity-loss.png
+   :alt: Producer Connectivity Loss
 
 Additional Resources
 --------------------
