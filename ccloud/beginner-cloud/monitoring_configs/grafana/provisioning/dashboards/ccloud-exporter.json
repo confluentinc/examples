@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1612973615262,
+  "iteration": 1613080468415,
   "links": [],
   "panels": [
     {
@@ -159,7 +159,7 @@
       "pluginVersion": "7.3.7",
       "targets": [
         {
-          "expr": "rate(ccloud_metric_received_bytes{topic=~\"$topic\", kafka_id=~\"$cluster\"}[$__rate_interval])",
+          "expr": "sum(rate(ccloud_metric_received_bytes{topic=~\"$topic\", kafka_id=~\"$cluster\"}[$__rate_interval]))",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -227,7 +227,7 @@
       "pluginVersion": "7.3.7",
       "targets": [
         {
-          "expr": "rate(ccloud_metric_sent_bytes{topic=~\"$topic\", kafka_id=~\"$cluster\"}[$__rate_interval])",
+          "expr": "sum(rate(ccloud_metric_sent_bytes{topic=~\"$topic\", kafka_id=~\"$cluster\"}[$__rate_interval]))",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -363,7 +363,7 @@
       "pluginVersion": "7.3.7",
       "targets": [
         {
-          "expr": "sum(ccloud_metric_retained_bytes{topic=~\"$topic\", kafka_id=~\"$cluster\"})",
+          "expr": "sum(ccloud_metric_retained_bytes{topic=~\"$topic\", kafka_id=~\"$cluster\"})/3",
           "interval": "",
           "legendFormat": "{{cluster}}",
           "refId": "A"
@@ -2176,7 +2176,6 @@
         "allValue": "",
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],
@@ -2227,5 +2226,5 @@
   "timezone": "",
   "title": "Confluent Cloud",
   "uid": "fhX5408Zk",
-  "version": 2
+  "version": 3
 }
