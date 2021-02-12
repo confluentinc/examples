@@ -145,6 +145,8 @@ def read_ccloud_config(config_file):
                 parameter, value = line.strip().split('=', 1)
                 conf[parameter] = value.strip()
 
+    #conf['ssl.ca.location'] = certifi.where()
+
     return conf
 
 
@@ -166,8 +168,6 @@ def create_topic(conf, topic):
     """
 
     admin_client_conf = pop_schema_registry_params_from_config(conf.copy())
-    #admin_client_conf['ssl.ca.location'] = certifi.where()
-
     a = AdminClient(admin_client_conf)
 
     fs = a.create_topics([NewTopic(

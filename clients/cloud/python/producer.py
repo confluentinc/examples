@@ -25,7 +25,6 @@
 from confluent_kafka import Producer, KafkaError
 import json
 import ccloud_lib
-#import certifi
 
 
 if __name__ == '__main__':
@@ -38,8 +37,6 @@ if __name__ == '__main__':
 
     # Create Producer instance
     producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
-    #producer_conf['ssl.ca.location'] = certifi.where()
-
     producer = Producer(producer_conf)
 
     # Create topic if needed

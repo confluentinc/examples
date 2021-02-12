@@ -30,7 +30,6 @@ from confluent_kafka.serialization import StringDeserializer
 
 import json
 import ccloud_lib
-#import certifi
 
 
 if __name__ == '__main__':
@@ -60,7 +59,6 @@ if __name__ == '__main__':
     consumer_conf['value.deserializer'] = count_avro_deserializer
     consumer_conf['group.id'] = 'python_example_group_2'
     consumer_conf['auto.offset.reset'] = 'earliest'
-    #consumer_conf['ssl.ca.location'] = certifi.where()
 
     consumer = DeserializingConsumer(consumer_conf)
 
