@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     schema_registry_conf = {
         'url': conf['schema.registry.url'],
-        'basic.auth.user.info': conf['schema.registry.basic.auth.user.info']}
+        'basic.auth.user.info': conf['basic.auth.user.info']}
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
     name_avro_deserializer = AvroDeserializer(ccloud_lib.name_schema,
