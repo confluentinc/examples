@@ -117,7 +117,7 @@ rd_kafka_conf_t *read_config (const char *config_file) {
  * @returns 0 on success or -1 on error.
  */
 int create_topic (rd_kafka_t *rk, const char *topic,
-                  int num_partitions, int replication_factor) {
+                  int num_partitions) {
         rd_kafka_NewTopic_t *newt;
         char errstr[256];
         rd_kafka_queue_t *queue;
@@ -129,7 +129,7 @@ int create_topic (rd_kafka_t *rk, const char *topic,
 
         fprintf(stderr, "Creating topic %s\n", topic);
 
-        newt = rd_kafka_NewTopic_new(topic, num_partitions, replication_factor,
+        newt = rd_kafka_NewTopic_new(topic, num_partitions, -1,
                                      errstr, sizeof(errstr));
         if (!newt) {
                 fprintf(stderr, "Failed to create NewTopic object: %s\n",
