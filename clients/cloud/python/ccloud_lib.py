@@ -28,7 +28,6 @@ from uuid import uuid4
 
 #import certifi
 
-
 name_schema = """
     {
         "namespace": "io.confluent.examples.clients.cloud",
