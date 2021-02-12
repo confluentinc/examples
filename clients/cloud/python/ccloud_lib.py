@@ -26,6 +26,8 @@ from confluent_kafka import avro, KafkaError
 from confluent_kafka.admin import AdminClient, NewTopic
 from uuid import uuid4
 
+#import certifi
+
 
 name_schema = """
     {
@@ -146,6 +148,16 @@ def read_ccloud_config(config_file):
     return conf
 
 
+def pop_schema_registry_params_from_config(conf):
+    """Remove potential Schema Registry related configurations from dictionary"""
+
+    conf.pop('schema.registry.url', None)
+    conf.pop('basic.auth.user.info', None)
+    conf.pop('basic.auth.credentials.source', None)
+
+    return conf
+
+
 def create_topic(conf, topic):
     """
         Create a topic if needed
@@ -153,13 +165,11 @@ def create_topic(conf, topic):
         https://github.com/confluentinc/confluent-kafka-python/blob/master/examples/adminapi.py
     """
 
-    a = AdminClient({
-           'bootstrap.servers': conf['bootstrap.servers'],
-           'sasl.mechanisms': 'PLAIN',
-           'security.protocol': 'SASL_SSL',
-           'sasl.username': conf['sasl.username'],
-           'sasl.password': conf['sasl.password']
-    })
+    admin_client_conf = pop_schema_registry_params_from_config(conf.copy())
+    #admin_client_conf['ssl.ca.location'] = certifi.where()
+
+    a = AdminClient(admin_client_conf)
+
     fs = a.create_topics([NewTopic(
          topic,
          num_partitions=1,

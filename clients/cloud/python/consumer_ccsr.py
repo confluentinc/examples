@@ -30,6 +30,7 @@ from confluent_kafka.serialization import StringDeserializer
 
 import json
 import ccloud_lib
+#import certifi
 
 
 if __name__ == '__main__':
@@ -54,16 +55,12 @@ if __name__ == '__main__':
 
     # for full list of configurations, see:
     #   https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#deserializingconsumer
-    consumer_conf = {
-        'bootstrap.servers': conf['bootstrap.servers'],
-        'sasl.mechanisms': conf['sasl.mechanisms'],
-        'security.protocol': conf['security.protocol'],
-        'sasl.username': conf['sasl.username'],
-        'sasl.password': conf['sasl.password'],
-        'key.deserializer': name_avro_deserializer,
-        'value.deserializer': count_avro_deserializer,
-        'group.id': 'python_example_group_2',
-        'auto.offset.reset': 'earliest' }
+    consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
+    consumer_conf['key.deserializer'] = name_avro_deserializer
+    consumer_conf['value.deserializer'] = count_avro_deserializer
+    consumer_conf['group.id'] = 'python_example_group_2'
+    consumer_conf['auto.offset.reset'] = 'earliest'
+    #consumer_conf['ssl.ca.location'] = certifi.where()
 
     consumer = DeserializingConsumer(consumer_conf)
 
