@@ -59,7 +59,6 @@ if __name__ == '__main__':
     consumer_conf['value.deserializer'] = count_avro_deserializer
     consumer_conf['group.id'] = 'python_example_group_2'
     consumer_conf['auto.offset.reset'] = 'earliest'
-
     consumer = DeserializingConsumer(consumer_conf)
 
     # Subscribe to topic

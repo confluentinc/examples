@@ -41,7 +41,6 @@ if __name__ == '__main__':
     consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
     consumer_conf['group.id'] = 'python_example_group_1'
     consumer_conf['auto.offset.reset'] = 'earliest'
-
     consumer = Consumer(consumer_conf)
 
     # Subscribe to topic

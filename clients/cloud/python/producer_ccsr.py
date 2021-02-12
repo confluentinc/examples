@@ -61,7 +61,6 @@ if __name__ == '__main__':
     producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
     producer_conf['key.serializer'] = name_avro_serializer
     producer_conf['value.serializer'] = count_avro_serializer
-
     producer = SerializingProducer(producer_conf)
 
     delivered_records = 0
