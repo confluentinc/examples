@@ -130,7 +130,7 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Environment Setup
 ~~~~~~~~~~~~~~~~~
 
-Make sure you have the following pre-requisites, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
+Make sure you have the following pre-requisites, depending on whether you are running with |ccloud| or locally in Docker:
 
 |ccloud|
 --------
@@ -148,19 +148,6 @@ Docker
 * Docker Compose version >= 1.25.0 with Docker Compose file format 3
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 
-Local
------
-
-* `Confluent Platform <https://www.confluent.io/download/>`__: download |cp| with commercial features to use topic management, |ksqldb| and |sr-long| integration, and streams monitoring capabilities
-* Java 1.8 to run the example application
-* Maven to compile the example application
-* (optional) `Elasticsearch 5.6.5 <https://www.elastic.co/downloads/past-releases/elasticsearch-5-6-5>`__ to export data from Kafka
-
-  * If you do not want to use Elasticsearch, comment out ``check_running_elasticsearch`` in the ``start.sh`` script
-
-* (optional) `Kibana 5.5.2 <https://www.elastic.co/downloads/past-releases/kibana-5-5-2>`__ to visualize data
-
-  * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
 ====================
 Cost to Run Tutorial
@@ -225,7 +212,7 @@ Running the fully working example end-to-end provides context for each of the la
 
 Ensure you've followed the appropriate prerequisites section above prior to starting.
 
-#. Start the end-to-end example in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
+#. Start the end-to-end example in one of two modes, depending on whether you are running with |ccloud| or locally in Docker:
 
    * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. Then run the full solution using the provided script.
 
@@ -241,12 +228,6 @@ Ensure you've followed the appropriate prerequisites section above prior to star
      .. sourcecode:: bash
 
         docker-compose up -d --build
-
-   * Local: run the full solution using the provided script (this also starts a local |cp| cluster using Confluent CLI):
-
-     .. sourcecode:: bash
-
-        ./start.sh
 
 #. After starting the example with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
 
@@ -264,12 +245,6 @@ Ensure you've followed the appropriate prerequisites section above prior to star
    .. sourcecode:: bash
 
       ./read-topics-docker.sh
-
-   * Local: sample topic data by running:
-
-   .. sourcecode:: bash
-
-      ./read-topics.sh
 
 #. Explore the data with Elasticsearch and Kibana
 
@@ -300,7 +275,7 @@ Ensure you've followed the appropriate prerequisites section above prior to star
          :alt: image
          :width: 600px
 
-   * If you are running with Docker or locally, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
+   * If you are running with Docker, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
 
      * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
      * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
@@ -324,12 +299,6 @@ Ensure you've followed the appropriate prerequisites section above prior to star
      .. sourcecode:: bash
 
         docker-compose down
-
-   * Local:
-
-     .. sourcecode:: bash
-
-        ./stop.sh
 
 
 Exercise 1: Persist events 
@@ -710,7 +679,6 @@ You can use these to build stateful aggregates on streaming data.
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
 
-If you are running on local install, then type `ksql` to get to the |ksqldb| CLI prompt.
 If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the |ksqldb| CLI prompt.
 
 Assume you already have a |ksqldb| stream of orders called `orders` and a |ksqldb| table of customers called `customers_table`.
