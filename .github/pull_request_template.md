@@ -25,7 +25,6 @@ _Describe the validation already done, or needs to be done, by the PR submitter.
 <!-- - [ ] microservices-orders -->
 <!-- - [ ] multi-datacenter -->
 <!-- - [ ] multiregion -->
-<!-- - [ ] music -->
 <!-- - [ ] replicator-schema-translation -->
 <!-- - [ ] replicator-security -->
 <!-- - [ ] security/rbac -->
@@ -52,7 +51,6 @@ _Describe the tasks/validation that the PR submitter is requesting to be done by
 <!-- - [ ] microservices-orders -->
 <!-- - [ ] multi-datacenter -->
 <!-- - [ ] multiregion -->
-<!-- - [ ] music -->
 <!-- - [ ] replicator-schema-translation -->
 <!-- - [ ] replicator-security -->
 <!-- - [ ] security/rbac -->
