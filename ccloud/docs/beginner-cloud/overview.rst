@@ -13,18 +13,18 @@ resources in |ccloud|, and it creates and deletes topics, service accounts,
 credentials, and ACLs. Following the workflow in this tutorial, you accomplish
 the following steps:
 
--  `Create a new Confluent Cloud environment`_
--  `Create a new Confluent Cloud cluster`_
--  `Create a new API key/secret pair for user`_
--  `Produce and consume records with Confluent Cloud CLI`_
--  `Create a new service account with an API key/secret pair`_
--  `Run a Java producer without ACLs`_
--  `Run a Java producer with ACLs`_
--  `Run a Java producer with a prefixed ACL`_
--  `Run a fully managed Confluent Cloud connector`_
--  `Run a Java consumer with a Wildcard ACL`_
--  `Monitor producers and consumers`_
--  `Clean up Confluent Cloud resources`_
+-  Create a new Confluent Cloud environment
+-  Create a new Confluent Cloud cluster
+-  Create a new API key/secret pair for user
+-  Produce and consume records with Confluent Cloud CLI
+-  Create a new service account with an API key/secret pair
+-  Run a Java producer without ACLs
+-  Run a Java producer with ACLs
+-  Run a Java producer with a prefixed ACL
+-  Run a fully managed Confluent Cloud connector
+-  Run a Java consumer with a Wildcard ACL
+-  `Monitor producers and consumers
+-  Clean up Confluent Cloud resources
 
 Prerequisites
 -------------
