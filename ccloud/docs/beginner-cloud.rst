@@ -780,9 +780,11 @@ Monitoring Container Setup
    This ``.env`` file will be used by the ``ccloud-exporter`` container.
 
 
-#. Next we will modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
+#. Next we will setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
+   Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
+   You will need to sub in information about your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``/tmp/client.config``).
 
-   .. include:: ../beginner-cloud/monitoring_configs/kafka-lag-exporter/application.conf
+   .. literalinclude:: ../beginner-cloud/monitoring_configs/kafka-lag-exporter/application.conf
 
 
 #. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients by running:
