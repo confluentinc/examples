@@ -78,7 +78,7 @@ Troubleshooting
    Restart the producer by running ``docker-compose restart producer``. This is advice specific to this tutorial.
 
 Additional Resources
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
