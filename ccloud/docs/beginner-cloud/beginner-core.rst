@@ -6,12 +6,12 @@ Cost to Run Tutorial
 Caution
 ~~~~~~~
 
-.. include:: includes/ccloud-examples-caution.rst
+.. include:: ../includes/ccloud-examples-caution.rst
 
 |ccloud| Promo Code
 ~~~~~~~~~~~~~~~~~~~
 
-.. include:: includes/ccloud-examples-promo-code.rst
+.. include:: ../includes/ccloud-examples-promo-code.rst
 
 Run Tutorial
 ------------
@@ -544,7 +544,7 @@ Run a fully managed Confluent Cloud connector
    with |ccloud| connection information. Substitute your API key and secret for the service account,
    in the ``kafka.api.key`` and ``kafka.api.secret`` fields. See below for an example:
 
-   .. literalinclude:: ../beginner-cloud/datagen_ccloud_pageviews.json
+   .. literalinclude:: ../../beginner-cloud/datagen_ccloud_pageviews.json
 
 #. Create a managed connector in Confluent Cloud with the configuration file you made in the
    previous step using the following commands:
