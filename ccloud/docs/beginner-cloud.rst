@@ -4,7 +4,8 @@ Confluent Cloud CLI
 ===================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
+   :titlesonly:
 
    Beginner Confluent Cloud overview <../../ccloud/docs/beginner-cloud/overview>
    Beginner CLI content <../../ccloud/docs/beginner-cloud/beginner-core>
