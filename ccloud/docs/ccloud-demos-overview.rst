@@ -1,6 +1,9 @@
+Confluent Cloud Examples Index
+==============================
+
 .. toctree::
     :maxdepth: 1
-    :hidden:
+    :titlesonly:
 
     Overview <index>
     ../../ccloud/docs/ccloud-stack
