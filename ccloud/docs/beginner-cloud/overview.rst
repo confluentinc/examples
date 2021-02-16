@@ -23,7 +23,7 @@ the following steps:
 -  Run a Java producer with a prefixed ACL
 -  Run a fully managed Confluent Cloud connector
 -  Run a Java consumer with a Wildcard ACL
--  `Monitor producers and consumers
+-  Monitor producers and consumers
 -  Clean up Confluent Cloud resources
 
 Prerequisites
