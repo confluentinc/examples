@@ -10,6 +10,6 @@
     ../../ccloud/docs/beginner-cloud/monitoring-overview
     ../../ccloud/docs/beginner-cloud/producer-use-cases
     ../../ccloud/docs/beginner-cloud/consumer-use-cases
-    ../../ccloud/docs/beginner-cloud/cloud-use-cases
+    ../../ccloud/docs/beginner-cloud/ccloud-use-cases
     ../../ccloud/docs/beginner-cloud/advanced-usage
     ../../ccloud/docs/beginner-cloud/teardown
