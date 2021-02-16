@@ -26,27 +26,6 @@ Here are the variables and their default values:
      - us-west-2
 
 
-.. |Prometheus Targets Unknown|
-image:: images/prometheus-targets-unknown.png
-   :alt: Prometheus Targets Unknown
-
-.. |Prometheus Targets Up|
-image:: images/prometheus-targets-up.png
-   :alt: Prometheus Targets Up
-
-.. |Confluent Cloud Dashboard|
-image:: images/confluent-cloud-dashboard.png
-   :alt: Confluent Cloud Dashboard
-
-
-.. |Confluent Cloud Panel|
-image:: images/cloud-panel.png
-   :alt: Confluent Cloud Panel
-
-.. |Producer Connectivity Loss|
-image:: images/producer-connectivity-loss.png
-   :alt: Producer Connectivity Loss
-
 Additional Resources
 --------------------
 

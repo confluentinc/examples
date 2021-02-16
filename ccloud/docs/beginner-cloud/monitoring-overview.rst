@@ -92,4 +92,15 @@ Troubleshooting
 
    |Prometheus Targets Unknown|
 
-   This page will show you if Prometheus is scraping the targets you have created.
+   This page will show you if Prometheus is scraping the targets you have created. It should look like below if everything is working.
+
+   |Prometheus Targets Up|
+
+
+.. |Prometheus Targets Unknown|
+   image:: images/prometheus-targets-unknown.png
+   :alt: Prometheus Targets Unknown
+
+.. |Prometheus Targets Up|
+   image:: images/prometheus-targets-up.png
+   :alt: Prometheus Targets Up

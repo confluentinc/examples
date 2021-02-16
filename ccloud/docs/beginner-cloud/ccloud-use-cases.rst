@@ -42,3 +42,11 @@ Follow the instructions below to check if your cluster is getting close to its p
    More conservative thresholds are put in place--this panel will turn yellow when at 50%
    utilization and red at 60%.
 
+
+.. |Confluent Cloud Dashboard|
+   image:: images/confluent-cloud-dashboard.png
+   :alt: Confluent Cloud Dashboard
+
+.. |Confluent Cloud Panel|
+   image:: images/cloud-panel.png
+   :alt: Confluent Cloud Panel
