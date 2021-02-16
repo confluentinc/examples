@@ -79,9 +79,9 @@ Troubleshooting
 
 
 .. |Confluent Cloud Panel|
-   image:: images/cloud-panel.png
+   image:: ../images/cloud-panel.png
    :alt: Confluent Cloud Panel
 
 .. |Producer Connectivity Loss|
-   image:: images/producer-connectivity-loss.png
+   image:: ../images/producer-connectivity-loss.png
    :alt: Producer Connectivity Loss

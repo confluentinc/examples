@@ -44,9 +44,9 @@ Follow the instructions below to check if your cluster is getting close to its p
 
 
 .. |Confluent Cloud Dashboard|
-   image:: images/confluent-cloud-dashboard.png
+   image:: ../images/confluent-cloud-dashboard.png
    :alt: Confluent Cloud Dashboard
 
 .. |Confluent Cloud Panel|
-   image:: images/cloud-panel.png
+   image:: ../images/cloud-panel.png
    :alt: Confluent Cloud Panel

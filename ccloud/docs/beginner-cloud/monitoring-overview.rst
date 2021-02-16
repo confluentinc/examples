@@ -98,9 +98,9 @@ Troubleshooting
 
 
 .. |Prometheus Targets Unknown|
-   image:: images/prometheus-targets-unknown.png
+   image:: ../images/prometheus-targets-unknown.png
    :alt: Prometheus Targets Unknown
 
 .. |Prometheus Targets Up|
-   image:: images/prometheus-targets-up.png
+   image:: ../images/prometheus-targets-up.png
    :alt: Prometheus Targets Up
