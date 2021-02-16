@@ -728,9 +728,8 @@ a set of use cases.
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
-
-#. Create the ``localbuild/client:latest`` docker image with the following command:
+#. First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
+   Create the ``localbuild/client:latest`` docker image with the following command:
 
    .. code-block:: bash
 
@@ -746,9 +745,6 @@ First we will create a base client container and set all the necessary acls to a
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-4
       ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-4
       ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
-
-
-Next we will bring up our monitoring services and client applications.
 
 #. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
@@ -783,7 +779,13 @@ Next we will bring up our monitoring services and client applications.
 
    This ``.env`` file will be used by the ``ccloud-exporter`` container.
 
-#. Start up Prometheus, Grafana, a ``ccloud-exporter``, a ``node-exporter``, and a few Kafka clients by running:
+
+#. Next we will modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
+
+   .. include:: ../beginner-cloud/monitoring_configs/kafka-lag-exporter/application.conf
+
+
+#. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients by running:
 
    .. code-block:: bash
 
@@ -827,7 +829,7 @@ Follow the instructions below to check if your cluster is getting close to its p
    partitions and delete a topic with 6 partitions. At the end of the five minute window you still
    have 18 partitions but you actually created and deleted 12 partitions.
 
-   A more conservative thresholds are put in place--this panel will turn yellow when at 50%
+   More conservative thresholds are put in place--this panel will turn yellow when at 50%
    utilization and red at 60%.
 
 
@@ -836,7 +838,7 @@ Producer Client Use Cases
 
 Connectivity Problem
 ********************
-In this use case we will simulate a network failure, see how
+In this use case we will simulate a network failure, see how your producer reacts when it can't reach the broker.
 
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -854,7 +856,7 @@ Diagnose the problem
 
 #. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
    trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
-   Within two minutes, the top level panels like `Record error rate` and `Free buffer space` should turn red, a major indication something is wrong.
+   Within two minutes, the top level panels like ``Record error rate`` and ``Free buffer space`` should turn red, a major indication something is wrong.
    This means our producer is not producing data, which could happen for a few reasons.
 
    |Producer Connectivity Loss|
@@ -866,7 +868,7 @@ Diagnose the problem
 
    |Confluent Cloud Panel|
 
-   For a connectivity problem in a client, look specifically at the `Requests (rate)`. If this value
+   For a connectivity problem in a client, look specifically at the ``Requests (rate)``. If this value
    were yellow or red, the client connectivity problem could be due to hitting the Confluent Cloud
    requests rate limit. If you exceed the maximum, requests may be refused. Producer and consumer
    clients may also be throttled to keep the cluster stable. This throttling would register as non-zero

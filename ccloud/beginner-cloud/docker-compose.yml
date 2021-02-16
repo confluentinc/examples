@@ -106,3 +106,11 @@ services:
     ports:
       - 1236:1234
     <<: *cap-add
+
+  kafka-lag-exporter:
+    image: lightbend/kafka-lag-exporter:0.5.5
+    container_name: kafka-lag-exporter
+    hostname: kafka-lag-exporter
+    restart: always
+    volumes:
+      - ./monitoring_configs/kafka-lag-exporter:/opt/docker/conf
