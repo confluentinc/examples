@@ -644,20 +644,6 @@ Run a Java consumer with a Wildcard ACL
 
    You should see two ``Deleted ACLs.`` messages.
 
-#. Stop Docker:
-
-   .. code-block:: bash
-
-        docker-compose down
-
-#. Verify you see the following output:
-
-   .. code-block:: text
-
-      Stopping connect-cloud ... done
-      Removing connect-cloud ... done
-      Removing network beginner-cloud_default
-
 #. Delete the ACLs:
 
    .. code-block:: bash

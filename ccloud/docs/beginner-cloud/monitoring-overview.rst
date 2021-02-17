@@ -36,7 +36,7 @@ Monitoring Container Setup
       ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-4
       ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-4
       ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-4
-      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
+      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-beginner-cloud-1
 
 #. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
@@ -85,6 +85,15 @@ Monitoring Container Setup
 
       docker-compose up -d
 
+#. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
+
+   .. code-block:: bash
+
+      docker-compose up -d
+
+#. It will take up to 3 minutes for data to become visible in Grafana.
+
+   Now you are ready to proceed to Producer, Consumer, or General use cases to see what different failure scenarios look like.
 
 Troubleshooting
 ~~~~~~~~~~~~~~~
