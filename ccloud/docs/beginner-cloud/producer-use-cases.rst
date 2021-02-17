@@ -7,6 +7,6 @@ Producer Client Use Cases
    :maxdepth: 2
    :titlesonly:
 
-   Connectivity problem <../../ccloud/docs/beginner-cloud/producer-use-cases/connectivity-problem>
-   Additional resources <../../ccloud/docs/beginner-cloud/producer-use-cases/additional-resources>
+   Connectivity problem <../../../ccloud/docs/beginner-cloud/producer-use-cases/connectivity-problem>
+   Additional resources <../../../ccloud/docs/beginner-cloud/producer-use-cases/additional-resources>
 
