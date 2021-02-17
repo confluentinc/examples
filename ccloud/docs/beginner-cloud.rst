@@ -7,7 +7,7 @@ Confluent Cloud CLI
    :maxdepth: 2
    :titlesonly:
 
-   Beginner Confluent Cloud overview <../../ccloud/docs/beginner-cloud/overview>
+   Overview <../../ccloud/docs/beginner-cloud/overview>
    Beginner CLI content <../../ccloud/docs/beginner-cloud/beginner-core>
    Monitoring overview and setup <../../ccloud/docs/beginner-cloud/monitoring-overview>
    Producer use cases <../../ccloud/docs/beginner-cloud/producer-use-cases>

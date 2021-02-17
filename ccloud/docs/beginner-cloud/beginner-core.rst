@@ -4,7 +4,7 @@ Beginner CLI content
 --------------------
 
 Cost to Run Tutorial
-~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 Caution
 ~~~~~~~
@@ -17,7 +17,7 @@ Caution
 .. include:: ../includes/ccloud-examples-promo-code.rst
 
 Run Tutorial
-~~~~~~~
+~~~~~~~~~~~~
 
 #. Log in to the |ccloud| CLI:
 
