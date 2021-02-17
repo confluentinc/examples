@@ -6,13 +6,13 @@ Tutorial: |ccloud| CLI
 Overview
 --------
 
-This tutorial shows you how to use the `Confluent Cloud CLI
-<https://docs.confluent.io/ccloud-cli/current/install.html>`__ to interact with
+This tutorial shows you how to use the |ak| clients with
 your `Confluent Cloud <https://confluent.cloud/login>`__ cluster. It uses real
 resources in |ccloud|, and it creates and deletes topics, service accounts,
 credentials, and ACLs. Following the workflow in this tutorial, you accomplish
 the following steps:
 
+-  Create new Confluent 
 -  Create a new Confluent Cloud environment
 -  Create a new Confluent Cloud cluster
 -  Create a new API key/secret pair for user
@@ -40,4 +40,4 @@ Prerequisites
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
--  `docker <https://docs.docker.com/get-docker/>`__ installed on your host
+-  `Docker <https://docs.docker.com/get-docker/>`__ installed on your host
