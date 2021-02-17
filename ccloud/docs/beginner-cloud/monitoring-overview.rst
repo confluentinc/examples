@@ -6,27 +6,30 @@ Monitor producers and consumers
 Using Confluent Cloud has the advantage of circumventing the trials and tribulations of monitoring
 a Kafka cluster but you still need to monitor your client applications. Your success in Confluent
 Cloud largely depends on how well your applications are performing. Monitoring your client
-applications will give you insights on how to fine tune your producers and consumers, when to scale
+applications gives you insights on how to fine tune your producers and consumers, when to scale
 your Confluent Cloud cluster, what might be going wrong and how to resolve the problem.
 
-This module will cover how to setup a time-series database (Prometheus) populated with data from the
+This module will cover how to setup a time-series database populated with data from the
 Confluent Cloud Metrics API and client metrics from a locally running Java consumer and producer,
-along with how to setup a data visualization tool (Grafana). After the initial setup, we will cover
-a set of use cases.
+along with how to setup a data visualization tool. After the initial setup, you will
+follow a series of use cases that create failure scenarios and how you can be alerted when they occur.
+
+.. note::
+
+   This example uses Prometheus as the time-series database and Grafana for visualization, but the same principles can be applied to any other technologies.
 
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. First we will create a base client container and set all the necessary acls to allow our clients to read, write, and create streams.
-   Create the ``localbuild/client:latest`` docker image with the following command:
+#. Create the ``localbuild/client:latest`` docker image with the following command:
 
    .. code-block:: bash
 
       docker build -t localbuild/client:latest .
 
-   This image caches Kafka client dependencies, so that they won't need to be pulled each time we start a client container.
+   This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
 
-#. Run the following commands to create ACLs for the service account:
+#. Configure the necessary ACLs to allow the clients to read, write, and create |ak| topics in |ccloud|. In this case, the service account ID is `104349`, but substitute your service account ID.
 
    .. code-block:: bash
 
@@ -36,7 +39,7 @@ Monitoring Container Setup
       ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-consumer-1
 
 #. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
-   `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ will use the
+   `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
    key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
    `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
    for metrics about your Confluent Cloud deployment and displays them in a Prometheus scrapable
@@ -69,14 +72,14 @@ Monitoring Container Setup
    This ``.env`` file will be used by the ``ccloud-exporter`` container.
 
 
-#. Next we will setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
+#. Setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
    Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
-   You will need to sub in information about your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``/tmp/client.config``).
+   Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``/tmp/client.config``).
 
    .. literalinclude:: ../../beginner-cloud/monitoring_configs/kafka-lag-exporter/application.conf
 
 
-#. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients by running:
+#. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
 
    .. code-block:: bash
 

@@ -19,17 +19,19 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login
+#. Open `Grafana <localhost:3000>`__ and login with the username ``admin`` and password ``password``.
 
 #. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
    trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
-   Within two minutes, the top level panels like ``Record error rate`` and ``Free buffer space`` should turn red, a major indication something is wrong.
-   This means our producer is not producing data, which could happen for a few reasons.
+   Within two minutes, the top level panels like ``Record error rate`` (which track the |ak| JMX metric ``kafka_producer_producer_metrics_record_error_total``)
+   and ``Free buffer space`` (which track the |ak| JMX metric ``kafka_producer_producer_metrics_buffer_available_bytes``) 
+   should turn red, a major indication something is wrong.
+   This means the producer is not producing data, which could happen for a few reasons.
 
    |Producer Connectivity Loss|
 
 
-#. In order to say this is a truly a problem on the producer end, let's check the status of the Confluent Cloud cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
+#. In order to say this is a truly a problem on the producer end, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
 
 #. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
 
@@ -42,7 +44,7 @@ Diagnose the problem
    values for the producer client produce-throttle-time-max and produce-throttle-time-avg metrics and
    consumer client fetch-throttle-time-max and fetch-throttle-time-avg metrics.
 
-#. Let's check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
+#. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
    .. code-block:: bash
 
