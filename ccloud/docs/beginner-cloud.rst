@@ -12,6 +12,6 @@ Confluent Cloud CLI
    Monitoring overview and setup <../../ccloud/docs/beginner-cloud/monitoring-overview>
    Producer use cases <../../ccloud/docs/beginner-cloud/producer-use-cases>
    Consumer use cases <../../ccloud/docs/beginner-cloud/consumer-use-cases>
-   Confluent Cloud use cases <../../ccloud/docs/beginner-cloud/ccloud-use-cases>
+   General use cases <../../ccloud/docs/beginner-cloud/general-use-cases>
    Advanced usage <../../ccloud/docs/beginner-cloud/advanced-usage>
    Clean up Confluent Cloud resources <../../ccloud/docs/beginner-cloud/teardown>
