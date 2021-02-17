@@ -75,7 +75,7 @@ public class ProducerExample {
     return cfg;
   }
 
-  public static void main(final String[] args) throws IOException {
+  public static void main(final String[] args) throws Exception {
     if (args.length < 2) {
       System.out.println("Please provide command line arguments: configPath topic");
       System.exit(1);
@@ -102,8 +102,14 @@ public class ProducerExample {
     String key = "alice";
     PageviewRecord record = new PageviewRecord(10L, "blah", "test");
     // Produce sample data
-    while (true) {
-      producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), null);
+    try {
+      while (true) {
+        producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), null);
+        Thread.sleep(100);
+      }
+    } finally {
+      producer.flush();
+      producer.close();
     }
   }
 }
