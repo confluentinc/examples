@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-general-fail-to-create-partition:
+.. _ccloud-monitoring-general-fail-to-create-partition:
 
 Failing to create a new partition
 *********************************
@@ -6,7 +6,7 @@ Failing to create a new partition
 It's possible you won't be able to create a partition because you have reached a one of Confluent Clouds partition limits.
 Follow the instructions below to check if your cluster is getting close to its partition limits.
 
-#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login
+#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Navigate to the ``Confluent Cloud`` dashboard.
 
@@ -30,5 +30,5 @@ Follow the instructions below to check if your cluster is getting close to its p
    utilization and red at 60%.
 
 .. |Confluent Cloud Panel|
-   image:: ../../images/cloud-panel.png
+   image:: ../images/cloud-panel.png
    :alt: Confluent Cloud Panel

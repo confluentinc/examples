@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-consumer-additional-resources:
+.. _ccloud-monitoring-consumer-additional-resources:
 
 Additional Resources
 ********************

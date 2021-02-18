@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-advanced-usage:
+.. _ccloud-monitoring-advanced-usage:
 
 Advanced usage
 --------------

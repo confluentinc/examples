@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-general-overview:
+.. _ccloud-monitoring-general-overview:
 
 General Client Use Cases
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -15,6 +15,6 @@ you through where to look in this dashboard if you are experiencing a problem.
 
 
 .. |Confluent Cloud Dashboard|
-   image:: ../../images/confluent-cloud-dashboard.png
+   image:: ../images/confluent-cloud-dashboard.png
    :alt: Confluent Cloud Dashboard
 

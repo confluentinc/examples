@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-producer-additional-resources:
+.. _ccloud-monitoring-producer-additional-resources:
 
 Additional Resources
 ********************

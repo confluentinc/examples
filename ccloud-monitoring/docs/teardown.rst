@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-teardown:
+.. _ccloud-monitoring-teardown:
 
 Clean up Confluent Cloud resources
 ----------------------------------

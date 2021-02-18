@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-producer-connectivity-problem:
+.. _ccloud-monitoring-producer-connectivity-problem:
 
 Connectivity Problem
 ********************
@@ -20,10 +20,10 @@ Diagnose the problem
 
 #. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
    trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
-   Within two minutes, the top level panels like ``Record error rate`` (which track the |ak| JMX metric ``kafka_producer_producer_metrics_record_error_total``)
-   and ``Free buffer space`` (which track the |ak| JMX metric ``kafka_producer_producer_metrics_buffer_available_bytes``)
-   should turn red, a major indication something is wrong.
+   Within two minutes, the top level panels like ``Record error rate`` (derived from |ak| MBean ...) should turn red, a major indication something is wrong.
+   You should see the spark line in the ``Free buffer space`` (derived from |ak| MBean ...) panel go down and a bump in ``Retry reate`` (derived from |ak| MBean ...)
    This means the producer is not producing data, which could happen for a few reasons.
+
 
    |Producer Connectivity Loss|
 
@@ -78,9 +78,9 @@ Troubleshooting
 
 
 .. |Confluent Cloud Panel|
-   image:: ../../images/cloud-panel.png
+   image:: ../images/cloud-panel.png
    :alt: Confluent Cloud Panel
 
 .. |Producer Connectivity Loss|
-   image:: ../../images/producer-connectivity-loss.png
+   image:: ../images/producer-connectivity-loss.png
    :alt: Producer Connectivity Loss

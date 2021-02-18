@@ -1,4 +1,4 @@
-.. _ccloud-cli-tutorial-consumer-use-cases:
+.. _ccloud-monitoring-consumer-use-cases:
 
 Consumer Client Use Cases
 =========================
@@ -7,4 +7,4 @@ Consumer Client Use Cases
    :maxdepth: 2
    :titlesonly:
 
-   Additional resources <../../../ccloud/docs/beginner-cloud/consumer-use-cases/additional-resources>
+   Additional resources <consumer-use-cases/additional-resources>
