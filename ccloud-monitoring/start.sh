@@ -50,9 +50,6 @@ eval $CMD \
     && print_code_pass -c "source $DELTA_CONFIGS_ENV" \
     || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
-ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
-
-
 
 ##################################################
 # Start up monitoring
