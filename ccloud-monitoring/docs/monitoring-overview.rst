@@ -3,14 +3,14 @@
 Monitor Overview and Setup
 --------------------------
 
-Using Confluent Cloud has the advantage of circumventing the trials and tribulations of monitoring
+Using |ccloud| has the advantage of circumventing the trials and tribulations of monitoring
 a Kafka cluster but you still need to monitor your client applications. Your success in Confluent
 Cloud largely depends on how well your applications are performing. Monitoring your client
 applications gives you insights on how to fine tune your producers and consumers, when to scale
-your Confluent Cloud cluster, what might be going wrong and how to resolve the problem.
+your |ccloud| cluster, what might be going wrong and how to resolve the problem.
 
 This module will cover how to setup a time-series database populated with data from the
-Confluent Cloud Metrics API and client metrics from a locally running Java consumer and producer,
+|ccloud| Metrics API and client metrics from a locally running Java consumer and producer,
 along with how to setup a data visualization tool. After the initial setup, you will
 follow a series of use cases that create failure scenarios and how you can be alerted when they occur.
 
@@ -20,11 +20,11 @@ follow a series of use cases that create failure scenarios and how you can be al
 
 
 Prerequisites
--------------
+~~~~~~~~~~~~~
 
--  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
+-  Access to `|ccloud| <https://confluent.cloud/login>`__.
 
--  Local `install of Confluent Cloud CLI
+-  Local `install of |ccloud| CLI
    <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.21.0 or later)
 
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
@@ -36,19 +36,19 @@ Prerequisites
 -  `Docker <https://docs.docker.com/get-docker/>`__ installed on your host
 
 Cost to Run Tutorial
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 Caution
-~~~~~~~
+^^^^^^^
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
 
 |ccloud| Promo Code
-~~~~~~~~~~~~~~~~~~~
+^^^^^^^^^^^^^^^^^^^
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
-Confluent Cloud Cluster Setup
+|ccloud| Cluster Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Log in to the |ccloud| CLI:
@@ -75,11 +75,9 @@ Confluent Cloud Cluster Setup
        cd examples/ccloud-monitoring/
        git checkout |release_post_branch|
 
-#. If you want to manually step through the tutorial, which is advised for new
-   users who want to gain familiarity with |ccloud| CLI, go back to the last
-   section. Alternatively, you can run the full tutorial end-to-end with the
-   :devx-examples:`start.sh script|ccloud-monitoring/start.sh`, which
-   automates setting up the Confluent Cloud cluster and the following setup monitoring steps:
+#. If you already have a |ccloud| cluster, you may proceed to the `Monitoring Container Setup`_ section.
+   Alternatively, you can setup a |ccloud| cluster along with everything described in the `Monitoring Container Setup`_ section by running
+   :devx-examples:`start.sh script|ccloud-monitoring/start.sh`:
 
    .. code-block:: bash
 
@@ -101,6 +99,18 @@ Monitoring Container Setup
 
    This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
 
+#. Create a service account for the clients:
+
+   .. code-block:: bash
+
+      TODO finish steps
+
+#. Create a ``client.config``, filling in your api key and secret values:
+
+   .. code-block:: bash
+
+      TODO finish steps
+
 #. Configure the necessary ACLs to allow the clients to read, write, and create |ak| topics in |ccloud|. In this case, the service account ID is `104349`, but substitute your service account ID.
 
    .. code-block:: bash
@@ -114,7 +124,7 @@ Monitoring Container Setup
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
    key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
    `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
-   for metrics about your Confluent Cloud deployment and displays them in a Prometheus scrapable
+   for metrics about your |ccloud| deployment and displays them in a Prometheus scrapable
    webpage.
 
    .. code-block:: bash
@@ -133,7 +143,7 @@ Monitoring Container Setup
    The value of the API key, in this case ``LUFEIWBMYXD2AMN5``, and API secret, in this case
    ``yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd``, may differ in your output.
 
-#. Create the following environment variables, substituting in your Confluent Cloud API key, secret, and cluster id:
+#. Create the following environment variables, substituting in your |ccloud| API key, secret, and cluster id:
 
    .. code-block:: text
 
@@ -141,12 +151,12 @@ Monitoring Container Setup
       export CCLOUD_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
       export CCLOUD_CLUSTER=lkc-x6m01
 
-   This ``.env`` file will be used by the ``ccloud-exporter`` container.
+   These environment variables will be used by the ``ccloud-exporter`` container.
 
 
 #. Setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
    Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
-   Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``/tmp/client.config``).
+   Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``client.config`` created earlier).
 
    .. literalinclude:: ../monitoring_configs/kafka-lag-exporter/application.conf
 

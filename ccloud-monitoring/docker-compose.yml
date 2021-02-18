@@ -13,7 +13,7 @@ x-consumer: &consumer
     - grafana
     - producer
   volumes:
-    - /tmp/client.config:/tmp/client.config
+    - ./$CONFIG_FILE:/tmp/client.config
     - ./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar
     - ./monitoring_configs/jmx-exporter/kafka_client.yml:/usr/share/jmx-exporter/kafka_client.yml
     - ./:/tmp/java/
@@ -78,7 +78,7 @@ services:
     hostname: producer
     container_name: producer
     volumes:
-      - /tmp/client.config:/tmp/client.config
+      - ./$CONFIG_FILE:/tmp/client.config
       - ./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar
       - ./monitoring_configs/jmx-exporter/kafka_client.yml:/usr/share/jmx-exporter/kafka_client.yml
       - ./:/tmp/java/

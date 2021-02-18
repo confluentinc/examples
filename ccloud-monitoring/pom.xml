@@ -22,17 +22,6 @@
         Kafka Java clients examples for CCloud.
     </description>
 
-    <properties>
-        <java.version>8</java.version>
-        <slf4j-api.version>1.7.6</slf4j-api.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <avro.version>1.9.1</avro.version>
-        <gson.version>2.2.4</gson.version>
-        <schemaRegistryUrl>http://localhost:8081</schemaRegistryUrl>
-        <schemaRegistryBasicAuthUserInfo></schemaRegistryBasicAuthUserInfo>
-        <schemaLocal>src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc</schemaLocal>
-    </properties>
-
     <licenses>
         <license>
             <name>Apache License 2.0</name>
@@ -161,26 +150,6 @@
                         <param>../../license-mappings.xml</param>
                     </licenseMapping>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-maven-plugin</artifactId>
-                <version>${avro.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>schema</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/cloud/</sourceDirectory>
-                            <includes>
-                                <include>DataRecordAvro.avsc</include>
-                            </includes>
-                            <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>io.confluent</groupId>

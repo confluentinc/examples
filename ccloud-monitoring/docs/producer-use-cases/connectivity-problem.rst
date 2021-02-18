@@ -28,14 +28,14 @@ Diagnose the problem
    |Producer Connectivity Loss|
 
 
-#. In order to say this is a truly a problem on the producer end, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
+#. In order to say this is a truly a problem on the producer end, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``|ccloud|`` dashboard.
 
 #. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
 
    |Confluent Cloud Panel|
 
    For a connectivity problem in a client, look specifically at the ``Requests (rate)``. If this value
-   were yellow or red, the client connectivity problem could be due to hitting the Confluent Cloud
+   were yellow or red, the client connectivity problem could be due to hitting the |ccloud|
    requests rate limit. If you exceed the maximum, requests may be refused. Producer and consumer
    clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
    values for the producer client produce-throttle-time-max and produce-throttle-time-avg metrics and

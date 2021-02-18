@@ -11,6 +11,6 @@ Monitoring Clients
    Producer use cases <producer-use-cases>
    Consumer use cases <consumer-use-cases>
    General use cases <general-use-cases>
-   Advanced usage <advanced-usage>
-   Clean up Confluent Cloud resources <teardown>
+   Additional resources <additional-resources>
+   Clean up |ccloud| resources <teardown>
 

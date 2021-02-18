@@ -3,12 +3,12 @@
 Failing to create a new partition
 *********************************
 
-It's possible you won't be able to create a partition because you have reached a one of Confluent Clouds partition limits.
+It's possible you won't be able to create a partition because you have reached a one of |ccloud|'s partition limits.
 Follow the instructions below to check if your cluster is getting close to its partition limits.
 
 #. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
-#. Navigate to the ``Confluent Cloud`` dashboard.
+#. Navigate to the ``|ccloud|`` dashboard.
 
 #. Check the ``Partition Count`` panel. If this panel is yellow, you have used 80% of your allowed partitions; if it's red, you have used 90%.
 
@@ -18,7 +18,7 @@ Follow the instructions below to check if your cluster is getting close to its p
    All topics that are created by you as well as internal topics that are automatically created by
    Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Control Center–count towards the cluster partition limit.
 
-#. Check the ``Partition count change (delta)`` panel. Confluent Cloud clusters have a limit on the
+#. Check the ``Partition count change (delta)`` panel. |ccloud| clusters have a limit on the
    number of partitions that can be created and deleted in a 5 minute period. This single stat
    provides the absolute difference between the number of partitions at the beginning and end of
    the 5 minute period. This over simplifies the problem. An example being, at the start of a 5
