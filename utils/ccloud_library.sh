@@ -34,16 +34,17 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 function ccloud::prompt_continue_ccloud_demo() {
   echo
-  echo "---------------------------------------------------------------------------------------------"
-  echo "Any Confluent Cloud example uses real Confluent Cloud resources that may be billable."
-  echo "An example may create a new Confluent Cloud environment, Kafka cluster, topics, ACLs,"
-  echo "and service accounts, as well as resources that have hourly charges like connectors and"
-  echo "ksqlDB applications."
+  echo "-------------------------------------------------------------------------------------------"
+  echo "Any Confluent Cloud example uses real Confluent Cloud resources that may be billable,"
+  echo "including connectors and ksqlDB applications that may have hourly charges."
   echo
-  echo "To avoid unexpected charges, carefully evaluate the cost of resources before you start."
-  echo "After you are done running a Confluent Cloud example, destroy all Confluent Cloud resources"
-  echo "to avoid accruing hourly charges for services and verify that they have been deleted."
-  echo "---------------------------------------------------------------------------------------------"
+  echo "At the end of this script, it will show a command to destroy all Confluent Cloud resources."
+  echo "When you're done with the example, run the command and verify resources have been removed."
+  echo
+  echo "Use Confluent Cloud promo code C50INTEG to receive \$50 free usage, which should"
+  echo "sufficiently cover one day of running this example, beyond which you may be billed"
+  echo "for the Confluent Cloud resources until you destroy them."
+  echo "-------------------------------------------------------------------------------------------"
   echo
 
   read -p "Do you still want to run this script? [y/n] " -n 1 -r
