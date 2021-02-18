@@ -36,13 +36,8 @@ if __name__ == '__main__':
     conf = ccloud_lib.read_ccloud_config(config_file)
 
     # Create Producer instance
-    producer = Producer({
-        'bootstrap.servers': conf['bootstrap.servers'],
-        'sasl.mechanisms': conf['sasl.mechanisms'],
-        'security.protocol': conf['security.protocol'],
-        'sasl.username': conf['sasl.username'],
-        'sasl.password': conf['sasl.password'],
-    })
+    producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
+    producer = Producer(producer_conf)
 
     # Create topic if needed
     ccloud_lib.create_topic(conf, topic)
