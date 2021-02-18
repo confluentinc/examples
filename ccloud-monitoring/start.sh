@@ -52,23 +52,15 @@ eval $CMD \
 ##################################################
 # Start up monitoring
 ##################################################
-echo -e "\n====== Create demo-topic-1"
-ccloud kafka topic create demo-topic-1
-
-echo -s "\n====== Set all acls to do use cases"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic demo-topic-1
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic demo-topic-1
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic demo-topic-1
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ  --consumer-group demo-cloud-monitoring-1
-
-echo -e "\n====== Create cloud api-key and add it to .env"
-echo "ccloud api-key create --resource cloud --description \"ccloud-exporter\" -o json"
-OUTPUT=$(ccloud api-key create --resource cloud --description "ccloud-exporter" -o json)
+echo -e "\n====== Create cloud api-key and set environment variables for the ccloud-exporter"
+echo "ccloud api-key create --resource cloud --description \"confluent-cloud-metrics-api\" -o json"
+OUTPUT=$(ccloud api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json)
 rm .env 2>/dev/null
 echo "$OUTPUT" | jq .
-export CCLOUD_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
-export CCLOUD_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
-export CCLOUD_CLUSTER=$CLUSTER
+export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
+export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
+export CLOUD_CLUSTER=$CLUSTER
+
 
 echo "\n====== Build client container"
 docker build -t localbuild/client:latest .
@@ -78,3 +70,11 @@ echo "docker-compose up -d"
 docker-compose up -d
 echo -e "\n====== Login to grafana at http://localhost:3000/ un:admin pw:password"
 echo -e "\n====== Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
+
+echo
+echo "Confluent Cloud Environment:"
+echo
+echo "  export CONFIG_FILE=$CONFIG_FILE"
+echo "  export SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID"
+echo "  export METRICS_API_KEY=$METRICS_API_KEY"
+echo "  export METRICS_API_SECRET=$METRICS_API_SECRET"

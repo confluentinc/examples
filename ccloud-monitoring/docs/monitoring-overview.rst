@@ -96,6 +96,7 @@ Monitoring Container Setup
 
       source ../utils/helper.sh
       source ../utils/ccloud_library.sh
+      export EXAMPLE="ccloud-monitoring"
       ccloud::create_ccloud_stack false
 
    The output should resemble the content below:
@@ -146,8 +147,8 @@ Monitoring Container Setup
 
    .. code-block:: bash
 
-      export CCLOUD_API_KEY=LUFEIWBMYXD2AMN5
-      export CCLOUD_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
+      export METRICS_API_KEY=LUFEIWBMYXD2AMN5
+      export METRICS_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
 
    These environment variables will be used by the ``ccloud-exporter`` container.
 
@@ -156,7 +157,7 @@ Monitoring Container Setup
 
    .. code-block:: bash
 
-      export CCLOUD_CLUSTER=lkc-x6m01
+      export CLOUD_CLUSTER=lkc-x6m01
 
 #. Create the ``localbuild/client:latest`` docker image with the following command:
 

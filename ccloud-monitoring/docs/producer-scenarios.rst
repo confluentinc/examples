@@ -7,6 +7,6 @@ Producer Client Scenarios
    :maxdepth: 2
    :titlesonly:
 
+   Overview <producer-scenarios/overview>
    Connectivity problem <producer-scenarios/connectivity-problem>
-   Additional resources <producer-scenarios/additional-resources>
 

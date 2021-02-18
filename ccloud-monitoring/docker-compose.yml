@@ -44,9 +44,9 @@ services:
     hostname: ccloud-exporter
     restart: always
     environment:
-      - CCLOUD_API_KEY=$CCLOUD_API_KEY
-      - CCLOUD_API_SECRET=$CCLOUD_API_SECRET
-      - CCLOUD_CLUSTER=$CCLOUD_CLUSTER
+      - CCLOUD_API_KEY=$METRICS_API_KEY
+      - CCLOUD_API_SECRET=$METRICS_API_SECRET
+      - CCLOUD_CLUSTER=$CLOUD_CLUSTER
 
   prometheus:
     image: prom/prometheus:v2.24.1
