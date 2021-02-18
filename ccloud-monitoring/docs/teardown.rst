@@ -1,7 +1,7 @@
 .. _ccloud-monitoring-teardown:
 
 Clean up |ccloud| resources
-----------------------------------
+---------------------------
 
 #. Tear down monitoring containers by entering the following into the CLI:
 
@@ -9,15 +9,17 @@ Clean up |ccloud| resources
 
       docker-compose down
 
-#. Run the following to teardown the ccloud-stack:
+#. Delete the cloud api key created for the ``ccloud-exporter``:
+
+   .. code-block:: bash
+
+      ccloud api-key delete $CCLOUD_API_KEY
+
+#. Run the following to teardown the ccloud-stack, inserting your service account ID instead of ``184498``.
+   Your service account ID can be found in your client configuration file (ie ``stack-configs/java-service-account-184498.config``).
+
    .. code-block:: bash
 
       source ../utils/ccloud_library.sh
-      ccloud::ccloud_stack_destroy stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+      ccloud::destroy_ccloud_stack 184498
 
-In this case, run the following script to delete the example’s topics, |ak|
-cluster, and environment:
-
-.. code-block:: bash
-
-   ./cleanup.sh

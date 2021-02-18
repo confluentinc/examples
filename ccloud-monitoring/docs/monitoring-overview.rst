@@ -75,57 +75,48 @@ Caution
        cd examples/ccloud-monitoring/
        git checkout |release_post_branch|
 
-#. If you already have a |ccloud| cluster, you may proceed to the `Monitoring Container Setup`_ section.
+#. Proceed to `Monitoring Container Setup`_ section if you would like to walk through how to setup a |ccloud| cluster, secrets, and monitoring pieces.
    Alternatively, you can setup a |ccloud| cluster along with everything described in the `Monitoring Container Setup`_ section by running
    :devx-examples:`start.sh script|ccloud-monitoring/start.sh`:
 
    .. code-block:: bash
 
-         ./start.sh
+      ./start.sh
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
    Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
    Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
-|ccloud| Setup
-~~~~~~~~~~~~~~
-source ../utils/helper.sh
-source ../utils/ccloud_library.sh
-ccloud::create_ccloud_stack false
-
-
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-#. Create the ``localbuild/client:latest`` docker image with the following command:
-
-   .. code-block:: bash
-
-      docker build -t localbuild/client:latest .
-
-   This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
-
-#. Create a service account for the clients:
+#. Create a |ccloud| cluster by running the following commands, this will take a few minutes:
 
    .. code-block:: bash
 
-      TODO finish steps
+      source ../utils/helper.sh
+      source ../utils/ccloud_library.sh
+      ccloud::create_ccloud_stack false
 
-#. Create a ``client.config``, filling in your api key and secret values:
+   The output should resemble the content below:
 
-   .. code-block:: bash
+   .. code-block:: text
+      Creating Confluent Cloud stack for service account demo-app-16798, ID: 184498.
+      Set Kafka cluster "lkc-36pwo" as the active cluster for environment "env-oz8kp".
 
-      TODO finish steps
+      Waiting up to 720 seconds for Confluent Cloud cluster to be ready and for credentials to propagate
 
-#. Configure the necessary ACLs to allow the clients to read, write, and create |ak| topics in |ccloud|. In this case, the service account ID is `104349`, but substitute your service account ID.
+      Sleeping an additional 80 seconds to ensure propagation of all metadata
+      Set API Key "242FB4O5U67ORXTT" as the active API key for "lkc-36pwo".
 
-   .. code-block:: bash
+      Client configuration file saved to: stack-configs/java-service-account-184498.config
 
-      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
-      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
-      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-1
-      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-cloud-monitoring-1
+#. Map the client configuration file that was created above to the environment variable ``CONFIG_FILE``, see below.
+   Your client configuration file name may differ from what is shown here.
+
+   .. code-block:: text
+
+      export CONFILE_FILE=stack-configs/java-service-account-184498.config
 
 #. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
@@ -136,7 +127,7 @@ Monitoring Container Setup
 
    .. code-block:: bash
 
-      ccloud api-key create --resource cloud --description "ccloud-exporter" -o json
+      ccloud api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json
 
    Verify your output resembles:
 
@@ -150,22 +141,36 @@ Monitoring Container Setup
    The value of the API key, in this case ``LUFEIWBMYXD2AMN5``, and API secret, in this case
    ``yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd``, may differ in your output.
 
-#. Create the following environment variables, substituting in your |ccloud| API key, secret, and cluster id:
+#. Create the following environment variables, substituting in your |ccloud| API key and secret created in the step earlier.
 
-   .. code-block:: text
+   .. code-block:: bash
 
       export CCLOUD_API_KEY=LUFEIWBMYXD2AMN5
       export CCLOUD_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
-      export CCLOUD_CLUSTER=lkc-x6m01
 
    These environment variables will be used by the ``ccloud-exporter`` container.
 
+#. Create one more environment variable, ``CCLOUD_CLUSTER``, that will be used by the ``ccloud-exporter``.
+   You can find your |ccloud| cluster ID by either running ``ccloud kafka cluster list`` or looking in the client configuration file (``stack-configs/java-service-account-184498.config``) for ``# KAFKA CLUSTER ID: <cluster id>``.
+
+   .. code-block:: bash
+
+      export CCLOUD_CLUSTER=lkc-x6m01
 
 #. Setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
    Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
    Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``client.config`` created earlier).
 
    .. literalinclude:: ../monitoring_configs/kafka-lag-exporter/application.conf
+
+
+#. Create the ``localbuild/client:latest`` docker image with the following command:
+
+   .. code-block:: bash
+
+      docker build -t localbuild/client:latest .
+
+   This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
 
 #. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
 
@@ -177,15 +182,16 @@ Monitoring Container Setup
 
    .. code-block:: text
 
-      Creating network "beginner-cloud_default" with the default driver
+      Creating network "ccloud-monitoring_default" with the default driver
       Creating prometheus         ... done
-      Creating grafana            ... done
       Creating kafka-lag-exporter ... done
-      Creating ccloud-exporter    ... done
+      Creating grafana            ... done
       Creating node-exporter      ... done
+      Creating ccloud-exporter    ... done
       Creating producer           ... done
       Creating consumer-1         ... done
       Creating consumer-2         ... done
+
 
 #. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__.
 
