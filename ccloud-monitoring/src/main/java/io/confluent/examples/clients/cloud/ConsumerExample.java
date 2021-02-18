@@ -56,16 +56,16 @@ public class ConsumerExample {
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "demo-cloud-monitoring-1");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
+    // Create consumer
     final Consumer<String, PageviewRecord> consumer = new KafkaConsumer<String, PageviewRecord>(props);
     consumer.subscribe(Arrays.asList(topic));
 
+    // Poll for messages
     Long total_count = 0L;
-
     try {
       while (true) {
         ConsumerRecords<String, PageviewRecord> records = consumer.poll(100);
         for (ConsumerRecord<String, PageviewRecord> record : records) {
-          String key = record.key();
           total_count++;
           if (total_count % 1000 == 0) {
             System.out.printf("Consumer reached %d, sleep to simulate consumer skip heartbeat", total_count);

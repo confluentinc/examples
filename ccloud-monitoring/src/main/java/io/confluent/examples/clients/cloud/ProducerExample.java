@@ -57,13 +57,6 @@ public class ProducerExample {
       }
   }
 
-  static String readFile(String path, Charset encoding)
-      throws IOException
-  {
-    byte[] encoded = Files.readAllBytes(Paths.get(path));
-    return new String(encoded, encoding);
-  }
-
   public static Properties loadConfig(final String configFile) throws IOException {
     if (!Files.exists(Paths.get(configFile))) {
       throw new IOException(configFile + " not found.");
@@ -98,13 +91,16 @@ public class ProducerExample {
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
         "io.confluent.kafka.serializers.KafkaJsonSerializer");
 
+    // Create a dummy message
     Producer<String, PageviewRecord> producer = new KafkaProducer<String, PageviewRecord>(props);
-    String key = "alice";
-    PageviewRecord record = new PageviewRecord(10L, "blah", "test");
+    String key = "";
+    PageviewRecord record = new PageviewRecord(10L, "the content of this field doesn't matter", "nor does this one");
+
     // Produce sample data
     try {
       while (true) {
         producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), null);
+        // Add a small sleep so that buffer space is swamped
         Thread.sleep(100);
       }
     } finally {
