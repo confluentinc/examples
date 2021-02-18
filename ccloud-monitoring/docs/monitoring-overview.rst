@@ -88,6 +88,13 @@ Caution
    Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
+|ccloud| Setup
+~~~~~~~~~~~~~~
+source ../utils/helper.sh
+source ../utils/ccloud_library.sh
+ccloud::create_ccloud_stack false
+
+
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 

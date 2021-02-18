@@ -12,5 +12,5 @@ Monitoring Clients
    Consumer scenarios <consumer-scenarios>
    General scenarios <general-scenarios>
    Additional resources <additional-resources>
-   Clean up |ccloud| resources <teardown>
+   Clean up Confluent Cloud resources <teardown>
 

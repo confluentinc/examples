@@ -2,7 +2,10 @@
 
 Connectivity Problem
 ********************
-In this scenarios we will simulate a network failure, see how your producer reacts when it can't reach the broker.
+
+In the ``producer`` container, add a rule blocking network traffic that has a destination TCP port ``9092``. This will prevent the producer from reaching the broker in |ccloud|.
+
+This scenario will look at |ccloud| metrics from the Metrics API and client metrics from the client application's MBean object ``kafka.producer:type=producer-metrics,client-id=producer-1``.
 
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -20,8 +23,8 @@ Diagnose the problem
 
 #. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
    trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
-   Within two minutes, the top level panels like ``Record error rate`` (derived from |ak| MBean ...) should turn red, a major indication something is wrong.
-   You should see the spark line in the ``Free buffer space`` (derived from |ak| MBean ...) panel go down and a bump in ``Retry reate`` (derived from |ak| MBean ...)
+   Within two minutes, the top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
+   You should see the spark line in the ``Free buffer space`` (derived from |ak| MBean attribute ``buffer-available-bytes``) panel go down and a bump in ``Retry rate`` (derived from |ak| MBean attribute ``record-retry-rate``)
    This means the producer is not producing data, which could happen for a few reasons.
 
 
