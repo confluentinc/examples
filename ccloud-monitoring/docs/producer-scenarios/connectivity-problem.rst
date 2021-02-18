@@ -2,7 +2,7 @@
 
 Connectivity Problem
 ********************
-In this use case we will simulate a network failure, see how your producer reacts when it can't reach the broker.
+In this scenarios we will simulate a network failure, see how your producer reacts when it can't reach the broker.
 
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -28,7 +28,7 @@ Diagnose the problem
    |Producer Connectivity Loss|
 
 
-#. In order to say this is a truly a problem on the producer end, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``|ccloud|`` dashboard.
+#. In order to say this is a truly a problem on the producer end, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
 
 #. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
 

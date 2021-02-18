@@ -8,9 +8,9 @@ Monitoring Clients
    :titlesonly:
 
    Monitoring overview and setup <monitoring-overview>
-   Producer use cases <producer-use-cases>
-   Consumer use cases <consumer-use-cases>
-   General use cases <general-use-cases>
+   Producer scenarios <producer-scenarios>
+   Consumer scenarios <consumer-scenarios>
+   General scenarios <general-scenarios>
    Additional resources <additional-resources>
    Clean up |ccloud| resources <teardown>
 

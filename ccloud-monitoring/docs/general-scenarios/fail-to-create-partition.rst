@@ -8,7 +8,7 @@ Follow the instructions below to check if your cluster is getting close to its p
 
 #. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
-#. Navigate to the ``|ccloud|`` dashboard.
+#. Navigate to the ``Confluent Cloud`` dashboard.
 
 #. Check the ``Partition Count`` panel. If this panel is yellow, you have used 80% of your allowed partitions; if it's red, you have used 90%.
 

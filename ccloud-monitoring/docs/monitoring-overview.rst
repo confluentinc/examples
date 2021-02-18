@@ -12,7 +12,7 @@ your |ccloud| cluster, what might be going wrong and how to resolve the problem.
 This module will cover how to setup a time-series database populated with data from the
 |ccloud| Metrics API and client metrics from a locally running Java consumer and producer,
 along with how to setup a data visualization tool. After the initial setup, you will
-follow a series of use cases that create failure scenarios and how you can be alerted when they occur.
+follow a series of scenarios that create failure scenarios and how you can be alerted when they occur.
 
 .. note::
 
@@ -22,9 +22,9 @@ follow a series of use cases that create failure scenarios and how you can be al
 Prerequisites
 ~~~~~~~~~~~~~
 
--  Access to `|ccloud| <https://confluent.cloud/login>`__.
+-  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
--  Local `install of |ccloud| CLI
+-  Local `install of Confluent Cloud CLI
    <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.21.0 or later)
 
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
@@ -85,7 +85,7 @@ Caution
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
    Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
-   Now you are ready to proceed to Producer, Consumer, or General use cases to see what different failure scenarios look like.
+   Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
 Monitoring Container Setup
@@ -190,7 +190,7 @@ Monitoring Container Setup
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
    Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
-   Now you are ready to proceed to Producer, Consumer, or General use cases to see what different failure scenarios look like.
+   Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
 .. |Prometheus Targets Unknown|
