@@ -3,7 +3,7 @@
 Clean up |ccloud| resources
 ---------------------------
 
-#. Tear down monitoring containers by entering the following into the CLI:
+#. Tear down the Docker monitoring containers:
 
    .. code-block:: bash
 
@@ -22,4 +22,3 @@ Clean up |ccloud| resources
 
       source ../utils/ccloud_library.sh
       ccloud::destroy_ccloud_stack 184498
-
