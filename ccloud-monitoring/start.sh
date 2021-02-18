@@ -52,14 +52,14 @@ eval $CMD \
 ##################################################
 # Start up monitoring
 ##################################################
-echo -e "\n# Create demo-topic-4"
-ccloud kafka topic create demo-topic-4
+echo -e "\n# Create demo-topic-1"
+ccloud kafka topic create demo-topic-1
 
 echo -s "\n# Set all acls to do use cases"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic demo-topic-4
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic demo-topic-4
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic demo-topic-4
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ  --consumer-group demo-beginner-cloud-1
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic demo-topic-1
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic demo-topic-1
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic demo-topic-1
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ  --consumer-group demo-cloud-monitoring-1
 
 echo -e "\n# Create cloud api-key and add it to .env"
 echo "ccloud api-key create --resource cloud --description \"ccloud-exporter\" -o json"

@@ -51,8 +51,6 @@ Caution
 Confluent Cloud Cluster Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you did not follow steps in Beginner CLI content, follow the steps below to setup a Confluent Cloud cluster and api keys.
-
 #. Log in to the |ccloud| CLI:
 
    .. code-block:: bash
@@ -107,10 +105,10 @@ Monitoring Container Setup
 
    .. code-block:: bash
 
-      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-4
-      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-4
-      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-4
-      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-beginner-cloud-1
+      ccloud kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
+      ccloud kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
+      ccloud kafka acl create --allow --service-account 104349 --operation READ --topic demo-topic-1
+      ccloud kafka acl create --allow --service-account 104349 --operation READ  --consumer-group demo-cloud-monitoring-1
 
 #. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
@@ -150,7 +148,7 @@ Monitoring Container Setup
    Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
    Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``/tmp/client.config``).
 
-   .. literalinclude:: ../../beginner-cloud/monitoring_configs/kafka-lag-exporter/application.conf
+   .. literalinclude:: ../monitoring_configs/kafka-lag-exporter/application.conf
 
 #. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
 

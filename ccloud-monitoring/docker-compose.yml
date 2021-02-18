@@ -22,7 +22,7 @@ x-consumer: &consumer
   command: >
     bash -c "sleep 15 &&
     mvn compile -f /tmp/java/
-    &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"/tmp/client.config demo-topic-4\""
+    &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
 
 services:
   node-exporter:
@@ -88,7 +88,7 @@ services:
       MAVEN_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_client.yml
     command: >
       bash -c "mvn clean compile -f /tmp/java/
-      &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"/tmp/client.config demo-topic-4 99999\""
+      &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
     <<: *cap-add
 
   consumer-1:
