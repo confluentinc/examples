@@ -84,8 +84,10 @@ function ccloud::validate_ccloud_cli_v2() {
 function ccloud::validate_logged_in_ccloud_cli() {
   ccloud::validate_ccloud_cli_v2 || exit 1
 
-  if [[ "$(ccloud kafka cluster list 2>&1)" == "Error: You must log in to run that command." ]]; then
-    echo "ERROR: Log into Confluent Cloud with the command 'ccloud login --save' before running the example. The '--save' argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local netrc file."
+  if [[ "$(ccloud kafka cluster list 2>&1)" =~ "ccloud login" ]]; then
+    echo
+    echo "ERROR: Not logged into Confluent Cloud."
+    echo "Log in with the command 'ccloud login --save' before running the example. The '--save' argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local netrc file."
     exit 1
   fi
 
