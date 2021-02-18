@@ -58,15 +58,9 @@ if __name__ == '__main__':
 
     # for full list of configurations, see:
     #  https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#serializingproducer
-    producer_conf = {
-        'bootstrap.servers': conf['bootstrap.servers'],
-        'sasl.mechanisms': conf['sasl.mechanisms'],
-        'security.protocol': conf['security.protocol'],
-        'sasl.username': conf['sasl.username'],
-        'sasl.password': conf['sasl.password'],
-        'key.serializer': name_avro_serializer,
-        'value.serializer': count_avro_serializer}
-
+    producer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
+    producer_conf['key.serializer'] = name_avro_serializer
+    producer_conf['value.serializer'] = count_avro_serializer
     producer = SerializingProducer(producer_conf)
 
     delivered_records = 0
