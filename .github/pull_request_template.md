@@ -11,7 +11,6 @@ _Describe the validation already done, or needs to be done, by the PR submitter.
 
 <!-- Uncomment any of the following that are required -->
 <!-- - [ ] Documentation -->
-<!-- - [ ] ccloud -->
 <!-- - [ ] ccloud/beginner-cloud -->
 <!-- - [ ] ccloud/ccloud-stack -->
 <!-- - [ ] clickstream -->
@@ -37,7 +36,6 @@ _Describe the tasks/validation that the PR submitter is requesting to be done by
 
 <!-- Uncomment any of the following that are required -->
 <!-- - [ ] Documentation -->
-<!-- - [ ] ccloud -->
 <!-- - [ ] ccloud/beginner-cloud -->
 <!-- - [ ] ccloud/ccloud-stack -->
 <!-- - [ ] clickstream -->
