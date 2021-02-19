@@ -4,15 +4,15 @@ Monitor Overview and Setup
 --------------------------
 
 Using |ccloud| has the advantage of circumventing the trials and tribulations of monitoring
-a Kafka cluster but you still need to monitor your client applications. Your success in Confluent
+a Kafka cluster, but you still need to monitor your client applications. Your success in Confluent
 Cloud largely depends on how well your applications are performing. Monitoring your client
 applications gives you insights on how to fine tune your producers and consumers, when to scale
-your |ccloud| cluster, what might be going wrong and how to resolve the problem.
+your |ccloud| cluster, what might be going wrong, and how to resolve the problem.
 
-This module will cover how to setup a time-series database populated with data from the
+This module covers how to set up a time-series database populated with data from the
 |ccloud| Metrics API and client metrics from a locally running Java consumer and producer,
-along with how to setup a data visualization tool. After the initial setup, you will
-follow a series of scenarios that create failure scenarios and how you can be alerted when they occur.
+along with how to set up a data visualization tool. After the initial setup, you will
+follow a series of scenarios to create failure scenarios and to be alerted when the errors occur.
 
 .. note::
 
@@ -90,7 +90,7 @@ Caution
 
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-#. Create a |ccloud| cluster by running the following commands, this will take a few minutes:
+#. Create a |ccloud| cluster by running the following commands. This will take a few minutes:
 
    .. code-block:: bash
 
