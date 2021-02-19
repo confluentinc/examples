@@ -90,6 +90,21 @@ Caution
 
 Monitoring Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+The following instructions will:
+
+-  use ``ccloud-stack`` to create a |ccloud| cluster, a service account with proper acls, and a client configuration file
+
+-  create a ``cloud`` resource api-key for the ``ccloud-exporter``
+
+-  build a |ak| client docker image with the maven project's dependencies cache
+
+-  stand up numerous docker containers (2 consumers with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
+
+-  direct you to Prometheus to validate Prometheus is able to scrape data from the various exporters
+
+-  direct you to Grafana to validate data is being pulled from Prometheus
+
+
 #. Create a |ccloud| cluster by running the following commands. This will take a few minutes:
 
    .. code-block:: bash
@@ -186,7 +201,6 @@ Monitoring Container Setup
       Creating producer           ... done
       Creating consumer-1         ... done
       Creating consumer-2         ... done
-
 
 #. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__.
 

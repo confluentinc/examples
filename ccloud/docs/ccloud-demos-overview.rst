@@ -268,7 +268,7 @@ Additional Resources
     ../../ccloud/docs/ccloud-stack
     ../../ccloud/docs/beginner-cloud
     ../../clients/docs/clients-all-examples
-    Monitoring Apache Kafka Clients to Confluent Cloud <../../ccloud-monitoring/docs/index>
+    ../../ccloud-monitoring/docs/index
     On-Prem Kafka to Cloud <../../../cp-demo/docs/index>
     ../../cloud-etl/docs/index
     ../../microservices-orders/docs/index

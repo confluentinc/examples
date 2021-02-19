@@ -1,7 +1,7 @@
 .. _ccloud-monitoring-index:
 
-Monitoring Clients
-==================
+Monitoring |ak-tm| Clients to Confluent Cloud
+=============================================
 
 .. toctree::
    :maxdepth: 2
