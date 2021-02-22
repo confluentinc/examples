@@ -41,8 +41,8 @@ Diagnose the problem
    were yellow or red, the client connectivity problem could be due to hitting the |ccloud|
    requests rate limit. If you exceed the maximum, requests may be refused. Producer and consumer
    clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
-   values for the producer client produce-throttle-time-max and produce-throttle-time-avg metrics and
-   consumer client fetch-throttle-time-max and fetch-throttle-time-avg metrics.
+   values for the producer client ``produce-throttle-time-max`` and ``produce-throttle-time-avg`` metrics and
+   consumer client ``fetch-throttle-time-max`` and ``fetch-throttle-time-avg`` metrics.
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
@@ -58,7 +58,7 @@ Diagnose the problem
       producer           | [2021-02-11 18:16:12,232] WARN [Producer clientId=producer-1] Received invalid metadata error in produce request on partition demo-topic-1-3 due to org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.. Going to request metadata update now (org.apache.kafka.clients.producer.internals.Sender)
 
 
-   Note that the logs validate provide a clear picture of what is going on--``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was entirely to be expected because the failure scenario we introduced blocked outgoing traffic to the broker's post. Looking at metrics alone won't always lead you directly to an answer but they are a quick way to see if things are working as expected.
+   Note that the logs provide a clear picture of what is going on--``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was expected because the failure scenario we introduced blocked outgoing traffic to the broker's port. Looking at metrics alone won't always lead you directly to an answer but they are a quick way to see if things are working as expected.
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
