@@ -36,8 +36,8 @@ sleep 20
 
 echo "Posting Orders and Payments"
 java -cp $JAR io.confluent.examples.streams.microservices.PostOrdersAndPayments --bootstrap-servers $BOOTSTRAP_SERVERS --schema-registry $SCHEMA_REGISTRY_URL --order-service-url "http://localhost:$RESTPORT" $CONFIG_FILE_ARG >$LOG_DIR/PostOrdersAndPayments.log 2>&1 &
-sleep 30
 
+sleep 60
 echo "Starting EmailService"
 java -cp $JAR io.confluent.examples.streams.microservices.EmailService --bootstrap-servers $BOOTSTRAP_SERVERS --schema-registry $SCHEMA_REGISTRY_URL $CONFIG_FILE_ARG $ADDITIONAL_ARGS >$LOG_DIR/$SERVICE.log 2>&1 &
 PIDS+=($!)
