@@ -9,6 +9,7 @@ Confluent Cloud Examples Index
     ../../ccloud/docs/ccloud-stack
     ../../ccloud/docs/beginner-cloud
     ../../clients/docs/clients-all-examples
+    ../../ccloud-monitoring/docs/index
     On-Prem Kafka to Cloud <../../../cp-demo/docs/index>
     ../../cloud-etl/docs/index
     ../../microservices-orders/docs/index
