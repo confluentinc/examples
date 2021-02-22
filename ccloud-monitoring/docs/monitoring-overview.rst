@@ -132,7 +132,7 @@ The following instructions will:
 
    .. code-block:: text
 
-      export CONFILE_FILE=stack-configs/java-service-account-184498.config
+      export CONFIG_FILE=stack-configs/java-service-account-184498.config
 
 #. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
    `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
@@ -201,11 +201,11 @@ The following instructions will:
       Creating consumer-1         ... done
       Creating consumer-2         ... done
 
-#. Navigate to the Prometheus Targets page at `localhost:9090/targets <localhost:9090/targets>`__.
+#. Navigate to the `Prometheus Targets page <localhost:9090/targets>`__.
 
    |Prometheus Targets Unknown|
 
-   This page will show you if Prometheus is scraping the targets you have created. It should look like below after a 2 minutes if everything is working.
+   This page will show you if Prometheus is scraping the targets you have created. It should look like below after 2 minutes if everything is working. You may need to refresh the page.
 
    |Prometheus Targets Up|
 
