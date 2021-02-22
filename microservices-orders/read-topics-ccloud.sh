@@ -31,7 +31,7 @@ docker-compose -f docker-compose-ccloud.yml exec connect kafka-console-consumer 
   
 # Topic platinum: dynamic routing
 echo -e "\n-----platinum topic-----"
-docker-compose -f docker-compose-ccloud.yml exec connect kafka-avro-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CONFIG_FILE --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --from-beginning --timeout-ms 10000 --max-messages 5 --topic platinum
+docker-compose -f docker-compose-ccloud.yml exec connect kafka-avro-console-consumer --bootstrap-server $BOOTSTRAP_SERVERS --consumer.config $CONFIG_FILE --property basic.auth.credentials.source=USER_INFO --property schema.registry.basic.auth.user.info=$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO --property schema.registry.url=$SCHEMA_REGISTRY_URL --from-beginning --timeout-ms 30000 --max-messages 5 --topic platinum
  
 # Sample ksqlDB
 echo -e "\n-----Query ksqlDB-----"
