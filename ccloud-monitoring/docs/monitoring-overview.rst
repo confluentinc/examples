@@ -3,9 +3,9 @@
 Monitor Overview and Setup
 --------------------------
 
-Using |ccloud| has the advantage of circumventing the trials and tribulations of monitoring
-a Kafka cluster, but you still need to monitor your client applications. Your success in Confluent
-Cloud largely depends on how well your applications are performing. Monitoring your client
+Using |ccloud| has the advantage of circumventing the trials and tribulations one would face when monitoring
+an on-prem Kafka cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
+Your success in |ccloud| largely depends on how well your applications are performing. Monitoring your client
 applications gives you insights on how to fine tune your producers and consumers, when to scale
 your |ccloud| cluster, what might be going wrong, and how to resolve the problem.
 
