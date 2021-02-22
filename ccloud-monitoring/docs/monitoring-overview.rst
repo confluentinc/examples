@@ -109,7 +109,6 @@ The following instructions will:
 
    .. code-block:: bash
 
-      source ../utils/helper.sh
       source ../utils/ccloud_library.sh
       export EXAMPLE="ccloud-monitoring"
       ccloud::create_ccloud_stack false

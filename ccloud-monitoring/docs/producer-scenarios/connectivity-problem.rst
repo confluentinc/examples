@@ -21,12 +21,15 @@ Diagnose the problem
 
 #. Open `Grafana <localhost:3000>`__ and login with the username ``admin`` and password ``password``.
 
-#. Navigate to the ``Producer Client Metrics`` dashboard. Within a minute you should see a downward
-   trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
-   Within two minutes, the top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
-   You should see the spark line in the ``Free buffer space`` (derived from |ak| MBean attribute ``buffer-available-bytes``) panel go down and a bump in ``Retry rate`` (derived from |ak| MBean attribute ``record-retry-rate``)
-   This means the producer is not producing data, which could happen for a few reasons.
+#. Navigate to the ``Producer Client Metrics`` dashboard.
 
+   -  Within a minute you should see a downward trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
+
+   -  Within two minutes, the top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
+
+   -  Within two minutes, you should see the spark line in the ``Free buffer space`` (derived from |ak| MBean attribute ``buffer-available-bytes``) panel go down and a bump in ``Retry rate`` (derived from |ak| MBean attribute ``record-retry-rate``)
+
+   This means the producer is not producing data, which could happen for a few reasons.
 
    |Producer Connectivity Loss|
 
@@ -39,8 +42,9 @@ Diagnose the problem
 
    For a connectivity problem in a client, look specifically at the ``Requests (rate)``. If this value
    were yellow or red, the client connectivity problem could be due to hitting the |ccloud|
-   requests rate limit. If you exceed the maximum, requests may be refused. Producer and consumer
-   clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
+   requests rate limit. If you exceed the maximum, requests may be refused.
+
+   If request limits are hit, clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
    values for the producer client ``produce-throttle-time-max`` and ``produce-throttle-time-avg`` metrics and
    consumer client ``fetch-throttle-time-max`` and ``fetch-throttle-time-avg`` metrics.
 
