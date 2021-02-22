@@ -124,12 +124,13 @@ int create_topic (rd_kafka_t *rk, const char *topic,
         rd_kafka_event_t *rkev;
         const rd_kafka_CreateTopics_result_t *res;
         const rd_kafka_topic_result_t **restopics;
+        const int replication_factor_or_use_default = -1;
         size_t restopic_cnt;
         int ret = 0;
 
         fprintf(stderr, "Creating topic %s\n", topic);
 
-        newt = rd_kafka_NewTopic_new(topic, num_partitions, -1,
+        newt = rd_kafka_NewTopic_new(topic, num_partitions, replication_factor_or_use_default,
                                      errstr, sizeof(errstr));
         if (!newt) {
                 fprintf(stderr, "Failed to create NewTopic object: %s\n",
