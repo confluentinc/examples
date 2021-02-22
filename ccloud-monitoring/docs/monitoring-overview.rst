@@ -173,6 +173,12 @@ The following instructions will:
 
       export CLOUD_CLUSTER=lkc-x6m01
 
+#. Setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
+   Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
+   Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``client.config`` created earlier).
+
+   .. literalinclude:: ../monitoring_configs/kafka-lag-exporter/application.conf
+
 #. Create the ``localbuild/client:latest`` docker image with the following command:
 
    .. code-block:: bash
