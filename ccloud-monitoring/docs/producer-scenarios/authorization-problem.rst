@@ -25,7 +25,7 @@ Diagnose the problem
 
    -  The top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
 
-   -  Throughput, e.g. ``Outgoing byte rate``, shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the broker but the broker is writing them to the log because of lack of authorization.
+   -  Throughput, e.g. ``Outgoing byte rate``, shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the cluster but they are not being written to the log because of lack of authorization.
 
    |Producer Authorization Problem|
 
@@ -35,7 +35,9 @@ Diagnose the problem
 
    |Confluent Cloud Panel|
 
-#. Change the topics filter to show only ``demo-topic-1``.  Further down, notice that topic retained bytes has flattened, and topic sent bytes (records being sent to the consumer) has dropped to zero, because there are no new records to send to it.
+#. Change the topics filter to show only ``demo-topic-1``.  Notice that ``Topic retained bytes`` has flattened because the records sent by the producer are not getting written to the log, and ``Topic sent bytes`` (records being sent to the consumer) has dropped to zero, because there are no new records to send to it.
+
+   |Confluent Cloud Dashboard Producer Authorization Problem|
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
@@ -87,6 +89,10 @@ Resolve failure scenario
 .. |Confluent Cloud Panel|
    image:: ../images/cloud-panel.png
    :alt: Confluent Cloud Panel
+
+.. |Confluent Cloud Dashboard Producer Authorization Problem|
+   image:: ../images/confluent-cloud-dashboard-producer-authorization-problem.png
+   :alt: Confluent Cloud Dashboard
 
 .. |Producer Authorization Problem|
    image:: ../images/producer-authorization-problem.png
