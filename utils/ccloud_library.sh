@@ -28,6 +28,8 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
+CCLOUD_MIN_VERSION=${CCLOUD_MIN_VERSION:-1.22.1}
+
 # --------------------------------------------------------------
 # Library
 # --------------------------------------------------------------
@@ -103,7 +105,7 @@ function ccloud::validate_version_ccloud_cli() {
 
   ccloud::validate_ccloud_cli_installed || exit 1
 
-  REQUIRED_CCLOUD_VER=${1:-"1.7.0"}
+  REQUIRED_CCLOUD_VER=${1:-$CCLOUD_MIN_VERSION}
   CCLOUD_VER=$(ccloud::get_version_ccloud_cli)
 
   if ccloud::version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
@@ -418,7 +420,7 @@ function ccloud::create_credentials_resource() {
 #####################################################################
 # The return from this function will be a colon ':' delimited
 #   list, if the api-key is created the second element of the
-#   list will the secret.  If the api-key is being reused
+#   list will be the secret.  If the api-key is being reused
 #   the second element of the list will be empty
 #####################################################################
 function ccloud::maybe_create_credentials_resource() {
@@ -451,8 +453,12 @@ function ccloud::find_ksqldb_app() {
 function ccloud::create_ksqldb_app() {
   KSQLDB_NAME=$1
   CLUSTER=$2
+  # colon deliminated credentials (APIKEY:APISECRET)
+  local ksqlDB_kafka_creds=$3
+  local kafka_api_key=$(echo $ksqlDB_kafka_creds | cut -d':' -f1)
+  local kafka_api_secret=$(echo $ksqlDB_kafka_creds | cut -d':' -f2)
 
-  KSQLDB=$(ccloud ksql app create --cluster $CLUSTER -o json "$KSQLDB_NAME" | jq -r ".id")
+  KSQLDB=$(ccloud ksql app create --cluster $CLUSTER --api-key "$kafka_api_key" --api-secret "$kafka_api_secret" -o json "$KSQLDB_NAME" | jq -r ".id")
   echo $KSQLDB
 
   return 0
@@ -460,13 +466,15 @@ function ccloud::create_ksqldb_app() {
 function ccloud::maybe_create_ksqldb_app() {
   KSQLDB_NAME=$1
   CLUSTER=$2
+  # colon deliminated credentials (APIKEY:APISECRET)
+  local ksqlDB_kafka_creds=$3
   
   APP_ID=$(ccloud::find_ksqldb_app $KSQLDB_NAME $CLUSTER)
   if [ $? -eq 0 ]
   then
     echo $APP_ID
   else
-    ccloud::create_ksqldb_app "$KSQLDB_NAME" "$CLUSTER"
+    ccloud::create_ksqldb_app "$KSQLDB_NAME" "$CLUSTER" "$ksqlDB_kafka_creds"
   fi
 
   return 0
@@ -879,6 +887,9 @@ function ccloud::set_kafka_cluster_use() {
 # https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html
 #
 function ccloud::create_ccloud_stack() {
+	
+	ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
+
   QUIET="${QUIET:-true}"
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
@@ -897,12 +908,14 @@ function ccloud::create_ccloud_stack() {
     SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
   fi
 
+
   if [[ "$SERVICE_NAME" == "" ]]; then
     echo "ERROR: SERVICE_NAME is not defined. If you are providing the SERVICE_ACCOUNT_ID to this function please also provide the SERVICE_NAME"
     exit 1
   fi
 
   echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
+
 
   if [[ -z "$ENVIRONMENT" ]]; 
   then
@@ -924,6 +937,7 @@ function ccloud::create_ccloud_stack() {
     echo "ERROR: Could not create cluster. Please troubleshoot"
     exit 1
   fi
+
   BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
 
@@ -937,6 +951,8 @@ function ccloud::create_ccloud_stack() {
   echo "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata"
   sleep $WARMUP_TIME 
 
+  ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
+
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
   SCHEMA_REGISTRY_ENDPOINT=$(ccloud schema-registry cluster describe -o json | jq -r ".endpoint_url")
@@ -944,14 +960,11 @@ function ccloud::create_ccloud_stack() {
   
   if $enable_ksqldb ; then
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
-    KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER)
+    KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$CLUSTER_CREDS")
     KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQLDB -o json | jq -r ".endpoint")
-    KSQLDB_SERVICE_ACCOUNT_ID=$(ccloud service-account list -o json 2>/dev/null | jq -r "map(select(.name == \"KSQL.$KSQLDB\")) | .[0].id")
-    KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $KSQLDB_SERVICE_ACCOUNT_ID $KSQLDB)
-    ccloud ksql app configure-acls $KSQLDB
+    KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
+		ccloud ksql app configure-acls $KSQLDB
   fi
-
-  ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
   CLOUD_API_SECRET=`echo $CLUSTER_CREDS | awk -F: '{print $2}'`
@@ -1003,6 +1016,11 @@ EOF
 }
 
 function ccloud::destroy_ccloud_stack() {
+	if [ $# -eq 0 ];then
+	  echo "ccloud::destroy_ccloud_stack requires a single parameter, the service account id."
+		exit 1
+	fi
+
   SERVICE_ACCOUNT_ID=$1
 
   PRESERVE_ENVIRONMENT="${PRESERVE_ENVIRONMENT:-false}"
@@ -1020,12 +1038,6 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
-  # Delete API keys associated to the service account
-  ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
-
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
-  ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
-
   if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
     local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
     echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id"
@@ -1038,6 +1050,12 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
   ccloud kafka cluster delete $cluster_id &> "$REDIRECT_TO"
+
+  # Delete API keys associated to the service account
+  ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
+
+  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
+  ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
   if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then
     local environment_id=$(ccloud environment list -o json | jq -r 'map(select(.name | startswith("'"$ENVIRONMENT_NAME_PREFIX"'"))) | .[].id')
