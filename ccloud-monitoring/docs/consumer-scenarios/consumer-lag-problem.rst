@@ -8,6 +8,11 @@ In the ``consumer`` container ...
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+#. Stop ``consumer-1`` container, thus removing a consumer from the consumer group:
+
+   .. code-block:: bash
+
+      docker-compose stop consumer-1
 
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
@@ -20,7 +25,11 @@ Diagnose the problem
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+#. Start ``consumer-1`` container, thus adding a consumer back to the consumer group:
 
+   .. code-block:: bash
+
+      docker-compose start consumer-1
 
 Troubleshooting
 ^^^^^^^^^^^^^^^

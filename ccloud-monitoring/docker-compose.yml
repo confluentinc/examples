@@ -113,4 +113,8 @@ services:
     hostname: kafka-lag-exporter
     restart: always
     volumes:
-      - ./monitoring_configs/kafka-lag-exporter:/opt/docker/conf
+      - ./monitoring_configs/kafka-lag-exporter/:/opt/docker/conf/
+    environment:
+      - CLOUD_CLUSTER=$CLOUD_CLUSTER
+      - BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS
+      - SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG

@@ -173,11 +173,14 @@ The following instructions will:
 
       export CLOUD_CLUSTER=lkc-x6m01
 
-#. Setup the configuration file for the ``kafka-lag-exporter``. This Prometheus exporter collects information about consumer groups.
-   Modify the ``monitoring_configs/kafka-lag-exporter/application.conf`` file to point to your cluster.
-   Substitute your cluster's ``name``, ``bootstrap-brokers``, and ``sasl.jaas.config`` (can be found in ``client.config`` created earlier).
+#. Allow the service account created in the ``ccloud::create_ccloud_stack`` to describe the cluster and consumer-groups.
+   This is necessary for the ``kafka-lag-exporter``, which is a Prometheus exporter collects information about consumer groups.
 
-   .. literalinclude:: ../monitoring_configs/kafka-lag-exporter/application.conf
+   .. code-block:: bash
+
+      source delta_configs/env.delta
+      ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope
+      ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*'
 
 #. Create the ``localbuild/client:latest`` docker image with the following command:
 
@@ -186,6 +189,7 @@ The following instructions will:
       docker build -t localbuild/client:latest .
 
    This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
+
 
 #. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
 
