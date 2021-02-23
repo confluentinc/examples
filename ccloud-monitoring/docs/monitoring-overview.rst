@@ -173,14 +173,6 @@ The following instructions will:
 
       export CLOUD_CLUSTER=lkc-x6m01
 
-#. Create the ``localbuild/client:latest`` docker image with the following command:
-
-   .. code-block:: bash
-
-      docker build -t localbuild/client:latest .
-
-   This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
-
 #. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
 
    .. code-block:: bash

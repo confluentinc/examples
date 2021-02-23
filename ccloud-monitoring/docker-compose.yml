@@ -6,7 +6,7 @@ x-network: &cap-add
   cap_add:
     - NET_ADMIN
 x-consumer: &consumer
-  image: localbuild/client:latest
+  image: cnfldemos/ccloud-monitoring-client:0.1.0
   restart: always
   depends_on:
     - prometheus
@@ -70,7 +70,7 @@ services:
       - ./monitoring_configs/grafana/provisioning/:/etc/grafana/provisioning/
 
   producer:
-    image: localbuild/client:latest
+    image: cnfldemos/ccloud-monitoring-client:0.1.0
     restart: always
     depends_on:
       - prometheus
