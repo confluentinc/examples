@@ -529,18 +529,18 @@ function ccloud::delete_acls_ccloud_stack() {
 }
 
 function ccloud::validate_ccloud_config() {
-	[ -z "$1" ] && {
-  	echo "ccloud::validate_ccloud_config expects one parameter (configuration file with Confluent Cloud connection information)"
-  	exit 1
+  [ -z "$1" ] && {
+    echo "ccloud::validate_ccloud_config expects one parameter (configuration file with Confluent Cloud connection information)"
+    exit 1
   }
 
-	local cfg_file="$1"
-	local bootstrap=$(grep "bootstrap\.servers" "$cfg_file" | cut -d'=' -f2-)
-	[ -z "$bootstrap" ] && {
-		echo "ERROR: Cannot read the 'bootstrap.servers' key-value pair from $cfg_file."
-		exit 1;
-	}
-	return 0;
+  local cfg_file="$1"
+  local bootstrap=$(grep "bootstrap\.servers" "$cfg_file" | cut -d'=' -f2-)
+  [ -z "$bootstrap" ] && {
+    echo "ERROR: Cannot read the 'bootstrap.servers' key-value pair from $cfg_file."
+    exit 1;
+  }
+  return 0;
 }
 
 function ccloud::validate_ksqldb_up() {
@@ -887,8 +887,8 @@ function ccloud::set_kafka_cluster_use() {
 # https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html
 #
 function ccloud::create_ccloud_stack() {
-	
-	ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
+  
+  ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
 
   QUIET="${QUIET:-true}"
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
@@ -963,7 +963,7 @@ function ccloud::create_ccloud_stack() {
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$CLUSTER_CREDS")
     KSQLDB_ENDPOINT=$(ccloud ksql app describe $KSQLDB -o json | jq -r ".endpoint")
     KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
-		ccloud ksql app configure-acls $KSQLDB
+    ccloud ksql app configure-acls $KSQLDB
   fi
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
@@ -1016,10 +1016,10 @@ EOF
 }
 
 function ccloud::destroy_ccloud_stack() {
-	if [ $# -eq 0 ];then
-	  echo "ccloud::destroy_ccloud_stack requires a single parameter, the service account id."
-		exit 1
-	fi
+  if [ $# -eq 0 ];then
+    echo "ccloud::destroy_ccloud_stack requires a single parameter, the service account id."
+    exit 1
+  fi
 
   SERVICE_ACCOUNT_ID=$1
 
@@ -1648,11 +1648,11 @@ EOF
   
   cat <<EOF >> $GO_CONFIG
 import (
-	"github.com/confluentinc/confluent-kafka-go/kafka"
+  "github.com/confluentinc/confluent-kafka-go/kafka"
   
  
 producer, err := kafka.NewProducer(&kafka.ConfigMap{
-	         "bootstrap.servers": "$BOOTSTRAP_SERVERS",
+           "bootstrap.servers": "$BOOTSTRAP_SERVERS",
           "broker.version.fallback": "0.10.0.0",
           "api.version.fallback.ms": 0,
           "sasl.mechanisms": "PLAIN",
@@ -1665,15 +1665,15 @@ producer, err := kafka.NewProducer(&kafka.ConfigMap{
                  })
  
 consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		 "bootstrap.servers": "$BOOTSTRAP_SERVERS",
-  		 "broker.version.fallback": "0.10.0.0",
-  		 "api.version.fallback.ms": 0,
-  		 "sasl.mechanisms": "PLAIN",
-  		 "security.protocol": "SASL_SSL",
-  		 "sasl.username": "$CLOUD_KEY",
-  		 "sasl.password": "$CLOUD_SECRET",
+     "bootstrap.servers": "$BOOTSTRAP_SERVERS",
+       "broker.version.fallback": "0.10.0.0",
+       "api.version.fallback.ms": 0,
+       "sasl.mechanisms": "PLAIN",
+       "security.protocol": "SASL_SSL",
+       "sasl.username": "$CLOUD_KEY",
+       "sasl.password": "$CLOUD_SECRET",
                  // "ssl.ca.location": "/usr/local/etc/openssl/cert.pem", // varies by distro
-  		 "session.timeout.ms": 6000,
+       "session.timeout.ms": 6000,
                  "plugin.library.paths": "monitoring-interceptor",
                  // .... additional configuration settings
                  })
