@@ -1,7 +1,7 @@
 .. _ccloud-monitoring-producer-connectivity-problem:
 
-Confluent Cloud Unreachable
-***************************
+|ccloud| Unreachable
+********************
 
 In the ``producer`` container, add a rule blocking network traffic that has a destination TCP port ``9092``. This will prevent the producer from reaching the |ak| cluster in |ccloud|.
 
@@ -19,7 +19,7 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-.. includes: ../includes/produce-failures.rst
+.. include: ../includes/produce-failures.rst
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 

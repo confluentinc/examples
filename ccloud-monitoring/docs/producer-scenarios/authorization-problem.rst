@@ -10,7 +10,7 @@ This scenario will look at |ccloud| metrics from the Metrics API and client metr
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Delete the ACL allowing write to the topic, inserting your service account ID instead of ``184498``:
+#. Delete the ACL that allowed the service account to write to the topic, inserting your service account ID instead of ``184498``:
 
    .. code-block:: bash
 
@@ -19,7 +19,7 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-.. includes: ../includes/produce-failures.rst
+.. include: ../includes/produce-failures.rst
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
@@ -33,7 +33,6 @@ Diagnose the problem
 
       WHAT? No AuthZ errors?
 
-   Note that the logs provide a clear picture of what is going on--``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was expected because the failure scenario we introduced blocked outgoing traffic to the broker's port. Looking at metrics alone won't always lead you directly to an answer but they are a quick way to see if things are working as expected.
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -42,7 +41,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      ccloud kafka acl add --service-account 184498 --operation write  --topic '*' --allow
+      ccloud kafka acl create --service-account 184498 --operation write  --topic '*' --allow
 
 
 .. |Confluent Cloud Panel|
