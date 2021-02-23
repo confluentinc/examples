@@ -21,6 +21,21 @@ Diagnose the problem
 
 .. includes: ../includes/produce-failures.rst
 
+#. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
+
+   .. code-block:: bash
+
+      docker-compose logs producer
+
+#. Verify that you see log messages similar to what is shown below:
+
+   .. code-block:: text
+
+      producer           | [2021-02-11 18:16:12,231] WARN [Producer clientId=producer-1] Got error produce response with correlation id 15603 on topic-partition demo-topic-1-3, retrying (2147483646 attempts left). Error: NETWORK_EXCEPTION (org.apache.kafka.clients.producer.internals.Sender)
+      producer           | [2021-02-11 18:16:12,232] WARN [Producer clientId=producer-1] Received invalid metadata error in produce request on partition demo-topic-1-3 due to org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.. Going to request metadata update now (org.apache.kafka.clients.producer.internals.Sender)
+
+   Note that the logs provide a clear picture of what is going on--``Error: NETWORK_EXCEPTION`` and ``server disconnected``. This was expected because the failure scenario we introduced blocked outgoing traffic to the broker's port. Looking at metrics alone won't always lead you directly to an answer but they are a quick way to see if things are working as expected.
+
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
