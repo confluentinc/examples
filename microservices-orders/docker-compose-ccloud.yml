@@ -21,6 +21,8 @@ services:
     container_name: microservices
     ports:
       - "18894:18894"
+    depends_on:
+      - connect
     volumes:
       - $PWD/scripts:/opt/docker/scripts
       - $PWD/logs:/opt/docker/logs
