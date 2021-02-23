@@ -31,7 +31,7 @@ Diagnose the problem
 
    .. code-block:: text
 
-      WHAT? No AuthZ errors?
+      org.apache.kafka.common.errors.TopicAuthorizationException: Not authorized to access topics: [demo-topic-1]
 
 
 Resolve failure scenario
@@ -42,6 +42,12 @@ Resolve failure scenario
    .. code-block:: bash
 
       ccloud kafka acl create --service-account 184498 --operation write  --topic '*' --allow
+
+#. Verify that the ``org.apache.kafka.common.errors.TopicAuthorizationException`` log messages stopped in the ``producer`` container.
+
+   .. code-block:: bash
+
+      docker-compose logs producer
 
 
 .. |Confluent Cloud Panel|
