@@ -25,7 +25,7 @@ Diagnose the problem
 
    -  The top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
 
-   -  Throughput, e.g. ``Outgoing byte rate``, shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the cluster but they are not being written to the log because of lack of authorization.
+   -  Throughput, e.g. ``Outgoing byte rate``, shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the cluster but they are not being written to the broker's log because of lack of authorization.
 
    |Producer Authorization Problem|
 
@@ -35,7 +35,13 @@ Diagnose the problem
 
    |Confluent Cloud Panel|
 
-#. Change the topics filter to show only ``demo-topic-1``.  Notice that ``Topic retained bytes`` has flattened because the records sent by the producer are not getting written to the log, and ``Topic sent bytes`` (records being sent to the consumer) has dropped to zero, because there are no new records to send to it.
+#. Change the topics filter to show only ``demo-topic-1``.  Observe:
+
+   - ``Topic retained bytes`` has flattened because the records sent by the producer are not getting written to the log.
+
+   - ``Topic received bytes`` is continuing to reflect network utilization that |ccloud| is receiving the records, before they get denied due to authorization errors.
+
+   - ``Topic sent bytes`` (records being sent to the consumer) has dropped to zero, because there are no new records to send to it.
 
    |Confluent Cloud Dashboard Producer Authorization Problem|
 
