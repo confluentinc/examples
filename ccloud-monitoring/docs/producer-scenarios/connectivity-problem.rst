@@ -19,7 +19,7 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-.. include: ../includes/produce-failures.rst
+.. include:: ../includes/produce-failures.rst
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
