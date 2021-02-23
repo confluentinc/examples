@@ -51,6 +51,22 @@ Diagnose the problem
 
    Note that the logs provide a clear picture of what is going on--``org.apache.kafka.common.errors.TopicAuthorizationException``.  This was expected because the failure scenario we introduced removed the ACL that permitted the service account to write to the topic.
 
+#. View the source code that catches this exception, :devx-examples:`ccloud-monitoring/src|ccloud-monitoring/src/main/java/io/confluent/examples/clients/cloud/ProducerExample.java`, using a ``Callback()``.
+
+   .. code-block:: java
+
+        producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), new Callback() {
+            @Override
+            public void onCompletion(RecordMetadata m, Exception e) {
+              if (e != null) {
+                e.printStackTrace();
+              } else {
+                System.out.printf("Produced record to topic %s%n", topic);
+              }
+            }
+        });
+
+
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
