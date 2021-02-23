@@ -8,5 +8,5 @@ Producer Client Scenarios
    :titlesonly:
 
    Overview <producer-scenarios/overview>
-   Confluent Cloud Unreachable <producer-scenarios/connectivity-problem>
+   Confluent Cloud Unreachable <producer-scenarios/confluent-cloud-unreachable>
    Authorization Revoked <producer-scenarios/authorization-problem>

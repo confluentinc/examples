@@ -1,4 +1,4 @@
-.. _ccloud-monitoring-producer-connectivity-problem:
+.. _ccloud-monitoring-producer-confluent-cloud-unreachable:
 
 |ccloud| Unreachable
 ********************

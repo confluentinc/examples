@@ -33,6 +33,8 @@ Diagnose the problem
 
       org.apache.kafka.common.errors.TopicAuthorizationException: Not authorized to access topics: [demo-topic-1]
 
+   Note that the logs provide a clear picture of what is going on--``org.apache.kafka.common.errors.TopicAuthorizationException``.  This was expected because the failure scenario we introduced removed the ACL that permitted the service account to write to the topic.
+
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
