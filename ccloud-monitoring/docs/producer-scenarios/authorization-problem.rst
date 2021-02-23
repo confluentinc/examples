@@ -25,15 +25,17 @@ Diagnose the problem
 
    -  The top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
 
-   -  Throughput, e.g. ``Outgoing byte rate``, still looks like the producer is successfully sending messages.  This is a false positive.
+   -  Throughput, e.g. ``Outgoing byte rate``, shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the broker but the broker is writing them to the log because of lack of authorization.
 
    |Producer Authorization Problem|
 
-#. In order to isolate this problem to the producer, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
+#. Check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
 
-#. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
+#. In the ``Confluent Cloud`` dashboard, look at the top panels, they should all be green which means the cluster is operating safely within its resources.
 
    |Confluent Cloud Panel|
+
+#. Change the topics filter to show only ``demo-topic-1``.  Further down, notice that topic retained bytes has flattened, and topic sent bytes (records being sent to the consumer) has dropped to zero, because there are no new records to send to it.
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
