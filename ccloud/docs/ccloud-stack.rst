@@ -142,7 +142,6 @@ Create a ccloud-stack
 
    .. code-block:: text
 
-ACLs in this cluster:
         ServiceAccountId | Permission |    Operation     |     Resource     |             Name             |   Type
       +------------------+------------+------------------+------------------+------------------------------+----------+
         User:186588      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | *                            | LITERAL
