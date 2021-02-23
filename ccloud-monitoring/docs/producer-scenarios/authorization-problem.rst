@@ -19,7 +19,21 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-.. include:: ../includes/produce-failures.rst
+#. From your web browser, navigate to the Grafana dashboard at http://localhost:3000 and login with the username ``admin`` and password ``password``.
+
+#. Navigate to the ``Producer Client Metrics`` dashboard.  Wait 2 minutes and then observe:
+
+   -  The top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
+
+   -  Throughput, e.g. ``Outgoing byte rate``, still looks like the producer is successfully sending messages.  This is a false positive.
+
+   |Producer Authorization Problem|
+
+#. In order to isolate this problem to the producer, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
+
+#. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
+
+   |Confluent Cloud Panel|
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
@@ -56,6 +70,6 @@ Resolve failure scenario
    image:: ../images/cloud-panel.png
    :alt: Confluent Cloud Panel
 
-.. |Producer Connectivity Loss|
-   image:: ../images/producer-connectivity-loss.png
-   :alt: Producer Connectivity Loss
+.. |Producer Authorization Problem|
+   image:: ../images/producer-authorization-problem.png
+   :alt: Producer Authorization Problem
