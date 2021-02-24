@@ -10,6 +10,9 @@ is an open source project that collects consumer group lag information and prese
 scrapable format. A large or quickly growing lag indicates that the consumer is not able to keep up with
 the volume of messages on a topic.
 
+This scenario will look at Confluent Cloud metrics from the Metrics API, kafka-lag-exporter metrics, and
+client metrics from the client application’s MBean object ``kafka.consumer:type=consumer-fetch-manager-metrics,client-id=<client_id>``.
+
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -43,15 +46,15 @@ Diagnose the problem
 
 #. Navigate to the ``Consumer Client Metrics`` dashboard. Wait 2 minutes and then observe:
 
-   - Rebalance rate has a bump, indicating that the consumer group ``demo-cloud-monitoring-1`` underwent a rebalance, which is to be expected when a consumer leaves the group.
+   - ``Rebalance rate`` (``rebalance-rate-per-hour``) has a bump, indicating that the consumer group ``demo-cloud-monitoring-1`` underwent a rebalance, which is to be expected when a consumer leaves the group.
 
    |Consumer Rebalance Bump|
 
-   - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase. Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner.
+   - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase. Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner. These metrics are derived from ``kafka-lag-exporter``.
 
    |Consumer Lag|
 
-   - An increase in ``Fetch request rate`` and ``Fetch size avg`` in the ``Consumer Fetch Metrics`` tab, indicating the consumer is fetching more often and larger batches.
+   - An increase in ``Fetch request rate`` (``fetch-total``) and ``Fetch size avg`` (``fetch-size-avg``) in the ``Consumer Fetch Metrics`` tab, indicating the consumer is fetching more often and larger batches.
 
    |Consumer Fetch Increase|
 
