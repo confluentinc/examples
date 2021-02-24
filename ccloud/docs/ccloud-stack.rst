@@ -54,7 +54,7 @@ By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you ha
    ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
 
    # By default, ccloud-stack does not enable Confluent Cloud ksqlDB, but if you explicitly enable it:
-   ccloud ksql app create --cluster $CLUSTER --api-key "$kafka_api_key" --api-secret "$kafka_api_secret" -o json "$KSQLDB_NAME"
+   ccloud ksql app create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" -o json "$KSQLDB_NAME"
    ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB
 
    ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
@@ -119,7 +119,7 @@ Create a ccloud-stack
 
 #. ``ccloud-stack`` configures permissive ACLs with wildcards, which is useful for development and learning environments. In production, configure much stricter ACLs.
 
-   If you ran without ksqlDB (in the output below, service account ID is ``119612``):
+   If you ran without ksqlDB:
 
    .. code-block:: text
 
@@ -138,7 +138,7 @@ Create a ccloud-stack
         User:186607      | ALLOW      | WRITE            | TOPIC            | *             | LITERAL
         User:186607      | ALLOW      | READ             | TOPIC            | *             | LITERAL
 
-   If you ran with ksqlDB (in the output below, ksqlDB service account ID is ``119613``):
+   If you ran with ksqlDB:
 
    .. code-block:: text
 

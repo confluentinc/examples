@@ -105,11 +105,10 @@ function ccloud::validate_version_ccloud_cli() {
 
   ccloud::validate_ccloud_cli_installed || exit 1
 
-  REQUIRED_CCLOUD_VER=${1:-$CCLOUD_MIN_VERSION}
   CCLOUD_VER=$(ccloud::get_version_ccloud_cli)
 
-  if ccloud::version_gt $REQUIRED_CCLOUD_VER $CCLOUD_VER; then
-    echo "ccloud version ${REQUIRED_CCLOUD_VER} or greater is required.  Current reported version: ${CCLOUD_VER}"
+  if ccloud::version_gt $CCLOUD_MIN_VERSION $CCLOUD_VER; then
+    echo "ccloud version ${CCLOUD_MIN_VERSION} or greater is required.  Current reported version: ${CCLOUD_VER}"
     echo 'To update run: ccloud update'
     exit 1
   fi
