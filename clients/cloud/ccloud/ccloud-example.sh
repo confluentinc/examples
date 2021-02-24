@@ -6,7 +6,7 @@ source ../../../utils/ccloud_library.sh
 check_timeout \
   && print_pass "timeout installed" \
   || exit 1
-ccloud::validate_version_ccloud_cli 1.13.0 \
+ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
   && print_pass "ccloud version ok" \
   || exit 1
 ccloud::validate_logged_in_ccloud_cli \

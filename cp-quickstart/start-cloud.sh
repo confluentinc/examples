@@ -18,7 +18,7 @@ source ../utils/ccloud_library.sh
 check_jq \
   && print_pass "jq found"
 
-ccloud::validate_version_ccloud_cli 1.7.0 \
+ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
   && print_pass "ccloud version ok"
 
 ccloud::validate_logged_in_ccloud_cli \
