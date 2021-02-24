@@ -49,15 +49,37 @@ Diagnose the problem
 
    - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase. Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner.
 
-   |Consumer Lag Records|
+   |Consumer Lag|
 
-   - An increase in ``Fetch request rate`` and ``Fetch size avg``, indicating the consumer is fetching more often and larger batches.
+   - An increase in ``Fetch request rate`` and ``Fetch size avg`` in the ``Consumer Fetch Metrics`` tab, indicating the consumer is fetching more often and larger batches.
 
    |Consumer Fetch Increase|
 
    - All of the graphs in the ``Throughput`` are indicating the consumer is processing more bytes/records.
 
    |Consumer Throughput Increase|
+
+#. A top level view of the |ccloud| cluster that reflects an increase in bytes produced and bytes consumed can be viewed in the ``Confluent Cloud`` dashboard in the panels highlighted below.
+
+   |Confluent Cloud Request Increase|
+
+#. The consumer logs won't show that the consumer is falling behind which is why it is important to keep an eye on consumer group metrics.
+   Logs will tell us that the consumer group rebalanced, the logs can be accessed with the following command:
+
+   .. code-block:: bash
+
+      docker-compose logs consumer
+
+   They should look something like what is below:
+
+   .. code-block:: text
+
+      consumer_1            | [2021-02-24 16:04:45,659] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Attempt to heartbeat failed since group is rebalancing (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
+      consumer_1            | [2021-02-24 16:04:45,695] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Revoke previously assigned partitions demo-topic-1-1, demo-topic-1-2, demo-topic-1-0, demo-topic-1-5, demo-topic-1-3, demo-topic-1-4 (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+      consumer_1            | [2021-02-24 16:04:45,695] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] (Re-)joining group (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
+      consumer_1            | [2021-02-24 16:04:45,748] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Successfully joined group with generation Generation{generationId=42, memberId='consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7', protocol='range'} (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
+      consumer_1            | [2021-02-24 16:04:45,750] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Finished assignment for group at generation 42: {consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7=Assignment(partitions=[demo-topic-1-3, demo-topic-1-4, demo-topic-1-5]), consumer-demo-cloud-monitoring-1-1-261ae825-8cd3-427b-a9f6-cde4849915b1=Assignment(partitions=[demo-topic-1-0, demo-topic-1-1, demo-topic-1-2])} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
+      consumer_1            | [2021-02-24 16:04:45,794] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Successfully synced group in generation Generation{generationId=42, memberId='consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7', protocol='range'}  (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -90,9 +112,9 @@ Resolve failure scenario
    image:: ../images/rebalance-bump.png
    :alt: Consumer Rebalance Bump
 
-.. |Consumer Lag Records|
-   image:: ../images/consumer-lag-records.png
-   :alt: Consumer Lag Records
+.. |Consumer Lag|
+   image:: ../images/consumer-group-lag.png
+   :alt: Consumer Lag
 
 .. |Consumer Fetch Increase|
    image:: ../images/consumer-fetch-increase.png
@@ -101,3 +123,7 @@ Resolve failure scenario
 .. |Consumer Throughput Increase|
    image:: ../images/consumer-throughput-increase.png
    :alt: Consumer Throughput Increase
+
+.. |Confluent Cloud Request Increase|
+   image:: ../images/ccloud-request-increase.png
+   :alt: Confluent Cloud Request Increase
