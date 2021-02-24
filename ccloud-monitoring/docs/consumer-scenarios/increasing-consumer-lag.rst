@@ -1,7 +1,7 @@
-.. _ccloud-monitoring-consumer-connectivity-problem:
+.. _ccloud-monitoring-consumer-increasing-consumer-lag:
 
-Consumer Lag Problem
-********************
+Increasing Consumer Lag
+***********************
 
 Consumer lag is a tremendous performance indicator. It tells you the offset difference between the
 producer's last produced message and the consumer group's last commit. If you are unfamiliar with
@@ -11,13 +11,14 @@ consumer groups or concepts like committing offsets, please refer to this
 A large consumer lag, or a quickly growing lag, indicates that the consumer is not able to keep up with
 the volume of messages on a topic.
 
-This scenario will look at Confluent Cloud metrics from the Metrics API, `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ metrics, and
+This scenario will look at |ccloud| metrics from the Metrics API, `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ metrics, and
 client metrics from the client application’s MBean object ``kafka.consumer:type=consumer-fetch-manager-metrics,client-id=<client_id>``.
 
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Stop ``consumer-1`` container, thus removing a consumer from the consumer group and add 2 producers:
+#. By default 2 consumers and 1 producer are running. Adjust that to 1 consumer and 5 producers in order to show an increase in consumer lag.
+   The container scaling can be done with the command below:
 
    .. code-block:: bash
 
@@ -51,7 +52,10 @@ Diagnose the problem
 
    |Consumer Rebalance Bump|
 
-   - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase. Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner. These metrics are derived from ``kafka-lag-exporter``.
+   - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase.
+     Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner.
+     These metrics are derived from the ``kafka-lag-exporter`` container.
+     `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ is a scala open source project that collects data about consumer groups and presents them in a Prometheus scrapable format.
 
    |Consumer Lag|
 
@@ -62,6 +66,13 @@ Diagnose the problem
    - All of the graphs in the ``Throughput`` are indicating the consumer is processing more bytes/records.
 
    |Consumer Throughput Increase|
+
+#. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-monitoring-1`` consumer group.
+   This page will update periodically, within two minutes you should see a steady increase is the offset lag.
+
+   |Confluent Cloud Consumer Lag|
+
+   This provides a snapshot in time, but it lacks of historical context that the ``Consumer Client Metrics`` dashboard provides.
 
 #. The current consumer lag can also be observed via the CLI if you have Confluent Platform installed.
 
@@ -80,13 +91,6 @@ Diagnose the problem
       demo-cloud-monitoring-1 demo-topic-1    5          47748           47803           55              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
       demo-cloud-monitoring-1 demo-topic-1    1          48097           48151           54              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
       demo-cloud-monitoring-1 demo-topic-1    2          48310           48370           60              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
-
-   This command provides a snapshot in time, but it lacks of historical context that the ``Consumer Client Metrics`` dashboard provides.
-
-#. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-monitoring-1`` consumer group.
-   This page will update periodically, within two minutes you should see a steady increase is the offset lag.
-
-   |Confluent Cloud Consumer Lag|
 
    Again the downside of this view is the lack of historical context that the ``Consumer Client Metrics`` dashboard provides.
 

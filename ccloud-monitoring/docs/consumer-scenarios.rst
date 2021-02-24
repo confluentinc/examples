@@ -8,4 +8,4 @@ Consumer Client Scenarios
    :titlesonly:
 
    Overview <consumer-scenarios/overview>
-   Consumer lag <consumer-scenarios/consumer-lag-problem>
+   Increasing consumer lag <consumer-scenarios/increasing-consumer-lag>
