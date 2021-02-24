@@ -48,10 +48,6 @@ eval $CMD \
     && print_code_pass -c "source $DELTA_CONFIGS_ENV" \
     || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
-printf "\n====== Allow service account to describe Confluent Cloud cluster and consumer groups\n"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*'
-
 ##################################################
 # Start up monitoring
 ##################################################

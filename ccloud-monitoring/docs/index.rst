@@ -11,6 +11,6 @@ Monitoring |ak-tm| Clients to Confluent Cloud
    Producer scenarios <producer-scenarios>
    Consumer scenarios <consumer-scenarios>
    General scenarios <general-scenarios>
-   Additional resources <additional-resources>
    Clean up Confluent Cloud resources <teardown>
+   Additional resources <additional-resources>
 
