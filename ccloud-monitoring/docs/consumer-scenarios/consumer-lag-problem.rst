@@ -59,6 +59,33 @@ Diagnose the problem
 
    |Consumer Throughput Increase|
 
+#. The current consumer lag can also be observed via the CLI if you have Confluent Platform installed.
+
+   .. code-block:: bash
+
+      kafka-consumer-groups --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CONFIG_FILE --describe --group demo-cloud-monitoring-1
+
+   Which will produce something similar to the following:
+
+   .. code-block:: text
+
+      GROUP                   TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                             HOST            CLIENT-ID
+      demo-cloud-monitoring-1 demo-topic-1    0          48163           48221           58              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
+      demo-cloud-monitoring-1 demo-topic-1    3          91212           91278           66              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
+      demo-cloud-monitoring-1 demo-topic-1    4          47854           47893           39              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
+      demo-cloud-monitoring-1 demo-topic-1    5          47748           47803           55              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
+      demo-cloud-monitoring-1 demo-topic-1    1          48097           48151           54              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
+      demo-cloud-monitoring-1 demo-topic-1    2          48310           48370           60              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
+
+  The downside of this view is the lack of historical context that the ``Consumer Client Metrics`` dashboard provides.
+
+#. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-monitoring-1`` consumer group.
+   This page will update periodically, within two minutes you should see a steady increase is the offset lag.
+
+   |Confluent Cloud Consumer Lag|
+
+  Again the downside of this view is the lack of historical context that the ``Consumer Client Metrics`` dashboard provides.
+
 #. A top level view of the |ccloud| cluster that reflects an increase in bytes produced and bytes consumed can be viewed in the ``Confluent Cloud`` dashboard in the panels highlighted below.
 
    |Confluent Cloud Request Increase|
@@ -127,3 +154,7 @@ Resolve failure scenario
 .. |Confluent Cloud Request Increase|
    image:: ../images/ccloud-request-increase.png
    :alt: Confluent Cloud Request Increase
+
+.. |Confluent Cloud Consumer Lag|
+   image:: ../images/ccloud-consumer-lag-view.png
+   :alt: Confluent Cloud Consumer Lag
