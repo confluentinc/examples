@@ -13,7 +13,7 @@
 source ../../utils/helper.sh
 source ../../utils/ccloud_library.sh
 
-ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
+ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
 ccloud::validate_logged_in_ccloud_cli || exit 1
 ccloud::prompt_continue_ccloud_demo || exit 1
 check_timeout || exit 1
