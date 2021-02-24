@@ -14,4 +14,4 @@ these scenarios the focus is on the change in client metric values.
 
 .. |Consumer Dashboard|
    image:: ../images/consumer-dashboard.png
-   :alt: Producer Dashboard
+   :alt: Consumer Dashboard

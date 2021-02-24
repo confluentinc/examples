@@ -43,15 +43,15 @@ Diagnose the problem
 
 #. Navigate to the ``Consumer Client Metrics`` dashboard.
 
-   - Within a minute you should see an upward trend in ``Consumer group lag`` both by seconds and by offsets.
+   - Almost immediately you will notice the rebalance rate has a bump, indicating that the consumer group ``demo-cloud-monitoring-1`` underwent a rebalance, which is to be expected when a consumer leaves the group.
 
-   - The rebalance rate should have a bump, indicating that the consumer group <insert cg name> underwent a rebalance, which is to be expected when a consumer leaves the group.
+   - Within a minute you should see an upward trend in ``Consumer group lag`` both by seconds and by offsets.
 
    - Within two minutes you should notice an increase in ``Fetch request rate``.
 
    - After two minutes, you will notice all of the graphs in the ``Throughput`` are indicating the consume is processing more bytes/records.
 
-
+   |Consumer Dashboard With Lag|
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -79,3 +79,6 @@ Resolve failure scenario
       Creating ccloud-monitoring_consumer_2              ... done
       Starting ccloud-monitoring_producer_1              ... done
 
+.. |Consumer Dashboard With Lag|
+   image:: ../images/consumer-lag-all.png
+   :alt: Consumer Dashboard With Lag
