@@ -173,13 +173,19 @@ The following instructions will:
 
       export CLOUD_CLUSTER=lkc-x6m01
 
-#. Allow the service account created in the ``ccloud::create_ccloud_stack`` to describe the cluster and consumer-groups.
-   This is necessary for the ``kafka-lag-exporter``, which is a Prometheus exporter collects information about consumer groups.
+#. Next, prep the environment for the ``kafka-lag-exporter``--a Prometheus exporter that collect information about consumer groups.
+   To do this, we need to set a few environment variables by executing the following:
 
    .. code-block:: bash
 
       ccloud::generate_configs $CONFIG_FILE
       source delta_configs/env.delta
+
+
+   Then run the commands below to allow the service account to describe the cluster and consumer-groups.
+
+   .. code-block:: bash
+
       ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope
       ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*'
 
