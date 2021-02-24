@@ -41,17 +41,23 @@ Diagnose the problem
 
 #. Open `Grafana <localhost:3000>`__ and login with the username ``admin`` and password ``password``.
 
-#. Navigate to the ``Consumer Client Metrics`` dashboard.
+#. Navigate to the ``Consumer Client Metrics`` dashboard. Wait 2 minutes and then observe:
 
-   - Almost immediately you will notice the rebalance rate has a bump, indicating that the consumer group ``demo-cloud-monitoring-1`` underwent a rebalance, which is to be expected when a consumer leaves the group.
+   - Rebalance rate has a bump, indicating that the consumer group ``demo-cloud-monitoring-1`` underwent a rebalance, which is to be expected when a consumer leaves the group.
 
-   - Within a minute you should see an upward trend in ``Consumer group lag`` both by seconds and by offsets.
+   |Consumer Rebalance Bump|
 
-   - Within two minutes you should notice an increase in ``Fetch request rate``.
+   - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase. Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner.
 
-   - After two minutes, you will notice all of the graphs in the ``Throughput`` are indicating the consume is processing more bytes/records.
+   |Consumer Lag Records|
 
-   |Consumer Dashboard With Lag|
+   - An increase in ``Fetch request rate`` and ``Fetch size avg``, indicating the consumer is fetching more often and larger batches.
+
+   |Consumer Fetch Increase|
+
+   - All of the graphs in the ``Throughput`` are indicating the consumer is processing more bytes/records.
+
+   |Consumer Throughput Increase|
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -79,6 +85,19 @@ Resolve failure scenario
       Creating ccloud-monitoring_consumer_2              ... done
       Starting ccloud-monitoring_producer_1              ... done
 
-.. |Consumer Dashboard With Lag|
-   image:: ../images/consumer-lag-all.png
-   :alt: Consumer Dashboard With Lag
+
+.. |Consumer Rebalance Bump|
+   image:: ../images/rebalance-bump.png
+   :alt: Consumer Rebalance Bump
+
+.. |Consumer Lag Records|
+   image:: ../images/consumer-lag-records.png
+   :alt: Consumer Lag Records
+
+.. |Consumer Fetch Increase|
+   image:: ../images/consumer-fetch-increase.png
+   :alt: Consumer Fetch Increase
+
+.. |Consumer Throughput Increase|
+   image:: ../images/consumer-throughput-increase.png
+   :alt: Consumer Throughput Increase
