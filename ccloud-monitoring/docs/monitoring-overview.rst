@@ -178,6 +178,7 @@ The following instructions will:
 
    .. code-block:: bash
 
+      ccloud::generate_configs $CONFIG_FILE
       source delta_configs/env.delta
       ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope
       ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*'
@@ -195,7 +196,7 @@ The following instructions will:
 
    .. code-block:: bash
 
-      docker-compose up -d
+      docker-compose up -d --scale consumer=2
 
    Your output will resemble:
 
@@ -203,13 +204,13 @@ The following instructions will:
 
       Creating network "ccloud-monitoring_default" with the default driver
       Creating prometheus         ... done
-      Creating kafka-lag-exporter ... done
-      Creating grafana            ... done
       Creating node-exporter      ... done
-      Creating ccloud-exporter    ... done
-      Creating producer           ... done
-      Creating consumer-1         ... done
-      Creating consumer-2         ... done
+      Creating grafana            ... done
+      Creating kafka-lag-exporter ... done
+      Creating ccloud-exporter              ... done
+      Creating ccloud-monitoring_producer_1 ... done
+      Creating ccloud-monitoring_consumer_1 ... done
+      Creating ccloud-monitoring_consumer_2 ... done
 
 #. Navigate to the `Prometheus Targets page <localhost:9090/targets>`__.
 

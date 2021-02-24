@@ -5,13 +5,14 @@ volumes:
 x-network: &cap-add
   cap_add:
     - NET_ADMIN
-x-consumer: &consumer
+x-client-base: &client-base
   image: localbuild/client:latest
   restart: always
+  ports:
+    - 1234
   depends_on:
     - prometheus
     - grafana
-    - producer
   volumes:
     - ./$CONFIG_FILE:/tmp/client.config
     - ./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar
@@ -19,10 +20,6 @@ x-consumer: &consumer
     - ./:/tmp/java/
   environment:
     MAVEN_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_client.yml
-  command: >
-    bash -c "sleep 15 &&
-    mvn compile -f /tmp/java/
-    &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
 
 services:
   node-exporter:
@@ -70,41 +67,18 @@ services:
       - ./monitoring_configs/grafana/provisioning/:/etc/grafana/provisioning/
 
   producer:
-    image: localbuild/client:latest
-    restart: always
-    depends_on:
-      - prometheus
-      - grafana
-    hostname: producer
-    container_name: producer
-    volumes:
-      - ./$CONFIG_FILE:/tmp/client.config
-      - ./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar
-      - ./monitoring_configs/jmx-exporter/kafka_client.yml:/usr/share/jmx-exporter/kafka_client.yml
-      - ./:/tmp/java/
-    ports:
-      - 1234:1234
-    environment:
-      MAVEN_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_client.yml
+    <<: *client-base
     command: >
       bash -c "mvn clean compile -f /tmp/java/
       &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
     <<: *cap-add
 
-  consumer-1:
-    <<: *consumer
-    hostname: consumer-1
-    container_name: consumer-1
-    ports:
-      - 1237:1234
-    <<: *cap-add
-
-  consumer-2:
-    <<: *consumer
-    hostname: consumer-2
-    container_name: consumer-2
-    ports:
-      - 1236:1234
+  consumer:
+    <<: *client-base
+    command: >
+      bash -c "sleep 15 &&
+      mvn compile -f /tmp/java/
+      &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
     <<: *cap-add
 
   kafka-lag-exporter:

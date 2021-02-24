@@ -8,11 +8,12 @@ In the ``consumer`` container ...
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Stop ``consumer-1`` container, thus removing a consumer from the consumer group:
+#. Stop ``consumer-1`` container, thus removing a consumer from the consumer group and add 2 producers:
 
    .. code-block:: bash
 
       docker-compose stop consumer-1
+      docker-compose start producer-2 producer-3
 
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
@@ -25,11 +26,12 @@ Diagnose the problem
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Start ``consumer-1`` container, thus adding a consumer back to the consumer group:
+#. Start ``consumer-1`` container, thus adding a consumer back to the consumer group, and stop the extra producers:
 
    .. code-block:: bash
 
       docker-compose start consumer-1
+      docker-compose stop producer-2 producer-3
 
 Troubleshooting
 ^^^^^^^^^^^^^^^

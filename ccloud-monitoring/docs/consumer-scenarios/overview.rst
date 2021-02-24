@@ -9,9 +9,9 @@ this is not recommended for production use cases. This Java consumer will contin
 same message until the process is interrupted. The content of the message is not important here, in
 these scenarios the focus is on the change in client metric values.
 
-|Producer Dashboard|
+|Consumer Dashboard|
 
 
-.. |Producer Dashboard|
-   image:: ../images/producer-dashboard.png
+.. |Consumer Dashboard|
+   image:: ../images/consumer-dashboard.png
    :alt: Producer Dashboard
