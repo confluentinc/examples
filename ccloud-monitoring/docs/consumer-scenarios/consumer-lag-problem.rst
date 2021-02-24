@@ -3,14 +3,15 @@
 Consumer Lag Problem
 ********************
 
-Consumer group lag is a tremendous performance indicator. It informs you how far behind the latest offset
-a consumer group is, essentially the difference between the producer's last produced messaeg and
-the consumer group's latest commit. `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__
-is an open source project that collects consumer group lag information and presents it in a Prometheus
-scrapable format. A large or quickly growing lag indicates that the consumer is not able to keep up with
+Consumer group lag is a tremendous performance indicator. It tells you the difference between the
+producer's last produced message and the consumer group's last commit. If you are unfamiliar with
+consumer groups or concepts like committing offsets, please refer to this
+`Kafka Consumer documentation <https://docs.confluent.io/platform/current/clients/consumer.html>`__.
+
+A large or quickly growing lag indicates that the consumer is not able to keep up with
 the volume of messages on a topic.
 
-This scenario will look at Confluent Cloud metrics from the Metrics API, kafka-lag-exporter metrics, and
+This scenario will look at Confluent Cloud metrics from the Metrics API, `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ metrics, and
 client metrics from the client application’s MBean object ``kafka.consumer:type=consumer-fetch-manager-metrics,client-id=<client_id>``.
 
 Introduce failure scenario
