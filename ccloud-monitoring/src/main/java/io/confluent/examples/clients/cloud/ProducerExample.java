@@ -99,7 +99,16 @@ public class ProducerExample {
     // Produce sample data
     try {
       while (true) {
-        producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), null);
+        producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), new Callback() {
+            @Override
+            public void onCompletion(RecordMetadata m, Exception e) {
+              if (e != null) {
+                e.printStackTrace();
+              } else {
+                System.out.printf("Produced record to topic %s%n", topic);
+              }
+            }
+        });
         // Add a small sleep so that buffer space is swamped
         Thread.sleep(100);
       }

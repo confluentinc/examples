@@ -100,11 +100,6 @@ The following instructions will:
 
 -  stand up numerous docker containers (2 consumers with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
 
--  direct you to Prometheus to validate Prometheus is able to scrape data from the various exporters
-
--  direct you to Grafana to validate data is being pulled from Prometheus
-
-
 #. Create a |ccloud| cluster by running the following commands. This will take a few minutes:
 
    .. code-block:: bash
@@ -201,6 +196,13 @@ The following instructions will:
       Creating consumer-1         ... done
       Creating consumer-2         ... done
 
+Validate Setup
+~~~~~~~~~~~~~~
+
+#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud UI, view the **Data flow** in your newly created environment and |ak| cluster.
+
+   |Data Flow|
+
 #. Navigate to the `Prometheus Targets page <localhost:9090/targets>`__.
 
    |Prometheus Targets Unknown|
@@ -211,8 +213,13 @@ The following instructions will:
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
    Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
-   Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
+#. Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
+
+
+.. |Data Flow|
+   image:: images/data-flow.png
+   :alt: Data Flow
 
 .. |Prometheus Targets Unknown|
    image:: images/prometheus-targets-unknown.png
