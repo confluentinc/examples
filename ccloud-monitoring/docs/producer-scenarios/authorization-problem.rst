@@ -23,9 +23,9 @@ Diagnose the problem
 
 #. Navigate to the ``Producer Client Metrics`` dashboard.  Wait 2 minutes and then observe:
 
-   -  The top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
+   -  The top level panel with ``Record error rate`` (``record-error-rate``) should turn red, a major indication something is wrong.
 
-   -  Throughput, e.g. ``Outgoing byte rate``, shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the cluster but they are not being written to the broker's log because of lack of authorization.
+   -  Throughput, e.g. ``Outgoing byte rate`` (``outgoing-byte-rate``), shows the producer is successfully sending messages to the broker.  This is technically correct: the producer _is_ sending the batch of records to the cluster but they are not being written to the broker's log because of lack of authorization.
 
    |Producer Authorization Problem|
 
@@ -37,11 +37,11 @@ Diagnose the problem
 
 #. Change the topics filter to show only ``demo-topic-1``.  Observe:
 
-   - ``Topic retained bytes`` has flattened because the records sent by the producer are not getting written to the log.
+   - ``Topic received bytes`` (``io.confluent.kafka.server/received_bytes``) is still high because it |ccloud| is still receiving the records and using network bandwidth, before they get denied due to authorization errors.
 
-   - ``Topic received bytes`` is continuing to reflect network utilization that |ccloud| is receiving the records, before they get denied due to authorization errors.
+   - ``Topic retained bytes`` (``io.confluent.kafka.server/retained_bytes``) has flattened because the records sent by the producer are not getting written to the log.
 
-   - ``Topic sent bytes`` (records being sent to the consumer) has dropped to zero, because there are no new records to send to it.
+   - ``Topic sent bytes`` (``io.confluent.kafka.server/sent_bytes``), which are the records sent to the consumer, has dropped to zero because there are no new records to send.
 
    |Confluent Cloud Dashboard Producer Authorization Problem|
 
