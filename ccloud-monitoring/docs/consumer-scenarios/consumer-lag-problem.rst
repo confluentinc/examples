@@ -3,12 +3,12 @@
 Consumer Lag Problem
 ********************
 
-Consumer group lag is a tremendous performance indicator. It tells you the difference between the
+Consumer lag is a tremendous performance indicator. It tells you the offset difference between the
 producer's last produced message and the consumer group's last commit. If you are unfamiliar with
 consumer groups or concepts like committing offsets, please refer to this
 `Kafka Consumer documentation <https://docs.confluent.io/platform/current/clients/consumer.html>`__.
 
-A large or quickly growing lag indicates that the consumer is not able to keep up with
+A large consumer lag, or a quickly growing lag, indicates that the consumer is not able to keep up with
 the volume of messages on a topic.
 
 This scenario will look at Confluent Cloud metrics from the Metrics API, `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ metrics, and
@@ -81,7 +81,7 @@ Diagnose the problem
       demo-cloud-monitoring-1 demo-topic-1    1          48097           48151           54              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
       demo-cloud-monitoring-1 demo-topic-1    2          48310           48370           60              consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7 /10.2.10.251    consumer-demo-cloud-monitoring-1-1
 
-   The downside of this view is the lack of historical context that the ``Consumer Client Metrics`` dashboard provides.
+   This command provides a snapshot in time, but it lacks of historical context that the ``Consumer Client Metrics`` dashboard provides.
 
 #. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-monitoring-1`` consumer group.
    This page will update periodically, within two minutes you should see a steady increase is the offset lag.
@@ -94,8 +94,8 @@ Diagnose the problem
 
    |Confluent Cloud Request Increase|
 
-#. The consumer logs won't show that the consumer is falling behind which is why it is important to keep an eye on consumer group metrics.
-   Logs will tell us that the consumer group rebalanced, the logs can be accessed with the following command:
+#. The consumer logs won't show that the consumer is falling behind which is why it is important to have a robust monitoring solution that covers consumer lag.
+   However, consumer logs will show that the consumer group rebalanced.  The logs can be accessed with the following command:
 
    .. code-block:: bash
 
