@@ -1,6 +1,6 @@
 
 PUSH_PREFIX ?= cnfldemos
-CONTAINER_NAME ?= ccloud-monitoring-client
+CONTAINER_NAME ?= ccloud-observability-client
 VERSION ?= 0.1.0
 
 
