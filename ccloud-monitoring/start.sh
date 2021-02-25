@@ -60,10 +60,6 @@ export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
 export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
 export CLOUD_CLUSTER=$CLUSTER
 
-
-echo "\n====== Build client container"
-docker build -t localbuild/client:latest .
-
 echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
 echo "docker-compose up -d"
 docker-compose up -d
