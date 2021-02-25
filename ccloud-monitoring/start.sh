@@ -65,8 +65,8 @@ echo "\n====== Build client container"
 docker build -t localbuild/client:latest .
 
 echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
-echo "docker-compose up -d --scale consumer=2"
-docker-compose up -d --scale consumer=2
+echo "docker-compose up -d"
+docker-compose up -d
 echo -e "\n====== Login to grafana at http://localhost:3000/ un:admin pw:password"
 echo -e "\n====== Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
 
@@ -77,3 +77,6 @@ echo "  export CONFIG_FILE=$CONFIG_FILE"
 echo "  export SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID"
 echo "  export METRICS_API_KEY=$METRICS_API_KEY"
 echo "  export METRICS_API_SECRET=$METRICS_API_SECRET"
+echo "  export CLOUD_CLUSTER=$CLOUD_CLUSTER"
+echo "  export BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS"
+echo "  export SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG"

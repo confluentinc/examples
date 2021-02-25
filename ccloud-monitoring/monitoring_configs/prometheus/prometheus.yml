@@ -37,7 +37,7 @@ scrape_configs:
 
   - job_name: "consumer"
     static_configs:
-      - targets: ["ccloud-monitoring_consumer_1:1234", "ccloud-monitoring_consumer_2:1234"]
+      - targets: ["ccloud-monitoring_consumer_1:1234"]
         labels:
           env: 'dev'
 

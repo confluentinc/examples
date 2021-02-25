@@ -17,12 +17,12 @@ client metrics from the client application’s MBean object ``kafka.consumer:typ
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. By default 2 consumers and 1 producer are running. Adjust that to 1 consumer and 5 producers in order to show an increase in consumer lag.
+#. By default 1 consumer and 1 producer are running. Adjust that to 1 consumer and 5 producers in order to show an increase in consumer lag.
    The container scaling can be done with the command below:
 
    .. code-block:: bash
 
-      docker-compose up -d --scale consumer=1 --scale producer=5
+      docker-compose up -d --scale producer=5
 
    Which will produce the following output:
 
@@ -33,7 +33,6 @@ Introduce failure scenario
       node-exporter is up-to-date
       grafana is up-to-date
       prometheus is up-to-date
-      Stopping and removing ccloud-monitoring_consumer_2 ... done
       Starting ccloud-monitoring_producer_1              ... done
       Creating ccloud-monitoring_producer_2              ... done
       Creating ccloud-monitoring_producer_3              ... done
@@ -47,10 +46,6 @@ Diagnose the problem
 #. Open `Grafana <localhost:3000>`__ and login with the username ``admin`` and password ``password``.
 
 #. Navigate to the ``Consumer Client Metrics`` dashboard. Wait 2 minutes and then observe:
-
-   - ``Rebalance rate`` (``rebalance-rate-per-hour``) has a bump, indicating that the consumer group ``demo-cloud-monitoring-1`` underwent a rebalance, which is to be expected when a consumer leaves the group.
-
-   |Consumer Rebalance Bump|
 
    - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase.
      Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner.
@@ -99,22 +94,6 @@ Diagnose the problem
    |Confluent Cloud Request Increase|
 
 #. The consumer logs won't show that the consumer is falling behind which is why it is important to have a robust monitoring solution that covers consumer lag.
-   However, consumer logs will show that the consumer group rebalanced.  The logs can be accessed with the following command:
-
-   .. code-block:: bash
-
-      docker-compose logs consumer
-
-   They should look something like what is below:
-
-   .. code-block:: text
-
-      consumer_1            | [2021-02-24 16:04:45,659] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Attempt to heartbeat failed since group is rebalancing (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
-      consumer_1            | [2021-02-24 16:04:45,695] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Revoke previously assigned partitions demo-topic-1-1, demo-topic-1-2, demo-topic-1-0, demo-topic-1-5, demo-topic-1-3, demo-topic-1-4 (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
-      consumer_1            | [2021-02-24 16:04:45,695] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] (Re-)joining group (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
-      consumer_1            | [2021-02-24 16:04:45,748] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Successfully joined group with generation Generation{generationId=42, memberId='consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7', protocol='range'} (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
-      consumer_1            | [2021-02-24 16:04:45,750] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Finished assignment for group at generation 42: {consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7=Assignment(partitions=[demo-topic-1-3, demo-topic-1-4, demo-topic-1-5]), consumer-demo-cloud-monitoring-1-1-261ae825-8cd3-427b-a9f6-cde4849915b1=Assignment(partitions=[demo-topic-1-0, demo-topic-1-1, demo-topic-1-2])} (org.apache.kafka.clients.consumer.internals.ConsumerCoordinator)
-      consumer_1            | [2021-02-24 16:04:45,794] INFO [Consumer clientId=consumer-demo-cloud-monitoring-1-1, groupId=demo-cloud-monitoring-1] Successfully synced group in generation Generation{generationId=42, memberId='consumer-demo-cloud-monitoring-1-1-b0bec0b5-ec84-4233-9d3e-09d132b9a3c7', protocol='range'}  (org.apache.kafka.clients.consumer.internals.AbstractCoordinator)
 
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -123,7 +102,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      docker-compose up -d --scale consumer=2 --scale producer=1
+      docker-compose up -d --scale producer=1
 
    Which will produce the following output:
 
@@ -139,7 +118,6 @@ Resolve failure scenario
       Stopping and removing ccloud-monitoring_producer_4 ... done
       Stopping and removing ccloud-monitoring_producer_5 ... done
       Starting ccloud-monitoring_consumer_1              ... done
-      Creating ccloud-monitoring_consumer_2              ... done
       Starting ccloud-monitoring_producer_1              ... done
 
 

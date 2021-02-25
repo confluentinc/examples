@@ -98,7 +98,7 @@ The following instructions will:
 
 -  build a |ak| client docker image with the maven project's dependencies cache
 
--  stand up numerous docker containers (2 consumers with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
+-  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
 
 #. Create a |ccloud| cluster by running the following commands. This will take a few minutes:
 
@@ -189,7 +189,7 @@ The following instructions will:
 
    .. code-block:: bash
 
-      docker-compose up -d --scale consumer=2
+      docker-compose up -d
 
    Your output will resemble:
 
@@ -203,7 +203,6 @@ The following instructions will:
       Creating ccloud-exporter              ... done
       Creating ccloud-monitoring_producer_1 ... done
       Creating ccloud-monitoring_consumer_1 ... done
-      Creating ccloud-monitoring_consumer_2 ... done
 
 Validate Setup
 ~~~~~~~~~~~~~~
