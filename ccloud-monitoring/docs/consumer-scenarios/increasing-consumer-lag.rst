@@ -12,7 +12,7 @@ A large consumer lag, or a quickly growing lag, indicates that the consumer is n
 the volume of messages on a topic.
 
 
-This scenario will look metrics from various sources. Consumer lag metrics are pulled from the
+This scenario will look at metrics from various sources. Consumer lag metrics are pulled from the
 `kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ container, a scala open source project
 that collects data about consumer groups and presents them in a Prometheus scrapable format. Metrics
 about |ccloud| cluster resource usage are pulled from the Metrics API endpoints. Consumer client metrics
@@ -67,7 +67,7 @@ Diagnose the problem
 
    .. note::
 
-      If a client is `properly tuned <https://docs.confluent.io/cloud/current/client-apps/optimizing/index.html>`__ and has adequate resources,
+      If a client is `properly tuned <https://docs.confluent.io/cloud/current/client-apps/optimizing/index.html>`__ and has adequate resources
       an increase in throughput metrics or fetch metrics won't necessarily mean the consumer lag will increase.
 
 #. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-monitoring-1`` consumer group.
