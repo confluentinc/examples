@@ -80,7 +80,8 @@ It steps through the following workflow:
 .. figure:: ../../clients/cloud/images/confluent-cli.png
 
 Observability for |ak-tm| Clients to Confluent Cloud
----------------------------------------------
+----------------------------------------------------
+
 The :ref:`observability for Apache Kafka clients to Confluent Cloud example <ccloud-observability-index>` showcases which client metrics to monitor with various failure scenarios and dashboards.
 The clients are running against |ccloud|. The example creates a |ccloud| cluster, Java producers and consumers, Prometheus, Grafana, and various exporters.
 The same principles can be applied to any other time-series database or visualization technology and non-java clients--they generally offer similar metrics.
