@@ -85,9 +85,7 @@ The following instructions will:
        cd examples/ccloud-monitoring/
        git checkout |release_post_branch|
 
-#. Proceed to `Monitoring Container Setup`_ section if you would like to walk through how to setup a |ccloud| cluster, secrets, and monitoring pieces.
-   Alternatively, you can setup a |ccloud| cluster along with everything described in the `Monitoring Container Setup`_ section by running
-   :devx-examples:`start.sh script|ccloud-monitoring/start.sh`:
+#. Setup a |ccloud| cluster, secrets, and monitoring components by running :devx-examples:`start.sh script|ccloud-monitoring/start.sh`:
 
    .. code-block:: bash
 
