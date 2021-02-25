@@ -21,7 +21,7 @@ are pulled from the client application’s MBean object ``kafka.consumer:type=co
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. By default 1 consumer and 1 producer are running. Adjust that to 1 consumer and 5 producers in order to show an increase in consumer lag.
+#. By default 1 consumer and 1 producer are running. Adjust that to 1 consumer and 5 producers in order to force the condition where the consumer cannot keep up with the rate of messages being produced, which will cause an increase in consumer lag.
    The container scaling can be done with the command below:
 
    .. code-block:: bash
@@ -52,7 +52,7 @@ Diagnose the problem
 #. Navigate to the ``Consumer Client Metrics`` dashboard. Wait 2 minutes and then observe:
 
    - An upward trend in ``Consumer group lag in records``.  ``Consumer group lag in seconds`` will have a less dramatic increase.
-     Both indicating that the producer is creating more messages than the consumer can fetch in a timely manner.
+     Both indicate that the producer is creating more messages than the consumer can fetch in a timely manner.
      These metrics are derived from the ``kafka-lag-exporter`` container.
 
    |Consumer Lag|
