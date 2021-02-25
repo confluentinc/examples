@@ -32,3 +32,4 @@ clients/cloud/**/bin/
 ccloud/beginner-cloud/.ignored_folder/*
 !ccloud/beginner-cloud/.ignored_folder/.gitkeep
 ccloud-monitoring/target/*
+ccloud-monitoring/.env

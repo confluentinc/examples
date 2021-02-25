@@ -10,9 +10,6 @@ x-client-base: &client-base
   restart: always
   ports:
     - 1234
-  depends_on:
-    - prometheus
-    - grafana
   volumes:
     - ./$CONFIG_FILE:/tmp/client.config
     - ./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar

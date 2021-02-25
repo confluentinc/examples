@@ -70,6 +70,14 @@ docker-compose up -d
 echo -e "\n====== Login to grafana at http://localhost:3000/ un:admin pw:password"
 echo -e "\n====== Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
 
+echo "CONFIG_FILE=$CONFIG_FILE" >> .env
+echo "SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID" >> .env
+echo "METRICS_API_KEY=$METRICS_API_KEY" >> .env
+echo "METRICS_API_SECRET=$METRICS_API_SECRET" >> .env
+echo "CLOUD_CLUSTER=$CLOUD_CLUSTER" >> .env
+echo "BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS" >> .env
+echo "SASL_JAAS_CONFIG=\"$SASL_JAAS_CONFIG\"" >> .env
+
 echo
 echo "Confluent Cloud Environment:"
 echo
@@ -79,4 +87,4 @@ echo "  export METRICS_API_KEY=$METRICS_API_KEY"
 echo "  export METRICS_API_SECRET=$METRICS_API_SECRET"
 echo "  export CLOUD_CLUSTER=$CLOUD_CLUSTER"
 echo "  export BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS"
-echo "  export SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG"
+echo "  export SASL_JAAS_CONFIG=\"$SASL_JAAS_CONFIG\""
