@@ -6,7 +6,7 @@ source ../utils/helper.sh
 
 MAX_WAIT=${MAX_WAIT:-60}
 
-ccloud::validate_version_ccloud_cli 1.20.1 \
+ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
   && print_pass "ccloud version ok"
 
 ccloud::validate_logged_in_ccloud_cli \

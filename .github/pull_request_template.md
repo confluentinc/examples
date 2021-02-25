@@ -13,6 +13,7 @@ _Describe the validation already done, or needs to be done, by the PR submitter.
 <!-- - [ ] Documentation -->
 <!-- - [ ] ccloud/beginner-cloud -->
 <!-- - [ ] ccloud/ccloud-stack -->
+<!-- - [ ] ccloud-monitoring -->
 <!-- - [ ] clickstream -->
 <!-- - [ ] clients/avro -->
 <!-- - [ ] clients/cloud -->
@@ -27,7 +28,6 @@ _Describe the validation already done, or needs to be done, by the PR submitter.
 <!-- - [ ] replicator-schema-translation -->
 <!-- - [ ] replicator-security -->
 <!-- - [ ] security/rbac -->
-<!-- - [ ] security/secret-protection -->
 
 
 ### Reviewer Tasks
@@ -38,6 +38,7 @@ _Describe the tasks/validation that the PR submitter is requesting to be done by
 <!-- - [ ] Documentation -->
 <!-- - [ ] ccloud/beginner-cloud -->
 <!-- - [ ] ccloud/ccloud-stack -->
+<!-- - [ ] ccloud-monitoring -->
 <!-- - [ ] clickstream -->
 <!-- - [ ] clients/avro -->
 <!-- - [ ] clients/cloud -->
@@ -52,4 +53,3 @@ _Describe the tasks/validation that the PR submitter is requesting to be done by
 <!-- - [ ] replicator-schema-translation -->
 <!-- - [ ] replicator-security -->
 <!-- - [ ] security/rbac -->
-<!-- - [ ] security/secret-protection -->

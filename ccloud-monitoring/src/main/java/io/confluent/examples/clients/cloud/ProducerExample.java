@@ -93,13 +93,21 @@ public class ProducerExample {
 
     // Create a dummy message
     Producer<String, PageviewRecord> producer = new KafkaProducer<String, PageviewRecord>(props);
-    String key = "";
     PageviewRecord record = new PageviewRecord(10L, "the content of this field doesn't matter", "nor does this one");
 
     // Produce sample data
     try {
       while (true) {
-        producer.send(new ProducerRecord<String, PageviewRecord>(topic, key, record), null);
+        producer.send(new ProducerRecord<String, PageviewRecord>(topic, null, record), new Callback() {
+            @Override
+            public void onCompletion(RecordMetadata m, Exception e) {
+              if (e != null) {
+                e.printStackTrace();
+              } else {
+                System.out.printf("Produced record to topic %s%n", topic);
+              }
+            }
+        });
         // Add a small sleep so that buffer space is swamped
         Thread.sleep(100);
       }
