@@ -48,8 +48,18 @@ Caution
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
-|ccloud| Cluster Setup
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+|ccloud| Cluster and Monitoring Container Setup
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following instructions will:
+
+-  use ``ccloud-stack`` to create a |ccloud| cluster, a service account with proper acls, and a client configuration file
+
+-  create a ``cloud`` resource api-key for the ``ccloud-exporter``
+
+-  build a |ak| client docker image with the maven project's dependencies cache
+
+-  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
 
 #. Log in to the |ccloud| CLI:
 
@@ -75,9 +85,7 @@ Caution
        cd examples/ccloud-monitoring/
        git checkout |release_post_branch|
 
-#. Proceed to `Monitoring Container Setup`_ section if you would like to walk through how to setup a |ccloud| cluster, secrets, and monitoring pieces.
-   Alternatively, you can setup a |ccloud| cluster along with everything described in the `Monitoring Container Setup`_ section by running
-   :devx-examples:`start.sh script|ccloud-monitoring/start.sh`:
+#. Setup a |ccloud| cluster, secrets, and monitoring components by running :devx-examples:`start.sh script|ccloud-monitoring/start.sh`:
 
    .. code-block:: bash
 
@@ -87,114 +95,6 @@ Caution
    Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
    Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
-
-Monitoring Container Setup
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-The following instructions will:
-
--  use ``ccloud-stack`` to create a |ccloud| cluster, a service account with proper acls, and a client configuration file
-
--  create a ``cloud`` resource api-key for the ``ccloud-exporter``
-
--  build a |ak| client docker image with the maven project's dependencies cache
-
--  stand up numerous docker containers (2 consumers with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
-
-#. Create a |ccloud| cluster by running the following commands. This will take a few minutes:
-
-   .. code-block:: bash
-
-      source ../utils/ccloud_library.sh
-      export EXAMPLE="ccloud-monitoring"
-      ccloud::create_ccloud_stack false
-
-   The output should resemble the content below:
-
-   .. code-block:: text
-
-      Creating Confluent Cloud stack for service account demo-app-16798, ID: 184498.
-      Set Kafka cluster "lkc-36pwo" as the active cluster for environment "env-oz8kp".
-
-      Waiting up to 720 seconds for Confluent Cloud cluster to be ready and for credentials to propagate
-
-      Sleeping an additional 80 seconds to ensure propagation of all metadata
-      Set API Key "242FB4O5U67ORXTT" as the active API key for "lkc-36pwo".
-
-      Client configuration file saved to: stack-configs/java-service-account-184498.config
-
-#. Map the client configuration file that was created above to the environment variable ``CONFIG_FILE``, see below.
-   Your client configuration file name may differ from what is shown here.
-
-   .. code-block:: text
-
-      export CONFIG_FILE=stack-configs/java-service-account-184498.config
-
-#. Prior to starting any docker containers, create an api-key for the ``cloud`` resource with the command below. The
-   `ccloud-exporter <https://github.com/Dabz/ccloudexporter/blob/master/README.md>`_ uses the
-   key and secret to authenticate to |ccloud|. ``ccloud-exporter`` queries the
-   `Confluent Metrics API <https://docs.confluent.io/cloud/current/monitoring/metrics-api.html>`_
-   for metrics about your |ccloud| deployment and displays them in a Prometheus scrapable
-   webpage.
-
-   .. code-block:: bash
-
-      ccloud api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json
-
-   Verify your output resembles:
-
-   .. code-block:: text
-
-      {
-        "key": "LUFEIWBMYXD2AMN5",
-        "secret": "yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
-      }
-
-   The value of the API key, in this case ``LUFEIWBMYXD2AMN5``, and API secret, in this case
-   ``yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd``, may differ in your output.
-
-#. Create the following environment variables, substituting in your |ccloud| API key and secret created in the step earlier.
-
-   .. code-block:: bash
-
-      export METRICS_API_KEY=LUFEIWBMYXD2AMN5
-      export METRICS_API_SECRET=yad2iQkA9zxGvGYU1dmk+wiFJUNktQ3BtcRV9MrspaYhS9Z8g9ulZ7yhXtkRNNLd"
-
-   These environment variables will be used by the ``ccloud-exporter`` container.
-
-#. Create one more environment variable, ``CCLOUD_CLUSTER``, that will be used by the ``ccloud-exporter``.
-   You can find your |ccloud| cluster ID by either running ``ccloud kafka cluster list`` or looking in the client configuration file (``stack-configs/java-service-account-184498.config``) for ``# KAFKA CLUSTER ID: <cluster id>``.
-
-   .. code-block:: bash
-
-      export CLOUD_CLUSTER=lkc-x6m01
-
-#. Create the ``localbuild/client:latest`` docker image with the following command:
-
-   .. code-block:: bash
-
-      docker build -t localbuild/client:latest .
-
-   This image caches Kafka client dependencies so that they won't need to be pulled each time you start a client container.
-
-#. Start up Prometheus, Grafana, a ccloud-exporter, a node-exporter, and a few Kafka clients in Docker:
-
-   .. code-block:: bash
-
-      docker-compose up -d
-
-   Your output will resemble:
-
-   .. code-block:: text
-
-      Creating network "ccloud-monitoring_default" with the default driver
-      Creating prometheus         ... done
-      Creating kafka-lag-exporter ... done
-      Creating grafana            ... done
-      Creating node-exporter      ... done
-      Creating ccloud-exporter    ... done
-      Creating producer           ... done
-      Creating consumer-1         ... done
-      Creating consumer-2         ... done
 
 Validate Setup
 ~~~~~~~~~~~~~~
