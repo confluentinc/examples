@@ -5,7 +5,7 @@ Observability Overview and Setup
 
 Using |ccloud| has the advantage of circumventing the trials and tribulations one would face when monitoring
 an on-prem Kafka cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
-Your success in |ccloud| largely depends on how well your applications are performing. Monitoring your client
+Your success in |ccloud| largely depends on how well your applications are performing. Observability into the performance and status of your client
 applications gives you insights on how to fine tune your producers and consumers, when to scale
 your |ccloud| cluster, what might be going wrong, and how to resolve the problem.
 
