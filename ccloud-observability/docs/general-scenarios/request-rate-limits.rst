@@ -1,9 +1,9 @@
-.. _ccloud-observability-general-request-rate-limit:
+.. _ccloud-observability-general-request-rate-limits:
 
 Request rate limits
 ********************
 
-If request limits are hit, requests may be refused and clients may be throttled to keep the cluster stable. This throttling
+If request rate limits are hit, requests may be refused and clients may be throttled to keep the cluster stable. This throttling
 would register as non-zero values for the producer client ``produce-throttle-time-max`` and
 ``produce-throttle-time-avg`` metrics and consumer client ``fetch-throttle-time-max`` and ``fetch-throttle-time-avg`` metrics.
 
@@ -20,7 +20,7 @@ would register as non-zero values for the producer client ``produce-throttle-tim
    |Confluent Cloud Request Breakdown|
 
 #. Reduce requests by adjusting producer batching configurations (``linger.ms``), consumer
-   client batching configurations (``fetch.max.wait.ms``), and shut down inactive clients.
+   batching configurations (``fetch.max.wait.ms``), and shut down inactive clients.
 
 
 .. |Confluent Cloud Panel|
