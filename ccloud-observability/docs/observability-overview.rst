@@ -27,10 +27,6 @@ Prerequisites
 -  Local `install of Confluent Cloud CLI
    <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.21.0 or later)
 
--  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
-
--  `mvn <https://maven.apache.org/install.html>`__ installed on your host
-
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
 -  `Docker <https://docs.docker.com/get-docker/>`__ installed on your host
