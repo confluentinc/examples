@@ -15,12 +15,12 @@ would register as non-zero values for the producer client ``produce-throttle-tim
 
    |Confluent Cloud Panel|
 
-#. See a breakdown of where the requests are to with the ```` panel.
+#. Scroll lower down on the dashboard to see a breakdown of where the requests are to in the ``Request rate`` stacked column chart.
 
    |Confluent Cloud Request Breakdown|
 
-#. To reduce usage on this dimension, you can adjust producer batching configurations (``linger.ms``), consumer
-   client batching configurations (``fetch.max.wait.ms``), and shut down otherwise inactive clients.
+#. Reduce requests by adjusting producer batching configurations (``linger.ms``), consumer
+   client batching configurations (``fetch.max.wait.ms``), and shut down inactive clients.
 
 
 .. |Confluent Cloud Panel|
