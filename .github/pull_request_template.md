@@ -13,7 +13,7 @@ _Describe the validation already done, or needs to be done, by the PR submitter.
 <!-- - [ ] Documentation -->
 <!-- - [ ] ccloud/beginner-cloud -->
 <!-- - [ ] ccloud/ccloud-stack -->
-<!-- - [ ] ccloud-monitoring -->
+<!-- - [ ] ccloud-observability -->
 <!-- - [ ] clickstream -->
 <!-- - [ ] clients/avro -->
 <!-- - [ ] clients/cloud -->
@@ -38,7 +38,7 @@ _Describe the tasks/validation that the PR submitter is requesting to be done by
 <!-- - [ ] Documentation -->
 <!-- - [ ] ccloud/beginner-cloud -->
 <!-- - [ ] ccloud/ccloud-stack -->
-<!-- - [ ] ccloud-monitoring -->
+<!-- - [ ] ccloud-observability -->
 <!-- - [ ] clickstream -->
 <!-- - [ ] clients/avro -->
 <!-- - [ ] clients/cloud -->

@@ -1,0 +1,94 @@
+version: '2.3'
+volumes:
+  database:
+
+x-network: &cap-add
+  cap_add:
+    - NET_ADMIN
+
+# Note: src code and dependencies are built into cnfldemos/ccloud-observability-client
+#       the Dockerfile for cnfldemos/ccloud-observability-client can be found in this directory--called Dockerfile
+x-client-base: &client-base
+  image: cnfldemos/ccloud-observability-client:0.1.0
+  restart: always
+  ports:
+    - 1234
+  volumes:
+    - ./$CONFIG_FILE:/tmp/client.config
+    - ./monitoring_configs/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar
+    - ./monitoring_configs/jmx-exporter/kafka_client.yml:/usr/share/jmx-exporter/kafka_client.yml
+    - ./:/tmp/java/
+  environment:
+    MAVEN_OPTS: -javaagent:/usr/share/jmx-exporter/jmx_prometheus_javaagent-0.12.0.jar=1234:/usr/share/jmx-exporter/kafka_client.yml
+
+services:
+  node-exporter:
+    image: prom/node-exporter:v0.18.1
+    container_name: node-exporter
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--collector.filesystem.ignored-mount-points"
+      - "^(aufs|proc|nsfs|shm|cgroup|tmpfs|binfmt_misc|debugfs|devpts|fusectl|hugetlbfs|fuse.lxcfs|mqueue|pstore|securityfs|sysfs|autofs|devtmpfs|configfs)"
+
+  ccloud-exporter:
+    image: dabz/ccloudexporter:latest
+    container_name: ccloud-exporter
+    hostname: ccloud-exporter
+    restart: always
+    environment:
+      - CCLOUD_API_KEY=$METRICS_API_KEY
+      - CCLOUD_API_SECRET=$METRICS_API_SECRET
+      - CCLOUD_CLUSTER=$CLOUD_CLUSTER
+
+  prometheus:
+    image: prom/prometheus:v2.24.1
+    container_name: prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./monitoring_configs/prometheus/:/etc/prometheus/
+
+  grafana:
+    image: grafana/grafana:7.3.7
+    container_name: grafana
+    environment:
+      - "GF_INSTALL_PLUGINS=grafana-piechart-panel"
+      - "GF_SECURITY_ADMIN_USER=admin"
+      - "GF_SECURITY_ADMIN_PASSWORD=password"
+      - "GF_USERS_ALLOW_SIGN_UP=false"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./monitoring_configs/grafana/provisioning/:/etc/grafana/provisioning/
+
+  producer:
+    <<: *client-base
+    command: >
+      bash -c "mvn clean compile -f /tmp/java/
+      &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
+    <<: *cap-add
+
+  consumer:
+    <<: *client-base
+    command: >
+      bash -c "sleep 15 &&
+      mvn compile -f /tmp/java/
+      &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
+    <<: *cap-add
+
+  kafka-lag-exporter:
+    image: lightbend/kafka-lag-exporter:0.5.5
+    container_name: kafka-lag-exporter
+    hostname: kafka-lag-exporter
+    restart: always
+    volumes:
+      - ./monitoring_configs/kafka-lag-exporter/:/opt/docker/conf/
+    environment:
+      - CLOUD_CLUSTER=$CLOUD_CLUSTER
+      - BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS
+      - SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG
