@@ -84,7 +84,7 @@ static int run_producer (const char *topic, int msgcnt,
         }
 
         /* Create the topic. */
-        if (create_topic(rk, topic, 1, 3) == -1) {
+        if (create_topic(rk, topic, 1) == -1) {
                 rd_kafka_destroy(rk);
                 return -1;
         }
