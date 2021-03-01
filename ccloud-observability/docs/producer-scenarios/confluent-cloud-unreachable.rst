@@ -42,11 +42,8 @@ Diagnose the problem
 
    For a connectivity problem in a client, look specifically at the ``Requests (rate)``. If this value
    were yellow or red, the client connectivity problem could be due to hitting the |ccloud|
-   requests rate limit. If you exceed the maximum, requests may be refused.
-
-   If request limits are hit, clients may also be throttled to keep the cluster stable. This throttling would register as non-zero
-   values for the producer client ``produce-throttle-time-max`` and ``produce-throttle-time-avg`` metrics and
-   consumer client ``fetch-throttle-time-max`` and ``fetch-throttle-time-avg`` metrics.
+   requests rate limit. If you exceed the maximum, requests may be refused. See the
+   :ref:`General Request Rate Limits scenario <ccloud-observability-general-request-rate-limits>` for more details.
 
 #. Check the producer logs for more information about what is going wrong. Use the following docker command to get the producer logs:
 
