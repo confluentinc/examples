@@ -9,3 +9,4 @@ General Client Scenarios
 
    Overview <general-scenarios/overview>
    Failing to create a new partition <general-scenarios/fail-to-create-partition>
+   Request rate limits <general-scenarios/request-rate-limits>
