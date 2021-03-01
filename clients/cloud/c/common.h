@@ -25,7 +25,7 @@
 extern int run;
 rd_kafka_conf_t *read_config (const char *config_file);
 int create_topic (rd_kafka_t *rk, const char *topic,
-                  int num_partitions, int replication_factor);
+                  int num_partitions);
 
 void error_cb (rd_kafka_t *rk, int err, const char *reason, void *opaque);
 
