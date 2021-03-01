@@ -55,6 +55,7 @@ public class ConsumerExample {
     props.put(KafkaJsonDeserializerConfig.JSON_VALUE_TYPE, PageviewRecord.class);
     props.put(ConsumerConfig.GROUP_ID_CONFIG, "demo-cloud-observability-1");
     props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+    props.put(ConsumerConfig.CLIENT_ID_CONFIG, System.getenv("HOSTNAME"));
 
     // Create consumer
     final Consumer<String, PageviewRecord> consumer = new KafkaConsumer<String, PageviewRecord>(props);

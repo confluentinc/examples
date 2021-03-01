@@ -79,6 +79,8 @@ public class ProducerExample {
     // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
     // Follow these instructions to create this file: https://docs.confluent.io/platform/current/tutorials/examples/clients/docs/java.html
     final Properties props = loadConfig(args[0]);
+    props.put(ProducerConfig.CLIENT_ID_CONFIG, System.getenv("HOSTNAME"));
+
 
     // Create topic if needed
     final String topic = args[1];
