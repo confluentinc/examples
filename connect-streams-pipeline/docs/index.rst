@@ -30,6 +30,16 @@ It showcases different ways to produce data to |ak-tm| topics, with and without 
 
 Detailed walk-thru of this example is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blog post `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
 
+|ccloud|
+--------
+
+You can apply the same concepts explained in this example to |ccloud|.
+|ccloud| also has fully managed connectors that you can use, instead of self-managing your own, so that you can run 100% in the cloud.
+To try it out, create your own |ccloud| instance (see :ref:`ccloud-stack` for an easy way to spin up a new environment), deploy a connector, and then point your applications to |ccloud|.
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
+
+
 Description of Data
 -------------------
 
