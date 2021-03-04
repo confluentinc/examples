@@ -4,8 +4,8 @@ security.protocol=SASL_SSL
 client.security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
 client.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
-client.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<CCLOUD_API_KEY>' password='<CCLOUD_API_SECRET>';
+client.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<CCLOUD_API_KEY>' password='<CCLOUD_API_SECRET>';
 
 # Confluent Schema Registry configuration for REST Proxy
 client.basic.auth.credentials.source=USER_INFO
