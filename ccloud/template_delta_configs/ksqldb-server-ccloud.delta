@@ -2,18 +2,19 @@
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
-sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<CCLOUD_API_KEY>' password='<CCLOUD_API_SECRET>';
 basic.auth.credentials.source=USER_INFO
 schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
 schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>
+replication.factor=3
 
 # Confluent Monitoring Interceptor specific configuration
 confluent.monitoring.interceptor.sasl.mechanism=PLAIN
 confluent.monitoring.interceptor.security.protocol=SASL_SSL
 confluent.monitoring.interceptor.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
-confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+confluent.monitoring.interceptor.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<CCLOUD_API_KEY>' password='<CCLOUD_API_SECRET>';
 
-# KSQL Server specific configuration
+# ksqlDB Server specific configuration
 producer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringProducerInterceptor
 consumer.interceptor.classes=io.confluent.monitoring.clients.interceptor.MonitoringConsumerInterceptor
 ksql.streams.producer.retries=2147483647
@@ -24,7 +25,7 @@ ksql.streams.replication.factor=3
 ksql.internal.topic.replicas=3
 ksql.sink.replicas=3
 
-# Confluent Schema Registry configuration for KSQL Server
+# Confluent Schema Registry configuration for ksqlDB Server
 ksql.schema.registry.basic.auth.credentials.source=USER_INFO
 ksql.schema.registry.basic.auth.user.info=<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>
 ksql.schema.registry.url=https://<SCHEMA_REGISTRY_ENDPOINT>
