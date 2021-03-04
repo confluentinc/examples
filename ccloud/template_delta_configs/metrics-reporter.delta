@@ -3,4 +3,4 @@ confluent.metrics.reporter.topic.replicas=3
 confluent.metrics.reporter.sasl.mechanism=PLAIN
 confluent.metrics.reporter.security.protocol=SASL_SSL
 confluent.metrics.reporter.bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
-confluent.metrics.reporter.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<CCLOUD_API_KEY>" password\="<CCLOUD_API_SECRET>";
+confluent.metrics.reporter.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<CCLOUD_API_KEY>' password='<CCLOUD_API_SECRET>';
