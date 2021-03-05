@@ -1,0 +1,7 @@
+bootstrap.servers="<CCLOUD_BOOTSTRAP_SERVER>"
+security.protocol=SASL_SSL
+sasl.mechanisms=PLAIN
+sasl.username="<CCLOUD_API_KEY>"
+sasl.password="<CCLOUD_API_SECRET>"
+schema.registry.url="https://<SCHEMA_REGISTRY_ENDPOINT>"
+basic.auth.user.info="<SCHEMA_REGISTRY_API_KEY>:<SCHEMA_REGISTRY_API_SECRET>"
