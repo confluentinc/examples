@@ -1100,6 +1100,7 @@ function ccloud::destroy_ccloud_stack() {
 # Kafka Clients:
 # - Java (Producer/Consumer)
 # - Java (Streams)
+# - librdkafka config
 # - Python
 # - .NET
 # - Go
@@ -1568,6 +1569,24 @@ EOF
   chmod $PERM $JAVA_STREAMS_CONFIG
   
   ################################################################################
+  # librdkafka
+  ################################################################################
+  LIBRDKAFKA_CONFIG=$DEST/librdkafka.delta
+  echo "$LIBRDKAFKA_CONFIG"
+  rm -f $LIBRDKAFKA_CONFIG
+  
+  cat <<EOF >> $LIBRDKAFKA_CONFIG
+bootstrap.servers="$BOOTSTRAP_SERVERS"
+security.protocol=SASL_SSL
+sasl.mechanisms=PLAIN
+sasl.username="$CLOUD_KEY"
+sasl.password="$CLOUD_SECRET"
+schema.registry.url="$SCHEMA_REGISTRY_URL"
+basic.auth.user.info="$SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO"
+EOF
+  chmod $PERM $LIBRDKAFKA_CONFIG
+  
+  ################################################################################
   # Python
   ################################################################################
   PYTHON_CONFIG=$DEST/python.delta
@@ -1790,7 +1809,6 @@ EOF
 
   return 0
 }
-
 
 ##############################################
 # These are some duplicate functions from 
