@@ -705,7 +705,7 @@ function ccloud::login_ccloud_cli(){
   OUTPUT=$(
   expect <<END
     log_user 1
-    spawn ccloud login --url $URL
+    spawn ccloud login --url $URL --prompt
     expect "Email: "
     send "$EMAIL\r";
     expect "Password: "
