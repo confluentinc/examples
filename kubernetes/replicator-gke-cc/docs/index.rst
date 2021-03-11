@@ -38,7 +38,7 @@ The following applications or libraries are required to be installed and availab
 | ``GCP sdk core`` | ``2020.03.24``    |                                                           |
 | ``GKE cluster``  | ``1.15.11-gke.1`` |                                                           |
 +------------------+-------------------+-----------------------------------------------------------+
-| ``ccloud``       | ``v1.0.0``        | https://docs.confluent.io/ccloud-cli/current/install.html |
+| ``ccloud``       | ``v1.24.0``        | https://docs.confluent.io/ccloud-cli/current/install.html |
 +------------------+-------------------+-----------------------------------------------------------+
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst

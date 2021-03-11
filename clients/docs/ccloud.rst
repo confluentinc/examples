@@ -15,7 +15,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.22.1 or later.
+-  Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.24.0 or later.
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
 
