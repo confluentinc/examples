@@ -28,7 +28,7 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-CCLOUD_MIN_VERSION=${CCLOUD_MIN_VERSION:-1.22.1}
+CCLOUD_MIN_VERSION=${CCLOUD_MIN_VERSION:-1.24.0}
 
 # --------------------------------------------------------------
 # Library
