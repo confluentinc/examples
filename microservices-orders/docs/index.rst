@@ -135,7 +135,7 @@ Prerequisites
   * Java 1.8 to run the demo application
   * Maven to compile the demo application
 
-* For the end-to-end example:
+* For running the end-to-end example on |ccloud|, with connectors, Elasticsearch, and Kibana:
 
   * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access
   * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.24.0 or later
