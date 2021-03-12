@@ -127,23 +127,11 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 * `Kafka Streams documentation <https://docs.confluent.io/platform/current/streams/index.html>`__
 
 
-Environment Setup
-~~~~~~~~~~~~~~~~~
+Prerequisites
+~~~~~~~~~~~~~
 
-Make sure you have the following pre-requisites, depending on whether you are running with |ccloud| or locally in Docker:
-
-|ccloud|
---------
-
-* Docker version >= 19.00.0
-* Docker Compose version >= 1.25.0 with Docker Compose file format 3
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
 * |ccloud| CLI. See `Install and Configure the Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__.
-
-Docker
-------
-
 * Docker version >= 19.00.0
 * Docker Compose version >= 1.25.0 with Docker Compose file format 3
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
@@ -212,39 +200,30 @@ Running the fully working example end-to-end provides context for each of the la
 
 Ensure you've followed the appropriate prerequisites section above prior to starting.
 
-#. Start the end-to-end example in one of two modes, depending on whether you are running with |ccloud| or locally in Docker:
+#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. 
 
-   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. Then run the full solution using the provided script.
+   .. sourcecode:: bash
 
-     .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
+      ccloud login --save
 
-     .. sourcecode:: bash
+#. Start the end-to-end example by running the provided script.
 
-        ccloud login --save
-        ./start-ccloud.sh
+   .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
 
-   * Docker: run the full solution using ``docker-compose`` (this also starts a local |cp| cluster in Docker containers).
+   .. sourcecode:: bash
 
-     .. sourcecode:: bash
+      ./start-ccloud.sh
 
-        docker-compose up -d --build
-
-#. After starting the example with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
+#. After starting the example, the microservices applications will be running and Kafka topics will have data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
 
-   * |ccloud|: sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
+#. Sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
 
    .. sourcecode:: bash
 
       source delta_configs/env.delta; CONFIG_FILE=/opt/docker/stack-configs/java-service-account-<service-account-id>.config ./read-topics-ccloud.sh
-
-   * Docker: sample topic data by running:
-
-   .. sourcecode:: bash
-
-      ./read-topics-docker.sh
 
 #. Explore the data with Elasticsearch and Kibana
 
@@ -258,47 +237,23 @@ Ensure you've followed the appropriate prerequisites section above prior to star
        :alt: image
        :width: 600px
 
-#. View and monitor the streaming applications.
+#. View and monitor the streaming applications. Use the |ccloud| web user interface (login at https://confluent.cloud/login) to explore topics, consumers, Data flow, and the |ksql-cloud| application.
 
-   * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application:
+   .. figure:: images/data-flow.png
+       :alt: image
+       :width: 600px
 
-     * Browse to: https://confluent.cloud/login
-     * View the Data flow screen to see how events flow through the various microservices
+#. View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
      
-     .. figure:: images/data-flow.png
-         :alt: image
-         :width: 600px
+   .. figure:: images/ksqldb-orders-flow.png
+       :alt: image
+       :width: 600px
 
-     * View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
-     
-     .. figure:: images/ksqldb-orders-flow.png
-         :alt: image
-         :width: 600px
+#. When you are done, make sure to stop the example before proceeding to the exercises. Run the command below, where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder.
 
-   * If you are running with Docker, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
+   .. sourcecode:: bash
 
-     * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
-     * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
-     * Data Streams tab: view the throughput and latency performance of the microservices
-
-     .. figure:: images/streams-monitoring.png
-         :alt: image
-         :width: 600px
-
-
-#. When you are done, make sure to stop the example before proceeding to the exercises.
-
-   * |ccloud|: (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
-
-     .. sourcecode:: bash
-
-        ./stop-ccloud.sh stack-configs/java-service-account-12345.config
-
-   * Docker:
-
-     .. sourcecode:: bash
-
-        docker-compose down
+      ./stop-ccloud.sh stack-configs/java-service-account-12345.config
 
 
 Exercise 1: Persist events 
@@ -678,8 +633,6 @@ You can use these to build stateful aggregates on streaming data.
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
-
-If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the |ksqldb| CLI prompt.
 
 Assume you already have a |ksqldb| stream of orders called `orders` and a |ksqldb| table of customers called `customers_table`.
 From the |ksqldb| CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
