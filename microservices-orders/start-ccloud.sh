@@ -34,7 +34,7 @@ printf "\n====== Creating demo topics\n"
 ./scripts/create-topics-ccloud.sh ./topics.txt
 
 printf "\n====== Starting local services in Docker\n"
-docker-compose -f docker-compose-ccloud.yml up -d --build 
+docker-compose up -d --build 
 
 printf "\n====== Giving services $WARMUP_TIME seconds to startup\n"
 sleep $WARMUP_TIME 
