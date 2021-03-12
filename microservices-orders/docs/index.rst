@@ -130,11 +130,18 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 Prerequisites
 ~~~~~~~~~~~~~
 
-* |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
-* |ccloud| CLI. See `Install and Configure the Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__.
-* Docker version >= 19.00.0
-* Docker Compose version >= 1.25.0 with Docker Compose file format 3
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
+* For compiling and running the applications:
+
+  * Java 1.8 to run the demo application
+  * Maven to compile the demo application
+
+* For the end-to-end example:
+
+  * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access
+  * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.24.0 or later
+  * Docker version >= 19.00.0
+  * Docker Compose version >= 1.25.0 with Docker Compose file format 3
+  * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 6GB (default is 2GB)
 
 
 ====================
@@ -157,8 +164,6 @@ Tutorial
 
 Setup the Tutorial
 ~~~~~~~~~~~~~~~~~~
-
-#. Follow the "Environment Setup" instructions.
 
 #. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
@@ -197,8 +202,9 @@ Exercise 0: Run end-to-end example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Running the fully working example end-to-end provides context for each of the later exercises.
+The application code is run locally, and the |ak| cluster is in |ccloud|.
 
-Ensure you've followed the appropriate prerequisites section above prior to starting.
+Ensure you have followed the appropriate prerequisites section above prior to starting.
 
 #. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. 
 
@@ -214,7 +220,7 @@ Ensure you've followed the appropriate prerequisites section above prior to star
 
       ./start-ccloud.sh
 
-#. After starting the example, the microservices applications will be running and Kafka topics will have data in them.
+#. After starting the example, the microservices applications will be running localy and your |ccloud| instance will have Kafka topics with data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
