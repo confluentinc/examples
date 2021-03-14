@@ -144,20 +144,6 @@ Prerequisites
   * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 6GB (default is 2GB)
 
 
-====================
-Cost to Run Tutorial
-====================
-
-Caution
-~~~~~~~
-
-.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
-
-|ccloud| Promo Code
-~~~~~~~~~~~~~~~~~~~
-
-.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
-
 ========
 Tutorial
 ========
@@ -178,33 +164,26 @@ Setup the Tutorial
       cd examples/microservices-orders
       git checkout |release_post_branch|
 
-#. Run the full end-to-end working solution to see a customer-representative deployment of a streaming application. This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
-
-   - Exercise 0: Run end-to-end example
-
-#. After you have successfully run the full solution, go through each of the exercises 1-7 to better understand the basic principles of streaming applications:
-
-   - Exercise 1: Persist events 
-   - Exercise 2: Event-driven applications
-   - Exercise 3: Enriching streams with joins
-   - Exercise 4: Filtering and branching
-   - Exercise 5: Stateful operations
-   - Exercise 6: State stores
-   - Exercise 7: Enrichment with |ksqldb| 
-
-#. For each of the above exercises:
-
-   - Read the description to understand the focus area for the exercise
-   - Edit the file specified in each exercise and fill in the missing code
-   - Copy the file to the project, then compile the project and run the test for the service to ensure it works
-
 Exercise 0: Run end-to-end example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This exercise is optional but we suggest you run the full end-to-end working solution to see a customer-representative deployment of a streaming application.
+This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
 Running the fully working example end-to-end provides context for each of the later exercises.
 The application code is run locally, and the |ak| cluster is in |ccloud|.
 
-Ensure you have followed the appropriate prerequisites section above prior to starting.
+Cost to Run
+-----------
+
+The following cost applies only to Exercise 0 which is run with |ccloud|.
+The other exercises have no cost because they are run locally.
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
+
+Steps
+-----
 
 #. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. 
 
@@ -280,6 +259,10 @@ Posting an Order is essentially a REST call, and it creates the event in Kafka.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrdersService.java`
 
+.. sourcecode:: bash
+
+   ls exercises/OrdersService.java
+
 #. TODO 1.1: create a new `ProducerRecord` with a key specified by `bean.getId()` and value of the bean, to the orders topic whose name is specified by `ORDERS.name()`
 #. TODO 1.2: produce the newly created record using the existing `producer` and pass use the `OrdersService#callback` function to send the `response` and the record key
 
@@ -338,6 +321,10 @@ Instead of using a series of synchronous calls to submit and validate orders, th
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrderDetailsService.java|microservices-orders/exercises/OrderDetailsService.java`
+
+.. sourcecode:: bash
+
+   ls exercises/OrderDetailsService.java
 
 #. TODO 2.1: subscribe the existing `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
 #. TODO 2.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
@@ -404,6 +391,10 @@ Additionally, this service performs dynamic routing: an enriched order record is
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.java|microservices-orders/exercises/EmailService.java`
 
+.. sourcecode:: bash
+
+   ls exercises/EmailService.java
+
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
 #. TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
 
@@ -464,6 +455,10 @@ Then you will define define another set of criteria to branch records into two d
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/FraudService.java|microservices-orders/exercises/FraudService.java`
 
+.. sourcecode:: bash
+
+   ls exercises/FraudService.java
+
 #. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
 #. TODO 4.2: create a `KStream<String, OrderValue>` array from the `ordersWithTotals` stream by branching the records based on `OrderValue#getValue`
 
@@ -518,6 +513,10 @@ Additionally, you will use a stateful operation `reduce` to collapse duplicate r
 Before running `reduce`, you will group the records to repartition the data, which is generally required before using an aggregation operator.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/ValidationsAggregatorService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
+
+.. sourcecode:: bash
+
+   ls exercises/ValidationsAggregatorService.java
 
 #. TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
 #. TODO 5.2: group the records by key using `KStream#groupByKey`, providing the existing Serialized instance for ORDERS
@@ -578,6 +577,10 @@ In this exercise, you will create a state store for the Inventory Service.
 This state store is initialized with data from a Kafka topic before the service starts processing, and then it is updated as new orders are created.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/InventoryService.java|microservices-orders/exercises/InventoryService.java`
+
+.. sourcecode:: bash
+
+   ls exercises/InventoryService.java
 
 #. TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
 
