@@ -6,7 +6,8 @@
 #########################################
 
 NAME=`basename "$0"`
-QUIET="${QUIET:-true}"
+# Setting default QUIET=false to surface potential errors
+QUIET="${QUIET:-false}"
 [[ $QUIET == "true" ]] && 
   REDIRECT_TO="/dev/null" ||
   REDIRECT_TO="/dev/stdout"
