@@ -481,7 +481,9 @@ function ccloud::maybe_create_ksqldb_app() {
 
 function ccloud::create_acls_all_resources_full_access() {
   SERVICE_ACCOUNT_ID=$1
-  [[ $QUIET == "true" ]] && 
+  # Setting default QUIET=false to surface potential errors
+  QUIET="${QUIET:-false}"
+  [[ $QUIET == "false" ]] &&
     local REDIRECT_TO="/dev/null" ||
     local REDIRECT_TO="/dev/stdout"
 
@@ -508,10 +510,13 @@ function ccloud::create_acls_all_resources_full_access() {
 
 function ccloud::delete_acls_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
+  # Setting default QUIET=false to surface potential errors
+  QUIET="${QUIET:-false}"
+  [[ $QUIET == "false" ]] &&
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
   echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
-
-  local REDIRECT_TO="/dev/null"
 
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
   ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
@@ -896,7 +901,7 @@ function ccloud::create_ccloud_stack() {
   
   ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
 
-  QUIET="${QUIET:-true}"
+  QUIET="${QUIET:-false}"
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
   EXAMPLE=${EXAMPLE:-ccloud-stack-function}
@@ -1036,13 +1041,16 @@ function ccloud::destroy_ccloud_stack() {
   CONFIG_FILE=${CONFIG_FILE:-"stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config"}
   KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
 
-  # Setting default QUIET=false to surface potential deletion errors
+  # Setting default QUIET=false to surface potential errors
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] && 
     local REDIRECT_TO="/dev/null" ||
     local REDIRECT_TO="/dev/stdout"
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
+
+  # Delete associated ACLs
+  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
   if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
     local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
@@ -1060,7 +1068,7 @@ function ccloud::destroy_ccloud_stack() {
   # Delete API keys associated to the service account
   ccloud api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} ccloud api-key delete {}
 
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
+  # Delete service account
   ccloud service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
   if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then
