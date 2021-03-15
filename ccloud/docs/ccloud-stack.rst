@@ -70,7 +70,7 @@ Prerequisites
 =============
 
 - Create a user account in `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__
-- Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.24.0 or later.
+- Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later.
 - ``jq`` tool
 
 Note that ``ccloud-stack`` has been validated on macOS 10.15.3 with bash version 3.2.57.
