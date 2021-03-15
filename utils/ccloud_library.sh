@@ -510,6 +510,11 @@ function ccloud::create_acls_all_resources_full_access() {
 
 function ccloud::delete_acls_ccloud_stack() {
   SERVICE_ACCOUNT_ID=$1
+  # Setting default QUIET=false to surface potential errors
+  QUIET="${QUIET:-false}"
+  [[ $QUIET == "false" ]] &&
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/stdout"
 
   echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
 
