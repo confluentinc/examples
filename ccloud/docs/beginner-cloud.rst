@@ -31,7 +31,7 @@ Prerequisites
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
 -  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.24.0 or later)
+   <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.25.0 or later)
 
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
