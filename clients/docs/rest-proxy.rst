@@ -44,7 +44,7 @@ Setup
 
    .. code-block:: text
 
-      (cd ../../../ccloud/ && ./ccloud-generate-cp-configs.sh $HOME/.confluent/java.config)
+      ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
 
 #. Source the generated file of ``ENV`` variables.
 
@@ -66,6 +66,23 @@ Setup
 
       cat docker-compose.yml
 
+Basic Producer and Consumer
+---------------------------
+
+.. include:: includes/producer-consumer-description.rst
+
+
+Produce Records
+~~~~~~~~~~~~~~~
+
+#. Since you are not going to use |sr| in this section, comment out the following lines in the ``docker-compose.yml`` file:
+
+   .. code-block:: text
+
+      #KAFKA_REST_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      #KAFKA_REST_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      #KAFKA_REST_CLIENT_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+
 #. Start the |crest| Docker container by running the following command:
 
    .. code-block:: text
@@ -77,16 +94,6 @@ Setup
    .. code-block:: text
 
       docker-compose logs -f rest-proxy
-
-
-Basic Producer and Consumer
----------------------------
-
-.. include:: includes/producer-consumer-description.rst
-
-
-Produce Records
-~~~~~~~~~~~~~~~
 
 #. Get the |ak| cluster ID that the |crest| is connected to.
 
@@ -236,6 +243,15 @@ Consume Records
 
 #. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consume.sh`.
 
+Stop |crest|
+~~~~~~~~~~~~
+
+#. Stop Docker by running the following command:
+
+   .. code-block:: text
+
+       docker-compose down
+
 
 Avro and Confluent Cloud Schema Registry
 -----------------------------------------
@@ -253,6 +269,26 @@ Avro and Confluent Cloud Schema Registry
 
 Produce Avro Records
 ~~~~~~~~~~~~~~~~~~~~
+
+#. Since you are now going to use |sr| in this section, uncomment the following lines in the ``docker-compose.yml`` file:
+
+   .. code-block:: text
+
+      KAFKA_REST_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      KAFKA_REST_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      KAFKA_REST_CLIENT_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+
+#. Start the |crest| Docker container by running the following command:
+
+   .. code-block:: text
+
+       docker-compose up -d rest-proxy
+
+#. View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests`` to confirm |crest| has started.
+
+   .. code-block:: text
+
+      docker-compose logs -f rest-proxy
 
 #. Get the |ak| cluster ID that the |crest| is connected to.
 
@@ -443,8 +479,8 @@ Consume Avro Records
 
       {"subject":"test2-value","version":1,"id":100001,"schema":"[{\"type\":\"record\",\"name\":\"countInfo\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}]"}
 
-Stop
-----
+Stop |crest|
+~~~~~~~~~~~~
 
 #. Stop Docker by running the following command:
 
