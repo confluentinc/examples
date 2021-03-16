@@ -194,7 +194,7 @@ Create a ccloud-stack
       bootstrap.servers=<BROKER ENDPOINT>
       sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
       basic.auth.credentials.source=USER_INFO
-      schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+      basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
       ksql.endpoint=<KSQLDB ENDPOINT>
       ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
