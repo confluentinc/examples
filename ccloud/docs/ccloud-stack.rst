@@ -266,11 +266,12 @@ If you do not specify ``PRESERVE_ENVIRONMENT=true``, then the environment specif
    PRESERVE_ENVIRONMENT=true ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 
 To destroy the environment when destroying all the other resources in the ``ccloud-stack``, but the service account is not part of the environment name (i.e., multiple ``ccloud-stacks`` were created in the same environment), set the parameter ``ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID>``, as shown in the following example.
+Note that the service account ID in the environment name is not the same as the service account ID in the config name.
 If you do not specify the environment name prefix, then the destroy function will not be able to identify the proper environment ID to delete.
 
 .. code-block:: bash
 
-   ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID> ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+   ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID_original> ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID_current>.config
 
 
 Automated Workflows
