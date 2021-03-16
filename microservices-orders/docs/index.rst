@@ -138,7 +138,7 @@ Prerequisites
 * For running the end-to-end example on |ccloud|, with connectors, Elasticsearch, and Kibana:
 
   * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access
-  * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.24.0 or later
+  * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later
   * Docker version >= 19.00.0
   * Docker Compose version >= 1.25.0 with Docker Compose file format 3
   * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 6GB (default is 2GB)
