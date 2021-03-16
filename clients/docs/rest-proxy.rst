@@ -44,7 +44,7 @@ Setup
 
    .. code-block:: text
 
-      ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
+      (cd ../../../ccloud/ && ./ccloud-generate-cp-configs.sh $HOME/.confluent/java.config)
 
 #. Source the generated file of ``ENV`` variables.
 
