@@ -266,6 +266,18 @@ Avro and Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-schema-registry-2-java.rst
 
+#. Regenerate a file of ENV variables used by Docker to set the bootstrap
+   servers and security configuration.
+
+   .. code-block:: text
+
+      ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
+
+#. Source the regenerated file of ``ENV`` variables.
+
+   .. code-block:: text
+
+      source ./delta_configs/env.delta
 
 Produce Avro Records
 ~~~~~~~~~~~~~~~~~~~~
