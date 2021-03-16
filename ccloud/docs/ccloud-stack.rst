@@ -242,21 +242,21 @@ By default, the ``cloud-stack`` utility creates resources in the cloud provider 
 
       CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
 
-Use Existing Environment
-------------------------
+Re-use Existing Environment
+---------------------------
 
 By default, a new ``ccloud-stack`` creates a new environment.
 This means that, by default, ``./ccloud_stack_create.sh`` creates a new environment and ``./ccloud_stack_destroy.sh`` deletes the environment specified in the configuration file.
 However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/features.html#resource-limits-for-ccloud>`__, it may be desirable to work within an existing environment.
 
-To reuse an existing environment when creating a new ``ccloud-stack``, set the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the example:
+When you create a new stack, to reuse an existing environment, set the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the example:
 
 .. code-block:: bash
 
    ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
 When you destroy resources that were created by ``ccloud-stack``, the default behavior is that the environment specified by the service account ID in the configuration file is deleted.
-However, you have two additional options.
+However, there are two additional options.
 
 To preserve the environment when destroying all the other resources in the ``ccloud-stack``, set the parameter ``PRESERVE_ENVIRONMENT=true``, as shown in the following example.
 If you do not specify ``PRESERVE_ENVIRONMENT=true``, then the environment specified by the service account ID in the configuration file is deleted.
@@ -265,8 +265,8 @@ If you do not specify ``PRESERVE_ENVIRONMENT=true``, then the environment specif
 
    PRESERVE_ENVIRONMENT=true ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 
-To destroy the environment when destroying all the other resources in the ``ccloud-stack``, but the service account is not part of the environment name (you created multiple ``ccloud-stacks`` in the same environment), set the parameter ``ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID>``, as shown in the following example.
-If you do not specify this, then the destroy function will not be able to identify the environment ID to delete.
+To destroy the environment when destroying all the other resources in the ``ccloud-stack``, but the service account is not part of the environment name (i.e., multiple ``ccloud-stacks`` were created in the same environment), set the parameter ``ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID>``, as shown in the following example.
+If you do not specify the environment name prefix, then the destroy function will not be able to identify the proper environment ID to delete.
 
 .. code-block:: bash
 
