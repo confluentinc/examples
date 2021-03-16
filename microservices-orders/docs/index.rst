@@ -127,41 +127,22 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 * `Kafka Streams documentation <https://docs.confluent.io/platform/current/streams/index.html>`__
 
 
-Environment Setup
-~~~~~~~~~~~~~~~~~
+Prerequisites
+~~~~~~~~~~~~~
 
-Make sure you have the following pre-requisites, depending on whether you are running with |ccloud| or locally in Docker:
+* For compiling and running the applications:
 
-|ccloud|
---------
+  * Java 1.8 to run the demo application
+  * Maven to compile the demo application
 
-* Docker version >= 19.00.0
-* Docker Compose version >= 1.25.0 with Docker Compose file format 3
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
-* |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
-* |ccloud| CLI. See `Install and Configure the Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__.
+* For running the end-to-end example on |ccloud|, with connectors, Elasticsearch, and Kibana:
 
-Docker
-------
+  * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access
+  * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later
+  * Docker version >= 19.00.0
+  * Docker Compose version >= 1.25.0 with Docker Compose file format 3
+  * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 6GB (default is 2GB)
 
-* Docker version >= 19.00.0
-* Docker Compose version >= 1.25.0 with Docker Compose file format 3
-* In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
-
-
-====================
-Cost to Run Tutorial
-====================
-
-Caution
-~~~~~~~
-
-.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
-
-|ccloud| Promo Code
-~~~~~~~~~~~~~~~~~~~
-
-.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
 ========
 Tutorial
@@ -169,8 +150,6 @@ Tutorial
 
 Setup the Tutorial
 ~~~~~~~~~~~~~~~~~~
-
-#. Follow the "Environment Setup" instructions.
 
 #. Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ GitHub repository.
 
@@ -185,66 +164,51 @@ Setup the Tutorial
       cd examples/microservices-orders
       git checkout |release_post_branch|
 
-#. Run the full end-to-end working solution to see a customer-representative deployment of a streaming application. This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
-
-   - Exercise 0: Run end-to-end example
-
-#. After you have successfully run the full solution, go through each of the exercises 1-7 to better understand the basic principles of streaming applications:
-
-   - Exercise 1: Persist events 
-   - Exercise 2: Event-driven applications
-   - Exercise 3: Enriching streams with joins
-   - Exercise 4: Filtering and branching
-   - Exercise 5: Stateful operations
-   - Exercise 6: State stores
-   - Exercise 7: Enrichment with |ksqldb| 
-
-#. For each of the above exercises:
-
-   - Read the description to understand the focus area for the exercise
-   - Edit the file specified in each exercise and fill in the missing code
-   - Copy the file to the project, then compile the project and run the test for the service to ensure it works
-
 Exercise 0: Run end-to-end example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+This exercise is optional but we suggest you run the full end-to-end working solution to see a customer-representative deployment of a streaming application.
+This requires no code development; it just provides context for each of the exercises in which you will develop pieces of the microservices.
 Running the fully working example end-to-end provides context for each of the later exercises.
+The application code is run locally, and the |ak| cluster is in |ccloud|.
 
-Ensure you've followed the appropriate prerequisites section above prior to starting.
+Cost to Run
+-----------
 
-#. Start the end-to-end example in one of two modes, depending on whether you are running with |ccloud| or locally in Docker:
+The following cost applies only to Exercise 0 which is run with |ccloud|.
+The other exercises have no cost because they are run locally.
 
-   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. Then run the full solution using the provided script.
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
 
-     .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
-     .. sourcecode:: bash
+Steps
+-----
 
-        ccloud login --save
-        ./start-ccloud.sh
+#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. 
 
-   * Docker: run the full solution using ``docker-compose`` (this also starts a local |cp| cluster in Docker containers).
+   .. sourcecode:: bash
 
-     .. sourcecode:: bash
+      ccloud login --save
 
-        docker-compose up -d --build
+#. Start the end-to-end example by running the provided script.
 
-#. After starting the example with one of the above commands, the microservices applications will be running and Kafka topics will have data in them.
+   .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
+
+   .. sourcecode:: bash
+
+      ./start-ccloud.sh
+
+#. After starting the example, the microservices applications will be running localy and your |ccloud| instance will have Kafka topics with data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
 
-   * |ccloud|: sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
+#. Sample topic data by running the following command, substituting your configuration file name with the file located in the ``stack-configs`` folder example (``java-service-account-12345.config``).
 
    .. sourcecode:: bash
 
       source delta_configs/env.delta; CONFIG_FILE=/opt/docker/stack-configs/java-service-account-<service-account-id>.config ./read-topics-ccloud.sh
-
-   * Docker: sample topic data by running:
-
-   .. sourcecode:: bash
-
-      ./read-topics-docker.sh
 
 #. Explore the data with Elasticsearch and Kibana
 
@@ -258,47 +222,23 @@ Ensure you've followed the appropriate prerequisites section above prior to star
        :alt: image
        :width: 600px
 
-#. View and monitor the streaming applications.
+#. View and monitor the streaming applications. Use the |ccloud| web user interface (login at https://confluent.cloud/login) to explore topics, consumers, Data flow, and the |ksql-cloud| application.
 
-   * If you are running on |ccloud|, use the |ccloud| web user interface to explore topics, consumers, Data flow, and the |ksql-cloud| application:
+   .. figure:: images/data-flow.png
+       :alt: image
+       :width: 600px
 
-     * Browse to: https://confluent.cloud/login
-     * View the Data flow screen to see how events flow through the various microservices
+#. View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
      
-     .. figure:: images/data-flow.png
-         :alt: image
-         :width: 600px
+   .. figure:: images/ksqldb-orders-flow.png
+       :alt: image
+       :width: 600px
 
-     * View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
-     
-     .. figure:: images/ksqldb-orders-flow.png
-         :alt: image
-         :width: 600px
+#. When you are done, make sure to stop the example before proceeding to the exercises. Run the command below, where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder.
 
-   * If you are running with Docker, use |c3| to view Kafka data, write |ksqldb| queries, manage Kafka connectors, and monitoring your applications:
+   .. sourcecode:: bash
 
-     * |ksqldb| tab: view |ksqldb| streams and tables, and to create |ksqldb| queries. Otherwise, run the |ksqldb| CLI `ksql http://localhost:8088`. To get started, run the query ``SELECT * FROM ORDERS EMIT CHANGES;`` in the |ksqldb| Editor
-     * Connect tab: view the JDBC source connector and Elasticsearch sink connector.
-     * Data Streams tab: view the throughput and latency performance of the microservices
-
-     .. figure:: images/streams-monitoring.png
-         :alt: image
-         :width: 600px
-
-
-#. When you are done, make sure to stop the example before proceeding to the exercises.
-
-   * |ccloud|: (where the ``java-service-account-<service-account-id>.config`` file matches the file in your ``stack-configs`` folder):
-
-     .. sourcecode:: bash
-
-        ./stop-ccloud.sh stack-configs/java-service-account-12345.config
-
-   * Docker:
-
-     .. sourcecode:: bash
-
-        docker-compose down
+      ./stop-ccloud.sh stack-configs/java-service-account-12345.config
 
 
 Exercise 1: Persist events 
@@ -318,6 +258,10 @@ This event happens in the Orders Service, which provides a REST interface to POS
 Posting an Order is essentially a REST call, and it creates the event in Kafka. 
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.java|microservices-orders/exercises/OrdersService.java`
+
+.. sourcecode:: bash
+
+   ls exercises/OrdersService.java
 
 #. TODO 1.1: create a new `ProducerRecord` with a key specified by `bean.getId()` and value of the bean, to the orders topic whose name is specified by `ORDERS.name()`
 #. TODO 1.2: produce the newly created record using the existing `producer` and pass use the `OrdersService#callback` function to send the `response` and the record key
@@ -377,6 +321,10 @@ Instead of using a series of synchronous calls to submit and validate orders, th
 When a new order is created, it is written to the topic `orders`, from which `OrderDetailsService` has a consumer polling for new records. 
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/OrderDetailsService.java|microservices-orders/exercises/OrderDetailsService.java`
+
+.. sourcecode:: bash
+
+   ls exercises/OrderDetailsService.java
 
 #. TODO 2.1: subscribe the existing `consumer` to a `Collections#singletonList` with the orders topic whose name is specified by `Topics.ORDERS.name()`
 #. TODO 2.2: validate the order using `OrderDetailsService#isValid` and save the validation result to type `OrderValidationResult`
@@ -443,6 +391,10 @@ Additionally, this service performs dynamic routing: an enriched order record is
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.java|microservices-orders/exercises/EmailService.java`
 
+.. sourcecode:: bash
+
+   ls exercises/EmailService.java
+
 #. TODO 3.1: create a new `KStream` called `payments` from `payments_original`, using `KStream#selectKey` to rekey on order id specified by `payment.getOrderId()` instead of payment id
 #. TODO 3.2: do a stream-table join with the customers table, which requires three arguments:
 
@@ -503,6 +455,10 @@ Then you will define define another set of criteria to branch records into two d
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/FraudService.java|microservices-orders/exercises/FraudService.java`
 
+.. sourcecode:: bash
+
+   ls exercises/FraudService.java
+
 #. TODO 4.1: filter this stream to include only orders in "CREATED" state, i.e., it should satisfy the predicate `OrderState.CREATED.equals(order.getState())`
 #. TODO 4.2: create a `KStream<String, OrderValue>` array from the `ordersWithTotals` stream by branching the records based on `OrderValue#getValue`
 
@@ -557,6 +513,10 @@ Additionally, you will use a stateful operation `reduce` to collapse duplicate r
 Before running `reduce`, you will group the records to repartition the data, which is generally required before using an aggregation operator.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/ValidationsAggregatorService.java|microservices-orders/exercises/ValidationsAggregatorService.java`
+
+.. sourcecode:: bash
+
+   ls exercises/ValidationsAggregatorService.java
 
 #. TODO 5.1: window the data using `KGroupedStream#windowedBy`, specifically using `SessionWindows.with` to define 5-minute windows
 #. TODO 5.2: group the records by key using `KStream#groupByKey`, providing the existing Serialized instance for ORDERS
@@ -618,6 +578,10 @@ This state store is initialized with data from a Kafka topic before the service 
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/InventoryService.java|microservices-orders/exercises/InventoryService.java`
 
+.. sourcecode:: bash
+
+   ls exercises/InventoryService.java
+
 #. TODO 6.1: create a state store called `RESERVED_STOCK_STORE_NAME`, using `Stores#keyValueStoreBuilder` and `Stores#persistentKeyValueStore`
 
    #. the key Serde is derived from the topic specified by `WAREHOUSE_INVENTORY`
@@ -678,8 +642,6 @@ You can use these to build stateful aggregates on streaming data.
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
 You will create another persistent query that detects fraudulent behavior by counting the number of orders in a given window.
-
-If you are running on Docker, then type `docker-compose exec ksqldb-cli ksql http://ksqldb-server:8088` to get to the |ksqldb| CLI prompt.
 
 Assume you already have a |ksqldb| stream of orders called `orders` and a |ksqldb| table of customers called `customers_table`.
 From the |ksqldb| CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_table;` to see the respective schemas.
