@@ -108,7 +108,7 @@ Produce Records
 
       echo $KAFKA_CLUSTER_ID
 
-#. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+#. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3.
 
    .. literalinclude:: ../cloud/rest-proxy/produce.sh
       :lines: 8-11
@@ -126,7 +126,7 @@ Produce Records
         "cluster_id": "lkc-56ngz",
         "topic_name": "test2",
         "is_internal": false,
-        "replication_factor": 3,
+        "replication_factor": 0,
         "partitions": {
           "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions"
         },
@@ -311,7 +311,7 @@ Produce Avro Records
    in this tutorial, it is shown as ``lkc-56ngz``, but it will differ in your
    output.
 
-#. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+#. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
       :lines: 15-18
@@ -329,7 +329,7 @@ Produce Avro Records
         "cluster_id": "lkc-56ngz",
         "topic_name": "test2",
         "is_internal": false,
-        "replication_factor": 3,
+        "replication_factor": 0,
         "partitions": {
           "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions"
         },
