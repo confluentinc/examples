@@ -255,12 +255,23 @@ To reuse an existing environment when creating a new ``ccloud-stack``, set the p
 
    ENVIRONMENT=env-oxv5x ./ccloud_stack_create.sh
 
+When you destroy resources that were created by ``ccloud-stack``, the default behavior is that the environment specified by the service account ID in the configuration file is deleted.
+However, you have two additional options.
+
 To preserve the environment when destroying all the other resources in the ``ccloud-stack``, set the parameter ``PRESERVE_ENVIRONMENT=true``, as shown in the following example.
-If you do not specify ``PRESERVE_ENVIRONMENT=true``, then the default behavior is that the environment specified by the service account ID in the configuration file is deleted.
+If you do not specify ``PRESERVE_ENVIRONMENT=true``, then the environment specified by the service account ID in the configuration file is deleted.
 
 .. code-block:: bash
 
    PRESERVE_ENVIRONMENT=true ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+
+To destroy the environment when destroying all the other resources in the ``ccloud-stack``, but the service account is not part of the environment name (you created multiple ``ccloud-stacks`` in the same environment), set the parameter ``ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID>``, as shown in the following example.
+If you do not specify this, then the destroy function will not be able to identify the environment ID to delete.
+
+.. code-block:: bash
+
+   ENVIRONMENT_NAME_PREFIX=ccloud-stack-<SERVICE_ACCOUNT_ID> ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
+
 
 Automated Workflows
 -------------------
