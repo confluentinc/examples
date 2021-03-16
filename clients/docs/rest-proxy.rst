@@ -89,7 +89,7 @@ Produce Records
 
        docker-compose up -d rest-proxy
 
-#. View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests`` to confirm |crest| has started.
+#. View the |crest| logs and wait till you see the log message ``Server started, listening for requests`` to confirm it has started.
 
    .. code-block:: text
 
@@ -296,7 +296,7 @@ Produce Avro Records
 
        docker-compose up -d rest-proxy
 
-#. View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests`` to confirm |crest| has started.
+#. View the |crest| logs and wait till you see the log message ``Server started, listening for requests`` to confirm it has started.
 
    .. code-block:: text
 
