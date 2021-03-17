@@ -108,9 +108,9 @@ For the end-to-end example, the code that creates the order events via REST call
 +-------------------------------------+-----------------------------------+-----------------------+
 
 
-==============
-Pre-requisites
-==============
+=============
+Prerequisites
+=============
 
 
 Reading
@@ -127,8 +127,8 @@ For more learning on Kafka Streams API that you can use as a reference while wor
 * `Kafka Streams documentation <https://docs.confluent.io/platform/current/streams/index.html>`__
 
 
-Prerequisites
-~~~~~~~~~~~~~
+Environment
+~~~~~~~~~~~
 
 * For compiling and running the applications:
 
