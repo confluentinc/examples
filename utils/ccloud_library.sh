@@ -1009,7 +1009,7 @@ bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='${CLOUD_API_KEY}' password='${CLOUD_API_SECRET}';
 basic.auth.credentials.source=USER_INFO
 schema.registry.url=${SCHEMA_REGISTRY_ENDPOINT}
-schema.registry.basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $2}'`
+basic.auth.user.info=`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $1}'`:`echo $SCHEMA_REGISTRY_CREDS | awk -F: '{print $2}'`
 replication.factor=${REPLICATION_FACTOR}
 EOF
     if $enable_ksqldb ; then
@@ -1135,7 +1135,7 @@ function ccloud::destroy_ccloud_stack() {
 # If you are using Confluent Cloud Schema Registry, add the following configuration parameters
 #
 #   basic.auth.credentials.source=USER_INFO
-#   schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
+#   basic.auth.user.info=<SR API KEY>:<SR API SECRET>
 #   schema.registry.url=https://<SR ENDPOINT>
 #
 # If you are using Confluent Cloud ksqlDB, add the following configuration parameters
@@ -1187,7 +1187,7 @@ function ccloud::generate_configs() {
   
   # Schema Registry
   BASIC_AUTH_CREDENTIALS_SOURCE=$( grep "^basic.auth.credentials.source" $CONFIG_FILE | awk -F'=' '{print $2;}' )
-  SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^schema.registry.basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+  SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
   SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $CONFIG_FILE | awk -F'=' '{print $2;}' )
   
   # ksqlDB

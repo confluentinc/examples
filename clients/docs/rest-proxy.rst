@@ -58,26 +58,13 @@ Setup
 
    .. codewithvars:: bash
 
-      wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/|release|/cp-all-in-one-cloud/docker-compose.yml
+      wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/|release_post_branch|/cp-all-in-one-cloud/docker-compose.yml
 
 #. For the full |crest| configuration, view the |crest| section in the ``docker-compose.yml`` file which you just downloaded in the previous step.
 
    .. code-block:: text
 
       cat docker-compose.yml
-
-#. Start the |crest| Docker container by running the following command:
-
-   .. code-block:: text
-
-       docker-compose up -d rest-proxy
-
-#. View the |crest| logs in Docker and wait till you see the log message ``Server started, listening for requests`` to confirm |crest| has started.
-
-   .. code-block:: text
-
-      docker-compose logs -f rest-proxy
-
 
 Basic Producer and Consumer
 ---------------------------
@@ -87,6 +74,26 @@ Basic Producer and Consumer
 
 Produce Records
 ~~~~~~~~~~~~~~~
+
+#. Since you are not going to use |sr| in this section, comment out the following lines in the ``docker-compose.yml`` file:
+
+   .. code-block:: text
+
+      #KAFKA_REST_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      #KAFKA_REST_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      #KAFKA_REST_CLIENT_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+
+#. Start the |crest| Docker container by running the following command:
+
+   .. code-block:: text
+
+       docker-compose up -d rest-proxy
+
+#. View the |crest| logs and wait till you see the log message ``Server started, listening for requests`` to confirm it has started.
+
+   .. code-block:: text
+
+      docker-compose logs -f rest-proxy
 
 #. Get the |ak| cluster ID that the |crest| is connected to.
 
@@ -101,7 +108,7 @@ Produce Records
 
       echo $KAFKA_CLUSTER_ID
 
-#. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+#. Create the |ak| topic ``test1`` using the ``AdminClient`` functionality of the |crest| API v3.
 
    .. literalinclude:: ../cloud/rest-proxy/produce.sh
       :lines: 8-11
@@ -119,7 +126,7 @@ Produce Records
         "cluster_id": "lkc-56ngz",
         "topic_name": "test2",
         "is_internal": false,
-        "replication_factor": 3,
+        "replication_factor": 0,
         "partitions": {
           "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions"
         },
@@ -236,6 +243,15 @@ Consume Records
 
 #. View the :devx-examples:`consumer code|clients/cloud/rest-proxy/consume.sh`.
 
+Stop |crest|
+~~~~~~~~~~~~
+
+#. Stop Docker by running the following command:
+
+   .. code-block:: text
+
+       docker-compose down
+
 
 Avro and Confluent Cloud Schema Registry
 -----------------------------------------
@@ -250,9 +266,41 @@ Avro and Confluent Cloud Schema Registry
 
 #. .. include:: includes/client-example-schema-registry-2-java.rst
 
+#. Regenerate a file of ENV variables used by Docker to set the bootstrap
+   servers and security configuration.
+
+   .. code-block:: text
+
+      ../../../ccloud/ccloud-generate-cp-configs.sh $HOME/.confluent/java.config
+
+#. Source the regenerated file of ``ENV`` variables.
+
+   .. code-block:: text
+
+      source ./delta_configs/env.delta
 
 Produce Avro Records
 ~~~~~~~~~~~~~~~~~~~~
+
+#. Since you are now going to use |sr| in this section, uncomment the following lines in the ``docker-compose.yml`` file:
+
+   .. code-block:: text
+
+      KAFKA_REST_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
+      KAFKA_REST_CLIENT_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
+      KAFKA_REST_CLIENT_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
+
+#. Start the |crest| Docker container by running the following command:
+
+   .. code-block:: text
+
+       docker-compose up -d rest-proxy
+
+#. View the |crest| logs and wait till you see the log message ``Server started, listening for requests`` to confirm it has started.
+
+   .. code-block:: text
+
+      docker-compose logs -f rest-proxy
 
 #. Get the |ak| cluster ID that the |crest| is connected to.
 
@@ -263,7 +311,7 @@ Produce Avro Records
    in this tutorial, it is shown as ``lkc-56ngz``, but it will differ in your
    output.
 
-#. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3. If |crest| is backed to |ccloud|, configure the replication factor to ``3``.
+#. Create the |ak| topic ``test2`` using the ``AdminClient`` functionality of the |crest| API v3.
 
    .. literalinclude:: ../cloud/rest-proxy/produce-ccsr.sh
       :lines: 15-18
@@ -281,7 +329,7 @@ Produce Avro Records
         "cluster_id": "lkc-56ngz",
         "topic_name": "test2",
         "is_internal": false,
-        "replication_factor": 3,
+        "replication_factor": 0,
         "partitions": {
           "related": "http://rest-proxy:8082/v3/clusters/lkc-56ngz/topics/test2/partitions"
         },
@@ -443,8 +491,8 @@ Consume Avro Records
 
       {"subject":"test2-value","version":1,"id":100001,"schema":"[{\"type\":\"record\",\"name\":\"countInfo\",\"fields\":[{\"name\":\"count\",\"type\":\"long\"}]}]"}
 
-Stop
-----
+Stop |crest|
+~~~~~~~~~~~~
 
 #. Stop Docker by running the following command:
 
