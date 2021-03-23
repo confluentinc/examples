@@ -50,7 +50,7 @@ The original data is a :devx-examples:`table of locations|utils/table.locations`
    3|Moscow|200
    1|Raleigh|700
 
-In produces records to a Kafka topic:
+It produces records to a Kafka topic:
 
 .. figure:: images/blog_stream.jpg
 
@@ -145,7 +145,7 @@ Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value
 ---------------------------------------------------------------------------------------------
 
 - :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcspecificavro-connector.properties` produces Avro values, and null ``String`` keys, to a Kafka topic.
-- This example uses a simple message transformation (SMT) called ``SetSchemaMetadata`` with code that has a fix for `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__, allowing the connector to set the namespace in the schema. If you do not have the fix for `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__, see Example 4 that uses ``GenericAvro`` instead of ``SpecificAvro``.
+- This example uses a single message transformation (SMT) called ``SetSchemaMetadata`` with code that has a fix for `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__, allowing the connector to set the namespace in the schema. If you do not have the fix for `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__, see Example 4 that uses ``GenericAvro`` instead of ``SpecificAvro``.
 
 .. literalinclude:: ../jdbcspecificavro-connector.properties
 
