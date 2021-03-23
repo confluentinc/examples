@@ -29,8 +29,9 @@ ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
 ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
 ksqlDBAppId=$(ccloud ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
 ccloud ksql app configure-acls $ksqlDBAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
-ccloud kafka acl create --allow --service-account $(ccloud service-account list | grep $ksqlDBAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
-ccloud kafka acl create --allow --service-account $(ccloud service-account list | grep $ksqlDBAppId | awk '{print $1;}') --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
+SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
+ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
 
 # Submit KSQL queries
 echo -e "\nSubmit KSQL queries\n"
