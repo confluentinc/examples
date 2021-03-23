@@ -9,8 +9,14 @@ source config/demo.cfg
 
 aws s3api head-bucket --bucket "$S3_BUCKET" --region $STORAGE_REGION --profile $S3_PROFILE 2>/dev/null
 if [[ $? != 0 ]]; then
-  echo "aws s3api create-bucket --bucket $S3_BUCKET --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $S3_PROFILE"
-  aws s3api create-bucket --bucket $S3_BUCKET --region $STORAGE_REGION --create-bucket-configuration LocationConstraint=$STORAGE_REGION --profile $S3_PROFILE
+  # us-east-1 does not accept the LocationConstraint
+  if [[ "$STORAGE_REGION" == "us-east-1" ]]; then
+    CONSTRAINT=""
+  else
+    CONSTRAINT=" --create-bucket-configuration LocationConstraint=$STORAGE_REGION"
+  fi
+  echo "aws s3api create-bucket --bucket $S3_BUCKET --region $STORAGE_REGION $CONSTRAINT --profile $S3_PROFILE"
+  aws s3api create-bucket --bucket $S3_BUCKET --region $STORAGE_REGION $CONSTRAINT --profile $S3_PROFILE
   if [[ $? != 0 ]]; then
     echo "ERROR: Could not create S3 bucket $S3_BUCKET in region $STORAGE_REGION using the profile $S3_PROFILE. Troubleshoot and try again."
     exit 1
