@@ -540,7 +540,7 @@ Wshadow
 Wundef
 Yandex
 YearlyMovieFigures
-ZenDesk
+Zendesk
 ZooKeeper
 abc
 abortTransaction
