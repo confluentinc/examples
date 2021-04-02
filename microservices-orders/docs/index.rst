@@ -264,7 +264,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
    ls exercises/OrdersService.java
 
 #. TODO 1.1: create a new `ProducerRecord` with a key specified by `bean.getId()` and value of the bean, to the orders topic whose name is specified by `ORDERS.name()`
-#. TODO 1.2: produce the newly created record using the existing `producer` and pass use the `OrdersService#callback` function to send the `response` and the record key
+#. TODO 1.2: produce the newly created record using the existing `producer` and use the `OrdersService#callback` function to send the `response` and the record key
 
 .. tip::
 
