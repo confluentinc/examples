@@ -27,7 +27,7 @@ docker-compose exec -u0 zookeeper-central tc qdisc add dev eth0 parent 1:2 handl
 docker-compose exec -u0 zookeeper-central tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 50ms 10ms 20.00 > /dev/null
 docker-compose exec -u0 zookeeper-central tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $SUBNET flowid 1:3 > /dev/null
 
-echo -e "\n==> Configuring west-east as a high latency link (100ms)"
+echo -e "\n==> Configuring west-east as a high latency link (100ms) and 1% packet loss"
 docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 root handle 1: prio > /dev/null
 docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 root handle 1: prio > /dev/null
 docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 root handle 1: prio > /dev/null
@@ -37,9 +37,9 @@ docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:1 handle 10
 docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 parent 1:2 handle 20: sfq > /dev/null
 docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 parent 1:2 handle 20: sfq > /dev/null
 docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:2 handle 20: sfq > /dev/null
-docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 100ms 20ms 20.00 > /dev/null
-docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 100ms 20ms 20.00 > /dev/null
-docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 100ms 20ms 20.00 > /dev/null
+docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 100ms 20ms 20.00 loss 1.00 > /dev/null
+docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 100ms 20ms 20.00 loss 1.00 > /dev/null
+docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:3 handle 30: netem delay 100ms 20ms 20.00 loss 1.00 > /dev/null
 docker-compose exec -u0 broker-west-1 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $ZOOKEEPER_EAST_IP flowid 1:3 > /dev/null
 docker-compose exec -u0 broker-west-2 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $ZOOKEEPER_EAST_IP flowid 1:3 > /dev/null
 docker-compose exec -u0 zookeeper-west tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $ZOOKEEPER_EAST_IP flowid 1:3 > /dev/null
@@ -49,29 +49,6 @@ docker-compose exec -u0 zookeeper-west tc filter add dev eth0 protocol ip parent
 docker-compose exec -u0 broker-west-2 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_4_IP flowid 1:3 > /dev/null
 docker-compose exec -u0 broker-west-1 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_4_IP flowid 1:3 > /dev/null
 docker-compose exec -u0 zookeeper-west tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_4_IP flowid 1:3 > /dev/null
-
-echo -e "\n==> Configuring west-east with 1% packet loss"
-docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 root handle 1: prio > /dev/null
-docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 root handle 1: prio > /dev/null
-docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 root handle 1: prio > /dev/null
-docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 parent 1:1 handle 10: sfq > /dev/null
-docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:1 handle 10: sfq > /dev/null
-docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 parent 1:1 handle 10: sfq > /dev/null
-docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:2 handle 20: sfq > /dev/null
-docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 parent 1:2 handle 20: sfq > /dev/null
-docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 parent 1:2 handle 20: sfq > /dev/null
-docker-compose exec -u0 zookeeper-west tc qdisc add dev eth0 parent 1:3 handle 30: netem loss 1.00 > /dev/null
-docker-compose exec -u0 broker-west-2 tc qdisc add dev eth0 parent 1:3 handle 30: netem loss 1.00 > /dev/null
-docker-compose exec -u0 broker-west-1 tc qdisc add dev eth0 parent 1:3 handle 30: netem loss 1.00 > /dev/null
-docker-compose exec -u0 zookeeper-west tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $ZOOKEEPER_EAST_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 broker-west-1 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $ZOOKEEPER_EAST_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 broker-west-2 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $ZOOKEEPER_EAST_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 zookeeper-west tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_3_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 broker-west-1 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_3_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 zookeeper-west tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_4_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 broker-west-2 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_3_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 broker-west-1 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_4_IP flowid 1:3 > /dev/null
-docker-compose exec -u0 broker-west-2 tc filter add dev eth0 protocol ip parent 1:0 prio 1 u32 match ip dst $KAFKA_EAST_4_IP flowid 1:3 > /dev/null
 
 echo -e "\n==> Configuring east-west with 1% packet loss"
 docker-compose exec -u0 zookeeper-east tc qdisc add dev eth0 root handle 1: prio > /dev/null
