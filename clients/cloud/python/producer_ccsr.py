@@ -49,12 +49,12 @@ if __name__ == '__main__':
 
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
-    name_avro_serializer = AvroSerializer(ccloud_lib.name_schema,
-                                          schema_registry_client,
-                                          ccloud_lib.Name.name_to_dict)
-    count_avro_serializer = AvroSerializer(ccloud_lib.count_schema,
-                                           schema_registry_client,
-                                           ccloud_lib.Count.count_to_dict)
+    name_avro_serializer = AvroSerializer(schema_registry_client = schema_registry_client,
+                                          schema_str = ccloud_lib.name_schema,
+                                          to_dict = ccloud_lib.Name.name_to_dict)
+    count_avro_serializer = AvroSerializer(schema_registry_client = schema_registry_client,
+                                           schema_str =  ccloud_lib.count_schema,
+                                           to_dict = ccloud_lib.Count.count_to_dict)
 
     # for full list of configurations, see:
     #  https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#serializingproducer
