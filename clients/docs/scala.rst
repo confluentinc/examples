@@ -158,3 +158,8 @@ Kafka Streams
 #. When you are done, press ``Ctrl-C``.
 
 #. View the :devx-examples:`Kafka Streams code|clients/cloud/scala/src/main/scala/io/confluent/examples/clients/scala/Streams.scala`.
+
+Suggested Resources
+-------------------
+
+- Blog post: `Getting Started with Scala and Apache Kafka <https://www.confluent.io/blog/kafka-scala-tutorial-for-beginners/>`__
