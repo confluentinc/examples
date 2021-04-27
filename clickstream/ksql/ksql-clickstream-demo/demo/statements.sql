@@ -13,7 +13,7 @@ CREATE STREAM clickstream (
         agent varchar
     ) with (
         kafka_topic = 'clickstream',
-        value_format = 'json'
+        format = 'json'
     );
 
 -- error code lookup table:
