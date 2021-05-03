@@ -3,6 +3,8 @@
 Additional Resources
 --------------------
 
+-  Read `Monitoring Your Event Streams: Tutorial for Observability Into Apache Kafka Clients <https://www.confluent.io/blog/monitoring-event-streams-visualize-kafka-clients-in-confluent-cloud/>`__.
+
 -  See other :ref:`ccloud-demos-overview`.
 
 -  See advanced options for working with `ccloud-stack <https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html#advanced-options>`__.
