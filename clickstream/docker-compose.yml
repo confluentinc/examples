@@ -159,7 +159,7 @@ services:
       - 9021:9021
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
-      CONTROL_CENTER_CONNECT_CLUSTER: 'ksqldb-server:8083'
+      CONTROL_CENTER_CONNECT_CONNECT-DEFAULT_CLUSTER: 'ksqldb-server:8083'
       CONTROL_CENTER_KSQL_CLICKSTREAM_URL: "http://ksqldb-server:8088"
       CONTROL_CENTER_KSQL_CLICKSTREAM_ADVERTISED_URL: "http://localhost:8088"
       CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
