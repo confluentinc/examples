@@ -84,7 +84,7 @@ services:
       KSQL_CONNECT_CONFIG_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-configs
       KSQL_CONNECT_OFFSET_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-offsets
       KSQL_CONNECT_STATUS_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-status
-      KSQL_CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      KSQL_CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       KSQL_CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       KSQL_CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
       KSQL_CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
