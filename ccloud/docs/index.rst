@@ -63,12 +63,12 @@ Run demo
 
    For Confluent Cloud |sr| (in `preview`):
 
-   a. :ref:`Enable <cloud-sr-config>` Confluent Cloud |sr| prior to running the demo
+   a. `Enable <https://docs.confluent.io/cloud/current/get-started/schema-registry.html>`__ Confluent Cloud |sr| prior to running the demo
    b.  Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_SCHEMA_REGISTRY=true`
 
    For Confluent Cloud KSQL (in `preview`):
 
-   a. :ref:`Enable <cloud-ksql-create-application>` |ccloud| KSQL prior to running the demo
+   a. `Enable <https://docs.confluent.io/cloud/current/get-started/ksql.html>`__ |ccloud| KSQL prior to running the demo
    b. Modify `config.sh` and set `export USE_CONFLUENT_CLOUD_KSQL=true`
 
 4. Start the entire demo by running a single command.  You have two choices: using a Confluent Platform local install or Docker Compose. This will take less than 5 minutes to complete.
