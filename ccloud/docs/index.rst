@@ -46,7 +46,7 @@ Prerequisites
 -  `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
 -  jq
 
-2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see :ref:`auto-generate-configs` for more information).
+2. Create a |ccloud| configuration file with information on connecting to your Confluent Cloud cluster (see `Auto-Generating Configurations for Components to Confluent Cloud <https://docs.confluent.io/cloud/current/cp-component/auto-generate-configs.html>`__ for more information).
 By default, the demo looks for this configuration file at ``~/.ccloud/config``.
 
 3. This demo has been validated with:
