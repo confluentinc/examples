@@ -28,7 +28,7 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
 -  Kinesis source connector: reads from a Kinesis stream and writes the data to a Kafka topic in |ccloud|
 
-   - :ref:`cc_kinesis-source`
+   - `Amazon Kinesis Source Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-kinesis-source.html>`__
 
 -  KSQL: streaming SQL engine that enables real-time data processing against Kafka
 
@@ -36,9 +36,9 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
 -  Cloud storage sink connector: writes data from Kafka topics to cloud storage, one of:
 
-   - :ref:`cc_azure_blob_sink`
-   - :ref:`cc_gcs_connect_sink`
-   - :ref:`cc_s3_connect_sink`
+   - `Azure Blob Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-azure-blob-sink.html>`__
+   - `Google Cloud Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-gcs-sink.html>`__
+   - `Amazon S3 Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-s3-sink.html>`__
 
 -  |sr-ccloud|: for centralized management of schemas and checks compatibility as schemas evolve 
 
