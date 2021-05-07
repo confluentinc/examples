@@ -164,7 +164,7 @@ Produce Avro Records
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
-#. Run the `Confluent Confluent CLI consumer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_consume.html>`__
+#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_consume.html>`__
    reading messages from topic ``test2``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic
