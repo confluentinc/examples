@@ -37,7 +37,7 @@ Prerequisites
 =============
 
 - Create a user account in `Confluent Cloud <https://confluent.cloud/>`__ 
-- Local install of :ref:`Confluent Cloud CLI <ccloud-install-cli>` v1.13.0 or later.
+- Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.13.0 or later.
 - ``jq`` tool
 
 
