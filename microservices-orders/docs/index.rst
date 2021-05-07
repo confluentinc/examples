@@ -139,7 +139,7 @@ Make sure you have the following pre-requisites, depending on whether you are ru
 * Docker Compose version >= 1.25.0 with Docker Compose file format 3
 * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 8GB (default is 2GB)
 * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.microservices-orders?>`__ home page can help you get setup with your own account if you do not yet have access.
-* |ccloud| CLI. See :ref:`Install and Configure the Confluent Cloud CLI <cloud-cli-install>`.
+* |ccloud| CLI. See `Install and Configure the Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__.
 
 .. note:: The first 20 users to sign up for |ccloud| and use promo code ``C50INTEG`` will receive an additional $50 free usage (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer>`__).
 
