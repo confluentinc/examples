@@ -52,7 +52,7 @@ This demo showcases an entire end-to-end cloud ETL deployment, built for 100% cl
 
 -  `Confluent Cloud ksqlDB <https://docs.confluent.io/current/quickstart/cloud-quickstart/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
 
--  :ref:`Confluent Cloud Schema Registry <cloud-install-schema-registry>`: centralized management of schemas and compatibility checks as schemas evolve 
+-  `Confluent Cloud Schema Registry <https://docs.confluent.io/cloud/current/get-started/schema-registry.html>`__: centralized management of schemas and compatibility checks as schemas evolve
 
 
 Data Flow
