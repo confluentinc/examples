@@ -89,7 +89,7 @@ API Key and Secret Configuration
 
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can also create the API Key using the :ref:`Confluent Cloud UI <create-api-key-ui>`.
+.. tip:: You can also create the API Key using the `Confluent Cloud UI <https://docs.confluent.io/cloud/current/client-apps/api-keys.html>`__.
 
 #.  To create a new API Key:
 
