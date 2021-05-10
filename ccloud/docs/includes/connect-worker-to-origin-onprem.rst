@@ -7,7 +7,7 @@ The |kconnect| worker is backed to the origin on-premises |ak| cluster, so set t
    offset.storage.replication.factor=<replication-factor-origin>
    status.storage.replication.factor=<replication-factor-origin>
 
-The origin on-premises |ak| cluster can have a varied set of security features enabled, but for simplicity in this example we show no security configurations, just PLAINTEXT.
+The origin on-premises |ak| cluster can have a varied set of security features enabled, but for simplicity in this example we show no security configurations, just PLAINTEXT (see `this page <https://docs.confluent.io/kafka-connect-replicator/current/configuration_options.html>`__ for more |crep| security configuration options).
 The |kconnect| worker’s admin client requires connection information to the on-premises cluster.
 
 .. sourcecode:: bash
