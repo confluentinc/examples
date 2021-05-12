@@ -5,7 +5,7 @@
 .. |operator-demo-prefix| replace:: gke
 .. |kubectl-context-pattern| replace:: gke_project-name_us-central1-a_cp-examples-operator-jdoe
 .. |k8s-service-docs-link| replace:: `Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`__
-.. |operator-base-demo-link| replace:: `Confluent Platform on Google Kubernetes Engine example <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__
+.. |operator-base-demo-link| replace:: `Confluent Platform on Google Kubernetes Engine example <https://docs.confluent.io/platform/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__
 
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
@@ -38,7 +38,7 @@ The following applications or libraries are required to be installed and availab
 | ``GCP sdk core`` | ``2020.03.24``    |                                                          |
 | ``GKE cluster``  | ``1.15.11-gke.1`` |                                                          |
 +------------------+-------------------+----------------------------------------------------------+
-| ``ccloud``       | ``v1.0.0``        | https://docs.confluent.io/current/cloud/cli/install.html |
+| ``ccloud``       | ``v1.0.0``        | https://docs.confluent.io/ccloud-cli/current/install.html|
 +------------------+-------------------+----------------------------------------------------------+
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
