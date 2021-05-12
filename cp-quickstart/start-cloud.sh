@@ -59,13 +59,8 @@ eval $CMD \
     && print_code_pass -c "source $DELTA_CONFIGS_ENV" \
     || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
-# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
-MAX_WAIT=720
-printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be UP"
-retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
-print_pass "Confluent Cloud KSQL is UP"
-
-ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE || exit 1
+# false argument here means defer checking on ksqlDB to later in the script, to optimize time to run
+ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE false || exit 1
 
 printf "\n";print_process_start "====== Pre-creating topics"
 
@@ -90,6 +85,12 @@ printf "\nSleeping 30 seconds to give the Datagen Source Connectors a chance to 
 sleep 30
 
 printf "\n====== Setting up ksqlDB\n"
+
+# Pre-flight check of Confluent Cloud credentials specified in $CONFIG_FILE
+MAX_WAIT=720
+printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent Cloud ksqlDB cluster to be UP"
+retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
+print_pass "Confluent Cloud KSQL is UP"
 
 printf "Obtaining the ksqlDB App Id\n"
 CMD="ccloud ksql app list -o json | jq -r '.[].id'"
