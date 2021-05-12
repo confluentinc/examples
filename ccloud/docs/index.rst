@@ -45,7 +45,7 @@ Prerequisites
 
 #. An initialized `Confluent Cloud cluster <https://www.confluent.io/confluent-cloud/>`__
 
-#. Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.7.0 or later
+#. Local install of `Confluent Cloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__ v1.7.0 or later
 
 #. `Download <https://www.confluent.io/download/>`__ |cp| if using the local install (not required for Docker)
 

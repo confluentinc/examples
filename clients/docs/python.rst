@@ -146,7 +146,7 @@ These examples use the latest Serializer API provided by the ``confluent-kafka``
 library. The Serializer API replaces the legacy AvroProducer and AvroConsumer
 classes to provide a more flexible API including additional support for JSON,
 Protobuf, and Avro data formats. See the latest `confluent-kafka documentation
-<https://docs.confluent.io/clients-confluent-kafka-python/current/overview.html>`__ for
+<https://docs.confluent.io/current/clients/confluent-kafka-python/>`__ for
 further details.
 
 #. .. include:: includes/client-example-schema-registry-1.rst
