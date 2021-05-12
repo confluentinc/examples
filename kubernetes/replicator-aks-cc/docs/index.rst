@@ -5,7 +5,7 @@
 .. |operator-demo-prefix| replace:: aks
 .. |kubectl-context-pattern| replace:: aks_project-name_us-central1-a_cp-examples-operator-jdoe
 .. |k8s-service-docs-link| replace:: `Azure Kubernetes Service (AKS) <https://azure.microsoft.com/en-us/services/kubernetes-service/>`__
-.. |operator-base-demo-link| replace:: `Confluent Platform on Azure Kubernetes Service example <https://docs.confluent.io/current/tutorials/examples/kubernetes/aks-base/docs/index.html>`__
+.. |operator-base-demo-link| replace:: `Confluent Platform on Azure Kubernetes Service example <https://docs.confluent.io/platform/current/tutorials/examples/kubernetes/aks-base/docs/index.html>`__
 
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
@@ -36,7 +36,7 @@ The following applications or libraries are required to be installed and availab
 +------------------+----------------+-------------------------------------------------------------------------------------+
 | ``az``           | ``2.10.1``     |  https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest |
 +------------------+----------------+-------------------------------------------------------------------------------------+
-| ``ccloud``       | ``v1.0.0``     | https://docs.confluent.io/current/cloud/cli/install.html                            |
+| ``ccloud``       | ``v1.0.0``     | https://docs.confluent.io/ccloud-cli/current/install.html                           |
 +------------------+----------------+-------------------------------------------------------------------------------------+
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst
