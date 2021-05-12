@@ -58,7 +58,7 @@ Produce Records
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test1 --create --replication-factor 3 --partitions 6
 
 #. Run the `Confluent CLI
-   producer <https://docs.confluent.io/confluent-cli/current/command-reference/local/services/kafka/confluent_local_services_kafka_produce.html>`__,
+   producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html>`__,
    writing messages to topic ``test1``, passing in arguments for:
 
    -  ``--cloud``: write messages to a |ccloud| cluster
@@ -89,7 +89,7 @@ Consume Records
 
 #. Run the `Confluent CLI
    consumer
-   <https://docs.confluent.io/confluent-cli/current/command-reference/local/services/kafka/confluent_local_services_kafka_consume.html>`__,
+   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html>`__,
    reading messages from topic ``test1``, passing in additional arguments:
 
    -  ``--cloud``: write messages to a |ccloud| cluster
@@ -169,7 +169,7 @@ Produce Avro Records
       kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $HOME/.confluent/java.config | tail -1` --command-config $HOME/.confluent/java.config --topic test2 --create --replication-factor 3 --partitions 6
 
 #. Run the `Confluent CLI
-   producer <https://docs.confluent.io/confluent-cli/current/command-reference/local/services/kafka/confluent_local_services_kafka_produce.html>`__,
+   producer <https://docs.confluent.io/current/cli/command-reference/confluent-produce.html>`__,
    writing messages to topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the
@@ -208,7 +208,7 @@ Consume Avro Records
 
 #. Run the `Confluent CLI
    consumer
-   <https://docs.confluent.io/confluent-cli/current/command-reference/local/services/kafka/confluent_local_services_kafka_consume.html>`__,
+   <https://docs.confluent.io/current/cli/command-reference/confluent-consume.html>`__,
    reading messages from topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the

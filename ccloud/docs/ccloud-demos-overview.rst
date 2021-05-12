@@ -3,7 +3,7 @@
 |ccloud| Examples
 =================
 
-`Confluent Cloud <https://docs.confluent.io/cloud/current/overview.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command-line interface that you can use to manage cluster resources, |ak| topics, |sr|, and other services.
+`Confluent Cloud <https://docs.confluent.io/current/cloud/index.html>`__ is a resilient, scalable streaming data service based on |ak|, delivered as a fully managed service. It has a web interface and local command-line interface that you can use to manage cluster resources, |ak| topics, |sr|, and other services.
 
 This page describes a few resources to help you build and validate your solutions on |ccloud|.
 
@@ -231,7 +231,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
       docker-compose up -d <service>
 
-   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in `Add Connectors or Software <https://docs.confluent.io/home/connect/extending.html>`__, and then substitute that Docker image in your Docker Compose file.
+   In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in `Add Connectors or Software <https://docs.confluent.io/connect/extending.html>`__, and then substitute that Docker image in your Docker Compose file.
 
 #. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
 

@@ -269,7 +269,7 @@ Schema Evolution with Confluent Cloud Schema Registry
 
 #. For schema evolution, you can `test schema
    compatibility
-   <https://docs.confluent.io/platform/current/schema-registry/develop/maven-plugin.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud#schema-registry-test-compatibility>`__
+   <https://docs.confluent.io/current/schema-registry/develop/maven-plugin.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients-ccloud#schema-registry-test-compatibility>`__
    between newer schema versions and older schema versions in |ccloud| |sr|. The
    :devx-examples:`pom.xml|clients/cloud/java/pom.xml` hardcodes the Schema
    Registry subject name to ``test2-value``—change this if you didn't use topic
