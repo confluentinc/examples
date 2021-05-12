@@ -16,9 +16,9 @@ if [[ ! "$bucket_list" =~ "$GCS_BUCKET" ]]; then
 fi
 
 ccloud::create_connector connectors/gcs_no_avro.json || exit 1
-ccloud::wait_for_connector_up connectors/gcs_no_avro.json 240 || exit 1
+ccloud::wait_for_connector_up connectors/gcs_no_avro.json 300 || exit 1
 
 ccloud::create_connector connectors/gcs_avro.json || exit 1
-ccloud::wait_for_connector_up connectors/gcs_avro.json 240 || exit 1
+ccloud::wait_for_connector_up connectors/gcs_avro.json 300 || exit 1
 
 exit 0
