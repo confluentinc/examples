@@ -80,7 +80,7 @@ if [[ "${DATA_SOURCE}" == "rds" ]]; then
   export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
 fi
 ccloud::create_connector connectors/${DATA_SOURCE}.json || exit 1
-ccloud::wait_for_connector_up connectors/${DATA_SOURCE}.json 240 || exit 1
+ccloud::wait_for_connector_up connectors/${DATA_SOURCE}.json 300 || exit 1
 
 #################################################################
 # Confluent Cloud ksqlDB application
