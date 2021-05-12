@@ -32,7 +32,7 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
   
   |cluster-settings| 
 
-#.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
+#.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__
 
 #.  Log in to your |ccloud| cluster. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
