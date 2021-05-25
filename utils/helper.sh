@@ -52,8 +52,8 @@ function validate_version_confluent_cli_for_cp() {
 
   validate_version_confluent_cli_v2 || exit 1
 
-  VER_MIN="1.26.0"
-  VER_MAX="1.26.1"
+  VER_MIN="1.30.0"
+  VER_MAX="1.30.2"
   CLI_VER=$(get_version_confluent_cli)
 
   if version_gt $VER_MIN $CLI_VER || version_gt $CLI_VER $VER_MAX ; then
