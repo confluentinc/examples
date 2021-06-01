@@ -114,7 +114,7 @@ echo -e "\n========== $PACKAGE: Example 5: Java client producer with SpecificAvr
 sleep 2
 
 # Producer
-timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.Driver -Dexec.args="localhost:9092 http://localhost:8081 /usr/local/lib/table.locations"
+timeout 20s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.Driver -Dexec.args="localhost:9092 http://localhost:8081 /usr/local/lib/table.locations"
 
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
