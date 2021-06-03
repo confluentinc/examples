@@ -37,4 +37,4 @@ run script 'statements.sql';
 exit ;
 EOF
 
-printf "\n====== Installation Successfully Completed ======\n\n"
+printf "\n====== Successfully Completed ======\n\n"
