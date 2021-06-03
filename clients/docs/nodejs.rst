@@ -128,3 +128,9 @@ Consume Records
       Consumed record with key alice and value {"count":9} of partition 0 @ offset 9. Updated total count to 10
 
 #. View the :devx-examples:`consumer code|clients/cloud/nodejs/consumer.js`.
+
+
+Suggested Resources
+-------------------
+
+- Blog post: `Getting Started with KafkaJS <https://www.confluent.io/blog/getting-started-with-kafkajs/>`__, which uses an alternative Node.js client for |ak-tm|.
