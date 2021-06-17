@@ -1,8 +1,9 @@
-.. _quickstart-demos-operator-replicator-gke-cc:
 
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
    :width: 80%
+
+.. _quickstart-demos-operator-replicator-gke-cc:
 
 Google Kubernetes Engine to |ccloud| with |crep-full|
 =====================================================
@@ -12,7 +13,7 @@ Overview
 
 This example features a deployment of `Confluent Platform <https://www.confluent.io/product/confluent-platform/>`__ on `Google Kubernetes Engine (GKE) <https://cloud.google.com/kubernetes-engine/>`__ leveraging `Confluent Operator <https://docs.confluent.io/current/installation/operator/index.html>`__ and `Confluent Replicator <https://docs.confluent.io/current/connect/kafka-connect-replicator/index.html>`__, highlighting a data replication strategy to `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__.  Upon running this demo, you will have a GKE based |cp| deployment with simulated data replicating to your |ccloud| cluster.  We will verify the replication by running client applications against the |ccloud| cluster to view the simulated data originating in the source GKE cluster.
 
-If you'd like a primer on running |co-long| in GKE with lower resource requirements, see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.  
+If you'd like a primer on running |co-long| in GKE with lower resource requirements, see the `Confluent Platform on Google Kubernetes Engine demo <https://docs.confluent.io/current/tutorials/examples/kubernetes/gke-base/docs/index.html>`__.
 
 The major components of this demo are:
 
@@ -67,7 +68,7 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
 GKE Setup
 ~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.
 
 .. tip:: The :ref:`examples-operator-gke-base-variable-reference` section can be used to control the size of the deployed resources in this demo.
 
@@ -93,7 +94,7 @@ To create the standard cluster you can run the following:
 |ccloud| Account Setup
 +++++++++++++++++++++++++++++
 
-This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
+This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.
 
 .. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identicial in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appeneded to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this demo, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: `ccloud kafka topic delete <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_delete.html>`__ for instructions on deleting |ccloud| topics.
 
@@ -115,8 +116,8 @@ After you have established the |ccloud| cluster you are going to use for the dem
 You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your cluster.
 
 .. tip:: You can also view the bootstrap server value on the |ccloud| UI under the **Cluster settings**
-  
-  |cluster-settings| 
+
+  |cluster-settings|
 
 #.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/current/quickstart/cloud-quickstart/index.html#step-2-install-the-ccloud-cli>`__
 
@@ -133,7 +134,7 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
         Enter your Confluent credentials:
         Email: jdoe@myemail.io
         Password:
-        
+
         Logged in as jdoe@myemail.io
         Using environment t118 ("default")
 
@@ -147,11 +148,11 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
 
     ::
 
-              Id      |          Name          | Provider |   Region    | Durability | Status  
+              Id      |          Name          | Provider |   Region    | Durability | Status
         +-------------+------------------------+----------+-------------+------------+--------+
-            lkc-xmm5g | abc-test               | gcp      | us-central1 | LOW        | UP      
-            lkc-kngnv | rjs-gcp-us-central1    | gcp      | us-central1 | LOW        | UP      
-            lkc-3r3vj | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP      
+            lkc-xmm5g | abc-test               | gcp      | us-central1 | LOW        | UP
+            lkc-kngnv | rjs-gcp-us-central1    | gcp      | us-central1 | LOW        | UP
+            lkc-3r3vj | replicator-gke-cc-demo | gcp      | us-central1 | LOW        | UP
 
 #.  Describe the cluster to obtain the bootstrap server
 
@@ -204,7 +205,7 @@ Configure Helm Values
 
 To configure the demo to access your |ccloud| account, we are going to create a `Helm Chart <https://helm.sh/docs/chart_template_guide/>`__ values file, which the demo looks for in a particular location to pass to ``helm`` commands to weave your cloud account details into the configuration of the |cp| configurations.
 
-#.  Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values obtained above. 
+#.  Create a values file by executing the following command, first replacing the ``{{ mustache bracket }}`` values for  ``bootstrapEndpoint``, ``username``, and ``password`` with your relevant values obtained above.
 
     ::
 
@@ -219,12 +220,12 @@ To configure the demo to access your |ccloud| account, we are going to create a 
           bootstrapEndpoint: {{ cloud bootstrap server }}
           username: {{ cloud API key }}
           password: {{ cloud API secret }}
-        
+
         controlcenter:
           dependencies:
             monitoringKafkaClusters:
             - <<: *destinationCluster
-        
+
         replicator:
           replicas: 1
           dependencies:
@@ -306,7 +307,7 @@ Verify |c3-short|'s View of Multiple Clusters
 
 .. include:: ../../docs/includes/port-forward-c3.rst
 
-Now open a web-browser to http://localhost:12345, and you should see |c3| with 2 Healthy Clusters.  
+Now open a web-browser to http://localhost:12345, and you should see |c3| with 2 Healthy Clusters.
 
 .. figure:: images/c3-dual-clusters.png
     :alt: c3
@@ -368,7 +369,7 @@ To view the ``stock-trades`` topic data streaming on both clusters, you can open
         CreateTime:1572380698171        ZJZZT
         CreateTime:1572380698280        ZWZZT
         CreateTime:1572380698351        ZWZZT
-      
+
 .. _quickstart-demos-operator-replicator-gke-cc-destroy:
 
 Destroy Resources
@@ -396,7 +397,7 @@ The following highlights a simple Helm chart that can be used to deploy |kconnec
 
 The Helm chart is located in the ``helm/replicator-gke-cc`` folder of this demonstration.  The ``templates/replicator-configmap.yaml`` file contains a ``data`` section with a templated JSON value that conforms to the |kconnect-long| `connectors API <https://docs.confluent.io/current/connect/references/restapi.html#post--connectors>`__.  The Destination and Source cluster configuration values are filled in at runtime by the ``helm`` templating system, and are proivded by your ``my-values.yaml`` file created in the demo instructions above.
 
-:: 
+::
 
      apiVersion: v1
      kind: ConfigMap
@@ -452,7 +453,7 @@ In the same directory as the ConfigMap manifest file is a `Kubernetes Job <https
           containers:
           - name: replicator-connector-deploy
             image: cnfldemos/alpine-curl:3.10.2_7.65.1
-            args: [ 
+            args: [
               "-s",
               "-X", "POST",
               "-H", "Content-Type: application/json",
