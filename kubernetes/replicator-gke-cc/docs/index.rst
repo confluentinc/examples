@@ -1,4 +1,3 @@
-.. _quickstart-demos-operator-replicator-gke-cc:
 
 .. |k8s-service-name-long| replace:: Google Kubernetes Engine
 .. |k8s-service-name| replace:: GKE
@@ -10,6 +9,8 @@
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
    :width: 80%
+
+.. _quickstart-demos-operator-replicator-gke-cc:
 
 |k8s-service-name-long| to |ccloud| with |crep-full|
 =====================================================
@@ -58,7 +59,7 @@ Clone the `Confluent examples repository <https://github.com/confluentinc/exampl
 GKE Setup
 ~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.  
+In order to properly simulate a realistic replication scenario to |ccloud|, the demo requires a GKE Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``h1-highmem-2``.
 
 .. tip:: The :ref:`examples-operator-gke-base-variable-reference` section can be used to control the size of the deployed resources in this demo.
 
