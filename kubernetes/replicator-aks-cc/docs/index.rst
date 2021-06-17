@@ -1,4 +1,3 @@
-.. _quickstart-demos-operator-replicator-aks-cc:
 
 .. |k8s-service-name-long| replace:: Azure Kubernetes Service
 .. |k8s-service-name| replace:: AKS
@@ -10,6 +9,8 @@
 .. |cluster-settings| image:: images/cluster-settings.png
    :align: middle
    :width: 80%
+
+.. _quickstart-demos-operator-replicator-aks-cc:
 
 |k8s-service-name-long| to |ccloud| with |crep-full|
 =====================================================
@@ -49,7 +50,7 @@ Caution
 
 .. include:: ../../../ccloud/docs/includes/ccloud-examples-caution.rst
 
-In addition to |ccloud| resources, this example uses |az-long| resources: 
+In addition to |ccloud| resources, this example uses |az-long| resources:
 
 * Refer to `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document contains information on required sizing for |co-long|.
 * Refer to `Azure <https://azure.microsoft.com/en-us/pricing/calculator/>`__ pricing data for more information.
@@ -75,7 +76,7 @@ Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__ G
 AKS Setup
 ~~~~~~~~~
 
-In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a AKS Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``Standard_D4s_v4``.  
+In order to properly simulate a realistic replication scenario to |ccloud|, the example requires a AKS Node Pool sufficiently large to support a 3 node clusters for both |ak| and |zk|.  In testing of this demonstration, a sufficient cluster consisted of 7 nodes of machine type ``Standard_D4s_v4``.
 
 .. tip:: The :ref:`examples-operator-aks-base-variable-reference` section can be used to control the size of the deployed resources in this example.
 
@@ -102,7 +103,7 @@ Verify that ``az`` has created the cluster properly::
       tier: Free
     tags: null
     type: Microsoft.ContainerService/ManagedClusters
-    
+
     ...
 
     az aks get-credentials --only-show-errors --resource-group confluent-operator-demo --name cp-examples-operator-user --context aks_confluent-operator-demo_centralus_cp-examples-operator-user

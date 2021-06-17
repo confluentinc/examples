@@ -1,8 +1,9 @@
-.. _quickstart-demos-operator-gke:
 
 
 .. |k8s-service-name-long| replace:: Google Kubernetes Engine
 .. |k8s-service-name| replace:: GKE
+
+.. _quickstart-demos-operator-gke:
 
 |cp| on |k8s-service-name-long|
 ======================================
@@ -29,7 +30,7 @@ Running the Example
 
 .. warning:: This demo uses the real GCP SDK to launch real resources. To avoid unexpected charges, carefully evaluate the cost of resources before launching the demo and ensure all resources are destroyed after you are done evaluating the demonstration.  Optionally, refer to the |co| `Sizing recommendations <https://docs.confluent.io/operator/current/co-plan.html#co-env-sizing>`__ document and the :ref:`examples-operator-gke-base-variable-reference` section for more information on required resources for running |cp| on Kubernetes.
 
- 
+
 .. _quickstart-demos-operator-gke-setup:
 
 Setup
@@ -64,7 +65,7 @@ Verify that ``gcloud`` has created the cluster properly::
 
     ...
     Created [https://container.googleapis.com/v1/projects/<project-id>/zones/us-central1-a/clusters/cp-examples-operator-<username>].
-    To inspect the contents of your cluster, go to: <link> 
+    To inspect the contents of your cluster, go to: <link>
     kubeconfig entry generated for cp-examples-operator-<username>.
     NAME                            LOCATION  MASTER_VERSION  MASTER_IP     MACHINE_TYPE  NODE_VERSION   NUM_NODES  STATUS
     cp-examples-operator-<username> <zone>    1.12.8-gke.10   <ip-address>  n1-highmem-2  1.12.8-gke.10  3          RUNNING
@@ -100,12 +101,12 @@ The last output message you should see is::
 
 .. _examples-operator-gke-verify-confluent-platform:
 
-Verify 
+Verify
 ******
 
 .. include:: ../../docs/includes/base-demo/verify-demo.rst
 
-Highlights 
+Highlights
 **********
 
 .. _examples-operator-gke-base-configuration:
@@ -123,7 +124,7 @@ Remaining configuration details are specified in individual ``helm`` commands. A
 
 .. sourcecode:: bash
 
-  helm upgrade --install --namespace operator --set zookeeper.enabled=true ... 
+  helm upgrade --install --namespace operator --set zookeeper.enabled=true ...
 
 .. _examples-operator-base-client-configurations:
 
@@ -167,7 +168,7 @@ The following table documents variables that can be used to configure various be
 .. sourcecode:: bash
 
    VARIABLE=value make <make-target>
- 
+
 .. sourcecode:: bash
 
    make <make-target> VARIABLE=value
