@@ -26,7 +26,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
     <java.version>8</java.version>
-    <avro.version>1.9.1</avro.version>
     <gson.version>2.2.4</gson.version>
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
