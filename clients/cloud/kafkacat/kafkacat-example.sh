@@ -22,11 +22,11 @@ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail
 # Produce messages
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "alice,{\"count\":${i}}" ; done) | \
-   kafkacat -F $HOME/.confluent/config \
+   kafkacat -F $CONFIG_FILE \
             -K , \
             -P -t $topic_name
 
 # Consume messages
-kafkacat -F $HOME/.confluent/config \
+kafkacat -F $CONFIG_FILE \
          -K , \
          -C -t $topic_name -e
