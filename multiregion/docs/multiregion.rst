@@ -55,7 +55,11 @@ can be automatically promoted into the ISR is controlled by the
 
 - ``under-min-isr``: if the number of replicas in the ISR drops below the topic's ``min.insync.replicas`` configuration.
 - ``under-replicated``: if the number of replicas in the ISR ISR drops below the configured count of replicas in the topic's replica placement policy.
-- ``leader-is-observer``: if the current partition leader is an observer.
+- ``leader-is-observer``: if the current partition leader is an observer. If ``leader-is-observer`` is used, observers will only join the ISR if a user
+   intervenes manually. A user must call ``unclean`` leader election on an observer node, to make that observer the partition’s leader. Then, other observers
+   will also join the ISR in order to satisfy min-isr, if needed. This is always the behavior if ``"version": 1`` is used in the replica placement policy.
+
+
 
 
 Configuration
