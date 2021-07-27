@@ -57,6 +57,8 @@ can be automatically promoted into the ISR is controlled by the
 - ``under-replicated``: if the number of replicas in the ISR ISR drops below the configured count of replicas in the topic's replica placement policy.
 - ``leader-is-observer``: if the current partition leader is an observer.
 
+.. tip:: For an in-depth explanation of these concepts and configurations,
+         see `Multi-Region Clusters <https://docs.confluent.io/platform/current/multi-dc-deployments/multi-region.html>`__.
 
 Configuration
 --------------
