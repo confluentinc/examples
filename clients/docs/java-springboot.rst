@@ -151,6 +151,7 @@ The |kstreams| API reads from the same topic and does a rolling count and statef
 Suggested Resources
 -------------------
 
+* `Course: Spring Framework and Apache Kafka <https://developer.confluent.io/learn-kafka/spring/confluent-cloud/>`__
 * `Blog posts <https://www.confluent.io/blog/tag/spring>`__
 * `Podcasts <https://developer.confluent.io/podcast/topic/spring>`__
 * `Videos <https://www.youtube.com/playlist?list=PLa7VYi0yPIH26-ppF0Gcsx-YVQQbNjDEt>`__
