@@ -85,6 +85,7 @@ You can find the documentation and instructions for these "build-your-own" resou
 Here are additional GitHub repos that offer an incredible set of nearly a hundred other Apache Kafka demos.
 They are not maintained on a per-release basis like the demos in this repo, but they are an invaluable resource.
 
+* [Learn: Apache Kafka Demos and Examples](https://developer.confluent.io/demos-examples/)
 * [confluentinc/demo-scene](https://github.com/confluentinc/demo-scene/blob/master/README.md), the most popular demos include:
 
   * [Workshop: Apache Kafka and ksqlDB in Action: Let’s Build a Streaming Data Pipeline!](https://github.com/confluentinc/demo-scene/tree/master/build-a-streaming-pipeline/workshop)
