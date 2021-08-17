@@ -67,12 +67,6 @@ MAX_WAIT_KSQLDB=720
 printf "\n====== Waiting up to $MAX_WAIT_KSQLDB for ksqlDB to be ready\n"
 retry $MAX_WAIT_KSQLDB ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 
-printf "====== Creating ksqlDB ACLs\n"
-ccloud kafka acl create --allow --service-account $KSQLDB_SERVICE_ACCOUNT_ID --operation READ --topic 'orders'
-printf "\n"
-ccloud kafka acl create --allow --service-account $KSQLDB_SERVICE_ACCOUNT_ID --operation READ --topic 'customers'
-printf "\n"
-
 printf "\n====== Creating ksqlDB STREAMS and TABLES\n"
 KQLDB_QUERY_PROPERTIES='"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"'
 while read ksqlCmd; do
