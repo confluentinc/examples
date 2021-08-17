@@ -313,7 +313,7 @@ function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
 
   OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
-  (($? != 0)) && { echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again"; exit 1; }
+  (($? != 0)) && { echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"; exit 1; }
   ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
   ccloud environment use $ENVIRONMENT &>/dev/null
 
