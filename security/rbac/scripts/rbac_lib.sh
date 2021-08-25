@@ -44,7 +44,7 @@ function login_mds() {
   OUTPUT=$(
 expect <<END
   log_user 1
-  spawn confluent login --url $MDS_URL
+  spawn confluent login --url $MDS_URL -vvv
   expect "Username: "
   send "${USER_ADMIN_MDS}\r";
   expect "Password: "
