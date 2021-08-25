@@ -340,7 +340,7 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_NAME=$1
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
-  
+
   OUTPUT=$(ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>&1)
   (($? != 0)) && { echo "$OUTPUT"; exit 1; }
   CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
@@ -905,10 +905,12 @@ function ccloud::create_ccloud_stack() {
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
   EXAMPLE=${EXAMPLE:-ccloud-stack-function}
+  CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-true}"
 
   # Check if credit card is on file, which is required for cluster creation
-  if [[ $(ccloud admin payment describe) =~ "not found" ]]; then
+  if $CHECK_CREDIT_CARD && [[  $(ccloud admin payment describe) =~ "not found" ]]; then
     echo "ERROR: No credit card on file. Add a payment method and try again."
+    echo "If you are using a cloud provider's Marketplace, see documentation for a workaround: https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html#running-with-marketplace"
     exit 1
   fi
 
@@ -937,7 +939,7 @@ function ccloud::create_ccloud_stack() {
   else
     ccloud environment use $ENVIRONMENT || exit 1
   fi
-  
+
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
