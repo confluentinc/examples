@@ -857,6 +857,7 @@ kafkaconnect
 kafkaconsumer
 kafkarest
 kafkastore
+kcat
 keepConsuming
 keepalive
 keyValueStoreBuilder

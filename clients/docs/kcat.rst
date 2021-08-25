@@ -1,7 +1,7 @@
-.. _client-examples-kafkacat:
+.. _client-examples-kcat:
 
-kafkacat: Command Example for |ak-tm|
-=====================================
+kcat: Command Example for |ak-tm|
+=================================
 
 In this tutorial, you will run a |kcat| client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
@@ -15,8 +15,8 @@ Prerequisites
 Client
 ~~~~~~
 
--  `kafkacat <https://github.com/edenhill/kafkacat>`__ installed on your
-   machine. You must `build <https://github.com/edenhill/kafkacat#build>`__
+-  `kcat <https://github.com/edenhill/kcat>`__ installed on your
+   machine. You must `build <https://github.com/edenhill/kcat#build>`__
    |kcat| from the latest master branch to get the ``-F`` functionality
    that makes it easy to pass in the configuration to your |ccloud|
    configuration file.
@@ -37,7 +37,7 @@ Setup
 
    .. code-block:: bash
 
-      cd clients/cloud/kafkacat/
+      cd clients/cloud/kcat/
 
 #. .. include:: includes/client-example-create-file-java.rst
 
@@ -65,7 +65,7 @@ Produce Records
 
    .. code-block:: bash
 
-      kafkacat -F $HOME/.confluent/java.config -K , -P -t test1
+      kcat -F $HOME/.confluent/java.config -K , -P -t test1
 
 #. Type a few messages, using a ``,`` as the separator between the message key
    and value:
@@ -78,7 +78,7 @@ Produce Records
 
 #. When you are done, press ``CTRL-D``.
 
-#. View the :devx-examples:`producer code|clients/cloud/kafkacat/kafkacat-example.sh`.
+#. View the :devx-examples:`producer code|clients/cloud/kcat/kcat-example.sh`.
 
 
 Consume Records
@@ -94,7 +94,7 @@ Consume Records
 
    .. code-block:: bash
 
-      kafkacat -F $HOME/.confluent/java.config -K , -C -t test1 -e
+      kcat -F $HOME/.confluent/java.config -K , -C -t test1 -e
 
    You should see the messages you typed earlier.
 
@@ -117,4 +117,4 @@ Consume Records
          % Reached end of topic test1 [8] at offset 0
          % Reached end of topic test1 [11] at offset 3: exiting
 
-#. View the :devx-examples:`consumer code|clients/cloud/kafkacat/kafkacat-example.sh`.
+#. View the :devx-examples:`consumer code|clients/cloud/kcat/kcat-example.sh`.
