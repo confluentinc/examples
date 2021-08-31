@@ -95,7 +95,7 @@ The following instructions will:
 Validate Setup
 ~~~~~~~~~~~~~~
 
-#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud UI, view the **Data flow** in your newly created environment and |ak| cluster.
+#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud Console, view the **Data flow** in your newly created environment and |ak| cluster.
 
    |Data Flow|
 
