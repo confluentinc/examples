@@ -22,7 +22,7 @@ follow a series of scenarios to create failure scenarios and to be alerted when 
 Prerequisites
 ~~~~~~~~~~~~~
 
--  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
+-  `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
 
 -  Local `install of Confluent Cloud CLI
    <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.25.0 or later)
