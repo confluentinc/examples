@@ -22,7 +22,7 @@ After you have established the |ccloud| cluster you are going to use for the exa
 
 You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your cluster.
 
-.. tip:: You can also view the bootstrap server value on the |ccloud| UI under the **Cluster settings**
+.. tip:: You can also view the bootstrap server value on the |ccloud| Console under the **Cluster settings**
   
   |cluster-settings| 
 
@@ -89,7 +89,7 @@ API Key and Secret Configuration
 
 The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
 
-.. tip:: You can also create the API Key using the `Confluent Cloud UI <https://docs.confluent.io/cloud/using/api-keys.html#edit-resource-specific-api-key-descriptions-using-the-ui>`__.
+.. tip:: You can also create the API Key using the `Confluent Cloud Console <https://docs.confluent.io/cloud/using/api-keys.html#edit-resource-specific-api-key-descriptions-using-the-ui>`__.
 
 #.  To create a new API Key:
 

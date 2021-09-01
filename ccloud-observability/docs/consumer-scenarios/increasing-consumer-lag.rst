@@ -70,7 +70,7 @@ Diagnose the problem
       If a client is `properly tuned <https://docs.confluent.io/cloud/current/client-apps/optimizing/index.html>`__ and has adequate resources
       an increase in throughput metrics or fetch metrics won't necessarily mean the consumer lag will increase.
 
-#. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-observability-1`` consumer group.
+#. Another view of consumer lag can be found in |ccloud|. Open the Confluent Cloud Console, navigate to the "Consumers" section and click on the ``demo-cloud-observability-1`` consumer group.
    This page will update periodically, within two minutes you should see a steady increase is the offset lag.
 
    |Confluent Cloud Consumer Lag|
