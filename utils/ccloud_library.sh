@@ -1054,10 +1054,10 @@ function ccloud::destroy_ccloud_stack() {
   # Delete associated ACLs
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
-  if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
-    local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
-    echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id"
-    ccloud ksql app delete $ksqldb_id &> "$REDIRECT_TO"
+  ksqldb_id_found=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
+  if [[ $ksqldb_id_found != "" ]]; then
+    echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id_found"
+    ccloud ksql app delete $ksqldb_id_found &> "$REDIRECT_TO"
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
