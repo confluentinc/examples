@@ -134,3 +134,10 @@ Consume Records
 #. When you are done, press ``<ctrl>-c``.
 
 #. View the :devx-examples:`consumer code|clients/cloud/csharp/Program.cs`.
+
+Suggested Resources
+-------------------
+
+- Blog post: `Implement a Cross-Platform Apache Kafka Producer and Consumer with C# and .NET <https://www.confluent.io/blog/build-cross-platform-kafka-applications-using-c-and-dotnet-5/>`__
+- Developer tutorial: `Getting Started with Apache Kafka and .NET <https://developer.confluent.io/get-started/dotnet>`__
+
