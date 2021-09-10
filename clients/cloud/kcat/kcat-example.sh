@@ -5,14 +5,14 @@ set -eu
 source ../../../utils/helper.sh
 source ../../../utils/ccloud_library.sh
 
-CONFIG_FILE=$HOME/.confluent/java.config
+CONFIG_FILE=$HOME/.confluent/librdkafka.config
 ccloud::validate_ccloud_config $CONFIG_FILE || exit
 
 # Set topic name
 topic_name=test1
 
 # Create topic in Confluent Cloud
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $topic_name --create --replication-factor 3 --partitions 6
+ccloud kafka topic create --if-not-exists $topic_name
 
 # To specify the configuration file for connecting to the Confluent Cloud cluster
 #  option 1: use `-F <path>` argument (shown in the code below)
@@ -22,11 +22,11 @@ kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail
 # Produce messages
 num_messages=10
 (for i in `seq 1 $num_messages`; do echo "alice,{\"count\":${i}}" ; done) | \
-   kcat -F $HOME/.confluent/config \
+   kcat -F $CONFIG_FILE \
         -K , \
         -P -t $topic_name
 
 # Consume messages
-kcat -F $HOME/.confluent/config \
+kcat -F $CONFIG_FILE \
      -K , \
      -C -t $topic_name -e
