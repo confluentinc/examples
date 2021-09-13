@@ -13,6 +13,8 @@ topic_name=test1
 
 # Create topic in Confluent Cloud
 ccloud kafka topic create --if-not-exists $topic_name
+# Uncomment below if local Kafka cluster
+#kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --topic $topic_name --create --if-not-exists
 
 # To specify the configuration file for connecting to the Confluent Cloud cluster
 #  option 1: use `-F <path>` argument (shown in the code below)

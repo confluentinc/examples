@@ -53,11 +53,17 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Create the |ak| topic. 
+#. Create the |ak| topic. If you are using |ccloud| then use the |ccloud| CLI:
 
    .. code-block:: text
 
       ccloud kafka topic create --if-not-exists test1
+
+   If you are using a local |ak| cluster then use the |ak| CLI:
+
+   .. code-block:: text
+
+      kafka-topics --bootstrap-server lcoalhost:9092 --topic $topic_name --create --if-not-exists
 
 #. Run |kcat|, writing messages to topic ``test1``, passing in arguments for:
 
