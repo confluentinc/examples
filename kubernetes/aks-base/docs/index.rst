@@ -122,13 +122,13 @@ Highlights
 Service Configurations
 ``````````````````````
 
-The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this example we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/aks-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
+The |cp| Helm Charts deliver a reasonable base configuration for most deployments.  What is left to the user is the 'last mile' of configuration specific to your environment.  For this example we specify the non-default configuration in the :devx-examples:`values.yaml|kubernetes/aks-base/cfg/values.yaml` file.   The YAML file facilitates a declarative infrastructure approach, but can also be useful for viewing non-default configuration in a single place, bootstrapping a new environment, or sharing in general.
 
 The following is an example section of the ``values.yaml`` file showing how |ak| server properties (``configOverrides``) can be configured using Helm Charts.  The example also shows a YAML anchor (``<<: *cpImage``) to promote reuse within the YAML file itself.  See the :devx-examples:`values.yaml|kubernetes/aks-base/cfg/values.yaml` for further details.
 
 .. include:: ../../docs/includes/base-demo/highlight-service-configs.rst
 
-Remaining configuration details are specificied in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/aks-base/Makefile-impl` for the full commands.
+Remaining configuration details are specified in individual ``helm`` commands. An example is included below showing the setting to actually enable zookeeper deployment with the ``--set`` argument on the ``helm upgrade`` command.  See the :devx-examples:`Makefile|kubernetes/aks-base/Makefile-impl` for the full commands.
 
 .. sourcecode:: bash
 
