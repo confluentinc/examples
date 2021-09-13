@@ -27,7 +27,7 @@ There are additional examples for |ak| and |cp| command line tools and component
 * :ref:`Confluent CLI <client-examples-confluent-cli>`
 * :ref:`Confluent Cloud CLI <client-examples-ccloud>`
 * :ref:`Kafka Connect Datagen <client-examples-kafka-connect-datagen>`
-* :ref:`kafkacat <client-examples-kafkacat>`
+* :ref:`kcat <client-examples-kcat>`
 * :ref:`KSQL Datagen <client-examples-ksql-datagen>`
 * :ref:`REST Proxy <client-examples-rest-proxy>`
 
@@ -50,7 +50,7 @@ There are additional examples for |ak| and |cp| command line tools and component
       Java <java>
       Java Spring Boot <java-springboot>
       Kafka Connect Datagen <kafka-connect-datagen>
-      kafkacat <kafkacat>
+      kcat <kcat>
       Kotlin <kotlin>
       KSQL Datagen <ksql-datagen>
       Node.js <nodejs>
