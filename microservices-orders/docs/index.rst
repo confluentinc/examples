@@ -199,7 +199,7 @@ Steps
 
       ./start-ccloud.sh
 
-#. After starting the example, the microservices applications will be running localy and your |ccloud| instance will have Kafka topics with data in them.
+#. After starting the example, the microservices applications will be running locally and your |ccloud| instance will have Kafka topics with data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image

@@ -10,7 +10,7 @@ List your Azure subscription and identify the one you wish to use for this examp
 
     az account list -o table
 
-Set the active Azure subription via the Azure CLI.
+Set the active Azure subscription via the Azure CLI.
 
 .. sourcecode:: bash
 
