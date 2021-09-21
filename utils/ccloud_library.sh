@@ -1035,6 +1035,8 @@ function ccloud::destroy_ccloud_stack() {
   fi
 
   SERVICE_ACCOUNT_ID=$1
+  ENVIRONMENT=$(ccloud::get_environment_id_from_service_id $SERVICE_ACCOUNT_ID)
+  ccloud environment use $ENVIRONMENT
 
   PRESERVE_ENVIRONMENT="${PRESERVE_ENVIRONMENT:-false}"
 
