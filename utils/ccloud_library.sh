@@ -485,7 +485,7 @@ function ccloud::create_acls_all_resources_full_access() {
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] &&
     local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+    local REDIRECT_TO="/dev/tty"
 
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
@@ -514,7 +514,7 @@ function ccloud::delete_acls_ccloud_stack() {
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] &&
     local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+    local REDIRECT_TO="/dev/tty"
 
   echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
 
@@ -1050,7 +1050,7 @@ function ccloud::destroy_ccloud_stack() {
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] && 
     local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+    local REDIRECT_TO="/dev/tty"
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 

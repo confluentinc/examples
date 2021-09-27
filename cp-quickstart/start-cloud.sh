@@ -10,7 +10,7 @@ NAME=`basename "$0"`
 QUIET="${QUIET:-false}"
 [[ $QUIET == "true" ]] && 
   REDIRECT_TO="/dev/null" ||
-  REDIRECT_TO="/dev/stdout"
+  REDIRECT_TO="/dev/tty"
 
 # Source library
 source ../utils/helper.sh
