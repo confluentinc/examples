@@ -247,7 +247,7 @@ Re-use Existing Environment
 
 By default, a new ``ccloud-stack`` creates a new environment.
 This means that, by default, ``./ccloud_stack_create.sh`` creates a new environment and ``./ccloud_stack_destroy.sh`` deletes the environment specified in the configuration file.
-However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/features.html#resource-limits-for-ccloud>`__, it may be desirable to work within an existing environment.
+However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/current/client-apps/resource-limits.html>`__, it may be desirable to work within an existing environment.
 
 When you create a new stack, to reuse an existing environment, set the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the example:
 

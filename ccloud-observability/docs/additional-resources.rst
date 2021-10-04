@@ -9,7 +9,7 @@ Additional Resources
 
 -  See advanced options for working with `ccloud-stack <https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html#advanced-options>`__.
 
--  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/best-practices/index.html>`__ for a guide to configuring, monitoring, and
+-  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
 
 -  See the source code for `ccloud-exporter <https://github.com/Dabz/ccloudexporter>`__.
