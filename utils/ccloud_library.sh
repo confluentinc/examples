@@ -36,17 +36,20 @@ CCLOUD_MIN_VERSION=${CCLOUD_MIN_VERSION:-1.25.0}
 
 function ccloud::prompt_continue_ccloud_demo() {
   echo
-  echo "-------------------------------------------------------------------------------------------"
-  echo "Any Confluent Cloud example uses real Confluent Cloud resources that may be billable,"
-  echo "including connectors and ksqlDB applications that may have hourly charges."
+  echo "--------------------------------------------------------------------------------------------"
+  echo "This example runs on Confluent Cloud, sign up here:"
   echo
-  echo "At the end of this script, it will show a command to destroy all Confluent Cloud resources."
-  echo "When you're done with the example, run the command and verify resources have been removed."
+  echo "         https://www.confluent.io/confluent-cloud/tryfree/"
   echo
-  echo "Use Confluent Cloud promo code C50INTEG to receive \$50 free usage, which should"
-  echo "sufficiently cover one day of running this example, beyond which you may be billed"
+  echo "The example uses real Confluent Cloud resources that may be billable, including connectors"
+  echo "and ksqlDB applications that may have hourly charges. The end of this script shows a command"
+  echo "you can run to destroy all the cloud resources, and you should verify they are destroyed."
+  echo
+  echo "New Confluent Cloud signups receive \$400 to spend within Confluent Cloud during their first"
+  echo "60 days. Use Confluent Cloud promo code C50INTEG to receive an additional \$50 free usage."
+  echo "This will sufficiently cover one day of running this example, beyond which you may be billed"
   echo "for the Confluent Cloud resources until you destroy them."
-  echo "-------------------------------------------------------------------------------------------"
+  echo "--------------------------------------------------------------------------------------------"
   echo
 
   read -p "Do you still want to run this script? [y/n] " -n 1 -r
