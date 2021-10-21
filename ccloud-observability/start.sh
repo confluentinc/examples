@@ -14,6 +14,11 @@ source ../utils/ccloud_library.sh
 check_jq \
   && print_pass "jq found"
 
+[[ -z "$AUTO" ]] && {
+  printf "\n====== Confirm\n\n"
+  ccloud::prompt_continue_ccloud_demo || exit 1
+} 
+
 ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
   && print_pass "ccloud version ok"
 
@@ -21,11 +26,6 @@ ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" 
 
 print_pass "Prerequisite check pass"
-
-[[ -z "$AUTO" ]] && {
-  printf "\n====== Confirm\n\n"
-  ccloud::prompt_continue_ccloud_demo || exit 1
-} 
 
 printf "\n====== Starting\n\n"
 

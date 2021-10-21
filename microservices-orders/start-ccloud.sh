@@ -6,6 +6,8 @@ source ../utils/helper.sh
 
 MAX_WAIT=${MAX_WAIT:-60}
 
+[[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
+
 ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
   && print_pass "ccloud version ok"
 
@@ -13,7 +15,6 @@ ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI"
 
 printf "\n====== Create new Confluent Cloud stack\n"
-[[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
 export EXAMPLE="microservices-orders"
 ccloud::create_ccloud_stack true
 
