@@ -19,14 +19,6 @@ source ../utils/ccloud_library.sh
 check_jq \
   && print_pass "jq found"
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
-  && print_pass "ccloud version ok"
-
-ccloud::validate_logged_in_ccloud_cli \
-  && print_pass "logged into ccloud CLI" 
-
-print_pass "Prerequisite check pass"
-
 [[ -z "$AUTO" ]] && {
   printf "\n====== Confirm\n\n"
   ccloud::prompt_continue_ccloud_demo || exit 1
@@ -34,6 +26,14 @@ print_pass "Prerequisite check pass"
   if [[ ! $REPLY =~ ^[Yy]$ ]]; then exit 1; fi
 	printf "\n"
 } 
+
+ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
+  && print_pass "ccloud version ok"
+
+ccloud::validate_logged_in_ccloud_cli \
+  && print_pass "logged into ccloud CLI" 
+
+print_pass "Prerequisite check pass"
 
 printf "\nFor your reference the demo will highlight some commands in "; print_code "code format"
 

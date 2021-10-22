@@ -45,12 +45,12 @@ if __name__ == '__main__':
         'basic.auth.user.info': conf['basic.auth.user.info']}
     schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
-    name_avro_deserializer = AvroDeserializer(ccloud_lib.name_schema,
-                                              schema_registry_client,
-                                              ccloud_lib.Name.dict_to_name)
-    count_avro_deserializer = AvroDeserializer(ccloud_lib.count_schema,
-                                               schema_registry_client,
-                                               ccloud_lib.Count.dict_to_count)
+    name_avro_deserializer = AvroDeserializer(schema_registry_client = schema_registry_client,
+                                              schema_str = ccloud_lib.name_schema,
+                                              from_dict = ccloud_lib.Name.dict_to_name)
+    count_avro_deserializer = AvroDeserializer(schema_registry_client = schema_registry_client,
+                                               schema_str = ccloud_lib.count_schema,
+                                               from_dict = ccloud_lib.Count.dict_to_count)
 
     # for full list of configurations, see:
     #   https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#deserializingconsumer
