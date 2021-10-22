@@ -9,6 +9,8 @@ NAME=`basename "$0"`
 source ../utils/helper.sh
 source ../utils/ccloud_library.sh
 
+ccloud::prompt_continue_ccloud_demo || exit 1
+
 ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
   && print_pass "ccloud version ok" \
   || exit 1
@@ -33,7 +35,6 @@ export EXAMPLE="cloud-etl"
 
 echo
 echo ====== Create new Confluent Cloud stack
-ccloud::prompt_continue_ccloud_demo || exit 1
 ccloud::create_ccloud_stack true
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
