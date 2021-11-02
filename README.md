@@ -93,3 +93,4 @@ They are not maintained on a per-release basis like the demos in this repo, but 
   * [Kafka Connect Zero to Hero](https://github.com/confluentinc/demo-scene/tree/master/kafka-connect-zero-to-hero)
 
 * [vdesabou/kafka-docker-playground](https://github.com/vdesabou/kafka-docker-playground/blob/master/README.md)
+
