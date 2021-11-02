@@ -26,7 +26,7 @@ Examples
 ========
 
 |ccloud| Quickstart
---------------------------
+-----------------------
 
 The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated version of the :ref:`Confluent Platform Quickstart <quickstart>`, but this one runs in |ccloud|.
 
@@ -50,6 +50,13 @@ The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
 
 .. figure:: images/ccloud-stack-resources.png
 
+
+Tutorials
+---------
+
+There are 50+ tutorials at https://kafka-tutorials.confluent.io.
+This site features full code examples using |ak-tm|, |kstreams|, and ksqlDB to demonstrate real use cases.
+You can run the tutorials locally or some with |ccloud|.
 
 
 Client Code Examples

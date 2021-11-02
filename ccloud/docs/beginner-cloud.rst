@@ -837,10 +837,15 @@ Here are the variables and their default values:
 Additional Resources
 --------------------
 
+-  See additional |ccloud| CLI tutorials for producing and consuming events:
+
+   - `Producer and Consumer Basics <https://kafka-tutorials.confluent.io/kafka-console-consumer-producer-basics/confluent.html>`__
+
+   - `Producer and Consumer with (de)serializers <https://kafka-tutorials.confluent.io/kafka-console-consumer-producer-avro/confluent.html>`__
+
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
 
--  See other :ref:`ccloud-demos-overview`.
-
 -  For an example that showcases how to monitor |ak-tm| client application and |ccloud| metrics, and steps through various failure scenarios to see how they are reflected in the provided metrics, see the :ref:`Observability for Apache Kafka® Clients to Confluent Cloud demo <ccloud-observability-index>`.
 
+-  See other :ref:`ccloud-demos-overview`.
