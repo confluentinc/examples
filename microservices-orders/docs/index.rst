@@ -674,6 +674,7 @@ Stop Tutorial
 Additional Resources
 ====================
 
+* `How to build your first Apache Kafka Streams Application <https://kafka-tutorials.confluent.io/creating-first-apache-kafka-streams-application/confluent.html>`__
 * `Kafka Streams videos <https://www.youtube.com/watch?v=Z3JKCLG3VP4&list=PLa7VYi0yPIH1vDclVOB49xUruBAWkOCZD>`__
 * `Kafka Streams documentation <https://docs.confluent.io/platform/current/streams/index.html>`__
 * `Designing Event-Driven Systems <https://www.confluent.io/designing-event-driven-systems>`__
