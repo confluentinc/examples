@@ -289,3 +289,9 @@ Schema Evolution with Confluent Cloud Schema Registry
 
       # DataRecordAvro2b.avsc compatibility test: PASS
       mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc"
+
+Suggested Resources
+-------------------
+
+* `How to build your first Apache Kafka Streams Application <https://kafka-tutorials.confluent.io/creating-first-apache-kafka-streams-application/confluent.html>`__
+* `Getting started with Apache Kafka and your favorite language <https://developer.confluent.io/get-started/>`__
