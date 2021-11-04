@@ -174,3 +174,9 @@ Kafka Streams
 #. When you are done, press ``CTRL-C``.
 
 #. View the :devx-examples:`Kafka Streams code|clients/cloud/kotlin/src/main/kotlin/io/confluent/examples/clients/cloud/StreamsExample.kt`.
+
+Suggested Resources
+-------------------
+
+* `How to build your first Apache Kafka Streams Application <https://kafka-tutorials.confluent.io/creating-first-apache-kafka-streams-application/confluent.html>`__
+* `Getting started with Apache Kafka and your favorite language <https://developer.confluent.io/get-started/>`__

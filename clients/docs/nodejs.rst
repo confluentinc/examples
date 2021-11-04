@@ -134,3 +134,5 @@ Suggested Resources
 -------------------
 
 - Blog post: `Getting Started with KafkaJS <https://www.confluent.io/blog/getting-started-with-kafkajs/>`__, which uses an alternative Node.js client for |ak-tm|.
+- `How to build your first Apache Kafka Streams Application <https://kafka-tutorials.confluent.io/creating-first-apache-kafka-streams-application/confluent.html>`__
+- `Getting started with Apache Kafka and your favorite language <https://developer.confluent.io/get-started/>`__
