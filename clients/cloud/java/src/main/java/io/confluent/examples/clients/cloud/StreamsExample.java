@@ -28,7 +28,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.kstream.KGroupedStream;
 import org.apache.kafka.streams.kstream.Printed;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.Serialized;
+import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.state.KeyValueStore;
@@ -82,7 +82,7 @@ public class StreamsExample {
         counts.print(Printed.<String,Long>toSysOut().withLabel("Consumed record"));
 
         // Aggregate values by key
-        KStream<String,Long> countAgg = counts.groupByKey(Serialized.with(Serdes.String(), Serdes.Long()))
+        KStream<String,Long> countAgg = counts.groupByKey(Grouped.with(Serdes.String(), Serdes.Long()))
             .reduce(
                 (aggValue, newValue) -> aggValue + newValue)
             .toStream();
