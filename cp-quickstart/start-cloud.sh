@@ -27,11 +27,11 @@ check_jq \
 	printf "\n"
 } 
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
-  && print_pass "ccloud version ok"
+ccloud::validate_version_cli $CLI_MIN_VERSION \
+  && print_pass "confluent version ok"
 
 ccloud::validate_logged_in_ccloud_cli \
-  && print_pass "logged into ccloud CLI" 
+  && print_pass "logged into confluent CLI" 
 
 print_pass "Prerequisite check pass"
 
@@ -44,7 +44,7 @@ export EXAMPLE="cp-quickstart"
 ccloud::create_ccloud_stack true  \
 	&& print_code_pass -c "cccloud::create_ccloud_stack true"
 
-SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name | split("-")[3]')
+SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name | split("-")[3]')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
@@ -64,12 +64,12 @@ ccloud::validate_ccloud_stack_up $CLOUD_KEY $CONFIG_FILE false || exit 1
 
 printf "\n";print_process_start "====== Pre-creating topics"
 
-CMD="ccloud kafka topic create pageviews"
+CMD="confluent kafka topic create pageviews"
 $CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3)) 
 
-CMD="ccloud kafka topic create users"
+CMD="confluent kafka topic create users"
 $CMD &>"$REDIRECT_TO" \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
@@ -93,13 +93,13 @@ retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT |
 print_pass "Confluent Cloud KSQL is UP"
 
 printf "Obtaining the ksqlDB App Id\n"
-CMD="ccloud ksql app list -o json | jq -r '.[].id'"
+CMD="confluent ksql app list -o json | jq -r '.[].id'"
 ksqlDBAppId=$(eval $CMD) \
   && print_code_pass -c "$CMD" -m "$ksqlDBAppId" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
 printf "\nConfiguring ksqlDB ACLs\n"
-CMD="ccloud ksql app configure-acls $ksqlDBAppId pageviews users"
+CMD="confluent ksql app configure-acls $ksqlDBAppId pageviews users"
 $CMD \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
@@ -139,9 +139,9 @@ printf "\nLocal client configuration file written to $CONFIG_FILE\n\n"
 
 printf "====== Verify\n"
 
-printf "\nView messages in the topic 'pageviews' (Avro):\n\t";print_code "ccloud kafka topic consume pageviews --value-format avro --print-key"
-printf "\nView messages in the topic 'users' (Protobuf):\n\t";print_code "ccloud kafka topic consume users --value-format protobuf --print-key"
-printf "\nView messages in the topic backing the ksqlDB stream 'accomplished_female_readers' (JSON Schema):\n\t";print_code "ccloud kafka topic list | grep ACCOMPLISHED_FEMALE_READERS | xargs -I {} ccloud kafka topic consume {} --value-format jsonschema --print-key"
+printf "\nView messages in the topic 'pageviews' (Avro):\n\t";print_code "confluent kafka topic consume pageviews --value-format avro --print-key"
+printf "\nView messages in the topic 'users' (Protobuf):\n\t";print_code "confluent kafka topic consume users --value-format protobuf --print-key"
+printf "\nView messages in the topic backing the ksqlDB stream 'accomplished_female_readers' (JSON Schema):\n\t";print_code "confluent kafka topic list | grep ACCOMPLISHED_FEMALE_READERS | xargs -I {} confluent kafka topic consume {} --value-format jsonschema --print-key"
 
 printf "\nConfluent Cloud ksqlDB and the fully managed Datagen Source Connectors are running and accruing charges. To destroy this demo and its Confluent Cloud resources->\n"
 printf "\t./stop-cloud.sh $CONFIG_FILE\n\n"
