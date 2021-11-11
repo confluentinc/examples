@@ -28,7 +28,7 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-CLI_MIN_VERSION=${CLI_MIN_VERSION:-1.25.0}
+CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.0.0}
 
 # --------------------------------------------------------------
 # Library
