@@ -20,7 +20,7 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 
 After you have established the |ccloud| cluster you are going to use for the example you will need the public bootstrap server.
 
-You can use the ``confluent`` CLI to retrieve the bootstrap server value for your cluster.
+You can use the |confluent-cli| to retrieve the bootstrap server value for your cluster.
 
 .. tip:: You can also view the bootstrap server value on the |ccloud| Console under the **Cluster settings**
   

@@ -111,7 +111,7 @@ function ccloud::validate_version_cli() {
 
   if ccloud::version_gt $CLI_MIN_VERSION $CLI_VERSION; then
     echo "confluent version ${CLI_MIN_VERSION} or greater is required. Current version: ${CLI_VERSION}"
-    echo "To update run: confluent update"
+    echo "To update, follow: https://docs.confluent.io/confluent-cli/current/migrate.html"
     exit 1
   fi
 }
@@ -907,7 +907,7 @@ function ccloud::create_ccloud_stack() {
   CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-true}"
 
   # Check if credit card is on file, which is required for cluster creation
-  if $CHECK_CREDIT_CARD && [[  $(confluent admin payment describe) =~ "not found" ]]; then
+  if $CHECK_CREDIT_CARD && [[ $(confluent admin payment describe) =~ "not found" ]]; then
     echo "ERROR: No credit card on file. Add a payment method and try again."
     echo "If you are using a cloud provider's Marketplace, see documentation for a workaround: https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html#running-with-marketplace"
     exit 1
@@ -920,14 +920,12 @@ function ccloud::create_ccloud_stack() {
     SERVICE_ACCOUNT_ID=$(ccloud::create_service_account $SERVICE_NAME)
   fi
 
-
   if [[ "$SERVICE_NAME" == "" ]]; then
     echo "ERROR: SERVICE_NAME is not defined. If you are providing the SERVICE_ACCOUNT_ID to this function please also provide the SERVICE_NAME"
     exit 1
   fi
 
   echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
-
 
   if [[ -z "$ENVIRONMENT" ]]; 
   then
@@ -946,7 +944,7 @@ function ccloud::create_ccloud_stack() {
   (($? != 0)) && { echo "$CLUSTER"; exit 1; }
   if [[ "$CLUSTER" == "" ]] ; then
     echo "Kafka cluster id is empty"
-    echo "ERROR: Could not create cluster. Please troubleshoot"
+    echo "ERROR: Could not create cluster. Please troubleshoot."
     exit 1
   fi
 

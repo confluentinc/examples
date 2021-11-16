@@ -19,7 +19,7 @@ check_jq \
   ccloud::prompt_continue_ccloud_demo || exit 1
 } 
 
-ccloud::validate_version_cli $CCLOUD_MIN_VERSION \
+ccloud::validate_version_cli $CLI_MIN_VERSION \
   && print_pass "confluent version ok"
 
 ccloud::validate_logged_in_cli \

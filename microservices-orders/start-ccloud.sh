@@ -8,7 +8,7 @@ MAX_WAIT=${MAX_WAIT:-60}
 
 [[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
 
-ccloud::validate_version_cli $CCLOUD_MIN_VERSION \
+ccloud::validate_version_cli $CLI_MIN_VERSION \
   && print_pass "confluent version ok"
 
 ccloud::validate_logged_in_cli \

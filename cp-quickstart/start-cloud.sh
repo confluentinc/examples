@@ -30,7 +30,7 @@ check_jq \
 ccloud::validate_version_cli $CLI_MIN_VERSION \
   && print_pass "confluent version ok"
 
-ccloud::validate_logged_in_ccloud_cli \
+ccloud::validate_logged_in_cli \
   && print_pass "logged into confluent CLI" 
 
 print_pass "Prerequisite check pass"

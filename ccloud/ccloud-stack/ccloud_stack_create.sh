@@ -12,9 +12,9 @@ source ../../utils/ccloud_library.sh
 
 ccloud::prompt_continue_ccloud_demo || exit 1
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
+ccloud::validate_version_cli $CLI_MIN_VERSION || exit 1
 check_jq || exit 1
-ccloud::validate_logged_in_ccloud_cli || exit 1
+ccloud::validate_logged_in_cli || exit 1
 
 enable_ksqldb=false
 read -p "Do you also want to create a Confluent Cloud ksqlDB app (hourly charges may apply)? [y/n] " -n 1 -r

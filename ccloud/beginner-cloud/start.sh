@@ -14,8 +14,8 @@ source ../../utils/helper.sh
 source ../../utils/ccloud_library.sh
 
 ccloud::prompt_continue_ccloud_demo || exit 1
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
-ccloud::validate_logged_in_ccloud_cli || exit 1
+ccloud::validate_version_cli $CLI_MIN_VERSION || exit 1
+ccloud::validate_logged_in_cli || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_jq || exit 1
