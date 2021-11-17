@@ -7,10 +7,10 @@ check_timeout \
   && print_pass "timeout installed" \
   || exit 1
 ccloud::validate_version_cli $CLI_MIN_VERSION \
-  && print_pass "confluent version ok" \
+  && print_pass "Confluent CLI version ok" \
   || exit 1
 ccloud::validate_logged_in_cli \
-  && print_pass "logged into confluent CLI" \
+  && print_pass "Logged into the Confluent CLI" \
   || exit 1
 
 if [[ -z "$SR_API_KEY" ]] || [[ -z "$SR_API_SECRET" ]] ; then

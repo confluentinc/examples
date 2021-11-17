@@ -20,10 +20,10 @@ check_jq \
 } 
 
 ccloud::validate_version_cli $CLI_MIN_VERSION \
-  && print_pass "confluent version ok"
+  && print_pass "Confluent CLI version ok"
 
 ccloud::validate_logged_in_cli \
-  && print_pass "logged into confluent CLI" 
+  && print_pass "Logged into the Confluent CLI" 
 
 print_pass "Prerequisite check pass"
 
@@ -34,7 +34,7 @@ export EXAMPLE="ccloud-observability"
 ccloud::create_ccloud_stack false  \
 	&& print_code_pass -c "ccloud::create_ccloud_stack false"
 
-SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name | split("-")[3]')
+SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1

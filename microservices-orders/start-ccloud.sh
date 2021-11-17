@@ -9,16 +9,16 @@ MAX_WAIT=${MAX_WAIT:-60}
 [[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
 
 ccloud::validate_version_cli $CLI_MIN_VERSION \
-  && print_pass "confluent version ok"
+  && print_pass "Confluent CLI version ok"
 
 ccloud::validate_logged_in_cli \
-  && print_pass "logged into confluent CLI"
+  && print_pass "Logged into the Confluent CLI"
 
 printf "\n====== Create new Confluent Cloud stack\n"
 export EXAMPLE="microservices-orders"
 ccloud::create_ccloud_stack true
 
-SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
   printf "\nERROR: Could not determine SERVICE_ACCOUNT_ID from 'confluent kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack.\n"
   exit 1
