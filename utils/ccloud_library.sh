@@ -28,7 +28,7 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.0.0}
+CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.2.0}
 
 # --------------------------------------------------------------
 # Library
@@ -397,7 +397,7 @@ function ccloud::enable_schema_registry() {
 function ccloud::find_credentials_resource() {
   SERVICE_ACCOUNT_ID=$1
   RESOURCE=$2
-  local FOUND_CRED=$(confluent api-key list -o json | jq -c -r 'map(select((.resource_id == "'"$RESOURCE"'") and (.owner == "'"$SERVICE_ACCOUNT_ID"'")))')
+  local FOUND_CRED=$(confluent api-key list -o json | jq -c -r 'map(select((.resource_id == "'"$RESOURCE"'") and (.owner_resource_id == "'"$SERVICE_ACCOUNT_ID"'")))')
   local FOUND_COUNT=$(echo "$FOUND_CRED" | jq 'length')
   [[ $FOUND_COUNT -ne 0 ]] && {
       echo "$FOUND_CRED" | jq -r '.[0].key'
@@ -739,12 +739,12 @@ function ccloud::get_service_account() {
 
   local key="$1"
 
-  serviceAccount=$(confluent api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'"))) | .[].owner')
+  serviceAccount=$(confluent api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'"))) | .[].owner_resource_id')
   if [[ "$serviceAccount" == "" ]]; then
     echo "ERROR: Could not associate key $key to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
   fi
-  if ! [[ "$serviceAccount" =~ ^-?[0-9]+$ ]]; then
+  if ! [[ "$serviceAccount" =~ ^sa-[a-z0-9]+$ ]]; then
     echo "ERROR: $serviceAccount value is not a valid value for a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
   fi
