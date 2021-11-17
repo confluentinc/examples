@@ -66,4 +66,4 @@ echo
 
 echo
 ENVIRONMENT=$(ccloud::get_environment_id_from_service_id $SERVICE_ACCOUNT_ID)
-echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
+echo "Tip: 'confluent' CLI has been set to the new environment $ENVIRONMENT"

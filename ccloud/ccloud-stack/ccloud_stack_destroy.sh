@@ -39,4 +39,4 @@ echo
 ccloud::destroy_ccloud_stack $SERVICE_ACCOUNT_ID
 
 echo
-echo "Tip: 'ccloud' CLI currently has no environment set"
+echo "Tip: 'confluent' CLI currently has no environment set"
