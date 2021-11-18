@@ -11,14 +11,18 @@ source "${DIR_HELPER}/config.env"
 # Library of functions
 ################################################################
 
+function confluent-v1() {
+  HOME=~/confluent-v1 ~/confluent-v1/confluent "$@"
+}
+
 function check_env() {
   if [[ -z "$CONFLUENT_HOME" ]]; then
     echo "\$CONFLUENT_HOME is not defined. Run 'export CONFLUENT_HOME=/path/to/confluentplatform' and try again"
     exit 1
   fi
 
-  if [[ $(type confluent-v1 2>&1) =~ "not found" ]]; then
-    echo "'confluent-v1' is not found. Follow the installation guide (https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel) and try again."
+  if [[ ! -f ~/confluent-v1/confluent ]]; then
+    echo "The alias 'confluent-v1' is not set up. Follow the migration guide (https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel) and try again."
     exit 1
   fi
 
@@ -78,8 +82,8 @@ function check_python() {
 }
 
 function check_confluent_binary() {
-  if [[ $(type confluent-v1 2>&1) =~ "not found" ]]; then
-    echo "'confluent-v1' is not found. Follow the installation guide (https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel) and try again."
+  if [[ ! -f ~/confluent-v1/confluent ]]; then
+    echo "The alias 'confluent-v1' is not set up. Follow the migration guide (https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel) and try again."
     return 1
   fi
 
