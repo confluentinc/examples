@@ -3,7 +3,7 @@
 Authorization Revoked
 *********************
 
-Using the |ccloud| CLI, revoke the producer's authorization to write to the topic.
+Using the Confluent CLI, revoke the producer's authorization to write to the topic.
 
 This scenario will look at |ccloud| metrics from the Metrics API and client metrics from the client application's MBean object ``kafka.producer:type=producer-metrics,client-id=producer-1``.
 
@@ -14,7 +14,7 @@ Introduce failure scenario
 
    .. code-block:: bash
 
-      ccloud kafka acl delete --service-account 184498 --operation write  --topic '*' --allow
+      confluent kafka acl delete --service-account 184498 --operation write  --topic '*' --allow
 
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
@@ -83,7 +83,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      ccloud kafka acl create --service-account 184498 --operation write  --topic '*' --allow
+      confluent kafka acl create --service-account 184498 --operation write  --topic '*' --allow
 
 #. Verify that the ``org.apache.kafka.common.errors.TopicAuthorizationException`` log messages stopped in the ``producer`` container.
 

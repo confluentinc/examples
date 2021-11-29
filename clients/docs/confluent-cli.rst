@@ -3,14 +3,14 @@
 Confluent CLI: Command Example for |ak-tm|
 ==========================================
 
-In this tutorial, you will use the |confluent-cli| to produce messages to and
+In this tutorial, you will use the ``confluent local`` commands from the |confluent-cli| to produce messages to and
 consumes messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
 .. note::
 
-   The Confluent CLI is meant for development purposes only and isn't suitable
+   The ``confluent local`` commands from the |confluent-cli| are meant for development purposes only and aren't suitable
    for a production environment.
 
 Prerequisites

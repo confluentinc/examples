@@ -8,19 +8,19 @@ MAX_WAIT=${MAX_WAIT:-60}
 
 [[ -z "$NO_PROMPT" ]] && ccloud::prompt_continue_ccloud_demo
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
-  && print_pass "ccloud version ok"
+ccloud::validate_version_cli $CLI_MIN_VERSION \
+  && print_pass "Confluent CLI version ok"
 
-ccloud::validate_logged_in_ccloud_cli \
-  && print_pass "logged into ccloud CLI"
+ccloud::validate_logged_in_cli \
+  && print_pass "Logged into the Confluent CLI"
 
 printf "\n====== Create new Confluent Cloud stack\n"
 export EXAMPLE="microservices-orders"
 ccloud::create_ccloud_stack true
 
-SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
-  printf "\nERROR: Could not determine SERVICE_ACCOUNT_ID from 'ccloud kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack.\n"
+  printf "\nERROR: Could not determine SERVICE_ACCOUNT_ID from 'confluent kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack.\n"
   exit 1
 fi
 export CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
@@ -105,5 +105,5 @@ echo
 
 echo
 ENVIRONMENT=$(ccloud::get_environment_id_from_service_id $SERVICE_ACCOUNT_ID)
-echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
+echo "Tip: 'confluent' CLI has been set to the new environment $ENVIRONMENT"
 

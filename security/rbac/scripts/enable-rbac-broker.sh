@@ -24,7 +24,7 @@ ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=server.properties
 create_temp_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
-confluent local services kafka start
+confluent-v1 local services kafka start
 
 echo -e "Sleeping 10 seconds before login"
 sleep 10
@@ -39,12 +39,12 @@ login_mds $MDS
 
 get_cluster_id_kafka
 echo -e "\n# Grant principal User:$USER_ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster"
-echo "confluent iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for User:$USER_ADMIN_SYSTEM"
-echo "confluent iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
 # Topics: create, producer, consume
@@ -66,8 +66,8 @@ else
 fi
 
 echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC1"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Try to create topic $TOPIC1, after authorization (should pass)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
@@ -96,12 +96,12 @@ done
 echo $MESSAGE
 echo -e "\n# Produce $NUM_MESSAGES messages to topic $TOPIC1"
 set -x
-echo -e "${MESSAGE}" | confluent local services kafka produce $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
+echo -e "${MESSAGE}" | confluent-v1 local services kafka produce $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
 set +x
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
-echo "confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
-OUTPUT=$(confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES 2>&1)
+echo "confluent-v1 local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+OUTPUT=$(confluent-v1 local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$USER_CLIENT_A is not allowed access to consumer groups)"
 else

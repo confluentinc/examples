@@ -40,12 +40,12 @@ login_mds $MDS
 get_cluster_id_kafka
 
 echo -e "\n# Grant principal User:$USER_CLIENT_RP the DeveloperRead and DeveloperWrite roles to Topic:$LICENSE_TOPIC"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
-confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+echo "confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
+confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster-id $KAFKA_CLUSTER_ID
 
-confluent local services kafka-rest start
+confluent-v1 local services kafka-rest start
 
 ##################################################
 # REST Proxy client functions
@@ -62,8 +62,8 @@ confluent local services kafka-rest start
 ##################################################
 
 echo -e "\n# Grant principal User:$USER_CLIENT_RP the ResourceOwner role to Topic:$TOPIC3"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role ResourceOwner --resource Topic:$TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role ResourceOwner --resource Topic:$TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role ResourceOwner --resource Topic:$TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role ResourceOwner --resource Topic:$TOPIC3 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Create topic $TOPIC3"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC3 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/clientrp.properties.delta"
@@ -102,8 +102,8 @@ else
 fi
 
 echo -e "\n# Grant the principal User:$USER_CLIENT_RP to the DeveloperRead role for Group:$CONSUMER_GROUP"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Group:$CONSUMER_GROUP --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume messages from the topic $TOPIC3, after authorization (should pass)"
 echo 'curl -u '"${USER_CLIENT_RP}:${USER_CLIENT_RP}1"' --silent -X GET -H "Accept: application/vnd.kafka.json.v2+json" http://localhost:8082/consumers/'"$CONSUMER_GROUP"'/instances/my_consumer_instance/records'
@@ -113,8 +113,8 @@ curl -u $USER_CLIENT_RP:${USER_CLIENT_RP}1 --silent -X GET -H "Accept: applicati
 echo
 
 echo -e "\n# List the role bindings for User:$USER_CLIENT_RP to the Kafka cluster"
-echo "confluent iam rolebinding list --principal User:$USER_CLIENT_RP --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_CLIENT_RP --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent-v1 iam rolebinding list --principal User:$USER_CLIENT_RP --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent-v1 iam rolebinding list --principal User:$USER_CLIENT_RP --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 ##################################################
 # Cleanup

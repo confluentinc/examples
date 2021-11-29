@@ -11,10 +11,10 @@ source ../utils/ccloud_library.sh
 
 ccloud::prompt_continue_ccloud_demo || exit 1
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
+ccloud::validate_version_cli $CLI_MIN_VERSION \
   && print_pass "ccloud version ok" \
   || exit 1
-ccloud::validate_logged_in_ccloud_cli \
+ccloud::validate_logged_in_cli \
   && print_pass "logged into ccloud CLI" \
   || exit 1
 check_python \

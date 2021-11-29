@@ -138,7 +138,7 @@ Environment
 * For running the end-to-end example on |ccloud|, with connectors, Elasticsearch, and Kibana:
 
   * `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
-  * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later
+  * Local install of `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v2.2.0 or later
   * Docker version >= 19.00.0
   * Docker Compose version >= 1.25.0 with Docker Compose file format 3
   * In Docker's advanced `settings <https://docs.docker.com/docker-for-mac/#advanced>`__, increase the memory dedicated to Docker to at least 6GB (default is 2GB)
@@ -185,11 +185,11 @@ The other exercises have no cost because they are run locally.
 Steps
 -----
 
-#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. 
+#. Log in to |ccloud| with the command ``confluent login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. 
 
    .. sourcecode:: bash
 
-      ccloud login --save
+      confluent login --save
 
 #. Start the end-to-end example by running the provided script.
 

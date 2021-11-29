@@ -16,7 +16,7 @@ rm -f /tmp/tokenKeyPair.pem || true
 rm -f /tmp/tokenPublicKey.pem || true
 rm -f /tmp/login.properties || true
 
-confluent local destroy
+confluent-v1 local destroy
 
 # Clean up each individual properties file
 for propfile in $CONFLUENT_HOME/etc/kafka/server.properties $CONFLUENT_HOME/etc/schema-registry/connect-avro-distributed.properties $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties $CONFLUENT_HOME/etc/kafka-rest/kafka-rest.properties $CONFLUENT_HOME/etc/schema-registry/schema-registry.properties; do
