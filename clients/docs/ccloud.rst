@@ -1,10 +1,10 @@
 .. _client-examples-ccloud:
 
-Confluent Cloud CLI: Command Example for |ak-tm|
-================================================
+Confluent CLI: Command Example for |ak-tm|
+==========================================
 
-In this tutorial, you will use the |ccloud| CLI to
-produces messages to and consumes messages from an |ak-tm| cluster.
+In this tutorial, you will use the Confluent CLI to
+produce messages to and consume messages from an |ak-tm| cluster.
 
 .. include:: includes/client-example-overview.rst
 
@@ -15,7 +15,7 @@ Prerequisites
 Client
 ~~~~~~
 
--  Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later.
+-  Local install of `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v2.2.0 or later.
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
 
@@ -30,17 +30,17 @@ Setup
 
 #. .. include:: includes/clients-checkout.rst
 
-#. Change directory to the example for |ccloud| CLI.
+#. Change directory to the example for the Confluent CLI (Cloud).
 
    .. code-block:: bash
 
       cd clients/cloud/ccloud/
 
-#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+#. Log in to the Confluent CLI with the command ``confluent login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: bash
 
-      ccloud login --save
+      confluent login --save
 
 
 Basic Producer and Consumer
@@ -56,16 +56,16 @@ Produce Records
 
    .. code-block:: bash
 
-      ccloud kafka topic create test1
+      confluent kafka topic create test1
 
-#. Run the `Confluent Cloud CLI producer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_produce.html>`__,
+#. Run the `Confluent CLI producer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_produce.html>`__,
    writing messages to topic ``test1``, passing in arguments for:
 
    -  ``--parse-key --delimiter ,``: pass key and value, separated by a comma
 
    .. code-block:: bash
 
-      ccloud kafka topic produce test1 --parse-key --delimiter ,
+      confluent kafka topic produce test1 --parse-key --delimiter ,
 
 #. Type a few messages, using a ``,`` as the separator between the message key
    and value:
@@ -84,7 +84,7 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_consume.html>`__,
+#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html>`__,
    reading messages from topic ``test1``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic -
@@ -92,7 +92,7 @@ Consume Records
 
    .. code-block:: bash
 
-      ccloud kafka topic consume test1 -b --print-key
+      confluent kafka topic consume test1 -b --print-key
 
 #. Verify that the consumer received all the messages. You should see:
 
@@ -124,7 +124,7 @@ Produce Avro Records
 
    .. code-block:: bash
 
-      ccloud kafka topic create test2
+      confluent kafka topic create test2
 
 #. Create a file, for example ``schema.json``, that has the schema of your message payload.
 
@@ -132,7 +132,7 @@ Produce Avro Records
 
       echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
 
-#. Run the `Confluent Cloud CLI producer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_produce.html>`__
+#. Run the `Confluent Cloud CLI producer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_produce.html>`__
    writing messages to topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the
@@ -142,7 +142,7 @@ Produce Avro Records
 
    .. code-block:: bash
 
-      ccloud kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
+      confluent kafka topic produce test2 --value-format avro --schema schema.json --parse-key --delimiter ,
 
    .. note::
 
@@ -164,7 +164,7 @@ Produce Avro Records
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
-#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_consume.html>`__
+#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html>`__
    reading messages from topic ``test2``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic
@@ -174,7 +174,7 @@ Consume Avro Records
 
    .. code-block:: bash
 
-      ccloud kafka topic consume test2 -b --value-format avro --print-key
+      confluent kafka topic consume test2 -b --value-format avro --print-key
 
 #. Verify that the consumer received all the messages. You should see:
 

@@ -3,7 +3,7 @@
 
 This demonstration requires that you have a |ccloud| account and a |ak| cluster ready for use.  The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access.   
 
-.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identical in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appended to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this example, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: `ccloud kafka topic delete <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_delete.html>`__ for instructions on deleting |ccloud| topics.
+.. note:: This demonstration highlights a multi-cloud replication strategy using |crep-full|.  One benefit of |crep| is that the destination cluster topics and partitions will be identical in message offsets, timestamps, keys, and values.   If you re-use a cluster with an existing ``stock-trades`` topic, the messages will be appended to the end of the existing topic data and the offsets will not match the source cluster.  It's advised to build a new cluster for each run of this example, or delete the ``stock-trades`` |ak| topic in the destination cluster prior to running.  See: `confluent kafka topic delete <https://docs.confluent.io/ccloud-cli/current/command-reference/kafka/topic/ccloud_kafka_topic_delete.html>`__ for instructions on deleting |ccloud| topics.
 
 |ak| Cluster Setup
 +++++++++++++++++++
@@ -20,36 +20,33 @@ If you are creating a new cluster, it is advised to create it within the same Cl
 
 After you have established the |ccloud| cluster you are going to use for the example you will need the public bootstrap server.
 
-You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your cluster.
+You can use the |confluent-cli| to retrieve the bootstrap server value for your cluster.
 
 .. tip:: You can also view the bootstrap server value on the |ccloud| Console under the **Cluster settings**
   
   |cluster-settings| 
 
-#.  If you haven't already, `install the ccloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__
+#.  If you haven't already, `install the Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__
 
 #.  Log in to your |ccloud| cluster. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
     ::
 
-        ccloud login --save
+        confluent login --save
 
     Your output should resemble:
 
     ::
 
-        Enter your Confluent credentials:
+        Enter your Confluent Cloud credentials:
         Email: jdoe@myemail.io
-        Password:
-        
-        Logged in as jdoe@myemail.io
-        Using environment t118 ("default")
+        Password: ********
 
 #.  List your available |ak| clusters.
 
     ::
 
-        ccloud kafka cluster list
+        confluent kafka cluster list
 
     This should produce a list of clusters you have access to:
 
@@ -65,7 +62,7 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
 
     ::
 
-        ccloud kafka cluster describe lkc-3r3vj
+        confluent kafka cluster describe lkc-3r3vj
 
     This will produce a detailed view of the cluster.  The ``Endpoint`` field contains the bootstrap server value
 
@@ -87,7 +84,7 @@ You can use the ``ccloud`` CLI to retrieve the bootstrap server value for your c
 API Key and Secret Configuration
 ++++++++++++++++++++++++++++++++
 
-The ``ccloud`` CLI allows you to create API Keys to be used with client applications.
+The ``confluent`` CLI allows you to create API Keys to be used with client applications.
 
 .. tip:: You can also create the API Key using the `Confluent Cloud Console <https://docs.confluent.io/cloud/current/access-management/authenticate/api-keys/api-keys.html#edit-resource-specific-api-key-descriptions-using-the-ui>`__.
 
@@ -95,7 +92,7 @@ The ``ccloud`` CLI allows you to create API Keys to be used with client applicat
 
     ::
 
-        ccloud api-key create --resource lkc-3r3vj
+        confluent api-key create --resource lkc-3r3vj
 
     The tool will display a new Key and secret as below.  You will need to save these values elsewhere as they cannot be retrieved later.
 

@@ -46,16 +46,16 @@ if check_confluent_binary; then
   check_running_cp ${CONFLUENT} || exit
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_IN:"
-  echo -e "confluent local services kafka consume $KAFKA_TOPIC_NAME_IN --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10"
-  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local services kafka consume $KAFKA_TOPIC_NAME_IN --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10 2>/dev/null
+  echo -e "confluent-v1 local services kafka consume $KAFKA_TOPIC_NAME_IN --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10"
+  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent-v1 local services kafka consume $KAFKA_TOPIC_NAME_IN --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10 2>/dev/null
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_OUT2:"
-  echo -e "confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT2 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10"
-  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT2 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10 2>/dev/null
+  echo -e "confluent-v1 local services kafka consume $KAFKA_TOPIC_NAME_OUT2 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10"
+  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent-v1 local services kafka consume $KAFKA_TOPIC_NAME_OUT2 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10 2>/dev/null
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_OUT1:"
-  echo -e "confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT1 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10"
-  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT1 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10 2>/dev/null
+  echo -e "confluent-v1 local services kafka consume $KAFKA_TOPIC_NAME_OUT1 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10"
+  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent-v1 local services kafka consume $KAFKA_TOPIC_NAME_OUT1 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10 2>/dev/null
 
 else
 

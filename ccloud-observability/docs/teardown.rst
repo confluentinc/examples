@@ -13,7 +13,7 @@ Clean up |ccloud| resources
 
    .. code-block:: bash
 
-      ccloud api-key delete $METRICS_API_KEY
+      confluent api-key delete $METRICS_API_KEY
 
 #. Run the following to teardown the ccloud-stack, inserting your service account ID instead of ``184498``.
    Your service account ID can be found in your client configuration file (ie ``stack-configs/java-service-account-184498.config``).

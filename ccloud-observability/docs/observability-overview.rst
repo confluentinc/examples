@@ -24,8 +24,8 @@ Prerequisites
 
 -  `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
 
--  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.25.0 or later)
+-  Local `install of the Confluent CLI
+   <https://docs.confluent.io/confluent-cli/current/install.html>`__ (v2.2.0 or later)
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
@@ -57,11 +57,11 @@ The following instructions will:
 
 -  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
 
-#. Log in to the |ccloud| CLI:
+#. Log in to the Confluent CLI:
 
    .. code-block:: bash
 
-      ccloud login --save
+      confluent login --save
 
    The ``--save`` flag will save your |ccloud| login credentials to the
    ``~/.netrc`` file.

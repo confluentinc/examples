@@ -14,8 +14,8 @@ source ../../utils/helper.sh
 source ../../utils/ccloud_library.sh
 
 ccloud::prompt_continue_ccloud_demo || exit 1
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
-ccloud::validate_logged_in_ccloud_cli || exit 1
+ccloud::validate_version_cli $CLI_MIN_VERSION || exit 1
+ccloud::validate_logged_in_cli || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
 check_jq || exit 1
@@ -26,8 +26,8 @@ check_jq || exit 1
 
 ENVIRONMENT_NAME="ccloud-stack-000000-beginner-cli"
 echo -e "\n# Create a new Confluent Cloud environment $ENVIRONMENT_NAME"
-echo "ccloud environment create $ENVIRONMENT_NAME -o json"
-OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
+echo "confluent environment create $ENVIRONMENT_NAME -o json"
+OUTPUT=$(confluent environment create $ENVIRONMENT_NAME -o json)
 if [[ $? != 0 ]]; then
   echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./cleanup.sh) and run again"
   exit 1
@@ -37,8 +37,8 @@ ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
 #echo $ENVIRONMENT
 
 echo -e "\n# Specify $ENVIRONMENT as the active environment"
-echo "ccloud environment use $ENVIRONMENT"
-ccloud environment use $ENVIRONMENT
+echo "confluent environment use $ENVIRONMENT"
+confluent environment use $ENVIRONMENT
 
 ##################################################
 # Create a new Kafka cluster and specify it as the default
@@ -48,8 +48,8 @@ CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
 CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
 CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
 echo -e "\n# Create a new Confluent Cloud cluster $CLUSTER_NAME"
-echo "ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION"
-OUTPUT=$(ccloud kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
+echo "confluent kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION"
+OUTPUT=$(confluent kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
@@ -59,10 +59,10 @@ fi
 CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
 
 echo -e "\n# Specify $CLUSTER as the active Kafka cluster"
-echo "ccloud kafka cluster use $CLUSTER"
-ccloud kafka cluster use $CLUSTER
+echo "confluent kafka cluster use $CLUSTER"
+confluent kafka cluster use $CLUSTER
 
-BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
+BOOTSTRAP_SERVERS=$(confluent kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
 #echo "BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS"
 
 ##################################################
@@ -70,8 +70,8 @@ BOOTSTRAP_SERVERS=$(ccloud kafka cluster describe $CLUSTER -o json | jq -r ".end
 ##################################################
 
 echo -e "\n# Create a new API key for user"
-echo "ccloud api-key create --description \"Demo credentials\" --resource $CLUSTER -o json"
-OUTPUT=$(ccloud api-key create --description "Demo credentials" --resource $CLUSTER -o json)
+echo "confluent api-key create --description \"Demo credentials\" --resource $CLUSTER -o json"
+OUTPUT=$(confluent api-key create --description "Demo credentials" --resource $CLUSTER -o json)
 status=$?
 if [[ $status != 0 ]]; then
   echo "ERROR: Failed to create an API key.  Please troubleshoot and run again"
@@ -81,8 +81,8 @@ echo "$OUTPUT" | jq .
 
 API_KEY=$(echo "$OUTPUT" | jq -r ".key")
 echo -e "\n# Associate the API key $API_KEY to the Kafka cluster $CLUSTER"
-echo "ccloud api-key use $API_KEY --resource $CLUSTER"
-ccloud api-key use $API_KEY --resource $CLUSTER
+echo "confluent api-key use $API_KEY --resource $CLUSTER"
+confluent api-key use $API_KEY --resource $CLUSTER
 
 MAX_WAIT=720
 echo
@@ -93,15 +93,15 @@ sleep 60
 printf "\n\n"
 
 
-##################################################
-# Produce and consume with Confluent Cloud CLI
-##################################################
+############################################
+# Produce and consume with the Confluent CLI
+############################################
 
 TOPIC1="demo-topic-1"
 
 echo -e "\n# Create a new Kafka topic $TOPIC1"
-echo "ccloud kafka topic create $TOPIC1"
-ccloud kafka topic create $TOPIC1
+echo "confluent kafka topic create $TOPIC1"
+confluent kafka topic create $TOPIC1
 status=$?
 if [[ $status != 0 ]]; then
   echo "ERROR: Failed to create topic $TOPIC1. Please troubleshoot and run again"
@@ -110,19 +110,19 @@ fi
 
 echo -e "\n# Produce 5 messages to topic $TOPIC1"
 echo '(for i in `seq 1 5`; do echo "${i}" ; done) | \'
-echo "timeout 10s ccloud kafka topic produce $TOPIC1"
-(for i in `seq 1 5`; do echo "${i}" ; done) | timeout 10s ccloud kafka topic produce $TOPIC1
+echo "timeout 10s confluent kafka topic produce $TOPIC1"
+(for i in `seq 1 5`; do echo "${i}" ; done) | timeout 10s confluent kafka topic produce $TOPIC1
 status=$?
 if [[ $status != 0 && $status != 124 ]]; then
-  echo "ERROR: There seems to be a failure with 'ccloud kafka topic produce' command. Please troubleshoot"
+  echo "ERROR: There seems to be a failure with 'confluent kafka topic produce' command. Please troubleshoot"
   exit 1
 fi
 # Print messages to give user feedback during script run because it's not printed above
 (for i in `seq 1 5`; do echo "${i}" ; done)
 
 echo -e "\n# Consume messages from topic $TOPIC1"
-echo "ccloud kafka topic consume $TOPIC1 -b"
-timeout 10s ccloud kafka topic consume $TOPIC1 -b
+echo "confluent kafka topic consume $TOPIC1 -b"
+timeout 10s confluent kafka topic consume $TOPIC1 -b
 
 
 ##################################################
@@ -133,14 +133,14 @@ timeout 10s ccloud kafka topic consume $TOPIC1 -b
 echo -e "\n# Create a new service account"
 RANDOM_NUM=$((1 + RANDOM % 1000000))
 SERVICE_NAME="demo-app-$RANDOM_NUM"
-echo "ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME -o json"
-OUTPUT=$(ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json)
+echo "confluent iam service-account create $SERVICE_NAME --description $SERVICE_NAME -o json"
+OUTPUT=$(confluent iam service-account create $SERVICE_NAME --description $SERVICE_NAME  -o json)
 echo "$OUTPUT" | jq .
 SERVICE_ACCOUNT_ID=$(echo "$OUTPUT" | jq -r ".id")
 
 echo -e "\n# Create an API key and secret for the service account $SERVICE_ACCOUNT_ID"
-echo "ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json"
-OUTPUT=$(ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json)
+echo "confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json"
+OUTPUT=$(confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $CLUSTER -o json)
 echo "$OUTPUT" | jq .
 API_KEY_SA=$(echo "$OUTPUT" | jq -r ".key")
 API_SECRET_SA=$(echo "$OUTPUT" | jq -r ".secret")
@@ -170,8 +170,8 @@ sleep 90
 POM=../../clients/cloud/java/pom.xml
 
 echo -e "\n# By default, no ACLs are configured"
-echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
-ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
+echo "confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID"
+confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID
 
 echo -e "\n# Run the Java producer to $TOPIC1: before ACLs (expected to fail)"
 mvn -q -f $POM clean package
@@ -192,13 +192,13 @@ fi
 echo $OUTPUT
 
 echo -e "\n# Create ACLs for the service account"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 echo
-echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
-ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
+echo "confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID"
+confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
@@ -215,10 +215,10 @@ fi
 cat $LOG2
 
 echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1"
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1"
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $TOPIC1
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $TOPIC1
 
 
 
@@ -230,18 +230,18 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 TOPIC2="demo-topic-2"
 
 echo -e "\n# Create a new Kafka topic $TOPIC2"
-echo "ccloud kafka topic create $TOPIC2"
-ccloud kafka topic create $TOPIC2
+echo "confluent kafka topic create $TOPIC2"
+confluent kafka topic create $TOPIC2
 
 echo -e "\n# Create ACLs for the producer using a prefix"
 PREFIX=${TOPIC2/%??/}
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
 echo
-echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
-ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
+echo "confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID"
+confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
@@ -258,10 +258,10 @@ fi
 cat $LOG3
 
 echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix"
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix"
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic $PREFIX --prefix
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $PREFIX --prefix
 
 
 ##################################################
@@ -271,15 +271,15 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 TOPIC3="demo-topic-3"
 CONNECTOR="datagen_ccloud_pageviews"
 echo -e "\n# Create a new Kafka topic $TOPIC3"
-echo "ccloud kafka topic create $TOPIC3"
-ccloud kafka topic create $TOPIC3
+echo "confluent kafka topic create $TOPIC3"
+confluent kafka topic create $TOPIC3
 
 echo -e "\n# Create ACLs for Connect"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
 echo
-echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
-ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
+echo "confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID"
+confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
@@ -308,13 +308,13 @@ ccloud::wait_for_connector_up .ignored_folder/$CONNECTOR.json 300 || exit 1
 CONSUMER_GROUP="demo-beginner-cloud-1"
 
 echo -e "\n# Create ACLs for the consumer using a wildcard"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
+echo "confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 echo
-echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
-ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
+echo "confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID"
+confluent kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC3 (populated by kafka-connect-datagen): wildcard ACLs"
@@ -331,14 +331,14 @@ fi
 cat $LOG4
 
 echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP"
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
 echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
+echo "confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
+confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
 
 
 ##################################################
@@ -347,23 +347,23 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 ##################################################
 
 echo -e "\n# Cleanup: delete connector, service-account, topics, api-keys, kafka cluster, environment"
-CONNECTOR_ID=$(ccloud connector list | grep $CONNECTOR | tr -d '\*' | awk '{print $1;}')
-echo "ccloud connector delete $CONNECTOR_ID"
-ccloud connector delete $CONNECTOR_ID 1>/dev/null
-echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
-ccloud service-account delete $SERVICE_ACCOUNT_ID
+CONNECTOR_ID=$(confluent connect list | grep $CONNECTOR | tr -d '\*' | awk '{print $1;}')
+echo "confluent connect delete $CONNECTOR_ID"
+confluent connect delete $CONNECTOR_ID 1>/dev/null
+echo "confluent iam service-account delete $SERVICE_ACCOUNT_ID"
+confluent iam service-account delete $SERVICE_ACCOUNT_ID
 for t in $TOPIC1 $TOPIC2 $TOPIC3; do
-  echo "ccloud kafka topic delete $t"
-  ccloud kafka topic delete $t
+  echo "confluent kafka topic delete $t"
+  confluent kafka topic delete $t
 done
-echo "ccloud api-key delete $API_KEY_SA"
-ccloud api-key delete $API_KEY_SA 1>/dev/null
-echo "ccloud api-key delete $API_KEY"
-ccloud api-key delete $API_KEY 1>/dev/null
-echo "ccloud kafka cluster delete $CLUSTER"
-ccloud kafka cluster delete $CLUSTER 1>/dev/null
-echo "ccloud environment delete $ENVIRONMENT"
-ccloud environment delete $ENVIRONMENT 1>/dev/null
+echo "confluent api-key delete $API_KEY_SA"
+confluent api-key delete $API_KEY_SA 1>/dev/null
+echo "confluent api-key delete $API_KEY"
+confluent api-key delete $API_KEY 1>/dev/null
+echo "confluent kafka cluster delete $CLUSTER"
+confluent kafka cluster delete $CLUSTER 1>/dev/null
+echo "confluent environment delete $ENVIRONMENT"
+confluent environment delete $ENVIRONMENT 1>/dev/null
 
 # Delete files created locally
 rm -fr delta_configs

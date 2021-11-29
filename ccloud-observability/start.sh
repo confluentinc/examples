@@ -19,11 +19,11 @@ check_jq \
   ccloud::prompt_continue_ccloud_demo || exit 1
 } 
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION \
-  && print_pass "ccloud version ok"
+ccloud::validate_version_cli $CLI_MIN_VERSION \
+  && print_pass "Confluent CLI version ok"
 
-ccloud::validate_logged_in_ccloud_cli \
-  && print_pass "logged into ccloud CLI" 
+ccloud::validate_logged_in_cli \
+  && print_pass "Logged into the Confluent CLI" 
 
 print_pass "Prerequisite check pass"
 
@@ -32,9 +32,9 @@ printf "\n====== Starting\n\n"
 printf "\n====== Creating new Confluent Cloud stack using the ccloud::create_ccloud_stack function\nSee: %s for details\n" "https://github.com/confluentinc/examples/blob/$CONFLUENT_RELEASE_TAG_OR_BRANCH/utils/ccloud_library.sh"
 export EXAMPLE="ccloud-observability"
 ccloud::create_ccloud_stack false  \
-	&& print_code_pass -c "cccloud::create_ccloud_stack false"
+	&& print_code_pass -c "ccloud::create_ccloud_stack false"
 
-SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name | split("-")[3]')
+SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
@@ -53,8 +53,8 @@ eval $CMD \
 # Start up monitoring
 ##################################################
 echo -e "\n====== Create cloud api-key and set environment variables for the ccloud-exporter"
-echo "ccloud api-key create --resource cloud --description \"confluent-cloud-metrics-api\" -o json"
-OUTPUT=$(ccloud api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json)
+echo "confluent api-key create --resource cloud --description \"confluent-cloud-metrics-api\" -o json"
+OUTPUT=$(confluent api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json)
 rm .env 2>/dev/null
 echo "$OUTPUT" | jq .
 export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
