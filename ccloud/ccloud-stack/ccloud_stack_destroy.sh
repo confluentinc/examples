@@ -6,8 +6,8 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 source $DIR/../../utils/helper.sh
 source $DIR/../../utils/ccloud_library.sh
 
-ccloud::validate_version_ccloud_cli $CCLOUD_MIN_VERSION || exit 1
-ccloud::validate_logged_in_ccloud_cli || exit 1
+ccloud::validate_version_cli $CLI_MIN_VERSION || exit 1
+ccloud::validate_logged_in_cli || exit 1
 check_jq || exit 1
 
 if [ -z "$1" ]; then
@@ -39,4 +39,4 @@ echo
 ccloud::destroy_ccloud_stack $SERVICE_ACCOUNT_ID
 
 echo
-echo "Tip: 'ccloud' CLI currently has no environment set"
+echo "Tip: 'confluent' CLI currently has no environment set"

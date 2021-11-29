@@ -1,6 +1,6 @@
 ![image](../../images/confluent-logo-300-2.png)
 
-# Confluent Cloud CLI
+# Confluent CLI
 
 # Documentation
 

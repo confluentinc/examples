@@ -37,7 +37,7 @@ The following applications or libraries are required to be installed and availab
 +------------------+----------------+-------------------------------------------------------------------------------------+
 | ``az``           | ``2.10.1``     | https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest  |
 +------------------+----------------+-------------------------------------------------------------------------------------+
-| ``ccloud``       | ``v1.25.0``    | https://docs.confluent.io/ccloud-cli/current/install.html                           |
+| ``confluent``    | ``v2.2.0``     | https://docs.confluent.io/confluent-cli/current/install.html                        |
 +------------------+----------------+-------------------------------------------------------------------------------------+
 
 .. include:: ../../docs/includes/helm3-requirement-note.rst

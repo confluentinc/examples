@@ -12,7 +12,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE || exit
 topic_name=test1
 
 # Create topic in Confluent Cloud
-ccloud kafka topic create --if-not-exists $topic_name
+confluent kafka topic create --if-not-exists $topic_name
 # Uncomment below if local Kafka cluster
 #kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --topic $topic_name --create --if-not-exists
 
