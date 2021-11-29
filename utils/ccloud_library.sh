@@ -382,6 +382,14 @@ function ccloud::create_service_account() {
   return 0
 }
 
+function ccloud:get_service_account_from_current_cluster_name() {
+  SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
+
+  echo $SERVICE_ACCOUNT_ID
+
+  return 0
+}
+
 function ccloud::enable_schema_registry() {
   SCHEMA_REGISTRY_CLOUD=$1
   SCHEMA_REGISTRY_GEO=$2
@@ -1197,7 +1205,7 @@ function ccloud::generate_configs() {
   KSQLDB_BASIC_AUTH_USER_INFO=$( grep "^ksql.basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
   
   ################################################################################
-  # Build configuration file with CCloud connection parameters and
+  # Build configuration file with Confluent Cloud connection parameters and
   # Confluent Monitoring Interceptors for Streams Monitoring in Confluent Control Center
   ################################################################################
   INTERCEPTORS_CONFIG_FILE=$DEST/interceptors-ccloud.config

@@ -186,11 +186,11 @@ Because this example interacts with real resources in Kinesis or RDS PostgreSQL,
      - ``AZBLOB_STORAGE_ACCOUNT``
      - ``AZBLOB_CONTAINER``
 
-#. Log in to |ccloud| with the command ``ccloud login --save``, and use your |ccloud| username and password. The ``--save`` argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+#. Log in to |ccloud| with the command ``confluent login --save``, and use your |ccloud| username and password. The ``--save`` argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: shell
 
-      ccloud login --save
+      confluent login --save
 
 Run
 ~~~
@@ -247,7 +247,7 @@ Run
 Connectors
 ~~~~~~~~~~
 
-#. The example automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
+#. The example automatically created |kconnect-long| connectors using the |ccloud| CLI command ``confluent connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
 
    - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
    - :devx-examples:`PostgreSQL source connector configuration file|cloud-etl/connectors/rds.json`
@@ -271,7 +271,7 @@ Connectors
 
    .. code:: bash
 
-      ccloud connector list
+      confluent connector list
 
    Your output should resemble:
 
@@ -287,7 +287,7 @@ Connectors
 
    .. code:: bash
 
-      ccloud connector describe lcc-vnrqp
+      confluent connector describe lcc-vnrqp
 
    Your output should resemble:
 
