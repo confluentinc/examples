@@ -12,10 +12,10 @@ source ../utils/ccloud_library.sh
 ccloud::prompt_continue_ccloud_demo || exit 1
 
 ccloud::validate_version_cli $CLI_MIN_VERSION \
-  && print_pass "ccloud version ok" \
+  && print_pass "confluent version ok" \
   || exit 1
 ccloud::validate_logged_in_cli \
-  && print_pass "logged into ccloud CLI" \
+  && print_pass "logged into confluent CLI" \
   || exit 1
 check_python \
   && print_pass "python installed" \
@@ -36,9 +36,9 @@ export EXAMPLE="cloud-etl"
 echo
 echo ====== Create new Confluent Cloud stack
 ccloud::create_ccloud_stack true
-SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
+SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
-  echo "ERROR: Could not determine SERVICE_ACCOUNT_ID from 'ccloud kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack."
+  echo "ERROR: Could not determine SERVICE_ACCOUNT_ID from 'confluent kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack."
   exit 1
 fi
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
@@ -47,7 +47,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   && print_pass "$CONFIG_FILE ok" \
   || exit 1
 
-echo ====== Generate CCloud configurations
+echo ====== Generate Confluent Cloud configurations
 ccloud::generate_configs $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
@@ -73,7 +73,7 @@ ccloud::create_acls_connector $SERVICE_ACCOUNT_ID
 #################################################################
 # Create input topic and create source connector
 #################################################################
-ccloud kafka topic create $KAFKA_TOPIC_NAME_IN
+confluent kafka topic create $KAFKA_TOPIC_NAME_IN
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $AWS_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $AWS_PROFILE)
 if [[ "${DATA_SOURCE}" == "rds" ]]; then

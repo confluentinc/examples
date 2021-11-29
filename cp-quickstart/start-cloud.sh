@@ -44,7 +44,7 @@ export EXAMPLE="cp-quickstart"
 ccloud::create_ccloud_stack true  \
 	&& print_code_pass -c "cccloud::create_ccloud_stack true"
 
-SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
+SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 export CONFIG_FILE=$CONFIG_FILE
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
