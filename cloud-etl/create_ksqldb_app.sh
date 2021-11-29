@@ -11,7 +11,7 @@ source ../utils/ccloud_library.sh
 source config/demo.cfg
 
 #################################################################
-# Source CCloud configurations
+# Source Confluent Cloud configurations
 #################################################################
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta
@@ -25,13 +25,13 @@ ccloud::validate_credentials_ksqldb "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_B
 
 # Create required topics and ACLs
 echo -e "Create output topics $KAFKA_TOPIC_NAME_OUT1 and $KAFKA_TOPIC_NAME_OUT2, and ACLs to allow the ksqlDB application to run\n"
-ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT1
-ccloud kafka topic create $KAFKA_TOPIC_NAME_OUT2
-ksqlDBAppId=$(ccloud ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
-ccloud ksql app configure-acls $ksqlDBAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
-SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
+confluent kafka topic create $KAFKA_TOPIC_NAME_OUT1
+confluent kafka topic create $KAFKA_TOPIC_NAME_OUT2
+ksqlDBAppId=$(confluent ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
+confluent ksql app configure-acls $ksqlDBAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
+SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
 
 # Submit KSQL queries
 echo -e "\nSubmit KSQL queries\n"

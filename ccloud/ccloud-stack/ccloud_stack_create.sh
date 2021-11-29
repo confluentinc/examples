@@ -37,7 +37,7 @@ ccloud::create_ccloud_stack $enable_ksqldb || exit 1
 
 echo
 echo "Validating..."
-SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
+SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
 ccloud::generate_configs $CONFIG_FILE > /dev/null

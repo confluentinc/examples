@@ -36,10 +36,10 @@ fi
 # Delete connectors		
  for f in connectors/*.json; do		
    connector=$(cat $f | jq -r .name)		
-   connectorId=$(ccloud connector list | grep $connector | awk '{print $1}')		
+   connectorId=$(confluent connector list | grep $connector | awk '{print $1}')
    if [[ "$connectorId" != "" ]]; then		
      echo "Deleting connector $connector with id $connectorId"		
-     ccloud connector delete $connectorId		
+     confluent connector delete $connectorId
    fi		
 done
 
