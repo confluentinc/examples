@@ -38,7 +38,7 @@ ccloud-stack Utility
 The :ref:`ccloud-stack` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
-The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
+The script uses the Confluent CLI to dynamically do the following in |ccloud|:
 
 -  Create a new environment.
 -  Create a new service account.
@@ -67,16 +67,16 @@ It provides client examples written in various programming languages.
 
 .. figure:: ../../clients/cloud/images/clients-all.png
 
-|ccloud| CLI
-------------
+Confluent CLI
+-------------
 
-The :ref:`ccloud-cli-tutorial` is a fully scripted example that shows users how to interact with |ccloud| using the |ccloud| CLI.
+The :ref:`ccloud-cli-tutorial` is a fully scripted example that shows users how to interact with |ccloud| using the Confluent CLI.
 It steps through the following workflow:
 
 -  Create a new environment and specify it as the default.
 -  Create a new Kafka cluster and specify it as the default.
 -  Create a user key/secret pair and specify it as the default.
--  Produce and consume with |ccloud| CLI.
+-  Produce and consume with the Confluent CLI.
 -  Create a service account key/secret pair.
 -  Run a Java producer: before and after ACLs.
 -  Run a Java producer: showcase a Prefix ACL.
@@ -99,7 +99,7 @@ Cloud ETL
 ---------
 
 The :ref:`cloud ETL example <cloud-etl>` showcases a cloud ETL solution leveraging all fully-managed services on |ccloud|.
-Using |ccloud| CLI, the example creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
+Using the Confluent CLI, the example creates a source connector that reads data from an AWS Kinesis stream into |ccloud|, then a |ccloud| ksqlDB application processes that data, and then a sink connector writes the output data into cloud storage in the provider of your choice (GCP GCS, AWS S3, or Azure Blob).
 
 .. figure:: ../../cloud-etl/docs/images/topology.png
 
@@ -150,7 +150,7 @@ ccloud-stack Utility
 The :ref:`ccloud-stack` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
-The script uses the |ccloud| CLI to dynamically do the following in |ccloud|:
+The script uses the Confluent CLI to dynamically do the following in |ccloud|:
 
 -  Create a new environment.
 -  Create a new service account.
@@ -261,7 +261,7 @@ You can build any example with a mix of fully-managed services in |ccloud| and s
 
    In the case of running a self-managed connector locally that connects to |ccloud|, first add your desired connector to the base |kconnect-long| Docker image as described in `Add Connectors or Software <https://docs.confluent.io/home/connect/extending.html>`__, and then substitute that Docker image in your Docker Compose file.
 
-#. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the |ccloud| CLI.
+#. Refer to the :devx-examples:`library of bash functions|utils/ccloud_library.sh` for examples on how to interact with |ccloud| via the Confluent CLI.
 
 .. include:: includes/ccloud-examples-terminate.rst
 

@@ -9,7 +9,7 @@ Overview
 
 This ``ccloud-stack`` utility creates a stack of fully managed services in |ccloud|.
 It is a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
-The utility uses |ccloud| CLI under the hood to dynamically do the following in |ccloud| :
+The utility uses the Confluent CLI under the hood to dynamically do the following in |ccloud| :
 
 -  Create a new environment
 -  Create a new service account
@@ -38,26 +38,26 @@ It is intended to be a quick way to create resources in |ccloud| with correct cr
 - If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you create a topic, produce data to the |ak| cluster, or provision any other fully-managed service.
 - If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
 
-Here is a list of |ccloud| CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
+Here is a list of Confluent CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
 By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you have to explicitly enable it.
 
 .. code-block:: text
 
-   ccloud service-account create $SERVICE_NAME --description $SERVICE_NAME -o json
+   confluent iam service-account create $SERVICE_NAME --description $SERVICE_NAME -o json
 
-   ccloud environment create $ENVIRONMENT_NAME -o json
+   confluent environment create $ENVIRONMENT_NAME -o json
 
-   ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION
-   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for kafka
+   confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION
+   confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for kafka
 
-   ccloud schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json
-   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
+   confluent schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json
+   confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
 
    # By default, ccloud-stack does not enable Confluent Cloud ksqlDB, but if you explicitly enable it:
-   ccloud ksql app create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" -o json "$KSQLDB_NAME"
-   ccloud api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB REST API
+   confluent ksql app create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" -o json "$KSQLDB_NAME"
+   confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB REST API
 
-   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
+   confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
 
 |ccloud| Promo Code
 -------------------
@@ -70,7 +70,7 @@ Prerequisites
 =============
 
 - Create a user account in `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__
-- Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later.
+- Local install of the `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v2.2.0 or later.
 - ``jq`` tool
 
 Note that ``ccloud-stack`` has been validated on macOS 10.15.3 with bash version 3.2.57.
@@ -94,11 +94,11 @@ Setup
 
       cd ccloud/ccloud-stack/
 
-#. Log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+#. Log in to |ccloud| with the command ``confluent login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: shell
 
-      ccloud login --save
+      confluent login --save
 
 
 Create a ccloud-stack
@@ -230,11 +230,11 @@ Select Cloud Provider and Region
 
 By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. To create resources in another cloud provider or region other than the default, complete the following steps:
 
-#. View the available cloud providers and regions using the |ccloud| CLI:
+#. View the available cloud providers and regions using the Confluent CLI:
 
    .. code-block:: bash
 
-      ccloud kafka region list
+      confluent kafka region list
 
 #. Create the ``ccloud-stack`` and override the parameters ``CLUSTER_CLOUD`` and ``CLUSTER_REGION``, as shown in the following example:
 

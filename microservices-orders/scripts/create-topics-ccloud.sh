@@ -5,7 +5,7 @@ BOOTSTRAP_SERVERS=${BOOTSTRAP_SERVERS:-"broker:9092"}
 PARTITIONS=${PARTITIONS:-1}
 REPLICATION_FACTOR=${REPLICATION_FACTOR:-1}
 
-CURRENT_TOPICS=$(ccloud kafka topic list -o json)
+CURRENT_TOPICS=$(confluent kafka topic list -o json)
 
 while IFS= read -r TOPIC; 
   do
@@ -15,7 +15,7 @@ while IFS= read -r TOPIC;
         printf "topic $TOPIC already exists\n"
       else
         printf "\nCreating topic $TOPIC on Confluent Cloud\n"
-        ccloud kafka topic create $TOPIC
+        confluent kafka topic create $TOPIC
       fi
     }
   done <$TOPICS_FILE

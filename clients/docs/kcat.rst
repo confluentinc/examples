@@ -57,7 +57,7 @@ Produce Records
 
    .. code-block:: text
 
-      ccloud kafka topic create --if-not-exists test1
+      confluent kafka topic create --if-not-exists test1
 
    If you are using a local |ak| cluster then use the |ak| CLI:
 

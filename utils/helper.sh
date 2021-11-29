@@ -11,14 +11,18 @@ source "${DIR_HELPER}/config.env"
 # Library of functions
 ################################################################
 
+function confluent-v1() {
+  HOME=~/confluent-v1 ~/confluent-v1/confluent "$@"
+}
+
 function check_env() {
   if [[ -z "$CONFLUENT_HOME" ]]; then
     echo "\$CONFLUENT_HOME is not defined. Run 'export CONFLUENT_HOME=/path/to/confluentplatform' and try again"
     exit 1
   fi
 
-  if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Download Confluent Platform (https://www.confluent.io/download) to get the new Confluent CLI and try again"
+  if [[ ! -f ~/confluent-v1/confluent ]]; then
+    echo "The alias 'confluent-v1' is not set up. Follow the migration guide (https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel) and try again."
     exit 1
   fi
 
@@ -31,8 +35,7 @@ function check_env() {
 }
 
 function validate_version_confluent_cli_v2() {
-
-  if [[ -z $(confluent version | grep "Go") ]]; then
+  if [[ -z $(confluent-v1 version | grep "Go") ]]; then
     echo "This example requires the new Confluent CLI. Please update your version and try again."
     exit 1
   fi
@@ -41,7 +44,7 @@ function validate_version_confluent_cli_v2() {
 }
 
 function get_version_confluent_cli() {
-  confluent version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
+  confluent-v1 version | grep "^Version:" | cut -d':' -f2 | cut -d'v' -f2
 }
 
 function version_gt() {
@@ -49,15 +52,14 @@ function version_gt() {
 }
 
 function validate_version_confluent_cli_for_cp() {
-
   validate_version_confluent_cli_v2 || exit 1
 
-  VER_MIN="1.30.0"
-  VER_MAX="1.30.2"
-  CLI_VER=$(get_version_confluent_cli)
+  VER_MIN="1.40.0"
+  VER_MAX="1.43.1"
+  CLI_VERSION=$(get_version_confluent_cli)
 
-  if version_gt $VER_MIN $CLI_VER || version_gt $CLI_VER $VER_MAX ; then
-    echo "Confluent CLI version ${CLI_VER} is not compatible with the currently running Confluent Platform version ${CONFLUENT}. Set Confluent CLI version appropriately, see https://docs.confluent.io/platform/current/installation/versions-interoperability.html#confluent-cli for more information."
+  if version_gt $VER_MIN $CLI_VERSION || version_gt $CLI_VERSION $VER_MAX ; then
+    echo "Confluent CLI version ${CLI_VERSION} is not compatible with the currently running Confluent Platform version ${CONFLUENT}. Set Confluent CLI version appropriately, see https://docs.confluent.io/platform/current/installation/versions-interoperability.html#confluent-cli for more information."
     exit 1
   fi
 }
@@ -80,8 +82,8 @@ function check_python() {
 }
 
 function check_confluent_binary() {
-  if [[ $(type confluent 2>&1) =~ "not found" ]]; then
-    echo "'confluent' is not found. Install Confluent Platform if you want to use Confluent CLI."
+  if [[ ! -f ~/confluent-v1/confluent ]]; then
+    echo "The alias 'confluent-v1' is not set up. Follow the migration guide (https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel) and try again."
     return 1
   fi
 
@@ -129,7 +131,7 @@ function check_expect() {
 }
 
 function require_cp_or_exit() {
-  command -v confluent >/dev/null 2>&1 || {
+  command -v confluent-v1 >/dev/null 2>&1 || {
     printf "\nconfluent command not found.  Please check your Confluent Platform installation\n"
     exit 1;
   }
@@ -140,7 +142,7 @@ function check_running_cp() {
 
   expected_version=$1
 
-  actual_version=$( confluent local version 2>&1 | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
+  actual_version=$( confluent-v1 local version 2>&1 | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
   if [[ $expected_version != $actual_version ]]; then
     printf "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
@@ -152,7 +154,7 @@ function check_running_cp() {
 function check_cp() {
   require_cp_or_exit
 
-  type=$( confluent local version 2>&1 | tail -1 | awk -F: '{print $1;}' | tr '[:lower:]' '[:upper:]')
+  type=$( confluent-v1 local version 2>&1 | tail -1 | awk -F: '{print $1;}' | tr '[:lower:]' '[:upper:]')
   case $type in
     *PLATFORM*)
       return 0 ;; 
@@ -329,7 +331,7 @@ function get_cluster_id_kafka () {
 }
 
 function get_cluster_id_schema_registry () {
-  SCHEMA_REGISTRY_CLUSTER_ID=$(confluent cluster describe --url http://localhost:8081 | grep schema-registry-cluster | awk '{print $3;}')
+  SCHEMA_REGISTRY_CLUSTER_ID=$(confluent-v1 cluster describe --url http://localhost:8081 | grep schema-registry-cluster | awk '{print $3;}')
   if [[ -z "$SCHEMA_REGISTRY_CLUSTER_ID" ]]; then
     echo "Failed to get Schema Registry cluster ID. Please troubleshoot and run again"
     exit 1
@@ -338,7 +340,7 @@ function get_cluster_id_schema_registry () {
 }
 
 function get_cluster_id_connect () {
-  CONNECT_CLUSTER_ID=$(confluent cluster describe --url http://localhost:8083 | grep connect-cluster | awk '{print $3;}')
+  CONNECT_CLUSTER_ID=$(confluent-v1 cluster describe --url http://localhost:8083 | grep connect-cluster | awk '{print $3;}')
   if [[ -z "$CONNECT_CLUSTER_ID" ]]; then
     echo "Failed to get Connect cluster ID. Please troubleshoot and run again"
     exit 1
@@ -347,7 +349,7 @@ function get_cluster_id_connect () {
 }
 
 function get_service_id_ksqldb () {
-  KSQLDB_SERVICE_ID=$(confluent cluster describe --url http://localhost:8088 | grep ksql-cluster | awk '{print $3;}')
+  KSQLDB_SERVICE_ID=$(confluent-v1 cluster describe --url http://localhost:8088 | grep ksql-cluster | awk '{print $3;}')
   if [[ -z "$KSQLDB_SERVICE_ID" ]]; then
     echo "Failed to get ksqlDB service ID. Please troubleshoot and run again"
     exit 1

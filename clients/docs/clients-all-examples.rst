@@ -25,7 +25,7 @@ There are additional examples for |ak| and |cp| command line tools and component
 
 * :ref:`Apache Kafka commands <client-examples-kafka-commands>`
 * :ref:`Confluent CLI <client-examples-confluent-cli>`
-* :ref:`Confluent Cloud CLI <client-examples-ccloud>`
+* :ref:`Confluent CLI (Cloud) <client-examples-ccloud>`
 * :ref:`Kafka Connect Datagen <client-examples-kafka-connect-datagen>`
 * :ref:`kcat <client-examples-kcat>`
 * :ref:`KSQL Datagen <client-examples-ksql-datagen>`
@@ -43,7 +43,7 @@ There are additional examples for |ak| and |cp| command line tools and component
       C (librdkafka) <c>
       Clojure <clojure>
       Confluent CLI <confluent-cli>
-      Confluent Cloud CLI <ccloud>
+      Confluent CLI (Cloud) <ccloud>
       .NET <csharp>
       Go <go>
       Groovy <groovy>
