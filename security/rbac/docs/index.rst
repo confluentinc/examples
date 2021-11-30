@@ -207,6 +207,8 @@ Connect
       # Connector
       confluent iam rolebinding create --principal User:$USER_CONNECTOR --role ResourceOwner --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
       confluent iam rolebinding create --principal User:$USER_CONNECTOR --role ResourceOwner --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+      # Sink Connector
+      confluent iam rolebinding create --principal User:$USER_CONNECTOR --role DeveloperRead --resource Group:$CONNECTOR_CONSUMER_GROUP_ID --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 REST Proxy
 ~~~~~~~~~~
