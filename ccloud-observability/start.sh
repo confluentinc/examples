@@ -55,11 +55,16 @@ eval $CMD \
 echo -e "\n====== Create cloud api-key and set environment variables for the ccloud-exporter"
 echo "confluent api-key create --resource cloud --description \"confluent-cloud-metrics-api\" -o json"
 OUTPUT=$(confluent api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json)
-rm .env 2>/dev/null
+status=$?
+if [[ $status != 0 ]]; then
+  echo "ERROR: Failed to create an API key.  Please troubleshoot and run again"
+  exit 1
+fi
 echo "$OUTPUT" | jq .
 export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
 export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
 export CLOUD_CLUSTER=$CLUSTER
+rm .env 2>/dev/null
 
 echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
 echo "docker-compose up -d"
