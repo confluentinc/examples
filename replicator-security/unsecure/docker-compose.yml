@@ -86,7 +86,6 @@ services:
       - mi3:/usr/share/replicator/kafka-connect-replicator/
     environment:
       CONNECT_BOOTSTRAP_SERVERS: "destKafka1:11091"
-      CONNECT_REST_PORT: 8083
       CONNECT_LISTENERS: "http://0.0.0.0:8083"
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
