@@ -5,6 +5,8 @@ source ../utils/helper.sh
 
 check_jq || exit 1
 
+./stop.sh
+
 docker-compose up -d
 
 # Verify Kafka Connect workers have started

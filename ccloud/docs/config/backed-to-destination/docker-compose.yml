@@ -12,7 +12,7 @@ services:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS_DESTINATION
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-destination
       CONNECT_PRODUCER_CLIENT_ID: "demo-connect-destination-worker-producer"
-      CONNECT_REST_PORT: 8087
+      CONNECT_REST_ADVERTISED_PORT: 8087
       CONNECT_GROUP_ID: "connect-destination"
 
       CONNECT_CONFIG_STORAGE_TOPIC: demo-connect-destination-configs
