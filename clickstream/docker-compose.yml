@@ -79,7 +79,6 @@ services:
       # ksqlDB embedded Connect worker
       KSQL_CONNECT_BOOTSTRAP_SERVERS: kafka:29092
       KSQL_CONNECT_REST_ADVERTISED_HOST_NAME: ksqldb
-      KSQL_CONNECT_REST_PORT: 8083
       KSQL_CONNECT_GROUP_ID: ksqldb-kafka-connect-group-01
       KSQL_CONNECT_CONFIG_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-configs
       KSQL_CONNECT_OFFSET_STORAGE_TOPIC: _ksqldb-kafka-connect-group-01-offsets

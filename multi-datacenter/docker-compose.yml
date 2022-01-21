@@ -119,7 +119,7 @@ services:
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc2:29092'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc2
-      CONNECT_REST_PORT: 8382
+      CONNECT_LISTENERS: http://connect-dc2:8382
       CONNECT_GROUP_ID: "connect-dc2"
       CONNECT_PRODUCER_CLIENT_ID: "connect-worker-producer-dc2"
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-dc2
@@ -158,7 +158,7 @@ services:
     environment:
       CONNECT_BOOTSTRAP_SERVERS: 'broker-dc1:29091'
       CONNECT_REST_ADVERTISED_HOST_NAME: connect-dc1
-      CONNECT_REST_PORT: 8381
+      CONNECT_LISTENERS: http://connect-dc1:8381
       CONNECT_GROUP_ID: "connect-dc1"
       CONNECT_PRODUCER_CLIENT_ID: "connect-worker-producer-dc1"
       CONNECT_CONFIG_STORAGE_TOPIC: connect-configs-dc1
