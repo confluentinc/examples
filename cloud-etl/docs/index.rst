@@ -287,7 +287,7 @@ Connectors
 
    .. code:: bash
 
-      confluent connector describe lcc-vnrqp
+      confluent connect describe lcc-vnrqp
 
    Your output should resemble:
 
