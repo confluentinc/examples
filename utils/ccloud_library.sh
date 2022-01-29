@@ -383,7 +383,7 @@ function ccloud::create_service_account() {
 }
 
 function ccloud:get_service_account_from_current_cluster_name() {
-  SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
+  SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $4 "-" $5;}')
 
   echo $SERVICE_ACCOUNT_ID
 
