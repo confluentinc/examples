@@ -346,7 +346,7 @@ function ccloud::create_and_use_cluster() {
   OUTPUT=$(confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>&1)
   (($? != 0)) && { echo "$OUTPUT"; exit 1; }
   CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
-  confluent kafka cluster use $CLUSTER
+  confluent kafka cluster use $CLUSTER > /dev/null
   echo $CLUSTER
 
   return 0
