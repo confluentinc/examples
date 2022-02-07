@@ -346,9 +346,6 @@ confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --opera
 # - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
-echo "Premature exit"
-exit
-
 echo -e "\n# Cleanup: delete connector, service-account, topics, api-keys, kafka cluster, environment"
 CONNECTOR_ID=$(confluent connect list -o json | jq -r 'map(select(.name == "'"$CONNECTOR"'")) | .[].id')
 echo "confluent connect delete $CONNECTOR_ID"
