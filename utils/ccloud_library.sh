@@ -343,10 +343,10 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
 
-  OUTPUT=$(confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>&1)
+  OUTPUT=$(confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION --output json 2>&1)
   (($? != 0)) && { echo "$OUTPUT"; exit 1; }
-  CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
-  confluent kafka cluster use $CLUSTER
+  CLUSTER=$(echo "$OUTPUT" | jq -r .id)
+  confluent kafka cluster use $CLUSTER 2>/dev/null
   echo $CLUSTER
 
   return 0
@@ -675,11 +675,8 @@ function ccloud::wait_for_connector_up() {
 function ccloud::validate_ccloud_ksqldb_endpoint_ready() {
   KSQLDB_ENDPOINT=$1
 
-  ksqlDBAppId=$(confluent ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
-  if [[ "$ksqlDBAppId" == "" ]]; then
-    return 1
-  fi
-  STATUS=$(confluent ksql app describe $ksqlDBAppId | grep "Status" | grep UP)
+
+  STATUS=$(confluent ksql app list -o json | jq -r 'map(select(.endpoint == "'"$KSQLDB_ENDPOINT"'")) | .[].status' | grep UP)
   if [[ "$STATUS" == "" ]]; then
     return 1
   fi
