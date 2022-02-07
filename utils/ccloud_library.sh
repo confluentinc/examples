@@ -28,7 +28,7 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.3.1}
+CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.5.0}
 
 # --------------------------------------------------------------
 # Library
@@ -449,7 +449,7 @@ function ccloud::find_ksqldb_app() {
   KSQLDB_NAME=$1
   CLUSTER=$2
 
-  local FOUND_APP=$(confluent ksql app list -o json | jq -c -r 'map(select((.name == "'"$KSQLDB_NAME"'") and (.kafka == "'"$CLUSTER"'")))')
+  local FOUND_APP=$(confluent ksql cluster list -o json | jq -c -r 'map(select((.name == "'"$KSQLDB_NAME"'") and (.kafka == "'"$CLUSTER"'")))')
   local FOUND_COUNT=$(echo "$FOUND_APP" | jq 'length')
   [[ $FOUND_COUNT -ne 0 ]] && {
       echo "$FOUND_APP" | jq -r '.[].id'
@@ -467,7 +467,7 @@ function ccloud::create_ksqldb_app() {
   local kafka_api_key=$(echo $ksqlDB_kafka_creds | cut -d':' -f1)
   local kafka_api_secret=$(echo $ksqlDB_kafka_creds | cut -d':' -f2)
 
-  KSQLDB=$(confluent ksql app create --cluster $CLUSTER --api-key "$kafka_api_key" --api-secret "$kafka_api_secret" -o json "$KSQLDB_NAME" | jq -r ".id")
+  KSQLDB=$(confluent ksql cluster create --cluster $CLUSTER --api-key "$kafka_api_key" --api-secret "$kafka_api_secret" -o json "$KSQLDB_NAME" | jq -r ".id")
   echo $KSQLDB
 
   return 0
@@ -576,7 +576,7 @@ function ccloud::validate_ksqldb_up() {
 
   ccloud::validate_logged_in_cli || exit 1
 
-  local ksqldb_meta=$(confluent ksql app list -o json | jq -r 'map(select(.endpoint == "'"$ksqldb_endpoint"'")) | .[]')
+  local ksqldb_meta=$(confluent ksql cluster list -o json | jq -r 'map(select(.endpoint == "'"$ksqldb_endpoint"'")) | .[]')
 
   local ksqldb_appid=$(echo "$ksqldb_meta" | jq -r '.id')
   if [[ "$ksqldb_appid" == "" ]]; then
@@ -676,7 +676,7 @@ function ccloud::validate_ccloud_ksqldb_endpoint_ready() {
   KSQLDB_ENDPOINT=$1
 
 
-  STATUS=$(confluent ksql app list -o json | jq -r 'map(select(.endpoint == "'"$KSQLDB_ENDPOINT"'")) | .[].status' | grep UP)
+  STATUS=$(confluent ksql cluster list -o json | jq -r 'map(select(.endpoint == "'"$KSQLDB_ENDPOINT"'")) | .[].status' | grep UP)
   if [[ "$STATUS" == "" ]]; then
     return 1
   fi
@@ -976,9 +976,9 @@ function ccloud::create_ccloud_stack() {
   if $enable_ksqldb ; then
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$CLUSTER_CREDS")
-    KSQLDB_ENDPOINT=$(confluent ksql app describe $KSQLDB -o json | jq -r ".endpoint")
+    KSQLDB_ENDPOINT=$(confluent ksql cluster describe $KSQLDB -o json | jq -r ".endpoint")
     KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
-    confluent ksql app configure-acls $KSQLDB
+    confluent ksql cluster configure-acls $KSQLDB
   fi
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
@@ -1059,10 +1059,10 @@ function ccloud::destroy_ccloud_stack() {
   # Delete associated ACLs
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
-  ksqldb_id_found=$(confluent ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
+  ksqldb_id_found=$(confluent ksql cluster list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
   if [[ $ksqldb_id_found != "" ]]; then
     echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id_found"
-    confluent ksql app delete $ksqldb_id_found &> "$REDIRECT_TO"
+    confluent ksql cluster delete $ksqldb_id_found &> "$REDIRECT_TO"
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
