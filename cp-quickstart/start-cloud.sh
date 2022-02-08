@@ -93,13 +93,13 @@ retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT |
 print_pass "Confluent Cloud KSQL is UP"
 
 printf "Obtaining the ksqlDB App Id\n"
-CMD="confluent ksql app list -o json | jq -r '.[].id'"
+CMD="confluent ksql cluster list -o json | jq -r '.[].id'"
 ksqlDBAppId=$(eval $CMD) \
   && print_code_pass -c "$CMD" -m "$ksqlDBAppId" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
 
 printf "\nConfiguring ksqlDB ACLs\n"
-CMD="confluent ksql app configure-acls $ksqlDBAppId pageviews users"
+CMD="confluent ksql cluster configure-acls $ksqlDBAppId pageviews users"
 $CMD \
   && print_code_pass -c "$CMD" \
   || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
