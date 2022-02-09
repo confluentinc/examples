@@ -262,7 +262,6 @@ Jolokia
 KEEPALIVE
 KEYCOL
 KGroupedStream
-KQLDB
 KRB
 KSQL's
 KSTREAM
@@ -424,7 +423,6 @@ Pask
 Pipelining
 Plaintext
 PostOrdersAndPayments
-PostgresSQL
 Preflight
 Prem
 PressureAlert
@@ -442,7 +440,6 @@ PropertyQueryName
 PropertySetterName
 Protobuf
 PrototypeTemplate's
-Prozess
 PureScript
 PyPi
 RBAC
@@ -454,7 +451,6 @@ ROWKEY
 ROWTIME
 RPO
 RTOs
-Ractive
 RatedMovie
 RatingTimestampExtractor
 RatingTimestampExtractorTest
@@ -936,7 +932,6 @@ https
 iGw
 idempotence
 idempotency
-ie
 ieNkFJzlJ
 ifdef
 ifdef's
@@ -1213,7 +1208,6 @@ ratingAverage
 ratingCountAndSum
 ratingsById
 rawMovies
-rb
 rdktests
 readLine
 readValue
