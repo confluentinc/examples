@@ -63,7 +63,7 @@ Produce Records
 
    .. code-block:: text
 
-      kafka-topics --bootstrap-server lcoalhost:9092 --topic $topic_name --create --if-not-exists
+      kafka-topics --bootstrap-server localhost:9092 --topic $topic_name --create --if-not-exists
 
 #. Run |kcat|, writing messages to topic ``test1``, passing in arguments for:
 
