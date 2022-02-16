@@ -144,12 +144,12 @@ Download and run the tutorial
 
    .. code:: bash
 
-       ./scripts/start.sh
+      ./scripts/start.sh
     
    The automated demo takes several minutes to run to completion and return your prompt. You can follow the progress
    by comparing the output with the workflow and code examples in the manual steps. Use Ctl-C if you want to stop the demo early.
    
-   Be sure to clean up the Docker environment after running this script, as described in :ref:`multiregion-demo-teardown`.
+   Be sure to stop all services and clean up the Docker environment after running this script, as described in :ref:`multiregion-demo-teardown`.
 
 Startup
 -------
@@ -1224,41 +1224,26 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
 
-
-Stop the Tutorial
------------------
-
-#. To stop the example environment and all Docker containers, run the following command:
-
-   .. code-block:: bash
-
-      ./scripts/stop.sh
-
 .. _multiregion-demo-teardown:
 
-Teardown
---------
+Stop the Tutorial and Teardown
+------------------------------
 
-If you ran the tutorial manually, step-by-step, no further action is required.
-The script to stop the tutorial executes a full teardown.
-
-If you ran the automated tutorial to completion or cancelled with Ctrl-C, you
-should stop and remove the running containers. The best way to do this is to run
-the ``stop.sh`` script, which stops the demo application and all its services (``docker-compose down``), and
-removes the containers.
+To stop the example environment and all Docker containers, run the following command:
 
 .. code-block:: bash
 
    ./scripts/stop.sh
-   
+
 To stop the application manually, run the following command:
 
 .. code-block:: bash
 
    docker-compose down
 
-If the demo ran to completion, and you just want to clean up the Docker environment,
-here are some useful commands to do so.
+If you ran either the automated or manual demo to completion, and just want to
+clean up the Docker environment after the application is stopped, here are some
+useful commands to do so.
 
 - Stop containers: ``docker stop $(docker ps -a -q)``
 - Remove containers: ``docker rm $(docker ps -a -q)``
