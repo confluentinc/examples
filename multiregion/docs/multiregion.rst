@@ -120,8 +120,14 @@ Download and run the tutorial
 
    .. codewithvars:: bash
 
-      git clone https://github.com/confluentinc/examples
+      git clone https://github.com/confluentinc/examples      
+      
+   .. codewithvars:: bash
+
       cd examples
+
+   .. codewithvars:: bash
+
       git checkout |release|-post
 
 #. Go to the directory with the |mrrep| by running the following command:
@@ -132,12 +138,18 @@ Download and run the tutorial
 
 #. If you want to manually step through this tutorial, which is advised for new
    users who want to gain familiarity with |mrrep|, skip ahead to the next section.
+   
    Alternatively, you can run the full tutorial end-to-end with the following
    script, which automates all the steps in the tutorial:
 
    .. code:: bash
 
        ./scripts/start.sh
+    
+   The automated demo takes several minutes to run to completion and return your prompt. You can follow the progress
+   by comparing the output with the workflow and code examples in the manual steps. Use Ctl-C if you want to stop the demo early.
+   
+   Be sure to clean up the Docker environment after running this script, as described in :ref:`multiregion-demo-teardown`.
 
 Startup
 -------
@@ -1222,9 +1234,51 @@ Stop the Tutorial
 
       ./scripts/stop.sh
 
+.. _multiregion-demo-teardown:
+
+Teardown
+--------
+
+If you ran the tutorial manually, step-by-step, no further action is required.
+The script to stop the tutorial executes a full teardown.
+
+If you ran the automated tutorial to completion or cancelled with Ctrl-C, you
+should stop and remove the running containers. The best way to do this is to run
+the ``stop.sh`` script, which stops the demo application and all its services (``docker-compose down``), and
+removes the containers.
+
+.. code-block:: bash
+
+   ./scripts/stop.sh
+   
+To stop the application manually, run the following command:
+
+.. code-block:: bash
+
+   docker-compose down
+
+If the demo ran to completion, and you just want to clean up the Docker environment,
+here are some useful commands to do so.
+
+- Stop containers: ``docker stop $(docker ps -a -q)``
+- Remove containers: ``docker rm $(docker ps -a -q)``
+- Remove images: ``docker rmi $(docker images -q)`` (Optional)
 
 Troubleshooting
 ---------------
+
+Demo fails on startup
+~~~~~~~~~~~~~~~~~~~~~
+
+The demo application pulls resources from various sites, including OS packages and Docker images.
+If network connectivity is unreliable or these sites are unavailable, the demo can error out
+while attempting to pull the needed resources.
+
+If this happens, run the following command, and then retry the download and start scripts:
+
+.. code-block:: bash
+
+   docker-compose down
 
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
