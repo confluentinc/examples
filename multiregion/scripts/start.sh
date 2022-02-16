@@ -5,7 +5,7 @@ source ${DIR}/../.env
 
 ${DIR}/stop.sh
 
-${DIR}/build_docker_images.sh
+${DIR}/build_docker_images.sh || exit 1
 
 export RUN_JMX=${RUN_JMX:-true}
 
