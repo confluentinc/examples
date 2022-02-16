@@ -137,7 +137,7 @@ Download and run the tutorial
       cd multiregion
 
 #. If you want to manually step through this tutorial, which is advised for new
-   users who want to gain familiarity with |mrrep|, skip ahead to the next section.
+   users who want to gain familiarity with |mrrep|, :ref:`skip ahead to the next section <multiregion-manual-demo>`.
    
    Alternatively, you can run the full tutorial end-to-end with the following
    script, which automates all the steps in the tutorial:
@@ -150,6 +150,8 @@ Download and run the tutorial
    by comparing the output with the workflow and code examples in the manual steps. Use Ctl-C if you want to stop the demo early.
    
    Be sure to stop all services and clean up the Docker environment after running this script, as described in :ref:`multiregion-demo-teardown`.
+
+.. _multiregion-manual-demo:
 
 Startup
 -------
