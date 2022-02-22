@@ -75,8 +75,8 @@ function check_python() {
 }
 
 function check_confluent_binary() {
-  if [[ ! -f ~/confluent/confluent ]]; then
-    echo "The alias 'confluent' is not set up. Use the Confluent CLI bundled with Confluent Platform and try again."
+  if [[ $(type confluent 2>&1) =~ "not found" ]]; then
+    echo "'confluent' is not found. Install Confluent Platform to use Confluent CLI."
     return 1
   fi
 
