@@ -18,19 +18,19 @@ sleep 1
 ./stop.sh
 
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
-confluent-v1 local services start
+confluent local services start
 sleep 10
 
 if check_cp; then
-  confluent-v1 local services connect connector config datagen-pageviews --config connectors/datagen_pageviews.config
-  confluent-v1 local services connect connector config datagen-users --config connectors/datagen_users.config
+  confluent local services connect connector config datagen-pageviews --config connectors/datagen_pageviews.config
+  confluent local services connect connector config datagen-users --config connectors/datagen_users.config
 else
-  confluent-v1 local services connect connector config datagen-pageviews --config connectors/datagen_pageviews_oss.config
-  confluent-v1 local services connect connector config datagen-users --config connectors/datagen_users_oss.config
+  confluent local services connect connector config datagen-pageviews --config connectors/datagen_pageviews_oss.config
+  confluent local services connect connector config datagen-users --config connectors/datagen_users_oss.config
 fi
 sleep 20
 
-confluent-v1 local services connect connector status
+confluent local services connect connector status
 
 ksql http://localhost:8088 <<EOF
 run script 'statements.sql';
