@@ -120,8 +120,14 @@ Download and run the tutorial
 
    .. codewithvars:: bash
 
-      git clone https://github.com/confluentinc/examples
+      git clone https://github.com/confluentinc/examples      
+      
+   .. codewithvars:: bash
+
       cd examples
+
+   .. codewithvars:: bash
+
       git checkout |release|-post
 
 #. Go to the directory with the |mrrep| by running the following command:
@@ -131,13 +137,21 @@ Download and run the tutorial
       cd multiregion
 
 #. If you want to manually step through this tutorial, which is advised for new
-   users who want to gain familiarity with |mrrep|, skip ahead to the next section.
+   users who want to gain familiarity with |mrrep|, :ref:`skip ahead to the next section <multiregion-manual-demo>`.
+   
    Alternatively, you can run the full tutorial end-to-end with the following
    script, which automates all the steps in the tutorial:
 
    .. code:: bash
 
-       ./scripts/start.sh
+      ./scripts/start.sh
+    
+   The automated demo takes several minutes to run to completion and return your prompt. You can follow the progress
+   by comparing the output with the workflow and code examples in the manual steps. Use Ctl-C if you want to stop the demo early.
+   
+   Be sure to stop all services and clean up the Docker environment after running this script, as described in :ref:`multiregion-demo-teardown`.
+
+.. _multiregion-manual-demo:
 
 Startup
 -------
@@ -1212,19 +1226,46 @@ Now you will bring region ``west`` back online and restore configuration to the 
       multi-region-async-op-leader-is-observer: 0
       multi-region-default: 0
 
+.. _multiregion-demo-teardown:
 
-Stop the Tutorial
------------------
+Stop the Tutorial and Teardown
+------------------------------
 
-#. To stop the example environment and all Docker containers, run the following command:
+To stop the example environment and all Docker containers, run the following command:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      ./scripts/stop.sh
+   ./scripts/stop.sh
 
+To stop the application manually, run the following command:
+
+.. code-block:: bash
+
+   docker-compose down
+
+If you ran either the automated or manual demo to completion, and just want to
+clean up the Docker environment after the application is stopped, here are some
+useful commands to do so.
+
+- Stop containers: ``docker stop $(docker ps -a -q)``
+- Remove containers: ``docker rm $(docker ps -a -q)``
+- Remove images: ``docker rmi $(docker images -q)`` (Optional)
 
 Troubleshooting
 ---------------
+
+Demo fails on startup
+~~~~~~~~~~~~~~~~~~~~~
+
+The demo application pulls resources from various sites, including OS packages and Docker images.
+If network connectivity is unreliable or these sites are unavailable, the demo can error out
+while attempting to pull the needed resources.
+
+If this happens, run the following command, and then retry the download and start scripts:
+
+.. code-block:: bash
+
+   docker-compose down
 
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
