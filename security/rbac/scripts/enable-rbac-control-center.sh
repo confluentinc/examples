@@ -36,8 +36,8 @@ login_mds $MDS
 # Get the Kafka cluster id
 get_cluster_id_kafka
 echo -e "\n# Grant principal User:$USER_ADMIN_C3 the SystemAdmin role to the Kafka cluster"
-echo "confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Control Center"
 confluent local services control-center start
@@ -61,26 +61,26 @@ sleep 10
 ##################################################
 
 echo -e "\n# Grant principal User:$USER_CLIENT_C the DeveloperRead role to Topic:$TOPIC1"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 get_cluster_id_schema_registry
 echo -e "\n# Grant principal User:$USER_CLIENT_C the DeveloperRead role to Topic:$TOPIC2_AVRO"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Topic:$TOPIC2_AVRO --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n# Grant principal User:$USER_CLIENT_C the DeveloperRead role to Subject:${TOPIC2_AVRO}-value"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Subject:${TOPIC2_AVRO}-value --kafka-cluster-id $KAFKA_CLUSTER_ID --schema-registry-cluster-id $SCHEMA_REGISTRY_CLUSTER_ID
 
 get_cluster_id_connect
 echo -e "\n# Grant principal User:$USER_CLIENT_C the DeveloperRead role to Connector:$CONNECTOR_NAME"
-echo "confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
-confluent iam rolebinding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_CLIENT_C --role DeveloperRead --resource Connector:$CONNECTOR_NAME --kafka-cluster-id $KAFKA_CLUSTER_ID --connect-cluster-id $CONNECT_CLUSTER_ID
 
 echo -e "\n# List the role bindings for User:$USER_CLIENT_C to the Kafka cluster"
-echo "confluent iam rolebinding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rolebinding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding list --principal User:$USER_CLIENT_C --kafka-cluster-id $KAFKA_CLUSTER_ID
 
 echo -e "\n # Note: From the Control Center UI, login with username=clientc and password=clientc1"
 
