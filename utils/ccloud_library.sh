@@ -1068,7 +1068,7 @@ function ccloud::destroy_ccloud_stack() {
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
-  confluent connect list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} confluent connect delete {}
+  confluent connect list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} confluent connect delete --cluster $cluster_id {}
 
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
   confluent kafka cluster delete $cluster_id &> "$REDIRECT_TO"
