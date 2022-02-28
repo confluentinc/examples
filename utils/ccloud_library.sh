@@ -1057,6 +1057,7 @@ function ccloud::destroy_ccloud_stack() {
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
   local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  confluent kafka cluster use $cluster_id 2>/dev/null
 
   # Delete associated ACLs
   ccloud::delete_acls_ccloud_stack $cluster_id $SERVICE_ACCOUNT_ID
