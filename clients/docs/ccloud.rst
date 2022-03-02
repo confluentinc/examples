@@ -84,7 +84,7 @@ Produce Records
 Consume Records
 ~~~~~~~~~~~~~~~
 
-#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html>`__,
+#. Run the `Confluent CLI consumer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html>`__,
    reading messages from topic ``test1``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic -
@@ -132,7 +132,7 @@ Produce Avro Records
 
       echo '{"type":"record","name":"myrecord","fields":[{"name":"count","type":"int"}]}' > schema.json
 
-#. Run the `Confluent Cloud CLI producer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_produce.html>`__
+#. Run the `Confluent CLI producer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_produce.html>`__
    writing messages to topic ``test2``, passing in arguments for:
 
    -  ``--value-format avro``: use Avro data format for the value part of the
@@ -164,7 +164,7 @@ Produce Avro Records
 Consume Avro Records
 ~~~~~~~~~~~~~~~~~~~~
 
-#. Run the `Confluent Cloud CLI consumer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html>`__
+#. Run the `Confluent CLI consumer <https://docs.confluent.io/confluent-cli/current/command-reference/kafka/topic/confluent_kafka_topic_consume.html>`__
    reading messages from topic ``test2``, passing in arguments for:
 
    -  ``-b``: print all messages from the beginning of the topic
