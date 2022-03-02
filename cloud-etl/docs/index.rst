@@ -94,7 +94,7 @@ Cloud services
 Local Tools
 ~~~~~~~~~~~
 
--  `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v2.2.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+-  `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v2.5.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 -  `Confluent CLI v1 <https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel>`__ (optional)
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
@@ -247,7 +247,7 @@ Run
 Connectors
 ~~~~~~~~~~
 
-#. The example automatically created |kconnect-long| connectors using the |ccloud| CLI command ``confluent connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
+#. The example automatically created |kconnect-long| connectors using the Confluent CLI command ``confluent connect create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
 
    - :devx-examples:`AWS Kinesis source connector configuration file|cloud-etl/connectors/kinesis.json`
    - :devx-examples:`PostgreSQL source connector configuration file|cloud-etl/connectors/rds.json`
@@ -267,11 +267,11 @@ Connectors
    .. figure:: images/data-kinesis-s3.png
       :alt: image
 
-#. Using the `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__, list all the fully-managed connectors created in this cluster.
+#. Using the `Confluent CLI <https://docs.confluent.io/confluent-cli/current/overview.html>`__, list all the fully-managed connectors created in this cluster.
 
    .. code:: bash
 
-      confluent connector list
+      confluent connect list
 
    Your output should resemble:
 
@@ -287,7 +287,7 @@ Connectors
 
    .. code:: bash
 
-      confluent connector describe lcc-vnrqp
+      confluent connect describe lcc-vnrqp
 
    Your output should resemble:
 
