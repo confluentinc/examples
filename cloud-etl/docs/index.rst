@@ -267,7 +267,7 @@ Connectors
    .. figure:: images/data-kinesis-s3.png
       :alt: image
 
-#. Using the `Confluent CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__, list all the fully-managed connectors created in this cluster.
+#. Using the `Confluent CLI <https://docs.confluent.io/confluent-cli/current/overview.html>`__, list all the fully-managed connectors created in this cluster.
 
    .. code:: bash
 
