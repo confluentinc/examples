@@ -908,7 +908,7 @@ function ccloud::create_ccloud_stack() {
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
   EXAMPLE=${EXAMPLE:-ccloud-stack-function}
-  CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-true}"
+  CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-false}"
 
   # Check if credit card is on file, which is required for cluster creation
   if $CHECK_CREDIT_CARD && [[ $(confluent admin payment describe) =~ "not found" ]]; then
