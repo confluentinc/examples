@@ -64,13 +64,11 @@ echo "$OUTPUT" | jq .
 export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
 export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
 export CLOUD_CLUSTER=$CLUSTER
-rm .env 2>/dev/null
+export CLOUD_CONNECTORS=$(confluent connect list -o json | jq -c '. | map(.id)')
+export CLOUD_KSQLDB_APPS=$(confluent ksql cluster list -o json |  jq -c '. | map(.id)')
+export CLOUD_SCHEMA_REGISTRY=$(confluent schema-registry cluster describe -o json |  jq -c '[.cluster_id]')
 
-echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
-echo "docker-compose up -d"
-docker-compose up -d
-echo -e "\n====== Login to grafana at http://localhost:3000/ un:admin pw:password"
-echo -e "\n====== Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
+rm .env 2>/dev/null
 
 echo "CONFIG_FILE=$CONFIG_FILE" >> .env
 echo "SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID" >> .env
@@ -79,6 +77,28 @@ echo "METRICS_API_SECRET=$METRICS_API_SECRET" >> .env
 echo "CLOUD_CLUSTER=$CLOUD_CLUSTER" >> .env
 echo "BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS" >> .env
 echo "SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG" >> .env
+echo "CLOUD_CONNECTORS=$CLOUD_CONNECTORS" >> .env
+echo "CLOUD_KSQLDB_APPS=$CLOUD_KSQLDB_APPS" >> .env
+echo "CLOUD_SCHEMA_REGISTRY=$CLOUD_SCHEMA_REGISTRY" >> .env
+
+# Prometheus does not support env/variables in config yaml, https://github.com/prometheus/prometheus/issues/2357
+# Use yq instead to create from template
+docker run -i --rm --env-file .env mikefarah/yq '
+  with(.scrape_configs[].job_name == "confluent-cloud"; parent |
+    .basic_auth.username = env(METRICS_API_KEY) |
+    .basic_auth.password = env(METRICS_API_SECRET) |
+    .params."resource.kafka.id" += env(CLOUD_CLUSTER) |
+    .params."resource.connector.id" += env(CLOUD_CONNECTORS) |
+    .params."resource.ksql.id" += env(CLOUD_KSQLDB_APPS) |
+    .params."resource.schema_registry.id" += env(CLOUD_SCHEMA_REGISTRY)
+  )
+' < monitoring_configs/prometheus/prometheus.template.yml > monitoring_configs/prometheus/prometheus.yml
+
+echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
+echo "docker-compose up -d"
+docker-compose up -d
+echo -e "\n====== Login to grafana at http://localhost:3000/ un:admin pw:password"
+echo -e "\n====== Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
 
 echo
 echo "Confluent Cloud Environment:"
@@ -90,3 +110,6 @@ echo "  export METRICS_API_SECRET=$METRICS_API_SECRET"
 echo "  export CLOUD_CLUSTER=$CLOUD_CLUSTER"
 echo "  export BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS"
 echo "  export SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG"
+echo "  export CLOUD_CONNECTORS=$CLOUD_CONNECTORS"
+echo "  export CLOUD_KSQLDB_APPS=$CLOUD_KSQLDB_APPS"
+echo "  export CLOUD_SCHEMA_REGISTRY=$CLOUD_SCHEMA_REGISTRY"
