@@ -41,13 +41,6 @@ scrape_configs:
         labels:
           env: 'dev'
 
-  - job_name: "ccloud-exporter"
-    static_configs:
-      - targets:
-          - "ccloud-exporter:2112"
-        labels:
-          env: "dev"
-
   - job_name: 'confluent-cloud'
     static_configs:
       - targets:

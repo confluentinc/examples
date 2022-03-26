@@ -35,16 +35,6 @@ services:
       - "--collector.filesystem.ignored-mount-points"
       - "^(aufs|proc|nsfs|shm|cgroup|tmpfs|binfmt_misc|debugfs|devpts|fusectl|hugetlbfs|fuse.lxcfs|mqueue|pstore|securityfs|sysfs|autofs|devtmpfs|configfs)"
 
-  ccloud-exporter:
-    image: dabz/ccloudexporter:latest
-    container_name: ccloud-exporter
-    hostname: ccloud-exporter
-    restart: always
-    environment:
-      - CCLOUD_API_KEY=$METRICS_API_KEY
-      - CCLOUD_API_SECRET=$METRICS_API_SECRET
-      - CCLOUD_CLUSTER=$CLOUD_CLUSTER
-
   prometheus:
     image: prom/prometheus:v2.34.0
     container_name: prometheus

@@ -52,7 +52,7 @@ eval $CMD \
 ##################################################
 # Start up monitoring
 ##################################################
-echo -e "\n====== Create cloud api-key and set environment variables for the ccloud-exporter"
+echo -e "\n====== Create cloud api-key and set environment variables for Metrics API /export"
 echo "confluent api-key create --resource cloud --description \"confluent-cloud-metrics-api\" -o json"
 OUTPUT=$(confluent api-key create --resource cloud --description "confluent-cloud-metrics-api" -o json)
 status=$?

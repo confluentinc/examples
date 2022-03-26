@@ -51,11 +51,11 @@ The following instructions will:
 
 -  use ``ccloud-stack`` to create a |ccloud| cluster, a service account with proper acls, and a client configuration file
 
--  create a ``cloud`` resource api-key for the ``ccloud-exporter``
+-  create a ``cloud`` resource api-key for accessing the Metrics API /export endpoint
 
 -  build a |ak| client docker image with the maven project's dependencies cache
 
--  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
+-  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana and a node-exporter) with ``docker-compose``
 
 #. Log in to the Confluent CLI:
 
