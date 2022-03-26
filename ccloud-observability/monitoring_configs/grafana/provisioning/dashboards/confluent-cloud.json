@@ -94,7 +94,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -162,7 +162,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -230,7 +230,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -304,7 +304,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -373,7 +373,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -441,7 +441,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -512,7 +512,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -582,7 +582,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -1121,10 +1121,10 @@
         {
           "datasource": "$datasource",
           "exemplar": true,
-          "expr": "sum by (kafka_id) (confluent_kafka_server_request_count{job=~\"$job\",kafka_id=~\"$cluster\",principal=~\"$principal_id\"})",
+          "expr": "sum by (kafka_id, type) (confluent_kafka_server_request_count{job=~\"$job\",kafka_id=~\"$cluster\",principal=~\"$principal_id\"})",
           "hide": false,
           "interval": "",
-          "legendFormat": "{{kafka_id}}",
+          "legendFormat": "{{kafka_id}}-{{type}}",
           "refId": "A"
         }
       ],
@@ -1191,7 +1191,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -1633,7 +1633,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
@@ -1724,7 +1724,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "8.3.5",
+      "pluginVersion": "8.4.4",
       "targets": [
         {
           "datasource": "$datasource",
