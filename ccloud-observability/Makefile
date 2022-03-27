@@ -1,7 +1,7 @@
 
 PUSH_PREFIX ?= cnfldemos
 CONTAINER_NAME ?= ccloud-observability-client
-VERSION ?= 0.1.0
+VERSION ?= 0.2.0
 
 
 build-image:

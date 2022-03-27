@@ -9,7 +9,7 @@ x-network: &cap-add
 # Note: src code and dependencies are built into cnfldemos/ccloud-observability-client
 #       the Dockerfile for cnfldemos/ccloud-observability-client can be found in this directory--called Dockerfile
 x-client-base: &client-base
-  image: cnfldemos/ccloud-observability-client:0.1.0
+  image: cnfldemos/ccloud-observability-client:0.2.0
   restart: always
   ports:
     - 1234
