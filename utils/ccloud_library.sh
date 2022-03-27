@@ -519,8 +519,7 @@ function ccloud::create_acls_all_resources_full_access() {
 }
 
 function ccloud::delete_acls_ccloud_stack() {
-  CLUSTER_ID=$1
-  SERVICE_ACCOUNT_ID=$2
+  SERVICE_ACCOUNT_ID=$1
   # Setting default QUIET=false to surface potential errors
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] &&
@@ -529,23 +528,23 @@ function ccloud::delete_acls_ccloud_stack() {
 
   echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
 
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*' &>"$REDIRECT_TO"
 
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*' &>"$REDIRECT_TO"
 
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*' &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*' &>"$REDIRECT_TO"
 
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation IDEMPOTENT-WRITE --cluster-scope &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --cluster $CLUSTER_ID --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation IDEMPOTENT-WRITE --cluster-scope &>"$REDIRECT_TO"
+  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope &>"$REDIRECT_TO"
 
   return 0
 }
@@ -1060,7 +1059,7 @@ function ccloud::destroy_ccloud_stack() {
   confluent kafka cluster use $cluster_id 2>/dev/null
 
   # Delete associated ACLs
-  ccloud::delete_acls_ccloud_stack $cluster_id $SERVICE_ACCOUNT_ID
+  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
   ksqldb_id_found=$(confluent ksql cluster list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
   if [[ $ksqldb_id_found != "" ]]; then
@@ -1069,7 +1068,7 @@ function ccloud::destroy_ccloud_stack() {
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
-  confluent connect list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} confluent connect delete --cluster $cluster_id {}
+  confluent connect list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} confluent connect delete {}
 
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
   confluent kafka cluster delete $cluster_id &> "$REDIRECT_TO"
