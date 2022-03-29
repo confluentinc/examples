@@ -41,7 +41,7 @@ scrape_configs:
         labels:
           env: 'dev'
 
-  - job_name: 'confluent-cloud'
+  - job_name: confluent-cloud
     static_configs:
       - targets:
         - api.telemetry.confluent.cloud
