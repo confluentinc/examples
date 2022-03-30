@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package io.confluent.examples.clients.cloud;
+import io.confluent.examples.clients.cloud.DataRecordAvro;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
@@ -23,7 +24,6 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.Producer;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
-
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -83,7 +83,7 @@ public class ProducerAvroExample {
     final Long numMessages = 10L;
     for (Long i = 0L; i < numMessages; i++) {
       String key = "alice";
-      DataRecordAvro record = new DataRecordAvro(i);
+      DataRecordAvro record = new DataRecordAvro(i, "test");
 
       System.out.printf("Producing record: %s\t%s%n", key, record);
       producer.send(new ProducerRecord<String, DataRecordAvro>(topic, key, record), new Callback() {
