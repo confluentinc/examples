@@ -81,6 +81,8 @@ echo "CLOUD_CONNECTORS=$CLOUD_CONNECTORS" >> .env
 echo "CLOUD_KSQLDB_APPS=$CLOUD_KSQLDB_APPS" >> .env
 echo "CLOUD_SCHEMA_REGISTRY=$CLOUD_SCHEMA_REGISTRY" >> .env
 
+# Create custom prometheus.yml from prometheus.template.yml.
+# The resulting prometheus.yml will necessarily contain secrets, and is .gitignore-d .
 # Prometheus does not support env/variables in config yaml, https://github.com/prometheus/prometheus/issues/2357
 # Use yq instead to create from template
 docker run -i --rm --env-file .env mikefarah/yq '
@@ -97,8 +99,8 @@ docker run -i --rm --env-file .env mikefarah/yq '
 echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
 echo "docker-compose up -d"
 docker-compose up -d
-echo -e "\n====== Login to grafana at http://localhost:3000/ un:admin pw:password"
-echo -e "\n====== Query metrics in prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
+echo -e "\n====== Login to Grafana at http://localhost:3000/ un:admin pw:password"
+echo -e "\n====== Query metrics in Prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
 
 echo
 echo "Confluent Cloud Environment:"
