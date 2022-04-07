@@ -55,7 +55,7 @@ The following instructions will:
 
 -  build a |ak| client docker image with the maven project's dependencies cache
 
--  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana and a node-exporter) with ``docker-compose``
+-  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, `Prometheus <https://prometheus.io/>`, `Grafana <https://grafana.com/>` and a Prometheus `node-exporter <https://prometheus.io/docs/guides/node-exporter/>`) with ``docker-compose``
 
 #. Log in to the Confluent CLI:
 
