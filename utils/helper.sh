@@ -47,11 +47,10 @@ function version_gt() {
 function validate_version_confluent_cli_for_cp() {
   validate_version_confluent_cli_v2 || exit 1
 
-  VER_MIN="2.3.1"
-  VER_MAX="2.6.1"
+  VER_MIN="2.6.1"
   CLI_VERSION=$(get_version_confluent_cli)
 
-  if version_gt $VER_MIN $CLI_VERSION || version_gt $CLI_VERSION $VER_MAX ; then
+  if version_gt $VER_MIN $CLI_VERSION ; then
     echo "Confluent CLI version ${CLI_VERSION} is not compatible with the currently running Confluent Platform version ${CONFLUENT}. Set Confluent CLI version appropriately, see https://docs.confluent.io/platform/current/installation/versions-interoperability.html#confluent-cli for more information."
     exit 1
   fi
