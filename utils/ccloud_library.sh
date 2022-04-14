@@ -362,9 +362,16 @@ function ccloud::maybe_create_and_use_cluster() {
     confluent kafka cluster use $CLUSTER_ID
     echo $CLUSTER_ID
   else
-    OUTPUT=$(ccloud::create_and_use_cluster "$CLUSTER_NAME" "$CLUSTER_CLOUD" "$CLUSTER_REGION")
-    (($? != 0)) && { echo "$OUTPUT"; exit 1; }
-    echo "$OUTPUT"
+    if [[ ! -z "$CLUSTER_CREDS" ]]
+    then
+      echo "ERROR: Could not find your $CLUSTER_CLOUD cluster $CLUSTER_NAME in region $CLUSTER_REGION"
+      echo "Make sure CLUSTER_CLOUD and CLUSTER_REGION are set with values that correspond to your cluster!"
+      exit 1
+    else
+      OUTPUT=$(ccloud::create_and_use_cluster "$CLUSTER_NAME" "$CLUSTER_CLOUD" "$CLUSTER_REGION")
+      (($? != 0)) && { echo "$OUTPUT"; exit 1; }
+      echo "$OUTPUT"
+    fi
   fi
 
   return 0
@@ -383,7 +390,8 @@ function ccloud::create_service_account() {
 }
 
 function ccloud:get_service_account_from_current_cluster_name() {
-  SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $4 "-" $5;}')
+  # FIX THIS: needed to change this to make it work
+  SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $3 "-" $4;}')
 
   echo $SERVICE_ACCOUNT_ID
 
@@ -953,24 +961,35 @@ function ccloud::create_ccloud_stack() {
   fi
 
   BOOTSTRAP_SERVERS=$(confluent kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
-  CLUSTER_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
+  NEED_ACLS=0
+  if [[ -z "$CLUSTER_CREDS" ]]
+  then
+    CLUSTER_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
+    NEED_ACLS=1
+  fi
 
   MAX_WAIT=720
   echo ""
   echo "Waiting up to $MAX_WAIT seconds for Confluent Cloud cluster to be ready and for credentials to propagate"
   ccloud::retry $MAX_WAIT ccloud::validate_ccloud_cluster_ready || exit 1
 
-  # Estimating another 80s wait still sometimes required
-  WARMUP_TIME=${WARMUP_TIME:-80}
-  echo "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata"
-  sleep $WARMUP_TIME 
+  if [[ $NEED_ACLS -eq 1 ]]
+  then
+    # Estimating another 80s wait still sometimes required
+    WARMUP_TIME=${WARMUP_TIME:-80}
+    echo "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata"
+    sleep $WARMUP_TIME 
 
-  ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
+    ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
+  fi
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
   SCHEMA_REGISTRY_ENDPOINT=$(confluent schema-registry cluster describe -o json | jq -r ".endpoint_url")
-  SCHEMA_REGISTRY_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
+  if [[ -z "$SCHEMA_REGISTRY_CREDS" ]]
+  then
+    SCHEMA_REGISTRY_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
+  fi
   
   if $enable_ksqldb ; then
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
@@ -982,6 +1001,8 @@ function ccloud::create_ccloud_stack() {
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
   CLOUD_API_SECRET=`echo $CLUSTER_CREDS | awk -F: '{print $2}'`
+  # FIX THIS: I had to add this to make it work
+  confluent api-key store "$CLOUD_API_KEY" "$CLOUD_API_SECRET" --resource ${CLUSTER}
   confluent api-key use $CLOUD_API_KEY --resource ${CLUSTER}
 
   if [[ -z "$SKIP_CONFIG_FILE_WRITE" ]]; then
