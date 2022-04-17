@@ -561,11 +561,11 @@ function ccloud::set_cli_from_config_file() {
   ccloud::generate_configs $cfg_file
   source delta_configs/env.delta
 
-  if [ ! -z "$ENVIRONMENT_ID" && "$ENVIRONMENT_ID" != -1 ]; then
+  if [[ ! -z "$ENVIRONMENT_ID" && "$ENVIRONMENT_ID" != -1 ]] ; then
     echo "confluent environment use $ENVIRONMENT_ID"
     confluent environment use $ENVIRONMENT_ID
 
-    if [ ! -z "$KAFKA_CLUSTER_ID" && "$KAFKA_CLUSTER_ID" != -1 ]; then
+    if [[ ! -z "$KAFKA_CLUSTER_ID" && "$KAFKA_CLUSTER_ID" != -1 ]] ; then
       echo "confluent kafka cluster use $KAFKA_CLUSTER_ID"
       confluent kafka cluster use $KAFKA_CLUSTER_ID
     else
