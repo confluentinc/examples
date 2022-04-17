@@ -549,6 +549,38 @@ function ccloud::delete_acls_ccloud_stack() {
   return 0
 }
 
+function ccloud::set_cli_from_config_file() {
+  [ -z "$1" ] && {
+    echo "ccloud::validate_ccloud_config expects one parameter (configuration file with Confluent Cloud connection information)"
+    exit 1
+  }
+
+  local cfg_file="$1"
+  ccloud::validate_logged_in_cli
+  ccloud::validate_ccloud_config $cfg_file
+  ccloud::generate_configs $cfg_file
+  source delta_configs/env.delta
+
+  if [ ! -z "$ENVIRONMENT_ID" && "$ENVIRONMENT_ID" != -1 ]; then
+    echo "confluent environment use $ENVIRONMENT_ID"
+    confluent environment use $ENVIRONMENT_ID
+
+    if [ ! -z "$KAFKA_CLUSTER_ID" && "$KAFKA_CLUSTER_ID" != -1 ]; then
+      echo "confluent kafka cluster use $KAFKA_CLUSTER_ID"
+      confluent kafka cluster use $KAFKA_CLUSTER_ID
+    else
+      echo "Cannot set kafka cluster from $KAFKA_CLUSTER_ID"
+      return 1
+    fi
+
+  else
+    echo "Cannot set environment from $ENVIRONMENT_ID"
+    return 1
+  fi
+
+  return 0
+}
+
 function ccloud::validate_ccloud_config() {
   [ -z "$1" ] && {
     echo "ccloud::validate_ccloud_config expects one parameter (configuration file with Confluent Cloud connection information)"
@@ -994,10 +1026,10 @@ function ccloud::create_ccloud_stack() {
 # --------------------------------------
 # Confluent Cloud connection information
 # --------------------------------------
-# ENVIRONMENT ID: ${ENVIRONMENT}
-# SERVICE ACCOUNT ID: ${SERVICE_ACCOUNT_ID}
-# KAFKA CLUSTER ID: ${CLUSTER}
-# SCHEMA REGISTRY CLUSTER ID: ${SCHEMA_REGISTRY}
+# ENVIRONMENT_ID=${ENVIRONMENT}
+# SERVICE_ACCOUNT_ID=${SERVICE_ACCOUNT_ID}
+# KAFKA_CLUSTER_ID=${CLUSTER}
+# SCHEMA_REGISTRY_CLUSTER_ID=${SCHEMA_REGISTRY}
 EOF
     if $enable_ksqldb ; then
       cat <<EOF >> $CONFIG_FILE
@@ -1199,6 +1231,13 @@ function ccloud::generate_configs() {
   # ksqlDB
   KSQLDB_ENDPOINT=$( grep "^ksql.endpoint" $CONFIG_FILE | awk -F'=' '{print $2;}' )
   KSQLDB_BASIC_AUTH_USER_INFO=$( grep "^ksql.basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+
+  # These are optional if they exist in the configuration file
+  ENVIRONMENT_ID=$( grep "ENVIRONMENT_ID" $CONFIG_FILE | awk -F'=' 'END { if ($2) print $2; else print "-1" }')
+  SERVICE_ACCOUNT_ID=$( grep "SERVICE_ACCOUNT_ID" $CONFIG_FILE | awk -F'=' 'END { if ($2) print $2; else print "-1" }')
+  KAFKA_CLUSTER_ID=$( grep "KAFKA_CLUSTER_ID" $CONFIG_FILE | awk -F'=' 'END { if ($2) print $2; else print "-1" }')
+  SCHEMA_REGISTRY_CLUSTER_ID=$( grep "SCHEMA_REGISTRY_CLUSTER_ID" $CONFIG_FILE | awk -F'=' 'END { if ($2) print $2; else print "-1" }')
+  KSQLDB_APP_ID=$( grep "KSQLDB_APP_ID" $CONFIG_FILE | awk -F'=' 'END { if ($2) print $2; else print "-1" }')
   
   ################################################################################
   # Build configuration file with Confluent Cloud connection parameters and
@@ -1818,6 +1857,11 @@ export CLOUD_KEY="$CLOUD_KEY"
 export CLOUD_SECRET="$CLOUD_SECRET"
 export KSQLDB_ENDPOINT="$KSQLDB_ENDPOINT"
 export KSQLDB_BASIC_AUTH_USER_INFO="$KSQLDB_BASIC_AUTH_USER_INFO"
+export ENVIRONMENT_ID="$ENVIRONMENT_ID"
+export SERVICE_ACCOUNT_ID="$SERVICE_ACCOUNT_ID"
+export KAFKA_CLUSTER_ID="$KAFKA_CLUSTER_ID"
+export SCHEMA_REGISTRY_CLUSTER_ID="$SCHEMA_REGISTRY_CLUSTER_ID"
+export KSQLDB_APP_ID="$KSQLDB_APP_ID"
 EOF
   chmod $PERM $ENV_CONFIG
 
