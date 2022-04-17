@@ -1,3 +1,11 @@
+# --------------------------------------
+# Confluent Cloud connection information
+# --------------------------------------
+# ENVIRONMENT_ID=<id>
+# SERVICE_ACCOUNT_ID=<id>
+# KAFKA_CLUSTER_ID=<id>
+# SCHEMA_REGISTRY_CLUSTER_ID=<id>
+# --------------------------------------
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=<CCLOUD_BOOTSTRAP_SERVER>
