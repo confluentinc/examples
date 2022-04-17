@@ -572,7 +572,7 @@ function ccloud::set_cli_from_config_file() {
       echo "confluent kafka cluster use $KAFKA_CLUSTER_ID"
       confluent kafka cluster use $KAFKA_CLUSTER_ID
     else
-      echo "Cannot set kafka cluster from $KAFKA_CLUSTER_ID"
+      echo "Cannot set kafka cluster from \"$KAFKA_CLUSTER_ID\""
       return 1
     fi
 
