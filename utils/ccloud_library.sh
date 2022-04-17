@@ -993,7 +993,7 @@ function ccloud::create_ccloud_stack() {
   BOOTSTRAP_SERVERS=$(confluent kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
   if [[ "$CLUSTER_CREDS" == "" ]] ; then
-    echo "Credentials is empty"
+    echo "Credentials are empty"
     echo "ERROR: Could not create credentials."
     exit 1
   fi
