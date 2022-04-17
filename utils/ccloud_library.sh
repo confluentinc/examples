@@ -577,7 +577,7 @@ function ccloud::set_cli_from_config_file() {
     fi
 
   else
-    echo "Cannot set environment from $ENVIRONMENT_ID"
+    echo "Cannot set environment from \"$ENVIRONMENT_ID\""
     return 1
   fi
 
