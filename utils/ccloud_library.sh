@@ -438,7 +438,7 @@ function ccloud::maybe_create_credentials_resource() {
   
   local KEY=$(ccloud::find_credentials_resource $SERVICE_ACCOUNT_ID $RESOURCE)
   [[ -z $KEY ]] && {
-    ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $RESOURCE
+    ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $RESOURCE || exit 1
   } || {
     echo "$KEY:"; # the secret cannot be retrieved from a found key, caller needs to handle this
     return 0
@@ -984,8 +984,16 @@ function ccloud::create_ccloud_stack() {
     exit 1
   fi
 
+  # Sometimes bootstrap.servers is empty so testing a sleep
+  sleep 3
+
   BOOTSTRAP_SERVERS=$(confluent kafka cluster describe $CLUSTER -o json | jq -r ".endpoint" | cut -c 12-)
   CLUSTER_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $CLUSTER)
+  if [[ "$CLUSTER_CREDS" == "" ]] ; then
+    echo "Credentials is empty"
+    echo "ERROR: Could not create credentials."
+    exit 1
+  fi
 
   MAX_WAIT=720
   echo ""
@@ -994,7 +1002,7 @@ function ccloud::create_ccloud_stack() {
 
   # Estimating another 80s wait still sometimes required
   WARMUP_TIME=${WARMUP_TIME:-80}
-  echo "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata"
+  echo -e "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata\n"
   sleep $WARMUP_TIME 
 
   ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
