@@ -587,27 +587,24 @@ function ccloud::set_cli_from_config_file() {
 # CLOUD_API_SECRET
 function ccloud::set_cli_from_env_params() {
 
-  if [[ ! -z "$ENVIRONMENT_ID" && "$ENVIRONMENT_ID" != -1 ]] ; then
-    ccloud::maybe_create_and_use_environment 
-
-    if [[ ! -z "$KAFKA_CLUSTER_ID" && "$KAFKA_CLUSTER_ID" != -1 ]] ; then
-      ccloud::maybe_create_and_use_cluster 
-
-      if [[ ! -z "$CLOUD_API_KEY" && "$CLOUD_API_SECRET" != -1 ]] ; then
-
-        ccloud::use_credentials
-
-    else
-      echo "Cannot set kafka cluster from \"$KAFKA_CLUSTER_ID\""
-      return 1
-    fi
-
-  else
-    echo "Cannot set environment from \"$ENVIRONMENT_ID\""
-    return 1
+  # Check minimum parameters
+  if [[ -z "$ENVIRONMENT_ID" || \
+           "$ENVIRONMENT_ID" == -1 || \
+        -z "$KAFKA_CLUSTER_ID" || \
+           "$KAFKA_CLUSTER_ID" != -1 || \
+        -z "$CLOUD_API_KEY" || \
+        -z "$CLOUD_API_SECRET" ]]; then
+     echo "Missing some parameters.  Please troubleshoot and run again."
+     return 1
   fi
 
+  ccloud::maybe_create_and_use_environment 
+  ccloud::maybe_create_and_use_cluster 
+  SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $3 "-" $4;}')
+  ccloud::use_credentials
+
   return 0
+
 }
 
 
