@@ -445,13 +445,6 @@ function ccloud::maybe_create_credentials_resource() {
   }
 }
 
-function ccloud::use_credentials() {
-
-  confluent api-key use $CLOUD_API_KEY --resource ${KAFKA_CLUSTER_ID}
-
-  return 0
-}
-
 
 function ccloud::find_ksqldb_app() {
   KSQLDB_NAME=$1
@@ -590,17 +583,19 @@ function ccloud::set_cli_from_env_params() {
   if [[ -z "$ENVIRONMENT_ID" || \
            "$ENVIRONMENT_ID" == -1 || \
         -z "$KAFKA_CLUSTER_ID" || \
-           "$KAFKA_CLUSTER_ID" != -1 || \
-        -z "$CLOUD_API_KEY" || \
-        -z "$CLOUD_API_SECRET" ]]; then
+           "$KAFKA_CLUSTER_ID" == -1 || \
+        -z "$CLOUD_KEY" || \
+        -z "$CLOUD_SECRET" ]]; then
      echo "ERROR: Missing at least one environment parameter.  Please troubleshoot and run again."
      return 1
   fi
 
-  ccloud::maybe_create_and_use_environment 
-  ccloud::maybe_create_and_use_cluster 
+  confluent environment use $ENVIRONMENT_ID
+  confluent kafka cluster use $KAFKA_CLUSTER_ID
+  confluent api-key use $CLOUD_KEY --resource ${KAFKA_CLUSTER_ID}
+
+  # Not needed?
   SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $3 "-" $4;}')
-  ccloud::use_credentials
 
   return 0
 
