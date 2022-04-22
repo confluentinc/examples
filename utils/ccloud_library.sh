@@ -445,6 +445,14 @@ function ccloud::maybe_create_credentials_resource() {
   }
 }
 
+function ccloud::use_credentials() {
+
+  confluent api-key use $CLOUD_API_KEY --resource ${KAFKA_CLUSTER_ID}
+
+  return 0
+}
+
+
 function ccloud::find_ksqldb_app() {
   KSQLDB_NAME=$1
   CLUSTER=$2
@@ -570,14 +578,6 @@ function ccloud::set_cli_from_config_file() {
 }
 
 
-function ccloud::store_and_use_cluster_credentials() {
-
-  confluent api-key store "$CLOUD_API_KEY" "$CLOUD_API_SECRET" --resource ${KAFKA_CLUSTER_ID}
-  confluent api-key use $CLOUD_API_KEY --resource ${KAFKA_CLUSTER_ID}
-
-  return 0
-}
-
 
 # ccloud::set_cli_from_env_params enables users to switch between multiple Confluent Cloud clusters
 # Assumes environment parameters are set
@@ -595,7 +595,7 @@ function ccloud::set_cli_from_env_params() {
 
       if [[ ! -z "$CLOUD_API_KEY" && "$CLOUD_API_SECRET" != -1 ]] ; then
 
-        ccloud::store_and_use_cluster_credentials
+        ccloud::use_credentials
 
     else
       echo "Cannot set kafka cluster from \"$KAFKA_CLUSTER_ID\""
