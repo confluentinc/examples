@@ -593,9 +593,6 @@ function ccloud::set_cli_from_env_params() {
   confluent kafka cluster use $KAFKA_CLUSTER_ID
   confluent api-key use $CLOUD_KEY --resource ${KAFKA_CLUSTER_ID}
 
-  # Not needed?
-  SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $3 "-" $4;}')
-
   return 0
 
 }
