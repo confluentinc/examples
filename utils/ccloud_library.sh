@@ -445,7 +445,6 @@ function ccloud::maybe_create_credentials_resource() {
   }
 }
 
-
 function ccloud::find_ksqldb_app() {
   KSQLDB_NAME=$1
   CLUSTER=$2
@@ -575,8 +574,8 @@ function ccloud::set_cli_from_config_file() {
 # Assumes environment parameters are set
 # ENVIRONMENT_ID
 # KAFKA_CLUSTER_ID
-# CLOUD_API_KEY
-# CLOUD_API_SECRET
+# CLOUD_KEY
+# CLOUD_SECRET
 function ccloud::set_cli_from_env_params() {
 
   # Check minimum parameters
@@ -600,8 +599,6 @@ function ccloud::set_cli_from_env_params() {
   return 0
 
 }
-
-
 
 function ccloud::validate_ccloud_config() {
   [ -z "$1" ] && {
