@@ -571,7 +571,6 @@ function ccloud::set_cli_from_config_file() {
   ccloud::validate_ccloud_config $cfg_file
   ccloud::generate_configs $cfg_file
   source delta_configs/env.delta
-
   ccloud::set_cli_from_env_params
 
   return 0
@@ -594,7 +593,7 @@ function ccloud::set_cli_from_env_params() {
            "$KAFKA_CLUSTER_ID" != -1 || \
         -z "$CLOUD_API_KEY" || \
         -z "$CLOUD_API_SECRET" ]]; then
-     echo "Missing some parameters.  Please troubleshoot and run again."
+     echo "ERROR: Missing at least one environment parameter.  Please troubleshoot and run again."
      return 1
   fi
 
@@ -969,7 +968,9 @@ function ccloud::maybe_create_and_use_environment() {
     confluent environment use $ENVIRONMENT || exit 1
   fi
 
-  return $ENVIRONMENT
+  echo "$ENVIRONMENT"
+
+  return 0
 
 }
 
@@ -1009,7 +1010,7 @@ function ccloud::create_ccloud_stack() {
   echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
 
   ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"ccloud-stack-$SERVICE_ACCOUNT_ID-$EXAMPLE"}
-  ENVIRONMENT=$(ccloud::maybe_create_and_use_environment "$ENVIORNMENT_NAME)
+  ENVIRONMENT=$(ccloud::maybe_create_and_use_environment "$ENVIORNMENT_NAME")
 
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
