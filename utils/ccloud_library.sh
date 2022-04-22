@@ -946,7 +946,7 @@ function ccloud::set_kafka_cluster_use() {
 
 function ccloud::maybe_create_and_use_environment() {
 
-  ENVIORNMENT_NAME=$1
+  ENVIRONMENT_NAME=$1
 
   if [[ -z "$ENVIRONMENT" ]];
   then
@@ -998,7 +998,7 @@ function ccloud::create_ccloud_stack() {
   echo "Creating Confluent Cloud stack for service account $SERVICE_NAME, ID: $SERVICE_ACCOUNT_ID."
 
   ENVIRONMENT_NAME=${ENVIRONMENT_NAME:-"ccloud-stack-$SERVICE_ACCOUNT_ID-$EXAMPLE"}
-  ENVIRONMENT=$(ccloud::maybe_create_and_use_environment "$ENVIORNMENT_NAME")
+  ENVIRONMENT=$(ccloud::maybe_create_and_use_environment "$ENVIRONMENT_NAME")
 
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
