@@ -571,7 +571,6 @@ function ccloud::set_cli_from_config_file() {
 
 
 # ccloud::set_cli_from_env_params enables users to switch between multiple Confluent Cloud clusters
-# Assumes environment parameters are set
 # ENVIRONMENT_ID
 # KAFKA_CLUSTER_ID
 # CLOUD_KEY
