@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -62,7 +63,7 @@ public class ConsumerExample {
 
     try {
       while (true) {
-        ConsumerRecords<String, DataRecord> records = consumer.poll(100);
+        ConsumerRecords<String, DataRecord> records = consumer.poll(Duration.ofMillis(100));
         for (ConsumerRecord<String, DataRecord> record : records) {
           String key = record.key();
           DataRecord value = record.value();
