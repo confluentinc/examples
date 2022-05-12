@@ -31,7 +31,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
-import java.time.Duration;
 
 public class ConsumerExample {
 
