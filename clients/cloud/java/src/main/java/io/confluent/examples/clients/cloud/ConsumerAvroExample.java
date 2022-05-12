@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -61,7 +62,7 @@ public class ConsumerAvroExample {
 
     try {
       while (true) {
-        ConsumerRecords<String, DataRecordAvro> records = consumer.poll(100);
+        ConsumerRecords<String, DataRecordAvro> records = consumer.poll(Duration.ofMillis(100));
         for (ConsumerRecord<String, DataRecordAvro> record : records) {
           String key = record.key();
           DataRecordAvro value = record.value();
