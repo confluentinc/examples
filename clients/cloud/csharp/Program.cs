@@ -32,10 +32,6 @@ namespace CCloud
         {
             try
             {
-                var jbConfigs = (
-                    await File.ReadAllLinesAsync(configPath));
-                var jbFilterConfig = jbConfigs.Where(line => !line.StartsWith("#"));
-                
                 var cloudConfig = (await File.ReadAllLinesAsync(configPath))
                     .Where(line => !line.StartsWith("#") && !line.Length.Equals(0))
                     .ToDictionary(
