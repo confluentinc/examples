@@ -285,10 +285,10 @@ Schema Evolution with Confluent Cloud Schema Registry
    .. code-block:: text
 
       # DataRecordAvro2a.avsc compatibility test: FAIL
-      mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc"
+      mvn schema-registry:test-compatibility "-DschemaRegistryUrl={{ SCHEMA_REGISTRY_URL }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2a.avsc"
 
       # DataRecordAvro2b.avsc compatibility test: PASS
-      mvn schema-registry:test-compatibility "-DschemaRegistryUrl=https://{{ SR_ENDPOINT }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc"
+      mvn schema-registry:test-compatibility "-DschemaRegistryUrl={{ SCHEMA_REGISTRY_URL }}" "-DschemaRegistryBasicAuthUserInfo={{ SR_API_KEY }}:{{ SR_API_SECRET }}" "-DschemaLocal=src/main/resources/avro/io/confluent/examples/clients/cloud/DataRecordAvro2b.avsc"
 
 Suggested Resources
 -------------------
