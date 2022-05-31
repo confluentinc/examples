@@ -1,11 +1,14 @@
+package io.confluent.samples.cloud.cloudevents;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,6 +55,7 @@ class OrderCloudEvent {
     private Order data;
 }
 
+@Slf4j
 public class SampleProducer {
 
     @SneakyThrows
@@ -76,9 +80,14 @@ public class SampleProducer {
                 .data(order)
                 .id(UUID.randomUUID().toString())
                 .timestamp(System.currentTimeMillis())
-                .source(new URI("https://my.producer.application.org"))
+                .subject(UUID.randomUUID().toString())
+                .type("io.confluent.samples.orders.created")
+                .datacontenttype("application/json")
+                .source(new URI("/v1/orders"))
+                .timestamp(System.currentTimeMillis())
                 .specVersion("1.0.1")
                 .build();
+        log.info(new ObjectMapper().writeValueAsString(orderEvent));
         var result = kafkaProducer.send(new ProducerRecord<>("order-topic", orderEvent.getId(), orderEvent));
         System.err.println(result.get().toString());
     }
@@ -90,9 +99,14 @@ public class SampleProducer {
         OrderCloudEvent orderCloudEvent = OrderCloudEvent.builder()
                 .data(order)
                 .id(UUID.randomUUID().toString())
-                .specVersion("1.0.1")
-                .source(new URI("https://my.producer.application.org"))
+                .specVersion("1.0")
+                .subject(UUID.randomUUID().toString())
+                .type("io.confluent.samples.orders.created")
+                .datacontenttype("application/json")
+                .timestamp(System.currentTimeMillis())
+                .source(new URI("/v1/orders"))
                 .build();
+        log.info(new ObjectMapper().writeValueAsString(orderCloudEvent));
         var result = kafkaProducer.send(
                 new ProducerRecord<>("order-cloud-events", orderCloudEvent.getId(), orderCloudEvent)
         );
