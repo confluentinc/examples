@@ -1,7 +1,6 @@
 package io.confluent.samples.cloud.cloudevents;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,26 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Properties;
 import java.util.UUID;
-
-@Data
-@Builder
-@AllArgsConstructor
-class CloudEvent<T> {
-    private String id;
-    private URI source;
-    private String specVersion;
-    private String type;
-    private String datacontenttype;
-    private URI dataschema;
-    private String subject;
-    private long timestamp;
-    private T data;
-}
 
 @Data
 @Builder
@@ -59,7 +42,7 @@ class OrderCloudEvent {
 public class SampleProducer {
 
     @SneakyThrows
-    private static Properties producerProperties() throws IOException {
+    private static Properties producerProperties() {
         Properties prop = new Properties();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         InputStream stream = loader.getResourceAsStream("producer.properties");
@@ -68,28 +51,7 @@ public class SampleProducer {
     }
 
     public static void main(String [] args) {
-        // produceGenericCloudEvent();
         produceNonGenericCloudEvent();
-    }
-
-    @SneakyThrows
-    private static void produceGenericCloudEvent() {
-        KafkaProducer<String, CloudEvent<Order>> kafkaProducer = new KafkaProducer<>(producerProperties());
-        Order order = Order.builder().productID(UUID.randomUUID()).customerID(UUID.randomUUID()).timestamp(System.currentTimeMillis()).build();
-        CloudEvent<Order> orderEvent = CloudEvent.<Order>builder()
-                .data(order)
-                .id(UUID.randomUUID().toString())
-                .timestamp(System.currentTimeMillis())
-                .subject(UUID.randomUUID().toString())
-                .type("io.confluent.samples.orders.created")
-                .datacontenttype("application/json")
-                .source(new URI("/v1/orders"))
-                .timestamp(System.currentTimeMillis())
-                .specVersion("1.0.1")
-                .build();
-        log.info(new ObjectMapper().writeValueAsString(orderEvent));
-        var result = kafkaProducer.send(new ProducerRecord<>("order-topic", orderEvent.getId(), orderEvent));
-        System.err.println(result.get().toString());
     }
 
     @SneakyThrows
