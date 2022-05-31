@@ -1,0 +1,11 @@
+bootstrap.servers=<...>.confluent.cloud:9092
+security.protocol=SASL_SSL
+sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API_KEY>'   password='<API_SECRET>';
+sasl.mechanism=PLAIN
+acks=all
+value.serializer=io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer
+key.serializer=org.apache.kafka.common.serialization.StringSerializer
+schema.registry.url=https://<...>.confluent.cloud
+basic.auth.credentials.source=USER_INFO
+basic.auth.user.info=<SR_API_KEY>:<SR_API_SECRETE>
+json.oneof.for.nullables=false
