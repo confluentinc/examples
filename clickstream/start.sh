@@ -11,7 +11,7 @@ docker run -v $PWD/confluent-hub-components:/share/confluent-hub-components conf
 
 docker-compose up -d
 
-MAX_WAIT=90
+MAX_WAIT=180
 echo "Waiting up to $MAX_WAIT seconds for ksqlDB server's embedded Connect to be ready"
 retry $MAX_WAIT check_connect_up ksqldb-server || exit 1
 
