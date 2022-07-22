@@ -7,6 +7,7 @@ wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all
 wget -O update_run.sh https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/update_run.sh
 chmod 744 update_run.sh
 
+export COMPOSE_FILE=docker-compose.yml
 ./stop-docker.sh
 
 docker-compose up -d
