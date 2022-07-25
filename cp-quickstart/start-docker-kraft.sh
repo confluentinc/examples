@@ -4,8 +4,6 @@
 source ../utils/helper.sh
 
 wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/docker-compose.yml
-wget -O update_run.sh https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/update_run.sh
-chmod 744 update_run.sh
 
 ./stop-docker.sh
 
@@ -19,8 +17,10 @@ sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
 # Configure datagen connectors
-source ./connectors/submit_datagen_pageviews_config.sh
-source ./connectors/submit_datagen_users_config.sh
+wget -O connector_pageviews_cos.config  https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_pageviews_cos.config
+curl -X POST -H "Content-Type: application/json" --data @connector_pageviews_cos.config http://localhost:8083/connectors
+wget -O connector_users_cos.config https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_users_cos.config
+curl -X POST -H "Content-Type: application/json" --data @connector_users_cos.config http://localhost:8083/connectors
 
 # Verify topics exist
 MAX_WAIT=30
@@ -29,8 +29,10 @@ retry $MAX_WAIT check_topic_exists broker broker:29092 pageviews || exit 1
 retry $MAX_WAIT check_topic_exists broker broker:29092 users || exit 1
 echo "Topics exist!"
 
-# Read topics
-docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:29092 --timeout-ms 10000 --max-messages 5 --topic users --property schema.registry.url=http://schema-registry:8081
-docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:29092 --timeout-ms 10000 --max-messages 5 --topic pageviews --property schema.registry.url=http://schema-registry:8081
+# Run the KSQL queries
+docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+run script '/tmp/statements.sql';
+exit ;
+EOF"
 
 printf "\n====== Successfully Completed ======\n\n"
