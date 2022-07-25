@@ -19,10 +19,8 @@ sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
 # Configure datagen connectors
-wget -O connector_pageviews_cos.config  https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_pageviews_cos.config
-curl -X POST -H "Content-Type: application/json" --data @connector_pageviews_cos.config http://localhost:8083/connectors
-wget -O connector_users_cos.config https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_users_cos.config
-curl -X POST -H "Content-Type: application/json" --data @connector_users_cos.config http://localhost:8083/connectors
+source ./connectors/submit_datagen_pageviews_config.sh
+source ./connectors/submit_datagen_users_config.sh
 
 # Verify topics exist
 MAX_WAIT=30
