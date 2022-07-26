@@ -8,7 +8,7 @@ CONFIG_FILE="${CONFIG_FILE:-$HOME/.confluent/java.config}"
 ccloud::generate_configs $CONFIG_FILE || exit
 source ./delta_configs/env.delta
 
-wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml
+curl -f -sS -o docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml || exit 1
 ./stop.sh
 docker-compose up -d rest-proxy
 
