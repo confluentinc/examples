@@ -3,8 +3,8 @@
 # Source library
 source ../utils/helper.sh
 
-wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/docker-compose.yml
-wget -O update_run.sh https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/update_run.sh
+curl -f -sS -o docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/docker-compose.yml || exit 1
+curl -f -sS -o update_run.sh https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/update_run.sh || exit 1
 chmod 744 update_run.sh
 
 ./stop-docker.sh
@@ -12,7 +12,7 @@ chmod 744 update_run.sh
 docker-compose up -d
 
 # Verify Kafka Connect worker has started
-MAX_WAIT=120
+MAX_WAIT=180
 echo "Waiting up to $MAX_WAIT seconds for Connect to start"
 retry $MAX_WAIT check_connect_up connect || exit 1
 sleep 2 # give connect an exta moment to fully mature
@@ -29,8 +29,10 @@ retry $MAX_WAIT check_topic_exists broker broker:29092 pageviews || exit 1
 retry $MAX_WAIT check_topic_exists broker broker:29092 users || exit 1
 echo "Topics exist!"
 
-# Read topics
-docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:29092 --timeout-ms 10000 --max-messages 5 --topic users --property schema.registry.url=http://schema-registry:8081
-docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:29092 --timeout-ms 10000 --max-messages 5 --topic pageviews --property schema.registry.url=http://schema-registry:8081
+# Run the KSQL queries
+docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+run script '/tmp/statements.sql';
+exit ;
+EOF"
 
 printf "\n====== Successfully Completed ======\n\n"
