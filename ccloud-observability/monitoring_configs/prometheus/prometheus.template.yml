@@ -45,6 +45,8 @@ scrape_configs:
     static_configs:
       - targets:
         - api.telemetry.confluent.cloud
+        labels:
+          env: "dev"
     scheme: https
     basic_auth:
       username: ""
