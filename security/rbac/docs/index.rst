@@ -1,7 +1,7 @@
 .. _rbac_demo:
 
-RBAC Example
-============
+RBAC Example for |cp|
+=====================
 
 This example shows how to enable |rbac-long| functionality across |cp|.
 It is for users who have `downloaded <https://www.confluent.io/download/>`__ |cp| to their local hosts.

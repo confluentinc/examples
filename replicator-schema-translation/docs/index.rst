@@ -1,7 +1,7 @@
 .. _quickstart-demos-replicator-schema-translation:
 
-Replicator Schema Translation Example
-=====================================
+Replicator Schema Translation Example for |cp|
+==============================================
 
 This |crep| example showcases the transfer of schemas stored in |sr-long| from one cluster to another.
 
