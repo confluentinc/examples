@@ -7,12 +7,12 @@
     <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>[7.2.2-0, 7.2.3-0)</version>
+      <version>[7.2.1-0, 7.2.3-0)</version>
     </parent>
 
     <artifactId>clients-example</artifactId>
     <packaging>jar</packaging>
-    <version>7.2.2-0</version>
+    <version>7.2.1-0</version>
 
     <organization>
         <name>Confluent, Inc.</name>
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka-clients</artifactId>
-            <version>${kafka.version}</version>
+            <version>7.2.1-ce</version>
         </dependency>
         <dependency>
           <groupId>io.confluent</groupId>
