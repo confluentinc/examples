@@ -66,8 +66,8 @@ func main() {
 
 	// Process messages
 	totalCount := 0
-	run := true
-	for run == true {
+	
+	for  {
 		select {
 		case sig := <-sigchan:
 			fmt.Printf("Caught signal %v: terminating\n", sig)
