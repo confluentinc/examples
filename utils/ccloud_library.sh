@@ -1055,6 +1055,9 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
+  local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  confluent kafka cluster use $cluster_id 2>/dev/null
+
   # Delete associated ACLs
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
@@ -1065,7 +1068,6 @@ function ccloud::destroy_ccloud_stack() {
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
-  local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
   confluent connect list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} confluent connect delete {}
 
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"
