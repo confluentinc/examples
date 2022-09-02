@@ -10,13 +10,14 @@ Let's make some delicious instant KRaft
 
 ## Step 1
 ```
-$ git clone https://github.com/confluentinc/examples.git && cd exampls/instant-kraft
+$ git clone https://github.com/confluentinc/examples.git && cd examples/instant-kraft
 
 $ docker compose up
 ```
 
-That's it! One container, one process, doing the the broker and controller work. 
-The key server configure to enable KRaft is the `process.roles`. Here we have the same node doing both the broker and quorum conroller work.
+That's it! One container, one process, doing the the broker and controller work. No Zookeeper.
+The key server configure to enable KRaft is the `process.roles`. Here we have the same node doing both the broker and quorum conroller work. Note that this is ok for local development, but in production you should have seperate nodes for the broker and controller quorum nodes.
+
 ```
 KAFKA_PROCESS_ROLES: 'broker,controller'
 ```
@@ -25,11 +26,11 @@ KAFKA_PROCESS_ROLES: 'broker,controller'
 Start streaming
 
 ```
-$ docker compose exec broker kafka-topics --create --topic zookeeper-vacation-ideas --boostrap-server localhost:9092
+$ docker compose exec broker kafka-topics --create --topic zookeeper-vacation-ideas --bootstrap-server localhost:9092
 
 $ docker-compose exec broker kafka-producer-perf-test --topic zookeeper-vacation-ideas \
-    --num-records 200 \
-    --record-size 5000 \
+    --num-records 200000 \
+    --record-size 50 \
     --throughput -1 \
     --producer-props \
         acks=all \
@@ -40,4 +41,5 @@ $ docker-compose exec broker kafka-producer-perf-test --topic zookeeper-vacation
 
 
 Note: the `update_run.sh` is to get around some checks in the cp-kafka docker image. There are plans to change those checks in the future.
-The scipt also formats the storage volumes with a random uuid for the cluster. Formatting kafka storage is very important in production environments.
+
+The scipt also formats the storage volumes with a random uuid for the cluster. Formatting kafka storage is very important in production environments. See the AK documentation for more information.
