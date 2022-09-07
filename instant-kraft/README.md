@@ -39,6 +39,17 @@ $ docker-compose exec broker kafka-producer-perf-test --topic zookeeper-vacation
         batch.size=8196
 ```
 
+## Step 3
+Explore the cluster using the new kafka metadata command line tool.
+
+```
+ $ docker-compose exec broker kafka-metadata-shell --snapshot /tmp/kraft-combined-logs/__cluster_metadata-0/00000000000000000000.log
+
+# use the metadata shell to explore the quorum
+>> ls metadataQuorum
+
+>> cat metadataQuorum/leader
+```
 
 Note: the `update_run.sh` is to get around some checks in the cp-kafka docker image. There are plans to change those checks in the future.
 
