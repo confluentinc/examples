@@ -8,4 +8,4 @@ build-image:
 	docker build -t $(PUSH_PREFIX)/$(CONTAINER_NAME):$(VERSION) .
 
 push-image: build-image
-	docker push $(PUSH_PREFIX)/$(CONTAINER_NAME)
+	docker push $(PUSH_PREFIX)/$(CONTAINER_NAME):$(VERSION)
