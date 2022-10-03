@@ -31,13 +31,13 @@ scrape_configs:
 
   - job_name: "producer"
     static_configs:
-      - targets: ["ccloud-observability_producer_1:1234"]
+      - targets: ["producer:1234"]
         labels:
           env: "dev"
 
   - job_name: "consumer"
     static_configs:
-      - targets: ["ccloud-observability_consumer_1:1234"]
+      - targets: ["consumer:1234"]
         labels:
           env: 'dev'
 
