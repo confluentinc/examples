@@ -24,7 +24,7 @@ package main
  */
 
 import (
-	"./ccloud"
+	"github.com/confluentinc/examples/clients/cloud/go/ccloud"
 	"encoding/json"
 	"fmt"
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
