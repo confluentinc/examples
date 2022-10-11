@@ -41,12 +41,22 @@ scrape_configs:
         labels:
           env: 'dev'
 
-  - job_name: "ccloud-exporter"
+  - job_name: confluent-cloud
     static_configs:
       - targets:
-          - "ccloud-exporter:2112"
+        - api.telemetry.confluent.cloud
         labels:
           env: "dev"
+    scheme: https
+    basic_auth:
+      username: ""
+      password: ""
+    metrics_path: /v2/metrics/cloud/export
+    params:
+      "resource.kafka.id": []
+      "resource.connector.id": []
+      "resource.ksql.id": []
+      "resource.schema_registry.id": []
 
   - job_name: "kafka-lag-exporter"
     static_configs:
