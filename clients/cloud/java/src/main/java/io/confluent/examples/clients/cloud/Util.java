@@ -9,6 +9,7 @@ import java.util.Properties;
 
 public class Util {
     public static Properties loadConfig(String configFile) throws IOException {
+        configFile = configFile.replaceFirst("^~", System.getProperty("user.home"));
         if (!Files.exists(Paths.get(configFile))) {
             throw new IOException(configFile + " not found.");
         }
