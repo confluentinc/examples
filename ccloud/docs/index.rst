@@ -113,26 +113,6 @@ Microservices are deployed locally on Docker, and they are configured to use a |
 
 .. figure:: ../../microservices-orders/docs/images/microservices-demo.png
 
-Confluent Operator with Cloud
------------------------------
-
-The Kubernetes examples feature a deployment of |cp| on Google Kubernetes Engine (GKE) or Microsoft Azure leveraging Confluent Operator and |crep|, highlighting a data replication strategy to |ccloud|.
-Upon running this example, you will have a GKE-based or Azure-based |cp| deployment with simulated data replicating to your |ccloud| cluster.
-
-You can choose between two examples:
-
-- :ref:`quickstart-demos-operator-replicator-gke-cc`
-- :ref:`quickstart-demos-operator-replicator-aks-cc`
-
-.. figure:: ../../kubernetes/replicator-gke-cc/docs/images/operator-demo-phase-2.png
-
-DevOps for Apache Kafka® with Kubernetes and GitOps
----------------------------------------------------
-
-The :ref:`streaming-ops` project is a simulated production-environment running a streaming application targeting |ak-tm| on |ccloud|.  Applications and resources are managed by GitOps with a declarative infrastructure, Kubernetes, and the Operator Pattern.
-
-.. figure:: ../../images/github-flux-kubernetes-600x105.png
-
 =========================
 Build Your Own Cloud Demo
 =========================
