@@ -6,6 +6,6 @@ WORKDIR /tmp/java
 COPY pom.xml .
 COPY checkstyle/suppressions.xml /tmp/java/checkstyle/suppressions.xml
 COPY checkstyle.xml /tmp/java/checkstyle.xml
-RUN  mvn verify --fail-never
 # Copy in java src code
 COPY src/ /tmp/java/src/
+RUN mvn package
