@@ -16,8 +16,6 @@ Client
 
 - `.NET Core 2.1 <https://dotnet.microsoft.com/download>`__ or higher to run the client application
 
-- On Windows, default trusted root CA certificates are stored in the Windows Registry. These are required for secure access to Confluent Cloud. The .NET library does not currently have the capability to access these certificates, so you must obtain them from somewhere else, for example use the ``cacert.pem`` file distributed with curl (`download cacert.pm <https://curl.haxx.se/ca/cacert.pem>`__).
-
 .. include:: includes/certs-truststore.rst
 
 Kafka Cluster
@@ -59,14 +57,10 @@ Produce Records
    - whether to produce or consume (produce)
    - the topic name
    - the local file with configuration parameters to connect to your |ak| cluster
-   - Windows only: a local file with default trusted root CA certificates.
 
    .. code:: shell
 
-      # Run the producer (Windows)
-      dotnet run produce test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
-
-      # Run the producer (other)
+      # Run the producer
       dotnet run produce test1 $HOME/.confluent/librdkafka.config
 
 #. Verify that the producer sent all the messages. You should see:
@@ -106,14 +100,10 @@ Consume Records
    - whether to produce or consume (consume)
    - the topic name: same topic name as used above
    - the local file with configuration parameters to connect to your |ak| cluster
-   - Windows only: a local file with default trusted root CA certificates.
 
    .. code:: shell
 
-      # Run the consumer (Windows)
-      dotnet run consume test1 $HOME/.confluent/librdkafka.config /path/to/curl/cacert.pem
-   
-      # Run the consumer (other)
+      # Run the consumer
       dotnet run consume test1 $HOME/.confluent/librdkafka.config
 
 #. Verify that the consumer sent all the messages. You should see:
