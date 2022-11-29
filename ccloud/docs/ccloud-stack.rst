@@ -283,7 +283,7 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
    .. code:: bash
 
-      wget -O ccloud_library.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/ccloud_library.sh
+      curl -f -sS -o ccloud_library.sh https://raw.githubusercontent.com/confluentinc/examples/latest/utils/ccloud_library.sh
 
 #. Source the library
 

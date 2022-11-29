@@ -32,7 +32,6 @@ Introduce failure scenario
 
    .. code-block:: bash
 
-      ccloud-exporter is up-to-date
       kafka-lag-exporter is up-to-date
       node-exporter is up-to-date
       grafana is up-to-date
@@ -120,7 +119,6 @@ Resolve failure scenario
       grafana is up-to-date
       kafka-lag-exporter is up-to-date
       prometheus is up-to-date
-      ccloud-exporter is up-to-date
       Stopping and removing ccloud-observability_producer_2 ... done
       Stopping and removing ccloud-observability_producer_3 ... done
       Stopping and removing ccloud-observability_producer_4 ... done

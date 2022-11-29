@@ -23,6 +23,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -57,7 +58,7 @@ public class ConsumerExamplePageviews {
 
     try {
       while (true) {
-        ConsumerRecords<String, PageviewRecord> records = consumer.poll(100);
+        ConsumerRecords<String, PageviewRecord> records = consumer.poll(Duration.ofMillis(100));
         for (ConsumerRecord<String, PageviewRecord> record : records) {
           String key = record.key();
           PageviewRecord value = record.value();

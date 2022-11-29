@@ -33,7 +33,7 @@ Prerequisites
 -  Local `install of Confluent CLI
    <https://docs.confluent.io/confluent-cli/current/install.html>`__ (v2.2.0 or later)
 
--  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
+-  .. include:: includes/prereq_timeout.rst
 
 -  `mvn <https://maven.apache.org/install.html>`__ installed on your host
 

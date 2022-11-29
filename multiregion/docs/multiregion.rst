@@ -500,7 +500,7 @@ Consumer
 
    - In the first scenario, the consumer running in ``east`` reads from the
      leader in ``west`` and is impacted by the low bandwidth between ``east``
-     and ``west`. The throughput is lower in this case (for
+     and ``west``. The throughput is lower in this case (for
      example, ``0.9025`` MB per sec in the previous example).
 
    - In the second scenario, the consumer running in ``east`` reads from the
