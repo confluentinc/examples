@@ -17,9 +17,9 @@ sleep 2 # give connect an exta moment to fully mature
 echo "connect has started!"
 
 # Configure datagen connectors
-curl -sS -o connector_pageviews_cos.config  https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_pageviews_cos.config || exit 1
+curl -sS -o connector_pageviews_cos.config https://raw.githubusercontent.com/confluentinc/kafka-connect-datagen/master/config/connector_pageviews_cos.config || exit 1
 curl -X POST -H "Content-Type: application/json" --data @connector_pageviews_cos.config http://localhost:8083/connectors
-curl -sS -o connector_users_cos.config https://github.com/confluentinc/kafka-connect-datagen/raw/master/config/connector_users_cos.config || exit 1
+curl -sS -o connector_users_cos.config https://raw.githubusercontent.com/confluentinc/kafka-connect-datagen/master/config/connector_users_cos.config || exit 1
 curl -X POST -H "Content-Type: application/json" --data @connector_users_cos.config http://localhost:8083/connectors
 
 # Verify topics exist

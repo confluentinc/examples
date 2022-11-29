@@ -16,36 +16,23 @@
 
 package io.confluent.examples.clients.cloud;
 
-import java.util.Properties;
-
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.StreamsBuilder;
-import org.apache.kafka.streams.KeyValue;
-import org.apache.kafka.streams.kstream.KGroupedStream;
-import org.apache.kafka.streams.kstream.Printed;
-import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.Grouped;
-import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.common.utils.Bytes;
-import org.apache.kafka.streams.state.KeyValueStore;
-
-import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerializer;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
-import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
+import org.apache.kafka.streams.KafkaStreams;
+import org.apache.kafka.streams.KeyValue;
+import org.apache.kafka.streams.StreamsBuilder;
+import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.Consumed;
+import org.apache.kafka.streams.kstream.Grouped;
+import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.Printed;
 
-import java.util.Collections;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Map;
+import java.util.Properties;
+
+import static io.confluent.examples.clients.cloud.Util.loadConfig;
 
 public class StreamsAvroExample {
 
@@ -98,16 +85,4 @@ public class StreamsAvroExample {
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 
     }
-
-    public static Properties loadConfig(final String configFile) throws IOException {
-      if (!Files.exists(Paths.get(configFile))) {
-        throw new IOException(configFile + " not found.");
-      }
-      final Properties cfg = new Properties();
-      try (InputStream inputStream = new FileInputStream(configFile)) {
-        cfg.load(inputStream);
-      }
-      return cfg;
-    }
-
 }
