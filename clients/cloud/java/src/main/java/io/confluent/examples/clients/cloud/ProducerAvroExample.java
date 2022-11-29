@@ -15,30 +15,24 @@
  */
 package io.confluent.examples.clients.cloud;
 
+import io.confluent.kafka.serializers.KafkaAvroSerializer;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
-import org.apache.kafka.clients.producer.Callback;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.Producer;
-
-import io.confluent.kafka.serializers.KafkaAvroSerializer;
-
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.AdminClientConfig;
-import org.apache.kafka.clients.admin.NewTopic;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import org.apache.kafka.common.errors.TopicExistsException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Properties;
+
+import java.io.IOException;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+import static io.confluent.examples.clients.cloud.Util.loadConfig;
 
 public class ProducerAvroExample {
 
@@ -104,16 +98,4 @@ public class ProducerAvroExample {
 
     producer.close();
   }
-
-  public static Properties loadConfig(final String configFile) throws IOException {
-    if (!Files.exists(Paths.get(configFile))) {
-      throw new IOException(configFile + " not found.");
-    }
-    final Properties cfg = new Properties();
-    try (InputStream inputStream = new FileInputStream(configFile)) {
-      cfg.load(inputStream);
-    }
-    return cfg;
-  }
-
 }
