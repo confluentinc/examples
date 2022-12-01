@@ -48,15 +48,15 @@ CLUSTER_NAME="${CLUSTER_NAME:-demo-kafka-cluster}"
 CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
 CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
 echo -e "\n# Create a new Confluent Cloud cluster $CLUSTER_NAME"
-echo "confluent kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION"
-OUTPUT=$(confluent kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION)
+echo "confluent kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION --output json"
+OUTPUT=$(confluent kafka cluster create $CLUSTER_NAME --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION --output json)
 status=$?
 echo "$OUTPUT"
 if [[ $status != 0 ]]; then
   echo "ERROR: Failed to create Kafka cluster $CLUSTER_NAME. Please troubleshoot and run again"
   exit 1
 fi
-CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
+CLUSTER=$(echo "$OUTPUT" | jq -r .id)
 
 echo -e "\n# Specify $CLUSTER as the active Kafka cluster"
 echo "confluent kafka cluster use $CLUSTER"
@@ -347,7 +347,7 @@ confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --opera
 ##################################################
 
 echo -e "\n# Cleanup: delete connector, service-account, topics, api-keys, kafka cluster, environment"
-CONNECTOR_ID=$(confluent connect list | grep $CONNECTOR | tr -d '\*' | awk '{print $1;}')
+CONNECTOR_ID=$(confluent connect list -o json | jq -r 'map(select(.name == "'"$CONNECTOR"'")) | .[].id')
 echo "confluent connect delete $CONNECTOR_ID"
 confluent connect delete $CONNECTOR_ID 1>/dev/null
 echo "confluent iam service-account delete $SERVICE_ACCOUNT_ID"

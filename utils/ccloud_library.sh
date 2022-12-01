@@ -28,7 +28,7 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.3.1}
+CLI_MIN_VERSION=${CLI_MIN_VERSION:-2.5.0}
 
 # --------------------------------------------------------------
 # Library
@@ -343,10 +343,10 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
 
-  OUTPUT=$(confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>&1)
+  OUTPUT=$(confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION --output json 2>&1)
   (($? != 0)) && { echo "$OUTPUT"; exit 1; }
-  CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
-  confluent kafka cluster use $CLUSTER
+  CLUSTER=$(echo "$OUTPUT" | jq -r .id)
+  confluent kafka cluster use $CLUSTER 2>/dev/null
   echo $CLUSTER
 
   return 0
@@ -383,7 +383,7 @@ function ccloud::create_service_account() {
 }
 
 function ccloud:get_service_account_from_current_cluster_name() {
-  SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
+  SERVICE_ACCOUNT_ID=$(confluent kafka cluster describe -o json | jq -r '.name' | awk -F'-' '{print $4 "-" $5;}')
 
   echo $SERVICE_ACCOUNT_ID
 
@@ -449,7 +449,7 @@ function ccloud::find_ksqldb_app() {
   KSQLDB_NAME=$1
   CLUSTER=$2
 
-  local FOUND_APP=$(confluent ksql app list -o json | jq -c -r 'map(select((.name == "'"$KSQLDB_NAME"'") and (.kafka == "'"$CLUSTER"'")))')
+  local FOUND_APP=$(confluent ksql cluster list -o json | jq -c -r 'map(select((.name == "'"$KSQLDB_NAME"'") and (.kafka == "'"$CLUSTER"'")))')
   local FOUND_COUNT=$(echo "$FOUND_APP" | jq 'length')
   [[ $FOUND_COUNT -ne 0 ]] && {
       echo "$FOUND_APP" | jq -r '.[].id'
@@ -467,7 +467,7 @@ function ccloud::create_ksqldb_app() {
   local kafka_api_key=$(echo $ksqlDB_kafka_creds | cut -d':' -f1)
   local kafka_api_secret=$(echo $ksqlDB_kafka_creds | cut -d':' -f2)
 
-  KSQLDB=$(confluent ksql app create --cluster $CLUSTER --api-key "$kafka_api_key" --api-secret "$kafka_api_secret" -o json "$KSQLDB_NAME" | jq -r ".id")
+  KSQLDB=$(confluent ksql cluster create --cluster $CLUSTER --api-key "$kafka_api_key" --api-secret "$kafka_api_secret" --csu 1 -o json "$KSQLDB_NAME" | jq -r ".id")
   echo $KSQLDB
 
   return 0
@@ -576,7 +576,7 @@ function ccloud::validate_ksqldb_up() {
 
   ccloud::validate_logged_in_cli || exit 1
 
-  local ksqldb_meta=$(confluent ksql app list -o json | jq -r 'map(select(.endpoint == "'"$ksqldb_endpoint"'")) | .[]')
+  local ksqldb_meta=$(confluent ksql cluster list -o json | jq -r 'map(select(.endpoint == "'"$ksqldb_endpoint"'")) | .[]')
 
   local ksqldb_appid=$(echo "$ksqldb_meta" | jq -r '.id')
   if [[ "$ksqldb_appid" == "" ]]; then
@@ -638,7 +638,7 @@ function ccloud::create_connector() {
 
   echo -e "\nCreating connector from $file\n"
 
-  # About the Confluent Cloud CLI command 'confluent connect create':
+  # About the Confluent CLI command 'confluent connect create':
   # - Typical usage of this CLI would be 'confluent connect create --config <filename>'
   # - However, in this example, the connector's configuration file contains parameters that need to be first substituted
   #   so the CLI command includes eval and heredoc.
@@ -675,11 +675,7 @@ function ccloud::wait_for_connector_up() {
 function ccloud::validate_ccloud_ksqldb_endpoint_ready() {
   KSQLDB_ENDPOINT=$1
 
-  ksqlDBAppId=$(confluent ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
-  if [[ "$ksqlDBAppId" == "" ]]; then
-    return 1
-  fi
-  STATUS=$(confluent ksql app describe $ksqlDBAppId | grep "Status" | grep UP)
+  STATUS=$(confluent ksql cluster list -o json | jq -r 'map(select(.endpoint == "'"$KSQLDB_ENDPOINT"'")) | .[].status' | grep UP)
   if [[ "$STATUS" == "" ]]; then
     return 1
   fi
@@ -912,7 +908,7 @@ function ccloud::create_ccloud_stack() {
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
   EXAMPLE=${EXAMPLE:-ccloud-stack-function}
-  CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-true}"
+  CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-false}"
 
   # Check if credit card is on file, which is required for cluster creation
   if $CHECK_CREDIT_CARD && [[ $(confluent admin payment describe) =~ "not found" ]]; then
@@ -979,9 +975,9 @@ function ccloud::create_ccloud_stack() {
   if $enable_ksqldb ; then
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$CLUSTER_CREDS")
-    KSQLDB_ENDPOINT=$(confluent ksql app describe $KSQLDB -o json | jq -r ".endpoint")
+    KSQLDB_ENDPOINT=$(confluent ksql cluster describe $KSQLDB -o json | jq -r ".endpoint")
     KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
-    confluent ksql app configure-acls $KSQLDB
+    confluent ksql cluster configure-acls $KSQLDB
   fi
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
@@ -1059,17 +1055,19 @@ function ccloud::destroy_ccloud_stack() {
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
+  local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
+  confluent kafka cluster use $cluster_id 2>/dev/null
+
   # Delete associated ACLs
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
-  ksqldb_id_found=$(confluent ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
+  ksqldb_id_found=$(confluent ksql cluster list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
   if [[ $ksqldb_id_found != "" ]]; then
     echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id_found"
-    confluent ksql app delete $ksqldb_id_found &> "$REDIRECT_TO"
+    confluent ksql cluster delete $ksqldb_id_found &> "$REDIRECT_TO"
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails
-  local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
   confluent connect list --cluster $cluster_id -o json | jq -r '.[].id' | xargs -I{} confluent connect delete {}
 
   echo "Deleting CLUSTER: $CLUSTER_NAME : $cluster_id"

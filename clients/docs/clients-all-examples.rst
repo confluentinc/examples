@@ -15,7 +15,7 @@ For the subset of languages that support it, the code examples also demonstrate 
 * :ref:`Java <client-examples-java>`
 * :ref:`Java Spring Boot <client-examples-java-springboot>`
 * :ref:`Kotlin <client-examples-kotlin>`
-* :ref:`Node.js <client-examples-nodejs>`
+* `Node.js <https://developer.confluent.io/get-started/nodejs/>`__
 * :ref:`Python <client-examples-python>`
 * :ref:`Ruby <client-examples-ruby>`
 * :ref:`Rust <client-examples-rust>`
@@ -53,7 +53,7 @@ There are additional examples for |ak| and |cp| command line tools and component
       kcat <kcat>
       Kotlin <kotlin>
       KSQL Datagen <ksql-datagen>
-      Node.js <nodejs>
+      Node.js <https://developer.confluent.io/get-started/nodejs/>
       Python <python>
       REST Proxy <rest-proxy>
       Ruby <ruby>

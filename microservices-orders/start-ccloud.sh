@@ -18,9 +18,9 @@ printf "\n====== Create new Confluent Cloud stack\n"
 export EXAMPLE="microservices-orders"
 ccloud::create_ccloud_stack true
 
-SERVICE_ACCOUNT_ID=$(confluent kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4 "-" $5;}')
+SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
 if [[ "$SERVICE_ACCOUNT_ID" == "" ]]; then
-  printf "\nERROR: Could not determine SERVICE_ACCOUNT_ID from 'confluent kafka cluster list'. Please troubleshoot, destroy stack, and try again to create the stack.\n"
+  printf "\nERROR: Could not determine SERVICE_ACCOUNT_ID from 'confluent kafka cluster describe'. Please troubleshoot, destroy stack, and try again to create the stack.\n"
   exit 1
 fi
 export CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config

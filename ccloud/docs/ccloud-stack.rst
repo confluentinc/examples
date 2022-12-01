@@ -36,7 +36,7 @@ This utility uses real |ccloud| resources.
 It is intended to be a quick way to create resources in |ccloud| with correct credentials and permissions, useful as a starting point from which you can then use for learning, extending, and building other examples.
 
 - If you just run ``ccloud-stack`` without explicitly enabling |ccloud| ksqlDB, then there is no billing charge until you create a topic, produce data to the |ak| cluster, or provision any other fully-managed service.
-- If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB, then you will begin to accrue charges immediately.
+- If you run ``ccloud-stack`` with enabling |ccloud| ksqlDB (1 CSU), then you will begin to accrue charges immediately.
 
 Here is a list of Confluent CLI commands issued by the utility that create resources in |ccloud| (function ``ccloud::create_ccloud_stack()`` source code is in :devx-examples:`ccloud_library|utils/ccloud_library.sh`).
 By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you have to explicitly enable it.
@@ -54,7 +54,7 @@ By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you ha
    confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
 
    # By default, ccloud-stack does not enable Confluent Cloud ksqlDB, but if you explicitly enable it:
-   confluent ksql app create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" -o json "$KSQLDB_NAME"
+   confluent ksql cluster create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" --csu 1 -o json "$KSQLDB_NAME"
    confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB REST API
 
    confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
@@ -318,21 +318,6 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
    .. code:: bash
 
       ccloud::destroy_ccloud_stack $SERVICE_ACCOUNT_ID
-
-
-Running with Marketplace
-------------------------
-
-By default, ``ccloud-stack`` checks your payment method to verify that there is a credit card on file.
-However, when using |ccloud| on a cloud provider's Marketplace for a self-serve Pay-as-you-go account on Azure, GCP or AWS, your payment method is directly linked to your cloud provider and not necessarily with a credit card. 
-In these cases, therefore, ``ccloud-stack`` will fail, and you need a workaround.
-
-When you create a new stack, set the parameter ``CHECK_CREDIT_CARD=false``, as shown in the example:
-
-.. code-block:: bash
-
-   CHECK_CREDIT_CARD=false ./ccloud_stack_create.sh
-
 
 ====================
 Additional Resources

@@ -31,7 +31,7 @@ aws rds create-db-instance \
     --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
     --engine postgres \
     --allocated-storage 20 \
-    --db-instance-class db.t2.micro \
+    --db-instance-class db.t3.micro \
     --master-username pg \
     --master-user-password pg12345678 \
     --license-model postgresql-license \

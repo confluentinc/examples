@@ -21,7 +21,7 @@ Client
    that makes it easy to pass in the configuration to your |ccloud|
    configuration file.
 
--  Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.36.0 or later.
+-  Local install of `Confluent CLI <https://docs.confluent.io/confluent-cli/current/overview.html>`__ v2.5.0 or later.
 
 
 Kafka Cluster
@@ -53,7 +53,7 @@ Basic Producer and Consumer
 Produce Records
 ~~~~~~~~~~~~~~~
 
-#. Create the |ak| topic. If you are using |ccloud| then use the |ccloud| CLI:
+#. Create the |ak| topic. If you are using |ccloud| then use the Confluent CLI:
 
    .. code-block:: text
 
@@ -63,7 +63,7 @@ Produce Records
 
    .. code-block:: text
 
-      kafka-topics --bootstrap-server lcoalhost:9092 --topic $topic_name --create --if-not-exists
+      kafka-topics --bootstrap-server localhost:9092 --topic $topic_name --create --if-not-exists
 
 #. Run |kcat|, writing messages to topic ``test1``, passing in arguments for:
 

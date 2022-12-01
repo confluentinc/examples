@@ -154,8 +154,6 @@ Example 2: JDBC source connector with Single Message Transformations -> Key:Long
 Example 3: JDBC source connector with SpecificAvro -> Key:String(null) and Value:SpecificAvro
 ---------------------------------------------------------------------------------------------
 
-.. seealso:: See this example in the tutorial `Add key to data ingested through Kafka Connect <https://kafka-tutorials.confluent.io/connect-add-key-to-source/kstreams.html>`__.
-
 - :devx-examples:`Kafka Connect JDBC source connector|connect-streams-pipeline/jdbcspecificavro-connector.properties` produces Avro values, and null ``String`` keys, to a Kafka topic.
 - This example uses a single message transformation (SMT) called ``SetSchemaMetadata`` with code that has a fix for `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__, allowing the connector to set the namespace in the schema. If you do not have the fix for `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__, see Example 4 that uses ``GenericAvro`` instead of ``SpecificAvro``.
 

@@ -27,8 +27,8 @@ ccloud::validate_credentials_ksqldb "$KSQLDB_ENDPOINT" "$CONFIG_FILE" "$KSQLDB_B
 echo -e "Create output topics $KAFKA_TOPIC_NAME_OUT1 and $KAFKA_TOPIC_NAME_OUT2, and ACLs to allow the ksqlDB application to run\n"
 confluent kafka topic create $KAFKA_TOPIC_NAME_OUT1
 confluent kafka topic create $KAFKA_TOPIC_NAME_OUT2
-ksqlDBAppId=$(confluent ksql app list | grep "$KSQLDB_ENDPOINT" | awk '{print $1}')
-confluent ksql app configure-acls $ksqlDBAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
+ksqlDBAppId=$(confluent ksql cluster list -o json | jq -r 'map(select(.endpoint == "'"$KSQLDB_ENDPOINT"'")) | .[].id')
+confluent ksql cluster configure-acls $ksqlDBAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
 SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
 confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
 confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2

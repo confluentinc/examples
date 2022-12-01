@@ -10,8 +10,7 @@ are hit, requests may be refused and clients may be throttled to keep the cluste
 client is throttled, |ccloud| will delay the client's requests for ``produce-throttle-time-avg`` (in ms) for
 producers or ``fetch-throttle-time-avg`` (in ms) for consumers
 
-|ccloud| offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. This demo assumes
-you are running on a "basic" or "standard" cluster; both have a request limit of 1500 per second.
+|ccloud| offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. 
 
 #. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 

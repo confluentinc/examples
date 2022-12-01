@@ -112,16 +112,16 @@ Consume Records
    .. code-block:: text
 
         ...
-        Consumed record with key alice and value {"count":0}, and updated total count to 0
-        Consumed record with key alice and value {"count":1}, and updated total count to 1
+        Consumed record with key alice and value {"count":0}, and updated total count to 1
+        Consumed record with key alice and value {"count":1}, and updated total count to 2
         Consumed record with key alice and value {"count":2}, and updated total count to 3
-        Consumed record with key alice and value {"count":3}, and updated total count to 6
-        Consumed record with key alice and value {"count":4}, and updated total count to 10
-        Consumed record with key alice and value {"count":5}, and updated total count to 15
-        Consumed record with key alice and value {"count":6}, and updated total count to 21
-        Consumed record with key alice and value {"count":7}, and updated total count to 28
-        Consumed record with key alice and value {"count":8}, and updated total count to 36
-        Consumed record with key alice and value {"count":9}, and updated total count to 45
+        Consumed record with key alice and value {"count":3}, and updated total count to 4
+        Consumed record with key alice and value {"count":4}, and updated total count to 5
+        Consumed record with key alice and value {"count":5}, and updated total count to 6
+        Consumed record with key alice and value {"count":6}, and updated total count to 7
+        Consumed record with key alice and value {"count":7}, and updated total count to 8
+        Consumed record with key alice and value {"count":8}, and updated total count to 9
+        Consumed record with key alice and value {"count":9}, and updated total count to 10
 
 #. When you are done, press ``CTRL-C``.
 
