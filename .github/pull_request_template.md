@@ -20,8 +20,6 @@ _Describe the validation already done, or needs to be done, by the PR submitter.
 <!-- - [ ] cloud-etl -->
 <!-- - [ ] connect-streams-pipeline -->
 <!-- - [ ] cp-quickstart -->
-<!-- - [ ] kubernetes/gke-base -->
-<!-- - [ ] kubernetes/replicator-gke-cc -->
 <!-- - [ ] microservices-orders -->
 <!-- - [ ] multi-datacenter -->
 <!-- - [ ] multiregion -->
@@ -45,8 +43,6 @@ _Describe the tasks/validation that the PR submitter is requesting to be done by
 <!-- - [ ] cloud-etl -->
 <!-- - [ ] connect-streams-pipeline -->
 <!-- - [ ] cp-quickstart -->
-<!-- - [ ] kubernetes/gke-base -->
-<!-- - [ ] kubernetes/replicator-gke-cc -->
 <!-- - [ ] microservices-orders -->
 <!-- - [ ] multi-datacenter -->
 <!-- - [ ] multiregion -->
