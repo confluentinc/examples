@@ -1,4 +1,4 @@
-﻿// Copyright 2020 Confluent Inc.
+// Copyright 2020 Confluent Inc.
 
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ namespace CCloud
             try
             {
                 var cloudConfig = (await File.ReadAllLinesAsync(configPath))
-                    .Where(line => !line.StartsWith("#"))
+                    .Where(line => !line.StartsWith("#") && !line.Length.Equals(0))
                     .ToDictionary(
                         line => line.Substring(0, line.IndexOf('=')),
                         line => line.Substring(line.IndexOf('=') + 1));
