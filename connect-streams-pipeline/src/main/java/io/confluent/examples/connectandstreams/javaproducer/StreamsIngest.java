@@ -19,17 +19,15 @@ package io.confluent.examples.connectandstreams.javaproducer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Printed;
-import org.apache.kafka.streams.state.KeyValueStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Properties;
@@ -40,11 +38,10 @@ import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 
 public class StreamsIngest {
 
-  static final String INPUT_TOPIC = "javaproducer-locations";
-  static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
-  static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
-  static final String KEYS_STORE = "javaproducer-count-keys";
-  static final String SALES_STORE = "javaproducer-aggregate-sales";
+  private static final Logger LOGGER = LoggerFactory.getLogger(StreamsIngest.class);
+  private static final String INPUT_TOPIC = "javaproducer-locations";
+  private static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
+  private static final String DEFAULT_SCHEMA_REGISTRY_URL = "http://localhost:8081";
 
   public static void main(final String[] args) {
 
@@ -59,8 +56,8 @@ public class StreamsIngest {
     final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
     final String SCHEMA_REGISTRY_URL = args.length > 1 ? args[1] : DEFAULT_SCHEMA_REGISTRY_URL;
 
-    System.out.println("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
-    System.out.println("Connecting to Confluent schema registry at " + SCHEMA_REGISTRY_URL);
+    LOGGER.info("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
+    LOGGER.info("Connecting to Confluent schema registry at " + SCHEMA_REGISTRY_URL);
 
     final StreamsBuilder builder = new StreamsBuilder();
 

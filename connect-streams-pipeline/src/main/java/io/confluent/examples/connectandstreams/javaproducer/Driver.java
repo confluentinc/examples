@@ -20,6 +20,8 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.LongSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,6 +36,7 @@ import io.confluent.kafka.serializers.KafkaAvroSerializer;
 
 public class Driver {
 
+  static final Logger LOGGER = LoggerFactory.getLogger(Driver.class);
   static final String INPUT_TOPIC = "javaproducer-locations";
   static final String DEFAULT_TABLE_LOCATIONS = "/usr/local/lib/table.locations";
   static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
@@ -54,9 +57,9 @@ public class Driver {
     final String schemaRegistryUrl = args.length > 1 ? args[1] : DEFAULT_SCHEMA_REGISTRY_URL;
     final String tableLocations = args.length > 2 ? args[2] : DEFAULT_TABLE_LOCATIONS;
 
-    System.out.println("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
-    System.out.println("Connecting to Confluent schema registry at " + schemaRegistryUrl);
-    System.out.println("Reading locations table from file " + tableLocations);
+    LOGGER.info("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
+    LOGGER.info("Connecting to Confluent schema registry at " + schemaRegistryUrl);
+    LOGGER.info("Reading locations table from file " + tableLocations);
 
     final List<Location> locationsList = new ArrayList<>();
     try (final BufferedReader br = new BufferedReader(new FileReader(tableLocations))) {
@@ -78,10 +81,8 @@ public class Driver {
         new KafkaProducer<Long, Location>(props);
 
     locationsList.forEach(t -> {
-      System.out.println("Writing location information for '" + t.getId()
-                         + "' to input topic " + INPUT_TOPIC);
-      final ProducerRecord<Long, Location> record = new ProducerRecord<Long, Location>(INPUT_TOPIC,
-                                                                                       t.getId(), t);
+      LOGGER.info("Writing location information for '" + t.getId() + "' to input topic " + INPUT_TOPIC);
+      final ProducerRecord<Long, Location> record = new ProducerRecord<>(INPUT_TOPIC, t.getId(), t);
       locationProducer.send(record);
     });
 
@@ -90,4 +91,3 @@ public class Driver {
   }
 
 }
-

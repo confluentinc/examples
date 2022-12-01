@@ -19,17 +19,15 @@ package io.confluent.examples.connectandstreams.jdbcjson;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.common.utils.Bytes;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Printed;
-import org.apache.kafka.streams.state.KeyValueStore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
@@ -39,10 +37,9 @@ import io.confluent.examples.connectandstreams.jdbcjson.serde.JsonSerializer;
 
 public class StreamsIngest {
 
-  static final String INPUT_TOPIC = "jdbcjson-locations";
-  static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
-  static final String KEYS_STORE = "jdbcjson-count-keys";
-  static final String SALES_STORE = "jdbcjson-aggregate-sales";
+  private static final Logger LOGGER = LoggerFactory.getLogger(StreamsIngest.class);
+  private static final String INPUT_TOPIC = "jdbcjson-locations";
+  private static final String DEFAULT_BOOTSTRAP_SERVERS = "localhost:9092";
 
   public static void main(final String[] args) {
 
@@ -54,7 +51,7 @@ public class StreamsIngest {
 
     final String bootstrapServers = args.length > 0 ? args[0] : DEFAULT_BOOTSTRAP_SERVERS;
 
-    System.out.println("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
+    LOGGER.info("Connecting to Kafka cluster via bootstrap servers " + bootstrapServers);
 
     final StreamsBuilder builder = new StreamsBuilder();
 
