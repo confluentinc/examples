@@ -52,13 +52,6 @@ MAX_WAIT=300
 echo "Waiting up to $MAX_WAIT seconds for Confluent Control Center to start"
 retry $MAX_WAIT check_control_center_up control-center || exit 1
 
-# Give dc2 cluster a friendlier name. This is a temporary workaround for default cluster naming bug introduced in
-# Confluent Platform 7.3 (MMA-11616).
-CLUSTER_ID=`curl http://localhost:9021/2.0/clusters/kafka | jq -r '.[] | select (.displayName=="controlcenter.cluster") | .clusterId'`
-if [ ! -z "$CLUSTER_ID" ]; then
-  curl http://localhost:9021/2.0/clusters/kafka/$CLUSTER_ID  -X PATCH -H 'Content-Type:application/merge-patch+json' -d '{ "displayName":"dc2" }'
-fi
-
 echo -e "\n\n\n******************************************************************"
 echo -e "DONE! Connect to Confluent Control Center at http://localhost:9021"
 echo -e "******************************************************************\n"

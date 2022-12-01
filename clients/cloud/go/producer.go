@@ -24,7 +24,7 @@ package main
  */
 
 import (
-	"./ccloud"
+	"github.com/confluentinc/examples/clients/cloud/go/ccloud"
 	"context"
 	"encoding/json"
 	"fmt"

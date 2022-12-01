@@ -9,7 +9,7 @@ x-network: &cap-add
 # Note: src code and dependencies are built into cnfldemos/ccloud-observability-client
 #       the Dockerfile for cnfldemos/ccloud-observability-client can be found in this directory--called Dockerfile
 x-client-base: &client-base
-  image: cnfldemos/ccloud-observability-client:0.1.0
+  image: cnfldemos/ccloud-observability-client:0.2.0
   restart: always
   ports:
     - 1234
@@ -35,26 +35,19 @@ services:
       - "--collector.filesystem.ignored-mount-points"
       - "^(aufs|proc|nsfs|shm|cgroup|tmpfs|binfmt_misc|debugfs|devpts|fusectl|hugetlbfs|fuse.lxcfs|mqueue|pstore|securityfs|sysfs|autofs|devtmpfs|configfs)"
 
-  ccloud-exporter:
-    image: dabz/ccloudexporter:latest
-    container_name: ccloud-exporter
-    hostname: ccloud-exporter
-    restart: always
-    environment:
-      - CCLOUD_API_KEY=$METRICS_API_KEY
-      - CCLOUD_API_SECRET=$METRICS_API_SECRET
-      - CCLOUD_CLUSTER=$CLOUD_CLUSTER
-
   prometheus:
-    image: prom/prometheus:v2.24.1
+    image: prom/prometheus:v2.34.0
     container_name: prometheus
+    links:
+      - producer
+      - consumer
     ports:
       - 9090:9090
     volumes:
       - ./monitoring_configs/prometheus/:/etc/prometheus/
 
   grafana:
-    image: grafana/grafana:7.3.7
+    image: grafana/grafana:8.4.4
     container_name: grafana
     environment:
       - "GF_INSTALL_PLUGINS=grafana-piechart-panel"

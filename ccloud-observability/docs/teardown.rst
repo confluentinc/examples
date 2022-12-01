@@ -9,7 +9,7 @@ Clean up |ccloud| resources
 
       docker-compose down
 
-#. Delete the cloud api key created for the ``ccloud-exporter``:
+#. Delete the cloud api key created for Metrics API access:
 
    .. code-block:: bash
 
