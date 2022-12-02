@@ -1,2 +1,3 @@
 # See go/codeowners - automatically generated for confluentinc/examples:
 *	@confluentinc/devx
+*	@confluentinc/docs
