@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright 2020 Confluent Inc.
+# Copyright 2022 Confluent Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 # =============================================================================
 
 require 'optparse'
-require 'kafka'
+require 'rdkafka'
 
 #
 # Helper class for working with Confluent Cloud
@@ -34,40 +34,29 @@ class CCloud
     # Parse arguments, load the CCloud config and initialize the Kafka client
     @args = parse_args!
     @config = load_config(@args[:config])
-    @kafka = Kafka.new(
-      seed_brokers: @config[:'bootstrap.servers'],
-      sasl_plain_username: @config[:'sasl.username'],
-      sasl_plain_password: @config[:'sasl.password'],
-      ssl_ca_certs_from_system: true
-    )
   end
 
   def topic
     @args[:topic]
   end
 
+  def admin
+    @admin ||= rdkafka_admin_config.admin
+  end
+
   #
   # An asynchronous producer configured for the low-throughput needs of this example
   #
   def producer
-    @producer ||= @kafka.async_producer(
-      # Trigger a delivery once 5 messages have been buffered.
-      delivery_threshold: 5,
-
-      # Trigger a delivery every 5 milliseconds.
-      delivery_interval: 0.005,
-    )
+    @producer ||= rdkafka_producer_config.producer
   end
 
   def consumer
     return @consumer unless @consumer.nil?
 
-    # Consumers with the same group id will form a Consumer Group together.
-    @consumer = @kafka.consumer(group_id: 'ruby_example_group_1')
-
-    # It's better to shut down gracefully than to kill the process.
+    @consumer = rdkafka_consumer_config.consumer
     at_exit do
-      @consumer.stop # Leave group and commit final offsets
+      @consumer.close
     end
     @consumer
   end
@@ -106,7 +95,34 @@ class CCloud
       config[parameter.to_sym] = value
       config
     end
-    conf[:'bootstrap.servers'] = conf[:'bootstrap.servers'].split(',')
     conf
   end
+
+  def rdkafka_base_config
+    {
+      :"bootstrap.servers" => @config[:'bootstrap.servers'],
+      :"sasl.mechanism" => "PLAIN",
+      :"security.protocol" => "SASL_SSL",
+      :"sasl.username" => @config[:'sasl.username'],
+      :"sasl.password" => @config[:'sasl.password'],
+    }
+  end
+
+  def rdkafka_admin_config
+    Rdkafka::Config.new(rdkafka_base_config)
+  end
+
+  def rdkafka_consumer_config
+    config = rdkafka_base_config
+    config[:"group.id"] = "ruby_example_group_1"
+    config[:"auto.offset.reset"] = "earliest"
+    Rdkafka::Config.new(config)
+  end
+
+  def rdkafka_producer_config
+    config = rdkafka_base_config
+    config[:"linger.ms"] = 5
+    Rdkafka::Config.new(config)
+  end
 end
+

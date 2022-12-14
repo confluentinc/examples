@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Copyright 2020 Confluent Inc.
+# Copyright 2022 Confluent Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,10 +28,11 @@ require './c_cloud'
 ccloud = CCloud.new
 topic = ccloud.topic
 begin
-  ccloud.kafka.create_topic(topic, num_partitions: 1, replication_factor: 3)
+  create_topic_handle = ccloud.admin.create_topic(topic, 1, 3)
+  create_topic_handle.wait(max_wait_timeout: 15.0)
   puts "Created topic #{topic}"
-rescue Kafka::TopicAlreadyExists => e
-  puts "Did not create topic #{topic} because it already exists."
+rescue => e
+  puts "Failed to create topic #{topic}: #{e.message}"
 end
 
 produced_messages = 0
@@ -43,18 +44,18 @@ begin
     puts "Producing record: #{record}"
 
     begin
-      ccloud.producer.produce(record_value, key: record_key, topic: topic)
+      ccloud.producer.produce(
+        topic: topic,
+        payload: record_value,
+        key: record_key
+      )
       produced_messages += 1
-    rescue Kafka::Error => e
+    rescue => e
       puts "Failed to produce record #{record}: #{e.message}"
     end
   end
 ensure
-  # deliver all the buffered messages
-  ccloud.producer.deliver_messages
-  # Make sure to call `#shutdown` on the producer in order to avoid leaking
-  # resources. `#shutdown` will wait for any pending messages to be delivered
-  # before returning.
-  ccloud.producer.shutdown
+  # delivers any buffered messages and cleans up resources
+  ccloud.producer.close
 end
 puts "#{produced_messages} messages were successfully produced to topic #{topic}!"
