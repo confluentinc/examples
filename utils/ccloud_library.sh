@@ -489,6 +489,25 @@ function ccloud::maybe_create_ksqldb_app() {
   return 0
 }
 
+function ccloud::grant_envadmin_access() {
+  SERVICE_ACCOUNT_ID=$1
+  ENVIRONMENT=$2
+  # Setting default QUIET=false to surface potential errors
+  QUIET="${QUIET:-false}"
+  [[ $QUIET == "true" ]] &&
+    local REDIRECT_TO="/dev/null" ||
+    local REDIRECT_TO="/dev/tty"
+
+  echo "Adding role-binding to ${SERVICE_ACCOUNT_ID} on ${ENVIRONMENT}"
+  confluent iam rbac role-binding create --principal User:${SERVICE_ACCOUNT_ID} --role EnvironmentAdmin --environment ${ENVIRONMENT} -o json &>"$REDIRECT_TO"
+
+  echo -e "\nWaiting for role-binding to propagate\n"
+  sleep 30
+
+  confluent iam rbac role-binding list --principal User:${SERVICE_ACCOUNT_ID} -o json &>"$REDIRECT_TO"
+  return 0
+}
+
 function ccloud::create_acls_all_resources_full_access() {
   SERVICE_ACCOUNT_ID=$1
   # Setting default QUIET=false to surface potential errors
@@ -1034,7 +1053,7 @@ function ccloud::create_ccloud_stack() {
   echo -e "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata\n"
   sleep $WARMUP_TIME 
 
-  ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
+  ccloud::grant_envadmin_access $SERVICE_ACCOUNT_ID $ENVIRONMENT
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
@@ -1046,7 +1065,6 @@ function ccloud::create_ccloud_stack() {
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$CLUSTER_CREDS")
     KSQLDB_ENDPOINT=$(confluent ksql cluster describe $KSQLDB -o json | jq -r ".endpoint")
     KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
-    confluent ksql cluster configure-acls $KSQLDB
   fi
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
