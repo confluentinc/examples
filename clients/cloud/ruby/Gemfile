@@ -1,1 +1,3 @@
-gem 'ruby-kafka'
+source 'https://rubygems.org'
+
+gem 'rdkafka'

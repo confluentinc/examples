@@ -92,20 +92,6 @@ printf "\n";print_process_start "Waiting up to $MAX_WAIT seconds for Confluent C
 retry $MAX_WAIT ccloud::validate_ccloud_ksqldb_endpoint_ready $KSQLDB_ENDPOINT || exit 1
 print_pass "Confluent Cloud KSQL is UP"
 
-printf "Obtaining the ksqlDB App Id\n"
-CMD="confluent ksql cluster list -o json | jq -r '.[].id'"
-ksqlDBAppId=$(eval $CMD) \
-  && print_code_pass -c "$CMD" -m "$ksqlDBAppId" \
-  || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
-
-printf "\nConfiguring ksqlDB ACLs\n"
-CMD="confluent ksql cluster configure-acls $ksqlDBAppId pageviews users"
-$CMD \
-  && print_code_pass -c "$CMD" \
-  || exit_with_error -c $? -n "$NAME" -m "$CMD" -l $(($LINENO -3))
-
-echo -e "\nSleeping 60 seconds\n"
-sleep 60
 printf "\nSubmitting KSQL queries via curl to the ksqlDB REST endpoint\n"
 printf "\tSee https://docs.ksqldb.io/en/latest/developer-guide/api/ for more information\n"
 while read ksqlCmd; do # from statements-cloud.sql

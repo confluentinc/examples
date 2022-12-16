@@ -6,4 +6,5 @@ To override the embedded producers, configure |crep| to write to the destination
    producer.override.bootstrap.servers=<bootstrap-servers-destination>
    producer.override.security.protocol=SASL_SSL
    producer.override.sasl.mechanism=PLAIN
+   producer.override.sasl.login.callback.handler.class=org.apache.kafka.common.security.authenticator.AbstractLogin$DefaultLoginCallbackHandler
    producer.override.sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username="<api-key-destination>" password="<api-secret-destination>";

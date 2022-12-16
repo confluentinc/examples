@@ -489,63 +489,22 @@ function ccloud::maybe_create_ksqldb_app() {
   return 0
 }
 
-function ccloud::create_acls_all_resources_full_access() {
+function ccloud::grant_envadmin_access() {
   SERVICE_ACCOUNT_ID=$1
+  ENVIRONMENT=$2
   # Setting default QUIET=false to surface potential errors
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] &&
     local REDIRECT_TO="/dev/null" ||
     local REDIRECT_TO="/dev/tty"
 
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*' &>"$REDIRECT_TO"
+  echo "Adding role-binding to ${SERVICE_ACCOUNT_ID} on ${ENVIRONMENT}"
+  confluent iam rbac role-binding create --principal User:${SERVICE_ACCOUNT_ID} --role EnvironmentAdmin --environment ${ENVIRONMENT} -o json &>"$REDIRECT_TO"
 
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*' &>"$REDIRECT_TO"
+  echo -e "\nWaiting for role-binding to propagate\n"
+  sleep 30
 
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*' &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*' &>"$REDIRECT_TO"
-  
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation IDEMPOTENT-WRITE --cluster-scope &>"$REDIRECT_TO"
-  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope &>"$REDIRECT_TO"
-
-  return 0
-}
-
-function ccloud::delete_acls_ccloud_stack() {
-  SERVICE_ACCOUNT_ID=$1
-  # Setting default QUIET=false to surface potential errors
-  QUIET="${QUIET:-false}"
-  [[ $QUIET == "true" ]] &&
-    local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/tty"
-
-  echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
-
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --topic '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE_CONFIGS --topic '*' &>"$REDIRECT_TO"
-
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --consumer-group '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --consumer-group '*' &>"$REDIRECT_TO"
-
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --transactional-id '*' &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --transactional-id '*' &>"$REDIRECT_TO"
-
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation IDEMPOTENT-WRITE --cluster-scope &>"$REDIRECT_TO"
-  confluent kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation DESCRIBE --cluster-scope &>"$REDIRECT_TO"
-
+  confluent iam rbac role-binding list --principal User:${SERVICE_ACCOUNT_ID} -o json &>"$REDIRECT_TO"
   return 0
 }
 
@@ -1034,7 +993,7 @@ function ccloud::create_ccloud_stack() {
   echo -e "Sleeping an additional ${WARMUP_TIME} seconds to ensure propagation of all metadata\n"
   sleep $WARMUP_TIME 
 
-  ccloud::create_acls_all_resources_full_access $SERVICE_ACCOUNT_ID
+  ccloud::grant_envadmin_access $SERVICE_ACCOUNT_ID $ENVIRONMENT
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
@@ -1046,7 +1005,6 @@ function ccloud::create_ccloud_stack() {
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$CLUSTER_CREDS")
     KSQLDB_ENDPOINT=$(confluent ksql cluster describe $KSQLDB -o json | jq -r ".endpoint")
     KSQLDB_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $KSQLDB)
-    confluent ksql cluster configure-acls $KSQLDB
   fi
 
   CLOUD_API_KEY=`echo $CLUSTER_CREDS | awk -F: '{print $1}'`
@@ -1127,9 +1085,6 @@ function ccloud::destroy_ccloud_stack() {
   local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
   confluent kafka cluster use $cluster_id 2>/dev/null
 
-  # Delete associated ACLs
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
-
   ksqldb_id_found=$(confluent ksql cluster list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
   if [[ $ksqldb_id_found != "" ]]; then
     echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id_found"
@@ -1145,7 +1100,7 @@ function ccloud::destroy_ccloud_stack() {
   # Delete API keys associated to the service account
   confluent api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} confluent api-key delete {}
 
-  # Delete service account
+  # Delete service account along with its role bindings
   confluent iam service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
   if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then

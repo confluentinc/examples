@@ -1,6 +1,6 @@
 # Overview
 
-Produce messages to and consume messages from a Kafka cluster using the [ Zendesk Ruby Client for Apache Kafka](https://github.com/zendesk/ruby-kafka).
+Produce messages to and consume messages from a Kafka cluster using the [rdkafka](https://github.com/appsignal/rdkafka-ruby) gem that exposes [librdkafka](https://github.com/edenhill/librdkafka/).
 
 
 # Documentation
