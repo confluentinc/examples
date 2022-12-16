@@ -1145,9 +1145,6 @@ function ccloud::destroy_ccloud_stack() {
   local cluster_id=$(confluent kafka cluster list -o json | jq -r 'map(select(.name == "'"$CLUSTER_NAME"'")) | .[].id')
   confluent kafka cluster use $cluster_id 2>/dev/null
 
-  # Delete associated ACLs
-  ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
-
   ksqldb_id_found=$(confluent ksql cluster list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
   if [[ $ksqldb_id_found != "" ]]; then
     echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id_found"
@@ -1163,7 +1160,7 @@ function ccloud::destroy_ccloud_stack() {
   # Delete API keys associated to the service account
   confluent api-key list --service-account $SERVICE_ACCOUNT_ID -o json | jq -r '.[].key' | xargs -I{} confluent api-key delete {}
 
-  # Delete service account
+  # Delete service account along with its role bindings
   confluent iam service-account delete $SERVICE_ACCOUNT_ID &>"$REDIRECT_TO" 
 
   if [[ $PRESERVE_ENVIRONMENT == "false" ]]; then
