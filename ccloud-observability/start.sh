@@ -63,7 +63,8 @@ fi
 echo "$OUTPUT" | jq .
 export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
 export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
-export CLOUD_CLUSTER=$CLUSTER
+export CLOUD_CLUSTER=$(confluent kafka cluster describe -o json |  jq -c '[.id]')
+export LAG_EXPORTER_ID=$CLUSTER
 export CLOUD_CONNECTORS=$(confluent connect list -o json | jq -c '. | map(.id)')
 export CLOUD_KSQLDB_APPS=$(confluent ksql cluster list -o json |  jq -c '. | map(.id)')
 export CLOUD_SCHEMA_REGISTRY=$(confluent schema-registry cluster describe -o json |  jq -c '[.cluster_id]')
@@ -75,6 +76,7 @@ echo "SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID" >> .env
 echo "METRICS_API_KEY=$METRICS_API_KEY" >> .env
 echo "METRICS_API_SECRET=$METRICS_API_SECRET" >> .env
 echo "CLOUD_CLUSTER=$CLOUD_CLUSTER" >> .env
+echo "LAG_EXPORTER_ID=$LAG_EXPORTER_ID" >> .env
 echo "BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS" >> .env
 echo "SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG" >> .env
 echo "CLOUD_CONNECTORS=$CLOUD_CONNECTORS" >> .env
@@ -97,8 +99,8 @@ docker run -i --rm --env-file .env mikefarah/yq '
 ' < monitoring_configs/prometheus/prometheus.template.yml > monitoring_configs/prometheus/prometheus.yml
 
 echo -e "\n====== Starting up Prometheus, Grafana, exporters, and clients"
-echo "docker-compose up -d"
-docker-compose up -d
+echo "docker compose up -d"
+docker compose up -d
 echo -e "\n====== Login to Grafana at http://localhost:3000/ un:admin pw:password"
 echo -e "\n====== Query metrics in Prometheus at http://localhost:9090 (verify targets are being scraped at http://localhost:9090/targets/, may take a few minutes to start up)"
 
@@ -110,6 +112,7 @@ echo "  export SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID"
 echo "  export METRICS_API_KEY=$METRICS_API_KEY"
 echo "  export METRICS_API_SECRET=$METRICS_API_SECRET"
 echo "  export CLOUD_CLUSTER=$CLOUD_CLUSTER"
+echo "  export LAG_EXPORTER_ID=$LAG_EXPORTER_ID"
 echo "  export BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS"
 echo "  export SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG"
 echo "  export CLOUD_CONNECTORS=$CLOUD_CONNECTORS"

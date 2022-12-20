@@ -26,7 +26,7 @@ Introduce failure scenario
 
    .. code-block:: bash
 
-      docker-compose up -d --scale producer=5
+      docker compose up -d --scale producer=5
 
    Which will produce the following output:
 
@@ -46,7 +46,7 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-#. Open `Grafana <localhost:3000>`__ and login with the username ``admin`` and password ``password``.
+#. Open `Grafana <http://localhost:3000>`__ and login with the username ``admin`` and password ``password``.
 
 #. Navigate to the ``Consumer Client Metrics`` dashboard. Wait 2 minutes and then observe:
 
@@ -109,7 +109,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      docker-compose up -d --scale producer=1
+      docker compose up -d --scale producer=1
 
    Which will produce the following output:
 
