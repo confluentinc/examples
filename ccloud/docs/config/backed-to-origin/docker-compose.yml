@@ -3,7 +3,7 @@ version: '2'
 services:
 
   connect-origin:
-    image: confluentinc/cp-enterprise-replicator:5.5.x-latest
+    image: confluentinc/cp-enterprise-replicator:5.5.13
     hostname: connect-origin
     container_name: connect-origin
     ports:
