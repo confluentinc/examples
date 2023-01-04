@@ -52,6 +52,7 @@ This enables you to:
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
          `blog post <https://www.confluent.io/blog/build-a-cloud-etl-pipeline-with-confluent-cloud/>`__.
 
+=========
 Data Flow
 =========
 
