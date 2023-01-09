@@ -82,6 +82,6 @@ services:
     volumes:
       - ./monitoring_configs/kafka-lag-exporter/:/opt/docker/conf/
     environment:
-      - CLOUD_CLUSTER=$CLOUD_CLUSTER
+      - LAG_EXPORTER_ID=$LAG_EXPORTER_ID
       - BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS
       - SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG

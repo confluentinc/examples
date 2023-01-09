@@ -14,14 +14,14 @@ Introduce failure scenario
 
    .. code-block:: bash
 
-      docker-compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
+      docker compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
 
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
 #. From your web browser, navigate to the Grafana dashboard at http://localhost:3000 and login with the username ``admin`` and password ``password``.
 
-#. Navigate to the ``Producer Client Metrics`` dashboard.  Wait 2 minutes and then observe:
+#. Navigate to the ``Producer Client Metrics`` dashboard.  Wait a few minutes and then observe:
 
    -  A downward trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
 
@@ -49,7 +49,7 @@ Diagnose the problem
 
    .. code-block:: bash
 
-      docker-compose logs producer
+      docker compose logs producer
 
 #. Verify that you see log messages similar to what is shown below:
 
@@ -67,7 +67,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      docker-compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
+      docker compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
 
 #. It may take a few minutes for the producer to start sending requests again.
 
@@ -77,7 +77,7 @@ Troubleshooting
 
 #. Producer output rate doesn't come back up after adding in the ``iptables`` rule.
 
-   Restart the producer by running ``docker-compose restart producer``. This is advice specific to this tutorial.
+   Restart the producer by running ``docker compose restart producer``. This is advice specific to this tutorial.
 
 
 .. |Confluent Cloud Panel|

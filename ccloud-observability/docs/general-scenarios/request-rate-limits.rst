@@ -12,7 +12,7 @@ producers or ``fetch-throttle-time-avg`` (in ms) for consumers
 
 |ccloud| offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. 
 
-#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+#. Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Navigate to the ``Confluent Cloud`` dashboard.
 
