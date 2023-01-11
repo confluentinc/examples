@@ -45,7 +45,7 @@ are quite large and depending on your network connection may take
 
        ./start.sh
 
-#. You can apply the same concepts explained in this example to |ccloud|. |ccloud| also has fully managed connectors and ksqlDB applications that you can use, instead of self-managing your own.  To try it out, create your own |ccloud| instance (see :ref:`ccloud-stack` for an easy way to spin up a new environment), deploy the ``kafka-connect-datagen`` connectors, submit your ksqlDB queries, and then point your Elasticsearch connector to |ccloud|.
+#. You can apply the same concepts explained in this example to |ccloud|. |ccloud| also has fully managed connectors and ksqlDB applications that you can use, instead of self-managing your own.  To try it out, create your own |ccloud| instance (see :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` for an easy way to spin up a new environment), deploy the ``kafka-connect-datagen`` connectors, submit your ksqlDB queries, and then point your Elasticsearch connector to |ccloud|.
 
 -------
 Startup

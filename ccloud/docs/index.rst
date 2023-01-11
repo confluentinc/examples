@@ -35,7 +35,7 @@ The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated v
 ccloud-stack Utility
 --------------------
 
-The :ref:`ccloud-stack` creates a stack of fully managed services in |ccloud|.
+The :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the Confluent CLI to dynamically do the following in |ccloud|:
@@ -62,7 +62,7 @@ You can run the tutorials locally or some with |ccloud|.
 Client Code Examples
 --------------------
 
-If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to :ref:`clients-all-examples`.
+If you are looking for code examples of producers writing to and consumers reading from |ccloud|, or producers and consumers using Avro with |sr-long|, refer to `Language Guides <https://developer.confluent.io/get-started/>__`.
 It provides client examples written in various programming languages.
 
 .. figure:: ../../clients/cloud/images/clients-all.png
@@ -127,7 +127,7 @@ Build Your Own Cloud Demo
 ccloud-stack Utility
 --------------------
 
-The :ref:`ccloud-stack` creates a stack of fully managed services in |ccloud|.
+The :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the Confluent CLI to dynamically do the following in |ccloud|:
@@ -209,7 +209,7 @@ Or perhaps you want to build a |ak| demo in |ccloud| and run the |crest| client 
 
 You can build any example with a mix of fully-managed services in |ccloud| and self-managed components on localhost, in a few easy steps.
 
-#. Create a :ref:`ccloud-stack <ccloud-stack>` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
+#. Create a :cloud:`ccloud-stack|examples/ccloud/docs/ccloud-stack.html` of fully managed services in |ccloud|. One of the outputs is a local configuration file with key-value pairs of the required connection values to |ccloud|. (If you already have provisioned your |ccloud| resources, you can skip this step).
 
    .. sourcecode:: bash
 

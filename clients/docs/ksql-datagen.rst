@@ -1,7 +1,7 @@
 .. _client-examples-ksql-datagen:
 
-KSQL Datagen: Example for |ak-tm|
-=================================
+KSQL Datagen: Code Example for Apache Kafka
+===========================================
 
 In this tutorial, you will run a KSQL Datagen client application using the `KSQL
 Datagen command-line tool

@@ -1,6 +1,6 @@
 
-Confluent Cloud Examples Index
-==============================
+|ccloud| Examples
+=================
 
 .. toctree::
     :maxdepth: 1

@@ -35,7 +35,7 @@ Detailed walk-thru of this example is available in the whitepaper `Kafka Seriali
 
 You can apply the same concepts explained in this example to |ccloud|.
 |ccloud| also has fully managed connectors that you can use, instead of self-managing your own, so that you can run 100% in the cloud.
-To try it out, create your own |ccloud| instance (see :ref:`ccloud-stack` for an easy way to spin up a new environment), deploy a connector, and then point your applications to |ccloud|.
+To try it out, create your own |ccloud| instance (see :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` for an easy way to spin up a new environment), deploy a connector, and then point your applications to |ccloud|.
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 

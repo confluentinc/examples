@@ -1,7 +1,7 @@
 .. _client-examples-rust:
 
-Rust: Code Example for |ak-tm|
-==============================
+Rust: Code Example for Apache Kafka
+===================================
 
 In this tutorial, you will run a Rust client application that produces messages
 to and consumes messages from an |ak-tm| cluster.
