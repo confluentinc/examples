@@ -106,7 +106,7 @@ Using the Confluent CLI, the example creates a source connector that reads data 
 On-Prem Kafka to Cloud
 ----------------------
 
-The :ref:`hybrid cloud example <cp-demo>` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
+The :platform:`hybrid cloud example|tutorials/cp-demo/docs/overview.html` and playbook showcase a hybrid Kafka deployment: one cluster is a self-managed cluster running locally, the other is a |ccloud| cluster.
 |crep| copies the on-prem data to |ccloud| so that stream processing can happen in the cloud.
 
 Microservices in the Cloud

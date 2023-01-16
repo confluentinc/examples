@@ -227,7 +227,7 @@ Additional Resources
 - For additional considerations on running |crep| to |ccloud|, refer to `Migrate Topics on Confluent Cloud Clusters <https://docs.confluent.io/cloud/current/clusters/migrate-topics-on-cloud-clusters.html>`__.
 - To run a |ccloud| demo that showcases a hybrid |ak| cluster: one cluster is a
   self-managed |ak| cluster running locally, the other is a |ccloud| cluster, see
-  :ref:`cp-demo`.
+  :platform:`Scripted Confluent Platform Demo|tutorials/cp-demo/docs/overview.html`.
 - To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
 - For a practical guide to configuring, monitoring, and optimizing your |ak|
   client applications, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__.
