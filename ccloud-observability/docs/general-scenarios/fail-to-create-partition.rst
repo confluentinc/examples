@@ -6,7 +6,7 @@ Failing to create a new partition
 It's possible you won't be able to create a partition because you have reached a one of |ccloud|'s partition limits.
 Follow the instructions below to check if your cluster is getting close to its partition limits.
 
-#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+#. Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Navigate to the ``Confluent Cloud`` dashboard.
 

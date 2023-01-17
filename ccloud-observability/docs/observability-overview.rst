@@ -55,7 +55,7 @@ The following instructions will:
 
 -  build a |ak| client docker image with the maven project's dependencies cache
 
--  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, `Prometheus <https://prometheus.io/>`, `Grafana <https://grafana.com/>` and a Prometheus `node-exporter <https://prometheus.io/docs/guides/node-exporter/>`) with ``docker-compose``
+-  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, `Prometheus <https://prometheus.io/>`_, `Grafana <https://grafana.com/>`_ and a Prometheus `node-exporter <https://prometheus.io/docs/guides/node-exporter/>`_) with Docker Compose
 
 #. Log in to the Confluent CLI:
 
@@ -81,25 +81,25 @@ The following instructions will:
        cd examples/ccloud-observability/
        git checkout |release_post_branch|
 
-#. Setup a |ccloud| cluster, secrets, and observability components by running :devx-examples:`start.sh script|ccloud-observability/start.sh`:
+#. Set up a |ccloud| cluster, secrets, and observability components by running the :devx-examples:`start.sh script|ccloud-observability/start.sh`:
 
    .. code-block:: bash
 
       ./start.sh
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
-   Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+   Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
    Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
 Validate Setup
 ~~~~~~~~~~~~~~
 
-#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud Console, view the **Data flow** in your newly created environment and |ak| cluster.
+#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud Console, view the **Stream Lineage** in your newly created environment and |ak| cluster.
 
-   |Data Flow|
+   |Stream Lineage|
 
-#. Navigate to the `Prometheus Targets page <localhost:9090/targets>`__.
+#. Navigate to the `Prometheus Targets page <http://localhost:9090/targets>`__.
 
    |Prometheus Targets Unknown|
 
@@ -108,14 +108,14 @@ Validate Setup
    |Prometheus Targets Up|
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
-   Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+   Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
-.. |Data Flow|
-   image:: images/data-flow.png
-   :alt: Data Flow
+.. |Stream Lineage|
+   image:: images/stream-lineage.png
+   :alt: Stream Lineage
 
 .. |Prometheus Targets Unknown|
    image:: images/prometheus-targets-unknown.png

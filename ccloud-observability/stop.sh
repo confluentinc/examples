@@ -10,7 +10,7 @@ if [ -z "$1" ]; then
   exit 1
 else
   confluent api-key delete $METRICS_API_KEY
-  docker-compose down -v
+  docker compose down -v
   DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
   CONFIG_FILE=${DIR}/$1
   ../ccloud/ccloud-stack/ccloud_stack_destroy.sh $CONFIG_FILE

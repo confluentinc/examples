@@ -10,11 +10,11 @@ This scenario will look at |ccloud| metrics from the Metrics API and client metr
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Delete the ACL that allowed the service account to write to the topic, inserting your service account ID instead of ``184498``:
+#. Create an ACL that denies the service account permission to write to any topic, inserting your service account ID instead of ``sa-123456``:
 
    .. code-block:: bash
 
-      confluent kafka acl delete --service-account 184498 --operation write  --topic '*' --allow
+      confluent kafka acl create --service-account sa-123456 --operation write  --topic '*' --deny
 
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
@@ -49,7 +49,7 @@ Diagnose the problem
 
    .. code-block:: bash
 
-      docker-compose logs producer
+      docker compose logs producer
 
 #. Verify that you see log messages similar to what is shown below:
 
@@ -79,17 +79,17 @@ Diagnose the problem
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Add the ACL allowing write to the topic, inserting your service account ID instead of ``184498``:
+#. Delete the ACL created above that denied the service account permission to write to any topic.  Insert your service account ID instead of ``sa-123456``:
 
    .. code-block:: bash
 
-      confluent kafka acl create --service-account 184498 --operation write  --topic '*' --allow
+      confluent kafka acl delete --service-account sa-123456 --operation write  --topic '*' --deny
 
 #. Verify that the ``org.apache.kafka.common.errors.TopicAuthorizationException`` log messages stopped in the ``producer`` container.
 
    .. code-block:: bash
 
-      docker-compose logs producer
+      docker compose logs producer
 
 
 .. |Confluent Cloud Panel|

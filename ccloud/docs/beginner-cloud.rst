@@ -112,7 +112,7 @@ Create a new Confluent Cloud environment
         "name": "ccloud-stack-000000-beginner-cli"
       }
 
-   The value of the environment ID, in this case ``env-5qz2q``, may differ in
+   The value of the environment ID, in this case ``env-5qz2q``, will differ in
    your output. In this tutorial, the values for certain variables, including
    your environment ID, |ak| cluster ID, API key, will be unique and will not
    match the output shown.
@@ -151,24 +151,25 @@ Create a new Confluent Cloud cluster
 
    .. code-block:: text
 
-      +--------------+---------------------------------------------------------+
-      | Id           | lkc-x6m01                                               |
-      | Name         | demo-kafka-cluster                                      |
-      | Type         | BASIC                                                   |
-      | Ingress      |                                                     100 |
-      | Egress       |                                                     100 |
-      | Storage      |                                                    5000 |
-      | Provider     | aws                                                     |
-      | Availability | single-zone                                             |
-      | Region       | us-west-2                                               |
-      | Status       | UP                                                      |
-      | Endpoint     | SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092 |
-      | ApiEndpoint  | https://pkac-ldgj1.us-west-2.aws.confluent.cloud        |
-      +--------------+---------------------------------------------------------+
+      +---------------+---------------------------------------------------------+
+      | Id            | lkc-x6m01                                               |
+      | Name          | demo-kafka-cluster                                      |
+      | Type          | BASIC                                                   |
+      | Ingress       |                                                     100 |
+      | Egress        |                                                     100 |
+      | Storage       | 5 TB                                                    |
+      | Provider      | aws                                                     |
+      | Availability  | single-zone                                             |
+      | Region        | us-west-2                                               |
+      | Status        | UP                                                      |
+      | Endpoint      | SASL_SSL://pkc-4kgmg.us-west-2.aws.confluent.cloud:9092 |
+      | API Endpoint  | https://pkac-ldgj1.us-west-2.aws.confluent.cloud        |
+      | REST Endpoint | https://pkc-4kgmg.us-west-2.aws.confluent.cloud:443     |
+      +---------------+---------------------------------------------------------+
 
    The value of the |ak| cluster ID, in this case ``lkc-x6m01``, and |ak|
    cluster endpoint, in this case
-   ``pkc-4kgmg.us-west-2.aws.confluent.cloud:9092``, may differ in your output.
+   ``pkc-4kgmg.us-west-2.aws.confluent.cloud:9092``, will differ in your output.
 
 #. Specify ``lkc-x6m01`` as the active |ak| cluster by running the following
    command:
@@ -181,13 +182,13 @@ Create a new Confluent Cloud cluster
 
    .. code-block:: text
 
-       Set Kafka cluster "lkc-x6m01" as the active cluster for environment "env-5qz2".
+       Set Kafka cluster "lkc-x6m01" as the active cluster for environment "env-5qz2q".
 
 
 Create a new API key/secret pair for user
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Run the following command to create a user API key/secret pair for your |ak|
+#. Run the following command to create a user API key and secret for your |ak|
    cluster ``lkc-x6m01``:
 
    .. code-block:: bash
@@ -205,7 +206,7 @@ Create a new API key/secret pair for user
 
    The value of the API key, in this case ``QX7X4VA4DFJTTOIA``, and API secret,
    in this case
-   ``fjcDDyr0Nm84zZr77ku/AQqCKQOOmb35Ql68HQnb60VuU+xLKiu/n2UNQ0WYXp/D`` may
+   ``fjcDDyr0Nm84zZr77ku/AQqCKQOOmb35Ql68HQnb60VuU+xLKiu/n2UNQ0WYXp/D`` will
    differ in your output.
 
 #. Specify the API key ``QX7X4VA4DFJTTOIA`` for the |ak| cluster ``lkc-x6m01``:
@@ -246,7 +247,7 @@ Produce and consume records with Confluent CLI
       4
       5
 
-#. Type ``<CTRL-C>`` when you are finished.
+#. Type ``CTRL-C`` when you are finished.
 
 #. Run the following command to consume messages from topic ``demo-topic-1``.
    The flag ``-b`` allows the consumer to read from the beginning of the topic.
@@ -276,27 +277,27 @@ Create a new service account with an API key/secret pair
 
    .. code-block:: bash
 
-      confluent iam service-account create demo-app-3288 --description demo-app-3288 -o json
+      confluent iam service-account create demo-app-1 --description "Service account for demo application" -o json
 
 #. Verify your output resembles:
 
    .. code-block:: text
 
       {
-         "id": 104349,
-         "name": "demo-app-3288",
-         "description": "demo-app-3288"
+         "id": "sa-123456",
+         "name": "demo-app-1",
+         "description": "Service account for demo application"
       }
 
-   The value of the service account ID, in this case ``104349``, may differ in
+   The value of the service account ID, in this case ``sa-123456``, will differ in
    your output.
 
-#. Create an API key and secret for the service account ``104349`` for the |ak|
+#. Create an API key and secret for the service account ``sa-123456`` for the |ak|
    cluster ``lkc-x6m01`` by running the following command:
 
    .. code-block:: bash
 
-      confluent api-key create --service-account 104349 --resource lkc-x6m01 -o json
+      confluent api-key create --service-account sa-123456 --resource lkc-x6m01 -o json
 
 #. Verify your output resembles:
 
@@ -309,7 +310,7 @@ Create a new service account with an API key/secret pair
 
    The value of the service account's API key, in this case
    ``ESN5FSNDHOFFSUEV``, and API secret, in this case
-   ``nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB``, may
+   ``nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB``, will
    differ in your output.
 
 #. Create a local configuration file ``/tmp/client.config`` with |ccloud|
@@ -337,14 +338,14 @@ Run a Java producer without ACLs
 
    .. code-block:: bash
 
-      confluent kafka acl list --service-account 104349
+      confluent kafka acl list --service-account sa-123456
 
    Your output should resemble:
 
    .. code-block:: text
 
-        ServiceAccountId | Permission | Operation | Resource | Name | Type
-      +------------------+------------+-----------+----------+------+------+
+        Principal | Permission | Operation | Resource Type | Resource Name | Pattern Type
+      ------------+------------+-----------+---------------+---------------+---------------
 
 #. Compile the Java project at :devx-examples:`clients/cloud/java|clients/cloud/java/`
 
@@ -375,35 +376,35 @@ Run a Java producer with ACLs
 
    .. code-block:: bash
 
-      confluent kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic-1
-      confluent kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic-1
+      confluent kafka acl create --allow --service-account sa-123456 --operation CREATE --topic demo-topic-1
+      confluent kafka acl create --allow --service-account sa-123456 --operation WRITE --topic demo-topic-1
 
 #. Verify your output resembles:
 
    .. code-block:: text
 
-         ServiceAccountId | Permission | Operation | Resource |     Name     |  Type
-       +------------------+------------+-----------+----------+--------------+---------+
-         User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic-1 | LITERAL
+           Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+       -----------------+------------+-----------+---------------+---------------+---------------
+         User:sa-123456 | ALLOW      | CREATE    | TOPIC         | demo-topic-1  | LITERAL
 
-         ServiceAccountId | Permission | Operation | Resource |     Name     |  Type
-       +------------------+------------+-----------+----------+--------------+---------+
-         User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic-1 | LITERAL
+           Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+       -----------------+------------+-----------+---------------+---------------+---------------
+         User:sa-123456 | ALLOW      | WRITE     | TOPIC         | demo-topic-1  | LITERAL
 
 #. Run the following command and verify the ACLs were configured:
 
    .. code-block:: bash
 
-      confluent kafka acl list --service-account 104349
+      confluent kafka acl list --service-account sa-123456
 
    Your output should resemble below. Observe that the ACL Type is ``LITERAL``.
 
    .. code-block:: text
 
-         ServiceAccountId | Permission | Operation | Resource |     Name     |  Type
-       +------------------+------------+-----------+----------+--------------+---------+
-         User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic-1 | LITERAL
-         User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic-1 | LITERAL
+           Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+       -----------------+------------+-----------+---------------+---------------+---------------
+         User:sa-123456 | ALLOW      | CREATE    | TOPIC         | demo-topic-1  | LITERAL
+         User:sa-123456 | ALLOW      | WRITE     | TOPIC         | demo-topic-1  | LITERAL
 
 #. Run the Java producer to ``demo-topic-1`` after configuring the ACLs
    (expected to pass):
@@ -443,8 +444,8 @@ Run a Java producer with ACLs
 
    .. code-block:: bash
 
-      confluent kafka acl delete --allow --service-account 104349 --operation CREATE --topic demo-topic-1
-      confluent kafka acl delete --allow --service-account 104349 --operation WRITE --topic demo-topic-1
+      confluent kafka acl delete --allow --service-account sa-123456 --operation CREATE --topic demo-topic-1
+      confluent kafka acl delete --allow --service-account sa-123456 --operation WRITE --topic demo-topic-1
 
    You should see two ``Deleted ACLs.`` messages.
 
@@ -465,35 +466,35 @@ Run a Java producer with a prefixed ACL
 
    .. code-block:: bash
 
-      confluent kafka acl create --allow --service-account 104349 --operation CREATE --topic demo-topic --prefix
-      confluent kafka acl create --allow --service-account 104349 --operation WRITE --topic demo-topic --prefix
+      confluent kafka acl create --allow --service-account sa-123456 --operation CREATE --topic demo-topic --prefix
+      confluent kafka acl create --allow --service-account sa-123456 --operation WRITE --topic demo-topic --prefix
 
 #. Verify your output resembles:
 
    .. code-block:: text
 
-      ServiceAccountId | Permission | Operation | Resource |    Name    |   Type
-      +------------------+------------+-----------+----------+------------+----------+
-      User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic | PREFIXED
+          Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+      -----------------+------------+-----------+---------------+---------------+---------------
+        User:sa-123456 | ALLOW      | CREATE    | TOPIC         | demo-topic    | PREFIXED
 
-      ServiceAccountId | Permission | Operation | Resource |    Name    |   Type
-      +------------------+------------+-----------+----------+------------+----------+
-      User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic | PREFIXED
+          Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+      -----------------+------------+-----------+---------------+---------------+---------------
+        User:sa-123456 | ALLOW      | WRITE     | TOPIC         | demo-topic    | PREFIXED
 
 #. Verify the ACLs were configured by running the following command:
 
    .. code-block:: bash
 
-      confluent kafka acl list --service-account 104349
+      confluent kafka acl list --service-account sa-123456
 
    Your output should resemble below. Observe that the ACL Type is ``PREFIXED``.
 
    .. code-block:: text
 
-         ServiceAccountId | Permission | Operation | Resource |    Name    |   Type
-       +------------------+------------+-----------+----------+------------+----------+
-         User:104349      | ALLOW      | WRITE     | TOPIC    | demo-topic | PREFIXED
-         User:104349      | ALLOW      | CREATE    | TOPIC    | demo-topic | PREFIXED
+           Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+       -----------------+------------+-----------+---------------+---------------+---------------
+         User:sa-123456 | ALLOW      | WRITE     | TOPIC         | demo-topic    | PREFIXED
+         User:sa-123456 | ALLOW      | CREATE    | TOPIC         | demo-topic    | PREFIXED
 
 #. Run the Java producer to ``demo-topic-2``, which should match the newly
    created prefixed ACLs.
@@ -533,8 +534,8 @@ Run a Java producer with a prefixed ACL
 
    .. code-block:: bash
 
-      confluent kafka acl delete --allow --service-account 104349 --operation CREATE --topic demo-topic --prefix
-      confluent kafka acl delete --allow --service-account 104349 --operation WRITE --topic demo-topic --prefix
+      confluent kafka acl delete --allow --service-account sa-123456 --operation CREATE --topic demo-topic --prefix
+      confluent kafka acl delete --allow --service-account sa-123456 --operation WRITE --topic demo-topic --prefix
 
    You should see two ``Deleted ACLs.`` messages.
 
@@ -550,34 +551,34 @@ Run a fully managed Confluent Cloud connector
 
    You should see a ``Created topic "demo-topic-3"`` message.
 
-#. Run the following command to allow service account ID ``104349`` to write to
+#. Run the following command to allow service account ID ``sa-123456`` to write to
    any topic:
 
    .. code-block:: bash
 
-      confluent kafka acl create --allow --service-account 104349 --operation WRITE --topic '*'
+      confluent kafka acl create --allow --service-account sa-123456 --operation WRITE --topic '*'
 
 #. Verify your output resembles:
 
    .. code-block:: text
 
-         ServiceAccountId | Permission | Operation | Resource | Name |  Type
-       +------------------+------------+-----------+----------+------+---------+
-         User:104349      | ALLOW      | WRITE     | TOPIC    | *    | LITERAL
+           Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+       -----------------+------------+-----------+---------------+---------------+---------------
+         User:sa-123456 | ALLOW      | WRITE     | TOPIC         | *             | LITERAL
 
 #. Verify the ACLs were configured by running the following command:
 
    .. code-block:: bash
 
-      confluent kafka acl list --service-account 104349
+      confluent kafka acl list --service-account sa-123456
 
    Your output should resemble:
 
    .. code-block:: text
 
-         ServiceAccountId | Permission | Operation | Resource |  Name   |  Type
-       +------------------+------------+-----------+----------+---------+---------+
-         User:104349      | ALLOW      | WRITE     | TOPIC    | *       | LITERAL
+           Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+       -----------------+------------+-----------+---------------+---------------+---------------
+         User:sa-123456 | ALLOW      | WRITE     | TOPIC         | *             | LITERAL
 
 #. Create a local configuration file
    :devx-examples:`datagen_ccloud_pageviews.json|ccloud/beginner-cloud/datagen_ccloud_pageviews.json`
@@ -597,7 +598,7 @@ Run a fully managed Confluent Cloud connector
 
    .. code-block:: text
 
-      Created connector datagen_ccloud_pageviews lcc-zno83
+      Created connector "lcc-qrjxjd" (datagen_ccloud_pageviews).
 
 #. The connector may take up to 5 minutes to provision. Run the following command to check the connector status
 
@@ -609,9 +610,9 @@ Run a fully managed Confluent Cloud connector
 
    .. code-block:: text
 
-           ID     |           Name            |    Status    |  Type  | Trace
-      +-----------+---------------------------+--------------+--------+-------+
-        lcc-zno83 | datagen_ccloud_pageviews  | PROVISIONING | source |
+            ID     |           Name            |    Status    |  Type  | Trace
+      -------------+---------------------------+--------------+--------+--------
+         lcc-zno83 | datagen_ccloud_pageviews  | PROVISIONING | source |
 
    When the ``Status`` is ``RUNNING`` you may move on to the next step.
 
@@ -623,41 +624,41 @@ Run a Java consumer with a Wildcard ACL
 
    .. code-block:: bash
 
-      confluent kafka acl create --allow --service-account 104349 --operation READ --consumer-group demo-beginner-cloud-1
-      confluent kafka acl create --allow --service-account 104349 --operation READ --topic '*'
+      confluent kafka acl create --allow --service-account sa-123456 --operation READ --consumer-group demo-beginner-cloud-1
+      confluent kafka acl create --allow --service-account sa-123456 --operation READ --topic '*'
 
 #. Verify your output resembles:
 
    .. code-block:: text
 
-        ServiceAccountId | Permission | Operation | Resource |         Name          |  Type
-      +------------------+------------+-----------+----------+-----------------------+---------+
-        User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
+          Principal    | Permission | Operation | Resource Type |     Resource Name     | Pattern Type
+      -----------------+------------+-----------+---------------+-----------------------+---------------
+        User:sa-123456 | ALLOW      | READ      | GROUP         | demo-beginner-cloud-1 | LITERAL
 
-        ServiceAccountId | Permission | Operation | Resource | Name |  Type
-      +------------------+------------+-----------+----------+------+---------+
-        User:104349      | ALLOW      | READ      | TOPIC    | *    | LITERAL
+          Principal    | Permission | Operation | Resource Type | Resource Name | Pattern Type
+      -----------------+------------+-----------+---------------+---------------+---------------
+        User:sa-123456 | ALLOW      | READ      | TOPIC         | *             | LITERAL
 
 
 #. Verify the ACLs were configured by running the following command:
 
    .. code-block:: bash
 
-      confluent kafka acl list --service-account 104349
+      confluent kafka acl list --service-account sa-123456
 
    Your output should resemble:
 
    .. code-block:: text
 
-         ServiceAccountId | Permission | Operation | Resource |         Name          |  Type
-       +------------------+------------+-----------+----------+-----------------------+---------+
-         User:104349      | ALLOW      | WRITE     | TOPIC    | *                     | LITERAL
-         User:104349      | ALLOW      | READ      | TOPIC    | *                     | LITERAL
-         User:104349      | ALLOW      | READ      | GROUP    | demo-beginner-cloud-1 | LITERAL
+           Principal    | Permission | Operation | Resource Type |     Resource Name     | Pattern Type
+       -----------------+------------+-----------+---------------+-----------------------+---------------
+         User:sa-123456 | ALLOW      | WRITE     | TOPIC         | *                     | LITERAL
+         User:sa-123456 | ALLOW      | READ      | TOPIC         | *                     | LITERAL
+         User:sa-123456 | ALLOW      | READ      | GROUP         | demo-beginner-cloud-1 | LITERAL
 
 
 #. Run the Java consumer from ``demo-topic-3`` which is populated by
-   the datagen_ccloud_pageviews connector, and wait 15 seconds for it to complete.
+   the ``datagen_ccloud_pageviews`` connector, and wait 15 seconds for it to complete.
 
    .. code-block:: bash
 
@@ -679,33 +680,11 @@ Run a Java consumer with a Wildcard ACL
 
    .. code-block:: bash
 
-      confluent kafka acl delete --allow --service-account 104349 --operation READ --consumer-group demo-beginner-cloud-1
-      confluent kafka acl delete --allow --service-account 104349 --operation READ --topic '*'
+      confluent kafka acl delete --allow --service-account sa-123456 --operation WRITE --topic '*'
+      confluent kafka acl delete --allow --service-account sa-123456 --operation READ --consumer-group demo-beginner-cloud-1
+      confluent kafka acl delete --allow --service-account sa-123456 --operation READ --topic '*'
 
-   You should see two ``Deleted ACLs.`` messages.
-
-#. Stop Docker:
-
-   .. code-block:: bash
-
-        docker-compose down
-
-#. Verify you see the following output:
-
-   .. code-block:: text
-
-      Stopping connect-cloud ... done
-      Removing connect-cloud ... done
-      Removing network beginner-cloud_default
-
-#. Delete the ACLs:
-
-   .. code-block:: bash
-
-      confluent kafka acl delete --allow --service-account 104349 --operation WRITE --topic '*'
-
-   You should see a ``Deleted ACLs.`` message after running each of the previous
-   commands.
+   You should see ``Deleted ACLs.`` messages.
 
 
 Clean up Confluent Cloud resources
@@ -723,9 +702,9 @@ Clean up Confluent Cloud resources
 
       .. code-block:: text
 
-              ID     |           Name           | Status  |  Type  | Trace
-         +-----------+--------------------------+---------+--------+-------+
-           lcc-zno83 | datagen_ccloud_pageviews | RUNNING | source |
+               ID     |           Name            | Status  |  Type  | Trace
+         -------------+---------------------------+---------+--------+--------
+            lcc-zno83 | datagen_ccloud_pageviews  | RUNNING | source |
 
 
    b. Delete the connector, referencing the connector ID from the previous step:
@@ -740,7 +719,7 @@ Clean up Confluent Cloud resources
 
    .. code-block:: bash
 
-      confluent iam service-account delete 104349
+      confluent iam service-account delete sa-123456
 
 #. Complete the following steps to delete all the |ak| topics:
 
@@ -768,12 +747,13 @@ Clean up Confluent Cloud resources
 
       You should see: ``Deleted topic "demo-topic-3"``.
 
-#. Run the following commands to delete the API keys:
+#. Run the following command to delete the user API key:
 
    .. code-block:: bash
 
-      confluent api-key delete ESN5FSNDHOFFSUEV
       confluent api-key delete QX7X4VA4DFJTTOIA
+
+   Note that the service account API key was deleted when you deleted the service account.
 
 #. Delete the |ak| cluster:
 
