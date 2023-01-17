@@ -34,7 +34,7 @@ Before diving into the different ways to configure |crep|, first review some bas
 This will help you understand the logic for configuring |crep| because the way that the |kconnect-long| cluster is configured dictates how |crep| should be configured.
 
 |crep| is a |ak| connector and runs on |kconnect| workers.
-Even the :ref:`Replicator executable <replicator_executable>` has a bundled |kconnect| worker inside.
+Even the :platform:`Replicator executable|multi-dc-deployments/replicator/replicator-run.html#replicator_executable` has a bundled |kconnect| worker inside.
 
 |crep| has an embedded consumer that reads data from the origin cluster, and the |kconnect| worker has an embedded producer that copies that data to the destination cluster, which in this case is |ccloud|.
 To configure the proper connection information for |crep| to interact with the origin cluster, use the prefix ``src.``.
