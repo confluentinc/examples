@@ -2,4 +2,4 @@
 |crep| should be run with a |ccloud| service account, not super user credentials, so use |ccloud| CLI to configure appropriate ACLs for the service account id corresponding to |crep|.
 Since the origin cluster and destination cluster in this example are both |ccloud|, configure appropriate ACLs for the service account ids corresponding to |crep| in both |ccloud| clusters.
 
-For details on how to configure these ACLs for |crep|, see :ref:`replicator_security_overview`.
+For details on how to configure these ACLs for |crep|, see :ref:`:platform:`Security and ACL Configurations|multi-dc-deployments/replicator/index.html#replicator_security_overview``.
