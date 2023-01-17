@@ -16,7 +16,7 @@ The utility uses the Confluent CLI under the hood to dynamically do the followin
 -  Create a new Kafka cluster and associated credentials
 -  Enable Schema Registry and associated credentials
 -  (Optional) Create a new ksqlDB app and associated credentials
--  Create ACLs with wildcard for the service account
+-  Create role binding for the service account
 
 .. figure:: images/ccloud-stack-resources.png 
 
@@ -43,12 +43,14 @@ By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you ha
 
 .. code-block:: text
 
-   confluent iam service-account create $SERVICE_NAME --description $SERVICE_NAME -o json
+   confluent iam service-account create $SERVICE_NAME --description "SA for $EXAMPLE run by $CCLOUD_EMAIL"  -o json
 
    confluent environment create $ENVIRONMENT_NAME -o json
 
    confluent kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION
    confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for kafka
+
+   confluent iam rbac role-binding create --principal User:$SERVICE_ACCOUNT_ID --role EnvironmentAdmin --environment $ENVIRONMENT -o json
 
    confluent schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json
    confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for schema-registry
@@ -56,8 +58,6 @@ By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you ha
    # By default, ccloud-stack does not enable Confluent Cloud ksqlDB, but if you explicitly enable it:
    confluent ksql cluster create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" --csu 1 -o json "$KSQLDB_NAME"
    confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB REST API
-
-   confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation <....>    // permissive ACLs for all services
 
 |ccloud| Promo Code
 -------------------
@@ -74,7 +74,7 @@ Prerequisites
 - ``jq`` tool
 
 Note that ``ccloud-stack`` has been validated on macOS 10.15.3 with bash version 3.2.57.
-If you encounter issues on any other operating systems or versions, please open a GitHub issue at `confluentinc/examples <https://github.com/confluentinc/examples>`__.
+If you encounter issues on any other operating systems or versions, please open a GitHub issue at `confluentinc/examples <https://github.com/confluentinc/examples/issues>`__.
 
 
 .. _ccloud-stack-usage:
@@ -94,7 +94,7 @@ Setup
 
       cd ccloud/ccloud-stack/
 
-#. Log in to |ccloud| with the command ``confluent login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+#. Log in to |ccloud| with the command ``confluent login``, and use your |ccloud| username and password. The ``--save`` argument saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``.netrc`` file.
 
    .. code:: shell
 
@@ -104,7 +104,7 @@ Setup
 Create a ccloud-stack
 ---------------------
 
-#. By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`. For more options when configuring your ``ccloud-stack``, see :ref:`ccloud-stack-options`.
+#. By default, the ``ccloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. If this is the target provider and region, create the stack by calling the bash script :devx-examples:`ccloud_stack_create.sh|ccloud/ccloud-stack/ccloud_stack_create.sh`. For more options when configuring your ``ccloud-stack``, see :ref:`ccloud-stack-options`.
 
    .. code:: bash
 
@@ -117,85 +117,27 @@ Create a ccloud-stack
       Do you still want to run this script? [y/n] y
       Do you also want to create a Confluent Cloud ksqlDB app (hourly charges may apply)? [y/n] n
 
-#. ``ccloud-stack`` configures permissive ACLs with wildcards, which is useful for development and learning environments. In production, configure much stricter ACLs.
+#. ``ccloud-stack`` assigns the `EnvironmentAdmin <https://docs.confluent.io/cloud/current/access-management/access-control/cloud-rbac.html#environmentadmin>`__ role to the service account it creates. This permissive role is useful for development and learning environments. In production, configure a stricter role and potentially use ACLs with RBAC as documented `here <https://docs.confluent.io/cloud/current/access-management/access-control/cloud-rbac.html#use-acls-with-rbac>`__.
 
-   If you ran without ksqlDB:
-
-   .. code-block:: text
-
-        ServiceAccountId | Permission |    Operation     |     Resource     |     Name      |  Type
-      +------------------+------------+------------------+------------------+---------------+---------+
-        User:186607      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | *             | LITERAL
-        User:186607      | ALLOW      | WRITE            | TRANSACTIONAL_ID | *             | LITERAL
-        User:186607      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster | LITERAL
-        User:186607      | ALLOW      | READ             | GROUP            | *             | LITERAL
-        User:186607      | ALLOW      | WRITE            | GROUP            | *             | LITERAL
-        User:186607      | ALLOW      | CREATE           | GROUP            | *             | LITERAL
-        User:186607      | ALLOW      | DESCRIBE         | TOPIC            | *             | LITERAL
-        User:186607      | ALLOW      | DELETE           | TOPIC            | *             | LITERAL
-        User:186607      | ALLOW      | CREATE           | TOPIC            | *             | LITERAL
-        User:186607      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *             | LITERAL
-        User:186607      | ALLOW      | WRITE            | TOPIC            | *             | LITERAL
-        User:186607      | ALLOW      | READ             | TOPIC            | *             | LITERAL
-
-   If you ran with ksqlDB:
-
-   .. code-block:: text
-
-        ServiceAccountId | Permission |    Operation     |     Resource     |             Name             |   Type
-      +------------------+------------+------------------+------------------+------------------------------+----------+
-        User:186588      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | *                            | LITERAL
-        User:186588      | ALLOW      | DESCRIBE         | GROUP            | *                            | LITERAL
-        User:186588      | ALLOW      | DELETE           | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | READ             | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | ALTER            | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE         | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | ALTER_CONFIGS    | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | CREATE           | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | WRITE            | TOPIC            | pksqlc-o3g5o                 | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE         | TOPIC            | *                            | LITERAL
-        User:186588      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | *                            | LITERAL
-        User:186588      | ALLOW      | DESCRIBE         | TRANSACTIONAL_ID | pksqlc-o3g5o                 | LITERAL
-        User:186588      | ALLOW      | WRITE            | TRANSACTIONAL_ID | pksqlc-o3g5o                 | LITERAL
-        User:186588      | ALLOW      | ALTER            | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | WRITE            | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | READ             | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | DELETE           | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE         | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | ALTER_CONFIGS    | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | CREATE           | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE_CONFIGS | TOPIC            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | IDEMPOTENT_WRITE | CLUSTER          | kafka-cluster                | LITERAL
-        User:186588      | ALLOW      | DESCRIBE         | CLUSTER          | kafka-cluster                | LITERAL
-        User:186588      | ALLOW      | DESCRIBE_CONFIGS | CLUSTER          | kafka-cluster                | LITERAL
-        User:186588      | ALLOW      | WRITE            | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE         | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | DELETE           | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | READ             | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | CREATE           | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | ALTER            | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | ALTER_CONFIGS    | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-        User:186588      | ALLOW      | DESCRIBE_CONFIGS | GROUP            | _confluent-ksql-pksqlc-o3g5o | PREFIXED
-
-#. In addition to creating all the resources in |ccloud| with associated service account and ACLs, running ``ccloud-stack`` also generates a local configuration file with all the |ccloud| connection information, which is useful for other demos/automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
+#. In addition to creating all of the resources in |ccloud| with an associated service account, running ``ccloud-stack`` also generates a local configuration file with |ccloud| connection information, which is useful for creating demos or additional automation. View this file at ``stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config``. It resembles:
 
    .. code-block:: text
 
       # ------------------------------
-      # ENVIRONMENT ID: <ENVIRONMENT ID>
-      # SERVICE ACCOUNT ID: <SERVICE ACCOUNT ID>
-      # KAFKA CLUSTER ID: <KAFKA CLUSTER ID>
-      # SCHEMA REGISTRY CLUSTER ID: <SCHEMA REGISTRY CLUSTER ID>
-      # KSQLDB APP ID: <KSQLDB APP ID>
+      # ENVIRONMENT_ID: <ENVIRONMENT ID>
+      # SERVICE_ACCOUNT_ID: <SERVICE ACCOUNT ID>
+      # KAFKA_CLUSTER_ID: <KAFKA CLUSTER ID>
+      # SCHEMA_REGISTRY_CLUSTER_ID: <SCHEMA REGISTRY CLUSTER ID>
+      # KSQLDB_APP_ID: <KSQLDB APP ID>
       # ------------------------------
-      security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
+      security.protocol=SASL_SSL
       bootstrap.servers=<BROKER ENDPOINT>
       sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
       basic.auth.credentials.source=USER_INFO
       basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
+      replication.factor=3
       ksql.endpoint=<KSQLDB ENDPOINT>
       ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 
@@ -205,18 +147,13 @@ Create a ccloud-stack
 Destroy a ccloud-stack
 ----------------------
 
-#. To destroy a ``cloud-stack`` created in the previous step, call the bash script :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh` and pass in the client properties file auto-generated in the step above. By default, this deletes all resources, including the |ccloud| environment specified by the service account ID in the configuration file.
+#. To destroy a ``ccloud-stack`` created in the previous step, call the bash script :devx-examples:`ccloud_stack_destroy.sh|ccloud/ccloud-stack/ccloud_stack_destroy.sh` and pass in the client properties file auto-generated in the step above. By default, this deletes all resources, including the |ccloud| environment specified by the service account ID in the configuration file.
 
    .. code:: bash
 
       ./ccloud_stack_destroy.sh stack-configs/java-service-account-<SERVICE_ACCOUNT_ID>.config
 
 .. include:: includes/ccloud-examples-terminate.rst
-
-Details
--------
-
-See section :ref:`ccloud-stack-destroy` for more details.
 
 
 .. _ccloud-stack-options:
@@ -228,7 +165,7 @@ Advanced Options
 Select Cloud Provider and Region
 --------------------------------
 
-By default, the ``cloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. To create resources in another cloud provider or region other than the default, complete the following steps:
+By default, the ``ccloud-stack`` utility creates resources in the cloud provider ``aws`` in region ``us-west-2``. To create resources in another cloud provider or region other than the default, complete the following steps:
 
 #. View the available cloud providers and regions using the Confluent CLI:
 
@@ -242,12 +179,12 @@ By default, the ``cloud-stack`` utility creates resources in the cloud provider 
 
       CLUSTER_CLOUD=aws CLUSTER_REGION=us-west-2 ./ccloud_stack_create.sh
 
-Re-use Existing Environment
----------------------------
+Reuse Existing Environment
+--------------------------
 
 By default, a new ``ccloud-stack`` creates a new environment.
 This means that, by default, ``./ccloud_stack_create.sh`` creates a new environment and ``./ccloud_stack_destroy.sh`` deletes the environment specified in the configuration file.
-However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/current/client-apps/resource-limits.html>`__, it may be desirable to work within an existing environment.
+However, due to |ccloud| `environment limits per organization <https://docs.confluent.io/cloud/current/quotas/index.html#organization>`__, it may be desirable to work within an existing environment.
 
 When you create a new stack, to reuse an existing environment, set the parameter ``ENVIRONMENT`` with an existing environment ID, as shown in the example:
 
@@ -300,13 +237,13 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
 
 #. Run the bash function directly from the command line.
 
-   To create the ``cloud-stack`` without |ccloud| ksqlDB:
+   To create the ``ccloud-stack`` without |ccloud| ksqlDB:
 
    .. code:: bash
 
       ccloud::create_ccloud_stack
 
-   To create the ``cloud-stack`` with |ccloud| ksqlDB:
+   To create the ``ccloud-stack`` with |ccloud| ksqlDB:
 
    .. code:: bash
 
