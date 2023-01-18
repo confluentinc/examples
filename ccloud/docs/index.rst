@@ -35,7 +35,7 @@ The :devx-examples:`Confluent Cloud Quickstart|cp-quickstart/` is an automated v
 ccloud-stack Utility
 --------------------
 
-The :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` creates a stack of fully managed services in |ccloud|.
+The :cloud:`ccloud-stack utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the Confluent CLI to dynamically do the following in |ccloud|:
@@ -125,7 +125,7 @@ Build Your Own Cloud Demo
 ccloud-stack Utility
 --------------------
 
-The :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` creates a stack of fully managed services in |ccloud|.
+The :cloud:`ccloud-stack utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html` creates a stack of fully managed services in |ccloud|.
 Executed with a single command, it is a quick way to create fully managed components in |ccloud|, which you can then use for learning and building other demos.
 Do not use this in a production environment.
 The script uses the Confluent CLI to dynamically do the following in |ccloud|:
