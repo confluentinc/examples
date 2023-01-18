@@ -266,11 +266,11 @@ Additional Resources
     :maxdepth: 1
     :hidden:
 
-    ../../ccloud/docs/ccloud-stack
-    ../../ccloud/docs/beginner-cloud
-    ../../ccloud/docs/index
+    ccloud-stack
+    beginner-cloud
+    index
     ../../cloud-etl/docs/index
     ../../microservices-orders/docs/index
     ../../kubernetes/replicator-gke-cc/docs/index
-    ../../ccloud/docs/replicator-to-cloud-configuration-types
+    replicator-to-cloud-configuration-types
 
