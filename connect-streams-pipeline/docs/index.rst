@@ -28,7 +28,7 @@ It showcases different ways to produce data to |ak-tm| topics, with and without 
 | JDBC source connector with Avro         | JDBC                           | `Long`   | `Avro`         | ksqlDB            |
 +-----------------------------------------+--------------------------------+----------+----------------+-------------------+
 
-Detailed walk-thru of this example is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blogpost `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
+Detailed walk-thru of this example is available in the whitepaper `Kafka Serialization and Deserialization (SerDes) Examples <https://www.confluent.io/resources/kafka-streams-serialization-deserialization-code-examples>`__ and the blog post `Building a Real-Time Streaming ETL Pipeline in 20 Minutes <https://www.confluent.io/blog/building-real-time-streaming-etl-pipeline-20-minutes/>`__
 
 Description of Data
 -------------------
