@@ -1,7 +1,7 @@
 .. _client-examples-groovy:
 
-Groovy: Code Example for |ak-tm|
-================================
+Groovy: Code Example for Apache Kafka
+=====================================
 
 In this tutorial, you will run a Groovy client application that produces
 messages to and consumes messages from an |ak-tm| cluster.

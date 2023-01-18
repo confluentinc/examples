@@ -34,7 +34,7 @@ Before diving into the different ways to configure |crep|, first review some bas
 This will help you understand the logic for configuring |crep| because the way that the |kconnect-long| cluster is configured dictates how |crep| should be configured.
 
 |crep| is a |ak| connector and runs on |kconnect| workers.
-Even the :ref:`Replicator executable <replicator_executable>` has a bundled |kconnect| worker inside.
+Even the :platform:`Replicator executable|multi-dc-deployments/replicator/replicator-run.html#replicator_executable` has a bundled |kconnect| worker inside.
 
 |crep| has an embedded consumer that reads data from the origin cluster, and the |kconnect| worker has an embedded producer that copies that data to the destination cluster, which in this case is |ccloud|.
 To configure the proper connection information for |crep| to interact with the origin cluster, use the prefix ``src.``.
@@ -227,7 +227,7 @@ Additional Resources
 - For additional considerations on running |crep| to |ccloud|, refer to `Migrate Topics on Confluent Cloud Clusters <https://docs.confluent.io/cloud/current/clusters/migrate-topics-on-cloud-clusters.html>`__.
 - To run a |ccloud| demo that showcases a hybrid |ak| cluster: one cluster is a
   self-managed |ak| cluster running locally, the other is a |ccloud| cluster, see
-  :ref:`cp-demo`.
+  :platform:`Scripted Confluent Platform Demo|tutorials/cp-demo/docs/overview.html`.
 - To find additional |ccloud| demos, see :ref:`Confluent Cloud Demos Overview<ccloud-demos-overview>`.
 - For a practical guide to configuring, monitoring, and optimizing your |ak|
   client applications, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__.
