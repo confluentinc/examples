@@ -1,7 +1,7 @@
 .. _client-examples-scala:
 
-Scala: Code Example for |ak-tm|
-===============================
+Scala: Code Example for Apache Kafka
+====================================
 
 In this tutorial, you will run a Scala client application that produces messages
 to and consumes messages from an |ak-tm| cluster.
