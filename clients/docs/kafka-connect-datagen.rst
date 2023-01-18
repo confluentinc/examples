@@ -1,7 +1,7 @@
 .. _client-examples-kafka-connect-datagen:
 
-Kafka Connect Datagen: Example for |ak-tm|
-==========================================
+Kafka Connect Datagen: Code Example for Apache Kafka
+====================================================
 
 In this tutorial, you will run a |kconnect-long| Datagen source connector using
 `Kafka Connect Datagen
