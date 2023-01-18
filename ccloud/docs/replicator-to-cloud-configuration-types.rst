@@ -233,4 +233,4 @@ Additional Resources
   client applications, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__.
 - To run a |crep| tutorial with an active-active multi-datacenter design, with
   two instances of |crep-full| that copy data bidirectionally between the
-  datacenters, see :ref:`replicator`.
+  datacenters, see :platform:`Replicator Demo on Docker|multi-dc-deployments/replicator/replicator-docker-tutorial.html#replicator`.
