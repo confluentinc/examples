@@ -227,11 +227,9 @@ Ensure you've followed the appropriate prerequisites section above prior to star
 
 #. Start the end-to-end example in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to your home ``.netrc`` file. Then run the full solution using the provided script.
+   .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
 
-     .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
-
-     .. sourcecode:: bash
+   .. sourcecode:: bash
 
         ccloud login --save
         ./start-ccloud.sh
