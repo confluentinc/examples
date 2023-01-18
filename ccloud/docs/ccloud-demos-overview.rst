@@ -262,14 +262,12 @@ Additional Resources
    origin Kafka cluster. See :ref:`replicator-to-cloud-configurations` for more
    information.
 
-
 .. toctree::
     :maxdepth: 1
     :hidden:
 
     ../../ccloud/docs/ccloud-stack
     ../../ccloud/docs/beginner-cloud
-    ../../clients/docs/clients-all-examples
     ../../ccloud/docs/index
     ../../cloud-etl/docs/index
     ../../microservices-orders/docs/index
