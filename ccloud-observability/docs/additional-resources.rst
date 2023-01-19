@@ -3,7 +3,7 @@
 Additional Resources
 --------------------
 
--  See other :ref:`ccloud-demos-overview`.
+-  See other :cloud:`Confluent Cloud Examples|get-started/cloud-demos.html`.
 
 -  See advanced options for working with `ccloud-stack <https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html#advanced-options>`__.
 
