@@ -326,4 +326,4 @@ Additional Resources
 - For a practical guide to configuring, monitoring, and optimizing your Kafka
   client applications when using |ccloud|, see `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__.
 - Read this blog post about `using Confluent Cloud to manage data pipelines that use both on-premise and cloud deployments <https://www.confluent.io/blog/multi-cloud-integration-across-distributed-systems-with-kafka-connect/>`__.
-- For sample usage of ``ccloud-stack``, see :ref:`ccloud-demos-overview` .
+- For sample usage of ``ccloud-stack``, see :cloud:`Confluent Cloud Tutorials|get-started/cloud-demos.html`.
