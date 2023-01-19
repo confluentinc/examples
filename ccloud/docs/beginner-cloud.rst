@@ -840,4 +840,4 @@ Additional Resources
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
 
--  See other :ref:`ccloud-demos-overview`.
+-  See other :cloud:`Confluent Cloud Tutorials|get-started/cloud-demos.html`.

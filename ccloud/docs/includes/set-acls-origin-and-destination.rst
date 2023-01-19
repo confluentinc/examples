@@ -1,7 +1,7 @@
 |crep| must have authorization to read |ak| data from the origin cluster and write |ak| data in the destination |ccloud| cluster.
 |crep| should be run with a |ccloud| service account, not super user credentials, so use |ccloud| CLI to configure appropriate ACLs for the service account id corresponding to |crep|.
 Since the origin cluster and destination cluster in this example are both |ccloud|, configure appropriate ACLs for the service account ids corresponding to |crep| in both |ccloud| clusters.
-For more details on |crep| ACLs, see :ref:`replicator_security_overview`.
+For more details on |crep| ACLs, see :platform:`Security and ACL Configurations|multi-dc-deployments/replicator/index.html#replicator_security_overview`.
 
 In the origin |ccloud|:
 
