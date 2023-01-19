@@ -576,4 +576,4 @@ Details
 Additional Resources
 ====================
 
--  To find additional |ccloud| examples, see :ref:`Confluent Cloud Examples Overview<ccloud-demos-overview>`.
+-  To find additional |ccloud| examples, see :cloud:`Confluent Cloud Tutorials|get-started/cloud-demos.html`.
