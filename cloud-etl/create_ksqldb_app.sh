@@ -33,6 +33,12 @@ SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
 confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
 confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
 
+SQL_FILE=statements.sql
+
+if [[ "${DATA_SOURCE}" == "rds" ]]; then
+  SQL_FILE=rds-statements.sql
+fi
+
 # Submit KSQL queries
 echo -e "\nSubmit KSQL queries\n"
 properties='"ksql.streams.auto.offset.reset":"earliest","ksql.streams.cache.max.bytes.buffering":"0"'
@@ -54,7 +60,7 @@ EOF
     echo -e "\nERROR: KSQL command '$ksqlCmd' did not include \"SUCCESS\" in the response.  Please troubleshoot."
     exit 1
   fi
-done <statements.sql
+done <$SQL_FILE
 echo -e "\nSleeping 20 seconds after submitting KSQL queries\n"
 sleep 20
 

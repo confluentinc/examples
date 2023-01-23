@@ -30,8 +30,8 @@ if [[ "${DATA_SOURCE}" == "kinesis" ]]; then
 elif [[ "${DATA_SOURCE}" == "rds" ]]; then
 
   echo -e "\nData from PostgreSQL database $DB_INSTANCE_IDENTIFIER in AWS RDS with limit 10:"
-  export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
-  export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
+  export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
+  export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
   PGPASSWORD=pg12345678 psql \
      --host $CONNECTION_HOST \
      --port $CONNECTION_PORT \
@@ -39,34 +39,56 @@ elif [[ "${DATA_SOURCE}" == "rds" ]]; then
      --dbname $DB_INSTANCE_IDENTIFIER \
      --command "select * from $KAFKA_TOPIC_NAME_IN limit 10;"
 
+  KAFKA_TOPIC_NAME_IN='rds-eventlogs'
+
 fi
 
-if check_confluent_binary; then
+CLUSTER_ID=$(confluent kafka cluster list -o json | jq -r '.[0].id')
+if [ -z "$CLUSTER_ID" ]; then
+  echo "Cluster not found; please troubleshoot exiting now"
+  exit 1
+else
+  echo "Using cluster id $CLUSTER_ID"
 
-  check_running_cp ${CONFLUENT} || exit
+  SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO=$( grep "^basic.auth.user.info" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+  SCHEMA_REGISTRY_URL=$( grep "^schema.registry.url" $CONFIG_FILE | awk -F'=' '{print $2;}' )
+  SR_KEY=$(echo $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO | cut -d ':' -f 1)
+  SR_SECRET=$(echo $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO | cut -d ':' -f 2)
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_IN:"
-  echo -e "confluent local services kafka consume $KAFKA_TOPIC_NAME_IN --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10"
-  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local services kafka consume $KAFKA_TOPIC_NAME_IN --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10 2>/dev/null
+  echo -e "confluent kafka topic consume $KAFKA_TOPIC_NAME_IN --cluster $CLUSTER_ID --api-key $CLOUD_KEY --api-secret $CLOUD_SECRET --from-beginning --print-key"
+  timeout 5 confluent kafka topic consume $KAFKA_TOPIC_NAME_IN --cluster $CLUSTER_ID\
+   --api-key $CLOUD_KEY\
+   --api-secret $CLOUD_SECRET\
+   --from-beginning\
+   --print-key
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_OUT2:"
-  echo -e "confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT2 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10"
-  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT2 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --max-messages 10 2>/dev/null
+  echo -e "confluent kafka topic consume $KAFKA_TOPIC_NAME_OUT2 --cluster $CLUSTER_ID --api-key $CLOUD_KEY --api-secret $CLOUD_SECRET --from-beginning --print-key"
+  timeout 5 confluent kafka topic consume $KAFKA_TOPIC_NAME_OUT2 --cluster $CLUSTER_ID\
+   --api-key $CLOUD_KEY\
+   --api-secret $CLOUD_SECRET\
+   --from-beginning\
+   --print-key
 
   echo -e "\nData from Kafka topic $KAFKA_TOPIC_NAME_OUT1:"
-  echo -e "confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT1 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10"
-  export KAFKA_LOG4J_OPTS="-Dlog4j.rootLogger=DEBUG,stdout -Dlog4j.logger.kafka=DEBUG,stdout" && timeout 10 confluent local services kafka consume $KAFKA_TOPIC_NAME_OUT1 --cloud --config $CONFIG_FILE --from-beginning --property print.key=true --value-format avro --property basic.auth.credentials.source=${BASIC_AUTH_CREDENTIALS_SOURCE} --property schema.registry.basic.auth.user.info=${SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO} --property schema.registry.url=${SCHEMA_REGISTRY_URL} --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer --max-messages 10 2>/dev/null
-
-else
-
-  echo "Skipping reading the Kafka topics."
-
+  echo -e "confluent kafka consume $KAFKA_TOPIC_NAME_OUT1 --cluster $CLUSTER_ID --config-file $CONFIG_FILE --from-beginning --print-key --value-format avro"
+  timeout 5 confluent kafka topic consume $KAFKA_TOPIC_NAME_OUT1 --cluster $CLUSTER_ID\
+    --api-key $CLOUD_KEY\
+    --api-secret $CLOUD_SECRET\
+    --sr-api-key $SR_KEY\
+    --sr-api-secret $SR_SECRET\
+    --sr-endpoint $SCHEMA_REGISTRY_URL\
+    --from-beginning\
+    --print-key\
+    --value-format avro 
 fi
+
 
 echo -e "\nObjects in Cloud storage $DESTINATION_STORAGE:\n"
 AVRO_VERSION=1.9.1
 #if [[ ! -f avro-tools-${AVRO_VERSION}.jar ]]; then
-#  curl -L http://mirror.metrocast.net/apache/avro/avro-${AVRO_VERSION}/java/avro-tools-${AVRO_VERSION}.jar --output avro-tools-${AVRO_VERSION}.jar
+#  curl -L http://mirror.metrocast.net/apache/avro/avro-${AVRO_VERSION}/java/avro-tools-${AVRO_VERSION}.jar --output avro-tools-${AVRO_VERSION}.jarq
 #fi
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
@@ -79,12 +101,11 @@ if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
 elif [[ "$DESTINATION_STORAGE" == "gcs" ]]; then
 
-  gsutil ls -r gs://$GCS_BUCKET
+  gsutil ls -p $GCS_PROJECT_ID -r gs://$GCS_BUCKET
 
 else
 
   export AZBLOB_ACCOUNT_KEY=$(az storage account keys list --account-name $AZBLOB_STORAGE_ACCOUNT | jq -r '.[0].value')
-  #az storage blob list --container-name $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT1" | jq -r '.[].name'
   az storage blob list --container-name $AZBLOB_CONTAINER --account-name $AZBLOB_STORAGE_ACCOUNT --account-key $AZBLOB_ACCOUNT_KEY --prefix "topics/$KAFKA_TOPIC_NAME_OUT2" | jq -r '.[].name'
 
 fi
