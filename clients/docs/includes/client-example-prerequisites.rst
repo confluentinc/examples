@@ -9,5 +9,5 @@
   with an API key and secret.
 
   - The first 20 users to sign up for `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ and use promo code ``C50INTEG`` will receive an additional $50 free usage (`details <https://www.confluent.io/confluent-cloud-promo-disclaimer/>`__)
-  
+
   - For an automated way to create a |ak| cluster, credentials, and ACLs in |ccloud|, see the :cloud:`ccloud-stack utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html`.
