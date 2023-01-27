@@ -1,7 +1,7 @@
 .. _client-examples-kcat:
 
-kcat: Code Example for Apache Kafka
-===================================
+Create an Apache Kafka Client App for kafkacat
+==============================================
 
 In this tutorial, you will run a ``kcat`` (formerly known as ``kafkacat``) client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
