@@ -1,7 +1,7 @@
 .. _client-examples-ruby:
 
-Ruby
-====
+Create an Apache Kafka Client App for Ruby
+==========================================
 
 In this tutorial, you will run a Ruby client application using the `ZenDesk Ruby
 Client for Apache Kafka <https://github.com/zendesk/ruby-kafka>`__ that produces
