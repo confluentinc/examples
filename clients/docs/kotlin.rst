@@ -1,7 +1,7 @@
 .. _client-examples-kotlin:
 
-Kotlin: Code Example for |ak-tm|
-================================
+Create an Apache Kafka Client App for Kotlin
+============================================
 
 In this tutorial, you will run a Kotlin client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
