@@ -88,7 +88,7 @@ fi
 echo -e "\nObjects in Cloud storage $DESTINATION_STORAGE:\n"
 AVRO_VERSION=1.9.1
 #if [[ ! -f avro-tools-${AVRO_VERSION}.jar ]]; then
-#  curl -L http://mirror.metrocast.net/apache/avro/avro-${AVRO_VERSION}/java/avro-tools-${AVRO_VERSION}.jar --output avro-tools-${AVRO_VERSION}.jarq
+#  curl -L http://mirror.metrocast.net/apache/avro/avro-${AVRO_VERSION}/java/avro-tools-${AVRO_VERSION}.jar --output avro-tools-${AVRO_VERSION}.jar
 #fi
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
