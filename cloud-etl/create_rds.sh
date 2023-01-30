@@ -15,7 +15,7 @@ ccloud::validate_psql_installed \
   || exit 1
 
 ccloud::validate_aws_cli_installed_rds_db_ready() {
-  STATUS=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].DBInstanceStatus")
+  STATUS=$(aws rds describe-db-instances --region $RDS_REGION --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].DBInstanceStatus")
   if [[ "$STATUS" == "available" ]]; then
     return 0
   fi
@@ -48,15 +48,15 @@ echo "Waiting up to $MAX_WAIT seconds for AWS RDS PostgreSQL database $DB_INSTAN
 retry $MAX_WAIT ccloud::validate_aws_cli_installed_rds_db_ready $DB_INSTANCE_IDENTIFIER || exit 1
 print_pass "Database $DB_INSTANCE_IDENTIFIER is available"
 
-SECURITY_GROUP=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId")
-echo "aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE"
-aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE
+SECURITY_GROUP=$(aws rds describe-db-instances --region $RDS_REGION --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].VpcSecurityGroups[0].VpcSecurityGroupId")
+echo "aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --region $RDS_REGION --profile $AWS_PROFILE"
+aws ec2 authorize-security-group-ingress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --region $RDS_REGION --profile $AWS_PROFILE
 status=$?
 if [[ "$status" != 0 ]]; then
   echo "WARNING: status response not 0 when running aws ec2 authorize-security-group-ingress"
 fi
-echo "aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE"
-aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --profile $AWS_PROFILE
+echo "aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --region $RDS_REGION --profile $AWS_PROFILE"
+aws ec2 authorize-security-group-egress --group-id $SECURITY_GROUP --cidr 0.0.0.0/0 --protocol all --region $RDS_REGION --profile $AWS_PROFILE
 status=$?
 if [[ "$status" != 0 ]]; then
   echo "WARNING: status response not 0 when running aws ec2 authorize-security-group-ingress"
@@ -70,8 +70,8 @@ for row in $(jq -r '.[] .Data' $KAFKA_TOPIC_NAME_IN.json); do
 done
 
 echo "Create table $KAFKA_TOPIC_NAME_IN"
-export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
-export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
+export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
+export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
 PGPASSWORD=pg12345678 psql \
    --host $CONNECTION_HOST \
    --port $CONNECTION_PORT \

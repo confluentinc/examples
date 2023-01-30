@@ -13,11 +13,15 @@ if [[ $? -eq 0 ]]; then
   aws kinesis delete-stream --stream-name $KINESIS_STREAM_NAME --region $KINESIS_REGION --profile $AWS_PROFILE
 fi
 
-echo "Clean up AWS RDS"
-aws rds delete-db-instance \
-    --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
-    --skip-final-snapshot \
-    --profile $AWS_PROFILE > /dev/null
+
+if [ -n "${DB_INSTANCE_IDENTIFIER}" ]; then
+  echo "Clean up AWS RDS - [$DB_INSTANCE_IDENTIFIER]"  
+  aws rds delete-db-instance \
+      --db-instance-identifier $DB_INSTANCE_IDENTIFIER \
+      --skip-final-snapshot \
+      --region $RDS_REGION \
+      --profile $AWS_PROFILE > /dev/null
+fi
 
 echo "Clean up $DESTINATION_STORAGE cloud storage"
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
