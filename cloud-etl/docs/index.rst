@@ -173,6 +173,7 @@ Because this example interacts with real resources in Kinesis or RDS PostgreSQL,
 
      - ``DESTINATION_STORAGE='gcs'``
      - ``GCS_CREDENTIALS_FILE``
+     - ``GCS_PROJECT_ID``
      - ``GCS_BUCKET``
 
    - AWS S3

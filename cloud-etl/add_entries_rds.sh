@@ -10,8 +10,8 @@ source ../utils/ccloud_library.sh
 # Source demo-specific configurations
 source config/demo.cfg
 
-export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
-export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
+export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION  --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
+export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION  --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
 
 # File has ~500 records, so run several times to fulfill the flush size requirement of 1000 records / partition for the sink connectors
 echo -e "Adding ~11k records to table $KAFKA_TOPIC_NAME_IN\n"

@@ -9,10 +9,11 @@ source config/demo.cfg
 
 ccloud::validate_cloud_storage config/demo.cfg || exit 1
 
-bucket_list=$(gsutil ls | grep $GCS_BUCKET)
+
+bucket_list=$(gsutil ls -p $GCS_PROJECT_ID | grep $GCS_BUCKET)
 if [[ ! "$bucket_list" =~ "$GCS_BUCKET" ]]; then
-  echo "gsutil mb -l $STORAGE_REGION gs://$GCS_BUCKET"
-  gsutil mb -l $STORAGE_REGION gs://$GCS_BUCKET
+  echo "gsutil mb -p $GCS_PROJECT_ID -l $STORAGE_REGION gs://$GCS_BUCKET"
+  gsutil mb -p $GCS_PROJECT_ID -l $STORAGE_REGION gs://$GCS_BUCKET
 fi
 
 ccloud::create_connector connectors/gcs_no_avro.json || exit 1
