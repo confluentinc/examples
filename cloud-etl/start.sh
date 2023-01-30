@@ -77,8 +77,9 @@ confluent kafka topic create $KAFKA_TOPIC_NAME_IN
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $AWS_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $AWS_PROFILE)
 if [[ "${DATA_SOURCE}" == "rds" ]]; then
-  export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
-  export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
+  confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --prefix --topic rds
+  export CONNECTION_HOST=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Address")
+  export CONNECTION_PORT=$(aws rds describe-db-instances --db-instance-identifier $DB_INSTANCE_IDENTIFIER --region $RDS_REGION --profile $AWS_PROFILE | jq -r ".DBInstances[0].Endpoint.Port")
 fi
 ccloud::create_connector connectors/${DATA_SOURCE}.json || exit 1
 ccloud::wait_for_connector_up connectors/${DATA_SOURCE}.json 300 || exit 1
