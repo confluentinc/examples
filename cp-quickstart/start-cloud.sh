@@ -81,8 +81,8 @@ ccloud::create_connector connectors/ccloud-datagen-pageviews.json || exit 1
 ccloud::create_connector connectors/ccloud-datagen-users.json || exit 1
 ccloud::wait_for_connector_up connectors/ccloud-datagen-pageviews.json 300 || exit 1
 ccloud::wait_for_connector_up connectors/ccloud-datagen-users.json 300 || exit 1
-printf "\nSleeping 30 seconds to give the Datagen Source Connectors a chance to start producing messages\n"
-sleep 30
+printf "\nSleeping 60 seconds to give the Datagen Source Connectors a chance to start producing messages\n"
+sleep 60
 
 printf "\n====== Setting up ksqlDB\n"
 
