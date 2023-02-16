@@ -1,6 +1,6 @@
 .. _client-examples-kcat:
 
-Create an Apache Kafka Client App for kafkacat
+Create an Apache Kafka Client App for |kcat|
 ==============================================
 
 In this tutorial, you will run a ``kcat`` (formerly known as ``kafkacat``) client application that produces
