@@ -1,6 +1,6 @@
-.. _client-examples-kafkacat:
+.. _client-examples-kcat:
 
-Create an Apache Kafka Client App for kafkacat
+Create an Apache Kafka Client App for |kcat|
 ==============================================
 
 In this tutorial, you will run a |kcat| client application that produces
@@ -15,8 +15,8 @@ Prerequisites
 Client
 ~~~~~~
 
--  `kafkacat <https://github.com/edenhill/kafkacat>`__ installed on your
-   machine. You must `build <https://github.com/edenhill/kafkacat#build>`__
+-  `kcat <https://github.com/edenhill/kcat>`__ installed on your
+   machine. You must `build <https://github.com/edenhill/kcat#build>`__
    |kcat| from the latest master branch to get the ``-F`` functionality
    that makes it easy to pass in the configuration to your |ccloud|
    configuration file.
