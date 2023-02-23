@@ -30,8 +30,8 @@ confluent kafka topic create $KAFKA_TOPIC_NAME_OUT2
 ksqlDBAppId=$(confluent ksql cluster list -o json | jq -r 'map(select(.endpoint == "'"$KSQLDB_ENDPOINT"'")) | .[].id')
 confluent ksql cluster configure-acls $ksqlDBAppId $KAFKA_TOPIC_NAME_IN $KAFKA_TOPIC_NAME_OUT1 $KAFKA_TOPIC_NAME_OUT2
 SERVICE_ACCOUNT_ID=$(ccloud:get_service_account_from_current_cluster_name)
-confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT1
-confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic $KAFKA_TOPIC_NAME_OUT2
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operations WRITE --topic $KAFKA_TOPIC_NAME_OUT1
+confluent kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operations WRITE --topic $KAFKA_TOPIC_NAME_OUT2
 
 SQL_FILE=statements.sql
 
