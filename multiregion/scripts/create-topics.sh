@@ -2,7 +2,7 @@
 
 echo -e "\n==> Creating topic single-region"
 
-docker-compose exec broker-west-1 kafka-topics  --create \
+docker compose exec broker-west-1 kafka-topics  --create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic single-region \
 	--partitions 1 \
@@ -11,7 +11,7 @@ docker-compose exec broker-west-1 kafka-topics  --create \
 
 echo -e "\n==> Creating topic multi-region-sync"
 
-docker-compose exec broker-west-1 kafka-topics  --create \
+docker compose exec broker-west-1 kafka-topics  --create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic multi-region-sync \
 	--partitions 1 \
@@ -20,7 +20,7 @@ docker-compose exec broker-west-1 kafka-topics  --create \
 
 echo -e "\n==> Creating topic multi-region-async"
 
-docker-compose exec broker-west-1 kafka-topics  --create \
+docker compose exec broker-west-1 kafka-topics  --create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic multi-region-async \
 	--partitions 1 \
@@ -31,7 +31,7 @@ echo -e "\n==> Creating topic multi-region-default"
 
 # Note that the --replica-placement flag is not needed because we want to use
 # the default placement constraints in this topic
-docker-compose exec broker-west-1 kafka-topics  \
+docker compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic multi-region-default \
@@ -39,7 +39,7 @@ docker-compose exec broker-west-1 kafka-topics  \
 
 echo -e "\n==> Creating topic multi-region-async-op-under-min-isr"
 
-docker-compose exec broker-west-1 kafka-topics  \
+docker compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic multi-region-async-op-under-min-isr \
@@ -49,7 +49,7 @@ docker-compose exec broker-west-1 kafka-topics  \
 
 echo -e "\n==> Creating topic multi-region-async-op-under-replicated"
 
-docker-compose exec broker-west-1 kafka-topics  \
+docker compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic multi-region-async-op-under-replicated \
@@ -59,7 +59,7 @@ docker-compose exec broker-west-1 kafka-topics  \
 
 echo -e "\n==> Creating topic multi-region-async-op-leader-is-observer"
 
-docker-compose exec broker-west-1 kafka-topics  \
+docker compose exec broker-west-1 kafka-topics  \
 	--create \
 	--bootstrap-server broker-west-1:19091 \
 	--topic multi-region-async-op-leader-is-observer \

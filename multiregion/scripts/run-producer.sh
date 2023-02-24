@@ -2,7 +2,7 @@
 
 echo -e "\n\n==> Produce: Single-region Replication (topic: single-region) \n"
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic single-region \
+docker compose exec broker-west-1 kafka-producer-perf-test --topic single-region \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
@@ -14,7 +14,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic single-region
 
 echo -e "\n\n==> Produce: Multi-region Sync Replication (topic: multi-region-sync) \n"
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-sync \
+docker compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-sync \
     --num-records 200 \
     --record-size 5000 \
     --throughput -1 \
@@ -29,7 +29,7 @@ sleep 30
 
 echo -e "\n\n==> Produce: Multi-region Async Replication to Observers (topic: multi-region-async) \n"
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async \
+docker compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
@@ -39,7 +39,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-
         compression.type=none \
         batch.size=8196
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-under-min-isr \
+docker compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-under-min-isr \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
@@ -49,7 +49,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-
         compression.type=none \
         batch.size=8196
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-under-replicated \
+docker compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-under-replicated \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \
@@ -59,7 +59,7 @@ docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-
         compression.type=none \
         batch.size=8196
 
-docker-compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-leader-is-observer \
+docker compose exec broker-west-1 kafka-producer-perf-test --topic multi-region-async-op-leader-is-observer \
     --num-records 5000 \
     --record-size 5000 \
     --throughput -1 \

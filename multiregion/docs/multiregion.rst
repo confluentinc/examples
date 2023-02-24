@@ -33,14 +33,14 @@ producer).
 
 An ``ISR`` list (in-sync replicas) includes brokers that have a given
 topic-partition. The data is copied from the leader to every member of
-the ISR before the producer gets an acknowledgement. The followers in an
+the ISR before the producer gets an acknowledgment. The followers in an
 ISR can become the leader if the current leader fails.
 
 An ``Observer`` is a broker/replica that also has a copy of data for a given
 topic-partition, and consumers are allowed to read from them even though the
 *Observer* isn't the leader–this is known as “Follower Fetching”. However, the
 data is copied asynchronously from the leader such that a producer doesn't wait
-on observers to get back an acknowledgement.
+on observers to get back an acknowledgment.
 
 |Follower_Fetching|
 
@@ -96,7 +96,7 @@ Client
 
 -  ``client.rack``: identifies the location of the client. For the example,
    it represents a region, either ``east`` or ``west``
--  ``replication.factor``: at the topic level, replication factor is mutually
+-  ``replication.factor``: at the topic level, the replication factor is mutually
    exclusive to replica placement constraints, so for |kstreams| applications,
    set ``replication.factor=-1`` to let replica placement constraints take
    precedence
@@ -167,9 +167,9 @@ Startup
 
    .. code-block:: bash
 
-      docker-compose up -d
+      docker compose up -d
 
-#. You should see the following Docker containers with ``docker-compose ps``:
+#. You should see the following Docker containers with ``docker compose ps``:
 
    .. code-block:: text
 
@@ -533,7 +533,7 @@ There is a script you can run to collect the JMX metrics from the command line, 
 
 .. code-block:: bash
 
-    docker-compose exec broker-west-1 kafka-run-class kafka.tools.JmxTool --jmx-url service:jmx:rmi:///jndi/rmi://localhost:8091/jmxrmi --object-name kafka.cluster:type=Partition,name=<METRIC>,topic=<TOPIC>,partition=0 --one-time true
+    docker compose exec broker-west-1 kafka-run-class kafka.tools.JmxTool --jmx-url service:jmx:rmi:///jndi/rmi://localhost:8091/jmxrmi --object-name kafka.cluster:type=Partition,name=<METRIC>,topic=<TOPIC>,partition=0 --one-time true
 
 
 #. Run the script
@@ -601,7 +601,7 @@ In this section, you will simulate a single broker failure in the ``west`` regio
 
    .. code-block:: bash
 
-      docker-compose stop broker-west-1
+      docker compose stop broker-west-1
 
 #. Verify the new topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
@@ -665,7 +665,7 @@ In this section, you will simulate a single broker failure in the ``west`` regio
      observers to be automatically promoted into the ISR. In the case of ``multi-region-async-op-under-min-isr`` the number of
      non-observer replicas (1) is less than the ``min.insync.replicas`` value (2). Observers are promoted to the ISR
      to meet the ``min.insync.replicas`` requirement. In the case of ``multi-region-async-op-under-replicated`` the number of
-     online replicas (1) is less than the intended number of non observer replicas from the replica placement (2). An
+     online replicas (1) is less than the intended number of non-observer replicas from the replica placement (2). An
      observer is promoted to fulfill this requirement.
 
 #. Run the script
@@ -737,7 +737,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
    .. code-block:: bash
 
-      docker-compose stop broker-west-1 broker-west-2 zookeeper-west
+      docker compose stop broker-west-1 broker-west-2 zookeeper-west
 
 #. Verify the new topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
@@ -876,9 +876,9 @@ steps:
 
    .. code-block:: bash
 
-      docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
+      docker compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-async --partition 0
 
-      docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-default --partition 0
+      docker compose exec broker-east-4 kafka-leader-election --bootstrap-server broker-east-4:19094 --election-type UNCLEAN --topic multi-region-default --partition 0
 
 #. Describe the topics again with the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
 
@@ -1087,18 +1087,18 @@ the following steps:
 Failback
 --------
 
-Now you will bring region ``west`` back online and restore configuration to the same as in steady state.
+Now you will bring region ``west`` back online and restore configuration to the same as in the steady state.
 
 #. Run the following command to bring the ``west`` region back online:
 
    .. code-block:: bash
 
-       docker-compose start broker-west-1 broker-west-2 zookeeper-west
+       docker compose start broker-west-1 broker-west-2 zookeeper-west
 
    Wait for 5 minutes–the default duration for
    ``leader.imbalance.check.interval.seconds``–until the leadership election
    restores the preferred replicas. You can also trigger it with
-   ``docker-compose exec broker-east-4 kafka-leader-election --bootstrap-server
+   ``docker compose exec broker-east-4 kafka-leader-election --bootstrap-server
    broker-east-4:19094 --election-type PREFERRED --all-topic-partitions``.
 
 #. Verify the new topic replica placement is restored with the script
@@ -1241,7 +1241,7 @@ To stop the application manually, run the following command:
 
 .. code-block:: bash
 
-   docker-compose down
+   docker compose down
 
 If you ran either the automated or manual demo to completion, and just want to
 clean up the Docker environment after the application is stopped, here are some
@@ -1265,7 +1265,7 @@ If this happens, run the following command, and then retry the download and star
 
 .. code-block:: bash
 
-   docker-compose down
+   docker compose down
 
 Containers fail to ping each other
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1284,7 +1284,7 @@ complete the following steps:
 
    .. code-block:: bash
 
-      docker-compose down -v --remove-orphans
+      docker compose down -v --remove-orphans
 
       # More aggressive cleanup
       docker volume prune
@@ -1362,7 +1362,7 @@ it is possible Docker networking not working or cleaning up properly between run
    :alt: Control Center unclean leader election
 
 .. |C3 permanent failover|
-   image:: images/c3-perminant-failover-default.png
+   image:: images/c3-permanent-failover-default.png
    :alt: Control Center permanent failover
 
 	 
