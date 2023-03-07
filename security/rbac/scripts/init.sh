@@ -15,7 +15,7 @@ check_jq || exit 1
 mkdir -p /tmp/original_configs
 mkdir -p /tmp/rbac_configs
 
-./create_login_properties.py
+python3 create_login_properties.py
 
 # Generate keys
 openssl genrsa -out /tmp/tokenKeypair.pem 2048 

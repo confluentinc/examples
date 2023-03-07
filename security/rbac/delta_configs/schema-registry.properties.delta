@@ -8,7 +8,7 @@ kafkastore.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBe
 schema.registry.group.id=schema-registry-demo
 
 # These properties install the Schema Registry security plugin, and configure it to use RBAC for authorization and OAuth for authentication
-schema.registry.resource.extension.class=io.confluent.kafka.schemaregistry.security.SchemaRegistrySecurityResourceExtension
+schema.registry.resource.extension.class=io.confluent.kafka.schemaregistry.security.SchemaRegistrySecurityResourceExtension,io.confluent.schema.exporter.SchemaExporterResourceExtension
 confluent.schema.registry.authorizer.class=io.confluent.kafka.schemaregistry.security.authorizer.rbac.RbacAuthorizer
 rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
 
@@ -23,5 +23,9 @@ confluent.metadata.http.auth.credentials.provider=BASIC
 public.key.path=/tmp/tokenPublicKey.pem
 
 # This enables anonymous access with a principal of User:ANONYMOUS
+schema.linking.rbac.enable=true
 confluent.schema.registry.anonymous.principal=true
 authentication.skip.paths=/*
+kafkastore.update.handlers=io.confluent.schema.exporter.storage.SchemaExporterUpdateHandler
+password.encoder.secret=mysecret
+
