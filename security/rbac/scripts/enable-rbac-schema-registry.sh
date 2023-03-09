@@ -54,6 +54,9 @@ confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGIS
 echo "$KAFKA_CLUSTER_ID"
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_exporter_states --kafka-cluster-id $KAFKA_CLUSTER_ID
 
+# ONLY NEEDED FOR 7.4.0
+confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schema_encoders --kafka-cluster-id $KAFKA_CLUSTER_ID
+
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo"
 echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster-id $KAFKA_CLUSTER_ID"
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster-id $KAFKA_CLUSTER_ID
