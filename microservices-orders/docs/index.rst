@@ -215,7 +215,7 @@ Running the fully working example end-to-end provides context for each of the la
 
 #. Start the end-to-end example in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``.netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :cloud:`ccloud-stack Utility for Confluent Cloud|examples/ccloud/docs/ccloud-stack.html`).
+   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``.netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :cloud:`ccloud-stack Utility for Confluent Cloud|get-started/examples/ccloud/docs/ccloud-stack.html`).
 
      .. sourcecode:: bash
 
