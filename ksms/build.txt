@@ -1,0 +1,6 @@
+<!-- Dependencies below are required/recommended only when using Apache Avro. -->
+<dependency>
+    <groupId>io.confluent</groupId>
+    <artifactId>kafka-avro-serializer</artifactId>
+    <version>7.3.1</version>
+</dependency>

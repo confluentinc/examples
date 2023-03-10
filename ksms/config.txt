@@ -1,0 +1,9 @@
+//explain the code 
+props.put(StreamsConfig.DEFAULT_CLIENT_SUPPLIER_CONFIG, ConfluentClientSupplier.class.getName());
+props.put("confluent.ksms.server", "http://localhost:8000");
+//explain the code 
+props.put("confluent.ksms.server.path", "v1/assign");
+props.put("confluent.ksms.request.timeout", "10000");
+//explain the code
+props.put("confluent.ksms.username", "{{ APP_API_KEY }}");
+props.put("confluent.ksms.password", "{{ APP_API_SECRET }}");
