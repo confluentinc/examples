@@ -36,13 +36,13 @@ Microservices
 
 In this example, the system centers on an Orders Service which exposes a REST interface to POST and GET Orders.
 Posting an Order creates an event in Kafka that is recorded in the topic `orders`.
-This is picked up by different validation engines (Fraud Service, Inventory Service and Order Details Service), which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
+This is picked up by different validation engines (Fraud Service, Inventory Service, and Order Details Service), which validate the order in parallel, emitting a PASS or FAIL based on whether each validation succeeds.
 
 The result of each validation is pushed through a separate topic, Order Validations, so that we retain the **single writer** status of the Orders Service —> Orders Topic (Ben Stopford's `book <https://www.confluent.io/designing-event-driven-systems>`__ discusses several options for managing consistency in event collaboration).
 
 The results of the various validation checks are aggregated in the Validation Aggregator Service, which then moves the order to a Validated or Failed state, based on the combined result.
 
-To allow users to GET any order, the Orders Service creates a queryable materialized view (embedded inside the Orders Service), using a state store in each instance of the service, so that any Order can be requested historically. Note also that the Orders Service can be scaled out over a number of nodes, in which case GET requests must be routed to the correct node to get a certain key. This is handled automatically using the interactive queries functionality in Kafka Streams.
+To allow users to GET any order, the Orders Service creates a queryable materialized view (embedded inside the Orders Service), using a state store in each instance of the service, so that any Order can be requested historically. Note also that the Orders Service can be scaled out over multiple nodes, in which case GET requests must be routed to the correct node to get a certain key. This is handled automatically using the interactive queries functionality in Kafka Streams.
 
 The Orders Service also includes a blocking HTTP GET so that clients can read their own writes. In this way, we bridge the synchronous, blocking paradigm of a RESTful interface with the asynchronous, non-blocking processing performed server-side.
 
@@ -56,7 +56,7 @@ Here is a diagram of the microservices and the related Kafka topics.
     :alt: image
 
 All the services are client applications written in Java, and they use the Kafka Streams API.
-The java source code for these microservices are in the :cp-examples:`kafka-streams-examples repo|src/main/java/io/confluent/examples/streams/microservices`.
+The Java source code for these microservices is in the :cp-examples:`kafka-streams-examples repo|src/main/java/io/confluent/examples/streams/microservices`.
 
 Summary of services and the topics they consume from and produce to:
 
@@ -83,7 +83,7 @@ End-to-end Streaming ETL
 This example showcases an entire end-to-end streaming ETL deployment, built around the microservices described above.
 It is built on the |cp|, including:
 
-* JDBC source connector: reads from a sqlite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
+* JDBC source connector: reads from a SQLite database that has a table of customers information and writes the data to a Kafka topic, using Connect transforms to add a key to each message
 * Elasticsearch sink connector: pushes data from a Kafka topic to Elasticsearch
 * |ksqldb|: another variant of a fraud detection microservice
 
@@ -222,13 +222,13 @@ Steps
        :alt: image
        :width: 600px
 
-#. View and monitor the streaming applications. Use the `Confluent Cloud Console <http://confluent.cloud>`__ to explore topics, consumers, Data flow, and the |ksql-cloud| application.
+#. View and monitor the streaming applications. Use the `Confluent Cloud Console <http://confluent.cloud>`__ to explore topics, consumers, Stream Lineage, and the |ksql-cloud| application.
 
-   .. figure:: images/data-flow.png
+   .. figure:: images/stream-lineage.png
        :alt: image
        :width: 600px
 
-#. View the |ksqldb| flow screen for the ``ORDERS`` stream to observe events occurring and examine the streams schema. 
+#. View the |ksqldb| flow screen for the ``ORDERS_ENRICHED`` stream to observe events occurring and examine the stream's schema.
      
    .. figure:: images/ksqldb-orders-flow.png
        :alt: image
@@ -238,7 +238,7 @@ Steps
 
    .. sourcecode:: bash
 
-      ./stop-ccloud.sh stack-configs/java-service-account-12345.config
+      ./stop-ccloud.sh stack-configs/java-service-account-sa-123456.config
 
 
 Exercise 1: Persist events 
@@ -277,7 +277,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrdersService.j
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/OrdersService.java`.
 
-To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, copy the project's working solution to a spot where you can later recover or reference it, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -306,7 +306,7 @@ Building services on a protocol of requests and responses forces a complicated w
 .. figure:: images/event-driven.png
     :alt: image
 
-    A visual summary of commands, events and queries (`source <https://www.confluent.io/designing-event-driven-systems>`__)
+    A visual summary of commands, events, and queries (`source <https://www.confluent.io/designing-event-driven-systems>`__)
 
 In contrast, in an event-driven design, the event stream is the inter-service communication that enables services to cross deployment boundaries and avoids synchronous execution.
 When and how downstream services respond to those events is within their control, which reduces the coupling between services and enables an architecture with more pluggability.
@@ -342,7 +342,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/OrderDetailsSer
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/OrderDetailsService.java`.
 
-To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, copy the project's working solution to a spot where you can later recover or reference it, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -385,9 +385,9 @@ Read more on `an overview of distributed, real-time joins <https://www.confluent
     :width: 600px
 
 In this exercise, you will write a service that joins streaming order information with streaming payment information and data from a customer database.
-First, the payment stream needs to be rekeyed to match the same key info as the order stream before joined together.
-The resulting stream is then joined with the customer information that was read into Kafka by a JDBC source from a customer database.
-Additionally, this service performs dynamic routing: an enriched order record is written to a topic that is determined from the value of level field of the corresponding customer.
+First, the payment stream needs to be rekeyed to match the same key info as the order stream before being joined together.
+The resulting stream is then joined with the customer information that was read into Kafka by a JDBC source connector from a customer database.
+Additionally, this service performs dynamic routing: an enriched order record is written to a topic that is determined from the value of the `level` field of the corresponding customer.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.java|microservices-orders/exercises/EmailService.java`
 
@@ -417,7 +417,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/EmailService.ja
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/EmailService.java`.
 
-To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, copy the project's working solution to a spot where you can later recover or reference it, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -451,7 +451,7 @@ In other cases, the application may need to branch events, whereby each event is
     :width: 600px
 
 In this exercise, you will define one set of criteria to filter records in a stream based on some criteria.
-Then you will define define another set of criteria to branch records into two different streams.
+Then you will define another set of criteria to branch records into two different streams.
 
 Implement the `TODO` lines of the file :devx-examples:`exercises/FraudService.java|microservices-orders/exercises/FraudService.java`
 
@@ -475,7 +475,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/FraudService.ja
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/FraudService.java`.
 
-To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, copy the project's working solution to a spot where you can later recover or reference it, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -533,7 +533,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/ValidationsAggr
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/ValidationsAggregatorService.java`.
 
-To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, copy the project's working solution to a spot where you can later recover or reference it, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -603,7 +603,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/InventoryServic
    
    If you get stuck, here is the :cp-examples:`complete solution|src/main/java/io/confluent/examples/streams/microservices/InventoryService.java`.
 
-To test your code, save off the project's working solution, copy your version of the file to the main project, compile, and run the unit test.
+To test your code, copy the project's working solution to a spot where you can later recover or reference it, copy your version of the file to the main project, compile, and run the unit test.
 
 .. sourcecode:: bash
 
@@ -628,7 +628,7 @@ Exercise 7: Enrichment with ksqlDB
 
 `Confluent ksqlDB <https://www.confluent.io/product/ksql/>`__ is the streaming SQL engine that enables real-time data processing against |ak-tm|.
 It provides an easy-to-use, yet powerful interactive SQL interface for stream processing on Kafka, without requiring you to write code in a programming language such as Java or Python.
-|ksqldb| is scalable, elastic, fault tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
+|ksqldb| is scalable, elastic, fault-tolerant, and it supports a wide range of streaming operations, including data filtering, transformations, aggregations, joins, windowing, and sessionization.
 
 .. figure:: images/microservices-exercise-7.png
     :alt: image
@@ -648,7 +648,7 @@ From the |ksqldb| CLI prompt, type `DESCRIBE orders;` and `DESCRIBE customers_ta
 Then create the following persistent queries:
 
 #. TODO 7.1: create a new |ksqldb| stream that does a stream-table join between `orders` and `customers_table` based on customer id.
-#. TODO 7.2: create a new |ksqldb| table that counts if a customer submits more than 2 orders in a 30 second time window.
+#. TODO 7.2: create a new |ksqldb| table that counts if a customer submits more than 2 orders in a 30-second time window.
 
 .. tip::
 
@@ -661,7 +661,7 @@ Then create the following persistent queries:
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
 
-The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
+The CLI parser will give immediate feedback on whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
 =============
