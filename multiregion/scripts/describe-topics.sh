@@ -5,6 +5,6 @@ do
 
   echo -e "\n==> Describe topic: $topic\n"
 
-  docker-compose exec broker-east-3 kafka-topics --describe --bootstrap-server broker-east-3:19093 --topic $topic
+  docker compose exec broker-east-3 kafka-topics --describe --bootstrap-server broker-east-3:19093 --topic $topic
 
 done
