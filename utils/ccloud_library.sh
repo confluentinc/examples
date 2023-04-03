@@ -45,10 +45,7 @@ function ccloud::prompt_continue_ccloud_demo() {
   echo "and ksqlDB applications that may have hourly charges. The end of this script shows a command"
   echo "you can run to destroy all the cloud resources, and you should verify they are destroyed."
   echo
-  echo "New Confluent Cloud signups receive \$400 to spend within Confluent Cloud during their first"
-  echo "60 days. Use Confluent Cloud promo code C50INTEG to receive an additional \$50 free usage."
-  echo "This will sufficiently cover one day of running this example, beyond which you may be billed"
-  echo "for the Confluent Cloud resources until you destroy them."
+  echo "You may be billed for the Confluent Cloud resources until you destroy them."
   echo "--------------------------------------------------------------------------------------------"
   echo
 
