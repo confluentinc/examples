@@ -52,8 +52,8 @@ function validate_version_confluent_cli_for_cp() {
 
   validate_version_confluent_cli_v2 || exit 1
 
-  VER_MIN="1.11.0"
-  VER_MAX="1.22.0"
+  VER_MIN="1.30.0"
+  VER_MAX="1.30.2"
   CLI_VER=$(get_version_confluent_cli)
 
   if version_gt $VER_MIN $CLI_VER || version_gt $CLI_VER $VER_MAX ; then
@@ -140,7 +140,7 @@ function check_running_cp() {
 
   expected_version=$1
 
-  actual_version=$( confluent local version 2>&1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
+  actual_version=$( confluent local version 2>&1 | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
   if [[ $expected_version != $actual_version ]]; then
     printf "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1

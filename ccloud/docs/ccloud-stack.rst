@@ -328,6 +328,20 @@ If you don't want to create and destroy a ``ccloud-stack`` using the provided ba
       ccloud::destroy_ccloud_stack $SERVICE_ACCOUNT_ID
 
 
+Running with Marketplace
+------------------------
+
+By default, ``ccloud-stack`` checks your payment method to verify that there is a credit card on file.
+However, when using |ccloud| on a cloud provider's Marketplace for a self-serve Pay-as-you-go account on Azure, GCP or AWS, your payment method is directly linked to your cloud provider and not necessarily with a credit card. 
+In these cases, therefore, ``ccloud-stack`` will fail, and you need a workaround.
+
+When you create a new stack, set the parameter ``CHECK_CREDIT_CARD=false``, as shown in the example:
+
+.. code-block:: bash
+
+   CHECK_CREDIT_CARD=false ./ccloud_stack_create.sh
+
+
 ====================
 Additional Resources
 ====================

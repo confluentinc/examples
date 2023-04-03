@@ -17,7 +17,7 @@ Click on any language in the table below:
 | [![](images/java.png)](java/)     | [![](images/python.png)](python/)               | [![](images/go.png)](go/)         |
 | [![](images/scala.png)](scala/)   | [![](images/springboot.png)](java-springboot/)  | [![](images/ruby.png)](ruby/)     |
 | [![](images/groovy.png)](groovy/) | [![](images/kotlin.png)](kotlin/)               | [![](images/nodejs.png)](nodejs/) |
-| [![](images/kafkacat.jpg)](kafkacat/) | [![](images/dotnet.png)](csharp/)           | [![](images/c.png)](c/) |
+| [![](images/kcat.jpg)](kcat/)     | [![](images/dotnet.png)](csharp/)           | [![](images/c.png)](c/) |
 | [![](images/kafka-connect-datagen.png)](kafka-connect-datagen/) | [![](images/ksql-datagen.png)](ksql-datagen/) | [![](images/rust.png)](rust/) |
 | [![](images/kafka.png)](kafka-commands/) | [![](images/clojure.png)](clojure/) | [![](images/confluent-cli.png)](confluent-cli/) <br>Confluent CLI |
 | [![](images/confluent-cli.png)](ccloud/) <br>Confluent Cloud CLI | | |

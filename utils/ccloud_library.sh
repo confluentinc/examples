@@ -313,7 +313,7 @@ function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
 
   OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
-  (($? != 0)) && { echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot (maybe run ./clean.sh) and run again"; exit 1; }
+  (($? != 0)) && { echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"; exit 1; }
   ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
   ccloud environment use $ENVIRONMENT &>/dev/null
 
@@ -340,7 +340,7 @@ function ccloud::create_and_use_cluster() {
   CLUSTER_NAME=$1
   CLUSTER_CLOUD=$2
   CLUSTER_REGION=$3
-  
+
   OUTPUT=$(ccloud kafka cluster create "$CLUSTER_NAME" --cloud $CLUSTER_CLOUD --region $CLUSTER_REGION 2>&1)
   (($? != 0)) && { echo "$OUTPUT"; exit 1; }
   CLUSTER=$(echo "$OUTPUT" | grep '| Id' | awk '{print $4;}')
@@ -485,7 +485,7 @@ function ccloud::create_acls_all_resources_full_access() {
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] &&
     local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+    local REDIRECT_TO="/dev/tty"
 
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*' &>"$REDIRECT_TO"
   ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation DELETE --topic '*' &>"$REDIRECT_TO"
@@ -514,7 +514,7 @@ function ccloud::delete_acls_ccloud_stack() {
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] &&
     local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+    local REDIRECT_TO="/dev/tty"
 
   echo "Deleting ACLs for service account ID $SERVICE_ACCOUNT_ID"
 
@@ -905,10 +905,12 @@ function ccloud::create_ccloud_stack() {
   REPLICATION_FACTOR=${REPLICATION_FACTOR:-3}
   enable_ksqldb=${1:-false}
   EXAMPLE=${EXAMPLE:-ccloud-stack-function}
+  CHECK_CREDIT_CARD="${CHECK_CREDIT_CARD:-true}"
 
   # Check if credit card is on file, which is required for cluster creation
-  if [[ $(ccloud admin payment describe) =~ "not found" ]]; then
+  if $CHECK_CREDIT_CARD && [[  $(ccloud admin payment describe) =~ "not found" ]]; then
     echo "ERROR: No credit card on file. Add a payment method and try again."
+    echo "If you are using a cloud provider's Marketplace, see documentation for a workaround: https://docs.confluent.io/platform/current/tutorials/examples/ccloud/docs/ccloud-stack.html#running-with-marketplace"
     exit 1
   fi
 
@@ -937,7 +939,7 @@ function ccloud::create_ccloud_stack() {
   else
     ccloud environment use $ENVIRONMENT || exit 1
   fi
-  
+
   CLUSTER_NAME=${CLUSTER_NAME:-"demo-kafka-cluster-$SERVICE_ACCOUNT_ID"}
   CLUSTER_CLOUD="${CLUSTER_CLOUD:-aws}"
   CLUSTER_REGION="${CLUSTER_REGION:-us-west-2}"
@@ -1033,6 +1035,9 @@ function ccloud::destroy_ccloud_stack() {
   fi
 
   SERVICE_ACCOUNT_ID=$1
+  ENVIRONMENT=${ENVIRONMENT:-$(ccloud::get_environment_id_from_service_id $SERVICE_ACCOUNT_ID)}
+
+  ccloud environment use $ENVIRONMENT || exit 1
 
   PRESERVE_ENVIRONMENT="${PRESERVE_ENVIRONMENT:-false}"
 
@@ -1045,17 +1050,17 @@ function ccloud::destroy_ccloud_stack() {
   QUIET="${QUIET:-false}"
   [[ $QUIET == "true" ]] && 
     local REDIRECT_TO="/dev/null" ||
-    local REDIRECT_TO="/dev/stdout"
+    local REDIRECT_TO="/dev/tty"
 
   echo "Destroying Confluent Cloud stack associated to service account id $SERVICE_ACCOUNT_ID"
 
   # Delete associated ACLs
   ccloud::delete_acls_ccloud_stack $SERVICE_ACCOUNT_ID
 
-  if [[ "$KSQLDB_ENDPOINT" != "" ]]; then # This is just a quick check, if set there is a KSQLDB in this stack
-    local ksqldb_id=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
-    echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id"
-    ccloud ksql app delete $ksqldb_id &> "$REDIRECT_TO"
+  ksqldb_id_found=$(ccloud ksql app list -o json | jq -r 'map(select(.name == "'"$KSQLDB_NAME"'")) | .[].id')
+  if [[ $ksqldb_id_found != "" ]]; then
+    echo "Deleting KSQLDB: $KSQLDB_NAME : $ksqldb_id_found"
+    ccloud ksql app delete $ksqldb_id_found &> "$REDIRECT_TO"
   fi
 
   # Delete connectors associated to this Kafka cluster, otherwise cluster deletion fails

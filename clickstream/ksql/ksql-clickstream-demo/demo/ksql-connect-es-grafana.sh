@@ -39,7 +39,7 @@ curl -s -X "POST" "http://$CONNECT_HOST:8083/connectors/" \
   "config": {
     "schema.ignore": "true",
     "topics": "'$TABLE_NAME'",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.converter": "org.apache.kafka.connect.converters.ByteArrayConverter",
     "value.converter.schemas.enable": false,
     "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
     "key.ignore": "true",

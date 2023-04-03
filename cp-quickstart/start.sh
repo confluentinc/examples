@@ -36,3 +36,5 @@ ksql http://localhost:8088 <<EOF
 run script 'statements.sql';
 exit ;
 EOF
+
+printf "\n====== Successfully Completed ======\n\n"

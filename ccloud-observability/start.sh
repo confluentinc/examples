@@ -5,7 +5,7 @@ NAME=`basename "$0"`
 QUIET="${QUIET:-false}"
 [[ $QUIET == "true" ]] && 
   REDIRECT_TO="/dev/null" ||
-  REDIRECT_TO="/dev/stdout"
+  REDIRECT_TO="/dev/tty"
 
 # Source library
 source ../utils/helper.sh
@@ -73,7 +73,7 @@ echo "METRICS_API_KEY=$METRICS_API_KEY" >> .env
 echo "METRICS_API_SECRET=$METRICS_API_SECRET" >> .env
 echo "CLOUD_CLUSTER=$CLOUD_CLUSTER" >> .env
 echo "BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS" >> .env
-echo "SASL_JAAS_CONFIG=\"$SASL_JAAS_CONFIG\"" >> .env
+echo "SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG" >> .env
 
 echo
 echo "Confluent Cloud Environment:"
@@ -84,4 +84,4 @@ echo "  export METRICS_API_KEY=$METRICS_API_KEY"
 echo "  export METRICS_API_SECRET=$METRICS_API_SECRET"
 echo "  export CLOUD_CLUSTER=$CLOUD_CLUSTER"
 echo "  export BOOTSTRAP_SERVERS=$BOOTSTRAP_SERVERS"
-echo "  export SASL_JAAS_CONFIG=\"$SASL_JAAS_CONFIG\""
+echo "  export SASL_JAAS_CONFIG=$SASL_JAAS_CONFIG"

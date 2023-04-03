@@ -7,12 +7,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.confluent</groupId>
     <artifactId>rest-utils-parent</artifactId>
-    <version>6.1.11</version>
+    <version>6.2.0</version>
   </parent>
 
   <artifactId>java-client-avro-examples</artifactId>
   <packaging>jar</packaging>
-  <version>6.1.11</version>
+  <version>6.2.0</version>
 
   <organization>
     <name>Confluent, Inc.</name>
@@ -25,7 +25,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <properties>
     <!-- Keep versions as properties to allow easy modification -->
-    <avro.version>1.9.1</avro.version>
     <java.version>8</java.version>
     <gson.version>2.2.4</gson.version>
     <!-- Maven properties for compilation -->
@@ -62,11 +61,6 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
       <version>${kafka.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.avro</groupId>
-      <artifactId>avro</artifactId>
-      <version>${avro.version}</version>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>

@@ -31,7 +31,7 @@ Overview
 ========
 
 As enterprises move more and more of their applications to the cloud, they are also moving their on-prem ETL (extract, transform, load) pipelines to the cloud, as well as building new ones.
-This example showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
+This example showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__.
 
 .. figure:: images/cloud-etl.png
    :alt: image
@@ -88,7 +88,7 @@ Prerequisites
 Cloud services
 ~~~~~~~~~~~~~~
 
--  `Confluent Cloud cluster <https://confluent.cloud>`__
+-  `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
 -  Access to AWS and (optional) GCP or Azure
 
 Local Tools
@@ -241,7 +241,7 @@ Run
       ksql.basic.auth.user.info=<KSQLDB API KEY>:<KSQLDB API SECRET>
 
 
-#. Log into the Confluent Cloud UI at http://confluent.cloud .
+#. Log into the `Confluent Cloud Console <http://confluent.cloud>`__ .
 
 
 Connectors
@@ -329,7 +329,7 @@ Connectors
         aws.access.key.id   | ****************
 
 
-#. View these same connectors from the Confluent Cloud UI at https://confluent.cloud/ 
+#. View these same connectors from the Confluent Cloud Console.
 
    .. figure:: images/connectors.png
       :alt: image
@@ -338,7 +338,7 @@ Connectors
 ksqlDB
 ~~~~~~
 
-#. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/cloud/current/get-started/ksql.html#use-flow-view-to-inspect-data>`__ through your ksqlDB application:
+#. From the Confluent Cloud Console, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/cloud/current/get-started/ksql.html#use-flow-view-to-inspect-data>`__ through your ksqlDB application:
 
    .. figure:: images/flow.png
       :alt: image
@@ -347,7 +347,7 @@ ksqlDB
 
    .. literalinclude:: ../statements.sql
 
-#. Use the Confluent Cloud ksqlDB UI or its REST API to interact with the ksqlDB application:
+#. Use the Confluent Cloud ksqlDB editor or its REST API to interact with the ksqlDB application:
 
    .. code:: bash
 
@@ -441,7 +441,7 @@ ksqlDB
         ]
       }
 
-#. View these same queries from the Confluent Cloud UI at https://confluent.cloud/ 
+#. View these same queries from the Confluent Cloud Console.
 
 .. figure:: images/ksqldb_queries.png
    :alt: image
@@ -533,7 +533,7 @@ Validate
       gs://confluent-cloud-etl-demo/topics/SUM_PER_SOURCE/year=2020/month=02/day=26/hour=03/SUM_PER_SOURCE+3+0000003000.avro
 
 
-#. Add more entries in the source and see them propagate through the pipeline by viewing messages in the Confluent Cloud UI or CLI.
+#. Add more entries in the source and see them propagate through the pipeline by viewing messages in the Confluent Cloud Console or CLI.
 
    If you are running Kinesis:
 
@@ -547,7 +547,7 @@ Validate
 
       ./add_entries_rds.sh
 
-#. View the new messages from the Confluent Cloud UI.
+#. View the new messages from the Confluent Cloud Console.
 
 .. figure:: images/messages.png
    :alt: image

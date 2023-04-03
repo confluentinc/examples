@@ -3,7 +3,9 @@
 # Source library
 source ../utils/helper.sh
 
-wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one/docker-compose.yml
+wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/docker-compose.yml
+wget -O update_run.sh https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/update_run.sh
+chmod 744 update_run.sh
 
 ./stop-docker.sh
 
@@ -27,10 +29,8 @@ retry $MAX_WAIT check_topic_exists broker broker:29092 pageviews || exit 1
 retry $MAX_WAIT check_topic_exists broker broker:29092 users || exit 1
 echo "Topics exist!"
 
-# Run the KSQL queries
-docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
-run script '/tmp/statements.sql';
-exit ;
-EOF"
+# Read topics
+docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:29092 --timeout-ms 10000 --max-messages 5 --topic users --property schema.registry.url=http://schema-registry:8081
+docker-compose exec connect kafka-avro-console-consumer --bootstrap-server broker:29092 --timeout-ms 10000 --max-messages 5 --topic pageviews --property schema.registry.url=http://schema-registry:8081
 
 printf "\n====== Successfully Completed ======\n\n"

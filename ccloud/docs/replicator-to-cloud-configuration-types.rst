@@ -105,6 +105,8 @@ Configure |crep|
 
 .. include:: includes/replicator-connect-worker-to-destination.rst
 
+.. _configure-acls:
+
 Configure ACLs
 ^^^^^^^^^^^^^^
 

@@ -137,7 +137,7 @@ Environment
 
 * For running the end-to-end example on |ccloud|, with connectors, Elasticsearch, and Kibana:
 
-  * |ccloud| account. The `Confluent Cloud <https://www.confluent.io/confluent-cloud/>`__ home page can help you get setup with your own account if you do not yet have access
+  * `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
   * Local install of `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.25.0 or later
   * Docker version >= 19.00.0
   * Docker Compose version >= 1.25.0 with Docker Compose file format 3
@@ -199,7 +199,7 @@ Steps
 
       ./start-ccloud.sh
 
-#. After starting the example, the microservices applications will be running localy and your |ccloud| instance will have Kafka topics with data in them.
+#. After starting the example, the microservices applications will be running locally and your |ccloud| instance will have Kafka topics with data in them.
 
    .. figure:: images/microservices-exercises-combined.png
        :alt: image
@@ -222,7 +222,7 @@ Steps
        :alt: image
        :width: 600px
 
-#. View and monitor the streaming applications. Use the |ccloud| web user interface (login at https://confluent.cloud/login) to explore topics, consumers, Data flow, and the |ksql-cloud| application.
+#. View and monitor the streaming applications. Use the `Confluent Cloud Console <http://confluent.cloud>`__ to explore topics, consumers, Data flow, and the |ksql-cloud| application.
 
    .. figure:: images/data-flow.png
        :alt: image

@@ -13,8 +13,6 @@ Often referred to as a stretch cluster, |mrrep| replicate data between datacente
 You can choose how to replicate data, synchronously or asynchronously, on a per |ak| topic basis.
 It provides good durability guarantees and makes disaster recovery (DR) much easier.
 
-This tutorial uses a dedicated |ak| cluster backing |c3|, which monitors the multi-region cluster.
-
 Benefits:
 
 - Supports multi-site deployments of synchronous and asynchronous replication between datacenters
@@ -22,7 +20,6 @@ Benefits:
 - Ordering of |ak| messages is preserved across datacenters
 - Consumer offsets are preserved
 - In event of a disaster in a datacenter, new leaders are automatically elected in the other datacenter for the topics configured for synchronous replication, and applications proceed without interruption, achieving very low RTOs and RPO=0 for those topics.
-
 
 Concepts
 --------
@@ -60,6 +57,8 @@ can be automatically promoted into the ISR is controlled by the
 - ``under-replicated``: if the number of replicas in the ISR ISR drops below the configured count of replicas in the topic's replica placement policy.
 - ``leader-is-observer``: if the current partition leader is an observer.
 
+.. tip:: For an in-depth explanation of these concepts and configurations,
+         see `Multi-Region Clusters <https://docs.confluent.io/platform/current/multi-dc-deployments/multi-region.html>`__.
 
 Configuration
 --------------
@@ -70,6 +69,8 @@ The scenario for this tutorial is as follows:
 - Broker naming convention: ``broker-[region]-[broker_id]``
 
 |Multi-region Architecture|
+
+Note that this tutorial uses a dedicated |ak| cluster backing |c3|, which monitors the multi-region cluster.
 
 Here are some relevant configuration parameters at different component levels:
 

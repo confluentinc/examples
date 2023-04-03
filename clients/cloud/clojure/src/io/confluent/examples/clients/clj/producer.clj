@@ -12,30 +12,31 @@
 (defn- build-properties [config-fname]
   (with-open [config (jio/reader config-fname)]
     (doto (Properties.)
-      (.putAll {ProducerConfig/KEY_SERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringSerializer"
-                ProducerConfig/VALUE_SERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringSerializer"})
+      (.putAll
+        {ProducerConfig/KEY_SERIALIZER_CLASS_CONFIG   "org.apache.kafka.common.serialization.StringSerializer"
+         ProducerConfig/VALUE_SERIALIZER_CLASS_CONFIG "org.apache.kafka.common.serialization.StringSerializer"})
       (.load config))))
 
 (defn- create-topic! [topic partitions replication cloud-config]
   (let [ac (AdminClient/create cloud-config)]
     (try
-      (.createTopics ac [(NewTopic. topic partitions replication)])
+      (.createTopics ac [(NewTopic. ^String topic  (int partitions) (short replication))])
       ;; Ignore TopicExistsException, which would get thrown if the topic was previously created
       (catch TopicExistsException e nil)
       (finally
         (.close ac)))))
 
 (defn producer! [config-fname topic]
-  (let [props (build-properties config-fname)
-        print-ex (comp println (partial str "Failed to deliver message: "))
+  (let [props          (build-properties config-fname)
+        print-ex       (comp println (partial str "Failed to deliver message: "))
         print-metadata #(printf "Produced record to topic %s partition [%d] @ offest %d\n"
                                 (.topic %)
                                 (.partition %)
                                 (.offset %))
-        create-msg #(let [k "alice"
-                          v (json/write-str {:count %})]
-                      (printf "Producing record: %s\t%s\n" k v)
-                      (ProducerRecord. topic k v))]
+        create-msg     #(let [k "alice"
+                              v (json/write-str {:count %})]
+                          (printf "Producing record: %s\t%s\n" k v)
+                          (ProducerRecord. topic k v))]
     (with-open [producer (KafkaProducer. props)]
       (create-topic! topic 1 3 props)
       (let [;; We can use callbacks to handle the result of a send, like this:

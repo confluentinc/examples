@@ -133,7 +133,7 @@ CREATE TABLE ERRORS_PER_MIN AS
 
 -- Enriched error codes table:
 -- Aggregate (count&groupBy) using a TABLE-Window
-CREATE TABLE ENRICHED_ERROR_CODES_COUNT AS
+CREATE TABLE ENRICHED_ERROR_CODES_COUNT WITH (key_format='json') AS
     SELECT
         code as k1,
         definition as K2,
@@ -147,7 +147,7 @@ CREATE TABLE ENRICHED_ERROR_CODES_COUNT AS
 
 -- Enriched user details table:
 -- Aggregate (count&groupBy) using a TABLE-Window
-CREATE TABLE USER_IP_ACTIVITY AS
+CREATE TABLE USER_IP_ACTIVITY WITH (key_format='json') AS
     SELECT
         username as k1,
         ip as k2,
