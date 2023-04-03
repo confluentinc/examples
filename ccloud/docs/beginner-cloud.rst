@@ -40,19 +40,6 @@ Prerequisites
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
 
-Cost to Run Tutorial
---------------------
-
-Caution
-~~~~~~~
-
-.. include:: includes/ccloud-examples-caution.rst
-
-|ccloud| Promo Code
-~~~~~~~~~~~~~~~~~~~
-
-.. include:: includes/ccloud-examples-promo-code.rst
-
 Run Tutorial
 ------------
 
