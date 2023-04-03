@@ -43,17 +43,6 @@ Prerequisites
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
-
-Confluent Cloud Promo Code
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The first 20 users to sign up for `Confluent Cloud
-<https://www.confluent.io/confluent-cloud/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__
-and use promo code ``C50INTEG`` will receive an additional $50 free usage
-(`details
-<https://www.confluent.io/confluent-cloud-promo-disclaimer/?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.beginner-cloud>`__).
-
-
 Run the tutorial
 ----------------
 
