@@ -29,6 +29,8 @@ ccloud::validate_cloud_storage config/demo.cfg \
   && print_pass "cloud storage $DESTINATION_STORAGE ok" \
   || exit 1
 
+export EXAMPLE="cloud-etl"
+
 echo
 echo ====== Create new Confluent Cloud stack
 ccloud::prompt_continue_ccloud_demo || exit 1
@@ -45,7 +47,7 @@ ccloud::validate_ccloud_config $CONFIG_FILE \
   || exit 1
 
 echo ====== Generate CCloud configurations
-../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE
+ccloud::generate_configs $CONFIG_FILE
 
 DELTA_CONFIGS_DIR=delta_configs
 source $DELTA_CONFIGS_DIR/env.delta

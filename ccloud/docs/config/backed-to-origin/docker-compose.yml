@@ -3,7 +3,7 @@ version: '2'
 services:
 
   connect-origin:
-    image: confluentinc/cp-enterprise-replicator:6.0.0
+    image: confluentinc/cp-enterprise-replicator:6.0.1
     hostname: connect-origin
     container_name: connect-origin
     ports:
@@ -30,13 +30,11 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: $SCHEMA_REGISTRY_URL
       CONNECT_VALUE_CONVERTER_BASIC_AUTH_CREDENTIALS_SOURCE: $BASIC_AUTH_CREDENTIALS_SOURCE
       CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO: $SCHEMA_REGISTRY_BASIC_AUTH_USER_INFO
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
 
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: "/usr/share/java/kafka-connect-replicator/replicator-rest-extension-6.0.0.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.0.jar"
+      CLASSPATH: "/usr/share/java/kafka-connect-replicator/replicator-rest-extension-6.0.1.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-6.0.1.jar"
 
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL

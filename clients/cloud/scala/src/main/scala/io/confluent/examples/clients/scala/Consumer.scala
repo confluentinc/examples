@@ -51,6 +51,7 @@ import scala.collection.JavaConversions._
       properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer")
       properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.connect.json.JsonDeserializer")
       properties.put(ConsumerConfig.GROUP_ID_CONFIG, "scala_example_group")
+      properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
       properties.load(new FileReader(configFileName))
       properties
     }

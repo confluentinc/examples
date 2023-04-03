@@ -5,7 +5,7 @@ source ../../../utils/ccloud_library.sh
 
 CONFIG_FILE="${CONFIG_FILE:-$HOME/.confluent/java.config}"
 
-../../../ccloud/ccloud-generate-cp-configs.sh $CONFIG_FILE || exit
+ccloud::generate_configs $CONFIG_FILE || exit 1
 source ./delta_configs/env.delta
 
 wget -O docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-cloud/docker-compose.yml

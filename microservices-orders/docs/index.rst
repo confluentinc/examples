@@ -162,6 +162,20 @@ Local
 
   * If you do not want to use Kibana, comment out ``check_running_kibana`` in the ``start.sh`` script
 
+====================
+Cost to Run Tutorial
+====================
+
+Caution
+~~~~~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+
+|ccloud| Promo Code
+~~~~~~~~~~~~~~~~~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
+
 ========
 Tutorial
 ========
@@ -188,7 +202,7 @@ Setup the Tutorial
 
    - Exercise 0: Run end-to-end example
 
-#. After you have successfully run the full solution, go through each of the execises 1-7 to better understand the basic principles of streaming applications:
+#. After you have successfully run the full solution, go through each of the exercises 1-7 to better understand the basic principles of streaming applications:
 
    - Exercise 1: Persist events 
    - Exercise 2: Event-driven applications
@@ -209,13 +223,13 @@ Exercise 0: Run end-to-end example
 
 Running the fully working example end-to-end provides context for each of the later exercises.
 
-#. Ensure you've followed the appropriate prerequisites section above prior to starting.
+Ensure you've followed the appropriate prerequisites section above prior to starting.
 
 #. Start the end-to-end example in one of three modes, depending on whether you are running with |ccloud|, in Docker, or |cp| locally:
 
-   * |ccloud|: first log in to |ccloud| with the command ``ccloud login``, and use your |ccloud| username and password. To prevent being logged out, use the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``.netrc`` file. Then run the full solution using the provided script (this starts a new |ccloud| environment and Kafka using the :cloud:`ccloud-stack Utility for Confluent Cloud|get-started/examples/ccloud/docs/ccloud-stack.html`).
+   .. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
 
-     .. sourcecode:: bash
+   .. sourcecode:: bash
 
         ccloud login --save
         ./start-ccloud.sh
@@ -506,7 +520,7 @@ Exercise 4: Filtering and branching
 A stream of events can be captured in a Kafka topic.
 Client applications can then manipulate this stream based on some user-defined criteria, even creating new streams of data that they can act on or downstream services can act on.
 These help create new streams with more logically consistent data.
-In some cases, the application may need to filter events from an input stream that match certain critera, which results in a new stream with just a subset of records from the original stream.
+In some cases, the application may need to filter events from an input stream that match certain criteria, which results in a new stream with just a subset of records from the original stream.
 In other cases, the application may need to branch events, whereby each event is tested against a predicate and then routed to a stream that matches, which results in multiple new streams split from the original stream.
 
 .. figure:: images/microservices-exercise-4.png
@@ -646,7 +660,7 @@ Implement the `TODO` lines of the file :devx-examples:`exercises/InventoryServic
 .. tip::
 
    The following APIs will be helpful:
-   
+
    * https://docs.confluent.io/platform/current/streams/javadocs/javadoc/org/apache/kafka/streams/state/Stores.html#persistentKeyValueStore-java.lang.String-
    * https://docs.confluent.io/platform/current/streams/javadocs/javadoc/org/apache/kafka/streams/state/Stores.html#keyValueStoreBuilder-org.apache.kafka.streams.state.KeyValueBytesStoreSupplier-org.apache.kafka.common.serialization.Serde-org.apache.kafka.common.serialization.Serde-
    * https://docs.confluent.io/platform/current/streams/javadocs/javadoc/org/apache/kafka/streams/state/KeyValueStore.html#put-K-V-
@@ -688,7 +702,7 @@ It provides an easy-to-use, yet powerful interactive SQL interface for stream pr
 You can use |ksqldb| to merge streams of data in real time by using a SQL-like `join` syntax.
 A `ksqlDB join <https://docs.ksqldb.io/en/latest/developer-guide/joins/join-streams-and-tables/>`__ and a relational database join are similar in that they both combine data from two sources based on common values.
 The result of a |ksqldb| join is a new stream or table that’s populated with the column values that you specify in a `SELECT` statement.
-|ksqldb| also supports several `aggregate functions <https://docs.ksqldb.io/en/latest/concepts/materialized-views/>`__, like `COUNT` and `SUM`.
+|ksqldb| also supports several `aggregate functions <https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/aggregate-functions/>`__, like `COUNT` and `SUM`.
 You can use these to build stateful aggregates on streaming data. 
 
 In this exercise, you will create one persistent query that enriches the `orders` stream with customer information using a stream-table join.
@@ -708,8 +722,9 @@ Then create the following persistent queries:
 
    The following APIs will be helpful:
 
-   * https://docs.ksqldb.io/en/latest/concepts/streams/#create-a-persistent-streaming-query-from-a-stream
-   * https://docs.ksqldb.io/en/latest/how-to-guides/
+   * https://docs.ksqldb.io/en/latest/concepts/stream-processing/#derive-a-new-stream-from-an-existing-stream
+   * https://docs.ksqldb.io/en/latest/developer-guide/joins/
+   * https://docs.ksqldb.io/en/latest/concepts/time-and-windows-in-ksqldb-queries/#window-types
 
    If you get stuck, here is the :devx-examples:`complete solution|microservices-orders/statements.sql`.
 
@@ -717,7 +732,11 @@ Then create the following persistent queries:
 The CLI parser will give immediate feedback whether your |ksqldb| queries worked or not.
 Use ``SELECT * FROM <stream or table name> EMIT CHANGES LIMIT <row count>;`` to see the rows in each query.
 
+=============
+Stop Tutorial
+=============
 
+.. include:: ../../ccloud/docs/includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources

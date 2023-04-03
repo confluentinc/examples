@@ -24,3 +24,10 @@ log.*
 **/eventlogs.sql
 **/.DS_Store
 ccloud/*.zip
+*.project
+*.classpath
+**/.settings/
+**/.gradle/
+clients/cloud/**/bin/
+ccloud/beginner-cloud/.ignored_folder/*
+!ccloud/beginner-cloud/.ignored_folder/.gitkeep

@@ -16,7 +16,7 @@ topic_name=test1
 
 # Create topic in Confluent Cloud
 echo -e "\n# Create topic $topic_name"
-kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $topic_name --create --replication-factor 3 --partitions 6 2>/dev/null || true
+kafka-topics --bootstrap-server `grep "^\s*bootstrap.server" $CONFIG_FILE | tail -1` --command-config $CONFIG_FILE --topic $topic_name --create 2>/dev/null || true
 
 # Produce messages
 echo -e "\n# Produce messages to $topic_name"

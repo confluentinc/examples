@@ -3,12 +3,28 @@
 |crep-full| to |ccloud| Configurations
 ======================================
 
+========
+Overview
+========
+
 Whether you are migrating from on-premises to cloud or have a persistent "bridge to cloud" strategy, you can use |crep-full| to copy |ak| data to |ccloud|.
 Learn the different ways to configure |crep| and |kconnect-long|.
 
 .. figure:: images/replicator-to-ccloud.png
 
-.. include:: includes/ccloud-promo-code.rst
+===================
+Cost to Run Example
+===================
+
+Caution
+-------
+
+.. include:: includes/ccloud-examples-caution.rst
+
+|ccloud| Promo Code
+-------------------
+
+.. include:: includes/ccloud-examples-promo-code.rst
 
 ===============
 Concepts Review
@@ -200,6 +216,7 @@ Configure ACLs
 
 .. include:: includes/set-acls-origin-and-destination.rst
 
+.. include:: includes/ccloud-examples-terminate.rst
 
 ====================
 Additional Resources

@@ -64,14 +64,13 @@ public class StreamsExample {
         // Load properties from a local configuration file
         // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
         // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
-        // Follow these instructions to create this file: https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html
+        // Follow these instructions to create this file: https://docs.confluent.io/platform/current/tutorials/examples/clients/docs/java.html
         final Properties props = loadConfig(args[0]);
 
         // Add additional properties.
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "demo-streams-1");
         // Disable caching to print the aggregation value after each record
         props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
-        props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 3);
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
         final Serde<DataRecord> DataRecord = getJsonSerde();

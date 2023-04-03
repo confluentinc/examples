@@ -2,7 +2,7 @@
 
 # Overview
 
-The Confluent Platform Quickstart demo is the automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/current/quickstart.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart)
+The Confluent Platform Quickstart demo is the automated version of the [Confluent Platform Quickstart](https://docs.confluent.io/platform/current/quickstart/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart)
 
 ![image](images/quickstart.png)
 
@@ -19,19 +19,19 @@ For additional examples that showcase streaming applications within an event str
 
 ## Confluent Platform
 
-* [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/ce-quickstart.html#ce-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the local tarball install of Confluent Platform: run the command below and then open your browser and navigate to the Control Center at http://localhost:9021/:
+* [Confluent Platform Quick Start](https://docs.confluent.io/platform/current/quickstart/ce-quickstart.html#ce-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the local tarball install of Confluent Platform: run the command below and then open your browser and navigate to the Control Center at http://localhost:9021/:
 
 ```bash
 ./start.sh
 ```
 
-* [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the Docker version of Confluent Platform: run the command below and then open your browser and navigate to the Control Center at http://localhost:9021/:
+* [Confluent Platform Quick Start](https://docs.confluent.io/platform/current/quickstart/ce-docker-quickstart.html#ce-docker-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the Docker version of Confluent Platform: run the command below and then open your browser and navigate to the Control Center at http://localhost:9021/:
 
 ```bash
 ./start-docker.sh
 ```
 
-* [Confluent Platform Quick Start](https://docs.confluent.io/current/quickstart/cos-docker-quickstart.html#cos-docker-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the Docker version of Confluent Platform with community components only: run the command below:
+* [Confluent Platform Quick Start](https://docs.confluent.io/platform/current/quickstart/cos-docker-quickstart.html#cos-docker-quickstart?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.cp-quickstart) for the Docker version of Confluent Platform with community components only: run the command below:
 
 ```bash
 ./start-docker-community.sh

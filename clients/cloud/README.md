@@ -35,5 +35,5 @@ The following subset includes examples with Schema Registry and Avro data:
 # Additional Resources
 
 
-* For clusters in Confluent Cloud: refer to [Developing Client Applications on Confluent Cloud](https://docs.confluent.io/current/cloud/best-practices/index.html) for a practical guide to configuring, monitoring, and optimizing your Kafka client applications.
+* For clusters in Confluent Cloud: refer to [Developing Client Applications on Confluent Cloud](https://docs.confluent.io/cloud/current/client-apps/index.html) for a practical guide to configuring, monitoring, and optimizing your Kafka client applications.
 * For on-prem clusters: refer to [Optimizing Your Apache Kafka Deployment](https://www.confluent.io/white-paper/optimizing-your-apache-kafka-deployment?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.clients) whitepaper for a practical guide to optimizing your Apache Kafka deployment for various services goals including throughput, latency, durability and availability, and useful metrics to monitor for performance and cluster health.

@@ -30,6 +30,8 @@ else
   STMT="PRESERVE_ENVIRONMENT=true"
 fi
 
+export EXAMPLE="ccloud-stack-script"
+
 echo
 ccloud::create_ccloud_stack $enable_ksqldb || exit 1
 
@@ -38,7 +40,7 @@ echo "Validating..."
 SERVICE_ACCOUNT_ID=$(ccloud kafka cluster list -o json | jq -r '.[0].name' | awk -F'-' '{print $4;}')
 CONFIG_FILE=stack-configs/java-service-account-$SERVICE_ACCOUNT_ID.config
 ccloud::validate_ccloud_config $CONFIG_FILE || exit 1
-../ccloud-generate-cp-configs.sh $CONFIG_FILE > /dev/null
+ccloud::generate_configs $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 
 if $enable_ksqldb ; then
@@ -63,5 +65,5 @@ echo "    $STMT ./ccloud_stack_destroy.sh $CONFIG_FILE"
 echo
 
 echo
-ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+ENVIRONMENT=$(ccloud::get_environment_id_from_service_id $SERVICE_ACCOUNT_ID)
 echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"

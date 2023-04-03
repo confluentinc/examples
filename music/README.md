@@ -8,4 +8,4 @@ This demo uses a mock music application to showcase Apache Kafka Streams API and
 
 # Documentation
 
-You can find the documentation for running this demo and its accompanying tutorial at [https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html](https://docs.confluent.io/current/streams/kafka-streams-examples/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.music)
+You can find the documentation for running this demo and its accompanying tutorial at [https://docs.confluent.io/platform/current/streams/kafka-streams-examples/docs/index.html](https://docs.confluent.io/platform/current/streams/kafka-streams-examples/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.music)

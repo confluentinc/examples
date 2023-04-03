@@ -6,6 +6,30 @@
 Cloud ETL Example
 =================
 
+This example showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
+
+.. figure:: images/topology.png
+   :alt: image
+
+-  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
+
+   - `Amazon Kinesis Source Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-kinesis-source.html>`__
+   - `PostgreSQL CDC Source Connector (Debezium) for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-postgresql-cdc-source-debezium.html>`__
+
+-  Cloud sink connectors: writes data from Kafka topics in |ccloud| to cloud storage, one of:
+
+   - `Azure Blob Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-azure-blob-sink.html>`__
+   - `Google Cloud Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-gcs-sink.html>`__
+   - `Amazon S3 Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-s3-sink.html>`__
+
+-  `Confluent Cloud ksqlDB <https://docs.confluent.io/cloud/current/get-started/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
+
+-  `Confluent Cloud Schema Registry <https://docs.confluent.io/cloud/current/cp-component/schema-reg-cloud-config.html>`__: centralized management of schemas and compatibility checks as schemas evolve
+
+========
+Overview
+========
+
 As enterprises move more and more of their applications to the cloud, they are also moving their on-prem ETL (extract, transform, load) pipelines to the cloud, as well as building new ones.
 This example showcases a cloud ETL solution leveraging all fully-managed services on `Confluent Cloud <https://confluent.cloud>`__.
 
@@ -16,9 +40,6 @@ There are many powerful use cases for these real-time cloud ETL pipelines, and t
 Using |ccloud| CLI, the example creates a source connector that reads data from either an AWS Kinesis stream or AWS RDS PostgreSQL database into |ccloud|.
 Then it creates a |ccloud| ksqlDB application that processes that data.
 Finally, a sink connector writes the output data into cloud storage in the provider of your choice (one of GCP GCS, AWS S3, or Azure Blob).
-
-.. figure:: images/topology.png
-   :alt: image
 
 The end result is an event streaming ETL, running 100% in the cloud, spanning multiple cloud providers.
 This enables you to:
@@ -31,32 +52,8 @@ This enables you to:
 .. tip:: For more information about building a cloud ETL pipeline on |ccloud|, see this
          `blog post <https://www.confluent.io/blog/build-a-cloud-etl-pipeline-with-confluent-cloud/>`__.
 
-.. include:: ../../ccloud/docs/includes/ccloud-promo-code.rst
-
-========================
-End-to-end Streaming ETL
-========================
-
-This example showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
-
--  Cloud source connectors: writes data to Kafka topics in |ccloud| from a cloud service, one of:
-
-   - `Amazon Kinesis Source Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-kinesis-source.html#cc-kinesis-source>`__
-   - `PostgreSQL CDC Source Connector (Debezium) for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-postgresql-cdc-source-debezium.html>`__
-
--  Cloud sink connectors: writes data from Kafka topics in |ccloud| to cloud storage, one of:
-
-   - `Azure Blob Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-azure-blob-sink.html>`__
-   - `Google Cloud Storage Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-gcs-sink.html>`__
-   - `Amazon S3 Sink Connector for Confluent Cloud <https://docs.confluent.io/cloud/current/connectors/cc-s3-sink.html>`__
-
--  `Confluent Cloud ksqlDB <https://docs.confluent.io/cloud/current/get-started/ksql.html>`__ : streaming SQL engine that enables real-time data processing against Kafka
--  `Confluent Cloud Schema Registry <https://docs.confluent.io/cloud/current/get-started/schema-registry.html>`__: centralized management of schemas and compatibility checks as schemas evolve
-
-
-
 Data Flow
----------
+=========
 
 The data set is a stream of log messages, which in this example is mock data captured in :devx-examples:`eventlogs.json|cloud-etl/eventlogs.json`.
 It resembles this:
@@ -84,42 +81,55 @@ It resembles this:
 |                       | ``SUM_PER_SOURCE``    |                       |
 +-----------------------+-----------------------+-----------------------+
 
-=======
-Caution
-=======
-
-This ``cloud-etl`` example uses real cloud resources, including that of |ccloud|, AWS Kinesis or RDS PostgreSQL, and one of the cloud storage providers.
-To avoid unexpected charges, carefully evaluate the cost of resources before launching the example and ensure all resources are destroyed after you are done running it.
-
 =============
 Prerequisites
 =============
 
 Cloud services
---------------
+~~~~~~~~~~~~~~
 
 -  `Confluent Cloud cluster <https://confluent.cloud>`__
 -  Access to AWS and (optional) GCP or Azure
 
 Local Tools
------------
+~~~~~~~~~~~
 
 -  `Confluent Cloud CLI <https://docs.confluent.io/ccloud-cli/current/install.html>`__ v1.7.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
 -  ``az`` CLI, properly initialized with your credentials: (optional) if destination is Azure Blob storage
+-  ``psql``: (optional) if source is RDS PostgreSQL
 -  ``jq``
 -  ``curl``
 -  .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 -  ``python``
 -  Download `Confluent Platform <https://www.confluent.io/download/>`__ |release|: for more advanced Confluent CLI functionality (optional)
 
+====================
+Cost to Run Tutorial
+====================
+
+Caution
+~~~~~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
+
+This example also uses real resources from other cloud providers, including:
+
+* AWS Kinesis or RDS PostgreSQL
+* Cloud storage providers (one of GCP GCS, AWS S3, or Azure Blob) depending on your configuration
+
+|ccloud| Promo Code
+~~~~~~~~~~~~~~~~~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
+
 ===========
 Run Example
 ===========
 
 Setup
------
+~~~~~
 
 Because this example interacts with real resources in Kinesis or RDS PostgreSQL, a destination storage service, and |ccloud|, you must set up some initial parameters to communicate with these services.
 
@@ -156,7 +166,7 @@ Because this example interacts with real resources in Kinesis or RDS PostgreSQL,
      - ``RDS_REGION``
      - ``AWS_PROFILE``
 
-#. In the same example configuration file, set the required parameters for the destination cloud storage provider:
+#. In the same example configuration file at :devx-examples:`config/demo.cfg|cloud-etl/config/demo.cfg`, set the required parameters for the destination cloud storage provider:
 
    - GCP GCS
 
@@ -176,16 +186,18 @@ Because this example interacts with real resources in Kinesis or RDS PostgreSQL,
      - ``AZBLOB_STORAGE_ACCOUNT``
      - ``AZBLOB_CONTAINER``
 
-Run
----
-
 #. Log in to |ccloud| with the command ``ccloud login --save``, and use your |ccloud| username and password. The ``--save`` argument saves your Confluent Cloud user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 
    .. code:: shell
 
       ccloud login --save
 
-#. Run the example. You must explicitly set the cloud provider and region for your |ccloud| cluster when you start the example, and they must match the destination cloud storage provider and region. This will take several minutes to complete as it creates new resources in |ccloud| and other cloud providers.
+Run
+~~~
+
+.. include:: ../../ccloud/docs/includes/ccloud-stack-advanced-options.rst
+
+#. Run the example. Set the cloud provider and region for your |ccloud| cluster when you start the example, so that they match the destination cloud storage provider and region. This will take several minutes to complete as it creates new resources in |ccloud| and other cloud providers.
 
    .. code:: bash
 
@@ -199,7 +211,7 @@ Run
       CLUSTER_CLOUD=azure CLUSTER_REGION=westus2 ./start.sh
 
 
-#. As part of this script run, it creates a new |ccloud| stack of fully managed resources and generates a local configuration file with all connection information, cluster IDs, and credentials, which is useful for other demos/automation. View this local configuration file, where ``SERVICE ACCOUNT ID`` is auto-generated by the script.
+#. As part of this script run, the :cloud:`ccloud-stack utility for Confluent Cloud|get-started/examples/ccloud/docs/ccloud-stack.html` creates a new |ccloud| stack of fully-managed resources and also generates a local configuration file with all connection information, cluster IDs, and credentials, which is useful for other demos/automation. View this local configuration file, where ``SERVICE ACCOUNT ID`` is auto-generated by the script.
 
    .. sourcecode:: bash
 
@@ -221,7 +233,7 @@ Run
       security.protocol=SASL_SSL
       sasl.mechanism=PLAIN
       bootstrap.servers=<BROKER ENDPOINT>
-      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username\="<API KEY>" password\="<API SECRET>";
+      sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='<API KEY>' password='<API SECRET>';
       basic.auth.credentials.source=USER_INFO
       schema.registry.basic.auth.user.info=<SR API KEY>:<SR API SECRET>
       schema.registry.url=https://<SR ENDPOINT>
@@ -233,7 +245,7 @@ Run
 
 
 Connectors
-----------
+~~~~~~~~~~
 
 #. The example automatically created |kconnect-long| connectors using the |ccloud| CLI command ``ccloud connector create`` that included passing in connector configuration files from the :devx-examples:`connector configuration directory|cloud-etl/connectors/`:
 
@@ -324,7 +336,7 @@ Connectors
 
 
 ksqlDB
-------
+~~~~~~
 
 #. From the `Confluent Cloud UI <https://confluent.cloud>`__, select your Kafka cluster and click the ksqlDB tab to view the `flow <https://docs.confluent.io/cloud/current/get-started/ksql.html#use-flow-view-to-inspect-data>`__ through your ksqlDB application:
 
@@ -436,8 +448,7 @@ ksqlDB
 
 
 Validate
---------
-
+~~~~~~~~
 
 #. View the data from Kinesis, |ak|, and cloud storage after running the example, running the :devx-examples:`read-data.sh|cloud-etl/read-data.sh` script.
 
@@ -542,9 +553,14 @@ Validate
    :alt: image
 
 
-      
+============
 Stop Example
-------------
+============
+
+.. include:: ../../ccloud/docs/includes/ccloud-examples-terminate.rst
+
+Details
+~~~~~~~
 
 #. Stop the example and clean up all the resources, delete Kafka topics, delete the fully-managed connectors, delete the data in the cloud storage:
 

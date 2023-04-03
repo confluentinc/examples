@@ -17,6 +17,7 @@ package io.confluent.examples.clients.scala
 
 import java.io.FileReader
 import java.util.Properties
+import java.util.Optional
 
 import org.apache.kafka.clients.producer._
 import org.apache.kafka.clients.admin.{AdminClient, NewTopic}
@@ -34,7 +35,7 @@ object Producer extends App {
   val topicName = args(1)
   val MAPPER = new ObjectMapper
   val props = buildProperties(configFileName)
-  createTopic(topicName, 1, 3, props)
+  createTopic(topicName, props)
   val producer = new KafkaProducer[String, JsonNode](props)
 
   val callback = new Callback {
@@ -65,9 +66,9 @@ object Producer extends App {
     properties
   }
 
-  def createTopic(topic: String, partitions: Int, replication: Int, cloudConfig: Properties): Unit = {
-    val newTopic = new NewTopic(topic, partitions, replication.toShort)
-    val adminClient = AdminClient.create(cloudConfig)
+  def createTopic(topic: String, clusterConfig: Properties): Unit = {
+    val newTopic = new NewTopic(topic, Optional.empty[Integer](), Optional.empty[java.lang.Short]());
+    val adminClient = AdminClient.create(clusterConfig)
     Try (adminClient.createTopics(Collections.singletonList(newTopic)).all.get).recover {
       case e :Exception =>
         // Ignore if TopicExistsException, which may be valid if topic exists

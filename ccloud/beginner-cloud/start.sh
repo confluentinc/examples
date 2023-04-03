@@ -15,17 +15,16 @@ source ../../utils/ccloud_library.sh
 
 ccloud::validate_version_ccloud_cli 1.7.0 || exit 1
 ccloud::validate_logged_in_ccloud_cli || exit 1
+ccloud::prompt_continue_ccloud_demo || exit 1
 check_timeout || exit 1
 check_mvn || exit 1
-check_expect || exit 1
 check_jq || exit 1
-check_docker || exit 1
 
 ##################################################
 # Create a new environment and specify it as the default
 ##################################################
 
-ENVIRONMENT_NAME="demo-script-env"
+ENVIRONMENT_NAME="ccloud-stack-000000-beginner-cli"
 echo -e "\n# Create a new Confluent Cloud environment $ENVIRONMENT_NAME"
 echo "ccloud environment create $ENVIRONMENT_NAME -o json"
 OUTPUT=$(ccloud environment create $ENVIRONMENT_NAME -o json)
@@ -146,16 +145,16 @@ echo "$OUTPUT" | jq .
 API_KEY_SA=$(echo "$OUTPUT" | jq -r ".key")
 API_SECRET_SA=$(echo "$OUTPUT" | jq -r ".secret")
 
-CLIENT_CONFIG="/tmp/client.config"
-echo -e "\n# Create a local configuration file $CLIENT_CONFIG with Confluent Cloud connection information with the newly created API key and secret"
-cat <<EOF > $CLIENT_CONFIG
+CONFIG_FILE="/tmp/client.config"
+echo -e "\n# Create a local configuration file $CONFIG_FILE with Confluent Cloud connection information with the newly created API key and secret"
+cat <<EOF > $CONFIG_FILE
 sasl.mechanism=PLAIN
 security.protocol=SASL_SSL
 bootstrap.servers=${BOOTSTRAP_SERVERS}
 sasl.jaas.config=org.apache.kafka.common.security.plain.PlainLoginModule required username='${API_KEY_SA}' password='${API_SECRET_SA}';
 EOF
-echo "$ cat $CLIENT_CONFIG"
-cat $CLIENT_CONFIG
+echo "$ cat $CONFIG_FILE"
+cat $CONFIG_FILE
 
 echo -e "\n# Wait 90 seconds for the service account credentials to propagate"
 sleep 90
@@ -181,8 +180,8 @@ if [[ $? != 0 ]]; then
   exit 1
 fi
 LOG1="/tmp/log.1"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG1 2>&1
 echo "# Check logs for 'org.apache.kafka.common.errors.TopicAuthorizationException' (expected because there are no ACLs to allow this client application)"
 OUTPUT=$(grep "org.apache.kafka.common.errors.TopicAuthorizationException" $LOG1)
 if [[ ! -z $OUTPUT ]]; then
@@ -204,8 +203,8 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC1: after ACLs"
 LOG2="/tmp/log.2"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC1\" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC1" -Dlog4j.configuration=file:log4j.properties > $LOG2 2>&1
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG2)
 if [[ ! -z $OUTPUT ]]; then
@@ -247,8 +246,8 @@ sleep 2
 
 echo -e "\n# Run the Java producer to $TOPIC2: prefix ACLs"
 LOG3="/tmp/log.3"
-echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1"
-mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CLIENT_CONFIG $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1
+echo "mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"$CONFIG_FILE $TOPIC2\" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1"
+mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ProducerExample" -Dexec.args="$CONFIG_FILE $TOPIC2" -Dlog4j.configuration=file:log4j.properties > $LOG3 2>&1
 echo "# Check logs for '10 messages were produced to topic'"
 OUTPUT=$(grep "10 messages were produced to topic" $LOG3)
 if [[ ! -z $OUTPUT ]]; then
@@ -266,84 +265,41 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 
 
 ##################################################
-# Run Connect and kafka-connect-datagen connector with permissions
-# - Confluent Hub: https://www.confluent.io/hub/
+# Run a fully managed datagen_ccloud_pageviews connector
 ##################################################
 
 TOPIC3="demo-topic-3"
-
+CONNECTOR="datagen_ccloud_pageviews"
 echo -e "\n# Create a new Kafka topic $TOPIC3"
 echo "ccloud kafka topic create $TOPIC3"
 ccloud kafka topic create $TOPIC3
 
 echo -e "\n# Create ACLs for Connect"
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
 ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-echo "ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
-ccloud kafka acl create --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
 echo
 echo "ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID"
 ccloud kafka acl list --service-account $SERVICE_ACCOUNT_ID
 sleep 2
 
 echo -e "\n# Generate env variables with Confluent Cloud connection information for Connect to use"
-echo "../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null"
-../../ccloud/ccloud-generate-cp-configs.sh $CLIENT_CONFIG &>/dev/null
+ccloud::generate_configs $CONFIG_FILE
 echo "source delta_configs/env.delta"
 source delta_configs/env.delta
+cat  $CONNECTOR.json > .ignored_folder/$CONNECTOR.json
+sed -i '' 's/ESN5FSNDHOFFSUEV/$CLOUD_KEY/g' .ignored_folder/$CONNECTOR.json
+sed -i '' 's/nzBEyC1k7zfLvVON3vhBMQrNRjJR7pdMc2WLVyyPscBhYHkMwP6VpPVDTqhctamB/$CLOUD_SECRET/g' .ignored_folder/$CONNECTOR.json
 
-echo -e "\n# Run a Connect container with the kafka-connect-datagen plugin"
-echo "docker-compose up -d"
-docker-compose up -d
-MAX_WAIT=180
-echo "Waiting up to $MAX_WAIT seconds for Docker container for connect to be up"
-retry $MAX_WAIT check_connect_up connect-cloud || exit 1
-sleep 5
+echo -e "\n# Create a managed connector"
+echo "source ../../utils/ccloud_library.sh"
+source ../../utils/ccloud_library.sh
 
-echo -e "\n# Post the configuration for the kafka-connect-datagen connector that produces pageviews data to Confluent Cloud topic $TOPIC3"
-CONNECTOR=datagen-$TOPIC3
-HEADER="Content-Type: application/json"
-DATA=$( cat << EOF
-{
-  "name": "$CONNECTOR",
-  "config": {
-    "connector.class": "io.confluent.kafka.connect.datagen.DatagenConnector",
-    "kafka.topic": "$TOPIC3",
-    "quickstart": "pageviews",
-    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
-    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
-    "value.converter.schemas.enable": "false",
-    "max.interval": 5000,
-    "iterations": 1000,
-    "tasks.max": "1"
-  }
-}
-EOF
-)
-echo "curl --silent --output /dev/null -X POST -H \"${HEADER}\" --data \"${DATA}\" http://localhost:8083/connectors"
-curl --silent --output /dev/null -X POST -H "${HEADER}" --data "${DATA}" http://localhost:8083/connectors
-if [[ $? != 0 ]]; then
-  echo "ERROR: Could not successfully submit connector. Please troubleshoot Connect."
-  #exit $?
-fi
+echo "ccloud::create_connector $CONNECTOR.json"
+ccloud::create_connector .ignored_folder/$CONNECTOR.json
 
-echo -e "\n\n# Wait 20 seconds for kafka-connect-datagen to start producing messages"
-sleep 20
-
-echo -e "\n# Verify connector is running"
-echo "curl --silent http://localhost:8083/connectors/$CONNECTOR/status"
-curl --silent http://localhost:8083/connectors/$CONNECTOR/status
-STATE=$(curl --silent http://localhost:8083/connectors/$CONNECTOR/status | jq -r '.connector.state')
-#echo $STATE
-if [[ "$STATE" != "RUNNING" ]]; then
-  echo "ERROR: connector $CONNECTOR is not running.  Please troubleshoot the Docker logs."
-  exit $?
-fi
-
+echo -e "\n# Wait for connector to be up"
+echo "ccloud::wait_for_connector_up $CONNECTOR.json 300"
+ccloud::wait_for_connector_up .ignored_folder/$CONNECTOR.json 300 || exit 1
 ##################################################
 # Run a Java consumer: showcase a Wildcard ACL
 # - The following steps configure ACLs to match topics using a wildcard
@@ -363,8 +319,8 @@ sleep 2
 
 echo -e "\n# Run the Java consumer from $TOPIC3 (populated by kafka-connect-datagen): wildcard ACLs"
 LOG4="/tmp/log.4"
-echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExamplePageviews\" -Dexec.args=\"$CLIENT_CONFIG $TOPIC3\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
-timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CLIENT_CONFIG $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
+echo "timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExamplePageviews\" -Dexec.args=\"$CONFIG_FILE $TOPIC3\" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1"
+timeout 15s mvn -q -f $POM exec:java -Dexec.mainClass="io.confluent.examples.clients.cloud.ConsumerExamplePageviews" -Dexec.args="$CONFIG_FILE $TOPIC3" -Dlog4j.configuration=file:log4j.properties > $LOG4 2>&1
 echo "# Check logs for 'Consumed record with'"
 OUTPUT=$(grep "Consumed record with" $LOG4)
 if [[ ! -z $OUTPUT ]]; then
@@ -380,20 +336,9 @@ echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --op
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group $CONSUMER_GROUP
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*' 
 
-# Stop the connector
-echo -e "\n# Stop Docker"
-echo "docker-compose down"
-docker-compose down
-
 echo -e "\n# Delete ACLs"
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation CREATE --topic '*'
 echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'"
 ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation WRITE --topic '*'
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --topic '*'
-echo "ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect"
-ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operation READ --consumer-group connect
 
 
 ##################################################
@@ -401,10 +346,13 @@ ccloud kafka acl delete --allow --service-account $SERVICE_ACCOUNT_ID --operatio
 # - Delete the API key, service account, Kafka topics, Kafka cluster, environment, and the log files
 ##################################################
 
-echo -e "\n# Cleanup: delete service-account, topics, api-keys, kafka cluster, environment"
+echo -e "\n# Cleanup: delete connector, service-account, topics, api-keys, kafka cluster, environment"
+CONNECTOR_ID=$(ccloud connector list | grep $CONNECTOR | tr -d '\*' | awk '{print $1;}')
+echo "ccloud connector delete $CONNECTOR_ID"
+ccloud connector delete $CONNECTOR_ID 1>/dev/null
 echo "ccloud service-account delete $SERVICE_ACCOUNT_ID"
 ccloud service-account delete $SERVICE_ACCOUNT_ID
-for t in $TOPIC1 $TOPIC2 $TOPIC3 connect-configs connect-offsets connect-status; do
+for t in $TOPIC1 $TOPIC2 $TOPIC3; do
   echo "ccloud kafka topic delete $t"
   ccloud kafka topic delete $t
 done
@@ -423,4 +371,4 @@ rm -f "$LOG1"
 rm -f "$LOG2"
 rm -f "$LOG3"
 rm -f "$LOG4"
-rm -f "$CLIENT_CONFIG"
+rm -f "$CONFIG_FILE"

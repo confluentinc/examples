@@ -14,7 +14,7 @@ Once you build the custom Docker image, Kubernetes will need to pull this image 
 
 .. note:: It is not recommended to use volumes to place the desired jars onto the Connect image because it is less self-sufficient, less portable, and harder to match up versions between the base image and jars.
 
-For more advanced use cases where you want to use a custom connector instead of a pre-packaged one available at |c-hub|, you may create a Docker image with a custom connector from a `local archive <https://docs.confluent.io/home/connect/confluent-hub/command-reference/confluent-hub-install.html#confluent-hub-client-install>`__.
+For more advanced use cases where you want to use a custom connector instead of a pre-packaged one available at |c-hub|, you may create a Docker image with a custom connector from a `local archive <https://docs.confluent.io/home/connect/confluent-hub/command-reference/confluent-hub-install.html>`__.
 The demonstration uses this more advanced workflow.
 We use the `Kafka Connect Datagen connector <https://www.confluent.io/hub/confluentinc/kafka-connect-datagen>`__ to generate mock events, and this `Dockerfile <https://github.com/confluentinc/kafka-connect-datagen/blob/master/Dockerfile-local>`__ builds the Docker image with a local archive of the Kafka Connect Datagen connector compiled from source code (versus pulling directly from |c-hub|).
 We publish this image to `Docker Hub <https://hub.docker.com/r/cnfldemos/cp-server-connect-operator-with-datagen>`__, but in your environment, publish to your own Docker Hub repo.

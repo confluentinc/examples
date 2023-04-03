@@ -38,15 +38,14 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 public class ProducerAvroExample {
 
   // Create topic in Confluent Cloud
   public static void createTopic(final String topic,
-                          final int partitions,
-                          final int replication,
                           final Properties cloudConfig) {
-      final NewTopic newTopic = new NewTopic(topic, partitions, (short) replication);
+      final NewTopic newTopic = new NewTopic(topic, Optional.empty(), Optional.empty());
       try (final AdminClient adminClient = AdminClient.create(cloudConfig)) {
           adminClient.createTopics(Collections.singletonList(newTopic)).all().get();
       } catch (final InterruptedException | ExecutionException e) {
@@ -66,12 +65,12 @@ public class ProducerAvroExample {
     // Load properties from a local configuration file
     // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
     // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
-    // Follow these instructions to create this file: https://docs.confluent.io/current/tutorials/examples/clients/docs/java.html
+    // Follow these instructions to create this file: https://docs.confluent.io/platform/current/tutorials/examples/clients/docs/java.html
     final Properties props = loadConfig(args[0]);
 
     // Create topic if needed
     final String topic = args[1];
-    createTopic(topic, 1, 3, props);
+    createTopic(topic, props);
 
     // Add additional properties.
     props.put(ProducerConfig.ACKS_CONFIG, "all");

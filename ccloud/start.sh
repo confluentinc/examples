@@ -28,6 +28,8 @@ ccloud::validate_logged_in_ccloud_cli \
   && print_pass "logged into ccloud CLI" \
   || exit 1
 
+export EXAMPLE="original-hybrid-cloud-tarball"
+
 echo ====== Create new Confluent Cloud stack
 ccloud::prompt_continue_ccloud_demo || exit 1
 ccloud::create_ccloud_stack true
@@ -193,5 +195,5 @@ echo "    ./stop.sh $CONFIG_FILE"
 echo
 
 echo
-ENVIRONMENT=$(ccloud environment list | grep demo-env-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
+ENVIRONMENT=$(ccloud environment list | grep ccloud-stack-$SERVICE_ACCOUNT_ID | tr -d '\*' | awk '{print $1;}')
 echo "Tip: 'ccloud' CLI has been set to the new environment $ENVIRONMENT"
