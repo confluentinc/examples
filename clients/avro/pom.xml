@@ -7,7 +7,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>6.0.13-SNAPSHOT</version>
+      <version>6.0.13</version>
   </parent>
 
   <artifactId>java-client-avro-examples</artifactId>
