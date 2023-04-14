@@ -47,7 +47,7 @@ function version_gt() {
 function validate_version_confluent_cli_for_cp() {
   validate_version_confluent_cli_v2 || exit 1
 
-  VER_MIN="2.6.1"
+  VER_MIN="3.0.0"
   CLI_VERSION=$(get_version_confluent_cli)
 
   if version_gt $VER_MIN $CLI_VERSION ; then
