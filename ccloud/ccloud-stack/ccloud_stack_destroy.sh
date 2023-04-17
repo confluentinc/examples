@@ -34,6 +34,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 ccloud::generate_configs $CONFIG_FILE > /dev/null
 source delta_configs/env.delta
 SERVICE_ACCOUNT_ID=$(ccloud::get_service_account $CLOUD_KEY) || exit 1
+echo "Retrieved service account id $SERVICE_ACCOUNT_ID"
 
 echo
 ccloud::destroy_ccloud_stack $SERVICE_ACCOUNT_ID
