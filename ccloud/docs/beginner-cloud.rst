@@ -31,7 +31,7 @@ Prerequisites
 -  `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
 
 -  Local `install of Confluent CLI
-   <https://docs.confluent.io/confluent-cli/current/install.html>`__ (v2.2.0 or later)
+   <https://docs.confluent.io/confluent-cli/current/install.html>`__ (v3.0.0 or later)
 
 -  .. include:: includes/prereq_timeout.rst
 
