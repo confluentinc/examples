@@ -76,9 +76,9 @@ else
   timeout 5 confluent kafka topic consume $KAFKA_TOPIC_NAME_OUT1 --cluster $CLUSTER_ID\
     --api-key $CLOUD_KEY\
     --api-secret $CLOUD_SECRET\
-    --sr-api-key $SR_KEY\
-    --sr-api-secret $SR_SECRET\
-    --sr-endpoint $SCHEMA_REGISTRY_URL\
+    --schema-registry-api-key $SR_KEY\
+    --schema-registry-api-secret $SR_SECRET\
+    --schema-registry-endpoint $SCHEMA_REGISTRY_URL\
     --from-beginning\
     --print-key\
     --value-format avro 

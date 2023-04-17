@@ -40,10 +40,10 @@ fi
 # Delete connectors		
  for f in connectors/*.json; do		
    connector=$(cat $f | jq -r .name)		
-   connectorId=$(confluent connect list | grep $connector | awk '{print $1}')
+   connectorId=$(confluent connect cluster list | grep $connector | awk '{print $1}')
    if [[ "$connectorId" != "" ]]; then		
      echo "Deleting connector $connector with id $connectorId"		
-     confluent connect delete $connectorId
+     confluent connect cluster delete $connectorId --force
    fi		
 done
 
