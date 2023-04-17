@@ -95,7 +95,7 @@ Cloud services
 Local Tools
 ~~~~~~~~~~~
 
--  `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v2.5.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
+-  `Confluent CLI <https://docs.confluent.io/confluent-cli/current/install.html>`__ v3.0.0 or later, logged in with the ``--save`` argument which saves your |ccloud| user login credentials or refresh token (in the case of SSO) to the local ``netrc`` file.
 -  `Confluent CLI v1 <https://docs.confluent.io/confluent-cli/current/migrate.html#run-multiple-clis-in-parallel>`__ (optional)
 -  ``gsutil`` CLI, properly initialized with your credentials: (optional) if destination is GCP GCS
 -  ``aws`` CLI, properly initialized with your credentials: used for AWS Kinesis or RDS PostgreSQL, and (optional) if destination is AWS S3
