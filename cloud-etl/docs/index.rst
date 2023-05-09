@@ -1,7 +1,4 @@
 .. _cloud-etl:
-  
-.. toctree::
-    :maxdepth: 2
 
 Example: Build an ETL Pipeline With |ccloud|
 ============================================
