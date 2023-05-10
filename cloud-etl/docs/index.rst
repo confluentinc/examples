@@ -1,10 +1,7 @@
 .. _cloud-etl:
-  
-.. toctree::
-    :maxdepth: 2
 
-Cloud ETL Example
-=================
+Example: Build an ETL Pipeline With |ccloud|
+============================================
 
 This example showcases an entire end-to-end cloud ETL deployment, built for 100% cloud services:
 

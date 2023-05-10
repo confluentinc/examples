@@ -1,7 +1,7 @@
 .. _ccloud-stack:
 
-ccloud-stack Utility for |ccloud|
-=================================
+Example: Create Fully-Managed Services in |ccloud|
+==================================================
 
 ========
 Overview
