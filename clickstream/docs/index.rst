@@ -10,7 +10,7 @@ These steps will guide you through how to setup your environment and run the cli
 
 .. include:: ../../../../includes/docker-prereqs.rst
 
-  - `jq <https://stedolan.github.io/jq/>`_ version 1.6 or later 
+- `jq <https://stedolan.github.io/jq/>`_ version 1.6 or later 
 
 - If you are using Linux as your host, for the Elasticsearch container to start successfully you must first run: 
 
