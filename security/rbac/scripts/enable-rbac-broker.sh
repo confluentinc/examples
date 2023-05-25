@@ -39,12 +39,12 @@ login_mds $MDS
 
 get_cluster_id_kafka
 echo -e "\n# Grant principal User:$USER_ADMIN_SYSTEM the SystemAdmin role to the Kafka cluster"
-echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rbac role-binding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_ADMIN_SYSTEM --role SystemAdmin --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# List the role bindings for User:$USER_ADMIN_SYSTEM"
-echo "confluent iam rbac role-binding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rbac role-binding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding list --principal User:$USER_ADMIN_SYSTEM --kafka-cluster $KAFKA_CLUSTER_ID
 
 ##################################################
 # Topics: create, producer, consume
@@ -66,8 +66,8 @@ else
 fi
 
 echo -e "\n# Grant principal User:$USER_CLIENT_A the ResourceOwner role to Topic:$TOPIC1"
-echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role ResourceOwner --resource Topic:$TOPIC1 --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Try to create topic $TOPIC1, after authorization (should pass)"
 echo "kafka-topics --bootstrap-server $BOOTSTRAP_SERVER --create --topic $TOPIC1 --replication-factor 1 --partitions 3 --command-config $DELTA_CONFIGS_DIR/client.properties.delta"
@@ -109,8 +109,8 @@ else
 fi
 
 echo -e "#\n Grant principal User:$USER_CLIENT_A the DeveloperRead role to Group:console-consumer- prefix"
-echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID"
-confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster-id $KAFKA_CLUSTER_ID
+echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should pass)"
 echo "confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
