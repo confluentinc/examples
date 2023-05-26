@@ -13,7 +13,6 @@ confluent.schema.registry.authorizer.class=io.confluent.kafka.schemaregistry.sec
 rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
 
 # The location of a running metadata service; used to verify that requests are authorized by the users that make them
-confluent.schema.registry.auth.mechanism=JETTY_AUTH
 confluent.metadata.bootstrap.server.urls=http://localhost:8090
 
 # Credentials to use when communicating with the MDS; these should usually match the ones used for communicating with Kafka
