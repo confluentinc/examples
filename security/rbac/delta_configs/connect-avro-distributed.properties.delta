@@ -5,6 +5,17 @@ sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.
 sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="connect" password="connect1" metadataServerUrls="http://localhost:8090";
 
 ## Connector client (producer, consumer, admin client) properties ##
+key.converter=org.apache.kafka.connect.storage.StringConverter
+value.converter=io.confluent.connect.avro.AvroConverter
+group.id=connect-cluster
+offset.storage.topic=connect-offsets
+offset.storage.replication.factor=1
+config.storage.topic=connect-configs
+config.storage.replication.factor=1
+status.storage.topic=connect-statuses
+status.storage.replication.factor=1
+
+
 
 # Allow producer/consumer/admin client overrides (this enables per-connector principals)
 connector.client.config.override.policy=All
