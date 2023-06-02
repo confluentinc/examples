@@ -91,12 +91,12 @@ for i in $(seq 1 $NUM_MESSAGES); do
   if [ "$i" -ne "1" ]; then
     MESSAGE+=$'\n'
   fi
-  MESSAGE+="$i,$i"
+  MESSAGE+="$i:$i"
 done
 echo $MESSAGE
 echo -e "\n# Produce $NUM_MESSAGES messages to topic $TOPIC1"
 set -x
-echo -e "${MESSAGE}" | confluent local services kafka produce $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=,
+echo -e "${MESSAGE}" | confluent local services kafka produce $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=:
 set +x
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
