@@ -8,7 +8,7 @@ kafkastore.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBe
 schema.registry.group.id=schema-registry-demo
 
 # These properties install the Schema Registry security plugin, and configure it to use RBAC for authorization and OAuth for authentication
-schema.registry.resource.extension.class=io.confluent.kafka.schemaregistry.security.SchemaRegistrySecurityResourceExtension
+resource.extension.class=io.confluent.kafka.schemaregistry.security.SchemaRegistrySecurityResourceExtension
 confluent.schema.registry.authorizer.class=io.confluent.kafka.schemaregistry.security.authorizer.rbac.RbacAuthorizer
 rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
 
