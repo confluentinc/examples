@@ -43,6 +43,7 @@ fun createTopic(topic: String,
   try {
     with(AdminClient.create(cloudConfig)) {
       createTopics(listOf(newTopic)).all().get()
+
     }
   } catch (e: ExecutionException) {
     if (e.cause !is TopicExistsException) throw e
