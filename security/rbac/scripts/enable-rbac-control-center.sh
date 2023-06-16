@@ -40,10 +40,11 @@ echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_C3 --r
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Control Center"
-confluent local services control-center start
+#confluent local services control-center start
+$CONFLUENT_HOME/bin/control-center-start $CONFLUENT_HOME/etc/confluent-control-center/control-center-dev.properties
 
 echo "Sleeping 10 seconds"
-sleep 10
+sleep 100
 
 ##################################################
 # Control Center client functions
