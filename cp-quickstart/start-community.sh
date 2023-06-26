@@ -5,9 +5,9 @@ source ../utils/helper.sh
 
 curl -f -sS -o docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-community/docker-compose.yml || exit 1
 
-./stop-docker.sh
+./stop.sh
 
-docker-compose up -d
+docker compose up -d
 
 # Verify Kafka Connect worker has started
 MAX_WAIT=180
@@ -30,7 +30,7 @@ retry $MAX_WAIT check_topic_exists broker broker:29092 users || exit 1
 echo "Topics exist!"
 
 # Run the KSQL queries
-docker-compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+docker compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
 run script '/tmp/statements.sql';
 exit ;
 EOF"
