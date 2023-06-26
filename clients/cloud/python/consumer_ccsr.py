@@ -54,7 +54,7 @@ if __name__ == '__main__':
                                                from_dict = ccloud_lib.Count.dict_to_count)
 
     # for full list of configurations, see:
-    #   https://docs.confluent.io/platform/current/clients/confluent-kafka-python/#deserializingconsumer
+    #   https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/#deserializingconsumer-experimental
     consumer_conf = ccloud_lib.pop_schema_registry_params_from_config(conf)
     consumer_conf['key.deserializer'] = name_avro_deserializer
     consumer_conf['value.deserializer'] = count_avro_deserializer
