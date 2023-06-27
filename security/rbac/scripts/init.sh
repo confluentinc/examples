@@ -12,6 +12,13 @@ check_jq || exit 1
 # Initialize
 ##################################################
 
+# remove any logs / configs from previous runs for which users didn't run cleanup.sh
+rm -f /tmp/rbac_logs || true
+rm -f /tmp/original_configs || true
+rm -f /tmp/rbac_configs || true
+rm -f /tmp/control-center || true
+
+mkdir -p /tmp/rbac_logs
 mkdir -p /tmp/original_configs
 mkdir -p /tmp/rbac_configs
 
@@ -23,4 +30,4 @@ openssl rsa -in /tmp/tokenKeypair.pem -outform PEM -pubout -out /tmp/tokenPublic
 
 source ../config/local-demo.env
 
-confluent local destroy
+./stop-cp-services.sh

@@ -20,11 +20,18 @@ check_jq || exit 1
 ##################################################
 
 source ../config/local-demo.env
+LOGS_DIR=/tmp/rbac_logs
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=server.properties
 create_temp_configs $CONFLUENT_HOME/etc/kafka/$FILENAME $ORIGINAL_CONFIGS_DIR/$FILENAME $DELTA_CONFIGS_DIR/${FILENAME}.delta
-confluent local services kafka start
+
+zookeeper-server-start $CONFLUENT_HOME/etc/kafka/zookeeper.properties > $LOGS_DIR/zookeeper.log 2>&1 &
+
+echo -e "Sleeping 10 seconds before starting broker"
+sleep 10
+
+kafka-server-start $CONFLUENT_HOME/etc/kafka/$FILENAME > $LOGS_DIR/kafka.log 2>&1 &
 
 echo -e "Sleeping 10 seconds before login"
 sleep 10
@@ -96,12 +103,12 @@ done
 echo $MESSAGE
 echo -e "\n# Produce $NUM_MESSAGES messages to topic $TOPIC1"
 set -x
-echo -e "${MESSAGE}" | confluent local services kafka produce $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=:
+echo -e "${MESSAGE}" | kafka-console-producer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --producer.config $DELTA_CONFIGS_DIR/client.properties.delta --property parse.key=true --property key.separator=:
 set +x
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should fail)"
-echo "confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
-OUTPUT=$(confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES 2>&1)
+echo "kafka-console-consumer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+OUTPUT=$(kafka-console-consumer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES 2>&1)
 if [[ $OUTPUT =~ "org.apache.kafka.common.errors.GroupAuthorizationException" ]]; then
   echo "PASS: Consume failed due to org.apache.kafka.common.errors.GroupAuthorizationException (expected because User:$USER_CLIENT_A is not allowed access to consumer groups)"
 else
@@ -113,12 +120,12 @@ echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --r
 confluent iam rbac role-binding create --principal User:$USER_CLIENT_A --role DeveloperRead --resource Group:console-consumer- --prefix --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Consume from topic $TOPIC1 from RBAC endpoint (should pass)"
-echo "confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
-confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
+echo "kafka-console-consumer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+kafka-console-consumer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
 
 echo -e "\n# Consume from topic $TOPIC1 from PLAINTEXT endpoint"
-echo "confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
-confluent local services kafka consume $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
+echo "kafka-console-consumer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --consumer.config $DELTA_CONFIGS_DIR/client.properties.delta --from-beginning --property print.key=true --max-messages $NUM_MESSAGES"
+kafka-console-consumer --topic $TOPIC1 --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --property print.key=true --max-messages $NUM_MESSAGES
 
 
 ##################################################

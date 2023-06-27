@@ -20,6 +20,7 @@ check_jq || exit 1
 ##################################################
 
 source ../config/local-demo.env
+LOGS_DIR=/tmp/rbac_logs
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=control-center-dev.properties
@@ -39,15 +40,15 @@ echo -e "\n# Grant principal User:$USER_ADMIN_C3 the SystemAdmin role to the Kaf
 echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster $KAFKA_CLUSTER_ID"
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_C3 --role SystemAdmin --kafka-cluster $KAFKA_CLUSTER_ID
 
-echo -e "\n# Bring up Control Center"
-confluent local services control-center start
+echo -e "\n# Bring up Confluent Control Center"
+control-center-start $CONFLUENT_HOME/etc/confluent-control-center/$FILENAME > $LOGS_DIR/control-center.log 2>&1 &
 
 echo "Sleeping 10 seconds"
 sleep 10
 
 ##################################################
-# Control Center client functions
-# From the Control Center UI, login with username=clientc and password=clientc1
+# Confluent Control Center client functions
+# From the Confluent Control Center UI, login with username=clientc and password=clientc1
 #
 # For C3 topic inspection on topic with non-Avro data
 # - Grant principal User:$USER_CLIENT_C the DeveloperRead role to Topic:$TOPIC1
@@ -82,7 +83,7 @@ echo -e "\n# List the role bindings for User:$USER_CLIENT_C to the Kafka cluster
 echo "confluent iam rbac role-binding list --principal User:$USER_CLIENT_C --kafka-cluster $KAFKA_CLUSTER_ID"
 confluent iam rbac role-binding list --principal User:$USER_CLIENT_C --kafka-cluster $KAFKA_CLUSTER_ID
 
-echo -e "\n # Note: From the Control Center UI, login with username=clientc and password=clientc1"
+echo -e "\n # Note: From the Confluent Control Center UI, login with username=clientc and password=clientc1"
 
 ##################################################
 # Cleanup
