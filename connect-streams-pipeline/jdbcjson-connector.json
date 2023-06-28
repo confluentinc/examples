@@ -1,0 +1,24 @@
+{
+  "name": "test-source-sqlite-jdbc-autoincrement-jdbcjson",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "tasks.max": "1",
+    "key.converter": "org.apache.kafka.connect.converters.LongConverter",
+    "key.converter.schemas.enable": "false",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schemas.enable": "false",
+    "transforms": "InsertKey, ExtractId, CastLong",
+    "transforms.InsertKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.InsertKey.fields": "id",
+    "transforms.ExtractId.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "transforms.ExtractId.field": "id",
+    "transforms.CastLong.type": "org.apache.kafka.connect.transforms.Cast$Key",
+    "transforms.CastLong.spec": "int64",
+
+    "connection.url": "jdbc:sqlite:/usr/local/lib/retail.db",
+    "mode": "incrementing",
+    "incrementing.column.name": "id",
+    "topic.prefix": "jdbcjson-",
+    "table.whitelist": "locations"
+  }
+}
