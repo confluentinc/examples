@@ -91,12 +91,7 @@ Run example
       ls /tmp/rbac_configs/
 
 #. After you run the example, view the log files for each of the services.
-   Since this example uses Confluent CLI, all logs are saved in a temporary
-   directory specified by ``confluent local current``.
-
-   .. code:: bash
-
-      ls `confluent local current | tail -1`
+   All logs are saved in the temporary directory ``/tmp/rbac_logs/``.
 
    In that directory, you can step through the configuration properties for each of the services:
 
@@ -110,11 +105,11 @@ Run example
       schema-registry
       zookeeper
    
-#. In this example, the metadata service (MDS) logs are saved in a temporary directory.
+#. In this example, the metadata service (MDS) logs are saved under your |cp| installation directory.
 
    .. code:: bash
 
-      cat `confluent local current | tail -1`/kafka/logs/metadata-service.log
+      cat $CONFLUENT_HOME/logs/metadata-service.log
 
 
 Stop example

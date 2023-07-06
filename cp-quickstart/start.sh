@@ -2,39 +2,35 @@
 
 # Source library
 source ../utils/helper.sh
-source ../utils/ccloud_library.sh
 
-check_env \
-  && print_pass "Confluent Platform installed" \
-  || exit 1
-check_running_cp ${CONFLUENT} \
-  && print_pass "Confluent Platform version ${CONFLUENT} ok" \
-  || exit 1
-validate_version_confluent_cli_for_cp \
-  && print_pass "Confluent CLI version ok" \
-  || exit 1
-sleep 1
+curl -f -sS -o docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one-kraft/docker-compose.yml || exit 1
 
 ./stop.sh
 
-confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
-confluent local services start
-sleep 10
+docker compose up -d
 
-if check_cp; then
-  confluent local services connect connector config datagen-pageviews --config connectors/datagen_pageviews.config
-  confluent local services connect connector config datagen-users --config connectors/datagen_users.config
-else
-  confluent local services connect connector config datagen-pageviews --config connectors/datagen_pageviews_oss.config
-  confluent local services connect connector config datagen-users --config connectors/datagen_users_oss.config
-fi
-sleep 20
+# Verify Kafka Connect worker has started
+MAX_WAIT=180
+echo "Waiting up to $MAX_WAIT seconds for Connect to start"
+retry $MAX_WAIT check_connect_up connect || exit 1
+sleep 2 # give connect an exta moment to fully mature
+echo "connect has started!"
 
-confluent local services connect connector status
+# Configure datagen connectors
+source ./connectors/submit_datagen_pageviews_config.sh
+source ./connectors/submit_datagen_users_config.sh
 
-ksql http://localhost:8088 <<EOF
-run script 'statements.sql';
+# Verify topics exist
+MAX_WAIT=30
+echo -e "\nWaiting up to $MAX_WAIT seconds for topics (pageviews, users) to exist"
+retry $MAX_WAIT check_topic_exists broker broker:29092 pageviews || exit 1
+retry $MAX_WAIT check_topic_exists broker broker:29092 users || exit 1
+echo "Topics exist!"
+
+# Run the KSQL queries
+docker compose exec ksqldb-cli bash -c "ksql http://ksqldb-server:8088 <<EOF
+run script '/tmp/statements.sql';
 exit ;
-EOF
+EOF"
 
 printf "\n====== Successfully Completed ======\n\n"

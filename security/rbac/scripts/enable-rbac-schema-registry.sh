@@ -20,6 +20,7 @@ check_jq || exit 1
 ##################################################
 
 source ../config/local-demo.env
+LOGS_DIR=/tmp/rbac_logs
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=schema-registry.properties
@@ -61,7 +62,7 @@ confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGIS
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up Schema Registry"
-confluent local services schema-registry start
+schema-registry-start $CONFLUENT_HOME/etc/schema-registry/$FILENAME > $LOGS_DIR/schema-registry.log 2>&1 &
 
 echo -e "Sleeping 10 seconds before getting the Schema Registry cluster ID"
 sleep 10

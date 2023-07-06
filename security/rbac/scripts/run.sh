@@ -44,4 +44,4 @@ sleep 1
 ./enable-rbac-ksqldb-server.sh
 ./enable-rbac-control-center.sh
 
-#./cleanup.sh
+./cleanup.sh
