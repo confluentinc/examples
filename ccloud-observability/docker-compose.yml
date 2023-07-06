@@ -60,19 +60,17 @@ services:
       - ./monitoring_configs/grafana/provisioning/:/etc/grafana/provisioning/
 
   producer:
-    <<: *client-base
+    <<: [*client-base, *client-base]
     command: >
       bash -c "mvn clean compile -f /tmp/java/
       &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ProducerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
-    <<: *cap-add
 
   consumer:
-    <<: *client-base
+    <<: [*client-base, *client-base]
     command: >
       bash -c "sleep 15 &&
       mvn compile -f /tmp/java/
       &&  mvn -q -f /tmp/java/pom.xml exec:java -Dexec.mainClass=\"io.confluent.examples.clients.cloud.ConsumerExample\" -Dexec.args=\"/tmp/client.config demo-topic-1\""
-    <<: *cap-add
 
   kafka-lag-exporter:
     image: lightbend/kafka-lag-exporter:0.5.5
