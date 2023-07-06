@@ -20,6 +20,7 @@ check_jq || exit 1
 ##################################################
 
 source ../config/local-demo.env
+LOGS_DIR=/tmp/rbac_logs
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=ksql-server.properties
@@ -52,7 +53,7 @@ echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_KSQLDB
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_KSQLDB --role ResourceOwner --resource Topic:${KSQL_SERVICE_ID}ksql_processing_log --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Bring up KSQL server"
-confluent local services ksql-server start
+ksql-server-start $CONFLUENT_HOME/etc/ksqldb/$FILENAME  > $LOGS_DIR/ksql-server.log 2>&1 &
 
 echo "Sleeping 10 seconds"
 sleep 10
