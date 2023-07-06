@@ -1,3 +1,5 @@
+SET 'auto.offset.reset'='earliest';
+
 --We need to identify fields in schema, even with Avro, because this is a script (https://github.com/confluentinc/ksql/issues/1031)
 CREATE STREAM JDBCAVROKSQLLOCATIONS (id bigint, name varchar, sale bigint) with (kafka_topic='jdbcavroksql-locations', value_format='AVRO');
 

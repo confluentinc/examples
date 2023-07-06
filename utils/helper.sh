@@ -134,7 +134,13 @@ function check_running_cp() {
 
   expected_version=$1
 
-  actual_version=$( confluent local version 2>&1 | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
+  # Temporary workaround: `confluent local version` was removed in version 3.16.0 of the CLI, so grab the latest CLI
+  # in a temp dir in order to run the command. Under the hood this command searches version strings in CONFLUENT_HOME.
+  TMP_DIR=`mktemp -d`
+  curl -sL https://raw.githubusercontent.com/confluentinc/cli/main/install.sh | sh -s -- -b $TMP_DIR 3.15.1
+  actual_version=$( $TMP_DIR/confluent local version 2>&1 | tail -1 | awk -F':' '{print $2;}' | awk '$1 > 0 { print $1}' )
+  rm -rf $TMP_DIR
+
   if [[ $expected_version != $actual_version ]]; then
     printf "\nThis script expects Confluent Platform version $expected_version but the running version is $actual_version.\nTo proceed please either: change the examples repo branch to $actual_version or update the running Confluent Platform to version $expected_version.\n"
     exit 1
@@ -393,7 +399,7 @@ host_check_ksqlDBserver_up()
 check_connect_up() {
   containerName=$1
 
-  FOUND=$(docker-compose logs $containerName | grep "Herder started")
+  FOUND=$(docker compose logs $containerName | grep "Herder started")
   if [ -z "$FOUND" ]; then
     return 1
   fi

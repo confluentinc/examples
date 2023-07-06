@@ -20,6 +20,7 @@ check_jq || exit 1
 ##################################################
 
 source ../config/local-demo.env
+LOGS_DIR=/tmp/rbac_logs
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=connect-avro-distributed.properties
@@ -77,7 +78,8 @@ echo "confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFK
 confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:$KAFKA_CONNECT_DATAGEN_VERSION
 
 echo -e "\n# Bring up Connect"
-confluent local services connect start
+
+connect-distributed $CONFLUENT_HOME/etc/schema-registry/$FILENAME > $LOGS_DIR/connect.log 2>&1 &
 
 echo -e "Sleeping 30 seconds before getting the Connect cluster ID"
 sleep 30
@@ -139,14 +141,12 @@ confluent iam rbac role-binding create --principal User:$USER_CONNECTOR --role D
 
 echo -e "\n# Consume from topic $TOPIC2_AVRO from PLAINTEXT endpoint"
 cat << EOF
-confluent local services kafka consume $TOPIC2_AVRO --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
-  --value-format avro \\
+kafka-avro-console-consumer --topic $TOPIC2_AVRO --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \\
   --property basic.auth.credentials.source=USER_INFO \\
   --property schema.registry.basic.auth.user.info=$USER_CONNECTOR:${USER_CONNECTOR}1 \
   --property schema.registry.url=http://localhost:8081
 EOF
-confluent local services kafka consume $TOPIC2_AVRO --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \
-  --value-format avro \
+kafka-avro-console-consumer --topic $TOPIC2_AVRO --bootstrap-server $BOOTSTRAP_SERVER_PLAINTEXT --from-beginning --max-messages 10 \
   --property basic.auth.credentials.source=USER_INFO \
   --property schema.registry.basic.auth.user.info=$USER_CONNECTOR:${USER_CONNECTOR}1 \
   --property schema.registry.url=http://localhost:8081
