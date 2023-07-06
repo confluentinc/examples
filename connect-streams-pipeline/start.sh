@@ -9,20 +9,34 @@ check_running_cp ${CONFLUENT} || exit
 check_timeout || exit 1
 check_sqlite3 || exit 1
 
+curl -f -sS -o docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/${CONFLUENT_RELEASE_TAG_OR_BRANCH}/cp-all-in-one/docker-compose.yml || exit 1
+
 ./stop.sh
 
-mvn clean compile
+# Install JDBC connector
+docker compose up -d
+docker compose exec connect confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$KAFKA_CONNECT_JDBC_VERSION
+docker compose restart connect
 
-echo "auto.offset.reset=earliest" >> $CONFLUENT_HOME/etc/ksqldb/ksql-server.properties
-confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:$KAFKA_CONNECT_JDBC_VERSION
-confluent local services start
+# Wait for connect to be available
+MAX_WAIT=60
+echo "Waiting up to $MAX_WAIT seconds for Connect to be available"
+retry $MAX_WAIT check_connect_up connect || exit 1
+echo "Connect is available!"
+
+echo
+mvn clean compile
 
 # Create the SQL table
 TABLE_LOCATIONS=/usr/local/lib/table.locations
 prep_sqltable_locations
 
+# Copy DB to connect container
+docker cp /usr/local/lib/retail.db connect:/usr/local/lib/
+
 # --------------------------------------------------------------
 
+BOOTSTRAP_SERVER=localhost:9092
 PACKAGE="consoleproducer"
 TOPIC="$PACKAGE-locations"
 echo -e "\n========== $PACKAGE: Example 1: Kafka console producer -> Key:String and Value:String"
@@ -30,15 +44,17 @@ sleep 2
 
 # Write the contents of the file TABLE_LOCATIONS to a Topic, where the id is the message key and the name and sale are the message value.
 cat $TABLE_LOCATIONS | \
-confluent local services kafka produce $TOPIC \
---property parse.key=true \
---property key.separator='|' &>/dev/null
+kafka-console-producer --topic $TOPIC \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --property parse.key=true \
+  --property key.separator='|' &>/dev/null
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local services kafka consume $TOPIC \
---from-beginning \
---property print.key=true \
---max-messages 10
+kafka-console-consumer --topic $TOPIC \
+ --bootstrap-server $BOOTSTRAP_SERVER \
+ --from-beginning \
+ --property print.key=true \
+ --max-messages 10
 
 # Run the Java consumer application
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
@@ -51,15 +67,15 @@ echo -e "\n========== $PACKAGE: Example 2: JDBC source connector with Single Mes
 sleep 2
 
 # Run source connector
-confluent local services connect connector unload $PACKAGE &>/dev/null
-confluent local services connect connector config $PACKAGE --config ./$PACKAGE-connector.properties &>/dev/null
+curl -X POST -H "Content-Type: application/json" -d @./$PACKAGE-connector.json http://localhost:8083/connectors
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local services kafka consume $TOPIC \
---from-beginning \
---property print.key=true \
---key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
---max-messages 10
+kafka-console-consumer --topic $TOPIC \
+ --bootstrap-server $BOOTSTRAP_SERVER \
+ --from-beginning \
+ --property print.key=true \
+ --key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
+ --max-messages 10
 
 # Run the Java consumer application
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
@@ -72,15 +88,14 @@ echo -e "\n========== $PACKAGE: Example 3: JDBC source connector with SpecificAv
 sleep 2
 
 # Run source connector
-confluent local services connect connector unload $PACKAGE &>/dev/null
-confluent local services connect connector config $PACKAGE --config ./$PACKAGE-connector.properties &>/dev/null
+curl -X POST -H "Content-Type: application/json" -d @./$PACKAGE-connector.json http://localhost:8083/connectors
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local services kafka consume $TOPIC \
---value-format avro \
---from-beginning \
---property print.key=true \
---max-messages 10
+kafka-avro-console-consumer --topic $TOPIC \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --from-beginning \
+  --property print.key=true \
+  --max-messages 10
 
 # Run the Java consumer application
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
@@ -93,15 +108,14 @@ echo -e "\n========== $PACKAGE: Example 4: JDBC source connector with GenericAvr
 sleep 2
 
 # Run source connector
-confluent local services connect connector unload $PACKAGE &>/dev/null
-confluent local services connect connector config $PACKAGE --config ./$PACKAGE-connector.properties &>/dev/null
+curl -X POST -H "Content-Type: application/json" -d @./$PACKAGE-connector.json http://localhost:8083/connectors
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local services kafka consume $TOPIC \
---value-format avro \
---from-beginning \
---property print.key=true \
---max-messages 10
+kafka-avro-console-consumer --topic $TOPIC \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --from-beginning \
+  --property print.key=true \
+  --max-messages 10
 
 # Run the Java consumer application
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest
@@ -119,12 +133,12 @@ timeout 20s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandst
 curl -X GET http://localhost:8081/subjects/$TOPIC-value/versions/1
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local services kafka consume $TOPIC \
---value-format avro \
---key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
---from-beginning \
---property print.key=true \
---max-messages 10
+kafka-avro-console-consumer --topic $TOPIC \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --key-deserializer org.apache.kafka.common.serialization.LongDeserializer \
+  --from-beginning \
+  --property print.key=true \
+  --max-messages 10
 
 # Consumer
 timeout 10s mvn -q exec:java -Dexec.mainClass=io.confluent.examples.connectandstreams.$PACKAGE.StreamsIngest -Dexec.args="localhost:9092 http://localhost:8081"
@@ -137,15 +151,14 @@ echo -e "\n========== $PACKAGE: Example 6: JDBC source connector with Avro to KS
 sleep 2
 
 # Run source connector
-confluent local services connect connector unload $PACKAGE &>/dev/null
-confluent local services connect connector config $PACKAGE --config ./$PACKAGE-connector.properties &>/dev/null
+curl -X POST -H "Content-Type: application/json" -d @./$PACKAGE-connector.json http://localhost:8083/connectors
 
 # Run the Consumer to print the key as well as the value from the Topic
-confluent local services kafka consume $TOPIC \
---value-format avro \
---from-beginning \
---property print.key=true \
---max-messages 10
+kafka-avro-console-consumer --topic $TOPIC \
+  --bootstrap-server $BOOTSTRAP_SERVER \
+  --from-beginning \
+  --property print.key=true \
+  --max-messages 10
 
 # Create KSQL queries
 ksql http://localhost:8088 <<EOF
@@ -155,16 +168,19 @@ EOF
 
 # Read queries
 timeout 5s ksql http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
 SELECT * FROM JDBCAVROKSQLLOCATIONSWITHKEY EMIT CHANGES LIMIT 10;
 exit ;
 EOF
 
 timeout 5s ksql http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
 SELECT * FROM COUNTLOCATIONS EMIT CHANGES LIMIT 5;
 exit ;
 EOF
 
 timeout 5s ksql http://localhost:8088 <<EOF
+SET 'auto.offset.reset'='earliest';
 SELECT * FROM SUMLOCATIONS EMIT CHANGES LIMIT 5;
 exit ;
 EOF

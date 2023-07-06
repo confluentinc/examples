@@ -20,6 +20,7 @@ check_jq || exit 1
 ##################################################
 
 source ../config/local-demo.env
+LOGS_DIR=/tmp/rbac_logs
 ORIGINAL_CONFIGS_DIR=/tmp/original_configs
 DELTA_CONFIGS_DIR=../delta_configs
 FILENAME=kafka-rest.properties
@@ -45,7 +46,7 @@ echo "confluent iam rbac role-binding create --principal User:$USER_CLIENT_RP --
 confluent iam rbac role-binding create --principal User:$USER_CLIENT_RP --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster $KAFKA_CLUSTER_ID
 confluent iam rbac role-binding create --principal User:$USER_CLIENT_RP --role DeveloperWrite --resource Topic:$LICENSE_TOPIC --kafka-cluster $KAFKA_CLUSTER_ID
 
-confluent local services kafka-rest start
+kafka-rest-start $CONFLUENT_HOME/etc/kafka-rest/$FILENAME > $LOGS_DIR/kafka-rest.log 2>&1 &
 
 ##################################################
 # REST Proxy client functions

@@ -61,11 +61,11 @@ if [[ $status != 0 ]]; then
   exit 1
 fi
 echo "$OUTPUT" | jq .
-export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".key")
-export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".secret")
+export METRICS_API_KEY=$(echo "$OUTPUT" | jq -r ".api_key")
+export METRICS_API_SECRET=$(echo "$OUTPUT" | jq -r ".api_secret")
 export CLOUD_CLUSTER=$(confluent kafka cluster describe -o json |  jq -c '[.id]')
 export LAG_EXPORTER_ID=$CLUSTER
-export CLOUD_CONNECTORS=$(confluent connect list -o json | jq -c '. | map(.id)')
+export CLOUD_CONNECTORS=$(confluent connect cluster list -o json | jq -c '. | map(.id)')
 export CLOUD_KSQLDB_APPS=$(confluent ksql cluster list -o json |  jq -c '. | map(.id)')
 export CLOUD_SCHEMA_REGISTRY=$(confluent schema-registry cluster describe -o json |  jq -c '[.cluster_id]')
 

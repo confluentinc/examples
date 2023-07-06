@@ -95,7 +95,11 @@ The output of ``sum`` is:
 Prerequisites
 -------------
 
-- Download `Confluent Platform <https://www.confluent.io/download/>`__
+- This tutorial runs |cp| in Docker. Before proceeding:
+  - Install `Docker Desktop <https://docs.docker.com/desktop/>`__ or `Docker Engine <https://docs.docker.com/engine/install/>`__ (version 19.03.0 or later) if you don't already have it
+  - Install the `Docker Compose plugin <https://docs.docker.com/compose/install/>`__ if you don't already have it. This isn't necessary if you have Docker Desktop since it includes Docker Compose.
+  - Start Docker if it's not already running, either by starting Docker Desktop or, if you manage Docker Engine with ``systemd``, `via systemctl <https://docs.docker.com/config/daemon/systemd/>`__
+  - Verify that Docker is set up properly by ensuring no errors are output when you run ``docker info`` and ``docker compose version`` on the command line
 - Maven command ``mvn`` to compile Java code
 - .. include:: ../../ccloud/docs/includes/prereq_timeout.rst
 
@@ -122,7 +126,7 @@ Run example
 
      ./start.sh
 
-#. If you are running |cp|, open your browser and navigate to the |c3| web interface Management -> Connect tab at http://localhost:9021/management/connect to see the data in the Kafka topics and the deployed connectors.
+#. Open your browser and navigate to the |c3| web interface Management -> Connect tab to see the data in the Kafka topics and the deployed connectors.
 
 
 .. _connect-streams-pipeline-example-1:
@@ -130,7 +134,7 @@ Run example
 Example 1: Kafka console producer -> Key:String and Value:String
 ----------------------------------------------------------------
 
-- Command line ``confluent local services kafka produce`` produces ``String`` keys and ``String`` values to a Kafka topic.
+- Command line ``kafka-console-producer`` produces ``String`` keys and ``String`` values to a Kafka topic.
 - :devx-examples:`Client application|connect-streams-pipeline/src/main/java/io/confluent/examples/connectandstreams/consoleproducer/StreamsIngest.java` reads from the Kafka topic using ``Serdes.String()`` for both key and value.
 
 .. figure:: images/example_1.jpg
@@ -207,5 +211,5 @@ Technical Notes
 - `KAFKA-5245 <https://issues.apache.org/jira/browse/KAFKA-5245>`__: one needs to provide the Serdes twice, (1) when calling ``StreamsBuilder#stream()`` and (2) when calling ``KStream#groupByKey()``
 - `PR-531 <https://github.com/confluentinc/schema-registry/pull/531>`__: Confluent distribution provides packages for ``GenericAvroSerde`` and ``SpecificAvroSerde``
 - `KAFKA-2378 <https://issues.apache.org/jira/browse/KAFKA-2378>`__: adds APIs to be able to embed Kafka Connect into client applications
-- `KAFKA-2526 <https://issues.apache.org/jira/browse/KAFKA-2526>`__: one cannot use the ``--key-serializer`` argument in ``confluent local services kafka produce`` to serialize the key as a ``Long``. As a result, in this example the key is serialized as a ``String``. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify ``--line-reader`` argument in ``confluent local services kafka produce``.
+- `KAFKA-2526 <https://issues.apache.org/jira/browse/KAFKA-2526>`__: one cannot use the ``--key-serializer`` argument in ``kafka-console-producer`` to serialize the key as a ``Long``. As a result, in this example the key is serialized as a ``String``. As a workaround, you could write your own kafka.common.MessageReader (e.g. check out the default implementation of LineMessageReader) and then you can specify ``--line-reader`` argument in ``kafka-console-producer``.
 - `KAFKA-5164 <https://issues.apache.org/jira/browse/KAFKA-5164>`__: allows the connector to set the namespace in the schema.
