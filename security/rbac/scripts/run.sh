@@ -43,5 +43,3 @@ sleep 1
 ./enable-rbac-rest-proxy.sh
 ./enable-rbac-ksqldb-server.sh
 ./enable-rbac-control-center.sh
-
-# ./cleanup.sh
