@@ -7,7 +7,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.confluent</groupId>
     <artifactId>rest-utils-parent</artifactId>
-    <version>6.0.14-SNAPSHOT</version>
+    <version>6.0.14</version>
   </parent>
 
   <artifactId>connect-streams-examples</artifactId>
