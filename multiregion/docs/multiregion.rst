@@ -112,6 +112,13 @@ Topic
 -  ``--replica-placement <path-to-replica-placement-policy-json>``: at
    topic creation, this argument defines the replica placement policy for a given
    topic
+   
+Docker commands
+---------------
+
+This version of the tutorial shows ``docker compose`` commands. Earlier versions of the Docker Compose CLI
+used ``docker-compose`` (hyphenated). If ``docker compose`` doesn't work for you, then ``docker-compose`` should work.
+To learn more, see `https://docs.docker.com/compose/reference/ <https://docs.docker.com/compose/reference/>`__.
 
 Download and run the tutorial
 -----------------------------
