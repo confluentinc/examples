@@ -977,6 +977,8 @@ function ccloud::create_ccloud_stack() {
 
   SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
   SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
+  # FF-11908/DEVX-2800: sometimes describe fails immediately after enable, adding sleep
+  sleep 10
   SCHEMA_REGISTRY_ENDPOINT=$(confluent schema-registry cluster describe -o json | jq -r ".endpoint_url")
   SCHEMA_REGISTRY_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
   
