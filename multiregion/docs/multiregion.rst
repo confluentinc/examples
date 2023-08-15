@@ -112,6 +112,21 @@ Topic
 -  ``--replica-placement <path-to-replica-placement-policy-json>``: at
    topic creation, this argument defines the replica placement policy for a given
    topic
+   
+Prerequisites
+-------------
+
+- Install `Docker Desktop <https://docs.docker.com/desktop/>`__ (version ``4.0.0`` or later) or `Docker Engine <https://docs.docker.com/engine/install/>`__ (version ``19.03.0`` or later) if you don’t already have it.
+
+- Install the `Docker Compose plugin <https://docs.docker.com/compose/install/>`__ if you don’t already have it. This isn’t necessary if you have Docker Desktop, since it includes Docker Compose.
+
+- Start Docker if it’s not already running, either by starting Docker Desktop or, if you manage Docker Engine with ``systemd``, via `systemctl <https://docs.docker.com/config/daemon/systemd/>`__.
+
+- Verify that Docker is set up properly by ensuring no errors are output when you run ``docker info`` and ``docker compose version`` on the command line.
+
+.. tip:: Earlier versions of Docker did not include Docker Compose, so a separate (hyphenated) ``docker-compose`` CLI was required. If your local Docker installation does not support
+         Docker Compose (``docker compose version`` throws an error), then you can either upgrade Docker or install the Compose plugin as documented above; or, if you have the standalone ``docker-compose`` CLI
+         installed and you don't wish to modify your local Docker installation, then you can substitute ``docker-compose`` wherever ``docker compose`` is used in this tutorial.
 
 Download and run the tutorial
 -----------------------------
