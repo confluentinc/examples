@@ -33,8 +33,8 @@ sleep 10
 
 kafka-server-start $CONFLUENT_HOME/etc/kafka/$FILENAME > $LOGS_DIR/kafka.log 2>&1 &
 
-echo -e "Sleeping 10 seconds before login"
-sleep 10
+echo -e "Sleeping 30 seconds before logging in to MDS"
+sleep 30
 
 # Log in to Metadata Server (MDS)
 login_mds $MDS
