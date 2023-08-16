@@ -44,6 +44,14 @@ function version_gt() {
   test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
 }
 
+function version_gte() {
+  version_gt $1 $2 || test "$1" = "$2"
+}
+
+function get_version_openssl() {
+  openssl version | sed -r 's/OpenSSL //' | cut -d ' ' -f1
+}
+
 function validate_version_confluent_cli_for_cp() {
   validate_version_confluent_cli_v2 || exit 1
 
