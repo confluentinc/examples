@@ -25,7 +25,7 @@ Prerequisites
 -  Access to `Confluent Cloud <https://confluent.cloud/login>`__.
 
 -  Local `install of Confluent Cloud CLI
-   <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v1.25.0 or later)
+   <https://docs.confluent.io/ccloud-cli/current/install.html>`__ (v3.0.0 or later)
 
 -  `jq <https://github.com/stedolan/jq/wiki/Installation>`__ installed on your host
 
@@ -113,9 +113,9 @@ Validate Setup
 #. Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
-.. |Data Flow|
-   image:: images/data-flow.png
-   :alt: Data Flow
+.. |Stream Lineage|
+   image:: images/stream-lineage.png
+   :alt: Stream Lineage
 
 .. |Prometheus Targets Unknown|
    image:: images/prometheus-targets-unknown.png
