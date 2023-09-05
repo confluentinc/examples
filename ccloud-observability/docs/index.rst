@@ -55,7 +55,7 @@ The following instructions will:
 
 -  build a |ak| client docker image with the maven project's dependencies cache
 
--  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, Prometheus, Grafana, a ccloud-exporter, and a node-exporter) with ``docker-compose``
+-  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, `Prometheus <https://prometheus.io/>`_, `Grafana <https://grafana.com/>`_ and a Prometheus `node-exporter <https://prometheus.io/docs/guides/node-exporter/>`_) with Docker Compose
 
 #. Log in to the |ccloud| CLI:
 
@@ -81,25 +81,25 @@ The following instructions will:
        cd examples/ccloud-observability/
        git checkout |release_post_branch|
 
-#. Setup a |ccloud| cluster, secrets, and observability components by running :devx-examples:`start.sh script|ccloud-observability/start.sh`:
+#. Set up a |ccloud| cluster, secrets, and observability components by running :devx-examples:`start.sh script|ccloud-observability/start.sh`:
 
    .. code-block:: bash
 
       ./start.sh
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
-   Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+   Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
    Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
 
 Validate Setup
 ~~~~~~~~~~~~~~
 
-#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud UI, view the **Data flow** in your newly created environment and |ak| cluster.
+#. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud UI, view the **Stream Lineage** in your newly created environment and |ak| cluster.
 
    |Stream Lineage|
 
-#. Navigate to the `Prometheus Targets page <localhost:9090/targets>`__.
+#. Navigate to the `Prometheus Targets page <http://localhost:9090/targets>`__.
 
    |Prometheus Targets Unknown|
 
@@ -108,7 +108,7 @@ Validate Setup
    |Prometheus Targets Up|
 
 #. It will take up to 3 minutes for data to become visible in Grafana.
-   Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+   Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Now you are ready to proceed to Producer, Consumer, or General scenarios to see what different failure scenarios look like.
 
@@ -162,7 +162,7 @@ Introduce failure scenario
 
    .. code-block:: bash
 
-      docker-compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
+      docker compose exec producer iptables -A OUTPUT -p tcp --dport 9092 -j DROP
 
 ^^^^^^^^^^^^^^^^^^^^
 Diagnose the problem
@@ -198,7 +198,7 @@ Diagnose the problem
 
    .. code-block:: bash
 
-      docker-compose logs producer
+      docker compose logs producer
 
 #. Verify that you see log messages similar to what is shown below:
 
@@ -217,7 +217,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      docker-compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
+      docker compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
 
 #. It may take a few minutes for the producer to start sending requests again.
 
@@ -227,7 +227,7 @@ Troubleshooting
 
 #. Producer output rate doesn't come back up after adding in the ``iptables`` rule.
 
-   Restart the producer by running ``docker-compose restart producer``. This is advice specific to this tutorial.
+   Restart the producer by running ``docker compose restart producer``. This is advice specific to this tutorial.
 
 
    |Confluent Cloud Panel|
@@ -249,11 +249,11 @@ This scenario will look at |ccloud| metrics from the Metrics API and client metr
 Introduce failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Delete the ACL that allowed the service account to write to the topic, inserting your service account ID instead of ``184498``:
+#. Create an ACL that denies the service account permission to write to any topic, inserting your service account ID instead of ``sa-123456``:
 
    .. code-block:: bash
 
-      ccloud kafka acl delete --service-account 184498 --operation write  --topic '*' --allow
+      confluent kafka acl create --service-account sa-123456 --operation write  --topic '*' --deny
 
 ^^^^^^^^^^^^^^^^^^^^
 Diagnose the problem
@@ -289,7 +289,7 @@ Diagnose the problem
 
    .. code-block:: bash
 
-      docker-compose logs producer
+      docker compose logs producer
 
 #. Verify that you see log messages similar to what is shown below:
 
@@ -319,17 +319,17 @@ Diagnose the problem
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Add the ACL allowing write to the topic, inserting your service account ID instead of ``184498``:
+#. Delete the ACL created above that denied the service account permission to write to any topic.  Insert your service account ID instead of ``sa-123456``:
 
    .. code-block:: bash
 
-      ccloud kafka acl create --service-account 184498 --operation write  --topic '*' --allow
+      confluent kafka acl delete --service-account sa-123456 --operation write  --topic '*' --deny
 
 #. Verify that the ``org.apache.kafka.common.errors.TopicAuthorizationException`` log messages stopped in the ``producer`` container.
 
    .. code-block:: bash
 
-      docker-compose logs producer
+      docker compose logs producer
 
 .. _ccloud-observability-consumer-overview:
 
@@ -339,7 +339,7 @@ The dashboard and scenarios in this section use client metrics from a Java consu
 other non-java clients--they generally offer similar metrics.
 
 The source code for the client can found in the
-devx-examples:`ccloud-observability/src|ccloud-observability/src` directory. The client
+:devx-examples:`ccloud-observability/src|ccloud-observability/src` directory. The client
 uses default configurations, this is not recommended for production use cases. This Java consumer
 will continue to consumer the same message until the process is interrupted. The content of the
 message is not important here, in these scenarios the focus is on the change in client metric values.
@@ -375,7 +375,7 @@ Introduce failure scenario
 
    .. code-block:: bash
 
-      docker-compose up -d --scale producer=5
+      docker compose up -d --scale producer=5
 
    Which will produce the following output:
 
@@ -397,7 +397,7 @@ Introduce failure scenario
 Diagnose the problem
 ^^^^^^^^^^^^^^^^^^^^
 
-#. Open `Grafana <localhost:3000>`__ and login with the username ``admin`` and password ``password``.
+#. Open `Grafana <http://localhost:3000>`__ and login with the username ``admin`` and password ``password``.
 
 #. Navigate to the ``Consumer Client Metrics`` dashboard. Wait 2 minutes and then observe:
 
@@ -461,7 +461,7 @@ Resolve failure scenario
 
    .. code-block:: bash
 
-      docker-compose up -d --scale producer=1
+      docker compose up -d --scale producer=1
 
    Which will produce the following output:
 
@@ -504,7 +504,7 @@ Failing to create a new partition
 It's possible you won't be able to create a partition because you have reached a one of |ccloud|'s partition limits.
 Follow the instructions below to check if your cluster is getting close to its partition limits.
 
-#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+#. Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Navigate to the ``Confluent Cloud`` dashboard.
 
@@ -542,7 +542,7 @@ producers or ``fetch-throttle-time-avg`` (in ms) for consumers
 |ccloud| offers different cluster types, each with its own `usage limits <https://docs.confluent.io/cloud/current/clusters/cluster-types.html#basic-clusters>`__. This demo assumes
 you are running on a "basic" or "standard" cluster; both have a request limit of 1500 per second.
 
-#. Open `Grafana <localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
+#. Open `Grafana <http://localhost:3000>`__ and use the username ``admin`` and password ``password`` to login.
 
 #. Navigate to the ``Confluent Cloud`` dashboard.
 
@@ -563,25 +563,39 @@ you are running on a "basic" or "standard" cluster; both have a request limit of
 Clean up |ccloud| resources
 ---------------------------
 
-#. Tear down the Docker monitoring containers:
+Run the ``./stop.sh`` script, passing the path to your stack configuration as an argument. Insert your service account ID instead of ``sa-123456`` in the example below.
+Your service account ID can be found in your client configuration file path (i.e., ``stack-configs/java-service-account-sa-123456.config``).
+
+The ``METRICS_API_KEY`` environment variable must be set when you run this script in order to delete the Metrics API key that ``start.sh`` created for Prometheus to
+be able to scrape the Metrics API. The key was output at the end of the ``start.sh`` script, or you can find it in the ``.env`` file
+that ``start.sh`` created.
 
    .. code-block:: bash
 
-      docker-compose down
+      METRICS_API_KEY=XXXXXXXXXXXXXXXX ./stop.sh stack-configs/java-service-account-sa-123456.config
 
-#. Delete the cloud api key created for the ``ccloud-exporter``:
-
-   .. code-block:: bash
-
-      ccloud api-key delete $METRICS_API_KEY
-
-#. Run the following to teardown the ccloud-stack, inserting your service account ID instead of ``184498``.
-   Your service account ID can be found in your client configuration file (ie ``stack-configs/java-service-account-184498.config``).
+You will see output like the following once all local containers and Confluent Cloud resources have been cleaned up:
 
    .. code-block:: bash
 
-      source ../utils/ccloud_library.sh
-      ccloud::destroy_ccloud_stack 184498
+      Deleted API key "XXXXXXXXXXXXXXXX".
+      [+] Running 7/7
+       ⠿ Container kafka-lag-exporter               Removed                                                         0.6s
+       ⠿ Container grafana                          Removed                                                         0.5s
+       ⠿ Container prometheus                       Removed                                                         0.5s
+       ⠿ Container node-exporter                    Removed                                                         0.4s
+       ⠿ Container ccloud-observability-consumer-1  Removed                                                         0.6s
+       ⠿ Container ccloud-observability-producer-1  Removed                                                         0.6s
+       ⠿ Network ccloud-observability_default       Removed                                                         0.1s
+      This script will destroy all resources in java-service-account-sa-123456.config.  Do you want to proceed? [y/n] y
+      Now using "env-123456" as the default (active) environment.
+      Destroying Confluent Cloud stack associated to service account id sa-123456
+      Deleting CLUSTER: demo-kafka-cluster-sa-123456 : lkc-123456
+      Deleted Kafka cluster "lkc-123456".
+      Deleted API key "XXXXXXXXXXXXXXXX".
+      Deleted service account "sa-123456".
+      Deleting ENVIRONMENT: prefix ccloud-stack-sa-123456 : env-123456
+      Deleted environment "env-123456".
 
 .. _ccloud-observability-advanced-usage:
 
