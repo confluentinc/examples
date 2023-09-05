@@ -97,7 +97,7 @@ Validate Setup
 
 #. Validate the producer and consumer |ak| clients are running.  From the Confluent Cloud UI, view the **Data flow** in your newly created environment and |ak| cluster.
 
-   |Data Flow|
+   |Stream Lineage|
 
 #. Navigate to the `Prometheus Targets page <localhost:9090/targets>`__.
 
