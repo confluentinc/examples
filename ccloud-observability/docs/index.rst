@@ -4,7 +4,7 @@ Observability Overview and Setup
 --------------------------------
 
 Using |ccloud| has the advantage of circumventing the trials and tribulations one would face when monitoring
-an on-prem Kafka cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
+an |on-prem| |ak-tm| cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
 Your success in |ccloud| largely depends on how well your applications are performing. Observability into the performance and status of your client
 applications gives you insights on how to fine tune your producers and consumers, when to scale
 your |ccloud| cluster, what might be going wrong, and how to resolve the problem.
@@ -570,13 +570,13 @@ The ``METRICS_API_KEY`` environment variable must be set when you run this scrip
 be able to scrape the Metrics API. The key was output at the end of the ``start.sh`` script, or you can find it in the ``.env`` file
 that ``start.sh`` created.
 
-   .. code-block:: bash
+.. code-block:: bash
 
       METRICS_API_KEY=XXXXXXXXXXXXXXXX ./stop.sh stack-configs/java-service-account-sa-123456.config
 
 You will see output like the following once all local containers and Confluent Cloud resources have been cleaned up:
 
-   .. code-block:: bash
+.. code-block:: bash
 
       Deleted API key "XXXXXXXXXXXXXXXX".
       [+] Running 7/7
@@ -611,7 +611,7 @@ Additional Resources
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
 
--  See `jmx-monitoring-stacks <https://github.com/confluentinc/jmx-monitoring-stacks>`__ for examples of monitoring on-prem |ak| clusters and other clients with different monitoring technologies.
+-  See `jmx-monitoring-stacks <https://github.com/confluentinc/jmx-monitoring-stacks>`__ for examples of monitoring |on-prem| |ak| clusters and other clients with different monitoring technologies.
 
 .. |Confluent Cloud Request Breakdown|
    image:: images/cloud-request-rate-breakdown.png
