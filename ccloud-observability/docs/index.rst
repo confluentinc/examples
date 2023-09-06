@@ -32,7 +32,7 @@ Prerequisites
 -  `Docker <https://docs.docker.com/get-docker/>`__ installed on your host
 
 Evaluate the Costs to Run the Tutorial
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
 
