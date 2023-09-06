@@ -31,8 +31,8 @@ Prerequisites
 
 -  `Docker <https://docs.docker.com/get-docker/>`__ installed on your host
 
-Cost to Run Tutorial
-~~~~~~~~~~~~~~~~~~~~
+Evaluate the Costs to Run the Tutorial
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Caution
 ^^^^^^^
@@ -174,7 +174,7 @@ Diagnose the problem
 
    -  A downward trend in outgoing bytes which can be found by the expanding the ``Throughput`` tab.
 
-   -  The top level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
+   -  The top-level panels like ``Record error rate`` (derived from |ak| MBean attribute ``record-error-rate``) should turn red, a major indication something is wrong.
 
    -  The spark line in the ``Free buffer space`` (derived from |ak| MBean attribute ``buffer-available-bytes``) panel go down and a bump in ``Retry rate`` (derived from |ak| MBean attribute ``record-retry-rate``)
 
@@ -183,14 +183,14 @@ Diagnose the problem
    |Producer Connectivity Loss|
 
 
-#. In order to isolate this problem to the producer, check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
+#. Check the status of the |ccloud| cluster, specifically that it is accepting requests to isolate this problem to the producer. To do this, navigate to the ``Confluent Cloud`` dashboard.
 
-#. Look at the top panels, they should all be green which means the cluster is operating safely within its resources.
+#. Look at the top panels. They should all be green which means the cluster is operating safely within its resources.
 
    |Confluent Cloud Panel|
 
    For a connectivity problem in a client, look specifically at the ``Requests (rate)``. If this value
-   were yellow or red, the client connectivity problem could be due to hitting the |ccloud|
+   is yellow or red, the client connectivity problem could be due to hitting the |ccloud|
    requests rate limit. If you exceed the maximum, requests may be refused. See the
    :ref:`General Request Rate Limits scenario <ccloud-observability-general-request-rate-limits>` for more details.
 
@@ -219,7 +219,7 @@ Resolve failure scenario
 
       docker compose exec producer iptables -D OUTPUT -p tcp --dport 9092 -j DROP
 
-#. It may take a few minutes for the producer to start sending requests again.
+   It may take a few minutes for the producer to start sending requests again.
 
 ^^^^^^^^^^^^^^^
 Troubleshooting
@@ -271,7 +271,7 @@ Diagnose the problem
 
 #. Check the status of the |ccloud| cluster, specifically that it is accepting requests. Navigate to the ``Confluent Cloud`` dashboard.
 
-#. In the ``Confluent Cloud`` dashboard, look at the top panels, they should all be green which means the cluster is operating safely within its resources.
+#. In the ``Confluent Cloud`` dashboard, look at the top panels, they should all be green, which means the cluster is operating safely within its resources.
 
    |Confluent Cloud Panel|
 
@@ -340,9 +340,9 @@ other non-java clients--they generally offer similar metrics.
 
 The source code for the client can found in the
 :devx-examples:`ccloud-observability/src|ccloud-observability/src` directory. The client
-uses default configurations, this is not recommended for production use cases. This Java consumer
+uses default configurations, which is not recommended for production use cases. This Java consumer
 will continue to consumer the same message until the process is interrupted. The content of the
-message is not important here, in these scenarios the focus is on the change in client metric values.
+message is not important here. In these scenarios the focus is on the change in client metric values.
 
 |Consumer Dashboard|
 
@@ -361,23 +361,23 @@ the volume of messages on a topic.
 
 
 This scenario will look at metrics from various sources. Consumer lag metrics are pulled from the
-`kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ container, a scala open source project
+`kafka-lag-exporter <https://github.com/lightbend/kafka-lag-exporter>`__ container, a Scala open-source project
 that collects data about consumer groups and presents them in a Prometheus scrapable format. Metrics
 about |ccloud| cluster resource usage are pulled from the Metrics API endpoints. Consumer client metrics
 are pulled from the client application’s MBean object ``kafka.consumer:type=consumer-fetch-manager-metrics,client-id=<client_id>``.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-Introduce failure scenario
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Introduce failure a scenario
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. By default 1 consumer and 1 producer are running. Adjust that to 1 consumer and 5 producers in order to force the condition where the consumer cannot keep up with the rate of messages being produced, which will cause an increase in consumer lag.
+#. By default 1 consumer and 1 producer are running. Change this to 1 consumer and 5 producers to force the condition where the consumer cannot keep up with the rate of messages being produced, which will cause an increase in consumer lag.
    The container scaling can be done with the command below:
 
    .. code-block:: bash
 
       docker compose up -d --scale producer=5
 
-   Which will produce the following output:
+   This produces the following output:
 
    .. code-block:: bash
 
@@ -417,10 +417,10 @@ Diagnose the problem
 
    .. note::
 
-      If a client is `properly tuned <https://docs.confluent.io/cloud/current/client-apps/optimizing/index.html>`__ and has adequate resources
+      If a client is `properly tuned <https://docs.confluent.io/cloud/current/client-apps/optimizing/index.html>`__ and has adequate resources,
       an increase in throughput metrics or fetch metrics won't necessarily mean the consumer lag will increase.
 
-#. Another view of consumer lag can be found in |ccloud|. Open the UI, navigate to the "Consumers" section and click on the ``demo-cloud-observability-1`` consumer group.
+#. Another view of consumer lag can be found in |ccloud|. Open the console, navigate to the "Consumers" section and click on the ``demo-cloud-observability-1`` consumer group.
    This page will update periodically, within two minutes you should see a steady increase is the offset lag.
 
    |Confluent Cloud Consumer Lag|
@@ -433,7 +433,7 @@ Diagnose the problem
 
       kafka-consumer-groups --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CONFIG_FILE --describe --group demo-cloud-observability-1
 
-   Which will produce something similar to the following:
+  This produces something similar to the following:
 
    .. code-block:: text
 
@@ -463,7 +463,7 @@ Resolve failure scenario
 
       docker compose up -d --scale producer=1
 
-   Which will produce the following output:
+   This produces the following output:
 
    .. code-block:: bash
 
@@ -517,9 +517,9 @@ Follow the instructions below to check if your cluster is getting close to its p
    Confluent Platform components–such as ksqlDB, Kafka Streams, Connect, and Control Center–count towards the cluster partition limit.
 
 #. Check the ``Partition count change (delta)`` panel. |ccloud| clusters have a limit on the
-   number of partitions that can be created and deleted in a 5 minute period. This single stat
+   number of partitions that can be created and deleted in a 5 minute period. This statistic
    provides the absolute difference between the number of partitions at the beginning and end of
-   the 5 minute period. This over simplifies the problem. An example being, at the start of a 5
+   the 5 minute period. This over simplifies the problem. For example, at the start of a 5
    minute window you have 18 partitions. During the 5 minute window you create a new topic with 6
    partitions and delete a topic with 6 partitions. At the end of the five minute window you still
    have 18 partitions but you actually created and deleted 12 partitions.
