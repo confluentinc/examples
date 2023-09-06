@@ -34,15 +34,7 @@ Prerequisites
 Evaluate the Costs to Run the Tutorial
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Caution
-^^^^^^^
-
 .. include:: ../../ccloud/docs/includes/ccloud-examples-caution.rst
-
-|ccloud| Promo Code
-^^^^^^^^^^^^^^^^^^^
-
-.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
 
 |ccloud| Cluster and Observability Container Setup
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
