@@ -3,7 +3,7 @@
 Observability Overview and Setup
 --------------------------------
 
-Using |ccloud| has the advantage of circumventing the trials and tribulations one would face when monitoring
+Using |ccloud| has the advantage of circumventing the challenges you might face when monitoring
 an |on-prem| |ak-tm| cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
 Your success in |ccloud| largely depends on how well your applications are performing. Observability into the performance and status of your client
 applications gives you insights on how to fine tune your producers and consumers, when to scale
