@@ -358,9 +358,9 @@ that collects data about consumer groups and presents them in a Prometheus scrap
 about |ccloud| cluster resource usage are pulled from the Metrics API endpoints. Consumer client metrics
 are pulled from the client application’s MBean object ``kafka.consumer:type=consumer-fetch-manager-metrics,client-id=<client_id>``.
 
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Introduce failure a scenario
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 #. By default 1 consumer and 1 producer are running. Change this to 1 consumer and 5 producers to force the condition where the consumer cannot keep up with the rate of messages being produced, which will cause an increase in consumer lag.
    The container scaling can be done with the command below:
