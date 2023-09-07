@@ -53,7 +53,7 @@ The following instructions will:
 
    .. code-block:: bash
 
-      ccloud login --save
+      confluent login --prompt --save
 
    The ``--save`` flag will save your |ccloud| login credentials to the
    ``~/.netrc`` file.
