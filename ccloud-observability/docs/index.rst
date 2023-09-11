@@ -49,11 +49,11 @@ The following instructions will:
 
 -  stand up numerous docker containers (1 consumer with JMX exporter, 1 producer with JMX exporter, `Prometheus <https://prometheus.io/>`_, `Grafana <https://grafana.com/>`_ and a Prometheus `node-exporter <https://prometheus.io/docs/guides/node-exporter/>`_) with Docker Compose
 
-#. Log in to the |ccloud| CLI:
+#. Log in to |ccloud| with the |confluent-cli|:
 
    .. code-block:: bash
 
-      ccloud login --save
+      confluent login --prompt --save
 
    The ``--save`` flag will save your |ccloud| login credentials to the
    ``~/.netrc`` file.
