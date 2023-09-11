@@ -1,3 +1,5 @@
+:orphan:
+
 .. _ccloud-cli-tutorial:
 
 Tutorial: Confluent CLI
