@@ -1,3 +1,5 @@
+:orphan:
+
 .. _ccloud-cli-tutorial:
 
 Tutorial: Confluent CLI
@@ -46,7 +48,7 @@ Run Tutorial
 Start
 ~~~~~
 
-#. Log in to the Confluent CLI:
+#. Log in to |ccloud| with the |confluent-cli|:
 
    .. code-block:: bash
 
