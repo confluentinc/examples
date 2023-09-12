@@ -1,7 +1,7 @@
 .. _ccloud-observability-index:
 
-Observability Overview and Setup
---------------------------------
+Observability for |ak| Clients to |ccloud|
+------------------------------------------
 
 Using |ccloud| has the advantage of circumventing the challenges you might face when monitoring
 an |on-prem| |ak-tm| cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
