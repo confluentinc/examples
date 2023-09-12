@@ -5,32 +5,15 @@
 Tutorial: Confluent CLI
 =======================
 
-Overview
---------
-
-This tutorial shows you how to use the `Confluent CLI
-<https://docs.confluent.io/confluent-cli/current/install.html>`__ to interact with
-your `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__ cluster. It uses real
+This tutorial shows you how to use the |confluent-cli| to interact with
+your |ccloud| cluster. It uses real
 resources in |ccloud|, and it creates and deletes topics, service accounts,
-credentials, and ACLs. Following the workflow in this tutorial, you accomplish
-the following steps:
-
--  `Create a new Confluent Cloud environment`_
--  `Create a new Confluent Cloud cluster`_
--  `Create a new API key/secret pair for user`_
--  `Produce and consume records with Confluent CLI`_
--  `Create a new service account with an API key/secret pair`_
--  `Run a Java producer without ACLs`_
--  `Run a Java producer with ACLs`_
--  `Run a Java producer with a prefixed ACL`_
--  `Run a fully managed Confluent Cloud connector`_
--  `Run a Java consumer with a Wildcard ACL`_
--  `Clean up Confluent Cloud resources`_
+credentials, and ACLs.
 
 Prerequisites
 -------------
 
--  `Confluent Cloud <https://www.confluent.io/confluent-cloud/tryfree/>`__
+-  `Confluent Cloud <https://www.confluent.io/get-started/?product=cloud>`__
 
 -  Local `install of Confluent CLI
    <https://docs.confluent.io/confluent-cli/current/install.html>`__ (v3.0.0 or later)
@@ -808,14 +791,13 @@ Additional Resources
 
 -  See additional Confluent CLI tutorials for producing and consuming events:
 
-   - `Producer and Consumer Basics <https://kafka-tutorials.confluent.io/kafka-console-consumer-producer-basics/confluent.html>`__
+   - `Producer and Consumer Basics <https://developer.confluent.io/tutorials/kafka-console-consumer-producer-basics/confluent.html>`__
+   - `Producer and Consumer with (de)serializers <https://developer.confluent.io/tutorials/kafka-console-consumer-producer-avro/confluent.html>`__
 
-   - `Producer and Consumer with (de)serializers <https://kafka-tutorials.confluent.io/kafka-console-consumer-producer-avro/confluent.html>`__
+-  For a guide to configuring, monitoring, and optimizing your |ak| client applications when using |ccloud|, see
+   `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__.
 
--  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__ for a guide to configuring, monitoring, and
-   optimizing your |ak| client applications when using |ccloud|.
-
--  For an example that showcases how to monitor |ak-tm| client application and |ccloud| metrics, and steps through various failure scenarios to see how they are reflected in the provided metrics, see the :cloud:`Observability for Apache Kafka® Clients to Confluent Cloud demo|get-started/examples/ccloud-observability/docs/index.html`.
-
--  See other :cloud:`Confluent Cloud Tutorials|get-started/cloud-demos.html`.
+-  For an example that showcases how to monitor |ak| client application and |ccloud| metrics, and steps through various
+   failure scenarios to see how they are reflected in the provided metrics, see the
+   :cloud:`Observability for Apache Kafka® Clients to Confluent Cloud demo|get-started/examples/ccloud-observability/docs/index.html`.
 
