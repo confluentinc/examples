@@ -2,8 +2,8 @@
 
 .. _ccloud-cli-tutorial:
 
-Tutorial: Confluent CLI
-=======================
+Tutorial: Use |confluent-cli| with |ccloud|
+===========================================
 
 This tutorial shows you how to use the |confluent-cli| to interact with
 your |ccloud| cluster. It uses real
