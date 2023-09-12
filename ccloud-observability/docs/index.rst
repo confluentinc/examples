@@ -425,7 +425,7 @@ Diagnose the problem
 
       kafka-consumer-groups --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CONFIG_FILE --describe --group demo-cloud-observability-1
 
-  This produces something similar to the following:
+   This produces something similar to the following:
 
    .. code-block:: text
 
@@ -449,27 +449,27 @@ Diagnose the problem
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Start ``consumer-1`` container, thus adding a consumer back to the consumer group, and stop the extra producers:
+Start ``consumer-1`` container, thus adding a consumer back to the consumer group, and stop the extra producers:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      docker compose up -d --scale producer=1
+   docker compose up -d --scale producer=1
 
-   This produces the following output:
+This produces the following output:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      node-exporter is up-to-date
-      grafana is up-to-date
-      kafka-lag-exporter is up-to-date
-      prometheus is up-to-date
-      ccloud-exporter is up-to-date
-      Stopping and removing ccloud-observability_producer_2 ... done
-      Stopping and removing ccloud-observability_producer_3 ... done
-      Stopping and removing ccloud-observability_producer_4 ... done
-      Stopping and removing ccloud-observability_producer_5 ... done
-      Starting ccloud-observability_consumer_1              ... done
-      Starting ccloud-observability_producer_1              ... done
+   node-exporter is up-to-date
+   grafana is up-to-date
+   kafka-lag-exporter is up-to-date
+   prometheus is up-to-date
+   ccloud-exporter is up-to-date
+   Stopping and removing ccloud-observability_producer_2 ... done
+   Stopping and removing ccloud-observability_producer_3 ... done
+   Stopping and removing ccloud-observability_producer_4 ... done
+   Stopping and removing ccloud-observability_producer_5 ... done
+   Starting ccloud-observability_consumer_1              ... done
+   Starting ccloud-observability_producer_1              ... done
 
 .. _ccloud-observability-general-overview:
 
