@@ -553,7 +553,7 @@ you are running on a "basic" or "standard" cluster; both have a request limit of
 .. _ccloud-observability-teardown:
 
 Clean up |ccloud| resources
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Run the ``./stop.sh`` script, passing the path to your stack configuration as an argument. Insert your service account ID instead of ``sa-123456`` in the example below.
 Your service account ID can be found in your client configuration file path (i.e., ``stack-configs/java-service-account-sa-123456.config``).
@@ -592,7 +592,7 @@ You will see output like the following once all local containers and Confluent C
 .. _ccloud-observability-advanced-usage:
 
 Additional Resources
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 -  Read `Monitoring Your Event Streams: Tutorial for Observability Into Apache Kafka Clients <https://www.confluent.io/blog/monitoring-event-streams-visualize-kafka-clients-in-confluent-cloud/>`__.
 
