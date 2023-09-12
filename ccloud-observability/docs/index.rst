@@ -1,7 +1,7 @@
 .. _ccloud-observability-index:
 
-Observability Overview and Setup
---------------------------------
+Observability for |ak| Clients to |ccloud|
+------------------------------------------
 
 Using |ccloud| has the advantage of circumventing the challenges you might face when monitoring
 an |on-prem| |ak-tm| cluster, but you still need to monitor your client applications and, to some degree, your |ccloud| cluster.
@@ -425,7 +425,7 @@ Diagnose the problem
 
       kafka-consumer-groups --bootstrap-server $BOOTSTRAP_SERVERS --command-config $CONFIG_FILE --describe --group demo-cloud-observability-1
 
-  This produces something similar to the following:
+   This produces something similar to the following:
 
    .. code-block:: text
 
@@ -449,27 +449,27 @@ Diagnose the problem
 Resolve failure scenario
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-#. Start ``consumer-1`` container, thus adding a consumer back to the consumer group, and stop the extra producers:
+Start ``consumer-1`` container, thus adding a consumer back to the consumer group, and stop the extra producers:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      docker compose up -d --scale producer=1
+   docker compose up -d --scale producer=1
 
-   This produces the following output:
+This produces the following output:
 
-   .. code-block:: bash
+.. code-block:: bash
 
-      node-exporter is up-to-date
-      grafana is up-to-date
-      kafka-lag-exporter is up-to-date
-      prometheus is up-to-date
-      ccloud-exporter is up-to-date
-      Stopping and removing ccloud-observability_producer_2 ... done
-      Stopping and removing ccloud-observability_producer_3 ... done
-      Stopping and removing ccloud-observability_producer_4 ... done
-      Stopping and removing ccloud-observability_producer_5 ... done
-      Starting ccloud-observability_consumer_1              ... done
-      Starting ccloud-observability_producer_1              ... done
+   node-exporter is up-to-date
+   grafana is up-to-date
+   kafka-lag-exporter is up-to-date
+   prometheus is up-to-date
+   ccloud-exporter is up-to-date
+   Stopping and removing ccloud-observability_producer_2 ... done
+   Stopping and removing ccloud-observability_producer_3 ... done
+   Stopping and removing ccloud-observability_producer_4 ... done
+   Stopping and removing ccloud-observability_producer_5 ... done
+   Starting ccloud-observability_consumer_1              ... done
+   Starting ccloud-observability_producer_1              ... done
 
 .. _ccloud-observability-general-overview:
 
@@ -553,7 +553,7 @@ you are running on a "basic" or "standard" cluster; both have a request limit of
 .. _ccloud-observability-teardown:
 
 Clean up |ccloud| resources
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Run the ``./stop.sh`` script, passing the path to your stack configuration as an argument. Insert your service account ID instead of ``sa-123456`` in the example below.
 Your service account ID can be found in your client configuration file path (i.e., ``stack-configs/java-service-account-sa-123456.config``).
@@ -592,7 +592,7 @@ You will see output like the following once all local containers and Confluent C
 .. _ccloud-observability-advanced-usage:
 
 Additional Resources
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 -  Read `Monitoring Your Event Streams: Tutorial for Observability Into Apache Kafka Clients <https://www.confluent.io/blog/monitoring-event-streams-visualize-kafka-clients-in-confluent-cloud/>`__.
 
