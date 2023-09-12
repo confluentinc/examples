@@ -815,7 +815,7 @@ Additional Resources
 -  See `Developing Client Applications on Confluent Cloud <https://docs.confluent.io/cloud/current/client-apps/index.html>`__ for a guide to configuring, monitoring, and
    optimizing your |ak| client applications when using |ccloud|.
 
--  For an example that showcases how to monitor |ak-tm| client application and |ccloud| metrics, and steps through various failure scenarios to see how they are reflected in the provided metrics, see the :ref:`Observability for Apache Kafka® Clients to Confluent Cloud demo <ccloud-observability-index>`.
+-  For an example that showcases how to monitor |ak-tm| client application and |ccloud| metrics, and steps through various failure scenarios to see how they are reflected in the provided metrics, see the :cloud:`Observability for Apache Kafka® Clients to Confluent Cloud demo|get-started/examples/ccloud-observability/docs/index.html`.
 
 -  See other :cloud:`Confluent Cloud Tutorials|get-started/cloud-demos.html`.
 
