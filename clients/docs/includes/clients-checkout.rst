@@ -1,6 +1,5 @@
 Clone the `confluentinc/examples <https://github.com/confluentinc/examples>`__
-GitHub repository and check out the
-:litwithvars:`|release|-post` branch.
+GitHub repository and check out the branch.
 
 .. codewithvars:: bash
 
