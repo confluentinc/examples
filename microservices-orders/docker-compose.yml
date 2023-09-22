@@ -54,7 +54,6 @@ services:
       CONNECT_BOOTSTRAP_SERVERS: $BOOTSTRAP_SERVERS
       CONNECT_REST_ADVERTISED_HOST_NAME: connect
       CONNECT_GROUP_ID: "examples-microservices-orders"
-      CONNECT_REST_ADVERTISED_HOST_NAME: connect
 
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
       CONNECT_SASL_JAAS_CONFIG: $SASL_JAAS_CONFIG
@@ -154,7 +153,6 @@ services:
       XPACK_GRAPH_ENABLED: "false"
       XPACK_MONITORING_ENABLED: "false"
       XPACK_REPORTING_ENABLED: "false"
-      XPACK_SECURITY_ENABLED: "false"
     command: 
       - bash
       - -c
