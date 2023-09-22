@@ -6,4 +6,3 @@ GitHub repository and check out the
 
    git clone https://github.com/confluentinc/examples
    cd examples
-   git checkout |release|-post
