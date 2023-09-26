@@ -18,7 +18,7 @@ Client
 
 -  Docker
 
--  `Download <https://www.confluent.io/download/>`__ |cp| |release|
+-  `Download <https://www.confluent.io/download/>`__ |cp|
 
 Kafka Cluster
 ~~~~~~~~~~~~~
