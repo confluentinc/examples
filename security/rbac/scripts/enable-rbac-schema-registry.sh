@@ -32,6 +32,8 @@ login_mds $MDS
 ##################################################
 # Administrative Functions
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schemas
+# - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schema_encoders
+# - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_dek_registry_keys
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the DeveloperRead role to Topic:$LICENSE_TOPIC
 # - Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the DeveloperWrite role to Topic:$LICENSE_TOPIC
@@ -50,6 +52,10 @@ confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGIS
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_schema_encoders"
 echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schema_encoders --kafka-cluster $KAFKA_CLUSTER_ID"
 confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schema_encoders --kafka-cluster $KAFKA_CLUSTER_ID
+
+echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Topic:_dek_registry_keys"
+echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_dek_registry_keys --kafka-cluster $KAFKA_CLUSTER_ID"
+confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_dek_registry_keys --kafka-cluster $KAFKA_CLUSTER_ID
 
 echo -e "\n# Grant principal User:$USER_ADMIN_SCHEMA_REGISTRY the ResourceOwner role to Group:schema-registry-demo"
 echo "confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:schema-registry-demo --kafka-cluster $KAFKA_CLUSTER_ID"
