@@ -160,6 +160,8 @@ Schema Registry
    
       # Schema Registry Admin
       confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schemas --kafka-cluster $KAFKA_CLUSTER_ID
+      confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_schema_encoders --kafka-cluster $KAFKA_CLUSTER_ID
+      confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Topic:_dek_registry_keys --kafka-cluster $KAFKA_CLUSTER_ID
       confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role SecurityAdmin --kafka-cluster $KAFKA_CLUSTER_ID --schema-registry-cluster $SCHEMA_REGISTRY_CLUSTER_ID
       confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role ResourceOwner --resource Group:$SCHEMA_REGISTRY_CLUSTER_ID --kafka-cluster $KAFKA_CLUSTER_ID
       confluent iam rbac role-binding create --principal User:$USER_ADMIN_SCHEMA_REGISTRY --role DeveloperRead --resource Topic:$LICENSE_TOPIC --kafka-cluster $KAFKA_CLUSTER_ID
