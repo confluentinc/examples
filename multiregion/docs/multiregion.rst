@@ -67,10 +67,11 @@ The scenario for this tutorial is as follows:
 
 - Three regions: ``west``, ``central``, and ``east``
 - Broker naming convention: ``broker-[region]-[broker_id]``
+- [KRaft](https://docs.confluent.io/platform/current/kafka-metadata/kraft.html) is enabled in the cluster, with a controller in each region
 
 |Multi-region Architecture|
 
-Note that this tutorial uses a dedicated |ak| cluster backing |c3|, which monitors the multi-region cluster.
+Note that this tutorial uses a separate |ak| cluster backing |c3|, which monitors the multi-region cluster.
 
 Here are some relevant configuration parameters at different component levels:
 
@@ -172,11 +173,11 @@ Startup
 -------
 
 #. This |mrrep| example uses Traffic Control (``tc``) to inject latency between the regions and packet loss to simulate the
-   WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build custom Docker images with ``tc``.
+   WAN link. Confluent's ubi-based Docker images do not have ``tc`` installed, so build a custom Docker image with ``tc``.
 
    .. code-block:: bash
 
-      ./scripts/build_docker_images.sh
+      ./scripts/build_docker_image.sh
 
 #. Start all the Docker containers
 
@@ -188,18 +189,17 @@ Startup
 
    .. code-block:: text
 
-            Name                   Command            State                            Ports
-      ----------------------------------------------------------------------------------------------------------------
-      broker-ccc          /etc/confluent/docker/run   Up      0.0.0.0:8098->8098/tcp, 9092/tcp, 0.0.0.0:9098->9098/tcp
-      broker-east-3       /etc/confluent/docker/run   Up      0.0.0.0:8093->8093/tcp, 9092/tcp, 0.0.0.0:9093->9093/tcp
-      broker-east-4       /etc/confluent/docker/run   Up      0.0.0.0:8094->8094/tcp, 9092/tcp, 0.0.0.0:9094->9094/tcp
-      broker-west-1       /etc/confluent/docker/run   Up      0.0.0.0:8091->8091/tcp, 0.0.0.0:9091->9091/tcp, 9092/tcp
-      broker-west-2       /etc/confluent/docker/run   Up      0.0.0.0:8092->8092/tcp, 0.0.0.0:9092->9092/tcp
-      control-center      /etc/confluent/docker/run   Up      0.0.0.0:9021->9021/tcp
-      zookeeper-ccc       /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2188->2188/tcp, 2888/tcp, 3888/tcp
-      zookeeper-central   /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2182->2182/tcp, 2888/tcp, 3888/tcp
-      zookeeper-east      /etc/confluent/docker/run   Up      2181/tcp, 0.0.0.0:2183->2183/tcp, 2888/tcp, 3888/tcp
-      zookeeper-west      /etc/confluent/docker/run   Up      0.0.0.0:2181->2181/tcp, 2888/tcp, 3888/tcp
+      NAME                 COMMAND                       SERVICE              CREATED         STATUS         PORTS
+      broker-ccc           "/etc/confluent/docker/run"   broker-ccc           2 minutes ago   Up 2 minutes   0.0.0.0:8099->8099/tcp, 0.0.0.0:9099->9099/tcp, 9092/tcp
+      broker-east-3        "/etc/confluent/docker/run"   broker-east-3        2 minutes ago   Up 2 minutes   0.0.0.0:8093->8093/tcp, 0.0.0.0:9093->9093/tcp, 9092/tcp
+      broker-east-4        "/etc/confluent/docker/run"   broker-east-4        2 minutes ago   Up 2 minutes   0.0.0.0:8094->8094/tcp, 0.0.0.0:9094->9094/tcp, 9092/tcp
+      broker-west-1        "/etc/confluent/docker/run"   broker-west-1        2 minutes ago   Up 2 minutes   0.0.0.0:8091->8091/tcp, 0.0.0.0:9091->9091/tcp, 9092/tcp
+      broker-west-2        "/etc/confluent/docker/run"   broker-west-2        2 minutes ago   Up 2 minutes   0.0.0.0:8092->8092/tcp, 0.0.0.0:9092->9092/tcp
+      control-center       "/etc/confluent/docker/run"   control-center       2 minutes ago   Up 2 minutes   0.0.0.0:9021->9021/tcp
+      controller-ccc       "/etc/confluent/docker/run"   controller-ccc       2 minutes ago   Up 2 minutes   0.0.0.0:8098->8098/tcp, 0.0.0.0:9098->9098/tcp, 9092/tcp
+      controller-central   "/etc/confluent/docker/run"   controller-central   2 minutes ago   Up 2 minutes   0.0.0.0:8096->8096/tcp, 0.0.0.0:9096->9096/tcp, 9092/tcp
+      controller-east      "/etc/confluent/docker/run"   controller-east      2 minutes ago   Up 2 minutes   0.0.0.0:8097->8097/tcp, 0.0.0.0:9097->9097/tcp, 9092/tcp
+      controller-west      "/etc/confluent/docker/run"   controller-west      2 minutes ago   Up 2 minutes   0.0.0.0:8095->8095/tcp, 0.0.0.0:9095->9095/tcp, 9092/tcp
 
 
 Inject latency and packet loss
@@ -752,7 +752,7 @@ In this section, you will simulate a region failure by bringing down the ``west`
 
    .. code-block:: bash
 
-      docker compose stop broker-west-1 broker-west-2 zookeeper-west
+      docker compose stop broker-west-1 broker-west-2 controller-west
 
 #. Verify the new topic replica placement by running the script :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`:
 
@@ -1108,13 +1108,16 @@ Now you will bring region ``west`` back online and restore configuration to the 
 
    .. code-block:: bash
 
-       docker compose start broker-west-1 broker-west-2 zookeeper-west
+       docker compose start broker-west-1 broker-west-2 controller-west
 
    Wait for 5 minutes–the default duration for
    ``leader.imbalance.check.interval.seconds``–until the leadership election
-   restores the preferred replicas. You can also trigger it with
-   ``docker compose exec broker-east-4 kafka-leader-election --bootstrap-server
-   broker-east-4:19094 --election-type PREFERRED --all-topic-partitions``.
+   restores the preferred replicas. You can also trigger it with:
+
+   .. code-block:: bash
+
+       docker compose exec broker-east-4 kafka-leader-election --bootstrap-server \
+          broker-east-4:19094 --election-type PREFERRED --all-topic-partitions
 
 #. Verify the new topic replica placement is restored with the script
    :devx-examples:`describe-topics.sh|multiregion/scripts/describe-topics.sh`.
@@ -1336,7 +1339,7 @@ it is possible Docker networking not working or cleaning up properly between run
 
 
 .. |Multi-region Architecture|
-   image:: images/multi-region-base-v2.png
+   image:: images/multi-region-base.png
    :alt: Multi-region Architecture
 
 .. |Follower_Fetching|
@@ -1344,11 +1347,11 @@ it is possible Docker networking not working or cleaning up properly between run
    :alt: Follower fetching
 
 .. |Multi-region latencies|
-   image:: images/multi-region-latencies-v2.png
+   image:: images/multi-region-latencies.png
    :alt: Multi-region latencies
 
 .. |Multi-region topic replicas|
-   image:: images/multi-region-topic-replicas-v2.png
+   image:: images/multi-region-topic-replicas.png
    :alt: Multi-region topic replicas
 
 .. |C3 cluster navigation|

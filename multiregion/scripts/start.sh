@@ -5,15 +5,15 @@ source ${DIR}/../.env
 
 ${DIR}/stop.sh
 
-${DIR}/build_docker_images.sh || exit 1
+${DIR}/build_docker_image.sh || exit 1
 
 export RUN_JMX=${RUN_JMX:-true}
 
 echo "Bring up containers"
 docker compose up -d
 
-echo "Sleeping 20 seconds"
-sleep 20
+echo "Sleeping 30 seconds"
+sleep 30
 
 ${DIR}/validate_connectivity.sh
 if [[ $? != 0 ]]; then
@@ -69,7 +69,7 @@ if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 echo -e "\n=========== Fail west region ===========\n"
 
-docker compose stop broker-west-2 zookeeper-west
+docker compose stop broker-west-2 controller-west
 
 echo "Sleeping 30 seconds"
 sleep 30
@@ -104,7 +104,7 @@ ${DIR}/describe-topics.sh
 if [[ $RUN_JMX == "true" ]]; then ${DIR}/jmx_metrics.sh; fi
 
 echo -e "\n=========== Restore west region  ===========\n"
-docker compose start broker-west-1 broker-west-2 zookeeper-west
+docker compose start broker-west-1 broker-west-2 controller-west
 
 echo "Sleeping 300 seconds until the leadership election restores the preferred replicas"
 sleep 300
