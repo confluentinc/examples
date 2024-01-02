@@ -12,49 +12,49 @@ echo -e "\n==> Configuring central as a medium latency link (50ms)"
 #        gaiaadm/pumba:0.7.6 -l debug netem --duration 24000h \
 #                --tc-image gaiadocker/iproute2 \
 #                --target $SUBNET \
-#                delay --time 50 zookeeper-central --jitter 10 &
+#                delay --time 50 controller-central --jitter 10 &
 
 echo -e "\n==> Configuring west-east as a high latency link (100ms)"
 #docker run --rm -d \
 #        --network=${DOCKER_NETWORK} \
 #        --name pumba-high-latency-west-east \
 #        -v /var/run/docker.sock:/var/run/docker.sock \
-#        -e ZOOKEEPER_EAST_IP=${ZOOKEEPER_EAST_IP} \
+#        -e CONTROLLER_EAST_IP=${CONTROLLER_EAST_IP} \
 #        -e KAFKA_EAST_3_IP=${KAFKA_EAST_3_IP} \
 #        -e KAFKA_EAST_4_IP=${KAFKA_EAST_4_IP} \
 #        gaiaadm/pumba:0.7.6 -l debug netem --duration 24000h \
 #                --tc-image gaiadocker/iproute2 \
-#                --target ${ZOOKEEPER_EAST_IP} \
+#                --target ${CONTROLLER_EAST_IP} \
 #                --target ${KAFKA_EAST_3_IP} \
 #                --target ${KAFKA_EAST_4_IP} \
-#                delay --time 100 zookeeper-west broker-west-1 broker-west-2 --jitter 20 &
+#                delay --time 100 controller-west broker-west-1 broker-west-2 --jitter 20 &
 
 echo -e "\n==> Configuring west-east with 1% packet loss"
 #docker run --rm -d \
 #        --network=${DOCKER_NETWORK} \
 #        --name pumba-loss-west-east \
 #        -v /var/run/docker.sock:/var/run/docker.sock \
-#        -e ZOOKEEPER_EAST_IP=${ZOOKEEPER_EAST_IP} \
+#        -e CONTROLLER_EAST_IP=${CONTROLLER_EAST_IP} \
 #        -e KAFKA_EAST_3_IP=${KAFKA_EAST_3_IP} \
 #        -e KAFKA_EAST_4_IP=${KAFKA_EAST_4_IP} \
 #        gaiaadm/pumba:0.7.6 -l debug netem --duration 24000h \
 #                --tc-image gaiadocker/iproute2 \
-#                --target ${ZOOKEEPER_EAST_IP} \
+#                --target ${CONTROLLER_EAST_IP} \
 #                --target ${KAFKA_EAST_3_IP} \
 #                --target ${KAFKA_EAST_4_IP} \
-#                loss --percent 1 zookeeper-west broker-west-1 broker-west-2 &
+#                loss --percent 1 controller-west broker-west-1 broker-west-2 &
 
 echo -e "\n==> Configuring east-west with 1% packet loss"
 #docker run --rm -d \
 #        --network=${DOCKER_NETWORK} \
 #        --name pumba-loss-east-west \
 #        -v /var/run/docker.sock:/var/run/docker.sock \
-#        -e ZOOKEEPER_WEST_IP=${ZOOKEEPER_WEST_IP} \
+#        -e CONTROLLER_WEST_IP=${CONTROLLER_WEST_IP} \
 #        -e KAFKA_WEST_1_IP=${KAFKA_WEST_1_IP} \
 #        -e KAFKA_WEST_2_IP=${KAFKA_WEST_2_IP} \
 #        gaiaadm/pumba:0.7.6 -l debug netem --duration 24000h \
 #                --tc-image gaiadocker/iproute2 \
-#                --target ${ZOOKEEPER_WEST_IP} \
+#                --target ${CONTROLLER_WEST_IP} \
 #                --target ${KAFKA_WEST_1_IP} \
 #                --target ${KAFKA_WEST_2_IP} \
-#                loss --percent 1 zookeeper-east broker-east-3 broker-east-4 &
+#                loss --percent 1 controller-east broker-east-3 broker-east-4 &
