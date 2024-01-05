@@ -20,7 +20,7 @@ use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 
-pub fn get_config() -> Result<(String, ClientConfig), Box<std::error::Error>> {
+pub fn get_config() -> Result<(String, ClientConfig), Box<dyn std::error::Error>> {
     let matches = App::new("rust client example")
         .version(option_env!("CARGO_PKG_VERSION").unwrap_or(""))
         .arg(
@@ -44,10 +44,10 @@ pub fn get_config() -> Result<(String, ClientConfig), Box<std::error::Error>> {
     let file = File::open(matches.value_of("config").ok_or("error parsing config")?)?;
     for line in BufReader::new(&file).lines() {
         let cur_line: String = line?.trim().to_string();
-        if cur_line.starts_with('#') || cur_line.len() < 1 {
+        if cur_line.starts_with('#') || cur_line.is_empty() {
             continue;
         }
-        let key_value: Vec<&str> = cur_line.split("=").collect();
+        let key_value: Vec<&str> = cur_line.split('=').collect();
         kafka_config.set(
             key_value.get(0).ok_or("malformed key")?,
             key_value.get(1).ok_or("malformed value")?,

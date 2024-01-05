@@ -26,12 +26,12 @@ fn log_produce_result(
     result: Result<(i32, i64), (KafkaError, OwnedMessage)>,
 ) -> Result<(), ()> {
     result
-        .and_then(|(p, o)| {
+        .map(|(p, o)| {
             println!(
                 "Successfully produced record to topic {} partition [{}] @ offset {}",
                 topic, p, o
             );
-            Ok(())
+            
         })
         .map_err(|(err, _)| eprintln!("kafka error: {}", err))
 }
