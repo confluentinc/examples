@@ -9,6 +9,7 @@ build   = "build.rs"
 futures = "0.1"
 tokio   = "0.1.21"
 clap    = "2.33.0"
+rdkafka-sys = "=1.2.2"
 
     [dependencies.rdkafka]
     version     = "~0.21"
