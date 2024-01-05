@@ -1,13 +1,13 @@
 ![image](images/confluent-logo-300-2.png)
 
-* [Overview](#overview)
-* [Where to Start](#where-to-start)
-* [Confluent Cloud](#confluent-cloud)
-* [Stream Processing](#stream-processing)
-* [Data Pipelines](#data-pipelines)
-* [Confluent Platform](#confluent-platform)
-* [Build Your Own](#build-your-own)
-* [Additional Demos](#additional-demos)
+- [Overview](#overview)
+- [Where to start](#where-to-start)
+- [Confluent Cloud](#confluent-cloud)
+- [Stream Processing](#stream-processing)
+- [Data Pipelines](#data-pipelines)
+- [Confluent Platform](#confluent-platform)
+- [Build Your Own](#build-your-own)
+- [Additional Demos](#additional-demos)
 
 
 # Overview
@@ -60,17 +60,17 @@ You can find the documentation and instructions for all Confluent Cloud demos at
 
 # Confluent Platform
 
-| Demo                                       | Local | Docker | Description
-| ------------------------------------------ | ----- | ------ | ---------------------------------------------------------------------------
-| [Avro](clients/README.md)               |   [Y](clients/README.md)   |   N    | Client applications using Avro and Confluent Schema Registry <br><img src="https://www.confluent.io/wp-content/uploads/dwg_SchemaReg_howitworks.png" width="420">
-| [CP Demo](https://github.com/confluentinc/cp-demo)           |   N   |   [Y](https://github.com/confluentinc/cp-demo)    | [Confluent Platform demo](https://docs.confluent.io/platform/current/tutorials/cp-demo/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) (`cp-demo`) with a playbook for Kafka event streaming ETL deployments <br><img src="https://github.com/confluentinc/cp-demo/blob/7.2.1-post/docs/images/cp-demo-overview.jpg" width="420">
-| [Kubernetes](kubernetes/README.md)                 |   N   |   [Y](kubernetes/README.md)    | Demonstrations of Confluent Platform deployments using the  [Confluent Operator](https://docs.confluent.io/operator/current/overview.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) <br><img src="kubernetes/docs/images/operator.png" width="420">
-| [Multi Datacenter](multi-datacenter/README.md) | N | [Y](multi-datacenter/README.md) | Active-active multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters <br><img src="https://docs.confluent.io/platform/current/_images/mdc-level-1.png" width="420">
-| [Multi-Region Clusters](multiregion/README.md) | N | [Y](multiregion/README.md) | Multi-Region clusters (MRC) with follower fetching, observers, and replica placement<br><img src="multiregion/docs/images/multi-region-topic-replicas-v2.png" width="420">
-| [Quickstart](cp-quickstart/README.md)           |   [Y](cp-quickstart/README.md)   |   [Y](cp-quickstart/README.md)    | Automated version of the [Confluent Quickstart](https://docs.confluent.io/platform/current/quickstart/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top): for Confluent Platform on local install or Docker, community version, and Confluent Cloud <br><img src="cp-quickstart/images/quickstart.png" width="420">
-| [Role-Based Access Control](security/rbac/README.md) |  Y  |  Y  | Role-based Access Control (RBAC) provides granular privileges for users and service accounts <br><img src="https://docs.confluent.io/platform/current/_images/rbac-overview.png" width="450">
-| [Replicator Security](replicator-security/README.md) | N | [Y](replicator-security/README.md) | Demos of various security configurations supported by Confluent Replicator and examples of how to implement them <br><img src="images/replicator-security.png" width="300">
-
+| Demo                                                 | Local                        | Docker                                       | Description                                                                                                                                                                                                                                                                                                                                                                              |
+|------------------------------------------------------|------------------------------|----------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Avro](clients/README.md)                            | [Y](clients/README.md)       | N                                            | Client applications using Avro and Confluent Schema Registry <br><img src="https://www.confluent.io/wp-content/uploads/dwg_SchemaReg_howitworks.png" width="420">                                                                                                                                                                                                                        |
+| [CP Demo](https://github.com/confluentinc/cp-demo)   | N                            | [Y](https://github.com/confluentinc/cp-demo) | [Confluent Platform demo](https://docs.confluent.io/platform/current/tutorials/cp-demo/docs/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) (`cp-demo`) with a playbook for Kafka event streaming ETL deployments <br><img src="https://github.com/confluentinc/cp-demo/blob/7.2.1-post/docs/images/cp-demo-overview.jpg" width="420"> |
+| [Kubernetes](kubernetes/README.md)                   | N                            | [Y](kubernetes/README.md)                    | Demonstrations of Confluent Platform deployments using the  [Confluent Operator](https://docs.confluent.io/operator/current/overview.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top) <br><img src="kubernetes/docs/images/operator.png" width="420">                                                                                         |
+| [Multi Datacenter](multi-datacenter/README.md)       | N                            | [Y](multi-datacenter/README.md)              | Active-active multi-datacenter design with two instances of Confluent Replicator copying data bidirectionally between the datacenters <br><img src="https://docs.confluent.io/platform/current/_images/mdc-level-1.png" width="420">                                                                                                                                                     |
+| [Multi-Region Clusters](multiregion/README.md)       | N                            | [Y](multiregion/README.md)                   | Multi-Region clusters (MRC) with follower fetching, observers, and replica placement<br><img src="multiregion/docs/images/multi-region-topic-replicas-v2.png" width="420">                                                                                                                                                                                                               |
+| [Quickstart](cp-quickstart/README.md)                | [Y](cp-quickstart/README.md) | [Y](cp-quickstart/README.md)                 | Automated version of the [Confluent Quickstart](https://docs.confluent.io/platform/current/quickstart/index.html?utm_source=github&utm_medium=demo&utm_campaign=ch.examples_type.community_content.top): for Confluent Platform on local install or Docker, community version, and Confluent Cloud <br><img src="cp-quickstart/images/quickstart.png" width="420">                       |
+| [Role-Based Access Control](security/rbac/README.md) | Y                            | Y                                            | Role-based Access Control (RBAC) provides granular privileges for users and service accounts <br><img src="https://docs.confluent.io/platform/current/_images/rbac-overview.png" width="450">                                                                                                                                                                                            |
+| [Replicator Security](replicator-security/README.md) | N                            | [Y](replicator-security/README.md)           | Demos of various security configurations supported by Confluent Replicator and examples of how to implement them <br><img src="images/replicator-security.png" width="300">                                                                                                                                                                                                              |
+| [Instant KRaft](instant-kraft/README.md)             | Y                            | [Y](instant-kraft/README.md)                 | Get started with KRaft mode in Kafka in just a few minutes. Explore KRaft metadata. Note that KRaft is not yet supported in Confluent Platform.
 
 # Build Your Own
 
