@@ -1,7 +1,7 @@
 .. _mrc-tutorial:
 
-Tutorial: Multi-Region Clusters
-===============================
+Tutorial: Configure |mrrep| in |cp|
+===================================
 
 Overview
 --------
