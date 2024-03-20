@@ -21,11 +21,6 @@ Caution
 
 .. include:: includes/ccloud-examples-caution.rst
 
-|ccloud| Promo Code
--------------------
-
-.. include:: includes/ccloud-examples-promo-code.rst
-
 ===============
 Concepts Review
 ===============
