@@ -117,11 +117,6 @@ This example also uses real resources from other cloud providers, including:
 * AWS Kinesis or RDS PostgreSQL
 * Cloud storage providers (one of GCP GCS, AWS S3, or Azure Blob) depending on your configuration
 
-|ccloud| Promo Code
-~~~~~~~~~~~~~~~~~~~
-
-.. include:: ../../ccloud/docs/includes/ccloud-examples-promo-code.rst
-
 ===========
 Run Example
 ===========
