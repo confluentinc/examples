@@ -59,11 +59,6 @@ By default, the |ccloud| ksqlDB app is not created with ``ccloud-stack``, you ha
    confluent ksql cluster create --cluster $CLUSTER --api-key "$KAFKA_API_KEY" --api-secret "$KAFKA_API_SECRET" --csu 1 -o json "$KSQLDB_NAME"
    confluent api-key create --service-account $SERVICE_ACCOUNT_ID --resource $RESOURCE -o json    // for ksqlDB REST API
 
-|ccloud| Promo Code
--------------------
-
-.. include:: includes/ccloud-examples-promo-code.rst
-
 
 =============
 Prerequisites
