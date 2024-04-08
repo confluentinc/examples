@@ -14,53 +14,102 @@
 version: '3.5'
 
 services:
-  zookeeper-west:
-    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
-    hostname: zookeeper-west
-    container_name: zookeeper-west
+  controller-west:
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
+    hostname: controller-west
+    container_name: controller-west
     networks:
       - n1
     ports:
-      - "2181:2181"
+      - "9095:9095"
+      - "8095:8095"
+    volumes:
+      - ./config:/etc/kafka/demo
     environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 5
+      KAFKA_BROKER_ID: 5
+      KAFKA_PROCESS_ROLES: 'controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_LISTENERS: 'CONTROLLER://controller-west:9095'
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_JMX_PORT: 8095
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     cap_add:
       - NET_ADMIN
 
-  zookeeper-central:
-    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
-    hostname: zookeeper-central
-    container_name: zookeeper-central
+  controller-central:
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
+    hostname: controller-central
+    container_name: controller-central
     networks:
       - n1
     ports:
-      - "2182:2182"
+      - "9096:9096"
+      - "8096:8096"
+    volumes:
+      - ./config:/etc/kafka/demo
     environment:
-      ZOOKEEPER_SERVER_ID: 2
-      ZOOKEEPER_CLIENT_PORT: 2182
-      ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
-    depends_on:
-      - zookeeper-west
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 6
+      KAFKA_BROKER_ID: 6
+      KAFKA_PROCESS_ROLES: 'controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_LISTENERS: 'CONTROLLER://controller-central:9096'
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_JMX_PORT: 8096
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     cap_add:
       - NET_ADMIN
 
-  zookeeper-east:
-    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
-    hostname: zookeeper-east
-    container_name: zookeeper-east
+  controller-east:
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
+    hostname: controller-east
+    container_name: controller-east
     networks:
       - n1
     ports:
-      - "2183:2183"
+      - "9097:9097"
+      - "8097:8097"
+    volumes:
+      - ./config:/etc/kafka/demo
     environment:
-      ZOOKEEPER_SERVER_ID: 3
-      ZOOKEEPER_CLIENT_PORT: 2183
-      ZOOKEEPER_SERVERS: zookeeper-west:2888:3888;zookeeper-central:2888:3888;zookeeper-east:2888:3888
-    depends_on:
-      - zookeeper-west
-      - zookeeper-central
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 7
+      KAFKA_BROKER_ID: 7
+      KAFKA_PROCESS_ROLES: 'controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_LISTENERS: 'CONTROLLER://controller-east:9097'
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_JMX_PORT: 8097
+      KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     cap_add:
       - NET_ADMIN
 
@@ -76,25 +125,33 @@ services:
     volumes:
       - ./config:/etc/kafka/demo
     environment:
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 1
       KAFKA_BROKER_ID: 1
       KAFKA_BROKER_RACK: 'west'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_PROCESS_ROLES: 'broker'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-west-1:19091,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9091
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_CLUSTER_LINK_METADATA_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
       KAFKA_JMX_PORT: 8091
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     depends_on:
-      - zookeeper-west
-      - zookeeper-central
-      - zookeeper-east
+      - controller-west
+      - controller-central
+      - controller-east
     cap_add:
       - NET_ADMIN
 
@@ -108,26 +165,34 @@ services:
       - "9092:9092"
       - "8092:8092"
     environment:
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 2
       KAFKA_BROKER_ID: 2
       KAFKA_BROKER_RACK: 'west'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_PROCESS_ROLES: 'broker'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-west-2:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_CLUSTER_LINK_METADATA_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
       KAFKA_JMX_PORT: 8092
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       CONFLUENT_METRICS_ENABLE: 'true'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     depends_on:
-      - zookeeper-west
-      - zookeeper-central
-      - zookeeper-east
+      - controller-west
+      - controller-central
+      - controller-east
       - broker-west-1
     cap_add:
       - NET_ADMIN
@@ -144,26 +209,34 @@ services:
     volumes:
       - ./config:/etc/kafka/demo
     environment:
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 3
       KAFKA_BROKER_ID: 3
       KAFKA_BROKER_RACK: 'east'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_PROCESS_ROLES: 'broker'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-east-3:19093,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9093
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_CLUSTER_LINK_METADATA_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
       KAFKA_JMX_PORT: 8093
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       CONFLUENT_METRICS_ENABLE: 'true'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     depends_on:
-      - zookeeper-west
-      - zookeeper-central
-      - zookeeper-east
+      - controller-west
+      - controller-central
+      - controller-east
       - broker-west-1
       - broker-west-2
     cap_add:
@@ -179,49 +252,44 @@ services:
       - "9094:9094"
       - "8094:8094"
     environment:
+      CLUSTER_ID: '4L6g3nShT-eMCtK--X86sw'
+      KAFKA_NODE_ID: 4
       KAFKA_BROKER_ID: 4
       KAFKA_BROKER_RACK: 'east'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_PROCESS_ROLES: 'broker'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '5@controller-west:9095,6@controller-central:9096,7@controller-east:9097'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
       KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-east-4:19094,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9094
       KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-west:2181,zookeeper-central:2182,zookeeper-east:2183'
-      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 2
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_CLUSTER_LINK_METADATA_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
-      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
       KAFKA_JMX_PORT: 8094
       KAFKA_CONFLUENT_LOG_PLACEMENT_CONSTRAINTS: '{"version": 1,"replicas": [{"count": 2, "constraints": {"rack": "west"}}], "observers": [{"count": 2, "constraints": {"rack": "east"}}]}'
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 4
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
       CONFLUENT_METRICS_ENABLE: 'true'
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     depends_on:
-      - zookeeper-west
-      - zookeeper-central
-      - zookeeper-east
+      - controller-west
+      - controller-central
+      - controller-east
       - broker-west-1
       - broker-west-2
       - broker-east-3
     cap_add:
       - NET_ADMIN
 
-  zookeeper-ccc:
-    image: localbuild/cp-zookeeper-tc:${CONFLUENT_DOCKER_TAG}
-    hostname: zookeeper-ccc
-    container_name: zookeeper-ccc
-    networks:
-      - n1
-    ports:
-      - "2188:2188"
-    environment:
-      ZOOKEEPER_SERVER_ID: 4
-      ZOOKEEPER_CLIENT_PORT: 2188
-      ZOOKEEPER_SERVERS: zookeeper-ccc:2888:3888
-
-  broker-ccc:
+  controller-ccc:
     image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
-    hostname: broker-ccc
-    container_name: broker-ccc
+    hostname: controller-ccc
+    container_name: controller-ccc
     networks:
       - n1
     ports:
@@ -230,21 +298,58 @@ services:
     volumes:
       - ./config:/etc/kafka/demo
     environment:
+      CLUSTER_ID: 'wo9ij5pnSDmPDbp7SzorHQ'
+      KAFKA_NODE_ID: 8
       KAFKA_BROKER_ID: 8
-      KAFKA_BROKER_RACK: 'metrics'
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_PROCESS_ROLES: 'controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '8@controller-ccc:9098'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
-      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-ccc:19098,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9098
-      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper-ccc:2188'
+      KAFKA_LISTENERS: 'CONTROLLER://controller-ccc:9098'
+      KAFKA_REPLICA_SELECTOR_CLASS: org.apache.kafka.common.replica.RackAwareReplicaSelector
       KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
-      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
       KAFKA_JMX_PORT: 8098
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
+
+  broker-ccc:
+    image: localbuild/cp-server-tc:${CONFLUENT_DOCKER_TAG}
+    hostname: broker-ccc
+    container_name: broker-ccc
+    networks:
+      - n1
+    ports:
+      - "9099:9099"
+      - "8099:8099"
+    volumes:
+      - ./config:/etc/kafka/demo
+    environment:
+      CLUSTER_ID: 'wo9ij5pnSDmPDbp7SzorHQ'
+      KAFKA_NODE_ID: 9
+      KAFKA_BROKER_ID: 9
+      KAFKA_PROCESS_ROLES: 'broker'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '8@controller-ccc:9098'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://broker-ccc:19099,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9099
+      KAFKA_METRIC_REPORTERS: io.confluent.metrics.reporter.ConfluentMetricsReporter
+      KAFKA_CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_CONFLUENT_MONITORING_INTERCEPTER_BOOTSTRAP_SERVERS: broker-ccc:19099
+      KAFKA_JMX_PORT: 8099
       KAFKA_OFFSETS_TOPIC_NUM_PARTITIONS: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_LICENSE_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_CONFLUENT_BALANCER_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_CLUSTER_LINK_METADATA_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
+      KAFKA_CONFLUENT_BALANCER_ENABLE: 'false'
     depends_on:
-      - zookeeper-ccc
+      - controller-ccc
 
   control-center:
     image: confluentinc/cp-enterprise-control-center:${CONFLUENT_DOCKER_TAG}
@@ -253,17 +358,16 @@ services:
     networks:
       - n1
     depends_on:
-      - zookeeper-ccc
       - broker-ccc
     ports:
       - "9021:9021"
     environment:
-      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-ccc:19098
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: broker-ccc:19099
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONTROL_CENTER_KAFKA_MRC_BOOTSTRAP_SERVERS: broker-west-1:19091,broker-west-2:19092,broker-east-3:19093,broker-east-4:19094
-      CONTROL_CENTER_KAFKA_METRICS_BOOTSTRAP_SERVERS: broker-ccc:19098
+      CONTROL_CENTER_KAFKA_METRICS_BOOTSTRAP_SERVERS: broker-ccc:19099
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
 
