@@ -1,7 +1,7 @@
 .. _client-examples-groovy:
 
-Create an Apache Kafka Client App for Groovy
-============================================
+Create an Apache Kafka Client App for Groovy on |product|
+=========================================================
 
 In this tutorial, you will run a Groovy client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
