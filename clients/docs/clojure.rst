@@ -1,7 +1,7 @@
 .. _client-examples-clojure:
 
-Create an Apache Kafka Client App for Clojure
-=============================================
+Create an Apache Kafka Client App for Clojure on |product|
+==========================================================
 
 In this tutorial, you will run a Clojure client application that produces
 messages to and consumes messages from an |ak-tm| cluster.
