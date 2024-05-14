@@ -1,7 +1,7 @@
 .. _client-examples-rust:
 
-Create an Apache Kafka Client App for Rust
-==========================================
+Create an Apache Kafka Client App for Rust on |product|
+=======================================================
 
 In this tutorial, you will run a Rust client application that produces messages
 to and consumes messages from an |ak-tm| cluster.
