@@ -1,7 +1,7 @@
 .. _client-examples-ruby:
 
-Create an Apache Kafka Client App for Ruby
-==========================================
+Create an Apache Kafka Client App for Ruby on |product|
+=======================================================
 
 In this tutorial, you will run a Ruby client application using the `rdkafka <https://github.com/appsignal/rdkafka-ruby>`__ gem that produces
 messages to and consumes messages from an |ak-tm| cluster.
