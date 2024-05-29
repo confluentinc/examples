@@ -1,2 +1,2 @@
-# See go/codeowners - automatically generated for confluentinc/examples:
-*	@confluentinc/integration-architecture
+*                                    @confluentinc/integration-architecture
+clients/docs/includes/configs/cloud/ @confluentinc/cli
