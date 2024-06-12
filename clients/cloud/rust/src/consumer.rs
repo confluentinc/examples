@@ -44,7 +44,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (topic, mut config) = utils::get_config()?;
     let consumer: StreamConsumer = config.set("group.id", "rust_example_group_1").create()?;
 
-    consumer.subscribe(&vec![topic.as_ref()])?;
+    consumer.subscribe(&[&topic])?;
 
     let processor = consumer
         .start()
