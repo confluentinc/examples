@@ -1,0 +1,11 @@
+[
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "record",
+ "name": "OrderEnriched",
+ "fields": [
+     {"name": "id", "type": "string"},
+     {"name": "customerId", "type": "long"},
+     {"name": "customerLevel", "type": "string"}
+ ]
+}
+]

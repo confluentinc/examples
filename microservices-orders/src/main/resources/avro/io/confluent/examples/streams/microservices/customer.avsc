@@ -1,0 +1,14 @@
+[
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "record",
+ "name": "Customer",
+ "fields": [
+     {"name": "id", "type": "long"},
+     {"name": "firstName", "type": "string"},
+     {"name": "lastName", "type": "string"},
+     {"name": "email", "type": "string"},
+     {"name": "address", "type": "string"},
+     {"name": "level", "type": "string", "default": "bronze"}
+ ]
+}
+]
