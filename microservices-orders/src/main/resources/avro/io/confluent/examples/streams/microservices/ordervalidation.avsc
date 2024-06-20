@@ -1,0 +1,20 @@
+[
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "enum",
+ "name": "OrderValidationType",
+ "symbols" : ["INVENTORY_CHECK", "FRAUD_CHECK", "ORDER_DETAILS_CHECK"]
+},
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "enum",
+ "name": "OrderValidationResult",
+ "symbols" : ["PASS", "FAIL", "ERROR"]
+},
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "record",
+ "name": "OrderValidation",
+ "fields": [
+     {"name": "orderId", "type": "string"},
+     {"name": "checkType", "type": "OrderValidationType"},
+     {"name": "validationResult",  "type": "OrderValidationResult"}
+ ]
+}]
