@@ -1,0 +1,32 @@
+[
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "enum",
+ "name": "OrderState",
+ "symbols" : ["CREATED", "VALIDATED", "FAILED", "SHIPPED"]
+},
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "enum",
+ "name": "Product",
+ "symbols" : ["JUMPERS", "UNDERPANTS", "STOCKINGS"]
+},
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+ "type": "record",
+ "name": "Order",
+ "fields": [
+     {"name": "id", "type": "string"},
+     {"name": "customerId", "type": "long"},
+     {"name": "state", "type": "OrderState"},
+     {"name": "product",  "type": "Product"},
+     {"name": "quantity", "type": "int"},
+     {"name": "price", "type": "double"}
+ ]
+},
+{"namespace": "io.confluent.examples.streams.avro.microservices",
+   "type": "record",
+   "name": "OrderValue",
+    "fields": [
+     {"name": "order", "type": "Order"},
+     {"name": "value", "type": "double"}
+    ]
+}
+]
