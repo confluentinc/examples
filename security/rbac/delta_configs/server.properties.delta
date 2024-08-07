@@ -1,0 +1,49 @@
+# Confluent Authorizer Settings
+# Semi-colon separated list of super users in the format <principalType>:<principalName>
+# For example super.users=User:admin;User:mds
+super.users=User:ANONYMOUS;User:mds
+
+# MDS Server Settings
+confluent.metadata.topic.replication.factor=1
+
+# MDS Token Service Settings
+confluent.metadata.server.token.key.path=/tmp/tokenKeypair.pem
+
+# Configure the RBAC Metadata Service authorizer
+authorizer.class.name=io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
+confluent.authorizer.access.rule.providers=CONFLUENT,ZK_ACL
+
+# Bind Metadata Service HTTP service to port 8090
+confluent.metadata.server.listeners=http://0.0.0.0:8090
+# Configure HTTP service advertised hostname. Set this to http://127.0.0.1:8090 if running locally.
+confluent.metadata.server.advertised.listeners=http://127.0.0.1:8090
+
+# HashLoginService Initializer
+confluent.metadata.server.authentication.method=BEARER
+confluent.metadata.server.user.store=FILE
+confluent.metadata.server.user.store.file.path=/tmp/login.properties
+
+# Add named listener TOKEN to existing listeners and advertised.listeners
+listeners=TOKEN://:9092,PLAINTEXT://:9093
+advertised.listeners=TOKEN://localhost:9092,PLAINTEXT://localhost:9093
+ 
+# Add protocol mapping for newly added named listener TOKEN
+listener.security.protocol.map=PLAINTEXT:PLAINTEXT,TOKEN:SASL_PLAINTEXT
+
+listener.name.token.sasl.enabled.mechanisms=OAUTHBEARER
+ 
+# Configure the public key used to verify tokens
+# Note: username, password and metadataServerUrls must be set if used for inter-broker communication
+listener.name.token.oauthbearer.sasl.jaas.config= \
+    org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required \
+        publicKeyPath="/tmp/tokenPublicKey.pem";
+# Set SASL callback handler for verifying authentication token signatures
+listener.name.token.oauthbearer.sasl.server.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerValidatorCallbackHandler
+# Set SASL callback handler for handling tokens on login. This is essentially a noop if not used for inter-broker communication.
+listener.name.token.oauthbearer.sasl.login.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerServerLoginCallbackHandler
+
+# Settings for Self-Balancing Clusters
+confluent.balancer.topic.replication.factor=1
+
+# Settings for Audit Logging
+confluent.security.event.logger.exporter.kafka.topic.replicas=1
