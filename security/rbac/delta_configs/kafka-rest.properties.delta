@@ -1,0 +1,19 @@
+# Configure connections to other Confluent Platform services
+bootstrap.servers=localhost:9092
+schema.registry.url=http://localhost:8081
+
+client.security.protocol=SASL_PLAINTEXT
+client.sasl.mechanism=OAUTHBEARER
+client.security.protocol=SASL_PLAINTEXT
+client.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+client.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="clientrp" password="clientrp1" metadataServerUrls="http://localhost:8090";
+
+kafka.rest.resource.extension.class=io.confluent.kafkarest.security.KafkaRestSecurityResourceExtension
+rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+
+public.key.path=/tmp/tokenPublicKey.pem
+
+# Credentials to use with the MDS
+confluent.metadata.bootstrap.server.urls=http://localhost:8090
+confluent.metadata.basic.auth.user.info=rp:rp1
+confluent.metadata.http.auth.credentials.provider=BASIC
