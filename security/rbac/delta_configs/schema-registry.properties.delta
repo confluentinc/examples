@@ -1,0 +1,27 @@
+kafkastore.bootstrap.servers=localhost:9092
+kafkastore.security.protocol=SASL_PLAINTEXT
+kafkastore.sasl.mechanism=OAUTHBEARER
+kafkastore.sasl.login.callback.handler.class=io.confluent.kafka.clients.plugins.auth.token.TokenUserLoginCallbackHandler
+kafkastore.sasl.jaas.config=org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required username="sr" password="sr1" metadataServerUrls="http://localhost:8090";
+
+# Schema Registry group id, which is the cluster id
+schema.registry.group.id=schema-registry-demo
+
+# These properties install the Schema Registry security plugin, and configure it to use RBAC for authorization and OAuth for authentication
+resource.extension.class=io.confluent.kafka.schemaregistry.security.SchemaRegistrySecurityResourceExtension
+confluent.schema.registry.authorizer.class=io.confluent.kafka.schemaregistry.security.authorizer.rbac.RbacAuthorizer
+rest.servlet.initializor.classes=io.confluent.common.security.jetty.initializer.InstallBearerOrBasicSecurityHandler
+
+# The location of a running metadata service; used to verify that requests are authorized by the users that make them
+confluent.metadata.bootstrap.server.urls=http://localhost:8090
+
+# Credentials to use when communicating with the MDS; these should usually match the ones used for communicating with Kafka
+confluent.metadata.basic.auth.user.info=sr:sr1
+confluent.metadata.http.auth.credentials.provider=BASIC
+
+# The path to public keys that should be used to verify json web tokens during authentication
+public.key.path=/tmp/tokenPublicKey.pem
+
+# This enables anonymous access with a principal of User:ANONYMOUS
+confluent.schema.registry.anonymous.principal=true
+authentication.skip.paths=/*
