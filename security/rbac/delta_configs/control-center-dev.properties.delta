@@ -1,0 +1,6 @@
+confluent.controlcenter.rest.authentication.method=BEARER
+confluent.controlcenter.streams.security.protocol=SASL_PLAINTEXT
+public.key.path=/tmp/tokenPublicKey.pem
+
+confluent.metadata.basic.auth.user.info=c3:c31
+confluent.metadata.bootstrap.server.urls=http://localhost:8090
