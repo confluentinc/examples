@@ -6,6 +6,7 @@
     "kafka.api.secret": "$CLOUD_SECRET",
     "aws.access.key.id": "$AWS_ACCESS_KEY_ID",
     "aws.secret.access.key": "$AWS_SECRET_ACCESS_KEY",
+    "store.url": "$S3_ENDPOINT_URL",
     "s3.bucket.name": "$S3_BUCKET",
     "data.format": "AVRO",
     "time.interval" : "HOURLY",
