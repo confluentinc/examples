@@ -28,7 +28,7 @@
 # --------------------------------------------------------------
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
-CLI_MIN_VERSION=${CLI_MIN_VERSION:-3.0.0}
+CLI_MIN_VERSION=${CLI_MIN_VERSION:-4.0.0}
 
 # --------------------------------------------------------------
 # Library
@@ -311,7 +311,7 @@ function ccloud::get_environment_id_from_service_id() {
 function ccloud::create_and_use_environment() {
   ENVIRONMENT_NAME=$1
 
-  OUTPUT=$(confluent environment create $ENVIRONMENT_NAME -o json)
+  OUTPUT=$(confluent environment create $ENVIRONMENT_NAME --governance-package ESSENTIALS -o json)
   (($? != 0)) && { echo "ERROR: Failed to create environment $ENVIRONMENT_NAME. Please troubleshoot and run again"; exit 1; }
   ENVIRONMENT=$(echo "$OUTPUT" | jq -r ".id")
   confluent environment use $ENVIRONMENT &>/dev/null
@@ -387,22 +387,10 @@ function ccloud:get_service_account_from_current_cluster_name() {
   return 0
 }
 
-function ccloud::enable_schema_registry() {
-  SCHEMA_REGISTRY_CLOUD=$1
-  SCHEMA_REGISTRY_GEO=$2
-
-  OUTPUT=$(confluent schema-registry cluster enable --cloud $SCHEMA_REGISTRY_CLOUD --geo $SCHEMA_REGISTRY_GEO -o json)
-  SCHEMA_REGISTRY=$(echo "$OUTPUT" | jq -r ".id")
-
-  echo $SCHEMA_REGISTRY
-
-  return 0
-}
-
 function ccloud::find_credentials_resource() {
   SERVICE_ACCOUNT_ID=$1
   RESOURCE=$2
-  local FOUND_CRED=$(confluent api-key list -o json | jq -c -r 'map(select((.resource_id == "'"$RESOURCE"'") and (.owner_resource_id == "'"$SERVICE_ACCOUNT_ID"'")))')
+  local FOUND_CRED=$(confluent api-key list -o json | jq -c -r 'map(select((.resource == "'"$RESOURCE"'") and (.owner == "'"$SERVICE_ACCOUNT_ID"'")))')
   local FOUND_COUNT=$(echo "$FOUND_CRED" | jq 'length')
   [[ $FOUND_COUNT -ne 0 ]] && {
       echo "$FOUND_CRED" | jq -r '.[0].key'
@@ -411,6 +399,7 @@ function ccloud::find_credentials_resource() {
       return 1
     }
 }
+
 function ccloud::create_credentials_resource() {
   SERVICE_ACCOUNT_ID=$1
   RESOURCE=$2
@@ -746,7 +735,7 @@ function ccloud::get_service_account() {
 
   local key="$1"
 
-  serviceAccount=$(confluent api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'"))) | .[].owner_id')
+  serviceAccount=$(confluent api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'"))) | .[].owner')
   if [[ "$serviceAccount" == "" ]]; then
     echo "ERROR: Could not associate key $key to a service account. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
@@ -863,7 +852,7 @@ function ccloud::set_kafka_cluster_use_from_api_key() {
 
   local key="$1"
 
-  local kafkaCluster=$(confluent api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'" and .resource_type == "kafka"))) | .[].resource_id')
+  local kafkaCluster=$(confluent api-key list -o json | jq -r -c 'map(select((.key == "'"$key"'" and .resource_type == "kafka"))) | .[].resource')
   if [[ "$kafkaCluster" == "" ]]; then
     echo "ERROR: Could not associate key $key to a Confluent Cloud Kafka cluster. Verify your credentials, ensure the API key has a set resource type, and try again."
     exit 1
@@ -975,13 +964,9 @@ function ccloud::create_ccloud_stack() {
 
   ccloud::grant_envadmin_access $SERVICE_ACCOUNT_ID $ENVIRONMENT
 
-  SCHEMA_REGISTRY_GEO="${SCHEMA_REGISTRY_GEO:-us}"
-  SCHEMA_REGISTRY=$(ccloud::enable_schema_registry $CLUSTER_CLOUD $SCHEMA_REGISTRY_GEO)
-  # FF-11908/DEVX-2800: sometimes describe fails immediately after enable, adding sleep
-  sleep 10
-  SCHEMA_REGISTRY_ENDPOINT=$(confluent schema-registry cluster describe -o json | jq -r ".endpoint_url")
-  SCHEMA_REGISTRY_CREDS=$(ccloud::maybe_create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
-  
+  read SCHEMA_REGISTRY SCHEMA_REGISTRY_ENDPOINT < <(echo $(confluent schema-registry cluster describe -o json | jq -r ".cluster, .endpoint_url"))
+  SCHEMA_REGISTRY_CREDS=$(ccloud::create_credentials_resource $SERVICE_ACCOUNT_ID $SCHEMA_REGISTRY)
+
   if $enable_ksqldb ; then
     KSQLDB_NAME=${KSQLDB_NAME:-"demo-ksqldb-$SERVICE_ACCOUNT_ID"}
     KSQLDB=$(ccloud::maybe_create_ksqldb_app "$KSQLDB_NAME" $CLUSTER "$SERVICE_ACCOUNT_ID")
