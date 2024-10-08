@@ -25,8 +25,8 @@ fi
 
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id --profile $S3_PROFILE)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key --profile $S3_PROFILE)
-export S3_ENDPOINT_URL=$(aws configure get endpoint_url --profile $S3_PROFILE) || "https://s3.amazonaws.com"
-export S3_ENDPOINT_URL="${S3_ENDPOINT_URL:-https://s3.amazonaws.com}"
+export S3_ENDPOINT_URL=$(aws configure get endpoint_url --profile $S3_PROFILE)
+export S3_ENDPOINT_URL="${S3_ENDPOINT_URL:-https://s3.$STORAGE_REGION.amazonaws.com}"
 
 ccloud::create_connector connectors/s3_no_avro.json || exit 1
 ccloud::wait_for_connector_up connectors/s3_no_avro.json 300 || exit 1
