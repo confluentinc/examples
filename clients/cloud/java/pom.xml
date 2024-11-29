@@ -7,12 +7,12 @@
     <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>[7.2.11-0, 7.2.12-0)</version>
+      <version>7.2.13</version>
     </parent>
 
     <artifactId>clients-example</artifactId>
     <packaging>jar</packaging>
-    <version>7.2.11-0</version>
+    <version>7.2.13</version>
 
     <organization>
         <name>Confluent, Inc.</name>
