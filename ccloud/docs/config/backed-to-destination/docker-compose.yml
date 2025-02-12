@@ -3,7 +3,7 @@ version: '2'
 services:
 
   connect-destination:
-    image: confluentinc/cp-enterprise-replicator:7.8.x-latest
+    image: confluentinc/cp-enterprise-replicator:7.8.1
     hostname: connect-destination
     container_name: connect-destination
     ports:
@@ -33,7 +33,7 @@ services:
       CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
       CONNECT_LOG4J_ROOT_LOGLEVEL: INFO
       CONNECT_LOG4J_LOGGERS: org.reflections=ERROR
-      CLASSPATH: "/usr/share/java/kafka-connect-replicator/replicator-rest-extension-7.8.0-0.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-7.8.0-0.jar"
+      CLASSPATH: "/usr/share/java/kafka-connect-replicator/replicator-rest-extension-7.8.1.jar:/usr/share/java/monitoring-interceptors/monitoring-interceptors-7.8.1.jar"
 
       # Connect worker
       CONNECT_SECURITY_PROTOCOL: SASL_SSL
