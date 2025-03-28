@@ -28,7 +28,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <java.version>8</java.version>
     <gson.version>2.2.4</gson.version>
     <kafka.version>8.0.0-0-ccs</kafka.version>
-    <avro.version>1.10.1</avro.version>
+    <avro.version>1.11.4</avro.version>
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
