@@ -6,7 +6,7 @@
     "node": ">=8.6"
   },
   "dependencies": {
-    "minimist": "^1.2.6",
-    "node-rdkafka": "^2.5.1"
+    "minimist": "^1.2.8",
+    "node-rdkafka": "^2.18.0"
   }
 }
