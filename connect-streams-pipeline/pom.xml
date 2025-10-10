@@ -7,12 +7,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>io.confluent</groupId>
     <artifactId>rest-utils-parent</artifactId>
-    <version>[7.6.2-0, 7.6.3-0)</version>
+    <version>7.6.8</version>
   </parent>
 
   <artifactId>connect-streams-examples</artifactId>
   <packaging>jar</packaging>
-  <version>7.6.2-0</version>
+  <version>7.6.8</version>
 
   <organization>
       <name>Confluent, Inc.</name>
