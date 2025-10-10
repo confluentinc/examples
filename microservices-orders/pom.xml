@@ -7,12 +7,12 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
       <groupId>io.confluent</groupId>
       <artifactId>rest-utils-parent</artifactId>
-      <version>7.5.1</version>
+      <version>7.7.6</version>
   </parent>
 
   <artifactId>micro-services-examples</artifactId>
   <packaging>jar</packaging>
-  <version>7.5.1</version>
+  <version>7.7.6</version>
 
   <organization>
       <name>Confluent, Inc.</name>
@@ -27,7 +27,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- Keep versions as properties to allow easy modification -->
     <java.version>8</java.version>
     <gson.version>2.2.4</gson.version>
-    <kafka.version>3.7.0</kafka.version>
+    <kafka.version>7.7.6-ccs</kafka.version>
     <avro.version>1.10.1</avro.version>
     <!-- Maven properties for compilation -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
