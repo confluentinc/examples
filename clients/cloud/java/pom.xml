@@ -25,7 +25,7 @@
 
     <properties>
         <java.version>8</java.version>
-        <slf4j-api.version>1.7.6</slf4j-api.version>
+        <slf4j-api.version>1.7.36</slf4j-api.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gson.version>2.2.4</gson.version>
         <schemaRegistryUrl>http://localhost:8081</schemaRegistryUrl>
@@ -121,7 +121,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.14.1</version>
                 <inherited>true</inherited>
                 <configuration>
                     <source>${java.version}</source>
@@ -139,7 +139,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.6.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -151,7 +151,7 @@
             <plugin>
                 <groupId>org.jasig.maven</groupId>
                 <artifactId>maven-notice-plugin</artifactId>
-                <version>1.0.6.1</version>
+                <version>1.1.0</version>
                 <configuration>
                     <licenseMapping>
                         <param>../../license-mappings.xml</param>
