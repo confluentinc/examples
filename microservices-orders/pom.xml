@@ -162,7 +162,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.3.0</version>
+            <version>3.27.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
