@@ -7,7 +7,7 @@
     <parent>
         <groupId>io.confluent</groupId>
         <artifactId>rest-utils-parent</artifactId>
-        <version>8.0.0-0</version>
+        <version>8.0.4</version>
     </parent>
 
     <artifactId>clients-example</artifactId>
