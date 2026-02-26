@@ -33,6 +33,7 @@ import org.apache.kafka.streams.StreamsConfig.*
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Grouped
 import org.apache.kafka.streams.kstream.Printed
+import kotlin.system.exitProcess
 
 
 //DataRecord Serde
@@ -53,7 +54,7 @@ fun main(args: Array<String>) {
 
   if (args.size != 2) {
     println("Please provide command line arguments: <configPath> <topic>")
-    System.exit(1)
+    exitProcess(1)
   }
 
   val topic = args[1]
@@ -62,7 +63,7 @@ fun main(args: Array<String>) {
   val props = loadConfig(args[0])
   props[APPLICATION_ID_CONFIG] = "kotlin_streams_example_group_1"
   // Disable caching to print the aggregation value after each record
-  props[CACHE_MAX_BYTES_BUFFERING_CONFIG] = 0
+  props[STATESTORE_CACHE_MAX_BYTES_CONFIG] = 0
   props[REPLICATION_FACTOR_CONFIG] = 3
   props[AUTO_OFFSET_RESET_CONFIG] = "earliest"
 
@@ -83,6 +84,6 @@ fun main(args: Array<String>) {
   streams.start()
 
   // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
-  Runtime.getRuntime().addShutdownHook(Thread(Runnable { streams.close() }))
+  Runtime.getRuntime().addShutdownHook(Thread { streams.close() })
 
 }

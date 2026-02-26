@@ -56,11 +56,11 @@ fun main(args: Array<String>) {
     while (true) {
       totalCount = consumer
           .poll(ofMillis(100))
-          .fold(totalCount, { accumulator, record ->
+          .fold(totalCount) { accumulator, record ->
             val newCount = accumulator + 1
             println("Consumed record with key ${record.key()} and value ${record.value()}, and updated total count to $newCount")
             newCount
-          })
+          }
     }
   }
 }
