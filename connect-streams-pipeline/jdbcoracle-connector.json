@@ -1,0 +1,16 @@
+{
+    "name": "simple-jdbc-connector-for-oracle",
+    "config": {
+            "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+            "tasks.max": "2",
+            "poll.interval.ms": 3600000, 
+            "transforms.extractInt.field": "EVENT_TIMESTAMP",
+            "mode": "timestamp", 
+            "query": "select * from AUDSYS.UNIFIED_AUDIT_TRAIL",
+            "timestamp.column.name": "EVENT_TIMESTAMP",
+            "connection.password": "ORACLE_PASS",
+            "topic.prefix": "TOPIC_NAME",
+            "connection.user": "ORACLE_USERNAME",
+            "connection.url": "jdbc:oracle:<driver:thin>:@<oracle_address>:oracle_port/database_name"
+    }
+}
