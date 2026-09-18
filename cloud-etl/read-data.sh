@@ -81,7 +81,7 @@ else
     --schema-registry-endpoint $SCHEMA_REGISTRY_URL\
     --from-beginning\
     --print-key\
-    --value-format avro 
+    --value-format avro
 fi
 
 
@@ -92,7 +92,7 @@ AVRO_VERSION=1.9.1
 #fi
 if [[ "$DESTINATION_STORAGE" == "s3" ]]; then
 
-  for key in $(aws s3api list-objects --bucket $S3_BUCKET | jq -r '.Contents[].Key'); do
+  for key in $(aws s3api list-objects --bucket $S3_BUCKET --profile $S3_PROFILE | jq -r '.Contents[].Key'); do
     echo "S3 key: $key"
     #aws s3 cp s3://$S3_BUCKET/$key data.avro
     #echo "java -Dlog4j.configuration="file:log4j.properties" -jar avro-tools-${AVRO_VERSION}.jar tojson data.avro"
